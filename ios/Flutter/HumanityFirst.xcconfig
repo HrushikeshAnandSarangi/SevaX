@@ -1,0 +1,15 @@
+//
+//  HumanityFirst.xcconfig
+//  Runner
+//
+//  Created by Ajil on 7/24/19.
+//  Copyright © 2019 The Chromium Authors. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main_humanity_first.dart
+bundle_suffix = .humanityfirst
