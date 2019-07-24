@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/splash_view.dart';
 
 void main() {
-  FlavorConfig config = FlavorConfig(
-    flavor: Flavor.TULSI,
-    values: FlavorValues(name: 'App'),
-  );
+  FlavorConfig.appFlavor = Flavor.TULSI;
 
   runApp(MainApplication());
 }
@@ -14,9 +12,7 @@ class MainApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.red,
-      ),
+      home: SplashView(),
     );
   }
 }

@@ -48,6 +48,23 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "flavor-type"
+
+    productFlavors {
+        HumanityFirst {
+            dimension "flavor-type"
+            applicationIdSuffix ".humanityfirst"
+        }
+        App {
+            dimension "flavor-type"
+            applicationIdSuffix ".app"
+        }
+        Tulsi {
+            dimension "flavor-type"
+            applicationIdSuffix ".tulsi"
+        }
+    }
 }
 
 flutter {
