@@ -14,3 +14,4 @@
 
 FLUTTER_TARGET=lib/main_app.dart
 bundle_suffix = .app
+app_name = Seva Exchange

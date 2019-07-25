@@ -62,7 +62,7 @@ android {
         }
         Tulsi {
             dimension "flavor-type"
-            applicationIdSuffix ".tulsi"
+            applicationIdSuffix ".tulsi_2020"
         }
     }
 }

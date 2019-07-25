@@ -14,3 +14,4 @@
 
 FLUTTER_TARGET=lib/main_tulsi.dart
 bundle_suffix = .tulsi
+app_name = Tulsi 2020
