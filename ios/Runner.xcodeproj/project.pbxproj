@@ -580,7 +580,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 841816BC22E8249800662488 /* Tulsi.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Tulsi;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -660,7 +660,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -808,7 +808,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 841816BC22E8249800662488 /* Tulsi.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Tulsi;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -882,7 +882,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
