@@ -55,14 +55,17 @@ android {
         HumanityFirst {
             dimension "flavor-type"
             applicationIdSuffix ".humanityfirst"
+            resValue "string", "app_name", "Humanity First"
         }
         App {
             dimension "flavor-type"
             applicationIdSuffix ".app"
+            resValue "string", "app_name", "Seva Exchange"
         }
         Tulsi {
             dimension "flavor-type"
             applicationIdSuffix ".tulsi_2020"
+            resValue "string", "app_name", "Tulsi 2020"
         }
     }
 }
