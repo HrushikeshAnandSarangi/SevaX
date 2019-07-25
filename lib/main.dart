@@ -1,16 +1,18 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+library business;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:sevaexchange/auth/auth.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import './auth/auth.dart';
+import './auth/auth_provider.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+const String HUMANITY_FIRST_TB_ID = 'ajilo297@gmail.com*1559128156543';
 
 void main() {
-  FlavorConfig.appFlavor = Flavor.HUMANITY_FIRST;
-
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(
       alert: true,
@@ -36,12 +38,17 @@ void main() {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
-      runApp(MainApplication());
+      runApp(new SevaXApp());
     },
   );
 }
 
-class MainApplication extends StatelessWidget {
+class SevaXApp extends StatefulWidget {
+  @override
+  _SevaXAppState createState() => _SevaXAppState();
+}
+
+class _SevaXAppState extends State<SevaXApp> {
   @override
   Widget build(BuildContext context) {
     return AuthProvider(

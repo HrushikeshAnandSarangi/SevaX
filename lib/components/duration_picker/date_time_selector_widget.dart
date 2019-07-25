@@ -1,0 +1,89 @@
+import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+// import 'package:business/main.dart';
+
+class DateTimeSelector extends StatelessWidget {
+  final DateTime dateTime;
+  final String title;
+  final bool isSelected;
+  final VoidCallback onPressed;
+
+  DateTimeSelector({
+    @required this.title,
+    this.dateTime,
+    this.onPressed,
+    this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildContainer('$title', dateTime, context);
+  }
+
+  Widget _buildContainer(String _title, DateTime _date, BuildContext context) {
+    return Material(
+      child: InkWell(
+        onTap: onPressed,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.fromLTRB(16.0, 9.0, 16.0, 0.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      _title,
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xff999999),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.0,
+                    ),
+                    _buildTime(_date),
+                    SizedBox(
+                      height: 7.0,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 2.0,
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.transparent,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTime(DateTime _date) {
+    if (_date == null) {
+      return Text(
+        'date & time',
+        style: TextStyle(
+          color: Color(0xff999999),
+          fontSize: 15.0,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    } else {
+      String _forDate = new DateFormat('dd MMM yyyy, hh:mm a').format(_date);
+      return Text(_forDate,
+          style: TextStyle(
+            color: Color(0xff6c63ff),
+            fontSize: 15.0,
+            fontWeight: FontWeight.bold,
+          ));
+    }
+  }
+}

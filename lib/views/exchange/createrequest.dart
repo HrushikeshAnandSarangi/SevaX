@@ -1,0 +1,356 @@
+import 'package:flutter/material.dart';
+import 'dart:async';
+
+import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+
+import 'package:sevaexchange/main.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart'
+    as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
+
+class CreateRequest extends StatefulWidget {
+  final bool isOfferRequest;
+  final OfferModel offer;
+  //print('at createrequest = $isOfferRequest');
+  CreateRequest({Key key, this.isOfferRequest, this.offer}) : super(key: key);
+
+  @override
+  _CreateRequestState createState() => _CreateRequestState();
+}
+
+class _CreateRequestState extends State<CreateRequest> {
+  // final bool isOfferRequest;
+  // final String sevaUserIdOffer;
+  //print('at createrequeststate = $isOfferRequest');
+
+  // _CreateRequestState({this.isOfferRequest, this.sevaUserIdOffer});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(
+          "Create Request",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: false,
+      ),
+      body: RequestCreateForm(
+          isOfferRequest: widget.isOfferRequest, offer: widget.offer),
+    );
+  }
+}
+
+class RequestCreateForm extends StatefulWidget {
+  final bool isOfferRequest;
+  final OfferModel offer;
+  RequestCreateForm({this.isOfferRequest, this.offer});
+
+  @override
+  RequestCreateFormState createState() {
+    return RequestCreateFormState();
+  }
+}
+
+class RequestCreateFormState extends State<RequestCreateForm> {
+  final GlobalKey<_CreateRequestState> _offerState = GlobalKey();
+  final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
+
+  final _formKey = GlobalKey<FormState>();
+
+  RequestModel requestModel = RequestModel();
+
+  String _dateMessageStart = ' START date and time ';
+  String _dateMessageEnd = '  END date and time ';
+  String hoursMessage = ' Click to Set Duration';
+
+  String _selectedTimebankId;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedTimebankId = HUMANITY_FIRST_TB_ID;
+    this.requestModel.timebankId = _selectedTimebankId;
+  }
+
+  @override
+  void didChangeDependencies() {
+    FirestoreManager.getUserForIdStream(
+            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID)
+        .listen((userModel) {
+      this.requestModel.email = userModel.email;
+      this.requestModel.fullName = userModel.fullname;
+      this.requestModel.photoUrl = userModel.photoURL;
+      this.requestModel.sevaUserId = userModel.sevaUserID;
+    });
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle textStyle = Theme.of(context).textTheme.title;
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(hintText: 'Request Title'),
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.sentences,
+                style: textStyle,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter the subject of your Request';
+                  }
+                  requestModel.title = value;
+                },
+              ),
+              Text(' '),
+              OfferDurationWidget(
+                title: ' Request Duration*',
+                //startTime: CalendarWidgetState.startDate,
+                //endTime: CalendarWidgetState.endDate
+              ),
+              SizedBox(height: 8),
+
+              // FlatButton(
+              //   //Request Date and Time
+              //   color: Color.fromRGBO(112, 196, 147, 1.0),
+              //   onPressed: () {
+              //     DateTime selectedDate;
+              //     if (requestModel.requestStart == null) {
+              //       selectedDate = DateTime.now();
+              //     } else {
+              //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
+              //         requestModel.requestStart,
+              //       );
+              //     }
+
+              //     DatePicker.showDateTimePicker(
+              //       context,
+              //       showTitleActions: true,
+              //       onChanged: (date) {
+              //         requestModel.requestStart = date.millisecondsSinceEpoch;
+              //         setState(() {
+              //           _dateMessageStart = ' ' +
+              //               DateTime.fromMillisecondsSinceEpoch(
+              //                 requestModel.requestStart,
+              //               ).toString();
+              //         });
+              //       },
+              //       onConfirm: (date) {
+              //         requestModel.requestStart = date.millisecondsSinceEpoch;
+              //         setState(() {
+              //           _dateMessageStart = ' ' +
+              //               DateTime.fromMillisecondsSinceEpoch(
+              //                 requestModel.requestStart,
+              //               ).toString();
+              //         });
+              //       },
+              //       currentTime: DateTime(
+              //         selectedDate.year,
+              //         selectedDate.month,
+              //         selectedDate.day,
+              //         selectedDate.hour,
+              //         selectedDate.minute,
+              //         00,
+              //       ),
+              //     );
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(Icons.calendar_today, size: 24.0),
+              //       Text(_dateMessageStart),
+              //     ],
+              //   ),
+              // ),
+              // Text(' '),
+              // FlatButton(
+              //   color: Color.fromRGBO(112, 196, 0, 1.0),
+              //   onPressed: () {
+              //     DateTime selectedDate;
+
+              //     if (requestModel.requestEnd == null) {
+              //       selectedDate = DateTime.now();
+              //     } else {
+              //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
+              //         requestModel.requestEnd,
+              //       );
+              //     }
+
+              //     DatePicker.showDateTimePicker(
+              //       context,
+              //       showTitleActions: true,
+              //       onChanged: (date) {
+              //         requestModel.requestEnd = date.millisecondsSinceEpoch;
+              //         setState(() {
+              //           _dateMessageEnd = ' ' +
+              //               DateTime.fromMillisecondsSinceEpoch(
+              //                       requestModel.requestEnd)
+              //                   .toString();
+              //         });
+              //       },
+              //       onConfirm: (date) {
+              //         requestModel.requestEnd = date.millisecondsSinceEpoch;
+              //         setState(() {
+              //           _dateMessageEnd = ' ' +
+              //               DateTime.fromMillisecondsSinceEpoch(
+              //                       requestModel.requestEnd)
+              //                   .toString();
+              //         });
+              //       },
+              //       currentTime: DateTime(
+              //         selectedDate.year,
+              //         selectedDate.month,
+              //         selectedDate.day,
+              //         selectedDate.hour,
+              //         selectedDate.minute,
+              //         00,
+              //       ),
+              //     );
+              //   },
+              //   child: Row(
+              //     children: [
+              //       Icon(Icons.calendar_today, size: 24.0),
+              //       Text(_dateMessageEnd),
+              //     ],
+              //   ),
+              // ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Your Request and any #hashtags',
+                  labelText: 'Request',
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(20.0),
+                    ),
+                    borderSide: new BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: 10,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  requestModel.description = value;
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'No. of approvals',
+                  labelText: 'No. of volunteers',
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(20.0),
+                    ),
+                    borderSide: new BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter the number of volunteers needed';
+                  }
+                  requestModel.numberOfApprovals = int.parse(value);
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Center(
+                  child: RaisedButton(
+                    shape: StadiumBorder(),
+                    color: Colors.indigoAccent,
+                    onPressed: () {
+                      requestModel.requestStart =
+                          OfferDurationWidgetState.starttimestamp;
+                      requestModel.requestEnd =
+                          OfferDurationWidgetState.endtimestamp;
+                      print('Start time: ${requestModel.requestStart}');
+                      print('End time: ${requestModel.requestEnd}');
+                      if (_formKey.currentState.validate()) {
+                        print(
+                            'before checking to create notification = ${widget.isOfferRequest}');
+                        _writeToDB();
+
+                        if (widget.isOfferRequest == true) {
+                          print(
+                              'after checking to create notification = ${widget.isOfferRequest}');
+                          sendOfferRequest(
+                              offerModel: widget.offer,
+                              requestSevaID: requestModel.sevaUserId);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.attachment,
+                          size: 24.0,
+                          color: Colors.white,
+                        ),
+                        Text(' '),
+                        Text(
+                          'Pin Request',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future _writeToDB() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    String timestampString = timestamp.toString();
+    requestModel.id = '${requestModel.email}*$timestampString';
+    requestModel.postTimestamp = timestamp;
+    requestModel.accepted = false;
+    requestModel.acceptors = [];
+
+    if (requestModel.requestStart == null) {
+      requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
+    }
+
+    if (requestModel.requestEnd == null) {
+      requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
+    }
+
+    if (requestModel.id == null) return;
+    await FirestoreManager.createRequest(requestModel: requestModel);
+  }
+}

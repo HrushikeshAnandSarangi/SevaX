@@ -14,7 +14,7 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -52,16 +52,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
   assets:
@@ -89,16 +80,6 @@ flutter:
     - lib/assets/Y_from_Andrew_Yang_2020_logo.jpg
 
   fonts:
-    # - family: PT Serif
-    #   fonts:
-    #     - asset: fonts/PT_Serif-Web-Regular.ttf
-    #     - asset: fonts/PT_Serif-Web-Italic.ttf
-    #       style: italic
-    #     - asset: fonts/PT_Serif-Web-Bold.ttf
-    #       weight: 700
-    #     - asset: fonts/PT_Serif-Web-BoldItalic.ttf
-    #       style: italic
-    #       weight: 700
     - family: Montserrat
       fonts:
         - asset: fonts/Montserrat-Regular.ttf

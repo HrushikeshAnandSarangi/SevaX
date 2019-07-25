@@ -1,0 +1,427 @@
+import 'package:flutter/material.dart';
+
+import 'package:sevaexchange/components/newsimage/newsimage.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart'
+    as FirestoreManager;
+import 'package:sevaexchange/globals.dart' as globals;
+
+import 'package:sevaexchange/views/core.dart';
+
+class NewsCreate extends StatelessWidget {
+  final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        globals.newsImageURL = null;
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text(
+            "Create News Post",
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: false,
+          actions: <Widget>[
+            //  OutlineButton(
+            //         //color: Colors.indigo,
+            //         onPressed: () {
+            //           // Validate will return true if the form is valid, or false if
+            //           // the form is invalid.
+
+            //           if (_formState.currentState.formKey.currentState.validate()) {
+            //             // If the form is valid, we want to show a Snackbar
+            //             Scaffold.of(context).showSnackBar(
+            //                 SnackBar(content: Text('Creating Post')));
+            //             _formState.currentState.writeToDB();
+            //           }
+            //         },
+            //         highlightColor: Colors.white,
+            //         child: Text(
+            //           'Save',
+            //           style: TextStyle(color: Colors.white),
+            //         ),
+            //       ),
+          ],
+        ),
+        body: NewsCreateForm(),
+      ),
+    );
+  }
+}
+
+// Create a Form Widget
+class NewsCreateForm extends StatefulWidget {
+  NewsCreateForm({Key key}) : super(key: key);
+  @override
+  NewsCreateFormState createState() {
+    return NewsCreateFormState();
+  }
+}
+
+// Create a corresponding State class. This class will hold the data related to
+// the form.
+class NewsCreateFormState extends State<NewsCreateForm> {
+  // Create a global key that will uniquely identify the Form widget and allow
+  // us to validate the form
+  //
+  // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
+  final formKey = GlobalKey<FormState>();
+  String imageUrl;
+  NewsModel newsObject = NewsModel();
+  TextStyle textStyle;
+
+  List<DataModel> dataList = [];
+  DataModel selectedEntity;
+
+  Future<void> writeToDB() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    newsObject.id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
+    newsObject.email = SevaCore.of(context).loggedInUser.email;
+    newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
+    newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+    newsObject.newsImageUrl = globals.newsImageURL ?? '';
+    newsObject.postTimestamp = timestamp;
+
+//    EntityModel entityModel = _getSelectedEntityModel;
+    EntityModel entityModel = EntityModel(
+      entityId: 'ajilo297@gmail.com*1559128156543',
+      entityName: 'Yang 2020',
+      entityType: EntityType.timebank,
+    );
+
+    newsObject.entity = entityModel;
+
+    await FirestoreManager.createNews(newsObject: newsObject);
+    globals.newsImageURL = null;
+    Navigator.pop(context);
+  }
+
+//  EntityModel get _getSelectedEntityModel {
+//    if (this.selectedEntity.runtimeType == TimebankModel) {
+//      TimebankModel model = this.selectedEntity;
+//      return EntityModel(
+//        entityId: model.id,
+//        entityName: model.name,
+//        entityType: EntityType.timebank,
+//      );
+//    } else if (this.selectedEntity.runtimeType == CampaignModel) {
+//      CampaignModel model = this.selectedEntity;
+//      return EntityModel(
+//        entityId: model.id,
+//        entityName: model.name,
+//        entityType: EntityType.campaign,
+//      );
+//    } else {
+//      return EntityModel(entityType: EntityType.general);
+//    }
+//  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    dataList.add(EntityModel(entityType: EntityType.general));
+
+//    ApiManager.getTimeBanksForUser(userEmail: globals.email)
+//        .then((List<TimebankModel> timeBankModelList) {
+//      setState(() {
+//        timeBankModelList.forEach((model) {
+//          dataList.add(model);
+//        });
+//      });
+//    });
+//
+//    ApiManager.getCampaignsForUser(userEmail: globals.email)
+//        .then((List<CampaignModel> campaignModelList) {
+//      setState(() {
+//        campaignModelList.forEach((model) {
+//          dataList.add(model);
+//        });
+//      });
+//    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    FirestoreManager.FirestoreManager.getEntityDataListStream(
+      userEmail: SevaCore.of(context).loggedInUser.email,
+    ).listen(
+      (dataList) {
+        setState(() {
+          dataList.forEach((data) => this.dataList.add(data));
+        });
+      },
+    );
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    textStyle = Theme.of(context).textTheme.title;
+    // Build a Form widget using the formKey we created above
+    return Form(
+        key: formKey,
+        child: Container(
+          // margin: EdgeInsets.all(10),
+          // padding: EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  // Container(
+                  //   alignment: Alignment(1.0, 0),
+                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
+                  //   child:
+                  //   RaisedButton(
+                  //     shape: StadiumBorder(),
+                  //     color: Colors.indigoAccent,
+                  //     onPressed: () {
+                  //       // Validate will return true if the form is valid, or false if
+                  //       // the form is invalid.
+
+                  //       if (formKey.currentState.validate()) {
+                  //         // If the form is valid, we want to show a Snackbar
+                  //         Scaffold.of(context).showSnackBar(
+                  //             SnackBar(content: Text('Creating Post')));
+                  //         writeToDB();
+                  //       }
+                  //     },
+                  //     child: Text(
+                  //       'Save News Post',
+                  //       style: TextStyle(color: Colors.white),
+                  //     ),
+                  //   ),
+                  // ),
+
+//              entityDropdown,
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Center(
+                      child: NewsImage(),
+                    ),
+                  ),
+
+                  Container(
+                    padding: EdgeInsets.fromLTRB(
+                        MediaQuery.of(context).size.width / 4,
+                        0,
+                        MediaQuery.of(context).size.width / 4,
+                        0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: '+ Photo Credits',
+                      ),
+                      keyboardType: TextInputType.text,
+                      textAlign: TextAlign.center,
+                      //style: textStyle,
+                      validator: (value) {
+                        // if (value.isEmpty) {
+                        //   return 'Please enter some text';
+                        // }
+                        newsObject.photoCredits = value;
+                      },
+                    ),
+                  ),
+                  Text(""),
+                  
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 20.0),
+                          child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Your post title',
+                              labelText: '+ Post Title',
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(10.0),
+                                ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.text,
+                            //style: textStyle,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter the Post Title';
+                              }
+                              newsObject.title = value;
+                            },
+                          ),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 0.0),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                hintText: 'Your sub heading',
+                                labelText: '+ Sub Heading',
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                  borderSide: new BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
+                                ),
+                              ),
+                              keyboardType: TextInputType.text,
+                              //style: textStyle,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                newsObject.subheading = value;
+                              },
+                            )),
+                        Text(""),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            hintText: 'Your news and any #hashtags',
+                            labelText: '+ News and #hashtags',
+                            border: OutlineInputBorder(
+                              borderRadius: const BorderRadius.all(
+                                const Radius.circular(10.0),
+                              ),
+                              borderSide: new BorderSide(
+                                color: Colors.black,
+                                width: 0.5,
+                              ),
+                            ),
+                          ),
+                          keyboardType: TextInputType.multiline,
+                          //style: textStyle,
+                          maxLines: null,
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            newsObject.description = value;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Text(""),
+                ],
+              ),
+
+              Container(
+                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                alignment: Alignment(0, 1),
+                padding: const EdgeInsets.only(top: 10.0),
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: Colors.indigoAccent,
+                  onPressed: () {
+                    // Validate will return true if the form is valid, or false if
+                    // the form is invalid.
+
+                    if (formKey.currentState.validate()) {
+                      // If the form is valid, we want to show a Snackbar
+                      Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text('Creating Post')));
+                      writeToDB();
+                    }
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.attachment,
+                        size: 24.0,
+                        color: Colors.white,
+                      ),
+                      Text(' '),
+                      Text(
+                        'Save News Post',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              // Text(sevaUserID),
+            ],
+          )),
+        ));
+  }
+
+  Widget get entityDropdown {
+    return Container(
+      padding: EdgeInsets.only(bottom: 20.0),
+      child: DropdownButtonFormField<DataModel>(
+        decoration: InputDecoration.collapsed(
+          hintText: '+ Category',
+          hintStyle: Theme.of(context).textTheme.title.copyWith(
+                color: Theme.of(context).hintColor,
+              ),
+        ),
+        validator: (value) {
+          if (value == null) {
+            return 'Please select a category';
+          }
+        },
+        items: dataList.map((dataModel) {
+          if (dataModel.runtimeType == EntityModel) {
+            return DropdownMenuItem<DataModel>(
+              child: Text('General', style: textStyle),
+              value: dataModel,
+            );
+          } else if (dataModel.runtimeType == TimebankModel) {
+            TimebankModel model = dataModel;
+            return DropdownMenuItem<DataModel>(
+              child: Text(
+                '${model.name}',
+                style: textStyle,
+              ),
+              value: model,
+            );
+          } else if (dataModel.runtimeType == CampaignModel) {
+            CampaignModel model = dataModel;
+            return DropdownMenuItem<DataModel>(
+              child: Text(
+                '${model.name}',
+                style: textStyle,
+              ),
+              value: model,
+            );
+          }
+          return DropdownMenuItem<DataModel>(
+            child: Text(
+              'Undefined',
+              style: textStyle,
+            ),
+            value: null,
+          );
+        }).toList(),
+        value: selectedEntity,
+        onChanged: (dataModel) {
+          setState(() {
+            this.selectedEntity = dataModel;
+          });
+        },
+      ),
+    );
+  }
+}

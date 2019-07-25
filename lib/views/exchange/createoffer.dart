@@ -1,0 +1,181 @@
+import 'package:flutter/material.dart';
+
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart'
+    as FirestoreManager;
+import 'package:sevaexchange/main.dart';
+import 'package:sevaexchange/views/core.dart';
+
+class CreateOffer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text("Create Offer",style: TextStyle(color: Colors.white),),
+        centerTitle: false,
+      ),
+      body: MyCustomForm(),
+    );
+  }
+}
+
+// Create a Form Widget
+class MyCustomForm extends StatefulWidget {
+  @override
+  MyCustomFormState createState() {
+    return MyCustomFormState();
+  }
+}
+
+// Create a corresponding State class. This class will hold the data related to
+// the form.
+class MyCustomFormState extends State<MyCustomForm> {
+  // Create a global key that will uniquely identify the Form widget and allow
+  // us to validate the form
+  //
+  // Note: This is a GlobalKey<FormState>, not a GlobalKey<MyCustomFormState>!
+  final _formKey = GlobalKey<FormState>();
+
+  String title = '';
+  String schedule = '';
+  String description = '';
+
+  void _writeToDB() async {
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    String timestampString = timestamp.toString();
+    OfferModel model = OfferModel(
+      email: SevaCore.of(context).loggedInUser.email,
+      fullName: SevaCore.of(context).loggedInUser.fullname,
+      title: title,
+      id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
+      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      description: description,
+      schedule: schedule,
+      timebankId: HUMANITY_FIRST_TB_ID,
+      timestamp: timestamp,
+    );
+    await FirestoreManager.createOffer(offerModel: model);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle textStyle = Theme.of(context).textTheme.title;
+    // Build a Form widget using the _formKey we created above
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(' '),
+              TextFormField(
+                decoration: InputDecoration(hintText: 'Offer Title'),
+                keyboardType: TextInputType.text,
+                style: textStyle,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter the subject of your Offer';
+                  }
+                  title = value;
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.all(15.0),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Your Offer and any #hashtags',
+                  labelText: 'Offer Description',
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(20.0),
+                    ),
+                    borderSide: new BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: 10,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  description = value;
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.all(15.0),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: 'Describe My Availability',
+                  labelText: 'Availability',
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(20.0),
+                    ),
+                    borderSide: new BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                  ),
+                ),
+                keyboardType: TextInputType.multiline,
+                maxLines: 4,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  schedule = value;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Center(
+                  child: RaisedButton(
+                    shape: StadiumBorder(),
+                    color: Colors.indigoAccent,
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text('Creating Offer')),
+                        );
+                        _writeToDB();
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.attachment,
+                          size: 24.0,
+                          color: Colors.white,
+                        ),
+                        Text(' '),
+                        Text(
+                          'Create Offer',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    textColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

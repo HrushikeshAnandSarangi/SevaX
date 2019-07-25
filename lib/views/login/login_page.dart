@@ -1,0 +1,349 @@
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/auth/auth.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/views/login/register_page.dart';
+import 'package:sevaexchange/views/splash_view.dart';
+import 'package:flutter/services.dart';
+
+class LoginPage extends StatefulWidget {
+  LoginPage();
+
+  @override
+  State<StatefulWidget> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  bool _isLoading = false;
+
+  String emailId;
+  String password;
+  bool _shouldObscurePassword = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 23, 54, 134),
+              Color.fromARGB(255, 115, 132, 176),
+              Color.fromARGB(255, 214, 222, 234),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: 48),
+                  logo,
+                  SizedBox(height: 32),
+                  content,
+                  SizedBox(height: 16),
+                  signInWithGoogle,
+                  SizedBox(height: 16),
+                  SizedBox(height: 16),
+                  poweredBySevaLogo,
+                  SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  bool get isLoading => this._isLoading;
+  set isLoading(bool isLoading) {
+    setState(() => this._isLoading = isLoading);
+  }
+
+  Widget get logo {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Humanity\nFirst'.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              letterSpacing: 5,
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          Image.asset(
+            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+            height: 70,
+            fit: BoxFit.fill,
+            width: 80,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget get content {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                style: textStyle,
+                validator: _validateEmailId,
+                onSaved: _saveEmail,
+                decoration: InputDecoration(
+                  labelText: 'EMAIL',
+                  labelStyle: textStyle,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                obscureText: _shouldObscurePassword,
+                style: textStyle,
+                validator: _validatePassword,
+                onSaved: _savePassword,
+                decoration: InputDecoration(
+                  labelText: 'PASSWORD',
+                  labelStyle: textStyle,
+                  suffix: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _shouldObscurePassword = !_shouldObscurePassword;
+                      });
+                    },
+                    child: Text(
+                      'Show',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: _shouldObscurePassword
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: RaisedButton(
+                    padding: EdgeInsets.all(16),
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            signInWithEmailAndPassword();
+                          },
+                    color: Theme.of(context).primaryColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        if (isLoading)
+                          SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: Theme(
+                              data: ThemeData(accentColor: Colors.white),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          ),
+                        SizedBox(width: 16),
+                        Text(
+                          'SIGN IN',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    shape: StadiumBorder(),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            FlatButton(
+              materialTapTargetSize: MaterialTapTargetSize.padded,
+              padding: EdgeInsets.all(0),
+              onPressed: () async {
+                isLoading = true;
+                UserModel user = await Navigator.of(context).push(
+                  MaterialPageRoute<UserModel>(
+                    builder: (context) => RegisterPage(),
+                  ),
+                );
+                isLoading = false;
+                if (user != null) _processLogin(user);
+              },
+              child: Text(
+                'Create an Account',
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget get signInWithGoogle {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(width: 20, child: Divider(height: 3, color: Colors.black)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Sign in with'),
+            ),
+            SizedBox(width: 20, child: Divider(height: 3, color: Colors.black)),
+          ],
+        ),
+        SizedBox(height: 16),
+        Material(
+          color: Colors.white,
+          shape: CircleBorder(),
+          child: InkWell(
+            customBorder: CircleBorder(),
+            onTap: useGoogleSignIn,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 24,
+                width: 24,
+                child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget get poweredBySevaLogo {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 45,
+          child: Image.asset(
+            'lib/assets/images/sticker.webp',
+          ),
+        )
+      ],
+    );
+  }
+
+  TextStyle get textStyle {
+    return TextStyle(
+      color: Colors.white,
+    );
+  }
+
+  void useGoogleSignIn() async {
+    isLoading = true;
+    Auth auth = AuthProvider.of(context).auth;
+    UserModel user;
+    try {
+      user = await auth.handleGoogleSignIn();
+    } on PlatformException catch (erorr) {
+      handlePlatformException(erorr);
+    } on Exception catch (error) {
+      print(error);
+    }
+    isLoading = false;
+    _processLogin(user);
+  }
+
+  void signInWithEmailAndPassword() async {
+    if (!_formKey.currentState.validate()) return;
+    _formKey.currentState.save();
+    Auth auth = AuthProvider.of(context).auth;
+    UserModel user;
+    isLoading = true;
+    try {
+      user = await auth.signInWithEmailAndPassword(
+        email: emailId,
+        password: password,
+      );
+    } on PlatformException catch (erorr) {
+      handlePlatformException(erorr);
+    } on Exception catch (error) {
+      print(error);
+    }
+    isLoading = false;
+    if (user == null) {
+      print('Invalid user');
+      return;
+    }
+
+    _processLogin(user);
+  }
+
+  void handlePlatformException(PlatformException error) {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(error.message),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+        ),
+      ),
+    );
+  }
+
+  String _validateEmailId(String value) {
+    if (value.isEmpty) return 'Enter Email Address';
+    return null;
+  }
+
+  String _validatePassword(String value) {
+    if (value.isEmpty) return 'Enter password';
+    return null;
+  }
+
+  void _saveEmail(String value) {
+    this.emailId = value;
+  }
+
+  void _savePassword(String value) {
+    this.password = value;
+  }
+
+  void _processLogin(UserModel userModel) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => SplashView(),
+      ),
+    );
+  }
+}
