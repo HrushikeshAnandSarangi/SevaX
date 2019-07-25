@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/globals.dart';
+import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'dart:math';
 import 'dart:async';
+import 'package:sevaexchange/flavor_config.dart';
 
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 
 import 'package:sevaexchange/views/transaction_history.dart';
@@ -34,6 +36,7 @@ class _ProfilePageState extends State<ProfilePage>
   UserModel user;
   double titleOpacity = 0.0;
   ScrollController scrollController;
+  TimebankModel timebankModel;
 
   double appbarScale = 0.9;
   double flexibleScale = 1.0;
@@ -44,6 +47,12 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
+    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.timebankId)
+        .then((model) {
+      setState(() {
+        timebankModel = model;
+      });
+    });
 
     appbarAnimationController = AnimationController(
       vsync: this,
@@ -245,7 +254,7 @@ class _ProfilePageState extends State<ProfilePage>
         value,
         style: TextStyle(color: Colors.white),
       ),
-      backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).accentColor,
     );
   }
 
@@ -278,9 +287,7 @@ class _ProfilePageState extends State<ProfilePage>
                       ),
                     ),
                     image: DecorationImage(
-                      image: user.photoURL == null
-                          ? AssetImage('lib/assets/images/noimagefound.png')
-                          : NetworkImage(user.photoURL),
+                      image: NetworkImage(user.photoURL),
                     ),
                   ),
                 ),
@@ -307,7 +314,7 @@ class _ProfilePageState extends State<ProfilePage>
                 collapseMode: CollapseMode.pin,
                 background: Container(
                   padding: EdgeInsets.only(bottom: 16),
-                  color: Colors.indigo,
+                  color: Theme.of(context).primaryColor,
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Row(
@@ -373,13 +380,13 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get logoutButton {
     return Container(
-      decoration: getContainerDecoration(color: Colors.red),
+      decoration: getContainerDecoration(color: Theme.of(context).accentColor),
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Card(
-        color: Colors.red.withAlpha(0),
+        color: Theme.of(context).accentColor,
         elevation: 0,
         child: InkWell(
-          splashColor: Colors.redAccent,
+          splashColor: Theme.of(context).accentColor,
           onTap: () {
             showDialog(
               context: context,
@@ -400,7 +407,7 @@ class _ProfilePageState extends State<ProfilePage>
                     new RaisedButton(
                       padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                       elevation: 5,
-                      color: Colors.pink,
+                      color: Theme.of(context).accentColor,
                       textColor: Colors.white,
                       child: new Text("Cancel"),
                       onPressed: () {
@@ -461,7 +468,7 @@ class _ProfilePageState extends State<ProfilePage>
                 'Review Earnings >',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).accentColor,
                 ),
               ),
             ),
@@ -506,9 +513,9 @@ class _ProfilePageState extends State<ProfilePage>
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(left: 8.0),
             child: Text(
-              'Yang Bucks',
+              'Tulsi Tokens',
               style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).accentColor,
                   fontWeight: FontWeight.w400,
                   fontSize: 12),
             ),
@@ -586,7 +593,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget get administerTimebanks {
     return getActionCards(
       title: 'Timebank',
-      subtitle: 'Humanity First',
+      subtitle: timebankModel == null ? "loading" : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
@@ -598,7 +605,7 @@ class _ProfilePageState extends State<ProfilePage>
           MaterialPageRoute(
             builder: (context) {
               return TimebankAdminPage(
-                timebankId: 'ajilo297@gmail.com*1559128156543',
+                timebankId: FlavorConfig.timebankId,
               );
             },
           ),

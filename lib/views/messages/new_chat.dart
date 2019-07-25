@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-import 'package:sevaexchange/views/exchange/help.dart';
-import 'package:sevaexchange/views/news/newslistview.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
-import 'package:sevaexchange/views/timebanks/timebank_view.dart';
+
 import '../core.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'chatview.dart';
 
 class NewChat extends StatefulWidget {
-  //final TabController controller;
+  bool isShare;
+  NewsModel news;
 
-  //SearchView(this.controller);
+  NewChat(this.isShare, this.news);
 
   @override
   NewChatState createState() => NewChatState();
@@ -84,7 +80,8 @@ class NewChatState extends State<NewChat> with TickerProviderStateMixin {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ResultView(() {}(), searchTextController),
+            child: ResultView(
+                () {}(), searchTextController, widget.isShare, widget.news),
           ),
         ],
       ),
@@ -95,19 +92,57 @@ class NewChatState extends State<NewChat> with TickerProviderStateMixin {
 class ResultView extends StatefulWidget {
   final SearchType type;
   final TextEditingController controller;
+  bool isShare;
+  NewsModel news;
 
-  ResultView(this.type, this.controller);
+  ResultView(this.type, this.controller, this.isShare, this.news);
 
   @override
   _ResultViewState createState() => _ResultViewState();
 }
 
 class _ResultViewState extends State<ResultView> {
+  @override
+  void initState() {
+    if (widget.isShare == null) widget.isShare = false;
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     print('Build view');
     if (widget.controller.text.trim().isEmpty) {
-      return Center(child: Text('Enter a User Name'));
+      return StreamBuilder<List<MessageModel>>(
+        stream:
+            getMessagesforUser(email: SevaCore.of(context).loggedInUser.email),
+        builder: (BuildContext context,
+            AsyncSnapshot<List<MessageModel>> messageListSnapshot) {
+          if (messageListSnapshot.hasError) {
+            return new Text('Error: ${messageListSnapshot.error}');
+          }
+          switch (messageListSnapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            default:
+              List<MessageModel> messageModelList = messageListSnapshot.data;
+              if (messageModelList.length == 0) {
+                return Center(child: Text('No Requests'));
+              }
+              return Container(
+                padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                child: ListView(
+                  children: messageModelList.map(
+                    (MessageModel messageModel) {
+                      return getMessageListView(messageModel, context);
+                    },
+                  ).toList(),
+                ),
+              );
+          }
+        },
+      );
     }
 
     return StreamBuilder<List<UserModel>>(
@@ -156,6 +191,8 @@ class _ResultViewState extends State<ResultView> {
                                   builder: (context) => ChatView(
                                         useremail: user.email,
                                         messageModel: model,
+                                        isFromShare: widget.isShare,
+                                        news: widget.news,
                                       )),
                             );
                           },
@@ -183,6 +220,179 @@ class _ResultViewState extends State<ResultView> {
         );
       },
     );
+  }
+
+  Widget get taskShimmer {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Shimmer.fromColors(
+        child: Container(
+          decoration: ShapeDecoration(
+            color: Colors.white.withAlpha(80),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+          ),
+          child: ListTile(
+            title: Container(height: 10, color: Colors.white),
+            subtitle: Container(height: 10, color: Colors.white),
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+            ),
+          ),
+        ),
+        baseColor: Colors.black.withAlpha(50),
+        highlightColor: Colors.white.withAlpha(50),
+      ),
+    );
+  }
+
+  Widget getMessageListView(
+      MessageModel messageModel, BuildContext parentContext) {
+    String lastmessage;
+    if (messageModel.lastMessage == null) {
+      lastmessage = '';
+    } else
+      lastmessage = messageModel.lastMessage;
+    if (messageModel.user1 == SevaCore.of(context).loggedInUser.email) {
+      return StreamBuilder<Object>(
+          stream: FirestoreManager.getUserForEmailStream(messageModel.user2),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return new Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return taskShimmer;
+            }
+            UserModel user = snapshot.data;
+            return Container(
+              child: Card(
+                elevation: 0,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      parentContext,
+                      MaterialPageRoute(
+                        builder: (context) => ChatView(
+                          useremail: user.email,
+                          messageModel: messageModel,
+                          isFromShare: widget.isShare,
+                          news: widget.news,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        ClipOval(
+                          child: SizedBox(
+                            height: 45,
+                            width: 45,
+                            child: FadeInImage.assetNetwork(
+                                placeholder: 'lib/assets/images/profile.png',
+                                image: user.photoURL),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                user.fullname,
+                                style:
+                                    Theme.of(parentContext).textTheme.subhead,
+                              ),
+                              Text(
+                                lastmessage,
+                                style: TextStyle(color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          });
+    } else if (messageModel.user2 == SevaCore.of(context).loggedInUser.email) {
+      return StreamBuilder<Object>(
+          stream: FirestoreManager.getUserForEmailStream(messageModel.user1),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return new Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return taskShimmer;
+            }
+            UserModel user = snapshot.data;
+            return Container(
+              child: Card(
+                elevation: 0,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      parentContext,
+                      MaterialPageRoute(
+                        builder: (context) => ChatView(
+                          useremail: user.email,
+                          messageModel: messageModel,
+                          isFromShare: widget.isShare,
+                          news: widget.news,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        ClipOval(
+                          child: SizedBox(
+                            height: 45,
+                            width: 45,
+                            child: FadeInImage.assetNetwork(
+                                placeholder: 'lib/assets/images/profile.png',
+                                image: user.photoURL),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                user.fullname,
+                                style:
+                                    Theme.of(parentContext).textTheme.subhead,
+                              ),
+                              Text(
+                                lastmessage,
+                                style: TextStyle(color: Colors.grey),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          });
+    }
   }
 
   TextStyle get sectionTextStyle {

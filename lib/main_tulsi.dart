@@ -1,18 +1,55 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sevaexchange/auth/auth.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/splash_view.dart';
+import 'package:sevaexchange/themes/sevatheme.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.TULSI;
 
-  runApp(MainApplication());
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  _firebaseMessaging.requestNotificationPermissions(
+    IosNotificationSettings(
+      alert: true,
+      badge: true,
+      sound: true,
+    ),
+  );
+
+  _firebaseMessaging.configure(
+    onMessage: (Map<String, dynamic> message) {
+      print('onMessage: $message');
+      return null;
+    },
+    onLaunch: (Map<String, dynamic> message) {
+      print('onLaunch: $message');
+      return null;
+    },
+    onResume: (Map<String, dynamic> message) {
+      print('onResume: $message');
+      return null;
+    },
+  );
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+    (_) {
+      runApp(MainApplication());
+    },
+  );
 }
 
 class MainApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SplashView(),
+    return AuthProvider(
+      auth: Auth(),
+      child: MaterialApp(
+        theme: FlavorConfig.theme,
+        home: SplashView(),
+      ),
     );
   }
 }

@@ -4,11 +4,13 @@ class MessageModel extends DataModel {
   String user1;
   String user2;
   String lastMessage;
+  String timebank;
 
   MessageModel({
     this.user1,
     this.user2,
-    this.lastMessage
+    this.lastMessage,
+    this.timebank
   });
 
   MessageModel.fromMap(Map<String, dynamic> map) {

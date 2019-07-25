@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -320,7 +320,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   Future addUserToTimebank(UserModel loggedInUser) async {
     TimebankModel timebankModel = await FirestoreManager.getTimeBankForId(
-      timebankId: HUMANITY_FIRST_TB_ID,
+      timebankId: FlavorConfig.timebankId,
     );
     List<String> _members = timebankModel.members;
     timebankModel.members = [..._members, loggedInUser.email];

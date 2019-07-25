@@ -31,9 +31,10 @@ class _ChatListViewState extends State<ChatListView> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
+              NewsModel news;
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => NewChat()),
+                MaterialPageRoute(builder: (context) => NewChat(false, news)),
               );
             },
           )

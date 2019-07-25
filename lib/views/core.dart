@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
@@ -19,6 +20,7 @@ import 'package:sevaexchange/views/exchange/help.dart';
 
 import 'package:sevaexchange/views/tasks/activity_view.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import '../globals.dart' as globals;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -81,7 +83,7 @@ class _CoreViewState extends State<CoreView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: sevaTheme,
+      theme: FlavorConfig.theme,
       home: SevaCoreView(user: user),
     );
   }
@@ -119,7 +121,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     FirestoreManager.getTimeBankForId(
-            timebankId: 'ajilo297@gmail.com*1559128156543')
+            timebankId: FlavorConfig.timebankId)
         .then((timebank) {
       if (timebank.admins.contains(SevaCore.of(context).loggedInUser.email) ||
           timebank.coordinators
@@ -155,12 +157,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
       appBar: _selectedIndex == 4
           ? null
           : AppBar(
-              backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
               centerTitle: true,
-              title: Text(
-                pages.elementAt(_selectedIndex).title,
-                style: TextStyle(color: Colors.white),
-              ),
+              title: Text(pages.elementAt(_selectedIndex).title,style: TextStyle(color: Colors.white),),
               leading: IconButton(
                 icon: Hero(
                   tag: 'profilehero',
@@ -175,9 +174,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         ),
                       ),
                       image: DecorationImage(
-                        image: widget.user.photoURL == null
-                            ? AssetImage('lib/assets/images/noimagefound.png')
-                            : NetworkImage(widget.user.photoURL),
+                        image: NetworkImage(widget.user.photoURL),
                       ),
                     ),
                   ),
@@ -202,10 +199,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return IconButton(
-                          icon: Icon(
-                            Icons.notifications,
-                            color: Colors.white,
-                          ),
+                          icon: Icon(Icons.notifications,color: Colors.white,),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -233,10 +227,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         );
                       } else {
                         return IconButton(
-                          icon: Icon(
-                            Icons.notifications,
-                            color: Colors.white,
-                          ),
+                          icon: Icon(Icons.notifications,color: Colors.white,),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -249,10 +240,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       }
                     }),
                 IconButton(
-                  icon: Icon(
-                    Icons.chat,
-                    color: Colors.white,
-                  ),
+                  icon: Icon(Icons.chat,color: Colors.white,),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -269,9 +257,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
             ),
       body: pages.elementAt(_selectedIndex).page,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).bottomAppBarColor,
         type: BottomNavigationBarType.fixed,
         elevation: 16,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: Theme.of(context).indicatorColor.withAlpha(150),
         items: () {
           List<PageProperty> bottomPages = [];
 
@@ -288,13 +277,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
           }).toList();
         }(),
         currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).accentColor,
+        selectedItemColor: Theme.of(context).indicatorColor,
         onTap: (index) => setState(() {
-          if (index == 3) {
-            _settingModalBottomSheet(context);
-          } else
-            _selectedIndex = index;
-        }),
+              if (index == 3) {
+                _settingModalBottomSheet(context);
+              } else
+                _selectedIndex = index;
+            }),
       ),
       // floatingActionButton: GestureDetector(
       //   onTap: () {
@@ -473,14 +462,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
         //labelColor: Colors.white,
         tabs: [
           Tab(child: Text('Pending ')),
-          Tab(
-              child: Text(
-            'Not Accepted ',
-          )),
-          Tab(
-              child: Text(
-            'Completed ',
-          )),
+          Tab(child: Text('Not Accepted ',)),
+          Tab(child: Text('Completed ',)),
         ],
         controller: controller,
         isScrollable: true,
@@ -527,7 +510,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
         context: context,
         builder: (BuildContext bc) {
           return Container(
+            
             color: Color(0xFF737373),
+            
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -539,7 +524,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                 children: <Widget>[
                   new ListTile(
                       leading:
-                          new Icon(Icons.description, color: Colors.indigo),
+                          new Icon(Icons.description, color: Theme.of(context).primaryColor),
                       title: new Text(
                         'Create Feed',
                         style: TextStyle(fontWeight: FontWeight.w500),
@@ -559,46 +544,47 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   ),
                   new ListTile(
                     leading: new Icon(Icons.swap_horizontal_circle,
-                        color: Colors.indigo),
+                        color: Theme.of(context).primaryColor),
                     title: new Text(
                       'Create Campaign Request',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      if (isAdminOrCoordinator)
-                        {
-                          Navigator.of(context).pop(),
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateRequest(),
-                            ),
-                          )
-                        }
-                      else
-                        {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: new Text("Permission Denied"),
-                                content: new Text(
-                                    "You need to be an Admin or Coordinator to have permission to create campaigns"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  new FlatButton(
-                                    child: new Text("Close"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          )
-                        }
-                    },
+                          if (isAdminOrCoordinator)
+                            {
+                              Navigator.of(context).pop(),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateRequest(),
+                                ),
+                              )
+                            }
+                          else
+                            {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: new Text("Permission Denied"),
+                                    content: new Text(
+                                        "You need to be an Admin or Coordinator to have permission to create campaigns"),
+                                    actions: <Widget>[
+                                      // usually buttons at the bottom of the dialog
+                                      new FlatButton(
+                                        child: new Text("Close"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
+                            }
+                        },
                   ),
                   Divider(
                     height: 1,
@@ -607,21 +593,21 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   new ListTile(
                     leading: new Icon(
                       Icons.local_offer,
-                      color: Colors.indigo,
+                      color: Theme.of(context).primaryColor,
                     ),
                     title: new Text(
                       'Create Volunteer Offer',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      Navigator.of(context).pop(),
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateOffer(),
-                        ),
-                      )
-                    },
+                          Navigator.of(context).pop(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateOffer(),
+                            ),
+                          )
+                        },
                   ),
                 ],
               ),

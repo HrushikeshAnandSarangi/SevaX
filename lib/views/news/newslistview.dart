@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/messages/new_chat.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
+
+import '../core.dart';
 
 class NewsListView extends StatelessWidget {
   @override
@@ -17,10 +20,10 @@ class NewsListView extends StatelessWidget {
 
 class NewsList extends StatefulWidget {
   @override
-  _NewsListState createState() => _NewsListState();
+  NewsListState createState() => NewsListState();
 }
 
-class _NewsListState extends State<NewsList> {
+class NewsListState extends State<NewsList> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<NewsModel>>(
@@ -39,9 +42,7 @@ class _NewsListState extends State<NewsList> {
             return ListView.builder(
               itemCount: newsList.length,
               itemBuilder: (context, index) {
-                return getNewsCard(
-                  newsList.elementAt(index),
-                );
+                return getNewsCard(newsList.elementAt(index), false);
               },
             );
         }
@@ -49,7 +50,8 @@ class _NewsListState extends State<NewsList> {
     );
   }
 
-  Widget getNewsCard(NewsModel news) {
+  Widget getNewsCard(NewsModel news, bool isFromMessage) {
+    String loggedinemail = SevaCore.of(context).loggedInUser.email;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -75,121 +77,183 @@ class _NewsListState extends State<NewsList> {
                   spreadRadius: 8,
                   blurRadius: 10),
             ]),
-        child: Column(
+        child: Stack(
           children: <Widget>[
-            Container(
-              height: 250,
-              child: SizedBox.expand(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                  child: Hero(
-                    tag: news.id,
-                    child: FadeInImage(
-                      fit: BoxFit.fitWidth,
-                      placeholder:
-                          AssetImage('lib/assets/images/noimagefound.png'),
-                      image: NetworkImage(news.newsImageUrl),
+            Column(
+              children: <Widget>[
+                Container(
+                  height: 250,
+                  child: SizedBox.expand(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        topRight: Radius.circular(15),
+                      ),
+                      child: Hero(
+                        tag: news.id,
+                        child: FadeInImage(
+                          fit: BoxFit.fitWidth,
+                          placeholder:
+                              AssetImage('lib/assets/images/noimagefound.png'),
+                          image: NetworkImage(news.newsImageUrl),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(news.title,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                )),
-                            Text(
-                              news.subheading,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: 8.0),
-                      IconButton(
-                        icon: Icon(Icons.bookmark_border),
-                        onPressed: () {},
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 16),
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                          timeAgo.format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                              news.postTimestamp,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(news.title,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    )),
+                                Text(
+                                  news.subheading,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
                           ),
-                          style: TextStyle(fontSize: 12)),
-                    ],
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
+                          SizedBox(width: 8.0),
+                        ],
+                      ),
+                    ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
-                      child: FlatButton.icon(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.reply,
-                          color: Colors.green,
-                          size: 20,
-                        ),
-                        label: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text('Share',
-                              style: TextStyle(
-                                fontSize: 14,
-                              )),
-                        ),
+                      padding: EdgeInsets.only(left: 16),
+                      alignment: Alignment.centerLeft,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                              timeAgo.format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                  news.postTimestamp,
+                                ),
+                              ),
+                              style: TextStyle(fontSize: 12)),
+                        ],
                       ),
                     ),
-                    Icon(
-                      Icons.perm_contact_calendar,
-                      color: Colors.indigo,
-                      size: 20,
-                    ),
-                    SizedBox(width: 8.0),
-                    SizedBox(
-                      width: 100,
-                      child: Text(
-                        news.fullName,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
+                    !isFromMessage
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: FlatButton.icon(
+                                  onPressed: () {
+                                    bool isShare = true;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                NewChat(isShare, news)));
+                                  },
+                                  icon: Icon(
+                                    Icons.share,
+                                    color: Theme.of(context).primaryColor,
+                                    size: 20,
+                                  ),
+                                  label: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text('Share',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        )),
+                                  ),
+                                ),
+                              ),
+                              //SizedBox(width: 8,),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                                child: FlatButton.icon(
+                                  onPressed: () {
+                                    String emailId = news.email;
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfileViewer(
+                                                userEmail: emailId,
+                                              )),
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.perm_contact_calendar,
+                                    color: Theme.of(context).accentColor,
+                                    size: 20,
+                                  ),
+                                  label: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: SizedBox(
+                                      width: 100,
+                                      child: Text(
+                                        news.fullName,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Center(),
                   ],
                 ),
               ],
             ),
+            !isFromMessage
+                ? Positioned(
+                    bottom: 8,
+                    right: 8,
+                    child: Material(
+                      color: Colors.white.withAlpha(100),
+                      shape: CircleBorder(),
+                      child: InkWell(
+                        onTap: () {
+                          Set<String> likesList = Set.from(news.likes);
+                          news.likes != null &&
+                                  news.likes.contains(loggedinemail)
+                              ? likesList.remove(loggedinemail)
+                              : likesList.add(loggedinemail);
+                          news.likes = likesList.toList();
+                          FirestoreManager.updateNews(newsObject: news);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Center(
+                            child: news.likes != null &&
+                                    news.likes.contains(loggedinemail)
+                                ? Icon(
+                                    Icons.favorite,
+                                    size: 28,
+                                    color: Colors.red[900],
+                                  )
+                                : Icon(Icons.favorite_border,
+                                    size: 24, color: Colors.red[900]),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : Center(),
           ],
         ),
       ),
@@ -298,7 +362,7 @@ class NewsCardView extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           newsModel.title,
-          style: TextStyle(fontSize: 16.0,color: Colors.white),
+          style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
           IconButton(
@@ -307,7 +371,13 @@ class NewsCardView extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(Icons.share),
-            onPressed: () {},
+            onPressed: () {
+              bool isShare = true;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => NewChat(isShare, newsModel)));
+            },
           )
         ],
       ),

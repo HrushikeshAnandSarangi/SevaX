@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/utils/preference_manager.dart';
@@ -269,7 +270,7 @@ class _AuthRouterState extends State<AuthRouter> {
 
   Widget getMaterialApp({@required Widget child}) {
     return MaterialApp(
-      theme: sevaTheme,
+      theme: FlavorConfig.theme,
       home: child,
     );
   }

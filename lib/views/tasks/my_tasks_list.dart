@@ -471,7 +471,7 @@ class TaskCardViewState extends State<TaskCardView> {
                     Container(
                       padding: EdgeInsets.all(8.0),
                       child: RaisedButton(
-                        color: Colors.indigoAccent,
+                        color: Theme.of(context).accentColor,
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
                             int totalMinutes = int.parse(selectedMinuteValue) +

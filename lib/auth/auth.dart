@@ -8,7 +8,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FirestoreManager;
-
+import 'package:sevaexchange/flavor_config.dart';
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -143,7 +143,7 @@ class Auth {
     }
 
     TimebankModel model = await FirestoreManager.getTimeBankForId(
-      timebankId: HUMANITY_FIRST_TB_ID,
+      timebankId: FlavorConfig.timebankId,
     );
     List<String> members = model.members;
     if (!members.contains(signedInUser.email)) {

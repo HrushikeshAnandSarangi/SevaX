@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:meta/meta.dart';
-
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
 Future<void> createRequest({@required RequestModel requestModel}) async {
@@ -310,6 +311,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   var data = Firestore.instance
       .collection('requests')
       .where('approvedUsers', arrayContains: userEmail)
+      .where('timebankId', isEqualTo: FlavorConfig.timebankId)
       .snapshots();
 
   yield* data.transform(
@@ -390,6 +392,7 @@ Stream<List<RequestModel>> getCompletedRequestStream({
       // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
       //.where('transactions', arrayContains: true)
       .where('approvedUsers', arrayContains: userEmail)
+      .where('timebankId', isEqualTo: FlavorConfig.timebankId)
       .snapshots();
 
   yield* data.transform(
@@ -419,6 +422,7 @@ Stream<List<RequestModel>> getNotAcceptedRequestStream({
   var data = Firestore.instance
       .collection('requests')
       .where('acceptors', arrayContains: userEmail)
+      .where('timebankId', isEqualTo: FlavorConfig.timebankId)
       .snapshots();
 
   yield* data.transform(

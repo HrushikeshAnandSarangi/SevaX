@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
+import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FirestoreManager;
 import 'package:sevaexchange/globals.dart' as globals;
-
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/core.dart';
+
+import '../../main.dart';
 
 class NewsCreate extends StatelessWidget {
   final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
@@ -91,8 +94,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
-      entityId: 'ajilo297@gmail.com*1559128156543',
-      entityName: 'Yang 2020',
+      entityId: FlavorConfig.timebankId,
+      entityName: FlavorConfig.timebankName,
       entityType: EntityType.timebank,
     );
 
@@ -330,7 +333,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: RaisedButton(
                   shape: StadiumBorder(),
-                  color: Colors.indigoAccent,
+                  color: Theme.of(context).accentColor,
                   onPressed: () {
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.

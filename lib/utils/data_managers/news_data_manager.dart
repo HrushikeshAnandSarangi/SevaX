@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/main.dart';
 import 'dart:async';
-
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/news_model.dart';
 
 Future<void> createNews({@required NewsModel newsObject}) async {
@@ -11,13 +12,20 @@ Future<void> createNews({@required NewsModel newsObject}) async {
       .setData(newsObject.toMap());
 }
 
+Future<void> updateNews({@required NewsModel newsObject}) async {
+  await Firestore.instance
+      .collection('news')
+      .document(newsObject.id)
+      .updateData(newsObject.toMap());
+}
+
 Stream<List<NewsModel>> getNewsStream() async* {
   var data = Firestore.instance
       .collection('news')
       .where('entity', isEqualTo: {
         'entityType': 'timebanks',
-        'entityId': 'ajilo297@gmail.com*1559128156543',
-        'entityName': 'Yang 2020',
+        'entityId': FlavorConfig.timebankId,
+        'entityName': FlavorConfig.timebankName,
       })
       .orderBy('posttimestamp', descending: true)
       .snapshots();

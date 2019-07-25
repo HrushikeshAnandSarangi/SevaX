@@ -12,6 +12,7 @@ class NewsModel extends DataModel {
   String photoCredits;
   int postTimestamp;
   EntityModel entity;
+  List<String> likes;
 
   NewsModel(
       {this.id,
@@ -24,7 +25,8 @@ class NewsModel extends DataModel {
       this.newsImageUrl,
       this.photoCredits,
       this.postTimestamp,
-      this.entity});
+      this.entity,
+      this.likes});
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -61,6 +63,9 @@ class NewsModel extends DataModel {
     if (this.entity != null) {
       map['entity'] = this.entity.toMap();
     }
+    if (this.likes != null) {
+      map['likes'] = this.likes;
+    } else map['likes'] = [];
     return map;
   }
 
@@ -99,6 +104,10 @@ class NewsModel extends DataModel {
       Map<String, dynamic> dataMap = Map.castFrom(map['entity']);
       this.entity = EntityModel.fromMap(dataMap);
     }
+    if (map.containsKey('likes')) {
+      List<String> likesList = List.castFrom(map['likes']);
+      this.likes = likesList;
+    } else this.likes = [];
   }
 }
 

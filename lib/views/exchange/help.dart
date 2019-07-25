@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:intl/intl.dart';
-
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
@@ -26,7 +26,7 @@ class HelpViewState extends State<HelpView> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     FirestoreManager.getTimeBankForId(
-            timebankId: 'ajilo297@gmail.com*1559128156543')
+            timebankId: FlavorConfig.timebankId)
         .then((timebank) {
       if (timebank.admins.contains(SevaCore.of(context).loggedInUser.email) ||
           timebank.coordinators
@@ -44,8 +44,8 @@ class HelpViewState extends State<HelpView> {
     return TabBarView(
       controller: widget.controller,
       children: [
-        Requests(context, timebankId: HUMANITY_FIRST_TB_ID),
-        Offers(context, timebankId: HUMANITY_FIRST_TB_ID),
+        Requests(context, timebankId: FlavorConfig.timebankId),
+        Offers(context, timebankId: FlavorConfig.timebankId),
       ],
     );
   }
@@ -342,7 +342,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                         Container(
                           padding: EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            color: Colors.indigoAccent,
+                            color: Theme.of(context).accentColor,
                             onPressed: widget.requestItem.sevaUserId ==
                                     SevaCore.of(context).loggedInUser.sevaUserID
                                 ? null
@@ -590,7 +590,7 @@ class OfferCardView extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(8.0),
                           child: RaisedButton(
-                            color: Colors.indigoAccent,
+                            color: Theme.of(context).accentColor,
                             onPressed: offerModel.sevaUserId ==
                                     SevaCore.of(context).loggedInUser.sevaUserID
                                 ? null

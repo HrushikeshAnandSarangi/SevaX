@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:sevaexchange/main.dart' as prefix0;
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FirestoreManager;
@@ -54,7 +55,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       description: description,
       schedule: schedule,
-      timebankId: HUMANITY_FIRST_TB_ID,
+      timebankId: FlavorConfig.timebankId,
       timestamp: timestamp,
     );
     await FirestoreManager.createOffer(offerModel: model);
@@ -141,7 +142,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 child: Center(
                   child: RaisedButton(
                     shape: StadiumBorder(),
-                    color: Colors.indigoAccent,
+                    color: Theme.of(context).accentColor,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         Scaffold.of(context).showSnackBar(

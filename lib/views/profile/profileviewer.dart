@@ -80,10 +80,10 @@ class ProfileViewer extends StatelessWidget {
                               MediaQuery.of(context).size.width / 2.6,
                               0),
                           child: OutlineButton(
-                            borderSide: BorderSide(color: Colors.indigoAccent,),
+                            borderSide: BorderSide(color: Theme.of(context).accentColor,),
                             child: Row(
                               children: <Widget>[
-                                Icon(Icons.forum,color: Colors.indigoAccent,),
+                                Icon(Icons.forum,color: Theme.of(context).accentColor,),
                                 Text(' Chat')
                               ],
                             ),
@@ -504,7 +504,7 @@ Widget getChipWidgets(List<dynamic> strings, BuildContext context) {
           .map((item) => ActionChip(
                 padding: EdgeInsets.all(3.0),
                 onPressed: () {},
-                backgroundColor: Colors.redAccent,
+                backgroundColor: Theme.of(context).accentColor,
                 label: Text(
                   item,
                   style: TextStyle(color: Colors.white),

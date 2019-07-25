@@ -13,19 +13,18 @@ class UserModel extends DataModel {
   num currentBalance;
   String timezone;
 
-  UserModel({
-    this.bio,
-    this.email,
-    this.fullname,
-    this.photoURL,
-    this.interests,
-    this.membershipCampaigns,
-    this.membershipTimebanks,
-    this.sevaUserID,
-    this.skills,
-    this.currentBalance,
-    this.timezone,
-  });
+  UserModel(
+      {this.bio,
+      this.email,
+      this.fullname,
+      this.photoURL,
+      this.interests,
+      this.membershipCampaigns,
+      this.membershipTimebanks,
+      this.sevaUserID,
+      this.skills,
+      this.currentBalance,
+      this.timezone});
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('bio')) {
