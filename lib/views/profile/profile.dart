@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -488,37 +489,54 @@ class _ProfilePageState extends State<ProfilePage>
                       fontSize: 32.0,
                       fontWeight: FontWeight.w600),
                 ),
-                Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 2.0),
-                      child: sevaCoinIcon,
-                    ),
-                    SizedBox(height: 1),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: sevaCoinIcon,
-                    ),
-                    SizedBox(height: 1),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 6.0),
-                      child: sevaCoinIcon,
-                    ),
-                  ],
-                ),
+                FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                    ? Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 2.0),
+                            child: sevaCoinIcon,
+                          ),
+                          SizedBox(height: 1),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: sevaCoinIcon,
+                          ),
+                          SizedBox(height: 1),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 6.0),
+                            child: sevaCoinIcon,
+                          ),
+                        ],
+                      )
+                    : Padding(
+                        padding: EdgeInsets.all(4),
+                        child: SvgPicture.asset(
+                          'lib/assets/tulsi_icons/tulsi2020_icons_tulsi-token.svg',
+                          height: 16,
+                          width: 16,
+                        ),
+                      ),
               ],
             ),
           ),
           Container(
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(left: 8.0),
-            child: Text(
-              'Tulsi Tokens',
-              style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 12),
-            ),
+            child: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? Text(
+                    'Yang Bucks',
+                    style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12),
+                  )
+                : Text(
+                    'Tulsi Tokens',
+                    style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12),
+                  ),
           ),
         ],
       ),

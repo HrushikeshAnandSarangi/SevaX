@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -9,6 +10,7 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 
+import '../../flavor_config.dart';
 import '../core.dart';
 
 class NewsListView extends StatelessWidget {
@@ -69,7 +71,7 @@ class NewsListState extends State<NewsList> {
         margin: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(10.0),
             boxShadow: [
               BoxShadow(
                   color: Colors.black.withAlpha(25),
@@ -86,8 +88,8 @@ class NewsListState extends State<NewsList> {
                   child: SizedBox.expand(
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        topRight: Radius.circular(15),
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
                       ),
                       child: Hero(
                         tag: news.id,
@@ -105,7 +107,7 @@ class NewsListState extends State<NewsList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 16.0),
+                      padding: const EdgeInsets.only(left: 16.0, top: 5),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -147,115 +149,164 @@ class NewsListState extends State<NewsList> {
                         ],
                       ),
                     ),
-                    !isFromMessage
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: FlatButton.icon(
-                                  onPressed: () {
-                                    bool isShare = true;
-                                    Navigator.push(
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0, top: 4),
+                      child: !isFromMessage
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  child: getOptionButtons(
+                                    Row(
+                                      // mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        SizedBox(width: 16),
+                                        FlavorConfig.appFlavor ==
+                                                Flavor.HUMANITY_FIRST
+                                            ? Icon(
+                                                Icons.perm_contact_calendar,
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                                size: 20,
+                                              )
+                                            : SvgPicture.asset(
+                                                'lib/assets/tulsi_icons/tulsi2020_icons_author-profile-icon.svg',
+                                                height: 16,
+                                                width: 16,
+                                              ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 5),
+                                          child: Text(
+                                            news.fullName,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    () {
+                                      String emailId = news.email;
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                NewChat(isShare, news)));
-                                  },
-                                  icon: Icon(
-                                    Icons.share,
-                                    color: Theme.of(context).primaryColor,
-                                    size: 20,
-                                  ),
-                                  label: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text('Share',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                        )),
+                                          builder: (context) => ProfileViewer(
+                                            userEmail: emailId,
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                              ),
-                              //SizedBox(width: 8,),
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: FlatButton.icon(
-                                  onPressed: () {
-                                    String emailId = news.email;
+                                getOptionButtons(
+                                  Padding(padding: EdgeInsets.symmetric(horizontal:6, vertical: 2),
+                                    child: FlavorConfig.appFlavor ==
+                                            Flavor.HUMANITY_FIRST
+                                        ? Icon(
+                                            Icons.share,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                            size: 20,
+                                          )
+                                        : SvgPicture.asset(
+                                            'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
+                                            height: 20,
+                                            width: 20,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                  ),
+                                  () {
+                                    bool isShare = true;
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => ProfileViewer(
-                                                userEmail: emailId,
-                                              )),
+                                        builder: (context) =>
+                                            NewChat(isShare, news),
+                                      ),
                                     );
                                   },
-                                  icon: Icon(
-                                    Icons.perm_contact_calendar,
-                                    color: Theme.of(context).accentColor,
-                                    size: 20,
-                                  ),
-                                  label: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: SizedBox(
-                                      width: 100,
-                                      child: Text(
-                                        news.fullName,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 14,
+                                ),
+                                getOptionButtons(
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Center(
+                                          child: news.likes != null &&
+                                                  news.likes
+                                                      .contains(loggedinemail)
+                                              ? Icon(
+                                                  Icons.favorite,
+                                                  size: 24,
+                                                  color: Colors.red[900],
+                                                )
+                                              : Icon(
+                                                  Icons.favorite_border,
+                                                  size: 24,
+                                                  color: Colors.red[900],
+                                                ),
                                         ),
                                       ),
-                                    ),
+                                      Text('${news.likes.length}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                          )),
+                                    ],
                                   ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Center(),
+                                  () {
+                                    Set<String> likesList =
+                                        Set.from(news.likes);
+                                    news.likes != null &&
+                                            news.likes.contains(loggedinemail)
+                                        ? likesList.remove(loggedinemail)
+                                        : likesList.add(loggedinemail);
+                                    news.likes = likesList.toList();
+                                    FirestoreManager.updateNews(
+                                        newsObject: news);
+                                  },
+                                )
+                              ],
+                            )
+                          : Center(),
+                    ),
                   ],
                 ),
               ],
             ),
-            !isFromMessage
-                ? Positioned(
-                    bottom: 8,
-                    right: 8,
-                    child: Material(
-                      color: Colors.white.withAlpha(100),
-                      shape: CircleBorder(),
-                      child: InkWell(
-                        onTap: () {
-                          Set<String> likesList = Set.from(news.likes);
-                          news.likes != null &&
-                                  news.likes.contains(loggedinemail)
-                              ? likesList.remove(loggedinemail)
-                              : likesList.add(loggedinemail);
-                          news.likes = likesList.toList();
-                          FirestoreManager.updateNews(newsObject: news);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Center(
-                            child: news.likes != null &&
-                                    news.likes.contains(loggedinemail)
-                                ? Icon(
-                                    Icons.favorite,
-                                    size: 28,
-                                    color: Colors.red[900],
-                                  )
-                                : Icon(Icons.favorite_border,
-                                    size: 24, color: Colors.red[900]),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                : Center(),
+            // !isFromMessage
+            //     ? Positioned(
+            //         bottom: 8,
+            //         right: 8,
+            //         child: Material(
+            //           color: Colors.white.withAlpha(100),
+            //           shape: CircleBorder(),
+            //           child:
+            //         ),
+            //       )
+            // : Center(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget getOptionButtons(Widget child, VoidCallback onPressed) {
+    return Material(
+      color: Colors.white,
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: child,
+        ),
+        onTap: onPressed,
+        // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        // padding: EdgeInsets.all(0),
       ),
     );
   }
@@ -365,10 +416,6 @@ class NewsCardView extends StatelessWidget {
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.bookmark_border),
-            onPressed: () {},
-          ),
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {

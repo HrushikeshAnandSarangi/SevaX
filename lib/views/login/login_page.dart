@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
@@ -32,11 +34,23 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 23, 54, 134),
-              Color.fromARGB(255, 115, 132, 176),
-              Color.fromARGB(255, 214, 222, 234),
-            ],
+            colors: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? [
+                    Color.fromARGB(255, 23, 54, 134),
+                    Color.fromARGB(255, 115, 132, 176),
+                    Color.fromARGB(255, 214, 222, 234),
+                  ]
+                : FlavorConfig.appFlavor == Flavor.TULSI
+                    ? [
+                        Theme.of(context).accentColor,
+                        Theme.of(context).primaryColorLight,
+                        Theme.of(context).primaryColor
+                      ]
+                    : [
+                        Color.fromARGB(255, 23, 54, 134),
+                        Color.fromARGB(255, 115, 132, 176),
+                        Color.fromARGB(255, 214, 222, 234),
+                      ],
           ),
         ),
         child: SafeArea(
@@ -74,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       child: Column(
         children: <Widget>[
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
           Text(
             'Humanity\nFirst'.toUpperCase(),
             textAlign: TextAlign.center,
@@ -83,16 +98,28 @@ class _LoginPageState extends State<LoginPage> {
               color: Colors.white,
               fontWeight: FontWeight.w700,
             ),
-          ),
+          ) : Offstage(),
           SizedBox(
             height: 16,
           ),
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
           Image.asset(
             'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
             height: 70,
             fit: BoxFit.fill,
             width: 80,
-          ),
+          ) : FlavorConfig.appFlavor == Flavor.TULSI ?
+          SvgPicture.asset(
+            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
+            height: 100,
+            fit: BoxFit.fill,
+            width: 100,
+          ) : Image.asset(
+            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+            height: 70,
+            fit: BoxFit.fill,
+            width: 80,
+          )
         ],
       ),
     );

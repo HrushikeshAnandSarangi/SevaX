@@ -47,6 +47,7 @@ dependencies:
   datetime_picker_formfield: ^0.2.0
   timezone: ^0.5.4
   flutter_auth_buttons: ^0.5.0
+  flutter_svg: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,18 @@ flutter:
     - lib/assets/images/violet.png
     - lib/assets/Y_from_Andrew_Yang_2020_logo.png
     - lib/assets/Y_from_Andrew_Yang_2020_logo.jpg
+    - lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_author-profile-icon.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_heart-filled.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_heart-outline.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_notification-icon.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_tulsi-token.svg
+    - lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg
 
   fonts:
     - family: Montserrat

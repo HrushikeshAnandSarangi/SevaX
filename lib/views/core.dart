@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/main.dart';
@@ -271,7 +272,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
           return bottomPages.map((page) {
             return BottomNavigationBarItem(
-              icon: Icon(page.tabIcon),
+              icon: page.tabIcon,
               title: Text(page.title),
             );
           }).toList();
@@ -325,7 +326,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
   PageProperty get newsPageProperty {
     return PageProperty(
-      tabIcon: Icons.description,
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
+      Icon(Icons.description) :
+      SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: NewsListView(),
       title: 'Feed',
       appBarActions: [
@@ -358,7 +366,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get searchPageProperty {
     TabController controller = TabController(length: 4, vsync: this);
     return PageProperty(
-      tabIcon: Icons.search,
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.search) : 
+      SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: SearchView(controller),
       title: 'Search',
       // bottom: TabBar(
@@ -378,7 +392,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get exchangePageProperty {
     TabController controller = TabController(length: 2, vsync: this);
     return PageProperty(
-      tabIcon: Icons.swap_horizontal_circle,
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.swap_horizontal_circle) : 
+      SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: HelpView(controller),
       title: 'Volunteer',
       bottom: TabBar(
@@ -453,7 +473,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get tasksPageProperty {
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
-      tabIcon: Icons.playlist_add_check,
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.playlist_add_check) : 
+      SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: MyTaskPage(controller),
       title: 'Tasks',
       appBarActions: [],
@@ -473,7 +499,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
   PageProperty get createPageProperty {
     return PageProperty(
-        tabIcon: Icons.add_circle,
+        tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.add_circle) : 
+        SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
         page: SevaCoreView(),
         title: 'Create',
         appBarActions: []);
@@ -621,7 +653,7 @@ class PageProperty {
   Widget page;
   String title;
   List<Widget> appBarActions;
-  IconData tabIcon;
+  Widget tabIcon;
   FloatingActionButton fab;
   PreferredSizeWidget bottom;
 

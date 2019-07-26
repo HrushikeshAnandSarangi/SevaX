@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as fireStoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/skillsview.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -31,6 +32,20 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
+    switch (FlavorConfig.appFlavor) {
+      case Flavor.APP:
+        // TODO: Handle this case.
+        break;
+      case Flavor.HUMANITY_FIRST:
+        return humanitySplash;
+        break;
+      case Flavor.TULSI:
+        return tulsiSplash;
+        break;
+    }
+  }
+
+  Widget get humanitySplash {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -64,6 +79,63 @@ class _SplashViewState extends State<SplashView> {
               ),
               Image.asset(
                 'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+                height: 140,
+                width: 140,
+              ),
+              if (loadingMessage != null && loadingMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  child: Text(loadingMessage),
+                ),
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                child: SizedBox(
+                  height: 2,
+                  width: 150,
+                  child: LinearProgressIndicator(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get tulsiSplash {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).primaryColor,
+              Colors.red,
+              Colors.red[400],
+            ],
+            stops: [0, 0.6, 1],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Text(
+              //   'Humanity\nFirst'.toUpperCase(),
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //     letterSpacing: 5,
+              //     fontSize: 24,
+              //     color: Colors.white,
+              //     fontWeight: FontWeight.w700,
+              //   ),
+              // ),
+              SizedBox(
+                height: 16,
+              ),
+              SvgPicture.asset(
+                'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
                 height: 140,
                 width: 140,
               ),
