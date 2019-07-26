@@ -16,6 +16,9 @@
 		841816C122E827FB00662488 /* HumanityFirst.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */; };
 		843A33BE22E98FF2007859C8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 843A33BD22E98FF2007859C8 /* GoogleService-Info.plist */; };
 		844D7DD77675B45BFCA09196 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D23F6DABEACC2D74138073A /* libPods-Runner.a */; };
+		84F9F41B22EAB68B00D79D77 /* HumanityFirst-release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */; };
+		84F9F41C22EAB68B00D79D77 /* App-release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 84F9F41922EAB68A00D79D77 /* App-release.xcconfig */; };
+		84F9F41D22EAB68B00D79D77 /* Tulsi-release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */; };
 		9705A1C61CF904A100538489 /* Flutter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9740EEBA1CF902C7004384FC /* Flutter.framework */; };
 		9705A1C71CF904A300538489 /* Flutter.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9740EEBA1CF902C7004384FC /* Flutter.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9740EEB41CF90195004384FC /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9740EEB21CF90195004384FC /* Debug.xcconfig */; };
@@ -57,6 +60,9 @@
 		841816BC22E8249800662488 /* Tulsi.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Tulsi.xcconfig; path = Flutter/Tulsi.xcconfig; sourceTree = "<group>"; };
 		841816C022E827FB00662488 /* HumanityFirst.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = HumanityFirst.xcconfig; path = Flutter/HumanityFirst.xcconfig; sourceTree = "<group>"; };
 		843A33BD22E98FF2007859C8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "HumanityFirst-release.xcconfig"; path = "Flutter/HumanityFirst-release.xcconfig"; sourceTree = "<group>"; };
+		84F9F41922EAB68A00D79D77 /* App-release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "App-release.xcconfig"; path = "Flutter/App-release.xcconfig"; sourceTree = "<group>"; };
+		84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Tulsi-release.xcconfig"; path = "Flutter/Tulsi-release.xcconfig"; sourceTree = "<group>"; };
 		8D23F6DABEACC2D74138073A /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -124,6 +130,9 @@
 				841816BA22E8247500662488 /* App.xcconfig */,
 				841816BC22E8249800662488 /* Tulsi.xcconfig */,
 				841816C022E827FB00662488 /* HumanityFirst.xcconfig */,
+				84F9F41922EAB68A00D79D77 /* App-release.xcconfig */,
+				84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */,
+				84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */,
 			);
 			name = Flutter;
 			sourceTree = "<group>";
@@ -236,10 +245,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84F9F41D22EAB68B00D79D77 /* Tulsi-release.xcconfig in Resources */,
 				841816BB22E8247500662488 /* App.xcconfig in Resources */,
 				841816BD22E8249800662488 /* Tulsi.xcconfig in Resources */,
 				843A33BE22E98FF2007859C8 /* GoogleService-Info.plist in Resources */,
+				84F9F41C22EAB68B00D79D77 /* App-release.xcconfig in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
+				84F9F41B22EAB68B00D79D77 /* HumanityFirst-release.xcconfig in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				841816C122E827FB00662488 /* HumanityFirst.xcconfig in Resources */,
 				9740EEB41CF90195004384FC /* Debug.xcconfig in Resources */,
@@ -682,7 +694,7 @@
 		};
 		841816C822E82AE900662488 /* Release-App */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 841816BA22E8247500662488 /* App.xcconfig */;
+			baseConfigurationReference = 84F9F41922EAB68A00D79D77 /* App-release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -732,7 +744,7 @@
 		};
 		841816C922E82AE900662488 /* Release-App */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 841816BA22E8247500662488 /* App.xcconfig */;
+			baseConfigurationReference = 84F9F41922EAB68A00D79D77 /* App-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
@@ -756,7 +768,7 @@
 		};
 		841816CA22E82AF100662488 /* Release-Tulsi */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 841816BC22E8249800662488 /* Tulsi.xcconfig */;
+			baseConfigurationReference = 84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -806,7 +818,7 @@
 		};
 		841816CB22E82AF100662488 /* Release-Tulsi */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 841816BC22E8249800662488 /* Tulsi.xcconfig */;
+			baseConfigurationReference = 84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Tulsi;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
@@ -830,7 +842,7 @@
 		};
 		841816CC22E82AFA00662488 /* Release-HumanityFirst */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */;
+			baseConfigurationReference = 84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -880,7 +892,7 @@
 		};
 		841816CD22E82AFA00662488 /* Release-HumanityFirst */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */;
+			baseConfigurationReference = 84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
