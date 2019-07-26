@@ -13,5 +13,5 @@
 #include "Generated.xcconfig"
 
 FLUTTER_TARGET=lib/main_humanity_first.dart
-bundle_suffix = .humanityfirst
+bundle_identifier = com.sevaexchange.humanityfirst
 app_name = Humanity First

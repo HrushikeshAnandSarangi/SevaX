@@ -219,6 +219,7 @@
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 456DU6XRWC;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -433,6 +434,8 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -448,6 +451,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
@@ -513,6 +517,8 @@
 			baseConfigurationReference = 841816BA22E8247500662488 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -528,6 +534,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-App";
@@ -593,6 +600,8 @@
 			baseConfigurationReference = 841816BC22E8249800662488 /* Tulsi.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Tulsi;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -608,6 +617,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-Tulsi";
@@ -673,6 +683,8 @@
 			baseConfigurationReference = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -688,6 +700,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Debug-HumanityFirst";
@@ -747,6 +760,8 @@
 			baseConfigurationReference = 84F9F41922EAB68A00D79D77 /* App-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -762,6 +777,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-App";
@@ -821,6 +837,8 @@
 			baseConfigurationReference = 84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Tulsi;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -836,6 +854,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-Tulsi";
@@ -895,6 +914,8 @@
 			baseConfigurationReference = 84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -910,6 +931,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = "Release-HumanityFirst";
@@ -1025,6 +1047,8 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -1040,6 +1064,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1049,6 +1074,8 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = 456DU6XRWC;
 				ENABLE_BITCODE = NO;
@@ -1064,6 +1091,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sevaexchange;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

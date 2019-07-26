@@ -13,5 +13,5 @@
 #include "Generated.xcconfig"
 
 FLUTTER_TARGET=lib/main_app.dart
-bundle_suffix = .app
+bundle_identifier = com.sevaexchange.app
 app_name = Seva Exchange

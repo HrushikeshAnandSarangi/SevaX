@@ -13,5 +13,5 @@
 #include "Generated.xcconfig"
 
 FLUTTER_TARGET=lib/main_tulsi.dart
-bundle_suffix = .tulsi
+bundle_identifier = com.sevaexchange.tulsi
 app_name = Tulsi 2020
