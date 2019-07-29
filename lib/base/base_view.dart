@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/logger/logger.dart';
 
-class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
+class BaseView<T extends ChangeNotifier> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget child) builder;
   final Function(T) onModelReady;
   final T viewModel;
   final Widget child;
 
-  BaseWidget({this.builder, this.viewModel, this.child, this.onModelReady});
+  BaseView({this.builder, this.viewModel, this.child, this.onModelReady});
 
   @override
-  _BaseWidgetState<T> createState() => _BaseWidgetState<T>();
+  _BaseViewState<T> createState() => _BaseViewState<T>();
 }
 
-class _BaseWidgetState<T extends ChangeNotifier> extends State<BaseWidget<T>> {
+class _BaseViewState<T extends ChangeNotifier> extends State<BaseView<T>> {
   T model;
 
   @override
