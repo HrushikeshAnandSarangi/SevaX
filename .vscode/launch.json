@@ -5,25 +5,46 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Tulsi-release",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main_tulsi.dart",
+      "args": ["--flavor", "tulsi", "--release"]
+    },
+    {
+      "name": "App-release",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main_app.dart",
+      "args": ["--flavor", "app", "--release"]
+    },
+    {
+      "name": "HumanityFirst-release",
+      "type": "dart",
+      "request": "launch",
+      "program": "lib/main_humanity_first.dart",
+      "args": ["--flavor", "humanityfirst", "--release"]
+    },
+    {
       "name": "Tulsi",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_tulsi.dart",
-      "args": ["--flavor tulsi"]
+      "args": ["--flavor", "tulsi"]
     },
     {
       "name": "App",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_app.dart",
-      "args": ["--flavor app"]
+      "args": ["--flavor", "app"]
     },
     {
       "name": "HumanityFirst",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_humanity_first.dart",
-      "args": ["--flavor humanityfirst"]
+      "args": ["--flavor", "humanityfirst"]
     }
   ]
 }
