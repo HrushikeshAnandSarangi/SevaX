@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -24,9 +25,17 @@ class AuthenticationService extends BaseService {
   /// Login using [_googleAuthService]
   Future<UserModel> loginWithGoogle() async {
     log.i('loginWithGoogle: ');
-    UserModel userModel = await _googleAuthService.login();
-    _saveSignedInUser(userModel);
-    return userModel;
+    try {
+      UserModel userModel = await _googleAuthService.login();
+      _saveSignedInUser(userModel);
+      return userModel;
+    } on PlatformException catch (error) {
+      log.e('loginWithGoogle: PlatformException { ${error.toString()} }');
+      throw error;
+    } catch (error) {
+      log.e('loginWithGoogle: error { ${error.toString()} }');
+      throw error;
+    }
   }
 
   /// Login with [emailId] and [password]
@@ -39,12 +48,21 @@ class AuthenticationService extends BaseService {
       'emailId: $emailId: '
       'password: ${password.replaceRange(0, password.length - 1, '#')}',
     );
-    UserModel userModel = await _emailAuthService.login(
-      email: emailId,
-      password: password,
-    );
-    _saveSignedInUser(userModel);
-    return userModel;
+
+    try {
+      UserModel userModel = await _emailAuthService.login(
+        email: emailId,
+        password: password,
+      );
+      _saveSignedInUser(userModel);
+      return userModel;
+    } on PlatformException catch (error) {
+      log.e('loginWithEmail: PlatformException { ${error.toString()} }');
+      throw error;
+    } catch (error) {
+      log.e('loginWithEmail: error { ${error.toString()} }');
+      throw error;
+    }
   }
 
   /// Register a new user with [emailId], [password], [fullName] and [photoUrl]
@@ -62,16 +80,24 @@ class AuthenticationService extends BaseService {
       'image: ${image.path} ',
     );
 
-    UserModel userModel = await _emailAuthService.register(
-      emailId: emailId,
-      password: password,
-      fullName: fullName,
-      image: image,
-    );
+    try {
+      UserModel userModel = await _emailAuthService.register(
+        emailId: emailId,
+        password: password,
+        fullName: fullName,
+        image: image,
+      );
 
-    _saveSignedInUser(userModel);
-    log.i('registerNewUser: userModel: ${userModel.toMap()}');
-    return userModel;
+      _saveSignedInUser(userModel);
+      log.i('registerNewUser: userModel: ${userModel.toMap()}');
+      return userModel;
+    } on PlatformException catch (error) {
+      log.e('registerNewUser: PlatformException { ${error.toString()} }');
+      throw error;
+    } catch (error) {
+      log.e('registerNewUser: error { ${error.toString()} }');
+      throw error;
+    }
   }
 
   /// Logout the currently logged in [FirebaseUser]

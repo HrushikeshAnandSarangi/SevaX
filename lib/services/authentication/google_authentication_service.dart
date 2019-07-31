@@ -10,12 +10,20 @@ class GoogleAuthenticationService extends BaseService {
   GoogleAuthenticationService() {
     assert(this._firebaseAuth != null, 'Firebase Auth cannot be null');
   }
-  
+
   /// Initiate a [GoogleSignIn] flow and return a [UserModel] of the User
   Future<UserModel> login() async {
     log.i('login');
-    FirebaseUser firebaseUser = await _handleGoogleSignIn();
-    return _processUser(firebaseUser);
+    try {
+      FirebaseUser firebaseUser = await _handleGoogleSignIn();
+      return _processUser(firebaseUser);
+    } on PlatformException catch (error) {
+      log.e('login: PlatformException { ${error.toString()} }');
+      throw error;
+    } catch (error) {
+      log.e('login: error { ${error.toString()} }');
+      throw error;
+    }
   }
 
   /// Logout the currently logged in user and clear [GoogleSignIn] and
@@ -36,7 +44,7 @@ class GoogleAuthenticationService extends BaseService {
     try {
       googleUser = await _googleSignIn.signIn();
     } on PlatformException catch (error) {
-      log.e('handleGoogleSignIn: error { ${error.toString()} }');
+      log.e('handleGoogleSignIn: PlatformException { ${error.toString()} }');
       throw error;
     } catch (error) {
       log.e('handleGoogleSignIn: error { ${error.toString()} }');

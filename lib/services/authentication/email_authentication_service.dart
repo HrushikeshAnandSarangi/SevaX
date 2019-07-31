@@ -16,8 +16,16 @@ class EmailAuthenticationService extends BaseService {
     log.i('login: email: $email '
         'password: ${password.replaceRange(0, password.length - 1, '#')}');
 
-    FirebaseUser user = await _loginWithEmailAndPassword(email, password);
-    return await _processUser(user);
+    try {
+      FirebaseUser user = await _loginWithEmailAndPassword(email, password);
+      return await _processUser(user);
+    } on PlatformException catch (error) {
+      log.e('login: PlatformException { ${error.toString()} }');
+      throw error;
+    } catch (error) {
+      log.e('login: error { ${error.toString()} }');
+      throw error;
+    }
   }
 
   Future<UserModel> register({
@@ -39,7 +47,7 @@ class EmailAuthenticationService extends BaseService {
         password: password,
       );
     } on PlatformException catch (error) {
-      log.e('register: error ${error.toString()}');
+      log.e('register: Exception ${error.toString()}');
       throw error;
     } catch (error) {
       log.e('register: error ${error.toString()}');
@@ -79,7 +87,7 @@ class EmailAuthenticationService extends BaseService {
         password: password,
       );
     } on PlatformException catch (error) {
-      log.e('loginWithEmailAndPassword: error { ${error.toString()} }');
+      log.e('loginWithEmailAndPassword: Exception { ${error.toString()} }');
       throw error;
     } catch (error) {
       log.w('loginWithEmailAndPassword: error ${error.toString()}');
