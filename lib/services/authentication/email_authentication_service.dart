@@ -1,0 +1,156 @@
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sevaexchange/base/base_service.dart';
+import 'package:meta/meta.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class EmailAuthenticationService extends BaseService {
+  /// Login with [email] and [password]
+  Future<UserModel> login({
+    @required String email,
+    @required String password,
+  }) async {
+    log.i('login: email: $email '
+        'password: ${password.replaceRange(0, password.length - 1, '#')}');
+
+    FirebaseUser user = await _loginWithEmailAndPassword(email, password);
+    return await _processUser(user);
+  }
+
+  Future<UserModel> register({
+    @required String emailId,
+    @required String password,
+    @required String fullName,
+    @required File image,
+  }) async {
+    log.i('register: '
+        'email: $emailId '
+        'password: ${password.replaceRange(0, password.length - 1, '#')}'
+        'file: ${image.path}');
+
+    FirebaseUser user;
+
+    try {
+      user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailId,
+        password: password,
+      );
+    } on PlatformException catch (error) {
+      log.e('register: error ${error.toString()}');
+      throw error;
+    } catch (error) {
+      log.e('register: error ${error.toString()}');
+      throw error;
+    }
+
+    String imageUrl = await _saveImage(image, user.email);
+    UserModel userModel = UserModel(
+      photoURL: imageUrl,
+      fullname: emailId,
+      email: user.email,
+      sevaUserID: user.uid,
+    );
+
+    log.i('register: userModel: ${userModel.toMap()}');
+    return userModel;
+  }
+
+  /// Logout the logged in user from [FirebaseUser]
+  Future<void> logout() async {
+    log.i('logout:');
+    await FirebaseAuth.instance.signOut();
+  }
+
+  /// Login with [email] and [password]
+  Future<FirebaseUser> _loginWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    log.i('loginWithEmailAndPassword: email: $email '
+        'password: ${password.replaceRange(0, password.length - 1, '#')}');
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    FirebaseUser user;
+    try {
+      user = await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on PlatformException catch (error) {
+      log.e('loginWithEmailAndPassword: error { ${error.toString()} }');
+      throw error;
+    } catch (error) {
+      log.w('loginWithEmailAndPassword: error ${error.toString()}');
+      throw error;
+    }
+    log.i('loginWithEmailAndPassword: Got Firebase User');
+    return user;
+  }
+
+  /// Process a [firebaseUser] to a [UserModel]. Fetch photo url
+  /// from [Firestore]
+  Future<UserModel> _processUser(FirebaseUser firebaseUser) async {
+    log.i('_processUser: firebaseUser: ${firebaseUser?.uid}');
+    if (firebaseUser == null) {
+      log.w('_processUser. Firebase user is null');
+      return null;
+    }
+
+    UserModel userModel = UserModel(
+      email: firebaseUser.email,
+      sevaUserID: firebaseUser.uid,
+    );
+
+    userModel = await _fetchUserFromDocs(userModel.email);
+
+    log.i('_processUser: Processed UserModel: ${userModel.toMap()}');
+    return userModel;
+  }
+
+  /// Fetch the details of the user from Firestore
+  Future<UserModel> _fetchUserFromDocs(String emailId) async {
+    // TODO: Implement this using Firestore service
+
+    log.i('_fetchPhotoUrl: emailId: $emailId');
+    if (emailId == null || emailId.trim().isEmpty) {
+      log.e('_fetchPhotoUrl: Email ID is null');
+      return null;
+    }
+    DocumentSnapshot document =
+        await Firestore.instance.collection('users').document(emailId).get();
+
+    UserModel userModel = UserModel.fromMap(document.data);
+    return userModel;
+  }
+
+  /// Save [image] to Firestore for user with [email] and returns the photoUrl
+  Future<String> _saveImage(
+    File image,
+    String email,
+  ) async {
+    // TODO: Move this logic to corresponding service
+    log.i('_saveImage: ' 'image: ${image.path} ' 'email: $email');
+    return await uploadImage(image, email);
+  }
+
+  /// Upload [image] to Firebase storage and return the imageUrl
+  Future<String> uploadImage(File image, String email) async {
+    log.i('uploadImage: image: ${image.path} ' 'email: $email');
+    StorageReference ref = FirebaseStorage.instance
+        .ref()
+        .child('profile_images')
+        .child(email + '.jpg');
+    StorageUploadTask uploadTask = ref.putFile(
+      image,
+      StorageMetadata(
+        contentLanguage: 'en',
+        customMetadata: <String, String>{'activity': 'Profile Image'},
+      ),
+    );
+    String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
+    log.i('uploadImage: imageUrl: $imageURL');
+    return imageURL;
+  }
+}
