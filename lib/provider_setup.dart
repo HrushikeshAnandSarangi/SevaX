@@ -13,7 +13,6 @@ List<SingleChildCloneableWidget> providers = [
 ];
 
 List<SingleChildCloneableWidget> independentServices = [
-  Provider.value(value: LocalStorageService.getInstance()),
   Provider.value(
     value: GoogleAuthenticationService(
       firebaseAuth: FirebaseAuth.instance,
@@ -25,15 +24,19 @@ List<SingleChildCloneableWidget> independentServices = [
       firebaseAuth: FirebaseAuth.instance,
     ),
   ),
+  FutureProvider<LocalStorageService>.value(
+    value: LocalStorageService.getInstance(),
+  ),
 ];
 
 List<SingleChildCloneableWidget> dependentServices = [
-  ProxyProvider2<GoogleAuthenticationService, EmailAuthenticationService,
-      AuthenticationService>(
-    builder: (context, googleService, emailService, service) {
+  ProxyProvider3<GoogleAuthenticationService, EmailAuthenticationService,
+      LocalStorageService, AuthenticationService>(
+    builder: (context, googleService, emailService, storageService, service) {
       return AuthenticationService(
         emailAuthService: emailService,
         googleAuthService: googleService,
+        localStorageService: storageService,
       );
     },
   ),

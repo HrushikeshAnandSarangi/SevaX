@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,18 +10,26 @@ import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/services/authentication/email_authentication_service.dart';
 import 'package:sevaexchange/services/authentication/google_authentication_service.dart';
+import 'package:sevaexchange/services/local_storage/local_storage_service.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 
 class AuthenticationService extends BaseService {
   GoogleAuthenticationService _googleAuthService;
   EmailAuthenticationService _emailAuthService;
+  LocalStorageService _localStorageService;
+
+  // ignore: close_sinks
+  StreamController<UserModel> _loggedInUserStream =
+      StreamController<UserModel>.broadcast();
 
   AuthenticationService({
     @required GoogleAuthenticationService googleAuthService,
     @required EmailAuthenticationService emailAuthService,
+    @required LocalStorageService localStorageService,
   })  : this._googleAuthService = googleAuthService,
-        this._emailAuthService = emailAuthService;
+        this._emailAuthService = emailAuthService,
+        this._localStorageService = localStorageService;
 
   /// Login using [_googleAuthService]
   Future<UserModel> loginWithGoogle() async {
@@ -108,7 +117,10 @@ class AuthenticationService extends BaseService {
     // TODO: Base the logout process on the provider id
     await _googleAuthService.logout();
     await _emailAuthService.logout();
+    await _localStorageService.logout();
   }
+
+  Stream<UserModel> get loggedInUserStream => _loggedInUserStream.stream;
 
   Future<bool> _saveSignedInUser(UserModel signedInUser) async {
     log.i('_saveSignedInUser: signedInUser: ${signedInUser.toMap()}');
@@ -136,10 +148,9 @@ class AuthenticationService extends BaseService {
       await FirestoreManager.updateTimebank(model: model);
     }
 
-    // TODO: Save user details using PreferenceService
-    return await PreferenceManager.setLoggedInUser(
-      userId: signedInUser.sevaUserID,
+    return await _localStorageService.saveLoggedInUser(
       emailId: signedInUser.email,
+      userId: signedInUser.sevaUserID,
     );
   }
 

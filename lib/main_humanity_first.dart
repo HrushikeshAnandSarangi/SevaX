@@ -7,7 +7,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/provider_setup.dart';
 import 'package:sevaexchange/themes/sevatheme.dart';
-import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/splash/splash_view.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.HUMANITY_FIRST;
@@ -36,9 +36,8 @@ void main() {
     },
   );
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarBrightness: Brightness.dark
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(statusBarBrightness: Brightness.dark));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
@@ -50,14 +49,11 @@ void main() {
 class MainApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AuthProvider(
-      auth: Auth(),
-      child: MultiProvider(
-        providers: providers,
-        child: MaterialApp(
-          theme: FlavorConfig.theme,
-          home: SplashView(),
-        ),
+    return MultiProvider(
+      providers: providers,
+      child: MaterialApp(
+        theme: FlavorConfig.theme,
+        home: SplashView(),
       ),
     );
   }

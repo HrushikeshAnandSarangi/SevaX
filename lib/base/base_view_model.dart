@@ -5,6 +5,7 @@ import 'package:sevaexchange/logger/logger.dart';
 class BaseViewModel extends ChangeNotifier {
   bool _busy;
   Logger log;
+  bool _isDisposed = false;
 
   BaseViewModel({
     bool busy = false,
@@ -14,19 +15,27 @@ class BaseViewModel extends ChangeNotifier {
   }
 
   bool get busy {
-    // log.i('getBusy: $_busy');
     return this._busy;
   }
 
   set busy(bool busy) {
-    // log.i('setBusy: $busy');
     this._busy = busy;
     notifyListeners();
   }
 
   @override
+  void notifyListeners() {
+    if (!_isDisposed) {
+      super.notifyListeners();
+    } else {
+      log.w('notifyListeners: View has been disposed');
+    }
+  }
+
+  @override
   void dispose() {
     log.i('dispose');
+    _isDisposed = true;
     super.dispose();
   }
 }

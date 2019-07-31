@@ -77,7 +77,7 @@ class EmailAuthenticationService extends BaseService {
   /// Logout the logged in user from [FirebaseUser]
   Future<void> logout() async {
     log.i('logout:');
-    await FirebaseAuth.instance.signOut();
+    await _firebaseAuth.signOut();
   }
 
   /// Login with [email] and [password]
