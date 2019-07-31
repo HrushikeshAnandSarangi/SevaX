@@ -2,13 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
 
 class GoogleAuthenticationService extends BaseService {
-  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  FirebaseAuth _firebaseAuth;
+  GoogleSignIn _googleSignIn;
 
-  GoogleAuthenticationService() {
+  GoogleAuthenticationService({
+    @required FirebaseAuth firebaseAuth,
+    @required GoogleSignIn googleSignIn,
+  })  : this._firebaseAuth = firebaseAuth,
+        this._googleSignIn = googleSignIn {
     assert(this._firebaseAuth != null, 'Firebase Auth cannot be null');
+    assert(this._googleSignIn != null, 'Google Signin cannot be null');
   }
 
   /// Initiate a [GoogleSignIn] flow and return a [UserModel] of the User
@@ -30,8 +37,8 @@ class GoogleAuthenticationService extends BaseService {
   /// [FirebaseUser] cache
   Future<void> logout() async {
     log.i('logout:');
-    await GoogleSignIn().signOut();
-    await FirebaseAuth.instance.signOut();
+    await _googleSignIn.signOut();
+    await _firebaseAuth.signOut();
   }
 
   /// Initiate a [GoogleSignIn] flow and return the logged in user as a
@@ -39,7 +46,6 @@ class GoogleAuthenticationService extends BaseService {
   Future<FirebaseUser> _handleGoogleSignIn() async {
     log.i('handleGoogleSignIn');
 
-    GoogleSignIn _googleSignIn = GoogleSignIn();
     GoogleSignInAccount googleUser;
     try {
       googleUser = await _googleSignIn.signIn();

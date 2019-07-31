@@ -8,6 +8,14 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EmailAuthenticationService extends BaseService {
+  FirebaseAuth _firebaseAuth;
+
+  EmailAuthenticationService({
+    @override FirebaseAuth firebaseAuth,
+  }) : this._firebaseAuth = firebaseAuth {
+    assert(this._firebaseAuth != null, 'Firebase Auth cannot be null');
+  }
+
   /// Login with [email] and [password]
   Future<UserModel> login({
     @required String email,
@@ -42,7 +50,7 @@ class EmailAuthenticationService extends BaseService {
     FirebaseUser user;
 
     try {
-      user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: emailId,
         password: password,
       );
@@ -79,10 +87,10 @@ class EmailAuthenticationService extends BaseService {
   ) async {
     log.i('loginWithEmailAndPassword: email: $email '
         'password: ${password.replaceRange(0, password.length - 1, '#')}');
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
     FirebaseUser user;
     try {
-      user = await firebaseAuth.signInWithEmailAndPassword(
+      user = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -111,6 +119,7 @@ class EmailAuthenticationService extends BaseService {
       sevaUserID: firebaseUser.uid,
     );
 
+    // TODO: Move to Firestore service
     userModel = await _fetchUserFromDocs(userModel.email);
 
     log.i('_processUser: Processed UserModel: ${userModel.toMap()}');
@@ -146,6 +155,7 @@ class EmailAuthenticationService extends BaseService {
   /// Upload [image] to Firebase storage and return the imageUrl
   Future<String> uploadImage(File image, String email) async {
     log.i('uploadImage: image: ${image.path} ' 'email: $email');
+    // TODO: Move to file upload service
     StorageReference ref = FirebaseStorage.instance
         .ref()
         .child('profile_images')
