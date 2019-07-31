@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   String emailId;
   String password;
   bool _shouldObscurePassword = true;
+  Color enabled = Colors.white.withAlpha(120);
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +44,8 @@ class _LoginPageState extends State<LoginPage> {
                 : FlavorConfig.appFlavor == Flavor.TULSI
                     ? [
                         Theme.of(context).accentColor,
-                        Theme.of(context).primaryColorLight,
-                        Theme.of(context).primaryColor
+                        Theme.of(context).accentColor,
+
                       ]
                     : [
                         Color.fromARGB(255, 23, 54, 134),
@@ -88,38 +89,42 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       child: Column(
         children: <Widget>[
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
-          Text(
-            'Humanity\nFirst'.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              letterSpacing: 5,
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-          ) : Offstage(),
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+              ? Text(
+                  'Humanity\nFirst'.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    letterSpacing: 5,
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                  ),
+                )
+              : Offstage(),
           SizedBox(
             height: 16,
           ),
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
-          Image.asset(
-            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-            height: 70,
-            fit: BoxFit.fill,
-            width: 80,
-          ) : FlavorConfig.appFlavor == Flavor.TULSI ?
-          SvgPicture.asset(
-            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-            height: 100,
-            fit: BoxFit.fill,
-            width: 100,
-          ) : Image.asset(
-            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-            height: 70,
-            fit: BoxFit.fill,
-            width: 80,
-          )
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+              ? Image.asset(
+                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+                  height: 70,
+                  fit: BoxFit.fill,
+                  width: 80,
+                )
+              : FlavorConfig.appFlavor == Flavor.TULSI
+                  ? SvgPicture.asset(
+                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
+                      height: 100,
+                      fit: BoxFit.fill,
+                      width: 100,
+                      color: Colors.white,
+                    )
+                  : Image.asset(
+                      'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+                      height: 70,
+                      fit: BoxFit.fill,
+                      width: 80,
+                    )
         ],
       ),
     );
@@ -141,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validateEmailId,
                 onSaved: _saveEmail,
                 decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: enabled)),
                   labelText: 'EMAIL',
                   labelStyle: textStyle,
                 ),
@@ -154,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validatePassword,
                 onSaved: _savePassword,
                 decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: enabled)),
                   labelText: 'PASSWORD',
                   labelStyle: textStyle,
                   suffix: GestureDetector(
@@ -175,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 32),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -248,12 +255,12 @@ class _LoginPageState extends State<LoginPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(width: 20, child: Divider(height: 3, color: Colors.black)),
+            SizedBox(width: 20, child: Divider(height: 3, color: enabled)),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Sign in with'),
+              child: Text('Sign in with',style: TextStyle(color: enabled ),),
             ),
-            SizedBox(width: 20, child: Divider(height: 3, color: Colors.black)),
+            SizedBox(width: 20, child: Divider(height: 3, color: enabled)),
           ],
         ),
         SizedBox(height: 16),
@@ -292,7 +299,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextStyle get textStyle {
     return TextStyle(
-      color: Colors.white,
+      color: enabled,
     );
   }
 

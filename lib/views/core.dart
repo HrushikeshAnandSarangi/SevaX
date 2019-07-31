@@ -5,8 +5,7 @@ import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/themes/sevatheme.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
@@ -121,8 +120,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    FirestoreManager.getTimeBankForId(
-            timebankId: FlavorConfig.timebankId)
+    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.timebankId)
         .then((timebank) {
       if (timebank.admins.contains(SevaCore.of(context).loggedInUser.email) ||
           timebank.coordinators
@@ -158,9 +156,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
       appBar: _selectedIndex == 4
           ? null
           : AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
               centerTitle: true,
-              title: Text(pages.elementAt(_selectedIndex).title,style: TextStyle(color: Colors.white),),
+              title: Text(
+                pages.elementAt(_selectedIndex).title,
+                style: TextStyle(color: Colors.white),
+              ),
               leading: IconButton(
                 icon: Hero(
                   tag: 'profilehero',
@@ -200,7 +201,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return IconButton(
-                          icon: Icon(Icons.notifications,color: Colors.white,),
+                          icon: Icon(
+                            Icons.notifications,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -228,7 +232,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         );
                       } else {
                         return IconButton(
-                          icon: Icon(Icons.notifications,color: Colors.white,),
+                          icon: Icon(
+                            Icons.notifications,
+                            color: Colors.white,
+                          ),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -241,7 +248,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       }
                     }),
                 IconButton(
-                  icon: Icon(Icons.chat,color: Colors.white,),
+                  icon: Icon(
+                    Icons.chat,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -280,11 +290,11 @@ class _SevaCoreViewState extends State<SevaCoreView>
         currentIndex: _selectedIndex,
         selectedItemColor: Theme.of(context).indicatorColor,
         onTap: (index) => setState(() {
-              if (index == 3) {
-                _settingModalBottomSheet(context);
-              } else
-                _selectedIndex = index;
-            }),
+          if (index == 3) {
+            _settingModalBottomSheet(context);
+          } else
+            _selectedIndex = index;
+        }),
       ),
       // floatingActionButton: GestureDetector(
       //   onTap: () {
@@ -326,14 +336,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
   PageProperty get newsPageProperty {
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
-      Icon(Icons.description) :
-      SvgPicture.asset(
-        'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
-        height: 22,
-        width: 22,
-        color: Colors.white,
-      ),
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? Icon(Icons.description)
+          : SvgPicture.asset(
+              'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
+              height: 18,
+              width: 18,
+              color: Colors.white,
+            ),
       page: NewsListView(),
       title: 'Feed',
       appBarActions: [
@@ -366,13 +376,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get searchPageProperty {
     TabController controller = TabController(length: 4, vsync: this);
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.search) : 
-      SvgPicture.asset(
-        'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
-        height: 22,
-        width: 22,
-        color: Colors.white,
-      ),
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? Icon(Icons.search)
+          : SvgPicture.asset(
+              'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
+              height: 18,
+              width: 18,
+              color: Colors.white,
+            ),
       page: SearchView(controller),
       title: 'Search',
       // bottom: TabBar(
@@ -392,13 +403,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get exchangePageProperty {
     TabController controller = TabController(length: 2, vsync: this);
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.swap_horizontal_circle) : 
-      SvgPicture.asset(
-        'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
-        height: 22,
-        width: 22,
-        color: Colors.white,
-      ),
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? Icon(Icons.swap_horizontal_circle)
+          : SvgPicture.asset(
+              'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
+              height: 18,
+              width: 18,
+              color: Colors.white,
+            ),
       page: HelpView(controller),
       title: 'Volunteer',
       bottom: TabBar(
@@ -473,13 +485,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get tasksPageProperty {
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.playlist_add_check) : 
-      SvgPicture.asset(
-        'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
-        height: 22,
-        width: 22,
-        color: Colors.white,
-      ),
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? Icon(Icons.playlist_add_check)
+          : SvgPicture.asset(
+              'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
+              height: 18,
+              width: 18,
+              color: Colors.white,
+            ),
       page: MyTaskPage(controller),
       title: 'Tasks',
       appBarActions: [],
@@ -488,8 +501,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
         //labelColor: Colors.white,
         tabs: [
           Tab(child: Text('Pending ')),
-          Tab(child: Text('Not Accepted ',)),
-          Tab(child: Text('Completed ',)),
+          Tab(
+              child: Text(
+            'Not Accepted ',
+          )),
+          Tab(
+              child: Text(
+            'Completed ',
+          )),
         ],
         controller: controller,
         isScrollable: true,
@@ -499,13 +518,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
   PageProperty get createPageProperty {
     return PageProperty(
-        tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Icon(Icons.add_circle) : 
-        SvgPicture.asset(
-        'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
-        height: 22,
-        width: 22,
-        color: Colors.white,
-      ),
+        tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+            ? Icon(Icons.add_circle)
+            : SvgPicture.asset(
+                'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
+                height: 18,
+                width: 18,
+                color: Colors.white,
+              ),
         page: SevaCoreView(),
         title: 'Create',
         appBarActions: []);
@@ -542,9 +562,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            
             color: Color(0xFF737373),
-            
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -555,8 +573,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
               child: new Wrap(
                 children: <Widget>[
                   new ListTile(
-                      leading:
-                          new Icon(Icons.description, color: Theme.of(context).primaryColor),
+                      leading: new Icon(Icons.description,
+                          color: Theme.of(context).primaryColor),
                       title: new Text(
                         'Create Feed',
                         style: TextStyle(fontWeight: FontWeight.w500),
@@ -582,41 +600,40 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                          if (isAdminOrCoordinator)
-                            {
-                              Navigator.of(context).pop(),
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CreateRequest(),
-                                ),
-                              )
-                            }
-                          else
-                            {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  // return object of type Dialog
-                                  return AlertDialog(
-                                    title: new Text("Permission Denied"),
-                                    content: new Text(
-                                        "You need to be an Admin or Coordinator to have permission to create campaigns"),
-                                    actions: <Widget>[
-                                      // usually buttons at the bottom of the dialog
-                                      new FlatButton(
-                                        child: new Text("Close"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              )
-                            }
-                        },
+                      if (isAdminOrCoordinator)
+                        {
+                          Navigator.of(context).pop(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateRequest(),
+                            ),
+                          )
+                        }
+                      else
+                        {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // return object of type Dialog
+                              return AlertDialog(
+                                title: new Text("Permission Denied"),
+                                content: new Text(
+                                    "You need to be an Admin or Coordinator to have permission to create campaigns"),
+                                actions: <Widget>[
+                                  // usually buttons at the bottom of the dialog
+                                  new FlatButton(
+                                    child: new Text("Close"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        }
+                    },
                   ),
                   Divider(
                     height: 1,
@@ -632,14 +649,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                          Navigator.of(context).pop(),
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateOffer(),
-                            ),
-                          )
-                        },
+                      Navigator.of(context).pop(),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateOffer(),
+                        ),
+                      )
+                    },
                   ),
                 ],
               ),

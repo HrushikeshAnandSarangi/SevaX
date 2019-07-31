@@ -48,6 +48,37 @@ class CommonAppBarView extends StatelessWidget with PreferredSizeWidget {
         ),
         onPressed: () => viewModel.goToProfilePage(context),
       ),
+      actions: <Widget>[
+        StreamBuilder<bool>(
+            stream: viewModel.getNotifications(userEmail: userEmail),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return IconButton(
+                  icon: Icon(Icons.notifications),
+                  color: Colors.white,
+                  onPressed: () => viewModel.gotoNotificationsPage(context),
+                );
+              }
+              return IconButton(
+                icon: snapshot.data
+                    ? Icon(Icons.notifications_active)
+                    : Icon(Icons.notifications),
+                color: snapshot.data ? Colors.red : Colors.white,
+                onPressed: () => viewModel.gotoNotificationsPage(context),
+              );
+            }),
+        IconButton(
+          icon: Icon(
+            Icons.chat,
+            color: Colors.white,
+          ),
+          onPressed: () => viewModel.gotoChatListView(context),
+        ),
+      ],
     );
   }
 

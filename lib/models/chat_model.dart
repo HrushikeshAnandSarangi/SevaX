@@ -1,38 +1,28 @@
 import 'package:sevaexchange/models/data_model.dart';
 
 class ChatModel extends DataModel {
-  String message;
-  String fromId;
-  String toId;
-  int timestamp;
-  bool isRead;
+  String user1;
+  String user2;
+  String lastMessage;
+  String timebank;
 
   ChatModel({
-    this.message,
-    this.fromId,
-    this.toId,
-    this.timestamp,
-    this.isRead = false,
+    this.user1,
+    this.user2,
+    this.lastMessage,
+    this.timebank
   });
 
   ChatModel.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('message')) {
-      this.message = map['message'];
+    if (map.containsKey('user1')) {
+      this.user1 = map['user1'];
     }
 
-    if (map.containsKey('fromId')) {
-      this.fromId = map['fromId'];
+    if (map.containsKey('user2')) {
+      this.user2 = map['user2'];
     }
-    
-    if (map.containsKey('toId')) {
-      this.toId = map['toId'];
-    }
-    if (map.containsKey('timestamp')) {
-      this.timestamp = map['timestamp'];
-
-    if (map.containsKey('isRead')) {
-      this.isRead = map['isRead'];
-    }
+    if (map.containsKey('lastMessage')) {
+      this.lastMessage = map['lastMessage'];
     }
   }
 
@@ -40,25 +30,18 @@ class ChatModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {};
 
-    if (this.message != null) {
-      map['message'] = this.message;
+    if (this.user1 != null) {
+      map['user1'] = this.user1;
     }
 
-    if (this.fromId != null) {
-      map['fromId'] = this.fromId;
+    if (this.user2 != null) {
+      map['user2'] = this.user2;
     }
 
-    if (this.toId != null) {
-      map['toId'] = this.toId;
+    if (this.lastMessage != null) {
+      map['lastMessage'] = this.lastMessage;
     }
 
-    if (this.timestamp != null) {
-      map['timestamp'] = this.timestamp;
-    }
-
-    if (this.isRead != null) {
-      map['isRead'] = this.isRead;
-    }
     return map;
   }
 }

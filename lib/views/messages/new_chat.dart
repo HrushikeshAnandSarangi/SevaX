@@ -112,30 +112,30 @@ class _ResultViewState extends State<ResultView> {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     print('Build view');
     if (widget.controller.text.trim().isEmpty) {
-      return StreamBuilder<List<MessageModel>>(
+      return StreamBuilder<List<ChatModel>>(
         stream:
-            getMessagesforUser(email: SevaCore.of(context).loggedInUser.email),
+            getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
         builder: (BuildContext context,
-            AsyncSnapshot<List<MessageModel>> messageListSnapshot) {
-          if (messageListSnapshot.hasError) {
-            return new Text('Error: ${messageListSnapshot.error}');
+            AsyncSnapshot<List<ChatModel>> snapshot) {
+          if (snapshot.hasError) {
+            return new Text('Error: ${snapshot.error}');
           }
-          switch (messageListSnapshot.connectionState) {
+          switch (snapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
                 child: CircularProgressIndicator(),
               );
             default:
-              List<MessageModel> messageModelList = messageListSnapshot.data;
-              if (messageModelList.length == 0) {
-                return Center(child: Text('No Requests'));
+              List<ChatModel> chatModelList = snapshot.data;
+              if (chatModelList.length == 0) {
+                return Center(child: Text('No chats'));
               }
               return Container(
                 padding: EdgeInsets.only(left: 15.0, right: 15.0),
                 child: ListView(
-                  children: messageModelList.map(
-                    (MessageModel messageModel) {
-                      return getMessageListView(messageModel, context);
+                  children: chatModelList.map(
+                    (ChatModel chatModel) {
+                      return getMessageListView(chatModel, context);
                     },
                   ).toList(),
                 ),
@@ -178,7 +178,7 @@ class _ResultViewState extends State<ResultView> {
                     : () {
                         List users = [user.email, loggedInEmail];
                         users.sort();
-                        MessageModel model = MessageModel();
+                        ChatModel model = ChatModel();
                         model.user1 = users[0];
                         model.user2 = users[1];
                         print(model.user1);
@@ -190,7 +190,7 @@ class _ResultViewState extends State<ResultView> {
                               MaterialPageRoute(
                                   builder: (context) => ChatView(
                                         useremail: user.email,
-                                        messageModel: model,
+                                        chatModel: model,
                                         isFromShare: widget.isShare,
                                         news: widget.news,
                                       )),
@@ -248,15 +248,15 @@ class _ResultViewState extends State<ResultView> {
   }
 
   Widget getMessageListView(
-      MessageModel messageModel, BuildContext parentContext) {
+      ChatModel chatModel, BuildContext parentContext) {
     String lastmessage;
-    if (messageModel.lastMessage == null) {
+    if (chatModel.lastMessage == null) {
       lastmessage = '';
     } else
-      lastmessage = messageModel.lastMessage;
-    if (messageModel.user1 == SevaCore.of(context).loggedInUser.email) {
+      lastmessage = chatModel.lastMessage;
+    if (chatModel.user1 == SevaCore.of(context).loggedInUser.email) {
       return StreamBuilder<Object>(
-          stream: FirestoreManager.getUserForEmailStream(messageModel.user2),
+          stream: FirestoreManager.getUserForEmailStream(chatModel.user2),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -275,7 +275,7 @@ class _ResultViewState extends State<ResultView> {
                       MaterialPageRoute(
                         builder: (context) => ChatView(
                           useremail: user.email,
-                          messageModel: messageModel,
+                          chatModel: chatModel,
                           isFromShare: widget.isShare,
                           news: widget.news,
                         ),
@@ -323,9 +323,9 @@ class _ResultViewState extends State<ResultView> {
               ),
             );
           });
-    } else if (messageModel.user2 == SevaCore.of(context).loggedInUser.email) {
+    } else if (chatModel.user2 == SevaCore.of(context).loggedInUser.email) {
       return StreamBuilder<Object>(
-          stream: FirestoreManager.getUserForEmailStream(messageModel.user1),
+          stream: FirestoreManager.getUserForEmailStream(chatModel.user1),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -344,7 +344,7 @@ class _ResultViewState extends State<ResultView> {
                       MaterialPageRoute(
                         builder: (context) => ChatView(
                           useremail: user.email,
-                          messageModel: messageModel,
+                          chatModel: chatModel,
                           isFromShare: widget.isShare,
                           news: widget.news,
                         ),

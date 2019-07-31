@@ -95,7 +95,7 @@ class ProfileViewer extends StatelessWidget {
                                     print(loggedInEmail);
                                     List users = [userEmail, loggedInEmail];
                                     users.sort();
-                                    MessageModel model = MessageModel();
+                                    ChatModel model = ChatModel();
                                     model.user1 = users[0];
                                     model.user2 = users[1];
                                     print(model.user1);
@@ -106,7 +106,7 @@ class ProfileViewer extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (context) => ChatView(
                                                 useremail: userEmail,
-                                                messageModel: model,
+                                                chatModel: model,
                                               )),
                                     );
                                   },

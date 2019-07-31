@@ -108,11 +108,12 @@ class _SplashViewState extends State<SplashView> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Theme.of(context).primaryColor,
-              Colors.red,
-              Colors.red[400],
+              Theme.of(context).accentColor,
+              Theme.of(context).accentColor,
+              // Colors.red,
+              // Colors.red[400],
             ],
-            stops: [0, 0.6, 1],
+            //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -138,18 +139,30 @@ class _SplashViewState extends State<SplashView> {
                 'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
                 height: 140,
                 width: 140,
+                color: Colors.white,
+              ),
+              SizedBox(
+                height: 50,
               ),
               if (loadingMessage != null && loadingMessage.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(loadingMessage),
+                  child: Text(
+                    loadingMessage,
+                    style: TextStyle(color: Colors.white.withAlpha(120)),
+                  ),
                 ),
               Container(
                 margin: EdgeInsets.only(top: 8),
                 child: SizedBox(
                   height: 2,
                   width: 150,
-                  child: LinearProgressIndicator(),
+                  child: Theme(
+                      data: Theme.of(context)
+                          .copyWith(accentColor: Colors.red[900]),
+                      child: LinearProgressIndicator(
+                        backgroundColor: Theme.of(context).accentColor,
+                      )),
                 ),
               ),
             ],

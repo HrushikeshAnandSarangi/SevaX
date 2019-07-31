@@ -17,7 +17,7 @@ import 'new_chat.dart';
 
 class ChatView extends StatefulWidget {
   final String useremail;
-  final MessageModel messageModel;
+  final ChatModel chatModel;
   bool isFromRejectCompletion;
   bool isFromShare;
   NewsModel news;
@@ -25,7 +25,7 @@ class ChatView extends StatefulWidget {
   ChatView(
       {Key key,
       this.useremail,
-      this.messageModel,
+      this.chatModel,
       this.isFromRejectCompletion,
       this.isFromShare,
       this.news})
@@ -38,7 +38,7 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   //UserModel user;
   UserModel loggedInUser;
-  ChatModel chat = ChatModel();
+  MessageModel messageModel = MessageModel();
   String loggedInEmail;
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -142,10 +142,10 @@ class _ChatViewState extends State<ChatView> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: StreamBuilder<List<ChatModel>>(
-              stream: getMessagesforChat(messagemodel: widget.messageModel),
+            child: StreamBuilder<List<MessageModel>>(
+              stream: getMessagesforChat(chatModel: widget.chatModel),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
+                  AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
                 if (chatListSnapshot.hasError) {
                   return new Text('Error: ${chatListSnapshot.error}');
                 }
@@ -153,7 +153,7 @@ class _ChatViewState extends State<ChatView> {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
-                    List<ChatModel> chatModelList = chatListSnapshot.data;
+                    List<MessageModel> chatModelList = chatListSnapshot.data;
                     if (chatModelList.length == 0) {
                       return Center(child: Text('No Messages'));
                     }
@@ -162,7 +162,7 @@ class _ChatViewState extends State<ChatView> {
                       child: ListView(
                         controller: scrollcontroller,
                         children: chatModelList.map(
-                          (ChatModel chatModel) {
+                          (MessageModel chatModel) {
                             return getChatListView(
                                 chatModel, loggedInEmail, widget.useremail);
                           },
@@ -191,7 +191,7 @@ class _ChatViewState extends State<ChatView> {
                           //print('error');
                           return 'Please type message';
                         }
-                        chat.message = value;
+                        messageModel.message = value;
                       },
                     ),
                   ),
@@ -211,13 +211,15 @@ class _ChatViewState extends State<ChatView> {
                       String loggedInEmailId =
                           SevaCore.of(context).loggedInUser.email;
                       print(loggedInEmailId);
-                      chat.fromId = loggedInEmailId;
-                      chat.toId = widget.useremail;
-                      chat.timestamp = DateTime.now().millisecondsSinceEpoch;
+                      messageModel.fromId = loggedInEmailId;
+                      messageModel.toId = widget.useremail;
+                      messageModel.timestamp =
+                          DateTime.now().millisecondsSinceEpoch;
                       createmessage(
-                          chatmodel: chat, messagemodel: widget.messageModel);
-                      widget.messageModel.lastMessage = chat.message;
-                      updateChat(chat: widget.messageModel);
+                          messagemodel: messageModel,
+                          chatmodel: widget.chatModel);
+                      widget.chatModel.lastMessage = messageModel.message;
+                      updateChat(chat: widget.chatModel);
                       textcontroller.clear();
                       SchedulerBinding.instance.addPostFrameCallback((_) {
                         Timer(Duration(milliseconds: 100), () {
@@ -238,42 +240,42 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Widget getChatListView(
-      ChatModel chatmodel, String loggedinEmail, String chatUserEmail) {
-    // if (chatmodel.fromId == loggedinEmail) {
+      MessageModel messageModel, String loggedinEmail, String chatUserEmail) {
+    // if (messageModel.fromId == loggedinEmail) {
     RegExp exp = RegExp(
         r'[a-zA-Z][a-zA-Z0-9_.%$&]*[@][a-zA-Z0-9]*[.][a-zA-Z.]*[*][0-9]{13,}');
-    if (exp.hasMatch(chatmodel.message)) {
+    if (exp.hasMatch(messageModel.message)) {
       return FutureBuilder<Object>(
-          future: FirestoreManager.getNewsForId(chatmodel.message),
+          future: FirestoreManager.getNewsForId(messageModel.message),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return chatmodel.fromId == loggedinEmail
+              return messageModel.fromId == loggedinEmail
                   ? sendmessageShimmer
                   : receivemessageShimmer;
             }
             NewsModel news = snapshot.data;
 
             return Container(
-              padding: chatmodel.fromId == loggedinEmail
+              padding: messageModel.fromId == loggedinEmail
                   ? EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width / 10, 5, 0, 5)
                   : EdgeInsets.fromLTRB(
                       0, 5, MediaQuery.of(context).size.width / 10, 5),
-              alignment: chatmodel.fromId == loggedinEmail
+              alignment: messageModel.fromId == loggedinEmail
                   ? Alignment.topRight
                   : Alignment.topLeft,
               child: Wrap(
                 children: <Widget>[
                   Container(
-                    decoration: chatmodel.fromId == loggedinEmail
+                    decoration: messageModel.fromId == loggedinEmail
                         ? myBoxDecorationsend()
                         : myBoxDecorationreceive(),
-                    padding: chatmodel.fromId == loggedinEmail && news != null
+                    padding: messageModel.fromId == loggedinEmail && news != null
                         ? EdgeInsets.fromLTRB(0, 0, 5, 2)
-                        : chatmodel.fromId != loggedinEmail && news != null
+                        : messageModel.fromId != loggedinEmail && news != null
                             ? EdgeInsets.fromLTRB(0, 0, 0, 2)
                             : EdgeInsets.fromLTRB(10, 5, 10, 5),
                     child: Column(
@@ -282,14 +284,14 @@ class _ChatViewState extends State<ChatView> {
                         news != null
                             ? getNewsCard(news)
                             : Text(
-                                chatmodel.message,
+                                messageModel.message,
                                 style: TextStyle(fontWeight: FontWeight.w500),
                               ),
                         Text(
                           DateFormat('h:mm a').format(
                             getDateTimeAccToUserTimezone(
                                 dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                    chatmodel.timestamp),
+                                    messageModel.timestamp),
                                 timezoneAbb: loggedInUser.timezone),
                           ),
                           style:
@@ -304,18 +306,18 @@ class _ChatViewState extends State<ChatView> {
           });
     } else
       return Container(
-        padding: chatmodel.fromId == loggedinEmail
+        padding: messageModel.fromId == loggedinEmail
             ? EdgeInsets.fromLTRB(
                 MediaQuery.of(context).size.width / 10, 5, 0, 5)
             : EdgeInsets.fromLTRB(
                 0, 5, MediaQuery.of(context).size.width / 10, 5),
-        alignment: chatmodel.fromId == loggedinEmail
+        alignment: messageModel.fromId == loggedinEmail
             ? Alignment.topRight
             : Alignment.topLeft,
         child: Wrap(
           children: <Widget>[
             Container(
-              decoration: chatmodel.fromId == loggedinEmail
+              decoration: messageModel.fromId == loggedinEmail
                   ? myBoxDecorationsend()
                   : myBoxDecorationreceive(),
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
@@ -323,14 +325,14 @@ class _ChatViewState extends State<ChatView> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    chatmodel.message,
+                    messageModel.message,
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
                     DateFormat('h:mm a').format(
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              chatmodel.timestamp),
+                              messageModel.timestamp),
                           timezoneAbb: loggedInUser.timezone),
                     ),
                     style: TextStyle(fontSize: 10, color: Colors.grey[700]),

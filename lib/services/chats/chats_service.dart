@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/base/base_service.dart';
 
 import 'package:sevaexchange/models/models.dart';
 
- /// Create a [chat] 
+class ChatsService extends BaseService {
+  /// Create a [chat] 
   Future<void> createChat({
     @required ChatModel chat,
   }) async {
-    // log.i('createChat: MessageModel: ${chat.toMap()}');
+    log.i('createChat: MessageModel: ${chat.toMap()}');
     return await Firestore.instance
         .collection('chats')
         .document(chat.user1 + '*' + chat.user2)
@@ -19,20 +21,20 @@ import 'package:sevaexchange/models/models.dart';
   Future<void> updateChat({
     @required ChatModel chat,
   }) async {
-    // log.i('updateChat: MessageModel: ${chat.toMap()}');
+    log.i('updateChat: MessageModel: ${chat.toMap()}');
     return await Firestore.instance
         .collection('chats')
         .document(chat.user1 + '*' + chat.user2)
         .updateData(chat.toMap());
   }
 
-//Create a message
+/// Create a [messagemodel] using [chatmodel] to access the chat document 
   Future<void> createmessage({
     @required ChatModel chatmodel,
     @required MessageModel messagemodel,
   }) async {
-    // log.i(
-        //'createmessage: ChatModel: ${chatmodel.toMap()} \n MessageModel: ${messagemodel.toMap()}');
+    log.i(
+        'createmessage: ChatModel: ${chatmodel.toMap()} \n MessageModel: ${messagemodel.toMap()}');
     return await Firestore.instance
         .collection('chats')
         .document(chatmodel.user1 + '*' + chatmodel.user2)
@@ -41,11 +43,11 @@ import 'package:sevaexchange/models/models.dart';
         .setData(messagemodel.toMap());
   }
 
-//Get chats for a user
+/// Get [chatlist] for a [email]
   Stream<List<ChatModel>> getChatsforUser({
     @required String email,
   }) async* {
-    // log.i('getChatsforUser: Email: $email');
+    log.i('getChatsforUser: Email: $email');
     var data = Firestore.instance.collection('chats').snapshots();
 
     yield* data.transform(
@@ -67,15 +69,15 @@ import 'package:sevaexchange/models/models.dart';
     );
   }
 
-//Get Messages for a chat
+/// Get [messagelist] for a [chatModel]
   Stream<List<MessageModel>> getMessagesforChat({
     @required ChatModel chatModel,
   }) async* {
-    // log.i('getMessagesforChat: chatModel: $chatModel');
+    log.i('getMessagesforChat: chatModel: $chatModel');
     var data = Firestore.instance
-        .collection('chats')
-        .document(chatModel.user1 + '*' + chatModel.user2)
         .collection('messages')
+        .document(chatModel.user1 + '*' + chatModel.user2)
+        .collection('chats')
         .snapshots();
 
     yield* data.transform(
@@ -94,3 +96,4 @@ import 'package:sevaexchange/models/models.dart';
       ),
     );
   }
+}
