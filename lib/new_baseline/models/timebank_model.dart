@@ -1,174 +1,79 @@
-import 'package:sevaexchange/models/models.dart';
+class TimebankModel {
+    String id;
+    String name;
+    String missionStatement;
+    String emailId;
+    String phoneNumber;
+    String address;
+    String creatorId;
+    String photoUrl;
+    String photoCredits;
+    int createdAt;
+    List<String> admins;
+    List<String> coordinators;
+    List<String> members;
+    bool protected;
+    String parentTimebankId;
+    List<String> children;
+    double balance;
 
-class TimebankModel extends DataModel {
-  String id;
-  String name;
-  String missionStatement;
-  String primaryEmail;
-  String primaryNumber;
-  String address;
-  String avatarUrl;
-  String ownerSevaUserId;
-  String creatorEmail;
-  int postTimestamp;
-  List<String> admins;
-  List<String> coordinators;
-  List<String> members;
+    TimebankModel({
+        this.id,
+        this.name,
+        this.missionStatement,
+        this.emailId,
+        this.phoneNumber,
+        this.address,
+        this.creatorId,
+        this.photoUrl,
+        this.photoCredits,
+        this.createdAt,
+        this.admins,
+        this.coordinators,
+        this.members,
+        this.protected,
+        this.parentTimebankId,
+        this.children,
+        this.balance,
+    });
 
-  TimebankModel({
-    this.id,
-    this.name,
-    this.missionStatement,
-    this.postTimestamp,
-    this.address,
-    this.creatorEmail,
-    this.members = const <String>[],
-    this.admins = const <String>[],
-    this.coordinators = const <String>[],
-    this.ownerSevaUserId,
-    this.primaryEmail,
-    this.primaryNumber,
-    this.avatarUrl,
-  });
+    factory TimebankModel.fromMap(Map<String, dynamic> json) => new TimebankModel(
+        id: json["id"] == null ? null : json["id"],
+        name: json["name"] == null ? null : json["name"],
+        missionStatement: json["missionStatement"] == null ? null : json["missionStatement"],
+        emailId: json["email_id"] == null ? null : json["email_id"],
+        phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
+        address: json["address"] == null ? null : json["address"],
+        creatorId: json["creator_id"] == null ? null : json["creator_id"],
+        photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+        photoCredits: json["photo_credits"] == null ? null : json["photo_credits"],
+        createdAt: json["created_at"] == null ? null : json["created_at"],
+        admins: json["admins"] == null ? null : new List<String>.from(json["admins"].map((x) => x)),
+        coordinators: json["coordinators"] == null ? null : new List<String>.from(json["coordinators"].map((x) => x)),
+        members: json["members"] == null ? null : new List<String>.from(json["members"].map((x) => x)),
+        protected: json["protected"] == null ? null : json["protected"],
+        parentTimebankId: json["parent_timebank_id"] == null ? null : json["parent_timebank_id"],
+        children: json["children"] == null ? null : new List<String>.from(json["children"].map((x) => x)),
+        balance: json["balance"] == null ? null : json["balance"].toDouble(),
+    );
 
-  TimebankModel.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('id')) {
-      this.id = map['id'];
-    }
-    if (map.containsKey('timebankname')) {
-      this.name = map['timebankname'];
-    }
-    if (map.containsKey('missionstatement')) {
-      this.missionStatement = map['missionstatement'];
-    }
-    if (map.containsKey('primaryemail')) {
-      this.primaryEmail = map['primaryemail'];
-    }
-    if (map.containsKey('primarynumber')) {
-      this.primaryNumber = map['primarynumber'];
-    }
-    if (map.containsKey('ownersevauserid')) {
-      this.ownerSevaUserId = map['ownersevauserid'];
-    }
-    if (map.containsKey('creatoremail')) {
-      this.creatorEmail = map['creatoremail'];
-    }
-    if (map.containsKey('address')) {
-      this.address = map['address'];
-    }
-    if (map.containsKey('timebankavatarurl')) {
-      this.avatarUrl = map['timebankavatarurl'];
-    }
-
-    if (map.containsKey('admins')) {
-      List adminList = map['admins'];
-      this.admins = List.castFrom(adminList);
-    }
-
-    if (map.containsKey('coordinators')) {
-      List coordinatorList = map['coordinators'];
-      this.coordinators = List.castFrom(coordinatorList);
-    }
-
-    if (map.containsKey('members')) {
-      List memberList = map['members'];
-      this.members = List.castFrom(memberList);
-    }
-
-//    List membersEmail = map['membersemail'];
-//    List membersFullName = map['membersfullname'];
-//    List membersPhotoUrl = map['membersphotourl'];
-//
-//    List<String> membersEmailList = List.castFrom(membersEmail);
-//    List<String> membersFullNameList = List.castFrom(membersFullName);
-//    List<String> membersPhotoUrlList = List.castFrom(membersPhotoUrl);
-//
-//    this.members = _getMembersList(
-//        emailList: membersEmailList,
-//        fullNameList: membersFullNameList,
-//        photoUrlList: membersPhotoUrlList);
-
-    if (map.containsKey('posttimestamp')) {
-      this.postTimestamp = map['posttimestamp'];
-    }
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> object = {};
-    if (this.name != null && this.name.isNotEmpty) {
-      object['timebankname'] = this.name;
-    }
-    if (this.missionStatement != null && this.missionStatement.isNotEmpty) {
-      object['missionstatement'] = this.missionStatement;
-    }
-    if (this.primaryEmail != null && this.primaryEmail.isNotEmpty) {
-      object['primaryemail'] = this.primaryEmail;
-    }
-    if (this.primaryNumber != null && this.primaryNumber.isNotEmpty) {
-      object['primarynumber'] = this.primaryNumber;
-    }
-    if (this.ownerSevaUserId != null && this.ownerSevaUserId.isNotEmpty) {
-      object['ownersevauserid'] = this.ownerSevaUserId;
-    }
-    if (this.creatorEmail != null && this.creatorEmail.isNotEmpty) {
-      object['creatoremail'] = this.creatorEmail;
-    }
-    if (this.address != null && this.address.isNotEmpty) {
-      object['address'] = this.address;
-    }
-    if (this.avatarUrl != null && this.avatarUrl.isNotEmpty) {
-      object['timebankavatarurl'] = this.avatarUrl;
-    }
-    if (this.postTimestamp != null) {
-      object['posttimestamp'] = this.postTimestamp;
-    }
-    if (this.admins != null) {
-      object['admins'] = this.admins;
-    }
-    if (this.coordinators != null) {
-      object['coordinators'] = this.coordinators;
-    }
-    if (this.members != null) {
-      object['members'] = this.members;
-    }
-    return object;
-  }
-}
-
-class Member extends DataModel {
-  String email;
-  String fullName;
-  String photoUrl;
-
-  Member({this.fullName, this.email, this.photoUrl});
-
-  Member.fromMap(Map<String, dynamic> dataMap) {
-    if (dataMap.containsKey('membersemail')) {
-      this.email = dataMap['membersemail'];
-    }
-
-    if (dataMap.containsKey('membersfullname')) {
-      this.fullName = dataMap['membersfullname'];
-    }
-
-    if (dataMap.containsKey('membersphotourl')) {
-      this.photoUrl = dataMap['membersphotourl'];
-    }
-  }
-
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> object = {};
-
-    if (this.email != null && this.email.isNotEmpty) {
-      object['membersemail'] = this.email;
-    }
-    if (this.fullName != null && this.fullName.isNotEmpty) {
-      object['membersfullname'] = this.fullName;
-    }
-    if (this.photoUrl != null && this.photoUrl.isNotEmpty) {
-      object['membersphotourl'] = this.photoUrl;
-    }
-
-    return object;
-  }
+    Map<String, dynamic> toMap() => {
+        "id": id == null ? null : id,
+        "name": name == null ? null : name,
+        "missionStatement": missionStatement == null ? null : missionStatement,
+        "email_id": emailId == null ? null : emailId,
+        "phone_number": phoneNumber == null ? null : phoneNumber,
+        "address": address == null ? null : address,
+        "creator_id": creatorId == null ? null : creatorId,
+        "photo_url": photoUrl == null ? null : photoUrl,
+        "photo_credits": photoCredits == null ? null : photoCredits,
+        "created_at": createdAt == null ? null : createdAt,
+        "admins": admins == null ? null : new List<dynamic>.from(admins.map((x) => x)),
+        "coordinators": coordinators == null ? null : new List<dynamic>.from(coordinators.map((x) => x)),
+        "members": members == null ? null : new List<dynamic>.from(members.map((x) => x)),
+        "protected": protected == null ? null : protected,
+        "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
+        "children": children == null ? null : new List<dynamic>.from(children.map((x) => x)),
+        "balance": balance == null ? null : balance,
+    };
 }

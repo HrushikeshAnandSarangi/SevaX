@@ -1,119 +1,75 @@
-import 'package:sevaexchange/models/models.dart';
+class UserModel {
+    String id;
+    String fullName;
+    String emailId;
+    String bio;
+    String timezone;
+    List<String> skills;
+    List<String> interests;
+    List<String> timebanks;
+    List<String> projects;
+    String photoUrl;
+    List<Wallet> wallet;
 
-class UserModel extends DataModel {
-  String bio;
-  String email;
-  String fullname;
-  List<String> interests;
-  List<String> membershipTimebanks;
-  List<String> membershipCampaigns;
-  String photoURL;
-  String sevaUserID;
-  List<String> skills;
-  num currentBalance;
-  String timezone;
+    UserModel({
+        this.id,
+        this.fullName,
+        this.emailId,
+        this.bio,
+        this.timezone,
+        this.skills,
+        this.interests,
+        this.timebanks,
+        this.projects,
+        this.photoUrl,
+        this.wallet,
+    });
 
-  UserModel(
-      {this.bio,
-      this.email,
-      this.fullname,
-      this.photoURL,
-      this.interests,
-      this.membershipCampaigns,
-      this.membershipTimebanks,
-      this.sevaUserID,
-      this.skills,
-      this.currentBalance,
-      this.timezone});
+    factory UserModel.fromMap(Map<String, dynamic> json) => new UserModel(
+        id: json["id"] == null ? null : json["id"],
+        fullName: json["full_name"] == null ? null : json["full_name"],
+        emailId: json["email_id"] == null ? null : json["email_id"],
+        bio: json["bio"] == null ? null : json["bio"],
+        timezone: json["timezone"] == null ? null : json["timezone"],
+        skills: json["skills"] == null ? null : new List<String>.from(json["skills"].map((x) => x)),
+        interests: json["interests"] == null ? null : new List<String>.from(json["interests"].map((x) => x)),
+        timebanks: json["timebanks"] == null ? null : new List<String>.from(json["timebanks"].map((x) => x)),
+        projects: json["projects"] == null ? null : new List<String>.from(json["projects"].map((x) => x)),
+        photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+        wallet: json["wallet"] == null ? null : new List<Wallet>.from(json["wallet"].map((x) => Wallet.fromMap(x))),
+    );
 
-  UserModel.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('bio')) {
-      this.bio = map['bio'];
-    }
-    if (map.containsKey('email')) {
-      this.email = map['email'];
-    }
-    if (map.containsKey('fullname')) {
-      this.fullname = map['fullname'];
-    }
-    if (map.containsKey('photourl')) {
-      this.photoURL = map['photourl'];
-    }
-    if (map.containsKey('interests')) {
-      List<String> interestsList = List.castFrom(map['interests']);
-      this.interests = interestsList;
-    }
-    if (map.containsKey('membership_campaigns')) {
-      List<String> campaignList = List.castFrom(map['membership_campaigns']);
-      this.membershipCampaigns = campaignList;
-    }
-    if (map.containsKey('membership_timebanks')) {
-      List<String> timebanksList = List.castFrom(map['membership_timebanks']);
-      this.membershipTimebanks = timebanksList;
-    }
-    if (map.containsKey('sevauserid')) {
-      this.sevaUserID = map['sevauserid'];
-    }
-    if (map.containsKey('skills')) {
-      List<String> skillsList = List.castFrom(map['skills']);
-      this.skills = skillsList;
-    }
-    if (map.containsKey('currentBalance')) {
-      this.currentBalance = map['currentBalance'];
-    } else {
-      this.currentBalance = 0;
-    }
-    if (map.containsKey('timezone')) {
-      this.timezone = map['timezone'];
-    } else {
-      this.timezone = 'PT';
-    }
-  }
+    Map<String, dynamic> toMap() => {
+        "id": id == null ? null : id,
+        "full_name": fullName == null ? null : fullName,
+        "email_id": emailId == null ? null : emailId,
+        "bio": bio == null ? null : bio,
+        "timezone": timezone == null ? null : timezone,
+        "skills": skills == null ? null : new List<dynamic>.from(skills.map((x) => x)),
+        "interests": interests == null ? null : new List<dynamic>.from(interests.map((x) => x)),
+        "timebanks": timebanks == null ? null : new List<dynamic>.from(timebanks.map((x) => x)),
+        "projects": projects == null ? null : new List<dynamic>.from(projects.map((x) => x)),
+        "photo_url": photoUrl == null ? null : photoUrl,
+        "wallet": wallet == null ? null : new List<dynamic>.from(wallet.map((x) => x.toMap())),
+    };
+}
 
-  @override
-  Map<String, dynamic> toMap() {
-    Map<String, dynamic> object = {};
+class Wallet {
+    String rootTimebankId;
+    double balance;
 
-    if (this.bio != null && this.bio.isNotEmpty) {
-      object['bio'] = this.bio;
-    }
-    if (this.email != null && this.email.isNotEmpty) {
-      object['email'] = this.email;
-    }
-    if (this.fullname != null && this.fullname.isNotEmpty) {
-      object['fullname'] = this.fullname;
-    }
-    if (this.photoURL != null && this.photoURL.isNotEmpty) {
-      object['photourl'] = this.photoURL;
-    }
-    if (this.interests != null && this.interests.isNotEmpty) {
-      object['interests'] = this.interests;
-    }
-    if (this.membershipCampaigns != null &&
-        this.membershipCampaigns.isNotEmpty) {
-      object['membership_campaigns'] = this.membershipCampaigns;
-    }
-    if (this.membershipTimebanks != null &&
-        this.membershipTimebanks.isNotEmpty) {
-      object['membership_timebanks'] = this.membershipTimebanks;
-    }
-    if (this.sevaUserID != null && this.sevaUserID.isNotEmpty) {
-      object['sevauserid'] = this.sevaUserID;
-    }
-    if (this.skills != null && this.skills.isNotEmpty) {
-      object['skills'] = this.skills;
-    }
-    if (this.currentBalance != null) {
-      object['currentBalance'] = this.currentBalance;
-    } else {
-      object['currentBalance'] = 0;
-    }
-    if (this.timezone != null) {
-      object['timezone'] = this.timezone;
-    } else {
-      object['timezone'] = 'PT';
-    }
+    Wallet({
+        this.rootTimebankId,
+        this.balance,
+    });
 
-    return object;
-  }
+    factory Wallet.fromMap(Map<String, dynamic> json) => new Wallet(
+        rootTimebankId: json["root_timebank_id"] == null ? null : json["root_timebank_id"],
+        balance: json["balance"] == null ? null : json["balance"].toDouble(),
+    );
+
+    Map<String, dynamic> toMap() => {
+        "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
+        "balance": balance == null ? null : balance,
+    };
 }
