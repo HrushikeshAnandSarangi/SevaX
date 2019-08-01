@@ -16,6 +16,19 @@ class SplashViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  /// Precache images and check if user is logged in
+  Future initialize(BuildContext context) async {
+    await pauseLoading();
+    await preCacheImage(context);
+
+    bool userLoggedIn = await isUserLoggedIn();
+    if (userLoggedIn) {
+      navigateToCoreView(context);
+    } else {
+      navigateToLoginPage(context);
+    }
+  }
+
   /// Pause loading for [duration]
   Future pauseLoading({
     Duration duration = const Duration(seconds: 1),
@@ -41,12 +54,19 @@ class SplashViewModel extends BaseViewModel {
   }
 
   /// Check if user is logged in and return a [bool]
-  bool isUserLoggedIn() {
+  Future<bool> isUserLoggedIn() async {
     log.i('isUserLoggedIn: ');
-    if (_localStorageService.loggedInEmailId == null ||
-        _localStorageService.loggedInUserId == null ||
-        _localStorageService.loggedInUserId.isEmpty ||
-        _localStorageService.loggedInEmailId.isEmpty) {
+
+    loadingMessage = 'Checking if user is logged in';
+    busy = true;
+    String userEmail = await _localStorageService.loggedInEmailId;
+    String userId = await _localStorageService.loggedInUserId;
+    busy = false;
+
+    if (userEmail == null ||
+        userId == null ||
+        userId.isEmpty ||
+        userEmail.isEmpty) {
       log.i('isUserLoggedIn: loginStatus: false');
       return false;
     }

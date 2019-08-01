@@ -1,20 +1,8 @@
-import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/themes/sevatheme.dart';
-import 'package:sevaexchange/utils/preference_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
-import 'package:sevaexchange/views/bioview.dart';
-import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import '../views/core.dart';
-
-import 'package:sevaexchange/main.dart' show HUMANITY_FIRST_TB_ID;
-
-import '../auth/auth_provider.dart';
-import '../views/skillsview.dart';
 
 class AuthRouter extends StatefulWidget {
   @override

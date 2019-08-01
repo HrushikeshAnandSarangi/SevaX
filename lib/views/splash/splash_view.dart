@@ -11,8 +11,11 @@ class SplashView extends StatelessWidget {
       localStorageService: Provider.of<LocalStorageService>(context),
     );
 
-    return BaseView(
+    return BaseView<SplashViewModel>(
       viewModel: viewModel,
+      onModelReady: (viewModel) {
+        return viewModel.initialize(context);
+      },
       builder: (context, viewModel, _) {
         return _getView(context, viewModel);
       },
@@ -24,12 +27,14 @@ class SplashView extends StatelessWidget {
       appBar: AppBar(
         title: Text('SplashView'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          getLoader(context, viewModel),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            getLoader(context, viewModel),
+          ],
+        ),
       ),
     );
   }

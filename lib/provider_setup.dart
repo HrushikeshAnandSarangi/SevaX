@@ -24,8 +24,8 @@ List<SingleChildCloneableWidget> independentServices = [
       firebaseAuth: FirebaseAuth.instance,
     ),
   ),
-  FutureProvider<LocalStorageService>.value(
-    value: LocalStorageService.getInstance(),
+  Provider<LocalStorageService>.value(
+    value: LocalStorageService(),
   ),
 ];
 
