@@ -9,6 +9,8 @@ class ProjectModel {
     String address;
     String photoUrl;
     int createdAt;
+    int startTime;
+    int endTime;
     List<String> members;
 
     ProjectModel({
@@ -22,6 +24,8 @@ class ProjectModel {
         this.address,
         this.photoUrl,
         this.createdAt,
+        this.startTime,
+        this.endTime,
         this.members,
     });
 
@@ -36,6 +40,8 @@ class ProjectModel {
         address: json["address"] == null ? null : json["address"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
         createdAt: json["created_at"] == null ? null : json["created_at"],
+        startTime: json["start_time"] == null ? null : json["start_time"],
+        endTime: json["end_time"] == null ? null : json["end_time"],
         members: json["members"] == null ? null : new List<String>.from(json["members"].map((x) => x)),
     );
 
@@ -50,6 +56,8 @@ class ProjectModel {
         "address": address == null ? null : address,
         "photo_url": photoUrl == null ? null : photoUrl,
         "created_at": createdAt == null ? null : createdAt,
+        "start_time": startTime == null ? null : startTime,
+        "end_time": endTime == null ? null : endTime,
         "members": members == null ? null : new List<dynamic>.from(members.map((x) => x)),
     };
 }

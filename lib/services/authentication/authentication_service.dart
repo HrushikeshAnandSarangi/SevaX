@@ -12,7 +12,6 @@ import 'package:sevaexchange/services/authentication/email_authentication_servic
 import 'package:sevaexchange/services/authentication/google_authentication_service.dart';
 import 'package:sevaexchange/services/local_storage/local_storage_service.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/preference_manager.dart';
 
 class AuthenticationService extends BaseService {
   GoogleAuthenticationService _googleAuthService;
