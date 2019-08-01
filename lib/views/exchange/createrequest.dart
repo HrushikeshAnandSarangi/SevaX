@@ -8,8 +8,7 @@ import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -39,7 +38,10 @@ class _CreateRequestState extends State<CreateRequest> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text("Create Request",style: TextStyle(color: Colors.white),),
+        title: Text(
+          "Create Request",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: false,
       ),
       body: RequestCreateForm(
@@ -299,6 +301,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         if (widget.isOfferRequest == true) {
                           print(
                               'after checking to create notification = ${widget.isOfferRequest}');
+                          OfferModel offer = widget.offer;
+                          //String sevaUserIdOffer = offer.sevaUserId;
+
+                          Set<String> offerRequestList = () {
+                            if (offer.requestList == null) return [];
+                            return offer.requestList;
+                          }()
+                              .toSet();
+                          offerRequestList.add(requestModel.id);
+                          offer.requestList = offerRequestList.toList();
+                          FirestoreManager.updateOfferWithRequest(offer: offer);
                           sendOfferRequest(
                               offerModel: widget.offer,
                               requestSevaID: requestModel.sevaUserId);
