@@ -205,7 +205,7 @@ class _ChatViewState extends State<ChatView> {
                     Icons.send,
                     color: Colors.white,
                   )),
-                  backgroundColor: Colors.indigoAccent,
+                  backgroundColor: Theme.of(context).accentColor,
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
                       String loggedInEmailId =

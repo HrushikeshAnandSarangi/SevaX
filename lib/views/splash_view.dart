@@ -108,8 +108,8 @@ class _SplashViewState extends State<SplashView> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Theme.of(context).accentColor,
-              Theme.of(context).accentColor,
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor,
               // Colors.red,
               // Colors.red[400],
             ],
@@ -161,7 +161,7 @@ class _SplashViewState extends State<SplashView> {
                       data: Theme.of(context)
                           .copyWith(accentColor: Colors.red[900]),
                       child: LinearProgressIndicator(
-                        backgroundColor: Theme.of(context).accentColor,
+                        backgroundColor: Theme.of(context).primaryColor,
                       )),
                 ),
               ),

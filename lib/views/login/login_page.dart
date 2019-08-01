@@ -43,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
                   ]
                 : FlavorConfig.appFlavor == Flavor.TULSI
                     ? [
-                        Theme.of(context).accentColor,
-                        Theme.of(context).accentColor,
+                        Theme.of(context).primaryColor,
+                        Theme.of(context).primaryColor,
 
                       ]
                     : [
@@ -194,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                         : () {
                             signInWithEmailAndPassword();
                           },
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).accentColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
