@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sevaexchange/base/base_view.dart';
-import 'package:sevaexchange/services/local_storage/local_storage_service.dart';
+import 'package:sevaexchange/new_baseline/services/local_storage/local_storage_service.dart';
 import 'package:sevaexchange/views/splash/splash_view_model.dart';
 
 class SplashView extends StatelessWidget {

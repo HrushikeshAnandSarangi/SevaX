@@ -8,9 +8,9 @@ import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/services/authentication/email_authentication_service.dart';
-import 'package:sevaexchange/services/authentication/google_authentication_service.dart';
-import 'package:sevaexchange/services/local_storage/local_storage_service.dart';
+import 'package:sevaexchange/new_baseline/services/authentication/email_authentication_service.dart';
+import 'package:sevaexchange/new_baseline/services/authentication/google_authentication_service.dart';
+import 'package:sevaexchange/new_baseline/services/local_storage/local_storage_service.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class AuthenticationService extends BaseService {
