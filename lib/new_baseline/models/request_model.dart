@@ -1,4 +1,4 @@
-class OfferModel {
+class RequestModel {
     String id;
     String title;
     String description;
@@ -16,7 +16,7 @@ class OfferModel {
     bool isAccepted;
     List<TransactionModel> transactionModel;
 
-    OfferModel({
+    RequestModel({
         this.id,
         this.title,
         this.description,
@@ -35,7 +35,7 @@ class OfferModel {
         this.transactionModel,
     });
 
-    factory OfferModel.fromMap(Map<String, dynamic> json) => new OfferModel(
+    factory RequestModel.fromMap(Map<String, dynamic> json) => new RequestModel(
         id: json["id"] == null ? null : json["id"],
         title: json["title"] == null ? null : json["title"],
         description: json["description"] == null ? null : json["description"],
