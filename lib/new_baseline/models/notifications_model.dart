@@ -1,102 +1,79 @@
-import 'package:sevaexchange/models/data_model.dart';
-
-class NotificationsModel extends DataModel {
+class NotificationModel {
   String id;
-  NotificationType type;
-  Map<String, dynamic> data;
+  String dataId;
   String targetUserId;
   String senderUserId;
   bool isRead;
+  NotificationType type;
 
-  NotificationsModel({
+  NotificationModel({
     this.id,
-    this.type,
-    this.data,
+    this.dataId,
     this.targetUserId,
-    this.isRead = false,
     this.senderUserId,
+    this.isRead,
+    this.type,
   });
 
-  NotificationsModel.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('id')) {
-      this.id = map['id'];
-    }
-
-    if (map.containsKey('senderUserId')) {
-      this.senderUserId = map['senderUserId'];
-    }
-
-    if (map.containsKey('type')) {
-      String typeString = map['type'];
+  factory NotificationModel.fromMap(Map<String, dynamic> json) {
+    NotificationModel notificationModel = new NotificationModel(
+      id: json["id"] == null ? null : json["id"],
+      dataId: json["data_id"] == null ? null : json["data_id"],
+      targetUserId:
+          json["target_user_id"] == null ? null : json["target_user_id"],
+      senderUserId:
+          json["sender_user_id"] == null ? null : json["sender_user_id"],
+      isRead: json["is_read"] == null ? null : json["is_read"],
+    );
+    if (json.containsKey('type')) {
+      String typeString = json['type'];
       if (typeString == 'RequestAccept') {
-        this.type = NotificationType.RequestAccept;
+        notificationModel.type = NotificationType.RequestAccept;
       }
       if (typeString == 'RequestApprove') {
-        this.type = NotificationType.RequestApprove;
+        notificationModel.type = NotificationType.RequestApprove;
       }
       if (typeString == 'RequestReject') {
-        this.type = NotificationType.RequestReject;
+        notificationModel.type = NotificationType.RequestReject;
       }
       if (typeString == 'RequestCompleted') {
-        this.type = NotificationType.RequestCompleted;
+        notificationModel.type = NotificationType.RequestCompleted;
       }
       if (typeString == 'RequestCompletedApproved') {
-        this.type = NotificationType.RequestCompletedApproved;
+        notificationModel.type = NotificationType.RequestCompletedApproved;
       }
       if (typeString == 'RequestCompletedRejected') {
-        this.type = NotificationType.RequestCompletedRejected;
+        notificationModel.type = NotificationType.RequestCompletedRejected;
       }
       if (typeString == 'TransactionCredit') {
-        this.type = NotificationType.TransactionCredit;
+        notificationModel.type = NotificationType.TransactionCredit;
       }
       if (typeString == 'TransactionDebit') {
-        this.type = NotificationType.TransactionDebit;
+        notificationModel.type = NotificationType.TransactionDebit;
       }
       if (typeString == 'OfferAccept') {
-        this.type = NotificationType.OfferAccept;
+        notificationModel.type = NotificationType.OfferAccept;
       }
       if (typeString == 'OfferReject') {
-        this.type = NotificationType.OfferReject;
+        notificationModel.type = NotificationType.OfferReject;
       }
     }
-    if (map.containsKey('data')) {
-      this.data = Map.castFrom(map['data']);
-    }
-    if (map.containsKey('userId')) {
-      this.targetUserId = map['userId'];
-    }
-    if (map.containsKey('isRead')) {
-      this.isRead = map['isRead'];
-    }
+    return notificationModel;
   }
 
-  @override
   Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {};
-
-    if (this.id != null) {
-      map['id'] = this.id;
-    }
-
-    if (this.senderUserId != null) {
-      map['senderUserId'] = this.senderUserId;
-    }
+    Map<String, dynamic> map = {
+      "id": id == null ? null : id,
+      "data_id": dataId == null ? null : dataId,
+      "target_user_id": targetUserId == null ? null : targetUserId,
+      "sender_user_id": senderUserId == null ? null : senderUserId,
+      "is_read": isRead == null ? null : isRead,
+    };
 
     if (this.type != null) {
       map['type'] = this.type.toString().split('.').last;
     }
 
-    if (this.data != null) {
-      map['data'] = this.data;
-    }
-
-    if (this.targetUserId != null) {
-      map['userId'] = this.targetUserId;
-    }
-
-    if (this.isRead != null) {
-      map['isRead'] = this.isRead;
-    }
     return map;
   }
 }
