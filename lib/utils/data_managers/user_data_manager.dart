@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 
 import 'package:sevaexchange/models/user_model.dart';
 
-/// Create a User
+/// Create a [user]
 Future<void> createUser({
   @required UserModel user,
 }) async {

@@ -77,14 +77,14 @@ class FlavorConfig {
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.red,
-            primaryColor: Colors.red[900],
-            accentColor: Colors.blue,
+            primaryColor: Color.fromARGB(255, 6, 30, 62),
+            accentColor: Colors.red[900],
             indicatorColor: Colors.white,
             primaryColorBrightness: Brightness.light,
             accentColorBrightness: Brightness.light,
             fontFamily: 'Montserrat',
             splashColor: Colors.grey,
-            bottomAppBarColor: Colors.blue);
+            bottomAppBarColor: Colors.red[900],);
         break;
     }
   }

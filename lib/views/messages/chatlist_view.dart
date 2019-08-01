@@ -26,49 +26,54 @@ class _ChatListViewState extends State<ChatListView> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text('Messages',style: TextStyle(color: Colors.white),),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              NewsModel news;
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NewChat(false, news)),
-              );
-            },
-          )
-        ],
+        title: Text(
+          'Chats',
+          style: TextStyle(color: Colors.white),
+        ),
+        // actions: <Widget>[
+
+        // ],
       ),
-      body: StreamBuilder<List<MessageModel>>(
+      body: StreamBuilder<List<ChatModel>>(
         stream:
-            getMessagesforUser(email: SevaCore.of(context).loggedInUser.email),
+            getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
         builder: (BuildContext context,
-            AsyncSnapshot<List<MessageModel>> messageListSnapshot) {
-          if (messageListSnapshot.hasError) {
-            return new Text('Error: ${messageListSnapshot.error}');
+            AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
+          if (chatListSnapshot.hasError) {
+            return new Text('Error: ${chatListSnapshot.error}');
           }
-          switch (messageListSnapshot.connectionState) {
+          switch (chatListSnapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
                 child: CircularProgressIndicator(),
               );
             default:
-              List<MessageModel> messageModelList = messageListSnapshot.data;
-              if (messageModelList.length == 0) {
-                return Center(child: Text('No Requests'));
+              List<ChatModel> chatModelList = chatListSnapshot.data;
+              if (chatModelList.length == 0) {
+                return Center(child: Text('No Chats'));
               }
               return Container(
                 padding: EdgeInsets.only(left: 15.0, right: 15.0),
                 child: ListView(
-                  children: messageModelList.map(
-                    (MessageModel messageModel) {
-                      return getMessageListView(messageModel, context);
+                  children: chatModelList.map(
+                    (ChatModel chatModel) {
+                      return getMessageListView(chatModel, context);
                     },
                   ).toList(),
                 ),
               );
           }
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.chat,color: Colors.white,), 
+        label: Text('New Chat',style: TextStyle(color: Colors.white),),
+        onPressed: () {
+          NewsModel news;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewChat(false, news)),
+          );
         },
       ),
     );
@@ -100,15 +105,15 @@ class _ChatListViewState extends State<ChatListView> {
   }
 
   Widget getMessageListView(
-      MessageModel messageModel, BuildContext parentContext) {
+      ChatModel chatModel, BuildContext parentContext) {
     String lastmessage;
-    if (messageModel.lastMessage == null) {
+    if (chatModel.lastMessage == null) {
       lastmessage = '';
     } else
-      lastmessage = messageModel.lastMessage;
-    if (messageModel.user1 == SevaCore.of(context).loggedInUser.email) {
+      lastmessage = chatModel.lastMessage;
+    if (chatModel.user1 == SevaCore.of(context).loggedInUser.email) {
       return StreamBuilder<Object>(
-          stream: getUserForEmailStream(messageModel.user2),
+          stream: getUserForEmailStream(chatModel.user2),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -126,9 +131,9 @@ class _ChatListViewState extends State<ChatListView> {
                       parentContext,
                       MaterialPageRoute(
                         builder: (context) => ChatView(
-                              useremail: user.email,
-                              messageModel: messageModel,
-                            ),
+                          useremail: user.email,
+                          chatModel: chatModel,
+                        ),
                       ),
                     );
                   },
@@ -173,9 +178,9 @@ class _ChatListViewState extends State<ChatListView> {
               ),
             );
           });
-    } else if (messageModel.user2 == SevaCore.of(context).loggedInUser.email) {
+    } else if (chatModel.user2 == SevaCore.of(context).loggedInUser.email) {
       return StreamBuilder<Object>(
-          stream: getUserForEmailStream(messageModel.user1),
+          stream: getUserForEmailStream(chatModel.user1),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -193,9 +198,9 @@ class _ChatListViewState extends State<ChatListView> {
                       parentContext,
                       MaterialPageRoute(
                         builder: (context) => ChatView(
-                              useremail: user.email,
-                              messageModel: messageModel,
-                            ),
+                          useremail: user.email,
+                          chatModel: chatModel,
+                        ),
                       ),
                     );
                   },

@@ -1,9 +1,14 @@
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/base/base_service.dart';
 
+class TimeZonesService extends BaseService{
+
+  /// Get local Time according to the [timezoneAbb] selected by the user by using [dateTime] passed by the user
 DateTime getDateTimeAccToUserTimezone({
   @required String timezoneAbb,
   @required DateTime dateTime,
 }) {
+  log.i('getDateTimeAccToUserTimezone: TimezoneABB: $timezoneAbb DateTime: $dateTime');
   int offsetFromUtc;
   if (timezoneAbb == 'ST')
     offsetFromUtc = -11;
@@ -31,4 +36,5 @@ DateTime getDateTimeAccToUserTimezone({
   DateTime timeInUtc = dateTime.toUtc();
   DateTime localtime = timeInUtc.add(Duration(hours: offsetFromUtc));
   return localtime;
+}
 }

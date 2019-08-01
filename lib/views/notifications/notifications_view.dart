@@ -549,17 +549,17 @@ class NotificationsView extends StatelessWidget {
                 String loggedInEmail = SevaCore.of(context).loggedInUser.email;
                 List users = [user.email, loggedInEmail];
                 users.sort();
-                MessageModel messagemodel = MessageModel();
-                messagemodel.user1 = users[0];
-                messagemodel.user2 = users[1];
+                ChatModel chatModel = ChatModel();
+                chatModel.user1 = users[0];
+                chatModel.user2 = users[1];
 
-                createChat(chat: messagemodel);
+                createChat(chat: chatModel);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatView(
                             useremail: user.email,
-                            messageModel: messagemodel,
+                            chatModel: chatModel,
                             isFromRejectCompletion: true,
                           )),
                 );
@@ -739,17 +739,17 @@ class NotificationsView extends StatelessWidget {
                 String loggedInEmail = SevaCore.of(context).loggedInUser.email;
                 List users = [user.email, loggedInEmail];
                 users.sort();
-                MessageModel messagemodel = MessageModel();
-                messagemodel.user1 = users[0];
-                messagemodel.user2 = users[1];
+                ChatModel chatModel = ChatModel();
+                chatModel.user1 = users[0];
+                chatModel.user2 = users[1];
 
-                createChat(chat: messagemodel);
+                createChat(chat: chatModel);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => ChatView(
                             useremail: user.email,
-                            messageModel: messagemodel,
+                            chatModel: chatModel,
                             
                           )),
                 );
