@@ -7,7 +7,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/provider_setup.dart';
 import 'package:sevaexchange/themes/sevatheme.dart';
-import 'package:sevaexchange/views/splash/splash_view.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.HUMANITY_FIRST;
@@ -49,8 +49,8 @@ void main() {
 class MainApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: providers,
+    return AuthProvider(
+      auth: Auth(),
       child: MaterialApp(
         theme: FlavorConfig.theme,
         home: SplashView(),
