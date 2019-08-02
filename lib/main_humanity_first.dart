@@ -1,12 +1,9 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/provider_setup.dart';
-import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
 void main() {

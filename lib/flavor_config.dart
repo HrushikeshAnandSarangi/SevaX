@@ -77,7 +77,7 @@ class FlavorConfig {
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.red,
-            primaryColor: Color.fromARGB(255, 6, 30, 62),
+            primaryColor: Color.fromARGB(255, 26, 50, 102),
             accentColor: Colors.red[900],
             indicatorColor: Colors.white,
             primaryColorBrightness: Brightness.light,

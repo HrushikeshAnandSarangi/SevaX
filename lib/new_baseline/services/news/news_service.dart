@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/base/base_service.dart';
 import 'dart:async';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/new_baseline/models/news_model.dart';
 
 class NewsService extends BaseService {
   /// create a [newsObject]

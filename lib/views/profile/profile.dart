@@ -119,8 +119,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
+    return Scaffold(
+      body: Stack(
         children: <Widget>[
           Positioned(
             top: 0,
@@ -261,6 +261,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get sliverAppbar {
     return SliverAppBar(
+      iconTheme: IconThemeData(color: Colors.white),
       pinned: true,
       centerTitle: true,
       expandedHeight: 180,

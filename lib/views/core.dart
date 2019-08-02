@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -82,9 +83,19 @@ class _CoreViewState extends State<CoreView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: FlavorConfig.theme,
-      home: SevaCoreView(user: user),
+    return 
+    //AnnotatedRegion<SystemUiOverlayStyle>(
+      //child: 
+      MaterialApp(
+        theme: FlavorConfig.theme,
+        home: SevaCoreView(user: user),
+     // ),
+      // value: SystemUiOverlayStyle(
+      //   statusBarBrightness: Brightness.dark,
+      //   //statusBarColor: Theme.of(context).primaryColor,
+      //   systemNavigationBarIconBrightness: Brightness.dark,
+      //   statusBarIconBrightness: Brightness.dark
+      // ),
     );
   }
 }
