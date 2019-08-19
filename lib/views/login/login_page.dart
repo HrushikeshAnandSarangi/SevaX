@@ -48,9 +48,9 @@ class _LoginPageState extends State<LoginPage> {
 
                       ]
                     : [
-                        Color.fromARGB(255, 23, 54, 134),
-                        Color.fromARGB(255, 115, 132, 176),
-                        Color.fromARGB(255, 214, 222, 234),
+                        Theme.of(context).primaryColor,
+                        Theme.of(context).primaryColorLight,
+                        Theme.of(context).primaryColor,
                       ],
           ),
         ),
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 48),
+                  FlavorConfig.appFlavor==Flavor.APP ? SizedBox(height: 5) : SizedBox(height: 48),
                   logo,
                   SizedBox(height: 32),
                   content,
@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                   signInWithGoogle,
                   SizedBox(height: 16),
                   SizedBox(height: 16),
-                  poweredBySevaLogo,
+                  FlavorConfig.appFlavor==Flavor.APP ? Offstage() : poweredBySevaLogo,
                   SizedBox(height: 16),
                 ],
               ),
@@ -104,27 +104,24 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 16,
           ),
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? Image.asset(
-                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-                  height: 70,
-                  fit: BoxFit.fill,
-                  width: 80,
-                )
-              : FlavorConfig.appFlavor == Flavor.TULSI
-                  ? SvgPicture.asset(
-                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-                      height: 100,
-                      fit: BoxFit.fill,
-                      width: 100,
-                      color: Colors.white,
-                    )
-                  : Image.asset(
-                      'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-                      height: 70,
-                      fit: BoxFit.fill,
-                      width: 80,
-                    )
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
+          Image.asset(
+            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+            height: 70,
+            fit: BoxFit.fill,
+            width: 80,
+          ) : FlavorConfig.appFlavor == Flavor.TULSI ?
+          SvgPicture.asset(
+            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
+            height: 100,
+            fit: BoxFit.fill,
+            width: 100,
+          ) : Image.asset(
+            'lib/assets/images/seva-x-logo.png',
+            height: 80,
+            fit: BoxFit.fill,
+            width: 280,
+          )
         ],
       ),
     );

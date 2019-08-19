@@ -34,7 +34,7 @@ class _SplashViewState extends State<SplashView> {
   Widget build(BuildContext context) {
     switch (FlavorConfig.appFlavor) {
       case Flavor.APP:
-        // TODO: Handle this case.
+        return sevaAppSplash;
         break;
       case Flavor.HUMANITY_FIRST:
         return humanitySplash;
@@ -43,6 +43,67 @@ class _SplashViewState extends State<SplashView> {
         return tulsiSplash;
         break;
     }
+  }
+
+  Widget get sevaAppSplash {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              // Color.fromARGB(255, 9, 46, 108),
+              // Color.fromARGB(255, 88, 138, 224),
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor
+            ],
+            //stops: [0, 0.6, 1],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Text(
+              //   'Seva\nExchange'.toUpperCase(),
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //     letterSpacing: 5,
+              //     fontSize: 24,
+              //     color: Colors.white,
+              //     fontWeight: FontWeight.w700,
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: 16,
+              // ),
+              Image.asset(
+                'lib/assets/images/seva-x-logo.png',
+                height: 140,
+                width: 200,
+              ),
+              if (loadingMessage != null && loadingMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  child: Text(loadingMessage,style: TextStyle(color: Colors.white),),
+                ),
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                child: SizedBox(
+                  height: 2,
+                  width: 150,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget get humanitySplash {

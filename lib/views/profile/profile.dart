@@ -490,7 +490,8 @@ class _ProfilePageState extends State<ProfilePage>
                       fontSize: 32.0,
                       fontWeight: FontWeight.w600),
                 ),
-                FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
+                        FlavorConfig.appFlavor == Flavor.APP
                     ? Column(
                         children: <Widget>[
                           Padding(
@@ -531,13 +532,21 @@ class _ProfilePageState extends State<ProfilePage>
                         fontWeight: FontWeight.w400,
                         fontSize: 12),
                   )
-                : Text(
-                    'Tulsi Tokens',
-                    style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12),
-                  ),
+                : FlavorConfig.appFlavor == Flavor.APP
+                    ? Text(
+                        'Seva Coins',
+                        style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12),
+                      )
+                    : Text(
+                        'Tulsi Tokens',
+                        style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12),
+                      ),
           ),
         ],
       ),

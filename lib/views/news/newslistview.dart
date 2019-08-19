@@ -164,7 +164,8 @@ class NewsListState extends State<NewsList> {
                                       children: <Widget>[
                                         SizedBox(width: 16),
                                         FlavorConfig.appFlavor ==
-                                                Flavor.HUMANITY_FIRST
+                                                Flavor.HUMANITY_FIRST || FlavorConfig.appFlavor ==
+                                                Flavor.APP
                                             ? Icon(
                                                 Icons.perm_contact_calendar,
                                                 color: Theme.of(context)
@@ -206,7 +207,8 @@ class NewsListState extends State<NewsList> {
                                 getOptionButtons(
                                   Padding(padding: EdgeInsets.symmetric(horizontal:6, vertical: 2),
                                     child: FlavorConfig.appFlavor ==
-                                            Flavor.HUMANITY_FIRST
+                                            Flavor.HUMANITY_FIRST || FlavorConfig.appFlavor ==
+                                                Flavor.APP
                                         ? Icon(
                                             Icons.share,
                                             color:

@@ -83,13 +83,13 @@ class _CoreViewState extends State<CoreView> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    //AnnotatedRegion<SystemUiOverlayStyle>(
-      //child: 
-      MaterialApp(
-        theme: FlavorConfig.theme,
-        home: SevaCoreView(user: user),
-     // ),
+    return
+        //AnnotatedRegion<SystemUiOverlayStyle>(
+        //child:
+        MaterialApp(
+      theme: FlavorConfig.theme,
+      home: SevaCoreView(user: user),
+      // ),
       // value: SystemUiOverlayStyle(
       //   statusBarBrightness: Brightness.dark,
       //   //statusBarColor: Theme.of(context).primaryColor,
@@ -347,12 +347,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
   PageProperty get newsPageProperty {
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.description)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
-              height: 18,
-              width: 18,
+              height: 22,
+              width: 22,
               color: Colors.white,
             ),
       page: NewsListView(),
@@ -387,12 +388,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get searchPageProperty {
     TabController controller = TabController(length: 4, vsync: this);
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.search)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
-              height: 18,
-              width: 18,
+              height: 22,
+              width: 22,
               color: Colors.white,
             ),
       page: SearchView(controller),
@@ -414,12 +416,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get exchangePageProperty {
     TabController controller = TabController(length: 2, vsync: this);
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.swap_horizontal_circle)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
-              height: 18,
-              width: 18,
+              height: 22,
+              width: 22,
               color: Colors.white,
             ),
       page: HelpView(controller),
@@ -496,12 +499,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get tasksPageProperty {
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
-      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+      tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.playlist_add_check)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
-              height: 18,
-              width: 18,
+              height: 22,
+              width: 22,
               color: Colors.white,
             ),
       page: MyTaskPage(controller),
@@ -529,12 +533,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
   PageProperty get createPageProperty {
     return PageProperty(
-        tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+        tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
+                FlavorConfig.appFlavor == Flavor.APP
             ? Icon(Icons.add_circle)
             : SvgPicture.asset(
                 'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
-                height: 18,
-                width: 18,
+                height: 22,
+                width: 22,
                 color: Colors.white,
               ),
         page: SevaCoreView(),

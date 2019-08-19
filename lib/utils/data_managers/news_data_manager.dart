@@ -23,8 +23,8 @@ Stream<List<NewsModel>> getNewsStream() async* {
       .collection('news')
       .where('entity', isEqualTo: {
         'entityType': 'timebanks',
-        'entityId': FlavorConfig.timebankId,
-        'entityName': FlavorConfig.timebankName,
+        'entityId': FlavorConfig.appFlavor == Flavor.APP? 'ajilo297@gmail.com*1559128156543' : FlavorConfig.timebankId,
+        'entityName': FlavorConfig.appFlavor == Flavor.APP? 'Yang 2020' : FlavorConfig.timebankName,
       })
       .orderBy('posttimestamp', descending: true)
       .snapshots();

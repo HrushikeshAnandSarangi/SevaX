@@ -20,7 +20,7 @@ class FlavorConfig {
   static get timebankId {
     switch (appFlavor) {
       case Flavor.APP:
-        // TODO: Handle this case.
+        return 'ajilo297@gmail.com*1559128156543';
         break;
       case Flavor.HUMANITY_FIRST:
         return 'ajilo297@gmail.com*1559128156543';
@@ -34,7 +34,7 @@ class FlavorConfig {
   static get timebankName {
     switch (appFlavor) {
       case Flavor.APP:
-        // TODO: Handle this case.
+         return 'Seva Exchange';
         break;
       case Flavor.HUMANITY_FIRST:
         return 'Yang 2020';
@@ -48,7 +48,22 @@ class FlavorConfig {
   static get theme {
     switch (appFlavor) {
       case Flavor.APP:
-        // TODO: Handle this case.
+        return ThemeData(
+            appBarTheme: AppBarTheme(
+              brightness: Brightness.light,
+              color: Colors.white,
+              elevation: 1,
+            ),
+            brightness: Brightness.light,
+            primarySwatch: Colors.purple,
+            primaryColor: Colors.deepPurple,
+            accentColor: Colors.blue,
+            indicatorColor: Colors.white,
+            primaryColorBrightness: Brightness.light,
+            accentColorBrightness: Brightness.light,
+            fontFamily: 'Montserrat',
+            splashColor: Colors.grey,
+            bottomAppBarColor: Colors.grey[900]);
         break;
       case Flavor.HUMANITY_FIRST:
         return ThemeData(
