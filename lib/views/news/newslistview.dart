@@ -28,67 +28,114 @@ class NewsList extends StatefulWidget {
 
 class NewsListState extends State<NewsList> {
   String timebankName;
-  String timebankId=FlavorConfig.timebankId;
+  String timebankId = FlavorConfig.timebankId;
   List<TimebankModel> timebankList = [];
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        StreamBuilder<Object>(
-            stream: FirestoreManager.getTimebanksForUserStream(
-                userId: SevaCore.of(context).loggedInUser.sevaUserID),
-            builder: (context, snapshot) {
-              if (snapshot.hasError)
-                return new Text('Error: ${snapshot.error}');
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-              timebankList = snapshot.data;
-              // timebankList.forEach((t){
-              //   if(t.name==timebankName){
-              //     timebankId=t.id;
-              //   }
-              // });
-              List<String> dropdownList = [];
-              timebankList.forEach((t) {
-                dropdownList.add(t.id);
-              });
-              return DropdownButton<String>(
-                value: timebankId,
-                onChanged: (String newValue) {
-                  setState(() {
-                    timebankId = newValue;
-                    //print(timebankId);
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+            ),
+            Text(
+              'Timebank : ',
+              style: (TextStyle(fontWeight: FontWeight.w500)),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+            ),
+            StreamBuilder<Object>(
+                stream: FirestoreManager.getTimebanksForUserStream(
+                    userId: SevaCore.of(context).loggedInUser.sevaUserID),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  timebankList = snapshot.data;
+                  // timebankList.forEach((t){
+                  //   if(t.name==timebankName){
+                  //     timebankId=t.id;
+                  //   }
+                  // });
+                  List<String> dropdownList = [];
+                  timebankList.forEach((t) {
+                    dropdownList.add(t.id);
                   });
-                },
-                items:
-                    dropdownList.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: FutureBuilder<Object>(
-                        future: FirestoreManager.getTimeBankForId(
-                            timebankId: value),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError)
-                            return new Text('Error: ${snapshot.error}');
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Offstage();
-                          }
-                          TimebankModel timebankModel = snapshot.data;
-                          return Text(timebankModel.name);
-                        }),
+                  dropdownList.insert(0,'All');
+                  return DropdownButton<String>(
+                    value: timebankId,
+                    onChanged: (String newValue) {
+                      setState(() {
+                        timebankId = newValue;
+                        //print(timebankId);
+                      });
+                    },
+                    items: dropdownList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      if (value == 'All') {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      } else
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: FutureBuilder<Object>(
+                              future: FirestoreManager.getTimeBankForId(
+                                  timebankId: value),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError)
+                                  return new Text('Error: ${snapshot.error}');
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Offstage();
+                                }
+                                TimebankModel timebankModel = snapshot.data;
+                                return Text(timebankModel.name);
+                              }),
+                        );
+                    }).toList(),
                   );
-                }).toList(),
-              );
-            }),
+                }),
+          ],
+        ),
         Divider(
           color: Colors.grey,
           height: 0,
         ),
+        timebankId != 'All' ?
         StreamBuilder<List<NewsModel>>(
-          stream: FirestoreManager.getNewsStream(
-              timebankID: timebankId),
+          stream: FirestoreManager.getNewsStream(timebankID: timebankId),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
+                break;
+              default:
+                List<NewsModel> newsList = snapshot.data;
+                if (newsList.length == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text('Your feed is empty')),
+                  );
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: newsList.length,
+                    itemBuilder: (context, index) {
+                      return getNewsCard(newsList.elementAt(index), false);
+                    },
+                  ),
+                );
+            }
+          },
+        ) : StreamBuilder<List<NewsModel>>(
+          stream: FirestoreManager.getAllNewsStream(),
           builder: (context, snapshot) {
             if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
             switch (snapshot.connectionState) {

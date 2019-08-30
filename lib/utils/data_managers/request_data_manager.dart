@@ -42,7 +42,8 @@ Stream<List<RequestModel>> getRequestStreamCreatedByUser({
 }
 
 Stream<List<RequestModel>> getRequestListStream({String timebankId}) async* {
-  var query = timebankId == null
+  
+  var query = timebankId == null ||timebankId == 'All'
       ? Firestore.instance
           .collection('requests')
           .where('accepted', isEqualTo: false)
@@ -63,6 +64,34 @@ Stream<List<RequestModel>> getRequestListStream({String timebankId}) async* {
             model.id = documentSnapshot.documentID;
             if (model.approvedUsers.length <= model.numberOfApprovals)
               requestList.add(model);
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getAllRequestListStream() async* {
+  var query = Firestore.instance
+          .collection('requests')
+          .where('accepted', isEqualTo: false);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if(model.approvedUsers != null){
+            if (model.approvedUsers.length <= model.numberOfApprovals)
+              requestList.add(model);
+            }
+            
           },
         );
         requestSink.add(requestList);

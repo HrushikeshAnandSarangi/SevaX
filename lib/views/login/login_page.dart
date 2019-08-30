@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                       ]
                     : [
                         Theme.of(context).primaryColor,
-                        Theme.of(context).primaryColorLight,
+                        //Theme.of(context).primaryColorLight,
                         Theme.of(context).primaryColor,
                       ],
           ),

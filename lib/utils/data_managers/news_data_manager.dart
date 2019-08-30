@@ -40,6 +40,23 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   }));
 }
 
+Stream<List<NewsModel>> getAllNewsStream() async* {
+  var data = Firestore.instance
+      .collection('news')
+      .orderBy('posttimestamp', descending: true)
+      .snapshots();
+
+  yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<NewsModel>>.fromHandlers(
+          handleData: (querySnapshot, newsSink) {
+    List<NewsModel> modelList = [];
+    querySnapshot.documents.forEach((document) {
+      modelList.add(NewsModel.fromMap(document.data));
+    });
+    newsSink.add(modelList);
+  }));
+}
+
 Future<NewsModel> getNewsForId(String newsId) async {
   NewsModel newsModel;
   await Firestore.instance

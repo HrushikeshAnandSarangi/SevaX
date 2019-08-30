@@ -7,7 +7,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:meta/meta.dart';
 
 Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
-  var query = timebankId == null
+  var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
           .collection('offers')
           .where('assossiatedRequest', isNull: true)
@@ -15,6 +15,28 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
           .collection('offers')
           .where('timebankId', isEqualTo: timebankId)
           .where('assossiatedRequest', isNull: true);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
+      handleData: (snapshot, offerSink) {
+        List<OfferModel> offerList = [];
+        snapshot.documents.forEach((snapshot) {
+          OfferModel model = OfferModel.fromMap(snapshot.data);
+          model.id = snapshot.documentID;
+          offerList.add(model);
+        });
+        offerSink.add(offerList);
+      },
+    ),
+  );
+}
+
+Stream<List<OfferModel>> getAllOffersStream() async* {
+  var query = Firestore.instance
+      .collection('offers')
+      .where('assossiatedRequest', isNull: true);
 
   var data = query.snapshots();
 
