@@ -1,7 +1,8 @@
 // import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 // import '../components/member.dart';
 
 class AddMembersEdit extends StatefulWidget {
@@ -120,5 +121,43 @@ class _AddMembersEditState extends State<AddMembersEdit> {
         ),
       ),
     );
+  }
+}
+
+class Member extends DataModel {
+  String email;
+  String fullName;
+  String photoUrl;
+
+  Member({this.fullName, this.email, this.photoUrl});
+
+  Member.fromMap(Map<String, dynamic> dataMap) {
+    if (dataMap.containsKey('membersemail')) {
+      this.email = dataMap['membersemail'];
+    }
+
+    if (dataMap.containsKey('membersfullname')) {
+      this.fullName = dataMap['membersfullname'];
+    }
+
+    if (dataMap.containsKey('membersphotourl')) {
+      this.photoUrl = dataMap['membersphotourl'];
+    }
+  }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> object = {};
+
+    if (this.email != null && this.email.isNotEmpty) {
+      object['membersemail'] = this.email;
+    }
+    if (this.fullName != null && this.fullName.isNotEmpty) {
+      object['membersfullname'] = this.fullName;
+    }
+    if (this.photoUrl != null && this.photoUrl.isNotEmpty) {
+      object['membersphotourl'] = this.photoUrl;
+    }
+
+    return object;
   }
 }

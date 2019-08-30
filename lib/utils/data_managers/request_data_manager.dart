@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:meta/meta.dart';
@@ -159,8 +157,6 @@ Future<void> rejectRequestCompletion({
       .document(model.id)
       .setData(model.toMap(), merge: true);
 
-  
-
   NotificationsModel notification = NotificationsModel(
     id: utils.Utils.getUuid(),
     targetUserId: userId,
@@ -168,8 +164,7 @@ Future<void> rejectRequestCompletion({
     type: NotificationType.RequestCompletedRejected,
     data: model.toMap(),
   );
-   await utils.createTaskCompletedApprovedNotification(model: notification);
-
+  await utils.createTaskCompletedApprovedNotification(model: notification);
 }
 
 Future<void> approveRequestCompletion({
@@ -196,8 +191,38 @@ Future<void> approveRequestCompletion({
   print(credituser);
   print(user.email);
 
-  //await Firestore.instance.collection('users').document(model.email).updateData(
-  // {'currentBalance': FieldValue.increment(-(transactionvalue))});
+  if (FlavorConfig.appFlavor == Flavor.APP) {
+    await Firestore.instance
+        .collection('users')
+        .document(model.email)
+        .updateData(
+            {'currentBalance': FieldValue.increment(-(transactionvalue))});
+
+    NotificationsModel debitnotification = NotificationsModel(
+      id: utils.Utils.getUuid(),
+      targetUserId: model.sevaUserId,
+      senderUserId: userId,
+      type: NotificationType.TransactionDebit,
+      data: model.transactions
+          .where((transactionModel) {
+            if (transactionModel.from == model.sevaUserId &&
+                transactionModel.to == userId) {
+              print(
+                  'DEBIT DATA: ${transactionModel.to} == ${model.sevaUserId}');
+              print('DEBIT DATA: ${transactionModel.from} == $userId');
+              return true;
+            } else {
+              print(
+                  'DEBIT DATA: ${transactionModel.to} == ${model.sevaUserId}');
+              print('DEBIT DATA: ${transactionModel.from} == $userId');
+              return false;
+            }
+          })
+          .elementAt(0)
+          .toMap(),
+    );
+    await utils.createTransactionNotification(model: debitnotification);
+  }
 
   await Firestore.instance
       .collection('users')
@@ -227,31 +252,8 @@ Future<void> approveRequestCompletion({
         .toMap(),
   );
 
-  // NotificationsModel debitnotification = NotificationsModel(
-  //   id: utils.Utils.getUuid(),
-  //   targetUserId: model.sevaUserId,
-  //   senderUserId: userId,
-  //   type: NotificationType.TransactionDebit,
-  //   data: model.transactions
-  //       .where((transactionModel) {
-  //         if (transactionModel.from == model.sevaUserId &&
-  //             transactionModel.to == userId) {
-  //           print('DEBIT DATA: ${transactionModel.to} == ${model.sevaUserId}');
-  //           print('DEBIT DATA: ${transactionModel.from} == $userId');
-  //           return true;
-  //         } else {
-  //           print('DEBIT DATA: ${transactionModel.to} == ${model.sevaUserId}');
-  //           print('DEBIT DATA: ${transactionModel.from} == $userId');
-  //           return false;
-  //         }
-  //       })
-  //       .elementAt(0)
-  //       .toMap(),
-  // );
-
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
-  //await utils.createTransactionNotification(model: debitnotification);
 }
 
 Future<void> approveAcceptRequest({
@@ -433,8 +435,8 @@ Stream<List<RequestModel>> getNotAcceptedRequestStream({
           RequestModel model = RequestModel.fromMap(document.data);
           model.id = document.documentID;
           bool isApproved = false;
-          if(model.approvedUsers.contains(userEmail)) {
-            isApproved=true;
+          if (model.approvedUsers.contains(userEmail)) {
+            isApproved = true;
           }
           if (!isApproved) requestList.add(model);
         });

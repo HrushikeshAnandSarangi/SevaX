@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -12,7 +14,7 @@ import 'dart:math';
 import 'dart:async';
 import 'package:sevaexchange/flavor_config.dart';
 
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 
@@ -561,6 +563,7 @@ class _ProfilePageState extends State<ProfilePage>
       child: Column(
         children: <Widget>[
           administerTimebanks,
+          timebankslist,
           tasksWidget,
         ],
       ),
@@ -620,7 +623,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get administerTimebanks {
     return getActionCards(
-      title: 'Timebank',
+      title: 'Root Timebank',
       subtitle: timebankModel == null ? "loading" : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
@@ -635,6 +638,28 @@ class _ProfilePageState extends State<ProfilePage>
               return TimebankAdminPage(
                 timebankId: FlavorConfig.timebankId,
               );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget get timebankslist {
+    return getActionCards(
+      title: 'Timebanks List',
+   //subtitle: timebankModel == null ? "loading" : timebankModel.name,
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(12),
+        topLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return TimeBankList(timebankid: FlavorConfig.timebankId,title: 'Timebanks List',);
             },
           ),
         );

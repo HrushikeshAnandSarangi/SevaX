@@ -13,6 +13,8 @@ import '../../main.dart';
 
 class NewsCreate extends StatelessWidget {
   final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
+  final String timebankId;
+  NewsCreate({this.timebankId});
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -52,7 +54,7 @@ class NewsCreate extends StatelessWidget {
             //       ),
           ],
         ),
-        body: NewsCreateForm(),
+        body: NewsCreateForm(timebankId: timebankId,),
       ),
     );
   }
@@ -60,7 +62,8 @@ class NewsCreate extends StatelessWidget {
 
 // Create a Form Widget
 class NewsCreateForm extends StatefulWidget {
-  NewsCreateForm({Key key}) : super(key: key);
+  final String timebankId;
+  NewsCreateForm({Key key, this.timebankId}) : super(key: key);
   @override
   NewsCreateFormState createState() {
     return NewsCreateFormState();
@@ -94,8 +97,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
-      entityId: FlavorConfig.timebankId,
-      entityName: FlavorConfig.timebankName,
+      entityId: widget.timebankId,
+      //entityName: FlavorConfig.timebankName,
       entityType: EntityType.timebank,
     );
 

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sevaexchange/main.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FirestoreManager;
@@ -146,13 +147,13 @@ class Auth {
       timebankId: FlavorConfig.timebankId,
     );
     List<String> members = model.members;
-    if (!members.contains(signedInUser.email)) {
+    if (!members.contains(signedInUser.sevaUserID)) {
       List<String> tbMembers = members.map((m) => m).toList();
-      if (!tbMembers.contains(signedInUser.email)) {
-        tbMembers.add(signedInUser.email);
+      if (!tbMembers.contains(signedInUser.sevaUserID)) {
+        tbMembers.add(signedInUser.sevaUserID);
       }
       model.members = tbMembers;
-      await FirestoreManager.updateTimebank(model: model);
+      await FirestoreManager.updateTimebank(timebankModel: model);
     }
 
     return await PreferenceManager.setLoggedInUser(

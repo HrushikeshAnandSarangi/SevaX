@@ -7,7 +7,7 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/main.dart';
-import 'package:sevaexchange/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FirestoreManager;
@@ -324,6 +324,6 @@ class _RegisterPageState extends State<RegisterPage>
     );
     List<String> _members = timebankModel.members;
     timebankModel.members = [..._members, loggedInUser.email];
-    await FirestoreManager.updateTimebank(model: timebankModel);
+    await FirestoreManager.updateTimebank(timebankModel: timebankModel);
   }
 }

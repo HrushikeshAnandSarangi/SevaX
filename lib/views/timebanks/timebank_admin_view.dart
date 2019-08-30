@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FirestoreManager;
 import 'package:shimmer/shimmer.dart';
@@ -125,7 +126,7 @@ class _TimeBankAdminView extends StatelessWidget {
                   child: ClipOval(
                     child: FadeInImage.assetNetwork(
                       placeholder: 'lib/assets/images/noimagefound.png',
-                      image: timebankModel.avatarUrl,
+                      image: timebankModel.photoUrl,
                     ),
                   ),
                 ),
@@ -148,7 +149,7 @@ class _TimeBankAdminView extends StatelessWidget {
 
   Widget getAdminList(BuildContext context, TimebankModel model) {
     bool isAdmin = model.admins.contains(
-      SevaCore.of(context).loggedInUser.email,
+      SevaCore.of(context).loggedInUser.sevaUserID,
     );
 
     if (model.admins.length == 0) return Container();
@@ -159,7 +160,7 @@ class _TimeBankAdminView extends StatelessWidget {
         getSectionTitle(context, 'Admins'),
         ...model.admins.map((admin) {
           return FutureBuilder<UserModel>(
-            future: FirestoreManager.getUserForEmail(emailAddress: admin),
+            future: FirestoreManager.getUserForId(sevaUserId: admin),
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text(snapshot.error.toString());
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -177,7 +178,7 @@ class _TimeBankAdminView extends StatelessWidget {
                       onTap: () {
                         List<String> admins =
                             model.admins.map((s) => s).toList();
-                        admins.remove(user.email);
+                        admins.remove(user.sevaUserID);
                         updateTimebank(model, admins: admins);
                       },
                     ),
@@ -192,8 +193,8 @@ class _TimeBankAdminView extends StatelessWidget {
                             model.admins.map((s) => s).toList();
                         List<String> coordinators =
                             model.coordinators.map((s) => s).toList();
-                        coordinators.add(user.email);
-                        admins.remove(user.email);
+                        coordinators.add(user.sevaUserID);
+                        admins.remove(user.sevaUserID);
                         updateTimebank(
                           model,
                           coordinators: coordinators,
@@ -215,7 +216,7 @@ class _TimeBankAdminView extends StatelessWidget {
 
   Widget getCoordinationList(BuildContext context, TimebankModel model) {
     bool isAdmin = model.admins.contains(
-      SevaCore.of(context).loggedInUser.email,
+      SevaCore.of(context).loggedInUser.sevaUserID,
     );
     if (model.coordinators == null || model.coordinators.isEmpty)
       return Container();
@@ -227,7 +228,7 @@ class _TimeBankAdminView extends StatelessWidget {
         getSectionTitle(context, 'Coordinators'),
         ...model.coordinators.map((coordinator) {
           return FutureBuilder<UserModel>(
-            future: FirestoreManager.getUserForEmail(emailAddress: coordinator),
+            future: FirestoreManager.getUserForId(sevaUserId: coordinator),
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text(snapshot.error.toString());
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -245,7 +246,7 @@ class _TimeBankAdminView extends StatelessWidget {
                       onTap: () {
                         List<String> coordinators =
                             model.coordinators.map((s) => s).toList();
-                        coordinators.remove(user.email);
+                        coordinators.remove(user.sevaUserID);
                         updateTimebank(model, coordinators: coordinators);
                       },
                     ),
@@ -263,7 +264,7 @@ class _TimeBankAdminView extends StatelessWidget {
 
   Widget getMembersList(BuildContext context, TimebankModel model) {
     bool isAdmin = model.admins.contains(
-      SevaCore.of(context).loggedInUser.email,
+      SevaCore.of(context).loggedInUser.sevaUserID,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,7 +273,7 @@ class _TimeBankAdminView extends StatelessWidget {
         getSectionTitle(context, 'Members'),
         ...model.members.map((member) {
           return FutureBuilder<UserModel>(
-            future: FirestoreManager.getUserForEmail(emailAddress: member),
+            future: FirestoreManager.getUserForId(sevaUserId: member),
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text(snapshot.error.toString());
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -283,7 +284,7 @@ class _TimeBankAdminView extends StatelessWidget {
                 return Slidable(
                   delegate: SlidableDrawerDelegate(),
                   actions: <Widget>[
-                    if (!model.admins.contains(user.email))
+                    if (!model.admins.contains(user.sevaUserID))
                       IconSlideAction(
                         icon: Icons.supervisor_account,
                         color: Colors.green,
@@ -293,8 +294,8 @@ class _TimeBankAdminView extends StatelessWidget {
                               model.admins.map((s) => s).toList();
                           List<String> coordinators =
                               model.coordinators.map((s) => s).toList();
-                          admins.add(user.email);
-                          coordinators.remove(user.email);
+                          admins.add(user.sevaUserID);
+                          coordinators.remove(user.sevaUserID);
                           updateTimebank(
                             model,
                             admins: admins,
@@ -302,8 +303,8 @@ class _TimeBankAdminView extends StatelessWidget {
                           );
                         },
                       ),
-                    if (!model.coordinators.contains(user.email) &&
-                        !model.admins.contains(user.email))
+                    if (!model.coordinators.contains(user.sevaUserID) &&
+                        !model.admins.contains(user.sevaUserID))
                       IconSlideAction(
                         icon: Icons.supervised_user_circle,
                         color: Colors.orange,
@@ -311,7 +312,7 @@ class _TimeBankAdminView extends StatelessWidget {
                         onTap: () {
                           List<String> coordinators =
                               model.coordinators.map((s) => s).toList();
-                          coordinators.add(user.email);
+                          coordinators.add(user.sevaUserID);
                           updateTimebank(model, coordinators: coordinators);
                         },
                       ),
@@ -328,9 +329,9 @@ class _TimeBankAdminView extends StatelessWidget {
                             model.coordinators.map((s) => s).toList();
                         List<String> members =
                             model.members.map((s) => s).toList();
-                        admins.remove(user.email);
-                        coordinators.remove(user.email);
-                        members.remove(user.email);
+                        admins.remove(user.sevaUserID);
+                        coordinators.remove(user.sevaUserID);
+                        members.remove(user.sevaUserID);
                         updateTimebank(
                           model,
                           members: members,
@@ -426,6 +427,6 @@ class _TimeBankAdminView extends StatelessWidget {
     if (members != null) {
       model.members = members;
     }
-    await FirestoreManager.updateTimebank(model: model);
+    await FirestoreManager.updateTimebank(timebankModel:  model);
   }
 }

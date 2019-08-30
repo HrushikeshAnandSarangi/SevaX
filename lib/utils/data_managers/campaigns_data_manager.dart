@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:meta/meta.dart';
 
 import 'package:sevaexchange/models/campaign_model.dart';

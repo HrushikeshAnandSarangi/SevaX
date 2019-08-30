@@ -3,7 +3,8 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
 
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
@@ -26,29 +27,94 @@ class NewsList extends StatefulWidget {
 }
 
 class NewsListState extends State<NewsList> {
+  String timebankName;
+  String timebankId=FlavorConfig.timebankId;
+  List<TimebankModel> timebankList = [];
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<NewsModel>>(
-      stream: FirestoreManager.getNewsStream(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
-            break;
-          default:
-            List<NewsModel> newsList = snapshot.data;
-            if (newsList.length == 0) {
-              return Center(child: Text('Your feed is empty'));
+    return Column(
+      children: <Widget>[
+        StreamBuilder<Object>(
+            stream: FirestoreManager.getTimebanksForUserStream(
+                userId: SevaCore.of(context).loggedInUser.sevaUserID),
+            builder: (context, snapshot) {
+              if (snapshot.hasError)
+                return new Text('Error: ${snapshot.error}');
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              timebankList = snapshot.data;
+              // timebankList.forEach((t){
+              //   if(t.name==timebankName){
+              //     timebankId=t.id;
+              //   }
+              // });
+              List<String> dropdownList = [];
+              timebankList.forEach((t) {
+                dropdownList.add(t.id);
+              });
+              return DropdownButton<String>(
+                value: timebankId,
+                onChanged: (String newValue) {
+                  setState(() {
+                    timebankId = newValue;
+                    //print(timebankId);
+                  });
+                },
+                items:
+                    dropdownList.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: FutureBuilder<Object>(
+                        future: FirestoreManager.getTimeBankForId(
+                            timebankId: value),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError)
+                            return new Text('Error: ${snapshot.error}');
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Offstage();
+                          }
+                          TimebankModel timebankModel = snapshot.data;
+                          return Text(timebankModel.name);
+                        }),
+                  );
+                }).toList(),
+              );
+            }),
+        Divider(
+          color: Colors.grey,
+          height: 0,
+        ),
+        StreamBuilder<List<NewsModel>>(
+          stream: FirestoreManager.getNewsStream(
+              timebankID: timebankId),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Center(child: CircularProgressIndicator());
+                break;
+              default:
+                List<NewsModel> newsList = snapshot.data;
+                if (newsList.length == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: Text('Your feed is empty')),
+                  );
+                }
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: newsList.length,
+                    itemBuilder: (context, index) {
+                      return getNewsCard(newsList.elementAt(index), false);
+                    },
+                  ),
+                );
             }
-            return ListView.builder(
-              itemCount: newsList.length,
-              itemBuilder: (context, index) {
-                return getNewsCard(newsList.elementAt(index), false);
-              },
-            );
-        }
-      },
+          },
+        ),
+      ],
     );
   }
 
@@ -164,8 +230,9 @@ class NewsListState extends State<NewsList> {
                                       children: <Widget>[
                                         SizedBox(width: 16),
                                         FlavorConfig.appFlavor ==
-                                                Flavor.HUMANITY_FIRST || FlavorConfig.appFlavor ==
-                                                Flavor.APP
+                                                    Flavor.HUMANITY_FIRST ||
+                                                FlavorConfig.appFlavor ==
+                                                    Flavor.APP
                                             ? Icon(
                                                 Icons.perm_contact_calendar,
                                                 color: Theme.of(context)
@@ -205,10 +272,12 @@ class NewsListState extends State<NewsList> {
                                   ),
                                 ),
                                 getOptionButtons(
-                                  Padding(padding: EdgeInsets.symmetric(horizontal:6, vertical: 2),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
                                     child: FlavorConfig.appFlavor ==
-                                            Flavor.HUMANITY_FIRST || FlavorConfig.appFlavor ==
-                                                Flavor.APP
+                                                Flavor.HUMANITY_FIRST ||
+                                            FlavorConfig.appFlavor == Flavor.APP
                                         ? Icon(
                                             Icons.share,
                                             color:

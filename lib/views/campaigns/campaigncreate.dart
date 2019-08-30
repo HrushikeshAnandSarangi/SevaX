@@ -6,7 +6,7 @@ import 'package:sevaexchange/components/sevaavatar/campaignavatar.dart';
 import 'package:sevaexchange/views/membersadd.dart';
 
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 class CampaignCreate extends StatelessWidget {
   final TimebankModel timebankModel;
@@ -56,7 +56,7 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
     super.initState();
 
     globals.campaignAvatarURL = null;
-    globals.addedMembersEmail = [];
+    globals.addedMembersId = [];
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
   }
@@ -88,13 +88,13 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
       'creatoremail': SevaCore.of(context).loggedInUser.email,
       'address': _address,
       'campaignavatarurl': globals.campaignAvatarURL,
-      'membersemail': globals.addedMembersEmail,
+      'membersemail': globals.addedMembersId,
       'membersfullname': globals.addedMembersFullname,
       'membersphotourl': globals.addedMembersPhotoURL,
       'posttimestamp': timestamp
     });
     globals.campaignAvatarURL = null;
-    globals.addedMembersEmail = [];
+    globals.addedMembersId = [];
   }
 
   @override
@@ -308,10 +308,10 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
   }
 
   _showMembers() {
-    if (globals.addedMembersEmail == []) {
+    if (globals.addedMembersId == []) {
       Text('');
     } else {
-      Text(globals.addedMembersEmail.toString());
+      Text(globals.addedMembersId.toString());
     }
   }
 }

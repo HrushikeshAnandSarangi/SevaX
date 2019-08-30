@@ -5,7 +5,8 @@ import 'package:sevaexchange/components/sevaavatar/campaignavatar.dart';
 import 'package:sevaexchange/views/membersaddedit.dart';
 import 'package:sevaexchange/views/membersmanagecampaign.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/models/campaign_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FirestoreManager;
 
@@ -358,7 +359,7 @@ class CampaignEditFormState extends State<CampaignEditForm> {
   }
 
   _showMembers() {
-    if (globals.addedMembersEmail == []) {
+    if (globals.addedMembersId == []) {
       Text('');
     } else {
       Text(widget.campaignModel.members

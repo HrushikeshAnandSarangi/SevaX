@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/views/membersaddedit.dart';
 import 'package:sevaexchange/views/membersmanage.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 
 class TimebankEdit extends StatelessWidget {
@@ -72,9 +73,9 @@ class TimebankEditFormState extends State<TimebankEditForm> {
   void _updateToDB() {
     Firestore.instance
         .collection('timebanks')
-        .document(widget.timebankModel.creatorEmail +
+        .document(widget.timebankModel.creatorId +
             '*' +
-            widget.timebankModel.postTimestamp.toString())
+            widget.timebankModel.createdAt.toString())
         .updateData({
       'timebankname': _timeBankName,
       'missionstatement': _missionStatement,
@@ -196,7 +197,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
               ),
               Text(''),
               TextFormField(
-                initialValue: widget.timebankModel.primaryEmail,
+                initialValue: widget.timebankModel.emailId,
                 decoration: InputDecoration(
                   hintText: 'The Timebank\'s primary email',
                   labelText: 'Email',
@@ -224,7 +225,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
               ),
               Text(''),
               TextFormField(
-                initialValue: widget.timebankModel.primaryNumber,
+                initialValue: widget.timebankModel.phoneNumber,
                 decoration: InputDecoration(
                   hintText: 'The Timebanks primary phone number',
                   labelText: 'Phone Number',

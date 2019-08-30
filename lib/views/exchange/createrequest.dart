@@ -16,8 +16,9 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
+  final String timebankId;
   //print('at createrequest = $isOfferRequest');
-  CreateRequest({Key key, this.isOfferRequest, this.offer}) : super(key: key);
+  CreateRequest({Key key, this.isOfferRequest, this.offer,this.timebankId }) : super(key: key);
 
   @override
   _CreateRequestState createState() => _CreateRequestState();
@@ -45,7 +46,7 @@ class _CreateRequestState extends State<CreateRequest> {
         centerTitle: false,
       ),
       body: RequestCreateForm(
-          isOfferRequest: widget.isOfferRequest, offer: widget.offer),
+          isOfferRequest: widget.isOfferRequest, offer: widget.offer,timebankId: widget.timebankId,),
     );
   }
 }
@@ -53,7 +54,8 @@ class _CreateRequestState extends State<CreateRequest> {
 class RequestCreateForm extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
-  RequestCreateForm({this.isOfferRequest, this.offer});
+  final String timebankId;
+  RequestCreateForm({this.isOfferRequest, this.offer,this.timebankId});
 
   @override
   RequestCreateFormState createState() {
@@ -78,7 +80,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   @override
   void initState() {
     super.initState();
-    _selectedTimebankId = FlavorConfig.timebankId;
+    _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
   }
 

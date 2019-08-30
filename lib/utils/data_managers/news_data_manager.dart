@@ -18,13 +18,13 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
       .updateData(newsObject.toMap());
 }
 
-Stream<List<NewsModel>> getNewsStream() async* {
+Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   var data = Firestore.instance
       .collection('news')
       .where('entity', isEqualTo: {
         'entityType': 'timebanks',
-        'entityId': FlavorConfig.appFlavor == Flavor.APP? 'ajilo297@gmail.com*1559128156543' : FlavorConfig.timebankId,
-        'entityName': FlavorConfig.appFlavor == Flavor.APP? 'Yang 2020' : FlavorConfig.timebankName,
+        'entityId': timebankID,
+        //'entityName': FlavorConfig.timebankName,
       })
       .orderBy('posttimestamp', descending: true)
       .snapshots();

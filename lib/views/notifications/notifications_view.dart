@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/utils.dart' as prefix0;
 import 'package:sevaexchange/views/core.dart';
@@ -124,10 +124,10 @@ class NotificationsView extends StatelessWidget {
                 break;
               case NotificationType.TransactionDebit:
                 // TODO: Handle this case.
-                // TransactionModel model =
-                //     TransactionModel.fromMap(notification.data);
-                // return getNotificationDebit(
-                //     model, notification.senderUserId, notification.id);
+                TransactionModel model =
+                    TransactionModel.fromMap(notification.data);
+                return getNotificationDebit(
+                    model, notification.senderUserId, notification.id);
                 break;
               case NotificationType.OfferAccept:
                 OfferModel offerModel = OfferModel.fromMap(notification.data);
@@ -214,7 +214,11 @@ class NotificationsView extends StatelessWidget {
                       ),
                       TextSpan(
                         text: () {
-                          return '${model.credits} Yang Bucks';
+                          return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                              ? '${model.credits} Yang Bucks'
+                              : FlavorConfig.appFlavor == Flavor.TULSI
+                                  ? '${model.credits} Tulsi TOkens'
+                                  : '${model.credits} Seva Coins';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
@@ -264,7 +268,11 @@ class NotificationsView extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: () {
-                          return '${model.credits} Yang Bucks ';
+                          return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                              ? '${model.credits} Yang Bucks '
+                              : FlavorConfig.appFlavor == Flavor.TULSI
+                                  ? '${model.credits} Tulsi TOkens '
+                                  : '${model.credits} Seva Coins ';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
@@ -750,7 +758,6 @@ class NotificationsView extends StatelessWidget {
                       builder: (context) => ChatView(
                             useremail: user.email,
                             chatModel: chatModel,
-                            
                           )),
                 );
               },

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 
@@ -167,7 +168,10 @@ Stream<List<NotificationsModel>> getNotifications({
           NotificationsModel model = NotificationsModel.fromMap(
             documentSnapshot.data,
           );
-          if (model.type != NotificationType.TransactionDebit)
+          if (FlavorConfig.appFlavor != Flavor.APP) {
+            if (model.type != NotificationType.TransactionDebit)
+              notifications.add(model);
+          } else
             notifications.add(model);
         });
 

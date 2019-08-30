@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/base/base_view.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/app_bar/common_app_bar_view.dart';
@@ -24,7 +25,7 @@ class NewsView extends StatelessWidget {
         userEmail: '',
       ),
       body: StreamBuilder<List<NewsModel>>(
-        stream: FirestoreManager.getNewsStream(),
+        stream: FirestoreManager.getNewsStream(timebankID: FlavorConfig.timebankId),
         builder: (context, snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {

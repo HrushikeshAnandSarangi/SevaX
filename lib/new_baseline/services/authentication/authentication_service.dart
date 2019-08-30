@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/services/authentication/email_authentication_service.dart';
 import 'package:sevaexchange/new_baseline/services/authentication/google_authentication_service.dart';
@@ -144,7 +144,7 @@ class AuthenticationService extends BaseService {
       }
       model.members = tbMembers;
       // TODO: Move to timebankService
-      await FirestoreManager.updateTimebank(model: model);
+      await FirestoreManager.updateTimebank(timebankModel: model);
     }
 
     return await _localStorageService.saveLoggedInUser(

@@ -2,25 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views//membersadd.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 class TimebankCreate extends StatelessWidget {
+  final String timebankId;
+  TimebankCreate({@required this.timebankId});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Start a Timebank"),
+        title: Text(
+          "Start a Timebank",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: false,
       ),
-      body: TimebankCreateForm(),
+      body: TimebankCreateForm(
+        timebankId: timebankId,
+      ),
     );
   }
 }
 
 // Create a Form Widget
 class TimebankCreateForm extends StatefulWidget {
+  final String timebankId;
+  TimebankCreateForm({@required this.timebankId});
   @override
   TimebankCreateFormState createState() {
     return TimebankCreateFormState();
@@ -36,20 +47,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
 
-  String title = '';
-  String subHeading = '';
-  String description = '';
-  String _timeBankName;
-  String _missionStatement;
-  String _address;
-  String _primaryEmail;
-  String _primaryNumber;
+  TimebankModel timebankModel = TimebankModel();
+  bool protectedVal = false;
 
   void initState() {
     super.initState();
 
     globals.timebankAvatarURL = null;
-    globals.addedMembersEmail = [];
+    globals.addedMembersId = [];
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
   }
@@ -59,31 +64,28 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     // if (!_exists) {
     print('writeToDB');
     int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-    Firestore.instance
-        .collection('timebanks')
-        .document(
-            SevaCore.of(context).loggedInUser.email + '*' + timestampString)
-        .setData({
-      'timebankname': _timeBankName,
-      'missionstatement': _missionStatement,
-      'primaryemail': _primaryEmail,
-      'primarynumber': _primaryNumber,
-      'ownerfullname': SevaCore.of(context).loggedInUser.fullname,
-      'ownerphotourl': SevaCore.of(context).loggedInUser.photoURL,
-      'ownersevauserid': SevaCore.of(context).loggedInUser.sevaUserID,
-      'owneremail': SevaCore.of(context).loggedInUser.email,
-      'creatoremail': SevaCore.of(context).loggedInUser.email,
-      'address': _address,
-      'timebankavatarurl': globals.timebankAvatarURL,
-      'membersemail': globals.addedMembersEmail,
-      'membersfullname': globals.addedMembersFullname,
-      'membersphotourl': globals.addedMembersPhotoURL,
-      'posttimestamp': timestamp
+    List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
+    globals.addedMembersId.forEach((m) {
+      members.add(m);
     });
+
+    timebankModel.id = Utils.getUuid();
+    timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
+    timebankModel.photoUrl = globals.timebankAvatarURL;
+    timebankModel.createdAt = timestamp;
+    timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
+    timebankModel.coordinators = [];
+    timebankModel.members = members;
+    timebankModel.children = [];
+    timebankModel.balance = 0;
+    timebankModel.protected = protectedVal;
+    timebankModel.parentTimebankId = widget.timebankId;
+
+    createTimebank(timebankModel: timebankModel);
+
     globals.timebankAvatarURL = null;
-    globals.addedMembersEmail = [];
-    Navigator.pop(context);
+    globals.addedMembersId = [];
+
     // } else {
     //   print('timebank name exists');
     // }
@@ -109,23 +111,38 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Container(
-                        child: FlatButton(
-                      // color: Colors.blue,
-                      onPressed: () {
-                        // Validate will return true if the form is valid, or false if
-                        // the form is invalid.
+                        child: FutureBuilder<Object>(
+                            future:
+                                getTimeBankForId(timebankId: widget.timebankId),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError)
+                                return Text('Error: ${snapshot.error}');
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) return Offstage();
+                              TimebankModel parentTimebank = snapshot.data;
+                              return FlatButton(
+                                // color: Colors.blue,
+                                onPressed: () {
+                                  // Validate will return true if the form is valid, or false if
+                                  // the form is invalid.
 
-                        if (_formKey.currentState.validate()) {
-                          // If the form is valid, we want to show a Snackbar
-                          _writeToDB();
-                        }
-                      },
-                      child: Text(
-                        'Create Timebank',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      textColor: Colors.blue,
-                    )),
+                                  if (_formKey.currentState.validate()) {
+                                    // If the form is valid, we want to show a Snackbar
+                                    _writeToDB();
+                                    if(parentTimebank.children == null) parentTimebank.children=[];
+                                    parentTimebank.children
+                                        .add(timebankModel.id);
+                                    updateTimebank(timebankModel: parentTimebank);
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Text(
+                                  'Create Timebank',
+                                  style: TextStyle(fontSize: 16.0),
+                                ),
+                                textColor: Colors.blue,
+                              );
+                            })),
                   ),
                 ],
               ),
@@ -151,12 +168,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   ),
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLines: 3,
+                maxLines: 1,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  _timeBankName = value;
+                  timebankModel.name = value;
                 },
               ),
               Text(' '),
@@ -178,12 +195,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   ),
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLines: 10,
+                maxLines: null,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  _missionStatement = value;
+                  timebankModel.missionStatement = value;
                 },
               ),
               Text(''),
@@ -210,7 +227,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   if (value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  _primaryEmail = value;
+                  timebankModel.emailId = value;
                 },
               ),
               Text(''),
@@ -237,7 +254,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   if (value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  _primaryNumber = value;
+                  timebankModel.phoneNumber = value;
                 },
               ),
               Text(''),
@@ -259,13 +276,32 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   ),
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLines: 6,
+                maxLines: null,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
                   }
-                  _address = value;
+                  timebankModel.address = value;
                 },
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  Text(
+                    'Protected :',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Checkbox(
+                    value: protectedVal,
+                    onChanged: (bool value) {
+                      setState(() {
+                        protectedVal = value;
+                      });
+                    },
+                  ),
+                ],
               ),
               // Text(sevaUserID),
               Padding(
@@ -299,11 +335,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   }
 
   _showMembers() {
-    if (globals.addedMembersEmail == []) {
+    if (globals.addedMembersId == []) {
       Text('');
     } else {
-      print('dkcjzdlcj - ' + globals.addedMembersEmail.toString());
-      Text(globals.addedMembersEmail.toString());
+      print('dkcjzdlcj - ' + globals.addedMembersId.toString());
+      Text(globals.addedMembersId.toString());
     }
   }
 }

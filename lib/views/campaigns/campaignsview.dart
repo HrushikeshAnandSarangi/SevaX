@@ -7,7 +7,9 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/campaigns/campaign_join_request.dart';
 import 'package:sevaexchange/views/campaigns/campaign_join_requests_view.dart';
 import 'package:sevaexchange/views/membersmanagecampaign.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/models/campaign_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart'
     as FireStoreManager;
 

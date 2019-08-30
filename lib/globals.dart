@@ -22,7 +22,7 @@ List<dynamic> skills = [];
 //List<dynamic> userTimebanksCampaigns = [];
 List<dynamic> tempList = [];
 
-List<dynamic> addedMembersEmail = [];
+List<dynamic> addedMembersId = [];
 List<dynamic> addedMembersFullname = [];
 List<dynamic> addedMembersPhotoURL = [];
 

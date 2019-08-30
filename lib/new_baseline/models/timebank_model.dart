@@ -7,7 +7,6 @@ class TimebankModel {
     String address;
     String creatorId;
     String photoUrl;
-    String photoCredits;
     int createdAt;
     List<String> admins;
     List<String> coordinators;
@@ -26,7 +25,6 @@ class TimebankModel {
         this.address,
         this.creatorId,
         this.photoUrl,
-        this.photoCredits,
         this.createdAt,
         this.admins,
         this.coordinators,
@@ -46,7 +44,6 @@ class TimebankModel {
         address: json["address"] == null ? null : json["address"],
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
-        photoCredits: json["photo_credits"] == null ? null : json["photo_credits"],
         createdAt: json["created_at"] == null ? null : json["created_at"],
         admins: json["admins"] == null ? null : new List<String>.from(json["admins"].map((x) => x)),
         coordinators: json["coordinators"] == null ? null : new List<String>.from(json["coordinators"].map((x) => x)),
@@ -66,7 +63,6 @@ class TimebankModel {
         "address": address == null ? null : address,
         "creator_id": creatorId == null ? null : creatorId,
         "photo_url": photoUrl == null ? null : photoUrl,
-        "photo_credits": photoCredits == null ? null : photoCredits,
         "created_at": createdAt == null ? null : createdAt,
         "admins": admins == null ? null : new List<dynamic>.from(admins.map((x) => x)),
         "coordinators": coordinators == null ? null : new List<dynamic>.from(coordinators.map((x) => x)),

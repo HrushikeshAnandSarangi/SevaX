@@ -8,6 +8,8 @@ import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class CreateOffer extends StatelessWidget {
+  final String timebankId;
+  CreateOffer({this.timebankId});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,13 +20,15 @@ class CreateOffer extends StatelessWidget {
         title: Text("Create Offer",style: TextStyle(color: Colors.white),),
         centerTitle: false,
       ),
-      body: MyCustomForm(),
+      body: MyCustomForm(timebankId: timebankId,),
     );
   }
 }
 
 // Create a Form Widget
 class MyCustomForm extends StatefulWidget {
+  final String timebankId;
+  MyCustomForm({this.timebankId});
   @override
   MyCustomFormState createState() {
     return MyCustomFormState();
@@ -55,7 +59,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       description: description,
       schedule: schedule,
-      timebankId: FlavorConfig.timebankId,
+      timebankId: widget.timebankId,
       timestamp: timestamp,
     );
     await FirestoreManager.createOffer(offerModel: model);

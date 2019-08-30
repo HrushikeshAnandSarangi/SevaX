@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 import 'package:sevaexchange/views/core.dart';
 
@@ -31,11 +32,11 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
     Firestore.instance
         .collection('join_requests_timebanks')
         .document(
-            '${widget.owner.email}*${widget.timebankModel.postTimestamp}*${SevaCore.of(context).loggedInUser.email}')
+            '${widget.owner.email}*${widget.timebankModel.createdAt}*${SevaCore.of(context).loggedInUser.email}')
         .setData({
-      'timebankid': widget.timebankModel.creatorEmail +
+      'timebankid': widget.timebankModel.creatorId +
           '*' +
-          widget.timebankModel.postTimestamp.toString(),
+          widget.timebankModel.createdAt.toString(),
       'reason': _reason,
       'requestor_email': SevaCore.of(context).loggedInUser.email,
       'requestor_fullname': SevaCore.of(context).loggedInUser.fullname,

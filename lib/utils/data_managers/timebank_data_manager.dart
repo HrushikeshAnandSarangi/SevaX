@@ -2,9 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
 
-import 'package:sevaexchange/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
-/// Get all timebanks associated with a User
+Future<void> createTimebank({@required TimebankModel timebankModel}) async {
+  return await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankModel.id)
+      .setData(timebankModel.toMap());
+}
+
+/// Get all timebanknew associated with a User
 Future<List<TimebankModel>> getTimeBanksForUser(
     {@required String userEmail}) async {
   assert(userEmail != null && userEmail.isNotEmpty,
@@ -33,12 +40,12 @@ Future<List<TimebankModel>> getTimeBanksForUser(
   return timeBankModelList;
 }
 
-/// Get all timebanks associated with a User as a Stream
+/// Get all timebanknew associated with a User as a Stream
 Stream<List<TimebankModel>> getTimebanksForUserStream(
-    {@required String userEmail}) async* {
+    {@required String userId}) async* {
   var data = Firestore.instance
-      .collection('timebanks')
-      .where('membersemail', isEqualTo: userEmail)
+      .collection('timebanknew')
+      .where('members', arrayContains: userId)
       .snapshots();
 
   yield* data.transform(
@@ -60,11 +67,11 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 }
 
 /// Update Timebanks
-Future updateTimebank({TimebankModel model}) async {
-  await Firestore.instance
-      .collection('timebanks')
-      .document(model.id)
-      .updateData(model.toMap());
+Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
+  return await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankModel.id)
+      .updateData(timebankModel.toMap());
 }
 
 /// Get a particular Timebank by it's ID
@@ -74,7 +81,7 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
 
   TimebankModel timeBankModel;
   await Firestore.instance
-      .collection('timebanks')
+      .collection('timebanknew')
       .document(timebankId)
       .get()
       .then((DocumentSnapshot documentSnapshot) {
@@ -86,11 +93,15 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   return timeBankModel;
 }
 
+// Future<String> getTimebankNameforid({@required String timebankId}) async {
+
+// }
+
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
     {@required String timebankId}) async* {
   var data = Firestore.instance
-      .collection('timebanks')
+      .collection('timebanknew')
       .document(timebankId)
       .snapshots();
 
@@ -104,3 +115,5 @@ Stream<TimebankModel> getTimebankModelStream(
     ),
   );
 }
+
+

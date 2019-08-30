@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/views/exchange/createoffer.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/news/newscreate.dart';
+import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
+import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/timebanks/timebankedit.dart';
 import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
 import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
@@ -38,11 +44,12 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return timebankStreamBuilder();
+  Widget build(BuildContext buildcontext) {
+    return timebankStreamBuilder(buildcontext);
   }
 
-  StreamBuilder<TimebankModel> timebankStreamBuilder() {
+  StreamBuilder<TimebankModel> timebankStreamBuilder(
+      BuildContext buildcontext) {
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
           timebankId: widget.timebankId),
@@ -52,6 +59,15 @@ class _TimebankViewState extends State<TimebankView> {
             return Scaffold(
               appBar: AppBar(
                 title: Text('Loading'),
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.home),
+                    onPressed: () {
+                      Navigator.popUntil(context,
+                          ModalRoute.withName(Navigator.defaultRouteName));
+                    },
+                  )
+                ],
               ),
               body: Center(
                 child: CircularProgressIndicator(),
@@ -60,13 +76,41 @@ class _TimebankViewState extends State<TimebankView> {
             break;
           default:
             this.timebankModel = snapshot.data;
-            globals.timebankAvatarURL = timebankModel.avatarUrl;
+            globals.timebankAvatarURL = timebankModel.photoUrl;
             return Scaffold(
               appBar: AppBar(
                 title: Text(
                   '${timebankModel.name}',
-                  style: TextStyle(fontSize: 16.0),
+                  style: TextStyle(color: Colors.white),
                 ),
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.home),
+                    onPressed: () {
+                      Navigator.popUntil(context,
+                          ModalRoute.withName(Navigator.defaultRouteName));
+                    },
+                  )
+                ],
+              ),
+              floatingActionButton: FloatingActionButton.extended(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  'Create Sub TimeBank',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TimebankCreate(
+                              timebankId: timebankModel.id,
+                            )),
+                  );
+                },
               ),
               body: SafeArea(
                 child: SingleChildScrollView(
@@ -86,7 +130,7 @@ class _TimebankViewState extends State<TimebankView> {
                               child: CircleAvatar(
                                 backgroundColor: Colors.grey,
                                 backgroundImage:
-                                    _avatarImage(timebankModel.avatarUrl),
+                                    _avatarImage(timebankModel.photoUrl),
                                 minRadius: 40.0,
                               ),
                             ),
@@ -130,6 +174,111 @@ class _TimebankViewState extends State<TimebankView> {
                           },
                           child: _whichButton('viewcampaigns'),
                         ),
+                        FlatButton(
+                          child: Text(
+                            'View Sub Timebanks',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TimeBankList(
+                                        timebankid: timebankModel.id,
+                                        title: 'Sub Timebanks',
+                                      )),
+                            );
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'Create News Feed',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NewsCreate(timebankId: timebankModel.id,),
+                                ));
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'Create Campaign Request',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CreateRequest(timebankId: timebankModel.id,), ),
+                            );
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'Create Volunteer Offer',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CreateOffer(timebankId: timebankModel.id,)
+                                      ),
+                            );
+                          },
+                        ),
+                        timebankModel.parentTimebankId != null
+                            ? FutureBuilder<Object>(
+                                future: FirestoreManager.getTimeBankForId(
+                                    timebankId: timebankModel.parentTimebankId),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError)
+                                    return Text('Error: ${snapshot.error}');
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting)
+                                    return Offstage();
+                                  TimebankModel model = snapshot.data;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 10.0, left: 20.0),
+                                        child: Text(
+                                          'Parent Timebank',
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w700,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 10.0, left: 20.0),
+                                        child: Text(
+                                          '${model.name}',
+                                          style: TextStyle(fontSize: 18.0),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                })
+                            : Offstage(),
+
                         Padding(
                           padding: EdgeInsets.only(top: 10.0, left: 20.0),
                           child: Text(
@@ -181,12 +330,12 @@ class _TimebankViewState extends State<TimebankView> {
                           padding: EdgeInsets.only(left: 3.0),
                           child: FlatButton(
                             child: Text(
-                              '${timebankModel.primaryNumber}',
+                              '${timebankModel.phoneNumber}',
                               style: TextStyle(
                                   fontSize: 18.0, fontWeight: FontWeight.w400),
                             ),
                             onPressed: () {
-                              String _number = timebankModel.primaryNumber;
+                              String _number = timebankModel.phoneNumber;
                               launch('tel:$_number');
                             },
                           ),
@@ -206,24 +355,42 @@ class _TimebankViewState extends State<TimebankView> {
                           padding: EdgeInsets.only(left: 3.0),
                           child: FlatButton(
                             child: Text(
-                              '${timebankModel.primaryEmail}',
+                              '${timebankModel.emailId}',
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
                             onPressed: () {
-                              String _email = '${timebankModel.primaryEmail}';
+                              String _email = '${timebankModel.emailId}';
                               launch('mailto:$_email');
                             },
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.all(20.0),
+                          padding: EdgeInsets.only(top: 10.0, left: 20.0),
+                          child: Text(
+                            'Protected :',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w700,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10.0, left: 20.0),
+                          child: Text(
+                            '${timebankModel.protected}',
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20, bottom: 80),
                           child: Row(
                             children: <Widget>[
                               Text(
-                                'Member List',
+                                'Manage Members',
                                 style: TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w700),
@@ -232,75 +399,75 @@ class _TimebankViewState extends State<TimebankView> {
                             ],
                           ),
                         ),
-                        StreamBuilder<UserModel>(
-                          stream: FirestoreManager.getUserForIdStream(
-                              sevaUserId: timebankModel.ownerSevaUserId),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasError)
-                              return Text('Error: ${snapshot.error}');
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.waiting:
-                                return Center(
-                                    child: CircularProgressIndicator());
-                                break;
-                              default:
-                                UserModel ownerModel = snapshot.data;
-                                this.ownerModel = ownerModel;
-                                return FlatButton(
-                                  onPressed: ownerModel != null
-                                      ? () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfileViewer(
-                                                        userEmail:
-                                                            ownerModel.email,
-                                                      )));
-                                        }
-                                      : null,
-                                  child: Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 28.0,
-                                            right: 8.0,
-                                            top: 8.0,
-                                            bottom: 8.0),
-                                        child: CircleAvatar(
-                                          // minRadius: 20.0,
-                                          backgroundImage: ownerModel == null ||
-                                                  ownerModel.photoURL == null ||
-                                                  ownerModel.photoURL.isEmpty
-                                              ? AssetImage(
-                                                  'lib/assets/images/noimagefound.png')
-                                              : NetworkImage(
-                                                  ownerModel.photoURL),
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Container(
-                                          padding: EdgeInsets.only(right: 13.0),
-                                          child: ownerModel != null &&
-                                                  ownerModel.fullname != null
-                                              ? Text(
-                                                  ownerModel.fullname,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                    fontSize: 18.0,
-                                                  ),
-                                                )
-                                              : Container(),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                            }
-                          },
-                        ),
-                        getTextWidgets(context),
+                        // StreamBuilder<UserModel>(
+                        //   stream: FirestoreManager.getUserForIdStream(
+                        //       sevaUserId: timebankModel.creatorId),
+                        //   builder: (context, snapshot) {
+                        //     if (snapshot.hasError)
+                        //       return Text('Error: ${snapshot.error}');
+                        //     switch (snapshot.connectionState) {
+                        //       case ConnectionState.waiting:
+                        //         return Center(
+                        //             child: CircularProgressIndicator());
+                        //         break;
+                        //       default:
+                        //         UserModel ownerModel = snapshot.data;
+                        //         this.ownerModel = ownerModel;
+                        //         return FlatButton(
+                        //           onPressed: ownerModel != null
+                        //               ? () {
+                        //                   Navigator.push(
+                        //                       context,
+                        //                       MaterialPageRoute(
+                        //                           builder: (context) =>
+                        //                               ProfileViewer(
+                        //                                 userEmail:
+                        //                                     ownerModel.email,
+                        //                               )));
+                        //                 }
+                        //               : null,
+                        //           child: Row(
+                        //             children: <Widget>[
+                        //               Padding(
+                        //                 padding: const EdgeInsets.only(
+                        //                     left: 28.0,
+                        //                     right: 8.0,
+                        //                     top: 8.0,
+                        //                     bottom: 8.0),
+                        //                 child: CircleAvatar(
+                        //                   // minRadius: 20.0,
+                        //                   backgroundImage: ownerModel == null ||
+                        //                           ownerModel.photoURL == null ||
+                        //                           ownerModel.photoURL.isEmpty
+                        //                       ? AssetImage(
+                        //                           'lib/assets/images/noimagefound.png')
+                        //                       : NetworkImage(
+                        //                           ownerModel.photoURL),
+                        //                 ),
+                        //               ),
+                        //               Flexible(
+                        //                 child: Container(
+                        //                   padding: EdgeInsets.only(right: 13.0),
+                        //                   child: ownerModel != null &&
+                        //                           ownerModel.fullname != null
+                        //                       ? Text(
+                        //                           ownerModel.fullname,
+                        //                           overflow:
+                        //                               TextOverflow.ellipsis,
+                        //                           style: TextStyle(
+                        //                             fontSize: 18.0,
+                        //                           ),
+                        //                         )
+                        //                       : Container(),
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         );
+                        //     }
+                        //   },
+                        // ),
+                        //getTextWidgets(context),
                       ],
                     ),
                   ),
@@ -313,7 +480,7 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   Widget _showCreateCampaignButton(BuildContext context) {
-    if (timebankModel.ownerSevaUserId ==
+    if (timebankModel.creatorId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
       return FlatButton(
         onPressed: () {
@@ -334,7 +501,7 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   Widget _showJoinRequests(BuildContext context) {
-    if (timebankModel.ownerSevaUserId ==
+    if (timebankModel.creatorId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
       return FlatButton(
         onPressed: () {
@@ -357,7 +524,7 @@ class _TimebankViewState extends State<TimebankView> {
   Widget _whichRoute(String section) {
     switch (section) {
       case 'timebanks':
-        if (timebankModel.ownerSevaUserId ==
+        if (timebankModel.creatorId ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
           return TimebankEdit(
             ownerModel: ownerModel,
@@ -371,7 +538,7 @@ class _TimebankViewState extends State<TimebankView> {
         }
         break;
       case 'campaigns':
-        if (timebankModel.ownerSevaUserId ==
+        if (timebankModel.creatorId ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
           return CampaignCreate(
             timebankModel: timebankModel,
@@ -398,7 +565,7 @@ class _TimebankViewState extends State<TimebankView> {
   Widget _whichButton(String section) {
     switch (section) {
       case 'timebanks':
-        if (timebankModel.ownerSevaUserId ==
+        if (timebankModel.creatorId ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
           return Text(
             'Edit Timebank',
@@ -412,7 +579,7 @@ class _TimebankViewState extends State<TimebankView> {
         }
         break;
       case 'campaigns':
-        if (timebankModel.ownerSevaUserId ==
+        if (timebankModel.creatorId ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
           return Text(
             'Create a Campaign (Project)',
@@ -444,7 +611,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   Widget _showManageMembersButton(BuildContext context) {
     assert(timebankModel.id != null);
-    if (timebankModel.ownerSevaUserId ==
+    if (timebankModel.creatorId ==
         SevaCore.of(context).loggedInUser.sevaUserID) {
       return FlatButton(
         onPressed: () {
@@ -452,8 +619,8 @@ class _TimebankViewState extends State<TimebankView> {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return MembersManage(
-                  timebankModel: timebankModel,
+                return TimebankAdminPage(
+                  timebankId: timebankModel.id,
                 );
               },
             ),

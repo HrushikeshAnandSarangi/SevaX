@@ -20,7 +20,7 @@ class FlavorConfig {
   static get timebankId {
     switch (appFlavor) {
       case Flavor.APP:
-        return 'ajilo297@gmail.com*1559128156543';
+        return '5a1b1566-4587-4882-b1a3-12be45eba15f';
         break;
       case Flavor.HUMANITY_FIRST:
         return 'ajilo297@gmail.com*1559128156543';
@@ -51,7 +51,8 @@ class FlavorConfig {
         return ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Colors.white,
+              color: Colors.deepPurple,
+              iconTheme: IconThemeData(color: Colors.white),
               elevation: 1,
             ),
             brightness: Brightness.light,

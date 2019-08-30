@@ -12,6 +12,7 @@ import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/search_view.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
@@ -133,9 +134,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
     // TODO: implement didChangeDependencies
     FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.timebankId)
         .then((timebank) {
-      if (timebank.admins.contains(SevaCore.of(context).loggedInUser.email) ||
+      if (timebank.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
-              .contains(SevaCore.of(context).loggedInUser.email)) {
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         setState(() {
           isAdminOrCoordinator = true;
         });
@@ -600,7 +601,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NewsCreate(),
+                                builder: (context) => NewsCreate(timebankId: FlavorConfig.timebankId,),
                               ),
                             )
                           }),
@@ -616,13 +617,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      if (isAdminOrCoordinator)
+                      if (isAdminOrCoordinator ||
+                          FlavorConfig.appFlavor == Flavor.APP)
                         {
                           Navigator.of(context).pop(),
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CreateRequest(),
+                              builder: (context) => CreateRequest(timebankId: FlavorConfig.timebankId,),
                             ),
                           )
                         }
@@ -669,9 +671,58 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreateOffer(),
+                          builder: (context) => CreateOffer(timebankId: FlavorConfig.timebankId,),
                         ),
                       )
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey,
+                  ),
+                  new ListTile(
+                    leading: new Icon(Icons.timeline,
+                        color: Theme.of(context).primaryColor),
+                    title: new Text(
+                      'Create Timebank',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    onTap: () => {
+                      if (isAdminOrCoordinator)
+                        {
+                          Navigator.of(context).pop(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TimebankCreate(
+                                timebankId: FlavorConfig.timebankId,
+                              ),
+                            ),
+                          )
+                        }
+                      else
+                        {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // return object of type Dialog
+                              return AlertDialog(
+                                title: new Text("Permission Denied"),
+                                content: new Text(
+                                    "You need to be an Admin or Coordinator to have permission to create timebanks"),
+                                actions: <Widget>[
+                                  // usually buttons at the bottom of the dialog
+                                  new FlatButton(
+                                    child: new Text("Close"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          )
+                        }
                     },
                   ),
                 ],

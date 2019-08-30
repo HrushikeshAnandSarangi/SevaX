@@ -81,7 +81,7 @@ class _AddMembersState extends State<AddMembers> {
                         ),
                         onTap: () {
                           setState(() {
-                            globals.addedMembersEmail.add(document['email']);
+                            globals.addedMembersId.add(document['sevauserid']);
                             globals.addedMembersFullname
                                 .add(document['fullname']);
                             globals.addedMembersPhotoURL
