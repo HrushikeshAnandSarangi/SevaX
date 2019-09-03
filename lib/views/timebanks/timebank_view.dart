@@ -209,7 +209,7 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'Create Campaign Request',
+                            'Create Volunteer Request',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),

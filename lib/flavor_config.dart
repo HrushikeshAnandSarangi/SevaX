@@ -57,14 +57,14 @@ class FlavorConfig {
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.purple,
-            primaryColor: Colors.deepPurple,
-            accentColor: Colors.blue,
-            indicatorColor: Colors.white,
+            primaryColor: Color(0xFF6f76f6),
+            accentColor: Color(0xFF3f46c6),
+            indicatorColor: Colors.amberAccent,
             primaryColorBrightness: Brightness.light,
             accentColorBrightness: Brightness.light,
             fontFamily: 'Montserrat',
             splashColor: Colors.grey,
-            bottomAppBarColor: Colors.grey[900]);
+            bottomAppBarColor: Colors.white);
         break;
       case Flavor.HUMANITY_FIRST:
         return ThemeData(

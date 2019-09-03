@@ -282,8 +282,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).bottomAppBarColor,
         type: BottomNavigationBarType.fixed,
-        elevation: 16,
-        unselectedItemColor: Theme.of(context).indicatorColor.withAlpha(150),
+        elevation: 26,
+        unselectedItemColor: Colors.black,
         items: () {
           List<PageProperty> bottomPages = [];
 
@@ -300,7 +300,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
           }).toList();
         }(),
         currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).indicatorColor,
+        selectedItemColor: Theme.of(context).primaryColor,
         onTap: (index) => setState(() {
           if (index == 3) {
             _settingModalBottomSheet(context);
@@ -431,7 +431,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
       bottom: TabBar(
         labelColor: Colors.white,
         tabs: [
-          Tab(child: Text('Campaign Requests')),
+          Tab(child: Text('Volunteer Requests')),
           Tab(child: Text('Volunteer Offers')),
         ],
         controller: controller,
@@ -613,7 +613,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     leading: new Icon(Icons.swap_horizontal_circle,
                         color: Theme.of(context).primaryColor),
                     title: new Text(
-                      'Create Campaign Request',
+                      'Create Volunteer Request',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
