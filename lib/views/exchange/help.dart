@@ -103,7 +103,7 @@ class RequestsState extends State<Requests> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  //dropdownList.insert(0, 'All');
+                  dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
@@ -145,200 +145,11 @@ class RequestsState extends State<Requests> {
           color: Colors.grey,
           height: 0,
         ),
-        timebankId != 'All'
-            ? FutureBuilder<Object>(
-                future: FirestoreManager.getUserForId(
-                    sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.error}');
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  UserModel user = snapshot.data;
-                  String loggedintimezone = user.timezone;
-
-                  return StreamBuilder<List<RequestModel>>(
-                    stream: FirestoreManager.getRequestListStream(
-                      timebankId: timebankId,
-                    ),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                      if (requestListSnapshot.hasError) {
-                        return new Text('Error: ${requestListSnapshot.error}');
-                      }
-                      switch (requestListSnapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Center(child: CircularProgressIndicator());
-                        default:
-                          List<RequestModel> requestModelList =
-                              requestListSnapshot.data;
-                          if (requestModelList.length == 0) {
-                            return Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Center(child: Text('No Requests')),
-                            );
-                          }
-                          return Expanded(
-                            child: Container(
-                              padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                              child: ListView(
-                                children: requestModelList.map(
-                                  (RequestModel requestModel) {
-                                    return getRequestView(
-                                        requestModel, loggedintimezone);
-                                  },
-                                ).toList(),
-                              ),
-                            ),
-                          );
-                      }
-                    },
-                  );
-                })
-            : FutureBuilder<Object>(
-                future: FirestoreManager.getUserForId(
-                    sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.error}');
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  UserModel user = snapshot.data;
-                  String loggedintimezone = user.timezone;
-
-                  return StreamBuilder<List<RequestModel>>(
-                    stream: FirestoreManager.getAllRequestListStream(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                      if (requestListSnapshot.hasError) {
-                        return new Text('Error: ${requestListSnapshot.error}');
-                      }
-                      switch (requestListSnapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Center(child: CircularProgressIndicator());
-                        default:
-                          List<RequestModel> requestModelList =
-                              requestListSnapshot.data;
-                          if (requestModelList.length == 0) {
-                            return Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Center(child: Text('No Requests')),
-                            );
-                          }
-                          return Expanded(
-                            child: Container(
-                              padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                              child: ListView(
-                                children: requestModelList.map(
-                                  (RequestModel requestModel) {
-                                    return getRequestView(
-                                        requestModel, loggedintimezone);
-                                  },
-                                ).toList(),
-                              ),
-                            ),
-                          );
-                      }
-                    },
-                  );
-                }),
+        RequestListItems(
+          parentContext: context,
+          timebankId: timebankId,
+        )
       ],
-    );
-  }
-
-  Widget getRequestView(RequestModel model, String loggedintimezone) {
-    return Container(
-      decoration: containerDecoration,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Card(
-        elevation: 0,
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              widget.parentContext,
-              MaterialPageRoute(
-                builder: (context) => RequestCardView(requestItem: model),
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ClipOval(
-                  child: SizedBox(
-                    height: 45,
-                    width: 45,
-                    child: FadeInImage.assetNetwork(
-                        placeholder: 'lib/assets/images/profile.png',
-                        image: model.photoUrl),
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        model.title,
-                        style: Theme.of(widget.parentContext).textTheme.subhead,
-                      ),
-                      Text(
-                        model.description,
-                        style:
-                            Theme.of(widget.parentContext).textTheme.subtitle,
-                      ),
-                      SizedBox(height: 8),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: <Widget>[
-                          Text(getTimeFormattedString(
-                              model.requestStart, loggedintimezone)),
-                          SizedBox(width: 2),
-                          Icon(Icons.arrow_forward, size: 14),
-                          SizedBox(width: 4),
-                          Text(getTimeFormattedString(
-                              model.requestEnd, loggedintimezone)),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
-    DateFormat dateFormat = DateFormat('d MMM hh:mm a ');
-    DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
-    DateTime localtime = getDateTimeAccToUserTimezone(
-        dateTime: datetime, timezoneAbb: timezoneAbb);
-    String from = dateFormat.format(
-      localtime,
-    );
-    return from;
-  }
-
-  BoxDecoration get containerDecoration {
-    return BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(12.0)),
-      boxShadow: [
-        BoxShadow(
-            color: Colors.black.withAlpha(10),
-            spreadRadius: 4,
-            offset: Offset(0, 3),
-            blurRadius: 6)
-      ],
-      color: Colors.white,
     );
   }
 }
@@ -571,7 +382,7 @@ class OffersState extends State<Offers> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  //dropdownList.insert(0, 'All');
+                  dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
@@ -613,172 +424,11 @@ class OffersState extends State<Offers> {
           color: Colors.grey,
           height: 0,
         ),
-        timebankId != 'All'
-            ? StreamBuilder<List<OfferModel>>(
-                stream:
-                    FirestoreManager.getOffersStream(timebankId: timebankId),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<OfferModel>> snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    default:
-                      List<OfferModel> offersList = snapshot.data;
-
-                      if (offersList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Center(
-                            child: Text('No Offers'),
-                          ),
-                        );
-                      }
-                      return Expanded(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              OfferModel offer = offersList[index];
-                              return getOfferWidget(offer);
-                            },
-                            itemCount: offersList.length,
-                          ),
-                        ),
-                      );
-                  }
-                },
-              )
-            : StreamBuilder<List<OfferModel>>(
-                stream: FirestoreManager.getAllOffersStream(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<OfferModel>> snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    default:
-                      List<OfferModel> offersList = snapshot.data;
-                      if (offersList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Center(
-                            child: Text('No Offers'),
-                          ),
-                        );
-                      }
-                      return Expanded(
-                        child: Container(
-                          padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                          child: ListView.builder(
-                            itemBuilder: (context, index) {
-                              OfferModel offer = offersList[index];
-                              return getOfferWidget(offer);
-                            },
-                            itemCount: offersList.length,
-                          ),
-                        ),
-                      );
-                  }
-                },
-              ),
+        OfferListItems(
+          parentContext: context,
+          timebankId: timebankId,
+        )
       ],
-    );
-  }
-
-  Widget getOfferWidget(OfferModel model) {
-    return Container(
-      decoration: containerDecoration,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Card(
-        elevation: 0,
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              widget.parentContext,
-              MaterialPageRoute(
-                builder: (context) => OfferCardView(offerModel: model),
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                StreamBuilder<UserModel>(
-                  stream: FirestoreManager.getUserForIdStream(
-                    sevaUserId: model.sevaUserId,
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return CircleAvatar(foregroundColor: Colors.red);
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircleAvatar();
-                    }
-                    UserModel user = snapshot.data;
-                    return ClipOval(
-                      child: SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: FadeInImage.assetNetwork(
-                            placeholder: 'lib/assets/images/profile.png',
-                            image: user.photoURL),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        model.title,
-                        style: Theme.of(widget.parentContext).textTheme.subhead,
-                      ),
-                      Text(
-                        model.description,
-                        style:
-                            Theme.of(widget.parentContext).textTheme.subtitle,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  String getTimeFormattedString(int timeInMilliseconds) {
-    DateFormat dateFormat = DateFormat('d MMM h:m a ');
-    String from = dateFormat.format(
-      DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
-    );
-    return from;
-  }
-
-  BoxDecoration get containerDecoration {
-    return BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(12.0)),
-      boxShadow: [
-        BoxShadow(
-            color: Colors.black.withAlpha(10),
-            spreadRadius: 4,
-            offset: Offset(0, 3),
-            blurRadius: 6)
-      ],
-      color: Colors.white,
     );
   }
 }
@@ -932,6 +582,385 @@ class OfferCardView extends StatelessWidget {
               ),
             );
           }),
+    );
+  }
+}
+
+class RequestListItems extends StatelessWidget {
+  final String timebankId;
+  final BuildContext parentContext;
+  const RequestListItems({Key key, this.timebankId, this.parentContext})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (timebankId != 'All') {
+      return FutureBuilder<Object>(
+          future: FirestoreManager.getUserForId(
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return new Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            UserModel user = snapshot.data;
+            String loggedintimezone = user.timezone;
+
+            return StreamBuilder<List<RequestModel>>(
+              stream: FirestoreManager.getRequestListStream(
+                timebankId: timebankId,
+              ),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+                if (requestListSnapshot.hasError) {
+                  return new Text('Error: ${requestListSnapshot.error}');
+                }
+                switch (requestListSnapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Center(child: CircularProgressIndicator());
+                  default:
+                    List<RequestModel> requestModelList =
+                        requestListSnapshot.data;
+                    if (requestModelList.length == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: Text('No Requests')),
+                      );
+                    }
+                    return Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                        child: ListView(
+                          children: requestModelList.map(
+                            (RequestModel requestModel) {
+                              return getRequestView(
+                                  requestModel, loggedintimezone);
+                            },
+                          ).toList(),
+                        ),
+                      ),
+                    );
+                }
+              },
+            );
+          });
+    } else {
+      return FutureBuilder<Object>(
+          future: FirestoreManager.getUserForId(
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return new Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            UserModel user = snapshot.data;
+            String loggedintimezone = user.timezone;
+
+            return StreamBuilder<List<RequestModel>>(
+              stream: FirestoreManager.getAllRequestListStream(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+                if (requestListSnapshot.hasError) {
+                  return new Text('Error: ${requestListSnapshot.error}');
+                }
+                switch (requestListSnapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Center(child: CircularProgressIndicator());
+                  default:
+                    List<RequestModel> requestModelList =
+                        requestListSnapshot.data;
+                    if (requestModelList.length == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: Text('No Requests')),
+                      );
+                    }
+                    return Expanded(
+                      child: Container(
+                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                        child: ListView(
+                          children: requestModelList.map(
+                            (RequestModel requestModel) {
+                              return getRequestView(
+                                  requestModel, loggedintimezone);
+                            },
+                          ).toList(),
+                        ),
+                      ),
+                    );
+                }
+              },
+            );
+          });
+    }
+  }
+
+  Widget getRequestView(RequestModel model, String loggedintimezone) {
+    return Container(
+      decoration: containerDecoration,
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      child: Card(
+        elevation: 0,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              parentContext,
+              MaterialPageRoute(
+                builder: (context) => RequestCardView(requestItem: model),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipOval(
+                  child: SizedBox(
+                    height: 45,
+                    width: 45,
+                    child: FadeInImage.assetNetwork(
+                        placeholder: 'lib/assets/images/profile.png',
+                        image: model.photoUrl),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        model.title,
+                        style: Theme.of(parentContext).textTheme.subhead,
+                      ),
+                      Text(
+                        model.description,
+                        style: Theme.of(parentContext).textTheme.subtitle,
+                      ),
+                      SizedBox(height: 8),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text(getTimeFormattedString(
+                              model.requestStart, loggedintimezone)),
+                          SizedBox(width: 2),
+                          Icon(Icons.arrow_forward, size: 14),
+                          SizedBox(width: 4),
+                          Text(getTimeFormattedString(
+                              model.requestEnd, loggedintimezone)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ');
+    DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
+    DateTime localtime = getDateTimeAccToUserTimezone(
+        dateTime: datetime, timezoneAbb: timezoneAbb);
+    String from = dateFormat.format(
+      localtime,
+    );
+    return from;
+  }
+
+  BoxDecoration get containerDecoration {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black.withAlpha(10),
+            spreadRadius: 4,
+            offset: Offset(0, 3),
+            blurRadius: 6)
+      ],
+      color: Colors.white,
+    );
+  }
+}
+
+class OfferListItems extends StatelessWidget {
+  final String timebankId;
+  final BuildContext parentContext;
+  const OfferListItems({Key key, this.parentContext, this.timebankId})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (timebankId != 'All') {
+      return StreamBuilder<List<OfferModel>>(
+        stream: FirestoreManager.getOffersStream(timebankId: timebankId),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
+          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            default:
+              List<OfferModel> offersList = snapshot.data;
+
+              if (offersList.length == 0) {
+                return Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Text('No Offers'),
+                  ),
+                );
+              }
+              return Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      OfferModel offer = offersList[index];
+                      return getOfferWidget(offer);
+                    },
+                    itemCount: offersList.length,
+                  ),
+                ),
+              );
+          }
+        },
+      );
+    } else {
+      return StreamBuilder<List<OfferModel>>(
+        stream: FirestoreManager.getAllOffersStream(),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
+          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            default:
+              List<OfferModel> offersList = snapshot.data;
+              if (offersList.length == 0) {
+                return Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Text('No Offers'),
+                  ),
+                );
+              }
+              return Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      OfferModel offer = offersList[index];
+                      return getOfferWidget(offer);
+                    },
+                    itemCount: offersList.length,
+                  ),
+                ),
+              );
+          }
+        },
+      );
+    }
+  }
+
+  Widget getOfferWidget(OfferModel model) {
+    return Container(
+      decoration: containerDecoration,
+      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      child: Card(
+        elevation: 0,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              parentContext,
+              MaterialPageRoute(
+                builder: (context) => OfferCardView(offerModel: model),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                StreamBuilder<UserModel>(
+                  stream: FirestoreManager.getUserForIdStream(
+                    sevaUserId: model.sevaUserId,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return CircleAvatar(foregroundColor: Colors.red);
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircleAvatar();
+                    }
+                    UserModel user = snapshot.data;
+                    return ClipOval(
+                      child: SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: FadeInImage.assetNetwork(
+                            placeholder: 'lib/assets/images/profile.png',
+                            image: user.photoURL),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        model.title,
+                        style: Theme.of(parentContext).textTheme.subhead,
+                      ),
+                      Text(
+                        model.description,
+                        style: Theme.of(parentContext).textTheme.subtitle,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  String getTimeFormattedString(int timeInMilliseconds) {
+    DateFormat dateFormat = DateFormat('d MMM h:m a ');
+    String from = dateFormat.format(
+      DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
+    );
+    return from;
+  }
+
+  BoxDecoration get containerDecoration {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black.withAlpha(10),
+            spreadRadius: 4,
+            offset: Offset(0, 3),
+            blurRadius: 6)
+      ],
+      color: Colors.white,
     );
   }
 }

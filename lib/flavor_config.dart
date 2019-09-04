@@ -5,6 +5,7 @@ enum Flavor {
   APP,
   HUMANITY_FIRST,
   TULSI,
+  TOM
 }
 
 class FlavorValues {
@@ -23,11 +24,14 @@ class FlavorConfig {
         return '5a1b1566-4587-4882-b1a3-12be45eba15f';
         break;
       case Flavor.HUMANITY_FIRST:
-        return 'ajilo297@gmail.com*1559128156543';
+        return 'f3a1838c-f96a-424b-8825-90c6423be6fe';
         break;
       case Flavor.TULSI:
-        return 'ajilo297@gmail.com*1563778489754';
+        return '32c49ace-28f1-4696-97e3-2e22fea517ab';
         break;
+      case Flavor.TOM :
+      return '3b8647e4-9c64-405b-8b5b-1bfa396e67a4';
+      break;
     }
   }
 
@@ -42,6 +46,9 @@ class FlavorConfig {
       case Flavor.TULSI:
         return 'Tulsi 2020';
         break;
+      case Flavor.TOM :
+      return 'Tom 2020';
+      break;
     }
   }
 
@@ -51,9 +58,10 @@ class FlavorConfig {
         return ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Colors.deepPurple,
+              color: Color(0xFF6f76f6),
               iconTheme: IconThemeData(color: Colors.white),
-              elevation: 1,
+              elevation: 4,
+              actionsIconTheme: IconThemeData(color: Colors.white),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.purple,
@@ -70,8 +78,10 @@ class FlavorConfig {
         return ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Colors.white,
-              elevation: 1,
+              color: Colors.indigo,
+              elevation: 4,
+              actionsIconTheme: IconThemeData(color: Colors.white),
+              iconTheme: IconThemeData(color: Colors.white)
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.indigo,
@@ -88,8 +98,10 @@ class FlavorConfig {
         return ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
-              color: Colors.white,
-              elevation: 1,
+              color: Color.fromARGB(255, 26, 50, 102),
+              elevation: 4,
+              actionsIconTheme: IconThemeData(color: Colors.white),
+              iconTheme: IconThemeData(color: Colors.white),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.red,
@@ -101,6 +113,26 @@ class FlavorConfig {
             fontFamily: 'Montserrat',
             splashColor: Colors.grey,
             bottomAppBarColor: Colors.red[900],);
+        break;
+        case Flavor.TOM:
+        return ThemeData(
+            appBarTheme: AppBarTheme(
+              brightness: Brightness.light,
+              color: Color.fromARGB(255, 11, 40, 161),
+              elevation: 4,
+              actionsIconTheme: IconThemeData(color: Colors.white),
+              iconTheme: IconThemeData(color: Colors.white),
+            ),
+            brightness: Brightness.light,
+            primarySwatch: Colors.red,
+            primaryColor: Color.fromARGB(255, 11, 40, 161),
+            accentColor: Color.fromARGB(255,224,100,70),
+            indicatorColor: Colors.white,
+            primaryColorBrightness: Brightness.light,
+            accentColorBrightness: Brightness.light,
+            fontFamily: 'Montserrat',
+            splashColor: Colors.grey,
+            bottomAppBarColor: Color.fromARGB(255,224,100,70),);
         break;
     }
   }
