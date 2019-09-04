@@ -81,6 +81,11 @@ android {
             applicationIdSuffix ".tulsi_2020"
             resValue "string", "app_name", "Tulsi 2020"
         }
+        Tom {
+            dimension "flavor-type"
+            applicationIdSuffix ".tom_2020"
+            resValue "string", "app_name", "Tom 2020"
+        }
     }
 }
 

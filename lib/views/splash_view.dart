@@ -43,7 +43,8 @@ class _SplashViewState extends State<SplashView> {
         return tulsiSplash;
         break;
       case Flavor.TOM:
-        // TODO: Handle this case.
+        // TODO: Fix this
+        return tulsiSplash;
         break;
     }
   }
