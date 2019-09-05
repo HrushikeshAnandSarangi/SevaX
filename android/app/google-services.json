@@ -168,12 +168,64 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:405168293226:android:4cbcb77e645b5bc8e49113",
+        "android_client_info": {
+          "package_name": "com.sevaexchange.tom_2020"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "405168293226-qm6p15ej8qk72tojqpe0jqikhtvo5g3r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.tom_2020",
+            "certificate_hash": "a921f5b7d9b57bf4b97b2b08f2fca8211b55ae20"
+          }
+        },
+        {
+          "client_id": "405168293226-eem6gmp18giml6b3at1eil97kpgiaog0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUxQ2bCB0hX_6HkV9AVS4ToFCTuc4YEyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "405168293226-hc5528o806ni2ni5t29tfnc3v1e3nijh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "405168293226-e5s8iq4c61lavj4gggt2i8rf2dudh6ni.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sevaexchange.tulsi2020"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:405168293226:android:6233201c03783938",
         "android_client_info": {
           "package_name": "com.sevaexchange.tulsi_2020"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "405168293226-e7aopqjc1h56v7h5cblo2583ahikmb3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.tulsi_2020",
+            "certificate_hash": "3be468344c03dce92cfb72b2d3fd8201afc5a2f0"
+          }
+        },
         {
           "client_id": "405168293226-1n26od7157ae6jdfid2naa5i2dq394p6.apps.googleusercontent.com",
           "client_type": 1,
