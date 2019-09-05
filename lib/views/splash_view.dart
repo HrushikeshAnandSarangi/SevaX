@@ -40,7 +40,7 @@ class _SplashViewState extends State<SplashView> {
         return humanitySplash;
         break;
       case Flavor.TULSI:
-        return tulsiSplash;
+        return tomSplash;
         break;
       case Flavor.TOM:
         // TODO: Handle this case.
@@ -204,6 +204,76 @@ class _SplashViewState extends State<SplashView> {
                 height: 140,
                 width: 140,
                 color: Colors.white,
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              if (loadingMessage != null && loadingMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 32.0),
+                  child: Text(
+                    loadingMessage,
+                    style: TextStyle(color: Colors.white.withAlpha(120)),
+                  ),
+                ),
+              Container(
+                margin: EdgeInsets.only(top: 8),
+                child: SizedBox(
+                  height: 2,
+                  width: 150,
+                  child: Theme(
+                      data: Theme.of(context)
+                          .copyWith(accentColor: Colors.red[900]),
+                      child: LinearProgressIndicator(
+                        backgroundColor: Theme.of(context).primaryColor,
+                      )),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get tomSplash {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).primaryColor,
+              // Colors.red,
+              // Colors.red[400],
+            ],
+            //stops: [0, 0.6, 1],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Text(
+              //   'Humanity\nFirst'.toUpperCase(),
+              //   textAlign: TextAlign.center,
+              //   style: TextStyle(
+              //     letterSpacing: 5,
+              //     fontSize: 24,
+              //     color: Colors.white,
+              //     fontWeight: FontWeight.w700,
+              //   ),
+              // ),
+              SizedBox(
+                height: 16,
+              ),
+              SvgPicture.asset(
+                'lib/assets/ts2020-logo-w.svg',
+                height: 90,
+                width: 90,
+                //color: Colors.white,
               ),
               SizedBox(
                 height: 50,

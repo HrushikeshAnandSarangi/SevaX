@@ -45,13 +45,17 @@ class _LoginPageState extends State<LoginPage> {
                     ? [
                         Theme.of(context).primaryColor,
                         Theme.of(context).primaryColor,
-
                       ]
-                    : [
-                        Theme.of(context).primaryColor,
-                        //Theme.of(context).primaryColorLight,
-                        Theme.of(context).primaryColor,
-                      ],
+                    : FlavorConfig.appFlavor == Flavor.TOM
+                        ? [
+                            Theme.of(context).primaryColor,
+                            Theme.of(context).primaryColor,
+                          ]
+                        : [
+                            Theme.of(context).primaryColor,
+                            //Theme.of(context).primaryColorLight,
+                            Theme.of(context).primaryColor,
+                          ],
           ),
         ),
         child: SafeArea(
@@ -61,7 +65,9 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  FlavorConfig.appFlavor==Flavor.APP ? SizedBox(height: 5) : SizedBox(height: 48),
+                  FlavorConfig.appFlavor == Flavor.APP
+                      ? SizedBox(height: 5)
+                      : SizedBox(height: 48),
                   logo,
                   SizedBox(height: 32),
                   content,
@@ -69,7 +75,9 @@ class _LoginPageState extends State<LoginPage> {
                   signInWithGoogle,
                   SizedBox(height: 16),
                   SizedBox(height: 16),
-                  FlavorConfig.appFlavor==Flavor.APP ? Offstage() : poweredBySevaLogo,
+                  FlavorConfig.appFlavor == Flavor.APP
+                      ? Offstage()
+                      : poweredBySevaLogo,
                   SizedBox(height: 16),
                 ],
               ),
@@ -104,24 +112,34 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: 16,
           ),
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ?
-          Image.asset(
-            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-            height: 70,
-            fit: BoxFit.fill,
-            width: 80,
-          ) : FlavorConfig.appFlavor == Flavor.TULSI ?
-          SvgPicture.asset(
-            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-            height: 100,
-            fit: BoxFit.fill,
-            width: 100,
-          ) : Image.asset(
-            'lib/assets/images/seva-x-logo.png',
-            height: 80,
-            fit: BoxFit.fill,
-            width: 280,
-          )
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+              ? Image.asset(
+                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+                  height: 70,
+                  fit: BoxFit.fill,
+                  width: 80,
+                )
+              : FlavorConfig.appFlavor == Flavor.TULSI
+                  ? SvgPicture.asset(
+                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
+                      height: 100,
+                      fit: BoxFit.fill,
+                      width: 100,
+                      color: Colors.white,
+                    )
+                    : FlavorConfig.appFlavor == Flavor.TOM
+                  ? SvgPicture.asset(
+                      'lib/assets/ts2020-logo-w.svg',
+                      height: 90,
+                      fit: BoxFit.fill,
+                      width: 90,
+                    )
+                  : Image.asset(
+                      'lib/assets/images/seva-x-logo.png',
+                      height: 80,
+                      fit: BoxFit.fill,
+                      width: 280,
+                    )
         ],
       ),
     );
@@ -143,7 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validateEmailId,
                 onSaved: _saveEmail,
                 decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: enabled)),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: enabled)),
                   labelText: 'EMAIL',
                   labelStyle: textStyle,
                 ),
@@ -157,7 +176,8 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validatePassword,
                 onSaved: _savePassword,
                 decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: enabled)),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: enabled)),
                   labelText: 'PASSWORD',
                   labelStyle: textStyle,
                   suffix: GestureDetector(
@@ -255,7 +275,10 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(width: 20, child: Divider(height: 3, color: enabled)),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text('Sign in with',style: TextStyle(color: enabled ),),
+              child: Text(
+                'Sign in with',
+                style: TextStyle(color: enabled),
+              ),
             ),
             SizedBox(width: 20, child: Divider(height: 3, color: enabled)),
           ],

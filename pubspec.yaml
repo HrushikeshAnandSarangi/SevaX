@@ -93,7 +93,9 @@ flutter:
     - lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg
     - lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg
     - lib/assets/tulsi_icons/tulsi2020_icons_tulsi-token.svg
+    - lib/assets/ts2020-logo-w.svg
     - lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg
+    
 
   fonts:
     - family: Montserrat
