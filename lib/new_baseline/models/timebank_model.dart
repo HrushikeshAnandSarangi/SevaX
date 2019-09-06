@@ -13,6 +13,7 @@ class TimebankModel {
     List<String> members;
     bool protected;
     String parentTimebankId;
+    String rootTimebankId;
     List<String> children;
     double balance;
 
@@ -31,6 +32,7 @@ class TimebankModel {
         this.members,
         this.protected,
         this.parentTimebankId,
+        this.rootTimebankId,
         this.children,
         this.balance,
     });
@@ -50,6 +52,7 @@ class TimebankModel {
         members: json["members"] == null ? null : new List<String>.from(json["members"].map((x) => x)),
         protected: json["protected"] == null ? null : json["protected"],
         parentTimebankId: json["parent_timebank_id"] == null ? null : json["parent_timebank_id"],
+        rootTimebankId: json["root_timebank_id"] == null ? null : json["root_timebank_id"],
         children: json["children"] == null ? null : new List<String>.from(json["children"].map((x) => x)),
         balance: json["balance"] == null ? null : json["balance"].toDouble(),
     );
@@ -69,6 +72,7 @@ class TimebankModel {
         "members": members == null ? null : new List<dynamic>.from(members.map((x) => x)),
         "protected": protected == null ? null : protected,
         "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
+        "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
         "children": children == null ? null : new List<dynamic>.from(children.map((x) => x)),
         "balance": balance == null ? null : balance,
     };

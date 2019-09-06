@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
@@ -14,13 +11,11 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/search_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 
 import 'package:sevaexchange/views/news/newslistview.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
 
-import 'package:sevaexchange/views/tasks/activity_view.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import '../globals.dart' as globals;
@@ -349,7 +344,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get newsPageProperty {
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
           ? Icon(Icons.description)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
@@ -390,7 +385,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 4, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
           ? Icon(Icons.search)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
@@ -418,7 +413,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 2, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
           ? Icon(Icons.swap_horizontal_circle)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
@@ -501,7 +496,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
           ? Icon(Icons.playlist_add_check)
           : SvgPicture.asset(
               'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
@@ -535,7 +530,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get createPageProperty {
     return PageProperty(
         tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-                FlavorConfig.appFlavor == Flavor.APP
+                FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
             ? Icon(Icons.add_circle)
             : SvgPicture.asset(
                 'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',

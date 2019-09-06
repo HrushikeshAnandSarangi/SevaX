@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
@@ -55,8 +56,8 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
         snapshot.documents.forEach(
           (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
-            modelList.add(model);
+            if(model.rootTimebankId == FlavorConfig.timebankId)
+              modelList.add(model);
           },
         );
 

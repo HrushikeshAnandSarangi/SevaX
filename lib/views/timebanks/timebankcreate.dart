@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views//membersadd.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -80,6 +81,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.balance = 0;
     timebankModel.protected = protectedVal;
     timebankModel.parentTimebankId = widget.timebankId;
+    timebankModel.rootTimebankId = FlavorConfig.timebankId;
 
     createTimebank(timebankModel: timebankModel);
 
@@ -116,7 +118,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                 getTimeBankForId(timebankId: widget.timebankId),
                             builder: (context, snapshot) {
                               if (snapshot.hasError)
-                                return Text('Error: ${snapshot.error}');
+                                return Text('Error');
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) return Offstage();
                               TimebankModel parentTimebank = snapshot.data;

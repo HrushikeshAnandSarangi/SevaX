@@ -493,7 +493,7 @@ class _ProfilePageState extends State<ProfilePage>
                       fontWeight: FontWeight.w600),
                 ),
                 FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-                        FlavorConfig.appFlavor == Flavor.APP
+                        FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
                     ? Column(
                         children: <Widget>[
                           Padding(
@@ -537,6 +537,14 @@ class _ProfilePageState extends State<ProfilePage>
                 : FlavorConfig.appFlavor == Flavor.APP
                     ? Text(
                         'Seva Coins',
+                        style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 12),
+                      )
+                      : FlavorConfig.appFlavor == Flavor.TOM
+                    ? Text(
+                        'Tom Tokens',
                         style: TextStyle(
                             color: Theme.of(context).accentColor,
                             fontWeight: FontWeight.w400,

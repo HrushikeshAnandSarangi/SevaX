@@ -21,16 +21,16 @@ class FlavorConfig {
   static get timebankId {
     switch (appFlavor) {
       case Flavor.APP:
-        return '5a1b1566-4587-4882-b1a3-12be45eba15f';
+        return '73d0de2c-198b-4788-be64-a804700a88a4';
         break;
       case Flavor.HUMANITY_FIRST:
-        return 'f3a1838c-f96a-424b-8825-90c6423be6fe';
+        return 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2  ';
         break;
       case Flavor.TULSI:
-        return '32c49ace-28f1-4696-97e3-2e22fea517ab';
+        return '6897fefc-9380-4ca6-8373-5e7760bb31be';
         break;
       case Flavor.TOM :
-      return '3b8647e4-9c64-405b-8b5b-1bfa396e67a4';
+      return 'f4b0b4c4-3d37-4514-b00b-ee424950c038';
       break;
     }
   }
