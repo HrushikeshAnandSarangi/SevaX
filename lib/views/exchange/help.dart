@@ -531,7 +531,19 @@ class OfferCardView extends StatelessWidget {
                                     //   ),
                                     // );
 
-                                    if (HelpViewState.isAdminOrCoordinator ==
+                                    if(FlavorConfig.appFlavor == Flavor.APP){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectRequestView(
+                                            offerModel: offerModel,
+                                            sevaUserIdOffer: sevaUserIdOffer,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    else if (HelpViewState.isAdminOrCoordinator ==
                                         true) {
                                       Navigator.push(
                                         context,
