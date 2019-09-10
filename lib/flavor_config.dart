@@ -132,7 +132,7 @@ class FlavorConfig {
             accentColorBrightness: Brightness.light,
             fontFamily: 'Montserrat',
             splashColor: Colors.grey,
-            bottomAppBarColor: Color.fromARGB(255,224,100,70),);
+            bottomAppBarColor: Color.fromARGB(255, 11, 40, 161),);
         break;
     }
   }

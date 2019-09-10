@@ -103,7 +103,7 @@ class RequestsState extends State<Requests> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  dropdownList.insert(0, 'All');
+                  //dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
@@ -382,7 +382,7 @@ class OffersState extends State<Offers> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  dropdownList.insert(0, 'All');
+                  //dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {

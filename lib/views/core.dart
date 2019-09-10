@@ -129,7 +129,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
     // TODO: implement didChangeDependencies
     FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.timebankId)
         .then((timebank) {
-      if (timebank.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+      if (timebank.admins
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         setState(() {
@@ -278,7 +279,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
         backgroundColor: Theme.of(context).bottomAppBarColor,
         type: BottomNavigationBarType.fixed,
         elevation: 26,
-        unselectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey[500],
         items: () {
           List<PageProperty> bottomPages = [];
 
@@ -295,7 +296,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
           }).toList();
         }(),
         currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
+        selectedItemColor: Colors.white,
         onTap: (index) => setState(() {
           if (index == 3) {
             _settingModalBottomSheet(context);
@@ -344,14 +345,19 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get newsPageProperty {
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.description)
-          : SvgPicture.asset(
-              'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
-              height: 22,
-              width: 22,
-              color: Colors.white,
-            ),
+          : FlavorConfig.appFlavor == Flavor.TOM
+              ? Icon(
+                  Icons.description,
+                  color: Colors.white,
+                )
+              : SvgPicture.asset(
+                  'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
+                  height: 22,
+                  width: 22,
+                  color: Colors.white,
+                ),
       page: NewsListView(),
       title: 'Feed',
       appBarActions: [
@@ -385,14 +391,19 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 4, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.search)
-          : SvgPicture.asset(
-              'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
-              height: 22,
-              width: 22,
-              color: Colors.white,
-            ),
+          : FlavorConfig.appFlavor == Flavor.TOM
+              ? Icon(
+                  Icons.search,
+                  color: Colors.white,
+                )
+              : SvgPicture.asset(
+                  'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
+                  height: 22,
+                  width: 22,
+                  color: Colors.white,
+                ),
       page: SearchView(controller),
       title: 'Search',
       // bottom: TabBar(
@@ -413,14 +424,19 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 2, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.swap_horizontal_circle)
-          : SvgPicture.asset(
-              'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
-              height: 22,
-              width: 22,
-              color: Colors.white,
-            ),
+          : FlavorConfig.appFlavor == Flavor.TOM
+              ? Icon(
+                  Icons.swap_horizontal_circle,
+                  color: Colors.white,
+                )
+              : SvgPicture.asset(
+                  'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
+                  height: 22,
+                  width: 22,
+                  color: Colors.white,
+                ),
       page: HelpView(controller),
       title: 'Volunteer',
       bottom: TabBar(
@@ -496,14 +512,19 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
+              FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.playlist_add_check)
-          : SvgPicture.asset(
-              'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
-              height: 22,
-              width: 22,
-              color: Colors.white,
-            ),
+          : FlavorConfig.appFlavor == Flavor.TOM
+              ? Icon(
+                  Icons.playlist_add_check,
+                  color: Colors.white,
+                )
+              : SvgPicture.asset(
+                  'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
+                  height: 22,
+                  width: 22,
+                  color: Colors.white,
+                ),
       page: MyTaskPage(controller),
       title: 'Tasks',
       appBarActions: [],
@@ -530,14 +551,19 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get createPageProperty {
     return PageProperty(
         tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-                FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
+                FlavorConfig.appFlavor == Flavor.APP
             ? Icon(Icons.add_circle)
-            : SvgPicture.asset(
-                'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
-                height: 22,
-                width: 22,
-                color: Colors.white,
-              ),
+            : FlavorConfig.appFlavor == Flavor.TOM
+                ? Icon(
+                    Icons.add_circle,
+                    color: Colors.white,
+                  )
+                : SvgPicture.asset(
+                    'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
+                    height: 22,
+                    width: 22,
+                    color: Colors.white,
+                  ),
         page: SevaCoreView(),
         title: 'Create',
         appBarActions: []);
@@ -596,7 +622,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NewsCreate(timebankId: FlavorConfig.timebankId,),
+                                builder: (context) => NewsCreate(
+                                  timebankId: FlavorConfig.timebankId,
+                                ),
                               ),
                             )
                           }),
@@ -619,7 +647,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CreateRequest(timebankId: FlavorConfig.timebankId,),
+                              builder: (context) => CreateRequest(
+                                timebankId: FlavorConfig.timebankId,
+                              ),
                             ),
                           )
                         }
@@ -666,7 +696,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreateOffer(timebankId: FlavorConfig.timebankId,),
+                          builder: (context) => CreateOffer(
+                            timebankId: FlavorConfig.timebankId,
+                          ),
                         ),
                       )
                     },
