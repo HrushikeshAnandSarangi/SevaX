@@ -255,7 +255,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Text(
                 'Create an Account',
                 style: TextStyle(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).accentColor
                 ),
               ),
             )

@@ -94,10 +94,6 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   return timeBankModel;
 }
 
-// Future<String> getTimebankNameforid({@required String timebankId}) async {
-
-// }
-
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
     {@required String timebankId}) async* {

@@ -103,7 +103,7 @@ class RequestsState extends State<Requests> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  dropdownList.insert(0, 'All');
+                  //dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
@@ -382,7 +382,7 @@ class OffersState extends State<Offers> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  dropdownList.insert(0, 'All');
+                  //dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
@@ -531,7 +531,19 @@ class OfferCardView extends StatelessWidget {
                                     //   ),
                                     // );
 
-                                    if (HelpViewState.isAdminOrCoordinator ==
+                                    if(FlavorConfig.appFlavor == Flavor.APP){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SelectRequestView(
+                                            offerModel: offerModel,
+                                            sevaUserIdOffer: sevaUserIdOffer,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    else if (HelpViewState.isAdminOrCoordinator ==
                                         true) {
                                       Navigator.push(
                                         context,

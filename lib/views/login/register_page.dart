@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Register'),
+        title: Text('Register',style: TextStyle(color: Colors.white),),
       ),
       body: GestureDetector(
         onTap: () {

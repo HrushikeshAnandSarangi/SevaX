@@ -24,7 +24,7 @@ class FlavorConfig {
         return '73d0de2c-198b-4788-be64-a804700a88a4';
         break;
       case Flavor.HUMANITY_FIRST:
-        return 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2  ';
+        return 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2';
         break;
       case Flavor.TULSI:
         return '6897fefc-9380-4ca6-8373-5e7760bb31be';
@@ -132,7 +132,7 @@ class FlavorConfig {
             accentColorBrightness: Brightness.light,
             fontFamily: 'Montserrat',
             splashColor: Colors.grey,
-            bottomAppBarColor: Color.fromARGB(255,224,100,70),);
+            bottomAppBarColor: Color.fromARGB(255, 11, 40, 161),);
         break;
     }
   }

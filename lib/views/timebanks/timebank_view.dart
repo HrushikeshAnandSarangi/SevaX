@@ -99,7 +99,7 @@ class _TimebankViewState extends State<TimebankView> {
                   color: Colors.white,
                 ),
                 label: Text(
-                  'Create Sub TimeBank',
+                  'Create Branch',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
@@ -176,7 +176,7 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'View Sub Timebanks',
+                            'View Branches',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
