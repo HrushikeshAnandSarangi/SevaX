@@ -53,45 +53,45 @@ class TimebankJoinRequestViewState extends State<TimebankJoinRequestView> {
                 children: snapshot.data.documents
                     .map(
                       (item) => Slidable(
-                            delegate: SlidableDrawerDelegate(),
-                            actionExtentRatio: 0.25,
-                            child: Container(
-                              padding: EdgeInsets.only(left: 5.0),
-                              color: Colors.white,
-                              child: Row(
-                                children: <Widget>[
-                                  CircleAvatar(
-                                    minRadius: 15.0,
-                                    backgroundImage: NetworkImage(
-                                        item['requestor_photourl']),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProfileViewerJoinRequest(
-                                                  userEmail:
-                                                      item['requestor_email'],
-                                                  reason: item['reason'],
-                                                  tbName: item['timebank_name'],
-                                                )),
-                                      );
-                                    },
-                                    child: Text(item['requestor_fullname']),
-                                    // contentPadding: EdgeInsets.only(left: 25.0),
-                                    // title: Text(item['requestor_fullname']),
-                                  ),
-                                ],
+                        delegate: SlidableDrawerDelegate(),
+                        actionExtentRatio: 0.25,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 5.0),
+                          color: Colors.white,
+                          child: Row(
+                            children: <Widget>[
+                              CircleAvatar(
+                                minRadius: 15.0,
+                                backgroundImage:
+                                    NetworkImage(item['requestor_photourl']),
                               ),
-                            ),
-                            actions: <Widget>[
-                              IconSlideAction(
-                                caption: 'Accept',
-                                color: Colors.blue,
-                                icon: Icons.security,
-                                onTap: () {
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileViewerJoinRequest(
+                                              userEmail:
+                                                  item['requestor_email'],
+                                              reason: item['reason'],
+                                              tbName: item['timebank_name'],
+                                            )),
+                                  );
+                                },
+                                child: Text(item['requestor_fullname']),
+                                // contentPadding: EdgeInsets.only(left: 25.0),
+                                // title: Text(item['requestor_fullname']),
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Accept',
+                            color: Colors.blue,
+                            icon: Icons.security,
+                            onTap: () {
 //                                  setState(() {
 //                                    globals.currentTimebankMembersEmail
 //                                        .add(item['requestor_email']);
@@ -102,53 +102,52 @@ class TimebankJoinRequestViewState extends State<TimebankJoinRequestView> {
 //
 //                                    // globals.userTimebanksCampaigns.add(globals.currentCampaignCreator + '*' + globals.currentCampaignCreatedTimeStamp.toString());
 //                                  });
-                                  Member newMember = Member(
-                                    fullName: item['requestor_fullname'],
-                                    email: item['requestor_email'],
-                                    photoUrl: item['requestor_photourl'],
-                                  );
+                              Member newMember = Member(
+                                fullName: item['requestor_fullname'],
+                                email: item['requestor_email'],
+                                photoUrl: item['requestor_photourl'],
+                              );
 
-                                  timebankModel.members.add(newMember.email);
+                              timebankModel.members.add(newMember.email);
 
-                                  Firestore.instance
-                                      .collection('timebanks')
-                                      .document(widget.timebankModel.id)
-                                      .updateData(timebankModel.toMap());
+                              Firestore.instance
+                                  .collection('timebanks')
+                                  .document(widget.timebankModel.id)
+                                  .updateData(timebankModel.toMap());
 
-                                  Firestore.instance
-                                      .collection('users')
-                                      .document(item['requestor_email'])
-                                      .updateData({
-                                    'membership_timebanks':
-                                        FieldValue.arrayUnion(
-                                            [timebankModel.id])
-                                  });
+                              Firestore.instance
+                                  .collection('users')
+                                  .document(item['requestor_email'])
+                                  .updateData({
+                                'membership_timebanks':
+                                    FieldValue.arrayUnion([timebankModel.id])
+                              });
 
-                                  Firestore.instance
-                                      .collection('join_requests_timebanks')
-                                      .document(timebankModel.id +
-                                          '*' +
-                                          item['requestor_email'])
-                                      .delete();
-                                },
-                              ),
-                            ],
-                            secondaryActions: <Widget>[
-                              IconSlideAction(
-                                caption: 'Reject',
-                                color: Colors.red,
-                                icon: Icons.delete,
-                                onTap: () {
-                                  Firestore.instance
-                                      .collection('join_requests_timebanks')
-                                      .document(timebankModel.id +
-                                          '*' +
-                                          item['requestor_email'])
-                                      .delete();
-                                },
-                              ),
-                            ],
+                              Firestore.instance
+                                  .collection('join_requests_timebanks')
+                                  .document(timebankModel.id +
+                                      '*' +
+                                      item['requestor_email'])
+                                  .delete();
+                            },
                           ),
+                        ],
+                        secondaryActions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Reject',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () {
+                              Firestore.instance
+                                  .collection('join_requests_timebanks')
+                                  .document(timebankModel.id +
+                                      '*' +
+                                      item['requestor_email'])
+                                  .delete();
+                            },
+                          ),
+                        ],
+                      ),
                     )
                     .toList(),
               );

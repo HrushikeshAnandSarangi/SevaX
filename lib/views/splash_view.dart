@@ -90,7 +90,10 @@ class _SplashViewState extends State<SplashView> {
               if (loadingMessage != null && loadingMessage.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(loadingMessage,style: TextStyle(color: Colors.white),),
+                  child: Text(
+                    loadingMessage,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               Container(
                 margin: EdgeInsets.only(top: 8),

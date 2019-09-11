@@ -51,96 +51,95 @@ class CampaignJoinRequestViewState extends State<CampaignJoinRequestView> {
                 children: snapshot.data.documents
                     .map(
                       (item) => Slidable(
-                            delegate: SlidableDrawerDelegate(),
-                            actionExtentRatio: 0.25,
-                            child: Container(
-                              padding: EdgeInsets.only(left: 5.0),
-                              color: Colors.white,
-                              child: Row(
-                                children: <Widget>[
-                                  CircleAvatar(
-                                    minRadius: 15.0,
-                                    backgroundImage: NetworkImage(
-                                        item['requestor_photourl']),
-                                  ),
-                                  FlatButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProfileViewerJoinRequest(
-                                                userEmail:
-                                                    item['requestor_email'],
-                                                reason: item['reason'],
-                                                tbName: item['campaign_name'],
-                                              ),
-                                        ),
-                                      );
-                                    },
-                                    child: Text(item['requestor_fullname']),
-                                    // contentPadding: EdgeInsets.only(left: 25.0),
-                                    // title: Text(item['requestor_fullname']),
-                                  ),
-                                ],
+                        delegate: SlidableDrawerDelegate(),
+                        actionExtentRatio: 0.25,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 5.0),
+                          color: Colors.white,
+                          child: Row(
+                            children: <Widget>[
+                              CircleAvatar(
+                                minRadius: 15.0,
+                                backgroundImage:
+                                    NetworkImage(item['requestor_photourl']),
                               ),
-                            ),
-                            actions: <Widget>[
-                              IconSlideAction(
-                                caption: 'Accept',
-                                color: Colors.blue,
-                                icon: Icons.security,
-                                onTap: () {
-                                  globals.currentCampaignMembersEmail
-                                      .add(item['requestor_email']);
-                                  globals.currentCampaignMembersFullname
-                                      .add(item['requestor_fullname']);
-                                  globals.currentCampaignMembersPhotoURL
-                                      .add(item['requestor_photourl']);
-
-                                  Firestore.instance
-                                      .collection('campaigns')
-                                      .document(docID)
-                                      .updateData({
-                                    'membersemail':
-                                        globals.currentCampaignMembersEmail,
-                                    'membersfullname':
-                                        globals.currentCampaignMembersFullname,
-                                    'membersphotourl':
-                                        globals.currentCampaignMembersPhotoURL,
-                                  });
-
-                                  Firestore.instance
-                                      .collection('users')
-                                      .document(item['requestor_email'])
-                                      .updateData({
-                                    'membership_campaigns':
-                                        FieldValue.arrayUnion([docID])
-                                  });
-
-                                  Firestore.instance
-                                      .collection('join_requests_campaign')
-                                      .document(
-                                          docID + '*' + item['requestor_email'])
-                                      .delete();
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProfileViewerJoinRequest(
+                                        userEmail: item['requestor_email'],
+                                        reason: item['reason'],
+                                        tbName: item['campaign_name'],
+                                      ),
+                                    ),
+                                  );
                                 },
-                              ),
-                            ],
-                            secondaryActions: <Widget>[
-                              IconSlideAction(
-                                caption: 'Reject',
-                                color: Colors.red,
-                                icon: Icons.delete,
-                                onTap: () {
-                                  Firestore.instance
-                                      .collection('join_requests_campaign')
-                                      .document(
-                                          docID + '*' + item['requestor_email'])
-                                      .delete();
-                                },
+                                child: Text(item['requestor_fullname']),
+                                // contentPadding: EdgeInsets.only(left: 25.0),
+                                // title: Text(item['requestor_fullname']),
                               ),
                             ],
                           ),
+                        ),
+                        actions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Accept',
+                            color: Colors.blue,
+                            icon: Icons.security,
+                            onTap: () {
+                              globals.currentCampaignMembersEmail
+                                  .add(item['requestor_email']);
+                              globals.currentCampaignMembersFullname
+                                  .add(item['requestor_fullname']);
+                              globals.currentCampaignMembersPhotoURL
+                                  .add(item['requestor_photourl']);
+
+                              Firestore.instance
+                                  .collection('campaigns')
+                                  .document(docID)
+                                  .updateData({
+                                'membersemail':
+                                    globals.currentCampaignMembersEmail,
+                                'membersfullname':
+                                    globals.currentCampaignMembersFullname,
+                                'membersphotourl':
+                                    globals.currentCampaignMembersPhotoURL,
+                              });
+
+                              Firestore.instance
+                                  .collection('users')
+                                  .document(item['requestor_email'])
+                                  .updateData({
+                                'membership_campaigns':
+                                    FieldValue.arrayUnion([docID])
+                              });
+
+                              Firestore.instance
+                                  .collection('join_requests_campaign')
+                                  .document(
+                                      docID + '*' + item['requestor_email'])
+                                  .delete();
+                            },
+                          ),
+                        ],
+                        secondaryActions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Reject',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () {
+                              Firestore.instance
+                                  .collection('join_requests_campaign')
+                                  .document(
+                                      docID + '*' + item['requestor_email'])
+                                  .delete();
+                            },
+                          ),
+                        ],
+                      ),
                     )
                     .toList(),
               );

@@ -82,7 +82,7 @@ class SplashScreenState extends State<SplashScreen> {
       context,
       MaterialPageRoute(
           builder: (context) => LoginPage(
-                // onSignedIn: null,
+              // onSignedIn: null,
               )),
     );
   }
@@ -92,7 +92,7 @@ class SplashScreenState extends State<SplashScreen> {
       context,
       MaterialPageRoute(
           builder: (context) => LoginPage(
-                // onSignedIn: null,
+              // onSignedIn: null,
               )),
     );
   }

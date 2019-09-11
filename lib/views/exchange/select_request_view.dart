@@ -4,8 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 
@@ -54,9 +53,8 @@ class _SelectRequestViewState extends State<SelectRequestView> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          
           'Select Request',
-          style: TextStyle(fontSize: 16.0,color: Colors.white),
+          style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
       ),
       body: Container(

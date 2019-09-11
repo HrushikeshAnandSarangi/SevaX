@@ -16,10 +16,10 @@ export 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
 
 class FirestoreService extends BaseService {
-  /// 
+  ///
   Stream<List<DataModel>> getEntityDataListStream(
       {@required String userEmail}) async* {
-        log.i('getEntityDataListStream: EmailID: $userEmail');
+    log.i('getEntityDataListStream: EmailID: $userEmail');
     var campaignSnapshotStream = Firestore.instance
         .collection('campaigns')
         .where('membersemail', arrayContains: userEmail)

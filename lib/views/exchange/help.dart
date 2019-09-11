@@ -531,7 +531,7 @@ class OfferCardView extends StatelessWidget {
                                     //   ),
                                     // );
 
-                                    if(FlavorConfig.appFlavor == Flavor.APP){
+                                    if (FlavorConfig.appFlavor == Flavor.APP) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -542,8 +542,8 @@ class OfferCardView extends StatelessWidget {
                                           ),
                                         ),
                                       );
-                                    }
-                                    else if (HelpViewState.isAdminOrCoordinator ==
+                                    } else if (HelpViewState
+                                            .isAdminOrCoordinator ==
                                         true) {
                                       Navigator.push(
                                         context,

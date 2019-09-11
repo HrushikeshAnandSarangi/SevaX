@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/base/base_view_model.dart';
 import 'package:sevaexchange/new_baseline/services/local_storage/local_storage_service.dart';
 
-
 class SplashViewModel extends BaseViewModel {
   String _loadingMessage = '';
   LocalStorageService _localStorageService;

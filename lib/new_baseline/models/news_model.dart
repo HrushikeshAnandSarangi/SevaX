@@ -1,42 +1,47 @@
 class NewsModel {
-    String id;
-    String title;
-    String subHeading;
-    String description;
-    String creatorId;
-    String photoUrl;
-    String photoCredits;
-    int createdAt;
-    List<String> likes;
-    EntityModel entityModel;
+  String id;
+  String title;
+  String subHeading;
+  String description;
+  String creatorId;
+  String photoUrl;
+  String photoCredits;
+  int createdAt;
+  List<String> likes;
+  EntityModel entityModel;
 
-    NewsModel({
-        this.id,
-        this.title,
-        this.subHeading,
-        this.description,
-        this.creatorId,
-        this.photoUrl,
-        this.photoCredits,
-        this.createdAt,
-        this.likes,
-        this.entityModel,
-    });
+  NewsModel({
+    this.id,
+    this.title,
+    this.subHeading,
+    this.description,
+    this.creatorId,
+    this.photoUrl,
+    this.photoCredits,
+    this.createdAt,
+    this.likes,
+    this.entityModel,
+  });
 
-    factory NewsModel.fromMap(Map<String, dynamic> json) => new NewsModel(
+  factory NewsModel.fromMap(Map<String, dynamic> json) => new NewsModel(
         id: json["id"] == null ? null : json["id"],
         title: json["title"] == null ? null : json["title"],
         subHeading: json["sub_heading"] == null ? null : json["sub_heading"],
         description: json["description"] == null ? null : json["description"],
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
-        photoCredits: json["photo_credits"] == null ? null : json["photo_credits"],
+        photoCredits:
+            json["photo_credits"] == null ? null : json["photo_credits"],
         createdAt: json["created_at"] == null ? null : json["created_at"],
-        likes: json["likes"] == null ? null : new List<String>.from(json["likes"].map((x) => x)),
-        entityModel: json["entity_model"] == null ? null : EntityModel.fromMap(json["entity_model"]),
-    );
+        likes: json["likes"] == null
+            ? null
+            : new List<String>.from(json["likes"].map((x) => x)),
+        entityModel: json["entity_model"] == null
+            ? null
+            : EntityModel.fromMap(json["entity_model"]),
+      );
 
-    Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() => {
         "id": id == null ? null : id,
         "title": title == null ? null : title,
         "sub_heading": subHeading == null ? null : subHeading,
@@ -45,9 +50,10 @@ class NewsModel {
         "photo_url": photoUrl == null ? null : photoUrl,
         "photo_credits": photoCredits == null ? null : photoCredits,
         "created_at": createdAt == null ? null : createdAt,
-        "likes": likes == null ? null : new List<dynamic>.from(likes.map((x) => x)),
+        "likes":
+            likes == null ? null : new List<dynamic>.from(likes.map((x) => x)),
         "entity_model": entityModel == null ? null : entityModel.toMap(),
-    };
+      };
 }
 
 class EntityModel {

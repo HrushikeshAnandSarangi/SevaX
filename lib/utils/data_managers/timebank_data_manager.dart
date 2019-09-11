@@ -56,7 +56,7 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
         snapshot.documents.forEach(
           (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
-            if(model.rootTimebankId == FlavorConfig.timebankId)
+            if (model.rootTimebankId == FlavorConfig.timebankId)
               modelList.add(model);
           },
         );
@@ -112,5 +112,3 @@ Stream<TimebankModel> getTimebankModelStream(
     ),
   );
 }
-
-

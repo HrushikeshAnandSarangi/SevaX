@@ -14,6 +14,7 @@ class NewsService extends BaseService {
         .document(newsObject.id)
         .setData(newsObject.toMap());
   }
+
   /// update a [newsObject]
   Future<void> updateNews({@required NewsModel newsObject}) async {
     log.i('updateNews: newsObject: ${newsObject.toMap()}');

@@ -65,7 +65,7 @@ class NewsListState extends State<NewsList> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  dropdownList.insert(0,'All');
+                  dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
@@ -107,60 +107,65 @@ class NewsListState extends State<NewsList> {
           color: Colors.grey,
           height: 0,
         ),
-        timebankId != 'All' ?
-        StreamBuilder<List<NewsModel>>(
-          stream: FirestoreManager.getNewsStream(timebankID: timebankId),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-                break;
-              default:
-                List<NewsModel> newsList = snapshot.data;
-                if (newsList.length == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: Text('Your feed is empty')),
-                  );
-                }
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: newsList.length,
-                    itemBuilder: (context, index) {
-                      return getNewsCard(newsList.elementAt(index), false);
-                    },
-                  ),
-                );
-            }
-          },
-        ) : StreamBuilder<List<NewsModel>>(
-          stream: FirestoreManager.getAllNewsStream(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
-                break;
-              default:
-                List<NewsModel> newsList = snapshot.data;
-                if (newsList.length == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: Text('Your feed is empty')),
-                  );
-                }
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: newsList.length,
-                    itemBuilder: (context, index) {
-                      return getNewsCard(newsList.elementAt(index), false);
-                    },
-                  ),
-                );
-            }
-          },
-        ),
+        timebankId != 'All'
+            ? StreamBuilder<List<NewsModel>>(
+                stream: FirestoreManager.getNewsStream(timebankID: timebankId),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                      break;
+                    default:
+                      List<NewsModel> newsList = snapshot.data;
+                      if (newsList.length == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: Text('Your feed is empty')),
+                        );
+                      }
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: newsList.length,
+                          itemBuilder: (context, index) {
+                            return getNewsCard(
+                                newsList.elementAt(index), false);
+                          },
+                        ),
+                      );
+                  }
+                },
+              )
+            : StreamBuilder<List<NewsModel>>(
+                stream: FirestoreManager.getAllNewsStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return Center(child: CircularProgressIndicator());
+                      break;
+                    default:
+                      List<NewsModel> newsList = snapshot.data;
+                      if (newsList.length == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: Text('Your feed is empty')),
+                        );
+                      }
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: newsList.length,
+                          itemBuilder: (context, index) {
+                            return getNewsCard(
+                                newsList.elementAt(index), false);
+                          },
+                        ),
+                      );
+                  }
+                },
+              ),
       ],
     );
   }

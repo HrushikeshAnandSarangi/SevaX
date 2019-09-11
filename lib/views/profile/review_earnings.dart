@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sevaexchange/models/models.dart';
 //import 'package:sevaexchange/models/transaction_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
@@ -14,8 +13,11 @@ class ReviewEarningsPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Review Earnings',style: TextStyle(color: Colors.white),),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text(
+            'Review Earnings',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: ReviewEarning());
   }

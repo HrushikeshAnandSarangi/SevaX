@@ -4,14 +4,9 @@ class ChatModel extends DataModel {
   String user1;
   String user2;
   String lastMessage;
-  String timebank;
+  String rootTimebank;
 
-  ChatModel({
-    this.user1,
-    this.user2,
-    this.lastMessage,
-    this.timebank
-  });
+  ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
 
   ChatModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('user1')) {
@@ -23,6 +18,9 @@ class ChatModel extends DataModel {
     }
     if (map.containsKey('lastMessage')) {
       this.lastMessage = map['lastMessage'];
+    }
+    if (map.containsKey('rootTimebank')) {
+      this.rootTimebank = map['rootTimebank'];
     }
   }
 
@@ -40,6 +38,10 @@ class ChatModel extends DataModel {
 
     if (this.lastMessage != null) {
       map['lastMessage'] = this.lastMessage;
+    }
+
+    if (this.rootTimebank != null) {
+      map['rootTimebank'] = this.rootTimebank;
     }
 
     return map;

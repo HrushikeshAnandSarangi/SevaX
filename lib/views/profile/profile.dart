@@ -493,7 +493,8 @@ class _ProfilePageState extends State<ProfilePage>
                       fontWeight: FontWeight.w600),
                 ),
                 FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-                        FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.TOM
+                        FlavorConfig.appFlavor == Flavor.APP ||
+                        FlavorConfig.appFlavor == Flavor.TOM
                     ? Column(
                         children: <Widget>[
                           Padding(
@@ -542,21 +543,21 @@ class _ProfilePageState extends State<ProfilePage>
                             fontWeight: FontWeight.w400,
                             fontSize: 12),
                       )
-                      : FlavorConfig.appFlavor == Flavor.TOM
-                    ? Text(
-                        'Tom Tokens',
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12),
-                      )
-                    : Text(
-                        'Tulsi Tokens',
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12),
-                      ),
+                    : FlavorConfig.appFlavor == Flavor.TOM
+                        ? Text(
+                            'Tom Tokens',
+                            style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12),
+                          )
+                        : Text(
+                            'Tulsi Tokens',
+                            style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12),
+                          ),
           ),
         ],
       ),
@@ -656,7 +657,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget get timebankslist {
     return getActionCards(
       title: 'Timebanks List',
-   //subtitle: timebankModel == null ? "loading" : timebankModel.name,
+      //subtitle: timebankModel == null ? "loading" : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
@@ -667,7 +668,10 @@ class _ProfilePageState extends State<ProfilePage>
           context,
           MaterialPageRoute(
             builder: (context) {
-              return TimeBankList(timebankid: FlavorConfig.timebankId,title: 'Timebanks List',);
+              return TimeBankList(
+                timebankid: FlavorConfig.timebankId,
+                title: 'Timebanks List',
+              );
             },
           ),
         );

@@ -3,8 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class MembersManageCampaign extends StatefulWidget {
   final String campaignID;
@@ -46,58 +45,57 @@ class MembersManageCampaignState extends State<MembersManageCampaign> {
             children: campaignModel.members
                 .map(
                   (member) => Slidable(
-                        delegate: SlidableDrawerDelegate(),
-                        actionExtentRatio: 0.25,
-                        child: Container(
-                          color: Colors.white,
-                          child: ListTile(
-                            contentPadding: EdgeInsets.only(left: 25.0),
-                            title: Text(member.fullName),
-                          ),
-                        ),
-                        actions: <Widget>[
-                          IconSlideAction(
-                            caption: 'Coordinator',
-                            color: Colors.green,
-                            icon: Icons.security,
-                            onTap: () => print('Coordinator'),
-                          ),
-                          IconSlideAction(
-                            caption: 'Admin',
-                            color: Colors.blue,
-                            icon: Icons.security,
-                            onTap: () => print('Admin'),
-                          ),
-                        ],
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            caption: 'Delete',
-                            color: Colors.red,
-                            icon: Icons.delete,
-                            onTap: () {
-                              List<Member> updatedMembers =
-                                  campaignModel.members;
-                              updatedMembers.removeWhere((queryMember) {
-                                return queryMember.email == member.email;
-                              });
-
-                              campaignModel.members = updatedMembers;
-                              Firestore.instance
-                                  .collection('campaigns')
-                                  .document(campaignModel.id)
-                                  .updateData(campaignModel.toMap());
-
-                              Firestore.instance
-                                  .collection('users')
-                                  .document(member.email)
-                                  .updateData({
-                                'membership_campaigns':
-                                    FieldValue.arrayRemove([campaignModel.id])
-                              });
-                            },
-                          ),
-                        ],
+                    delegate: SlidableDrawerDelegate(),
+                    actionExtentRatio: 0.25,
+                    child: Container(
+                      color: Colors.white,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.only(left: 25.0),
+                        title: Text(member.fullName),
                       ),
+                    ),
+                    actions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Coordinator',
+                        color: Colors.green,
+                        icon: Icons.security,
+                        onTap: () => print('Coordinator'),
+                      ),
+                      IconSlideAction(
+                        caption: 'Admin',
+                        color: Colors.blue,
+                        icon: Icons.security,
+                        onTap: () => print('Admin'),
+                      ),
+                    ],
+                    secondaryActions: <Widget>[
+                      IconSlideAction(
+                        caption: 'Delete',
+                        color: Colors.red,
+                        icon: Icons.delete,
+                        onTap: () {
+                          List<Member> updatedMembers = campaignModel.members;
+                          updatedMembers.removeWhere((queryMember) {
+                            return queryMember.email == member.email;
+                          });
+
+                          campaignModel.members = updatedMembers;
+                          Firestore.instance
+                              .collection('campaigns')
+                              .document(campaignModel.id)
+                              .updateData(campaignModel.toMap());
+
+                          Firestore.instance
+                              .collection('users')
+                              .document(member.email)
+                              .updateData({
+                            'membership_campaigns':
+                                FieldValue.arrayRemove([campaignModel.id])
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 )
                 .toList(),
           ),

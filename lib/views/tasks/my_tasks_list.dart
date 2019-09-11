@@ -9,15 +9,13 @@ import 'package:intl/intl.dart';
 
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'completed_list.dart';
 import 'notAccepted_tasks.dart';
-
 
 class MyTaskPage extends StatefulWidget {
   final TabController controller;
@@ -43,19 +41,17 @@ class MyTaskPageState extends State<MyTaskPage> with TickerProviderStateMixin {
       setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return TabBarView(
       controller: widget.controller,
-      children: [
-        MyTasksList(),
-        NotAcceptedTaskList(),
-        CompletedList()
-      ],
-    );;
+      children: [MyTasksList(), NotAcceptedTaskList(), CompletedList()],
+    );
+    ;
   }
-  }
+}
 
 class MyTasksList extends StatelessWidget {
   @override
@@ -315,7 +311,10 @@ class TaskCardViewState extends State<TaskCardView> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text(requestModel.title,style: TextStyle(color: Colors.white),),
+        title: Text(
+          requestModel.title,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: GestureDetector(
         onTap: () {

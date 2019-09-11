@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-
 import 'package:sevaexchange/models/models.dart';
 //import 'package:sevaexchange/models/transaction_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
-class NotAcceptedTaskList extends StatefulWidget{
+class NotAcceptedTaskList extends StatefulWidget {
   NotAcceptedTaskListState createState() => NotAcceptedTaskListState();
 }
 
@@ -96,7 +94,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
                 );
               },
             ),
-            
+
             subtitle: FutureBuilder(
               future:
                   FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),

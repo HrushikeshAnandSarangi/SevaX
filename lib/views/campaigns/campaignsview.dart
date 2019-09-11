@@ -10,8 +10,7 @@ import 'package:sevaexchange/views/membersmanagecampaign.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/campaign_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FireStoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FireStoreManager;
 
 class CampaignsView extends StatelessWidget {
   final TimebankModel timebankModel;
@@ -217,9 +216,9 @@ class _CampaignViewState extends State<CampaignView> {
             context,
             MaterialPageRoute(
               builder: (context) => CampaignEdit(
-                    timebankId: campaignItem.parentTimebankId,
-                    campaignModel: campaignItem,
-                  ),
+                timebankId: campaignItem.parentTimebankId,
+                campaignModel: campaignItem,
+              ),
             ),
           );
         },
@@ -266,8 +265,8 @@ class _CampaignViewState extends State<CampaignView> {
             context,
             MaterialPageRoute(
               builder: (context) => CampaignJoinRequest(
-                    campaignModel: campaignItem,
-                  ),
+                campaignModel: campaignItem,
+              ),
             ),
           );
         },
@@ -294,8 +293,8 @@ class _CampaignViewState extends State<CampaignView> {
               context,
               MaterialPageRoute(
                 builder: (context) => ProfileViewer(
-                      userEmail: member.email,
-                    ),
+                  userEmail: member.email,
+                ),
               ),
             );
           },
@@ -583,8 +582,8 @@ class _CampaignViewState extends State<CampaignView> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ProfileViewer(
-                                        userEmail: ownerModel.email,
-                                      ),
+                                    userEmail: ownerModel.email,
+                                  ),
                                 ),
                               );
                             },

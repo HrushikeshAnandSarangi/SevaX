@@ -127,19 +127,19 @@ class _LoginPageState extends State<LoginPage> {
                       width: 100,
                       color: Colors.white,
                     )
-                    : FlavorConfig.appFlavor == Flavor.TOM
-                  ? SvgPicture.asset(
-                      'lib/assets/ts2020-logo-w.svg',
-                      height: 90,
-                      fit: BoxFit.fill,
-                      width: 90,
-                    )
-                  : Image.asset(
-                      'lib/assets/images/seva-x-logo.png',
-                      height: 80,
-                      fit: BoxFit.fill,
-                      width: 280,
-                    )
+                  : FlavorConfig.appFlavor == Flavor.TOM
+                      ? SvgPicture.asset(
+                          'lib/assets/ts2020-logo-w.svg',
+                          height: 90,
+                          fit: BoxFit.fill,
+                          width: 90,
+                        )
+                      : Image.asset(
+                          'lib/assets/images/seva-x-logo.png',
+                          height: 80,
+                          fit: BoxFit.fill,
+                          width: 280,
+                        )
         ],
       ),
     );
@@ -254,9 +254,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Text(
                 'Create an Account',
-                style: TextStyle(
-                  color: Theme.of(context).accentColor
-                ),
+                style: TextStyle(color: Theme.of(context).accentColor),
               ),
             )
           ],

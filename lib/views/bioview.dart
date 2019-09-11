@@ -27,7 +27,6 @@ class _BioViewState extends State<BioView> {
       },
       child: WillPopScope(
         onWillPop: () async {
-
           return false;
         },
         child: Scaffold(

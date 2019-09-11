@@ -117,8 +117,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             future:
                                 getTimeBankForId(timebankId: widget.timebankId),
                             builder: (context, snapshot) {
-                              if (snapshot.hasError)
-                                return Text('Error');
+                              if (snapshot.hasError) return Text('Error');
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) return Offstage();
                               TimebankModel parentTimebank = snapshot.data;
@@ -131,10 +130,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                   if (_formKey.currentState.validate()) {
                                     // If the form is valid, we want to show a Snackbar
                                     _writeToDB();
-                                    if(parentTimebank.children == null) parentTimebank.children=[];
+                                    if (parentTimebank.children == null)
+                                      parentTimebank.children = [];
                                     parentTimebank.children
                                         .add(timebankModel.id);
-                                    updateTimebank(timebankModel: parentTimebank);
+                                    updateTimebank(
+                                        timebankModel: parentTimebank);
                                     Navigator.pop(context);
                                   }
                                 },

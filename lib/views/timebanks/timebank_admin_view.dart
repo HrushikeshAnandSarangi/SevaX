@@ -3,8 +3,7 @@ import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -82,7 +81,7 @@ class _TimeBankAdminView extends StatelessWidget {
   Widget getAppBar(BuildContext context, TimebankModel timebankModel) {
     return SliverAppBar(
       iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
+      backgroundColor: Theme.of(context).primaryColor,
       centerTitle: true,
       expandedHeight: 250,
       floating: false,
@@ -98,7 +97,10 @@ class _TimeBankAdminView extends StatelessWidget {
       ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Text(timebankModel.name,style: TextStyle(color: Colors.white),),
+        title: Text(
+          timebankModel.name,
+          style: TextStyle(color: Colors.white),
+        ),
         collapseMode: CollapseMode.pin,
         background: Stack(
           children: <Widget>[
@@ -427,6 +429,6 @@ class _TimeBankAdminView extends StatelessWidget {
     if (members != null) {
       model.members = members;
     }
-    await FirestoreManager.updateTimebank(timebankModel:  model);
+    await FirestoreManager.updateTimebank(timebankModel: model);
   }
 }

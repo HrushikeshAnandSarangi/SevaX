@@ -37,12 +37,12 @@ class ImagePickerDialog extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) => new SlideTransition(
-            position: _drawerDetailsPosition,
-            child: new FadeTransition(
-              opacity: new ReverseAnimation(_drawerContentsOpacity),
-              child: this,
-            ),
-          ),
+        position: _drawerDetailsPosition,
+        child: new FadeTransition(
+          opacity: new ReverseAnimation(_drawerContentsOpacity),
+          child: this,
+        ),
+      ),
     );
   }
 

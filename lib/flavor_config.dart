@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-enum Flavor {
-  APP,
-  HUMANITY_FIRST,
-  TULSI,
-  TOM
-}
+enum Flavor { APP, HUMANITY_FIRST, TULSI, TOM }
 
 class FlavorValues {
   final String name;
@@ -29,16 +24,16 @@ class FlavorConfig {
       case Flavor.TULSI:
         return '6897fefc-9380-4ca6-8373-5e7760bb31be';
         break;
-      case Flavor.TOM :
-      return 'f4b0b4c4-3d37-4514-b00b-ee424950c038';
-      break;
+      case Flavor.TOM:
+        return 'f4b0b4c4-3d37-4514-b00b-ee424950c038';
+        break;
     }
   }
 
   static get timebankName {
     switch (appFlavor) {
       case Flavor.APP:
-         return 'Seva Exchange';
+        return 'Seva Exchange';
         break;
       case Flavor.HUMANITY_FIRST:
         return 'Yang 2020';
@@ -46,9 +41,9 @@ class FlavorConfig {
       case Flavor.TULSI:
         return 'Tulsi 2020';
         break;
-      case Flavor.TOM :
-      return 'Tom 2020';
-      break;
+      case Flavor.TOM:
+        return 'Tom 2020';
+        break;
     }
   }
 
@@ -77,12 +72,11 @@ class FlavorConfig {
       case Flavor.HUMANITY_FIRST:
         return ThemeData(
             appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
-              color: Colors.indigo,
-              elevation: 4,
-              actionsIconTheme: IconThemeData(color: Colors.white),
-              iconTheme: IconThemeData(color: Colors.white)
-            ),
+                brightness: Brightness.light,
+                color: Colors.indigo,
+                elevation: 4,
+                actionsIconTheme: IconThemeData(color: Colors.white),
+                iconTheme: IconThemeData(color: Colors.white)),
             brightness: Brightness.light,
             primarySwatch: Colors.indigo,
             primaryColor: Colors.indigo,
@@ -96,43 +90,45 @@ class FlavorConfig {
         break;
       case Flavor.TULSI:
         return ThemeData(
-            appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
-              color: Color.fromARGB(255, 26, 50, 102),
-              elevation: 4,
-              actionsIconTheme: IconThemeData(color: Colors.white),
-              iconTheme: IconThemeData(color: Colors.white),
-            ),
+          appBarTheme: AppBarTheme(
             brightness: Brightness.light,
-            primarySwatch: Colors.red,
-            primaryColor: Color.fromARGB(255, 26, 50, 102),
-            accentColor: Colors.red[900],
-            indicatorColor: Colors.white,
-            primaryColorBrightness: Brightness.light,
-            accentColorBrightness: Brightness.light,
-            fontFamily: 'Montserrat',
-            splashColor: Colors.grey,
-            bottomAppBarColor: Colors.red[900],);
+            color: Color.fromARGB(255, 26, 50, 102),
+            elevation: 4,
+            actionsIconTheme: IconThemeData(color: Colors.white),
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
+          brightness: Brightness.light,
+          primarySwatch: Colors.red,
+          primaryColor: Color.fromARGB(255, 26, 50, 102),
+          accentColor: Colors.red[900],
+          indicatorColor: Colors.white,
+          primaryColorBrightness: Brightness.light,
+          accentColorBrightness: Brightness.light,
+          fontFamily: 'Montserrat',
+          splashColor: Colors.grey,
+          bottomAppBarColor: Colors.red[900],
+        );
         break;
-        case Flavor.TOM:
+      case Flavor.TOM:
         return ThemeData(
-            appBarTheme: AppBarTheme(
-              brightness: Brightness.light,
-              color: Color.fromARGB(255, 11, 40, 161),
-              elevation: 4,
-              actionsIconTheme: IconThemeData(color: Colors.white),
-              iconTheme: IconThemeData(color: Colors.white),
-            ),
+          appBarTheme: AppBarTheme(
             brightness: Brightness.light,
-            primarySwatch: Colors.red,
-            primaryColor: Color.fromARGB(255, 11, 40, 161),
-            accentColor: Color.fromARGB(255,224,100,70),
-            indicatorColor: Colors.white,
-            primaryColorBrightness: Brightness.light,
-            accentColorBrightness: Brightness.light,
-            fontFamily: 'Montserrat',
-            splashColor: Colors.grey,
-            bottomAppBarColor: Color.fromARGB(255, 11, 40, 161),);
+            color: Color.fromARGB(255, 11, 40, 161),
+            elevation: 4,
+            actionsIconTheme: IconThemeData(color: Colors.white),
+            iconTheme: IconThemeData(color: Colors.white),
+          ),
+          brightness: Brightness.light,
+          primarySwatch: Colors.red,
+          primaryColor: Color.fromARGB(255, 11, 40, 161),
+          accentColor: Color.fromARGB(255, 224, 100, 70),
+          indicatorColor: Colors.white,
+          primaryColorBrightness: Brightness.light,
+          accentColorBrightness: Brightness.light,
+          fontFamily: 'Montserrat',
+          splashColor: Colors.grey,
+          bottomAppBarColor: Color.fromARGB(255, 11, 40, 161),
+        );
         break;
     }
   }
