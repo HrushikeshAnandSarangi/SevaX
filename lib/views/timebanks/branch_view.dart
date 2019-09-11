@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
-import 'package:sevaexchange/views/timebanks/branch_list.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -23,18 +22,18 @@ import 'package:sevaexchange/globals.dart' as globals;
 
 import 'package:sevaexchange/views/core.dart';
 
-class TimebankView extends StatefulWidget {
+class BranchView extends StatefulWidget {
   final String timebankId;
 
-  TimebankView({
+  BranchView({
     @required this.timebankId,
   });
 
   @override
-  _TimebankViewState createState() => _TimebankViewState();
+  _BranchViewState createState() => _BranchViewState();
 }
 
-class _TimebankViewState extends State<TimebankView> {
+class _BranchViewState extends State<BranchView> {
   TimebankModel timebankModel;
   UserModel ownerModel;
   String title = 'Loading';
@@ -94,25 +93,7 @@ class _TimebankViewState extends State<TimebankView> {
                   )
                 ],
               ),
-              floatingActionButton: FloatingActionButton.extended(
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  'Create Branch',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TimebankCreate(
-                              timebankId: timebankModel.id,
-                            )),
-                  );
-                },
-              ),
+              
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Container(
@@ -175,23 +156,7 @@ class _TimebankViewState extends State<TimebankView> {
                           },
                           child: _whichButton('viewcampaigns'),
                         ),
-                        FlatButton(
-                          child: Text(
-                            'View Branches',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BranchList(
-                                        timebankid: timebankModel.id,
-                                      )),
-                            );
-                          },
-                        ),
+                        
                         FlatButton(
                           child: Text(
                             'Create News Feed',
@@ -574,7 +539,7 @@ class _TimebankViewState extends State<TimebankView> {
         if (timebankModel.creatorId ==
             SevaCore.of(context).loggedInUser.sevaUserID) {
           return Text(
-            'Edit Timebank',
+            'Edit Branch',
             style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
           );
         } else {
@@ -606,7 +571,7 @@ class _TimebankViewState extends State<TimebankView> {
         break;
       case 'joinrequests':
         return Text(
-          'View Timebank Join Requests',
+          'View Branch Join Requests',
           style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
         );
         break;

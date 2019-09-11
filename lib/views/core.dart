@@ -296,7 +296,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
           }).toList();
         }(),
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.white,
+        selectedItemColor: FlavorConfig.appFlavor == Flavor.TOM ? Colors.white : Theme.of(context).primaryColor,
         onTap: (index) => setState(() {
           if (index == 3) {
             _settingModalBottomSheet(context);

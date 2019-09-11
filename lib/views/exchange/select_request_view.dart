@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
@@ -105,6 +106,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                           return CreateRequest(
                             isOfferRequest: isofferrequest,
                             offer: widget.offerModel,
+                            timebankId: FlavorConfig.timebankId,
                           );
                         },
                       ),
