@@ -3,6 +3,4 @@ import 'package:sevaexchange/models/models.dart';
 
 class NewsViewModel extends BaseViewModel {
   Stream<List<NewsModel>> _newsStream;
-  
-   
 }

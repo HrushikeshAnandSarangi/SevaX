@@ -23,16 +23,16 @@ class MessageModel extends DataModel {
     if (map.containsKey('fromId')) {
       this.fromId = map['fromId'];
     }
-    
+
     if (map.containsKey('toId')) {
       this.toId = map['toId'];
     }
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
 
-    if (map.containsKey('isRead')) {
-      this.isRead = map['isRead'];
-    }
+      if (map.containsKey('isRead')) {
+        this.isRead = map['isRead'];
+      }
     }
   }
 

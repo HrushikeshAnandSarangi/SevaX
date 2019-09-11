@@ -35,8 +35,7 @@ class _ChatListViewState extends State<ChatListView> {
         // ],
       ),
       body: StreamBuilder<List<ChatModel>>(
-        stream:
-            getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
+        stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
         builder: (BuildContext context,
             AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
           if (chatListSnapshot.hasError) {
@@ -66,8 +65,14 @@ class _ChatListViewState extends State<ChatListView> {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.chat,color: Colors.white,), 
-        label: Text('New Chat',style: TextStyle(color: Colors.white),),
+        icon: Icon(
+          Icons.chat,
+          color: Colors.white,
+        ),
+        label: Text(
+          'New Chat',
+          style: TextStyle(color: Colors.white),
+        ),
         onPressed: () {
           NewsModel news;
           Navigator.push(
@@ -104,8 +109,7 @@ class _ChatListViewState extends State<ChatListView> {
     );
   }
 
-  Widget getMessageListView(
-      ChatModel chatModel, BuildContext parentContext) {
+  Widget getMessageListView(ChatModel chatModel, BuildContext parentContext) {
     String lastmessage;
     if (chatModel.lastMessage == null) {
       lastmessage = '';

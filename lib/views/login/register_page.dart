@@ -9,8 +9,7 @@ import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -52,7 +51,10 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Register',style: TextStyle(color: Colors.white),),
+        title: Text(
+          'Register',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: GestureDetector(
         onTap: () {

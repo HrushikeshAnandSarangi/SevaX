@@ -80,8 +80,8 @@ class _ChipsTile extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) => CoreView(
-                                  sevaUserID: null,
-                                ),
+                              sevaUserID: null,
+                            ),
                           ),
                         );
                       },
@@ -107,9 +107,9 @@ class _ChipsTile extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (BuildContext context) => BioView(
-                                    onSave: null,
-                                    onSkipped: null,
-                                  ),
+                                onSave: null,
+                                onSkipped: null,
+                              ),
                             ),
                           );
                         }

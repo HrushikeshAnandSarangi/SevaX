@@ -113,10 +113,9 @@ class _ResultViewState extends State<ResultView> {
     print('Build view');
     if (widget.controller.text.trim().isEmpty) {
       return StreamBuilder<List<ChatModel>>(
-        stream:
-            getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<ChatModel>> snapshot) {
+        stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<ChatModel>> snapshot) {
           if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           }
@@ -247,8 +246,7 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 
-  Widget getMessageListView(
-      ChatModel chatModel, BuildContext parentContext) {
+  Widget getMessageListView(ChatModel chatModel, BuildContext parentContext) {
     String lastmessage;
     if (chatModel.lastMessage == null) {
       lastmessage = '';

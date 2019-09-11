@@ -273,7 +273,8 @@ class _ChatViewState extends State<ChatView> {
                     decoration: messageModel.fromId == loggedinEmail
                         ? myBoxDecorationsend()
                         : myBoxDecorationreceive(),
-                    padding: messageModel.fromId == loggedinEmail && news != null
+                    padding: messageModel.fromId == loggedinEmail &&
+                            news != null
                         ? EdgeInsets.fromLTRB(0, 0, 5, 2)
                         : messageModel.fromId != loggedinEmail && news != null
                             ? EdgeInsets.fromLTRB(0, 0, 0, 2)

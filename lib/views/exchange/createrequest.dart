@@ -18,7 +18,8 @@ class CreateRequest extends StatefulWidget {
   final OfferModel offer;
   final String timebankId;
   //print('at createrequest = $isOfferRequest');
-  CreateRequest({Key key, this.isOfferRequest, this.offer,this.timebankId }) : super(key: key);
+  CreateRequest({Key key, this.isOfferRequest, this.offer, this.timebankId})
+      : super(key: key);
 
   @override
   _CreateRequestState createState() => _CreateRequestState();
@@ -46,7 +47,10 @@ class _CreateRequestState extends State<CreateRequest> {
         centerTitle: false,
       ),
       body: RequestCreateForm(
-          isOfferRequest: widget.isOfferRequest, offer: widget.offer,timebankId: widget.timebankId,),
+        isOfferRequest: widget.isOfferRequest,
+        offer: widget.offer,
+        timebankId: widget.timebankId,
+      ),
     );
   }
 }
@@ -55,7 +59,7 @@ class RequestCreateForm extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
-  RequestCreateForm({this.isOfferRequest, this.offer,this.timebankId});
+  RequestCreateForm({this.isOfferRequest, this.offer, this.timebankId});
 
   @override
   RequestCreateFormState createState() {

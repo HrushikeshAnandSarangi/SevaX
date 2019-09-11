@@ -288,8 +288,8 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => MembersManage(
-                                timebankModel: widget.timebankModel,
-                              ),
+                            timebankModel: widget.timebankModel,
+                          ),
                         ),
                       );
                     },

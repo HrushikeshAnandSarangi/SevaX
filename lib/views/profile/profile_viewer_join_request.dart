@@ -19,7 +19,10 @@ class ProfileViewerJoinRequest extends StatelessWidget {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text('User Profile',style: TextStyle(color: Colors.white),),
+        title: Text(
+          'User Profile',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: false,
       ),
       body: StreamBuilder<DocumentSnapshot>(
@@ -484,14 +487,14 @@ Widget getChipWidgets(List<dynamic> strings) {
     children: strings
         .map(
           (item) => ActionChip(
-                padding: EdgeInsets.all(3.0),
-                onPressed: () {},
-                backgroundColor: _getChipColor(),
-                label: Text(
-                  item,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+            padding: EdgeInsets.all(3.0),
+            onPressed: () {},
+            backgroundColor: _getChipColor(),
+            label: Text(
+              item,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
         )
         .toList(),
   );

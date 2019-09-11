@@ -65,7 +65,8 @@ class NewsModel extends DataModel {
     }
     if (this.likes != null) {
       map['likes'] = this.likes;
-    } else map['likes'] = [];
+    } else
+      map['likes'] = [];
     return map;
   }
 
@@ -107,7 +108,8 @@ class NewsModel extends DataModel {
     if (map.containsKey('likes')) {
       List<String> likesList = List.castFrom(map['likes']);
       this.likes = likesList;
-    } else this.likes = [];
+    } else
+      this.likes = [];
   }
 }
 

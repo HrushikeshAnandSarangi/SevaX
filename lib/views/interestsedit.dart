@@ -12,7 +12,10 @@ class InterestsEdit extends StatelessWidget {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text("Edit Interests",style: TextStyle(color: Colors.white),),
+        title: Text(
+          "Edit Interests",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Interests(),
     );

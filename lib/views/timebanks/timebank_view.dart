@@ -203,7 +203,9 @@ class _TimebankViewState extends State<TimebankView> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => NewsCreate(timebankId: timebankModel.id,),
+                                  builder: (context) => NewsCreate(
+                                    timebankId: timebankModel.id,
+                                  ),
                                 ));
                           },
                         ),
@@ -218,7 +220,10 @@ class _TimebankViewState extends State<TimebankView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateRequest(timebankId: timebankModel.id,), ),
+                                builder: (context) => CreateRequest(
+                                  timebankId: timebankModel.id,
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -233,8 +238,9 @@ class _TimebankViewState extends State<TimebankView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => CreateOffer(timebankId: timebankModel.id,)
-                                      ),
+                                  builder: (context) => CreateOffer(
+                                        timebankId: timebankModel.id,
+                                      )),
                             );
                           },
                         ),

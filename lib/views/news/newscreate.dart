@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -54,7 +53,9 @@ class NewsCreate extends StatelessWidget {
             //       ),
           ],
         ),
-        body: NewsCreateForm(timebankId: timebankId,),
+        body: NewsCreateForm(
+          timebankId: timebankId,
+        ),
       ),
     );
   }
@@ -241,7 +242,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                     ),
                   ),
                   Text(""),
-                  
+
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Column(

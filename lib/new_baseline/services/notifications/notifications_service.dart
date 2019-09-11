@@ -9,7 +9,8 @@ class NotificationsService extends BaseService {
   Future<void> createAcceptRequestNotification({
     NotificationsModel notificationsModel,
   }) async {
-    log.i('createAcceptRequestNotification: NotificationModel: ${notificationsModel.toMap()}');
+    log.i(
+        'createAcceptRequestNotification: NotificationModel: ${notificationsModel.toMap()}');
     UserModel user =
         await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
@@ -25,7 +26,8 @@ class NotificationsService extends BaseService {
   Future<void> withdrawAcceptRequestNotification({
     NotificationsModel notificationsModel,
   }) async {
-    log.i('withdrawAcceptRequestNotification: NotificationModel: ${notificationsModel.toMap()}');
+    log.i(
+        'withdrawAcceptRequestNotification: NotificationModel: ${notificationsModel.toMap()}');
     UserModel user =
         await getUserForId(sevaUserId: notificationsModel.targetUserId);
     UserModel senderUser =
@@ -61,7 +63,8 @@ class NotificationsService extends BaseService {
     NotificationsModel model,
     String notificationId,
   }) async {
-    log.i('removeAcceptRequestNotification: NotificationModel: ${model.toMap()} \n NotificationId: $notificationId');
+    log.i(
+        'removeAcceptRequestNotification: NotificationModel: ${model.toMap()} \n NotificationId: $notificationId');
     UserModel user = await getUserForId(sevaUserId: model.senderUserId);
     await Firestore.instance
         .collection('users')
@@ -75,7 +78,8 @@ class NotificationsService extends BaseService {
   Future<void> createRequestApprovalNotification({
     NotificationsModel model,
   }) async {
-     log.i('createRequestApprovalNotification: NotificationModel: ${model.toMap()}');
+    log.i(
+        'createRequestApprovalNotification: NotificationModel: ${model.toMap()}');
     UserModel user = await getUserForId(
       sevaUserId: model.targetUserId,
     );
@@ -91,7 +95,8 @@ class NotificationsService extends BaseService {
   /// create TaskCompleted Notification[model]
   Future<void> createTaskCompletedNotification(
       {NotificationsModel model}) async {
-        log.i('createTaskCompletedNotification: NotificationModel: ${model.toMap()}');
+    log.i(
+        'createTaskCompletedNotification: NotificationModel: ${model.toMap()}');
     UserModel user = await getUserForId(sevaUserId: model.targetUserId);
     await Firestore.instance
         .collection('users')
@@ -105,7 +110,8 @@ class NotificationsService extends BaseService {
   Future<void> createTaskCompletedApprovedNotification({
     NotificationsModel model,
   }) async {
-    log.i('createTaskCompletedApprovedNotification: NotificationModel: ${model.toMap()}');
+    log.i(
+        'createTaskCompletedApprovedNotification: NotificationModel: ${model.toMap()}');
     UserModel user = await getUserForId(sevaUserId: model.targetUserId);
     await Firestore.instance
         .collection('users')
@@ -159,7 +165,8 @@ class NotificationsService extends BaseService {
 
   /// update a notification as read using[notificationId] and [userEmail]
   Future<void> readNotification(String notificationId, String userEmail) async {
-    log.i('readNotification: NotificationId: $notificationId \n UserEmail: $userEmail');
+    log.i(
+        'readNotification: NotificationId: $notificationId \n UserEmail: $userEmail');
     await Firestore.instance
         .collection('users')
         .document(userEmail)
@@ -201,5 +208,4 @@ class NotificationsService extends BaseService {
       ),
     );
   }
-
 }

@@ -19,8 +19,11 @@ class ProfileViewer extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-          title: Text('User Profile',style: TextStyle(color: Colors.white),),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text(
+            'User Profile',
+            style: TextStyle(color: Colors.white),
+          ),
           centerTitle: false,
         ),
         body: StreamBuilder<DocumentSnapshot>(
@@ -80,10 +83,15 @@ class ProfileViewer extends StatelessWidget {
                               MediaQuery.of(context).size.width / 2.6,
                               0),
                           child: OutlineButton(
-                            borderSide: BorderSide(color: Theme.of(context).accentColor,),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).accentColor,
+                            ),
                             child: Row(
                               children: <Widget>[
-                                Icon(Icons.forum,color: Theme.of(context).accentColor,),
+                                Icon(
+                                  Icons.forum,
+                                  color: Theme.of(context).accentColor,
+                                ),
                                 Text(' Chat')
                               ],
                             ),

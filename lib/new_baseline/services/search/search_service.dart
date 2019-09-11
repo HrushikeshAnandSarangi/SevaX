@@ -9,7 +9,7 @@ class SearchService extends BaseService {
   static final String _baseUrl = 'http://api.sevaexchange.com:9200';
 
   /// make a get request using [url] and [headers]
-   Future<http.Response> makeGetRequest({
+  Future<http.Response> makeGetRequest({
     @required String url,
     Map<String, String> headers,
   }) async {
@@ -18,7 +18,7 @@ class SearchService extends BaseService {
   }
 
   /// Search for user for [queryString]
-   Stream<List<UserModel>> searchForUser({
+  Stream<List<UserModel>> searchForUser({
     @required queryString,
   }) async* {
     log.i('searchForUser: QueryString: $queryString');
@@ -35,7 +35,7 @@ class SearchService extends BaseService {
   }
 
   /// Search for News for [queryString]
-   Stream<List<NewsModel>> searchForNews({
+  Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {
     log.i('searchForNews: QueryString: $queryString');
@@ -52,8 +52,8 @@ class SearchService extends BaseService {
     yield newsList;
   }
 
-  /// Search for Timebank for [queryString] 
-   Stream<List<TimebankModel>> searchForTimebank({
+  /// Search for Timebank for [queryString]
+  Stream<List<TimebankModel>> searchForTimebank({
     @required queryString,
   }) async* {
     log.i('searchForTimebank: QueryString: $queryString');
@@ -71,7 +71,7 @@ class SearchService extends BaseService {
   }
 
   /// Search for Campaign for [queryString]
-   Stream<List<CampaignModel>> searchForCampaign({
+  Stream<List<CampaignModel>> searchForCampaign({
     @required queryString,
   }) async* {
     log.i('searchForCampaign: QueryString: $queryString');
@@ -89,7 +89,7 @@ class SearchService extends BaseService {
   }
 
   /// Search for offer for [queryString]
-   Stream<List<OfferModel>> searchForOffer({
+  Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
     log.i('searchForOffer: QueryString: $queryString');
@@ -107,7 +107,7 @@ class SearchService extends BaseService {
   }
 
   /// Search for Request for [queryString]
-   Stream<List<RequestModel>> searchForRequest({
+  Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
     log.i('searchForRequest: QueryString: $queryString');
@@ -124,9 +124,9 @@ class SearchService extends BaseService {
   }
 
   /// make elastic search request using [url]
-   Future<List<Map<String, dynamic>>> _makeElasticSearchRequest(
+  Future<List<Map<String, dynamic>>> _makeElasticSearchRequest(
       String url) async {
-        log.i('_makeElasticSearchRequest: URL: $url');
+    log.i('_makeElasticSearchRequest: URL: $url');
     http.Response response = await makeGetRequest(url: url);
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];

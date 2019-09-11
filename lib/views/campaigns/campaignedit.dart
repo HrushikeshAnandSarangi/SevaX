@@ -7,8 +7,7 @@ import 'package:sevaexchange/views/membersmanagecampaign.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/campaign_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class CampaignEdit extends StatelessWidget {
   final String timebankId;
@@ -303,8 +302,8 @@ class CampaignEditFormState extends State<CampaignEditForm> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => MembersManageCampaign(
-                                campaignID: widget.campaignModel.id,
-                              ),
+                            campaignID: widget.campaignModel.id,
+                          ),
                         ),
                       );
                     },
@@ -332,8 +331,8 @@ class CampaignEditFormState extends State<CampaignEditForm> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => AddMembersEdit(
-                                timebankModel: widget.timebankModel,
-                              ),
+                            timebankModel: widget.timebankModel,
+                          ),
                         ),
                       );
                     },

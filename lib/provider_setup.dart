@@ -5,6 +5,7 @@ import 'package:sevaexchange/new_baseline/services/authentication/authentication
 import 'package:sevaexchange/new_baseline/services/authentication/email_authentication_service.dart';
 import 'package:sevaexchange/new_baseline/services/authentication/google_authentication_service.dart';
 import 'package:sevaexchange/new_baseline/services/local_storage/local_storage_service.dart';
+
 List<SingleChildCloneableWidget> providers = [
   ...independentServices,
   ...dependentServices,

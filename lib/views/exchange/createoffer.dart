@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -17,10 +16,15 @@ class CreateOffer extends StatelessWidget {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text("Create Offer",style: TextStyle(color: Colors.white),),
+        title: Text(
+          "Create Offer",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: false,
       ),
-      body: MyCustomForm(timebankId: timebankId,),
+      body: MyCustomForm(
+        timebankId: timebankId,
+      ),
     );
   }
 }

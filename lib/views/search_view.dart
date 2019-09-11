@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart'
-    as FirestoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
@@ -50,17 +49,17 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
             style: TextStyle(color: Colors.white),
             controller: searchTextController,
             decoration: InputDecoration(
-              hasFloatingPlaceholder: false,
-              alignLabelWithHint: true,
-              isDense: true,
-              // suffix: GestureDetector(
-              //   //onTap: () => search(),
-              //   child: Icon(Icons.search),
-              // ),
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-              hintText: 'Search',
-              hintStyle: TextStyle(color: Colors.white)
-            ),
+                hasFloatingPlaceholder: false,
+                alignLabelWithHint: true,
+                isDense: true,
+                // suffix: GestureDetector(
+                //   //onTap: () => search(),
+                //   child: Icon(Icons.search),
+                // ),
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
+                hintText: 'Search',
+                hintStyle: TextStyle(color: Colors.white)),
             // controller: searchTextController,
           ),
         ),
