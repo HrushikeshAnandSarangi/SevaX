@@ -1,0 +1,17 @@
+//
+//  Tom-release.xcconfig
+//  Runner
+//
+//  Created by Ajil on 9/9/19.
+//  Copyright © 2019 The Chromium Authors. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+#include "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main_tom.dart
+bundle_identifier = com.sevaexchange.tom
+app_name = Tom 2020
