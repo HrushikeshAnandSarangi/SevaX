@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
@@ -176,7 +177,7 @@ class _BranchViewState extends State<BranchView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'Create Volunteer Request',
+                            'Create ${FlavorConfig.values.requestTitle}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
@@ -194,7 +195,7 @@ class _BranchViewState extends State<BranchView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'Create Volunteer Offer',
+                            'Create ${FlavorConfig.values.offertitle}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),

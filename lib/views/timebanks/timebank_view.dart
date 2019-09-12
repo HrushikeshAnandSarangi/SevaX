@@ -23,6 +23,8 @@ import 'package:sevaexchange/globals.dart' as globals;
 
 import 'package:sevaexchange/views/core.dart';
 
+import '../../flavor_config.dart';
+
 class TimebankView extends StatefulWidget {
   final String timebankId;
 
@@ -211,7 +213,7 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'Create Volunteer Request',
+                            'Create ${FlavorConfig.values.requestTitle}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
@@ -229,7 +231,7 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'Create Volunteer Offer',
+                            'Create ${FlavorConfig.values.offertitle}',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
