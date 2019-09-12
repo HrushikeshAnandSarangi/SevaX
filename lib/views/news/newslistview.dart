@@ -28,7 +28,7 @@ class NewsList extends StatefulWidget {
 
 class NewsListState extends State<NewsList> {
   String timebankName;
-  String timebankId = FlavorConfig.timebankId;
+  String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
   @override
   Widget build(BuildContext context) {

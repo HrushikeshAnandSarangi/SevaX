@@ -26,7 +26,7 @@ class NewsView extends StatelessWidget {
       ),
       body: StreamBuilder<List<NewsModel>>(
         stream:
-            FirestoreManager.getNewsStream(timebankID: FlavorConfig.timebankId),
+            FirestoreManager.getNewsStream(timebankID: FlavorConfig.values.timebankId),
         builder: (context, snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {

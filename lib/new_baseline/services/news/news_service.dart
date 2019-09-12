@@ -31,8 +31,8 @@ class NewsService extends BaseService {
         .collection('news')
         .where('entity', isEqualTo: {
           'entityType': 'timebanks',
-          'entityId': FlavorConfig.timebankId,
-          'entityName': FlavorConfig.timebankName,
+          'entityId': FlavorConfig.values.timebankId,
+          'entityName': FlavorConfig.values.timebankName,
         })
         .orderBy('posttimestamp', descending: true)
         .snapshots();

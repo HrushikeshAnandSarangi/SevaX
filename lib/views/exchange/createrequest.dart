@@ -292,7 +292,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   child: RaisedButton(
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
-                    onPressed: () {
+                    onPressed: () async {
                       requestModel.requestStart =
                           OfferDurationWidgetState.starttimestamp;
                       requestModel.requestEnd =
@@ -302,7 +302,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       if (_formKey.currentState.validate()) {
                         print(
                             'before checking to create notification = ${widget.isOfferRequest}');
-                        _writeToDB();
+                        await _writeToDB();
 
                         if (widget.isOfferRequest == true) {
                           print(

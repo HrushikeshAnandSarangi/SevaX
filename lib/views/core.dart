@@ -83,7 +83,7 @@ class _CoreViewState extends State<CoreView> {
         //AnnotatedRegion<SystemUiOverlayStyle>(
         //child:
         MaterialApp(
-      theme: FlavorConfig.theme,
+      theme: FlavorConfig.values.theme,
       home: SevaCoreView(user: user),
       // ),
       // value: SystemUiOverlayStyle(
@@ -127,7 +127,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.timebankId)
+    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
         .then((timebank) {
       if (timebank.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
@@ -438,12 +438,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   color: Colors.white,
                 ),
       page: HelpView(controller),
-      title: 'Volunteer',
+      title: FlavorConfig.appFlavor == Flavor.APP ? 'Volunteer' : 'Campaign',
       bottom: TabBar(
         labelColor: Colors.white,
         tabs: [
-          Tab(child: Text('Volunteer Requests')),
-          Tab(child: Text('Volunteer Offers')),
+          Tab(child: Text('${FlavorConfig.values.requestTitle}s')),
+          Tab(child: Text('${FlavorConfig.values.offertitle}s')),
         ],
         controller: controller,
       ),
@@ -623,7 +623,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NewsCreate(
-                                  timebankId: FlavorConfig.timebankId,
+                                  timebankId: FlavorConfig.values.timebankId,
                                 ),
                               ),
                             )
@@ -636,7 +636,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     leading: new Icon(Icons.swap_horizontal_circle,
                         color: Theme.of(context).primaryColor),
                     title: new Text(
-                      'Create Volunteer Request',
+                      'Create ${FlavorConfig.values.requestTitle}',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
@@ -648,7 +648,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                             context,
                             MaterialPageRoute(
                               builder: (context) => CreateRequest(
-                                timebankId: FlavorConfig.timebankId,
+                                timebankId: FlavorConfig.values.timebankId,
                               ),
                             ),
                           )
@@ -688,7 +688,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       color: Theme.of(context).primaryColor,
                     ),
                     title: new Text(
-                      'Create Volunteer Offer',
+                      'Create ${FlavorConfig.values.offertitle}',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
@@ -697,7 +697,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         context,
                         MaterialPageRoute(
                           builder: (context) => CreateOffer(
-                            timebankId: FlavorConfig.timebankId,
+                            timebankId: FlavorConfig.values.timebankId,
                           ),
                         ),
                       )
@@ -722,7 +722,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                             context,
                             MaterialPageRoute(
                               builder: (context) => TimebankCreate(
-                                timebankId: FlavorConfig.timebankId,
+                                timebankId: FlavorConfig.values.timebankId,
                               ),
                             ),
                           )

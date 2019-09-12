@@ -296,7 +296,7 @@ class RequestService extends BaseService {
     var data = Firestore.instance
         .collection('requests')
         .where('approvedUsers', arrayContains: userEmail)
-        .where('timebankId', isEqualTo: FlavorConfig.timebankId)
+        .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
         .snapshots();
 
     yield* data.transform(
@@ -366,7 +366,7 @@ class RequestService extends BaseService {
     var data = Firestore.instance
         .collection('requests')
         .where('approvedUsers', arrayContains: userEmail)
-        .where('timebankId', isEqualTo: FlavorConfig.timebankId)
+        .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
         .snapshots();
 
     yield* data.transform(
@@ -399,7 +399,7 @@ class RequestService extends BaseService {
     var data = Firestore.instance
         .collection('requests')
         .where('acceptors', arrayContains: userEmail)
-        .where('timebankId', isEqualTo: FlavorConfig.timebankId)
+        .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
         .snapshots();
 
     yield* data.transform(

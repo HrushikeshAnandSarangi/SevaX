@@ -322,7 +322,7 @@ class _RegisterPageState extends State<RegisterPage>
 
   Future addUserToTimebank(UserModel loggedInUser) async {
     TimebankModel timebankModel = await FirestoreManager.getTimeBankForId(
-      timebankId: FlavorConfig.timebankId,
+      timebankId: FlavorConfig.values.timebankId,
     );
     List<String> _members = timebankModel.members;
     timebankModel.members = [..._members, loggedInUser.email];

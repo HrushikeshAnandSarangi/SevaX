@@ -50,7 +50,7 @@ class MainApplication extends StatelessWidget {
     return AuthProvider(
       auth: Auth(),
       child: MaterialApp(
-        theme: FlavorConfig.theme,
+        theme: FlavorConfig.values.theme,
         home: SplashView(),
       ),
     );

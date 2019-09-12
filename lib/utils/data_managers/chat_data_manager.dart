@@ -10,10 +10,10 @@ Future<void> createChat({
   @required ChatModel chat,
 }) async {
   // log.i('createChat: MessageModel: ${chat.toMap()}');
-  chat.rootTimebank = FlavorConfig.timebankId;
+  chat.rootTimebank = FlavorConfig.values.timebankId;
   return await Firestore.instance
       .collection('chatsnew')
-      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.timebankId)
+      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
       .setData(chat.toMap(), merge: true);
 }
 
@@ -24,7 +24,7 @@ Future<void> updateChat({
   // log.i('updateChat: MessageModel: ${chat.toMap()}');
   return await Firestore.instance
       .collection('chatsnew')
-      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.timebankId)
+      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
       .updateData(chat.toMap());
 }
 
@@ -41,7 +41,7 @@ Future<void> createmessage({
           '*' +
           chatmodel.user2 +
           '*' +
-          FlavorConfig.timebankId)
+          FlavorConfig.values.timebankId)
       .collection('messages')
       .document()
       .setData(messagemodel.toMap());
@@ -63,7 +63,7 @@ Stream<List<ChatModel>> getChatsforUser({
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
             if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
-                model.rootTimebank == FlavorConfig.timebankId) {
+                model.rootTimebank == FlavorConfig.values.timebankId) {
               chatlist.add(model);
             }
           },
@@ -85,7 +85,7 @@ Stream<List<MessageModel>> getMessagesforChat({
           '*' +
           chatModel.user2 +
           '*' +
-          FlavorConfig.timebankId)
+          FlavorConfig.values.timebankId)
       .collection('messages')
       .snapshots();
 

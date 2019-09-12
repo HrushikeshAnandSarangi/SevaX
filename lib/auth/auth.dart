@@ -144,7 +144,7 @@ class Auth {
     }
 
     TimebankModel model = await FirestoreManager.getTimeBankForId(
-      timebankId: FlavorConfig.timebankId,
+      timebankId: FlavorConfig.values.timebankId,
     );
     List<String> members = model.members;
     if (!members.contains(signedInUser.sevaUserID)) {

@@ -27,7 +27,7 @@ class HelpViewState extends State<HelpView> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.timebankId)
+    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
         .then((timebank) {
       if (timebank.admins.contains(SevaCore.of(context).loggedInUser.email) ||
           timebank.coordinators
@@ -65,7 +65,7 @@ class RequestsState extends State<Requests> {
     globals.orCreateSelector = 0;
   }
 
-  String timebankId = FlavorConfig.timebankId;
+  String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
   @override
   Widget build(BuildContext context) {
@@ -342,7 +342,7 @@ class OffersState extends State<Offers> {
     globals.orCreateSelector = 1;
   }
 
-  String timebankId = FlavorConfig.timebankId;
+  String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
 
   @override

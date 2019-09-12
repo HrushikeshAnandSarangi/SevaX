@@ -50,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.timebankId)
+    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
         .then((model) {
       setState(() {
         timebankModel = model;
@@ -645,7 +645,7 @@ class _ProfilePageState extends State<ProfilePage>
           MaterialPageRoute(
             builder: (context) {
               return TimebankAdminPage(
-                timebankId: FlavorConfig.timebankId,
+                timebankId: FlavorConfig.values.timebankId,
               );
             },
           ),
@@ -669,7 +669,7 @@ class _ProfilePageState extends State<ProfilePage>
           MaterialPageRoute(
             builder: (context) {
               return TimeBankList(
-                timebankid: FlavorConfig.timebankId,
+                timebankid: FlavorConfig.values.timebankId,
                 title: 'Timebanks List',
               );
             },

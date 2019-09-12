@@ -106,7 +106,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                           return CreateRequest(
                             isOfferRequest: isofferrequest,
                             offer: widget.offerModel,
-                            timebankId: FlavorConfig.timebankId,
+                            timebankId: FlavorConfig.values.timebankId,
                           );
                         },
                       ),

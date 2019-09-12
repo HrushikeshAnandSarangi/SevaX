@@ -58,7 +58,7 @@ class BranchList extends StatelessWidget {
                         return Offstage();
                       }
                       TimebankModel model = snapshot.data;
-                      return model.id != FlavorConfig.timebankId
+                      return model.id != FlavorConfig.values.timebankId
                           ? GestureDetector(
                               child: Card(
                                 child: Container(

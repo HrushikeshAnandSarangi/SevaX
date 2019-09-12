@@ -81,7 +81,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.balance = 0;
     timebankModel.protected = protectedVal;
     timebankModel.parentTimebankId = widget.timebankId;
-    timebankModel.rootTimebankId = FlavorConfig.timebankId;
+    timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
 
     createTimebank(timebankModel: timebankModel);
 
