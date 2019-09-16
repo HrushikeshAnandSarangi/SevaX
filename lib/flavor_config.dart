@@ -9,6 +9,7 @@ class FlavorValues {
   final String requestTitle;
   final String offertitle;
   final ThemeData theme;
+  final Color buttonTextColor;
 
   FlavorValues({
     @required this.timebankName,
@@ -16,6 +17,7 @@ class FlavorValues {
     this.requestTitle = 'Volunteer Request',
     this.offertitle = 'Volunteer Offer',
     this.theme,
+    this.buttonTextColor = Colors.white
   });
 }
 
@@ -30,6 +32,7 @@ class FlavorConfig {
           timebankName: 'Seva Exchange',
           offertitle: 'Volunteer Offer',
           requestTitle: 'Volunteer Request',
+          buttonTextColor: Colors.black,
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
@@ -41,7 +44,8 @@ class FlavorConfig {
             brightness: Brightness.light,
             primarySwatch: Colors.purple,
             primaryColor: Color.fromARGB(255, 109, 110, 172),
-            accentColor: Color(0xFF3f46c6),
+            accentColor: Color.fromARGB(255, 239, 179, 100),
+            
             indicatorColor: Colors.amberAccent,
             primaryColorBrightness: Brightness.light,
             accentColorBrightness: Brightness.light,

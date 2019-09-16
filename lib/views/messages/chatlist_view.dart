@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
@@ -67,12 +68,9 @@ class _ChatListViewState extends State<ChatListView> {
       floatingActionButton: FloatingActionButton.extended(
         icon: Icon(
           Icons.chat,
-          color: Colors.white,
         ),
-        label: Text(
-          'New Chat',
-          style: TextStyle(color: Colors.white),
-        ),
+        label: Text('New Chat'),
+        foregroundColor: FlavorConfig.values.buttonTextColor,
         onPressed: () {
           NewsModel news;
           Navigator.push(

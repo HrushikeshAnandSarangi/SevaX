@@ -314,7 +314,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                                       SevaCore.of(context).loggedInUser.email)
                                   ? 'Withdraw Request'
                                   : 'Accept Request',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
                             ),
                           ),
                         ),

@@ -209,7 +209,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
           Container(
             padding: EdgeInsets.all(8.0),
             child: RaisedButton(
-              color: Colors.deepPurple,
+              color: Theme.of(context).accentColor,
               onPressed: () {
                 OfferModel offer = widget.offerModel;
                 //String sevaUserIdOffer = offer.sevaUserId;
@@ -230,7 +230,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
               },
               child: Text(
                 'Send Request',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
               ),
             ),
           ),

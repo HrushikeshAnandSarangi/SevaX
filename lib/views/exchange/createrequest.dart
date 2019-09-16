@@ -333,13 +333,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         Icon(
                           Icons.attachment,
                           size: 24.0,
-                          color: Colors.white,
+                          color: FlavorConfig.values.buttonTextColor,
                         ),
                         Text(' '),
                         Text(
                           'Pin Request',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: FlavorConfig.values.buttonTextColor,
                           ),
                         ),
                       ],

@@ -39,9 +39,10 @@ class TimeBankList extends StatelessWidget {
             ),
           );
         },
+        foregroundColor: FlavorConfig.values.buttonTextColor,
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          
         ),
       ),
       body: Center(

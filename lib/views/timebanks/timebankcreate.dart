@@ -293,7 +293,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                     padding: EdgeInsets.all(5),
                   ),
                   Text(
-                    'Protected :',
+                    'Closed :',
                     style: TextStyle(fontSize: 18),
                   ),
                   Checkbox(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -203,7 +204,7 @@ class _ChatViewState extends State<ChatView> {
                   child: Center(
                       child: Icon(
                     Icons.send,
-                    color: Colors.white,
+                    color: FlavorConfig.values.buttonTextColor,
                   )),
                   backgroundColor: Theme.of(context).accentColor,
                   onPressed: () {

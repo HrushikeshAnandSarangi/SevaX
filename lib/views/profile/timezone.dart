@@ -74,7 +74,7 @@ class TimezoneListState extends State<TimezoneList> {
       TimeZoneModel(
           offsetFromUtc: 10,
           timezoneAbb: 'ChT',
-          timezoneName: ' Chamorro Standard Time'),
+          timezoneName: 'Chamorro Standard Time'),
       TimeZoneModel(
           offsetFromUtc: 12,
           timezoneAbb: 'WIT',

@@ -229,7 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(width: 16),
                         Text(
                           'SIGN IN',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
                         ),
                       ],
                     ),

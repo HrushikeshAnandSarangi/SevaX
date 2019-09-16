@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import '../../flavor_config.dart';
 import 'completed_list.dart';
 import 'notAccepted_tasks.dart';
 
@@ -513,7 +514,7 @@ class TaskCardViewState extends State<TaskCardView> {
                         },
                         child: Text(
                           'Completed',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
                         ),
                       ),
                     )

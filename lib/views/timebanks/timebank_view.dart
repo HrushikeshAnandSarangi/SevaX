@@ -99,11 +99,11 @@ class _TimebankViewState extends State<TimebankView> {
               floatingActionButton: FloatingActionButton.extended(
                 icon: Icon(
                   Icons.add,
-                  color: Colors.white,
                 ),
+                foregroundColor: FlavorConfig.values.buttonTextColor,
                 label: Text(
                   'Create Branch',
-                  style: TextStyle(color: Colors.white),
+                  
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -378,7 +378,7 @@ class _TimebankViewState extends State<TimebankView> {
                         Padding(
                           padding: EdgeInsets.only(top: 10.0, left: 20.0),
                           child: Text(
-                            'Protected :',
+                            'Closed :',
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w700,
@@ -577,12 +577,14 @@ class _TimebankViewState extends State<TimebankView> {
             SevaCore.of(context).loggedInUser.sevaUserID) {
           return Text(
             'Edit Timebank',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor),
           );
         } else {
           return Text(
             'Request to join this Timebank!',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
+            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
           );
         }
         break;
@@ -591,25 +593,25 @@ class _TimebankViewState extends State<TimebankView> {
             SevaCore.of(context).loggedInUser.sevaUserID) {
           return Text(
             'Create a Campaign (Project)',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
+            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
           );
         } else {
           return Text(
             'Join a Campaign (Project)',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
+            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
           );
         }
         break;
       case 'viewcampaigns':
         return Text(
           'View Current Campaigns',
-          style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
+          style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
         );
         break;
       case 'joinrequests':
         return Text(
           'View Timebank Join Requests',
-          style: TextStyle(fontWeight: FontWeight.w700, color: Colors.blue),
+          style: TextStyle(fontWeight: FontWeight.w700, color:Theme.of(context).accentColor),
         );
         break;
       default:

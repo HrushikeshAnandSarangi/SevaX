@@ -253,8 +253,8 @@ class _RegisterPageState extends State<RegisterPage>
             ),
           ],
         ),
-        color: Theme.of(context).primaryColor,
-        textColor: Colors.white,
+        color: Theme.of(context).accentColor,
+        textColor: FlavorConfig.values.buttonTextColor,
         shape: StadiumBorder(),
       ),
     );

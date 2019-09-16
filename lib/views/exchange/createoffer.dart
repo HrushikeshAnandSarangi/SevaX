@@ -166,13 +166,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                         Icon(
                           Icons.attachment,
                           size: 24.0,
-                          color: Colors.white,
+                          color: FlavorConfig.values.buttonTextColor,
                         ),
                         Text(' '),
                         Text(
                           'Create Offer',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: FlavorConfig.values.buttonTextColor,
                           ),
                         ),
                       ],

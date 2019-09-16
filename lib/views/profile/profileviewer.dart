@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'dart:math';
 
@@ -515,7 +516,7 @@ Widget getChipWidgets(List<dynamic> strings, BuildContext context) {
                 backgroundColor: Theme.of(context).accentColor,
                 label: Text(
                   item,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
                 ),
               ))
           .toList());

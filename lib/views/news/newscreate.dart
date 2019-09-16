@@ -355,13 +355,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       Icon(
                         Icons.attachment,
                         size: 24.0,
-                        color: Colors.white,
+                        color: FlavorConfig.values.buttonTextColor,
                       ),
                       Text(' '),
                       Text(
                         'Save News Post',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: FlavorConfig.values.buttonTextColor,
                         ),
                       ),
                     ],

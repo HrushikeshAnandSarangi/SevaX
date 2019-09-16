@@ -36,65 +36,71 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        leading: Container(
-            padding: EdgeInsets.fromLTRB(15, 5, 0, 0),
-            child: Icon(Icons.search)),
-        title: Container(
-          padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
-          child: TextField(
-            style: TextStyle(color: Colors.white),
-            controller: searchTextController,
-            decoration: InputDecoration(
-                hasFloatingPlaceholder: false,
-                alignLabelWithHint: true,
-                isDense: true,
-                // suffix: GestureDetector(
-                //   //onTap: () => search(),
-                //   child: Icon(Icons.search),
-                // ),
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
-                hintText: 'Search',
-                hintStyle: TextStyle(color: Colors.white)),
-            // controller: searchTextController,
+    return GestureDetector(
+      onTap: (){
+        print('check');
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Theme.of(context).primaryColor,
+          leading: Container(
+              padding: EdgeInsets.fromLTRB(15, 5, 0, 0),
+              child: Icon(Icons.search)),
+          title: Container(
+            padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
+            child: TextField(
+              style: TextStyle(color: Colors.white),
+              controller: searchTextController,
+              decoration: InputDecoration(
+                  hasFloatingPlaceholder: false,
+                  alignLabelWithHint: true,
+                  isDense: true,
+                  // suffix: GestureDetector(
+                  //   //onTap: () => search(),
+                  //   child: Icon(Icons.search),
+                  // ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white)),
+                  hintText: 'Search',
+                  hintStyle: TextStyle(color: Colors.white)),
+              // controller: searchTextController,
+            ),
+          ),
+          bottom: TabBar(
+            labelColor: Colors.white,
+            isScrollable: true,
+            controller: controller,
+            tabs: [
+              Tab(child: Text('Users')),
+              Tab(child: Text('News')),
+              Tab(child: Text('Requests')),
+              Tab(child: Text('Offers')),
+            ],
           ),
         ),
-        bottom: TabBar(
-          labelColor: Colors.white,
-          isScrollable: true,
-          controller: controller,
-          tabs: [
-            Tab(child: Text('Users')),
-            Tab(child: Text('News')),
-            Tab(child: Text('Requests')),
-            Tab(child: Text('Offers')),
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              child: ResultView(() {
+                switch (controller.index) {
+                  case 0:
+                    return SearchType.USER;
+                  case 1:
+                    return SearchType.NEWS;
+                  case 2:
+                    return SearchType.REQUEST;
+                  case 3:
+                    return SearchType.OFFER;
+                  default:
+                    return SearchType.USER;
+                }
+              }(), searchTextController),
+            ),
           ],
         ),
-      ),
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ResultView(() {
-              switch (controller.index) {
-                case 0:
-                  return SearchType.USER;
-                case 1:
-                  return SearchType.NEWS;
-                case 2:
-                  return SearchType.REQUEST;
-                case 3:
-                  return SearchType.OFFER;
-                default:
-                  return SearchType.USER;
-              }
-            }(), searchTextController),
-          ),
-        ],
       ),
     );
   }
@@ -112,6 +118,7 @@ class ResultView extends StatefulWidget {
 
 class _ResultViewState extends State<ResultView> {
   Widget build(BuildContext context) {
+    
     print('Build view');
     if (widget.controller.text.trim().isEmpty) {
       return Center(child: Text('Enter a Search String'));

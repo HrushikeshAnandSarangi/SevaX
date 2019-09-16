@@ -255,7 +255,7 @@ class _ProfilePageState extends State<ProfilePage>
     return Chip(
       label: Text(
         value,
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color:FlavorConfig.values.buttonTextColor,),
       ),
       backgroundColor: Theme.of(context).accentColor,
     );
@@ -412,7 +412,7 @@ class _ProfilePageState extends State<ProfilePage>
                       padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                       elevation: 5,
                       color: Theme.of(context).accentColor,
-                      textColor: Colors.white,
+                      textColor: FlavorConfig.values.buttonTextColor,
                       child: new Text("Cancel"),
                       onPressed: () {
                         Navigator.of(context).pop();
@@ -428,14 +428,14 @@ class _ProfilePageState extends State<ProfilePage>
             child: Row(
               children: <Widget>[
                 Spacer(),
-                Icon(Icons.exit_to_app, color: Colors.white),
+                Icon(Icons.exit_to_app, color: FlavorConfig.values.buttonTextColor),
                 SizedBox(
                   width: 8,
                 ),
                 Text(
                   'Log Out',
                   style: Theme.of(context).textTheme.button.copyWith(
-                        color: Colors.white,
+                        color: FlavorConfig.values.buttonTextColor,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
