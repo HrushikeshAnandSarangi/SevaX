@@ -5,6 +5,7 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/timebanks/branch_list.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
+import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -539,10 +540,14 @@ class _TimebankViewState extends State<TimebankView> {
             timebankModel: timebankModel,
           );
         } else {
-          return TimebankJoinRequest(
-            timebankModel: timebankModel,
-            owner: ownerModel,
-          );
+//          return TimebankJoinRequest(
+//            timebankModel: timebankModel,
+//            owner: ownerModel,
+//          );
+        return PinView(
+            timebankModel:timebankModel,
+             owner:ownerModel,
+        );
         }
         break;
       case 'campaigns':

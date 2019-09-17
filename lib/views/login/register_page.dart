@@ -9,6 +9,7 @@ import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class RegisterPage extends StatefulWidget {
@@ -30,6 +31,7 @@ class _RegisterPageState extends State<RegisterPage>
   String imageUrl;
   String confirmPassword;
   File selectedImage;
+  String isImageSelected = 'Add Photo';
 
   ImagePickerHandler imagePicker;
 
@@ -65,8 +67,11 @@ class _RegisterPageState extends State<RegisterPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 32),
+                SizedBox(height: 16),
+                logo,
+                SizedBox(height: 16),
                 _imagePicker,
+                _profileBtn,
                 _formFields,
                 SizedBox(height: 32),
                 registerButton,
@@ -78,6 +83,7 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
+
   bool get shouldObscure => this._shouldObscure;
   set shouldObscure(bool shouldObscure) {
     setState(() => this._shouldObscure = shouldObscure);
@@ -88,26 +94,51 @@ class _RegisterPageState extends State<RegisterPage>
     setState(() => this._isLoading = isLoading);
   }
 
-  Widget get _imagePicker {
+  Widget get _profileBtn {
     return SizedBox(
-      height: 80,
-      width: 100,
-      child: GestureDetector(
-        onTap: isLoading
+        height: 35,
+        width: 120,
+        child: Container(
+          padding: EdgeInsets.only(top: 5.0),
+          child: RaisedButton(
+            onPressed: isLoading
             ? null
             : () {
                 imagePicker.showDialog(context);
               },
+            color: Colors.grey,
+              child: Text(
+                this.isImageSelected,style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.0,
+              ),
+              ),
+          ),
+        ),
+    );
+  }
+  Widget get _imagePicker {
+    return SizedBox(
+      height: 80,
+      width: 120,
+      child: Container(
+//        onTap: isLoading
+//            ? null
+//            : () {
+//                imagePicker.showDialog(context);
+//              },
         child: selectedImage == null
             ? Container(
-                decoration: ShapeDecoration(
-                  shape: CircleBorder(),
+                decoration: BoxDecoration(
+                  //shape: CircleBorder(),
+                  //shape: ShapeBorder.,
+                  borderRadius: BorderRadius.circular(15.0),
                   color: Colors.grey[300],
                 ),
               )
             : Container(
-                decoration: ShapeDecoration(
-                  shape: CircleBorder(),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
                   image: DecorationImage(
                     image: FileImage(selectedImage),
                   ),
@@ -116,6 +147,7 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
   }
+
 
   Widget get _formFields {
     return Form(
@@ -189,7 +221,7 @@ class _RegisterPageState extends State<RegisterPage>
     TextCapitalization capitalization = TextCapitalization.none,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(bottom: 8.0,left: 16.0,right: 16.0,top: 8.0),
       child: TextFormField(
         enabled: !isLoading,
         decoration: InputDecoration(
@@ -301,6 +333,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
+      isImageSelected = 'Update Photo';
     });
   }
 
@@ -328,4 +361,57 @@ class _RegisterPageState extends State<RegisterPage>
     timebankModel.members = [..._members, loggedInUser.email];
     await FirestoreManager.updateTimebank(timebankModel: timebankModel);
   }
+
+  Widget get logo {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+              ? Text(
+            'Humanity\nFirst'.toUpperCase(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              letterSpacing: 5,
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+          )
+              : Offstage(),
+          SizedBox(
+            height: 16,
+          ),
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+              ? Image.asset(
+            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+            height: 70,
+            fit: BoxFit.fill,
+            width: 80,
+          )
+              : FlavorConfig.appFlavor == Flavor.TULSI
+              ? SvgPicture.asset(
+            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
+            height: 100,
+            fit: BoxFit.fill,
+            width: 100,
+            color: Colors.white,
+          )
+              : FlavorConfig.appFlavor == Flavor.TOM
+              ? SvgPicture.asset(
+            'lib/assets/ts2020-logo-w.svg',
+            height: 90,
+            fit: BoxFit.fill,
+            width: 90,
+          )
+              : Image.asset(
+            'lib/assets/images/seva-x-logo.png',
+            height: 30,
+            fit: BoxFit.fill,
+            width: 100,
+          )
+        ],
+      ),
+    );
+  }
+
 }

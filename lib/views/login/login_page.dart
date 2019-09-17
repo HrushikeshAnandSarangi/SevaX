@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                 onSaved: _saveEmail,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: enabled)),
+                      borderSide: BorderSide(color: Colors.white)),
                   labelText: 'EMAIL',
                   labelStyle: textStyle,
                 ),
@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                 onSaved: _savePassword,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: enabled)),
+                      borderSide: BorderSide(color: Colors.white)),
                   labelText: 'PASSWORD',
                   labelStyle: textStyle,
                   suffix: GestureDetector(
@@ -317,7 +317,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextStyle get textStyle {
     return TextStyle(
-      color: enabled,
+      color: Colors.white,
     );
   }
 

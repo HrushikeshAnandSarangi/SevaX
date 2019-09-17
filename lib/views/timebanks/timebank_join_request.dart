@@ -6,6 +6,8 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 import 'package:sevaexchange/views/core.dart';
 
+import 'timebank_congratsView.dart';
+
 class TimebankJoinRequest extends StatefulWidget {
   final Widget child;
   final TimebankModel timebankModel;
@@ -70,10 +72,10 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
                         onPressed: () {
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
-
+                          //_navigateCongrats();
                           if (_formKey.currentState.validate()) {
-                            _writeToDB();
-                            Navigator.pop(context);
+                            //_writeToDB();
+                            _navigateCongrats();
                           }
                         },
                         child: Text(
@@ -115,6 +117,13 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
             ),
           ),
         ),
+      ),
+    );
+  }
+  void _navigateCongrats() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+          builder: (context) => Congrats()
       ),
     );
   }
