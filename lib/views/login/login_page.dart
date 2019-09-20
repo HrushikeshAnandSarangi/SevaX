@@ -161,7 +161,8 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validateEmailId,
                 onSaved: _saveEmail,
                 decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
+                  enabledBorder:
+                  UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)),
                   labelText: 'EMAIL',
                   labelStyle: textStyle,

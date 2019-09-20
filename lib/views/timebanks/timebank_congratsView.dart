@@ -31,6 +31,9 @@ class _CongratsState extends State<Congrats> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(10.0),
+              ),
               logo,
               Padding(
                 padding: EdgeInsets.all(10.0),

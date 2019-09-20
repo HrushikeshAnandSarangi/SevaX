@@ -51,7 +51,7 @@ dependencies:
   logger: ^0.7.0+2
   provider: ^3.0.0+1
   pin_code_text_field: ^1.2.1
-  autocomplete_textfield_modified: ^1.6.11
+  flutter_typeahead: ^1.6.1
 
 dev_dependencies:
   flutter_test:

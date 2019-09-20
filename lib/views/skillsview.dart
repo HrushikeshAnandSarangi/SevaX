@@ -5,6 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/interestsview.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/data.dart';
 
 const List<String> _defaultTools = <String>[
   'Curators',
@@ -31,6 +34,33 @@ class InterestViewNew extends StatefulWidget {
 
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
+}
+
+class ProductPage extends StatelessWidget {
+  final Map<String, dynamic> product;
+
+  ProductPage({this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Column(
+          children: [
+            Text(
+              this.product['name'],
+              style: Theme.of(context).textTheme.headline,
+            ),
+            Text(
+              this.product['price'].toString() + ' USD',
+              style: Theme.of(context).textTheme.subhead,
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _InterestViewNewState extends State<InterestViewNew> {
@@ -69,21 +99,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
           automaticallyImplyLeading: false,
           title: Text('Interests'),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: interests.map((skill) {
-                int index = interests.indexOf(skill);
-                if (selectedInterests.contains(skill)) {
-                  return chip(skill, true, colorList[index]);
-                }
-                return chip(skill, false, colorList[index]);
-              }).toList(),
-            ),
-          ),
+        body: Column(
+          children: <Widget>[
+            ScrollExample(context),
+            list()
+          ],
         ),
         bottomNavigationBar: ButtonBar(
           children: <Widget>[
@@ -108,6 +128,74 @@ class _InterestViewNewState extends State<InterestViewNew> {
       ),
     );
   }
+  Widget list() {
+    if (selectedInterests.length > 0) {
+      return Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children:
+          selectedInterests.map((interest) {
+            int index = interests.indexOf(interest);
+            //if (selectedSkills.contains(skill)) {
+            return chip(interest, false, colorList[index]);
+            // }
+            //return chip(skill, false, colorList[index]);
+          }).toList(),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+    );
+  }
+
+
+  Widget ScrollExample(BuildContext context) {
+    //final List<String> items = List.generate(5, (index) => "Item $index");
+//
+//  List<String> some = items.where((item) {
+//    item.isSelected = false;
+//  }).cast<String>().toList();
+
+    return Container(
+      child:
+      //Column(children: [
+      Padding(
+        padding: EdgeInsets.all(10.0),
+        child:TypeAheadField<String>(
+          getImmediateSuggestions: true,
+          textFieldConfiguration: TextFieldConfiguration(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Search for interests'),
+          ),
+
+          suggestionsCallback: (String pattern) async {
+            return interests
+                .where((item) =>
+                item.toLowerCase().startsWith(pattern.toLowerCase()))
+                .toList();
+          },
+          itemBuilder: (context, String suggestion) {
+            return ListTile(
+              title: Text(suggestion),
+            );
+          },
+          onSuggestionSelected: (String suggestion) {
+            if (interests.contains(suggestion)) {
+              selectedInterests.add(suggestion);
+              interests.remove(suggestion);
+            }
+            print("Suggestion selected $suggestion");
+          },
+        ),
+      ),
+      //child: SizedBox(height: 500),
+      //]),
+    );
+  }
 
   Widget chip(String value, bool selected, Color color) {
     return Container(
@@ -129,7 +217,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
               if (selectedInterests.contains(value)) {
                 selectedInterests.remove(value);
               } else {
-                selectedInterests.add(value);
+                //selectedInterests.add(value);
               }
             });
           },
@@ -216,7 +304,11 @@ class SkillViewNew extends StatefulWidget {
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
 }
-
+class Skill {
+  String skillName;
+  bool isSelected;
+  Skill(this.skillName,this.isSelected);
+}
 class _SkillViewNewState extends State<SkillViewNew> {
   List<String> skills = const [
     'Curators',
@@ -230,9 +322,17 @@ class _SkillViewNewState extends State<SkillViewNew> {
     'Baseball',
   ];
 
+  List<Skill> skillsList = [Skill('Curators',false),
+                            Skill('Developers',false),
+                            Skill('Writer',false),
+                            Skill('Advertisers',false),
+                            Skill('Customer',false),
+                            Skill('Sports',false),
+                            Skill('Adventure',false),
+                            Skill('Culture',false),
+                            Skill('Baseball',false)];
   List<MaterialColor> colorList;
   Set<String> selectedSkills = <String>[].toSet();
-
   @override
   void initState() {
     super.initState();
@@ -240,6 +340,53 @@ class _SkillViewNewState extends State<SkillViewNew> {
       return color;
     }).toList();
     colorList.shuffle();
+    //skillsList.add();
+//    skillsList.add(Skill('Curators',false));
+  }
+
+  Widget ScrollExample(BuildContext context) {
+    //final List<String> items = List.generate(5, (index) => "Item $index");
+//
+//  List<String> some = items.where((item) {
+//    item.isSelected = false;
+//  }).cast<String>().toList();
+
+    return Container(
+      child:
+      //Column(children: [
+      Padding(
+        padding: EdgeInsets.all(10.0),
+        child:TypeAheadField<String>(
+          getImmediateSuggestions: true,
+          textFieldConfiguration: TextFieldConfiguration(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Search for skills'),
+          ),
+
+          suggestionsCallback: (String pattern) async {
+            return skills
+                .where((item) =>
+                item.toLowerCase().startsWith(pattern.toLowerCase()))
+                .toList();
+          },
+          itemBuilder: (context, String suggestion) {
+            return ListTile(
+              title: Text(suggestion),
+            );
+          },
+          onSuggestionSelected: (String suggestion) {
+            if (skills.contains(suggestion)) {
+              selectedSkills.add(suggestion);
+              skills.remove(suggestion);
+            }
+            print("Suggestion selected $suggestion");
+          },
+        ),
+      ),
+      //child: SizedBox(height: 500),
+      //]),
+    );
   }
 
   @override
@@ -254,21 +401,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
           title: Text('Skills'),
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: skills.map((skill) {
-                int index = skills.indexOf(skill);
-                if (selectedSkills.contains(skill)) {
-                  return chip(skill, true, colorList[index]);
-                }
-                return chip(skill, false, colorList[index]);
-              }).toList(),
-            ),
-          ),
-        ),
+            child: Column(
+          children: <Widget>[
+            ScrollExample(context),
+            list(),
+          ],
+        )),
         bottomNavigationBar: ButtonBar(
           children: <Widget>[
             FlatButton(
@@ -292,6 +430,28 @@ class _SkillViewNewState extends State<SkillViewNew> {
       ),
     );
   }
+  Widget list() {
+    if (selectedSkills.length > 0) {
+      return Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children:
+          selectedSkills.map((skill) {
+            int index = skills.indexOf(skill);
+            //if (selectedSkills.contains(skill)) {
+              return chip(skill, false, colorList[index]);
+           // }
+            //return chip(skill, false, colorList[index]);
+          }).toList(),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+    );
+  }
 
   Widget chip(String value, bool selected, Color color) {
     return Container(
@@ -312,8 +472,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
             setState(() {
               if (selectedSkills.contains(value)) {
                 selectedSkills.remove(value);
+                //skills.remove(value);
+                //skills.add(value);
               } else {
-                selectedSkills.add(value);
+                //selectedSkills.add(value);
+                //skills.remove(value);
               }
             });
           },
