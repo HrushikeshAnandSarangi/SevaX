@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/views/register_location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../globals.dart' as globals;
@@ -106,10 +107,11 @@ class _ChipsTile extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => BioView(
-                                onSave: null,
-                                onSkipped: null,
-                              ),
+                              builder: (BuildContext context) => LocationView(),
+//                              builder: (BuildContext context) => BioView(
+//                                onSave: null,
+//                                onSkipped: null,
+//                              ),
                             ),
                           );
                         }

@@ -121,10 +121,12 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
     );
   }
   void _navigateCongrats() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-          builder: (context) => Congrats()
-      ),
-    );
+    Navigator.pop(context);
+
+   // Navigator.of(context).pushReplacement(
+//      MaterialPageRoute(
+//          builder: (context) => Congrats()
+//      ),
+//    );
   }
 }

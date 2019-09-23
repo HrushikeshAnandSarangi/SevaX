@@ -5,6 +5,7 @@ class UserModel extends DataModel {
   String email;
   String fullname;
   List<String> interests;
+  Object calendar;
   List<String> membershipTimebanks;
   List<String> membershipCampaigns;
   String photoURL;
@@ -12,6 +13,7 @@ class UserModel extends DataModel {
   List<String> skills;
   num currentBalance;
   String timezone;
+  String otp;
 
   UserModel(
       {this.bio,
@@ -24,6 +26,8 @@ class UserModel extends DataModel {
       this.sevaUserID,
       this.skills,
       this.currentBalance,
+      this.calendar,
+        this.otp,
       this.timezone});
 
   UserModel.fromMap(Map<String, dynamic> map) {
@@ -42,6 +46,12 @@ class UserModel extends DataModel {
     if (map.containsKey('interests')) {
       List<String> interestsList = List.castFrom(map['interests']);
       this.interests = interestsList;
+    }
+    if (map.containsKey('calendar')) {
+      this.calendar = null;
+    }
+    if (map.containsKey('otp')) {
+      this.email = map['otp'];
     }
     if (map.containsKey('membership_campaigns')) {
       List<String> campaignList = List.castFrom(map['membership_campaigns']);
@@ -88,6 +98,12 @@ class UserModel extends DataModel {
     }
     if (this.interests != null && this.interests.isNotEmpty) {
       object['interests'] = this.interests;
+    }
+    if (this.calendar != null) {
+      object['calendar'] = this.calendar;
+    }
+    if (this.otp != null) {
+      object['otp'] = this.otp;
     }
     if (this.membershipCampaigns != null &&
         this.membershipCampaigns.isNotEmpty) {

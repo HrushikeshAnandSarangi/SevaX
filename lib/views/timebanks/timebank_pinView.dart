@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:sevaexchange/views/bioview.dart';
+import '../../splash_view.dart';
 import 'timebank_congratsView.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -8,15 +11,21 @@ import 'timebank_join_request.dart';
 //import 'package:sevaexchange/views/core.dart';
 
 
+typedef StringListCallback = void Function(String otp);
 class PinView extends StatefulWidget {
   final Widget child;
   TimebankModel timebankModel;
   UserModel owner;
+  final VoidCallback onSkipped;
+  final StringListCallback onSelectedOtp;
+
   PinView({
     Key key,
     this.child,
     @required this.timebankModel,
     @required this.owner,
+    @required this.onSelectedOtp,
+    @required this.onSkipped,
   }) : super(key: key);
 
   @override
@@ -91,6 +100,7 @@ class _LoginSignupScreenState extends State<PinView> {
                   },
                   onDone: (text){
                     print("DONE $text");
+                    //widget.onSelectedOtp(controller.text);
                   },
                   pinCodeTextFieldLayoutType: PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
                   wrapAlignment: WrapAlignment.start,
@@ -127,7 +137,8 @@ class _LoginSignupScreenState extends State<PinView> {
                         elevation: 0.0,
                         onPressed: (){
                           print('pressed skip');
-                          this._navigateCongrats();
+                          //this._navigateCongrats();
+                          widget.onSkipped();
                         },
                       ),
                     ),
@@ -179,12 +190,12 @@ class _LoginSignupScreenState extends State<PinView> {
     }
   }
   void _navigateCongrats() {
-    Navigator.of(context).pushReplacement(
+
+    //widget.onSelectedOtp(controller.text);
+    Navigator.pop(
+      context,
       MaterialPageRoute(
-        builder: (context) => TimebankJoinRequest(
-            timebankModel:widget.timebankModel ,
-            owner: widget.owner,
-          )
+        builder: (BuildContext context) => SplashView(),
       ),
     );
   }

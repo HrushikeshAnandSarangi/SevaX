@@ -5,11 +5,13 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 
 class TimeBankList extends StatelessWidget {
   final String timebankid;
   final String title;
   TimeBankList({@required this.timebankid, @required this.title});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,13 +147,14 @@ class TimeBankList extends StatelessWidget {
                                     )),
                               ),
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (routeContext) {
-                                      return TimebankView(timebankId: model.id);
-                                    },
-                                  ),
-                                );
+                                _showDialog(context,model.name);
+//                                Navigator.of(context).push(
+//                                  MaterialPageRoute(
+//                                    builder: (routeContext) {
+//                                      return TimebankView(timebankId: model.id);
+//                                    },
+//                                  ),
+//                                );
                               },
                             )
                           : Offstage();
@@ -163,6 +166,44 @@ class TimeBankList extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+  void _showDialog(BuildContext context,String name) {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Request to join"),
+          content: new Text("Do you want to join $name timebank?"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Join"),
+              onPressed: () {
+                print('Join clicked');
+               // Navigator.of(context).pop();
+                //WaitingView
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => WaitingView(),
+                  ),
+                );
+
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

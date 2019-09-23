@@ -5,7 +5,7 @@ enum Flavor { APP, HUMANITY_FIRST, TULSI, TOM }
 
 class FlavorValues {
   final String timebankName;
-  final String timebankId;
+  String timebankId;
   final String requestTitle;
   final String offertitle;
   final ThemeData theme;

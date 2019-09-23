@@ -26,6 +26,9 @@ class _CongratsState extends State<Congrats> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      appBar: AppBar(
+        title: Center(child: Text('Congratulations',textAlign: TextAlign.center,style: TextStyle(fontSize: 20.0),),),
+      ),
       body: Container(
           padding: EdgeInsets.all(20.0),
           child: Column(

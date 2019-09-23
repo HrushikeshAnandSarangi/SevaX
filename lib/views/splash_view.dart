@@ -6,8 +6,10 @@ import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
+import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 
 class SplashView extends StatefulWidget {
   @override
@@ -344,6 +346,14 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToInterestsView(loggedInUser);
     }
 
+    if (loggedInUser.calendar == null) {
+      await _navigateToCalendarView(loggedInUser);
+    }
+
+    if (loggedInUser.otp == null) {
+      await _navigateToPinView(loggedInUser);
+    }
+
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
@@ -380,6 +390,48 @@ class _SplashViewState extends State<SplashView> {
             loggedInUser.skills = [];
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping skills';
+          },
+        ),
+      ),
+    );
+  }
+
+  Future _navigateToCalendarView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => LocationView(
+          onSelectedCalendar: (calendar) {
+            Navigator.pop(context);
+            loggedInUser.calendar = calendar;
+            updateUserData(loggedInUser);
+            loadingMessage = 'Updating Calendar';
+          },
+          onSkipped: () {
+            Navigator.pop(context);
+            loggedInUser.calendar = {};
+            updateUserData(loggedInUser);
+            loadingMessage = 'Skipping Calendar';
+          },
+        ),
+      ),
+    );
+  }
+
+  Future _navigateToPinView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PinView(
+          onSelectedOtp: (otp) {
+            Navigator.pop(context);
+            loggedInUser.otp = otp;
+            updateUserData(loggedInUser);
+            loadingMessage = 'Checking Otp';
+          },
+          onSkipped: () {
+            Navigator.pop(context);
+            loggedInUser.otp = null;
+            updateUserData(loggedInUser);
+            loadingMessage = 'Skipping Otp';
           },
         ),
       ),

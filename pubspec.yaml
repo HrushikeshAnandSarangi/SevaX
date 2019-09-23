@@ -82,6 +82,7 @@ flutter:
     - lib/assets/images/green.png
     - lib/assets/images/pink.png
     - lib/assets/images/violet.png
+    - lib/assets/images/waiting.jpg
     - lib/assets/Y_from_Andrew_Yang_2020_logo.png
     - lib/assets/Y_from_Andrew_Yang_2020_logo.jpg
     - lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg

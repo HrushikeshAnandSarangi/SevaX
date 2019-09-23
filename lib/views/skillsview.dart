@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/views/register_location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sevaexchange/globals.dart' as globals;
@@ -34,33 +35,6 @@ class InterestViewNew extends StatefulWidget {
 
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
-}
-
-class ProductPage extends StatelessWidget {
-  final Map<String, dynamic> product;
-
-  ProductPage({this.product});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(50.0),
-        child: Column(
-          children: [
-            Text(
-              this.product['name'],
-              style: Theme.of(context).textTheme.headline,
-            ),
-            Text(
-              this.product['price'].toString() + ' USD',
-              style: Theme.of(context).textTheme.subhead,
-            )
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _InterestViewNewState extends State<InterestViewNew> {
@@ -625,7 +599,7 @@ class _ChipsTile extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      InterestsView()));
+                                      LocationView()));
                         }
                       },
                       child: Text('Next',
