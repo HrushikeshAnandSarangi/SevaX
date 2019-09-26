@@ -125,7 +125,7 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
   void _navigateCongrats() {
     if(UserData.shared.isFromLogin) {
       print(UserData.shared.user.requestStatus);
-      UserData.shared.user.calendar = {};
+      UserData.shared.user.calendar = "done";
       UserData.shared.user.requestStatus = "pending";
       UserData.shared.updateUserData();
       print(UserData.shared.user.requestStatus);

@@ -395,6 +395,7 @@ class _SplashViewState extends State<SplashView> {
       return;
     }
 //    print(loggedInUser.requestStatus);
+    print(loggedInUser.calendar);
 
     if (loggedInUser.skills == null) {
       await _navigateToSkillsView(loggedInUser);
@@ -414,6 +415,7 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.requestStatus == "pending") {
       await _navigateToWaitingView(loggedInUser);
     }
+
 
 
     loadingMessage = 'Finalizing';
@@ -474,7 +476,7 @@ class _SplashViewState extends State<SplashView> {
           },
           onSkipped: () {
             Navigator.pop(context);
-            loggedInUser.calendar = {};
+            loggedInUser.calendar = null;
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping Calendar';
           },

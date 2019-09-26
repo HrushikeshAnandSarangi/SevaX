@@ -5,7 +5,7 @@ class UserModel extends DataModel {
   String email;
   String fullname;
   List<String> interests;
-  Object calendar;
+  String calendar;
   List<String> membershipTimebanks;
   List<String> membershipCampaigns;
   String photoURL;

@@ -14,8 +14,8 @@ class FlavorValues {
   FlavorValues({
     @required this.timebankName,
     @required this.timebankId,
-    this.requestTitle = 'Volunteer Request',
-    this.offertitle = 'Volunteer Offer',
+    this.requestTitle = 'Request',
+    this.offertitle = 'Offer',
     this.theme,
     this.buttonTextColor = Colors.white
   });
@@ -30,8 +30,8 @@ class FlavorConfig {
         return FlavorValues(
           timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
           timebankName: 'Seva Exchange',
-          offertitle: 'Volunteer Offer',
-          requestTitle: 'Volunteer Request',
+          offertitle: 'Offer',
+          requestTitle: 'Request',
           buttonTextColor: Colors.black,
           theme: ThemeData(
             appBarTheme: AppBarTheme(
@@ -59,8 +59,8 @@ class FlavorConfig {
         return FlavorValues(
           timebankId: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2',
           timebankName: 'Yang 2020',
-          offertitle: 'Campaign Offer',
-          requestTitle: 'Campaign Request',
+          offertitle: 'Offer',
+          requestTitle: 'Request',
           theme: ThemeData(
             appBarTheme: AppBarTheme(
                 brightness: Brightness.light,
@@ -85,8 +85,8 @@ class FlavorConfig {
         return FlavorValues(
           timebankId: '6897fefc-9380-4ca6-8373-5e7760bb31be',
           timebankName: 'Tulsi 2020',
-          offertitle: 'Campaign Offer',
-          requestTitle: 'Campaign Request',
+          offertitle: 'Offer',
+          requestTitle: 'Request',
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
@@ -112,8 +112,8 @@ class FlavorConfig {
         return FlavorValues(
             timebankId: 'f4b0b4c4-3d37-4514-b00b-ee424950c038',
             timebankName: 'Tom 2020',
-            offertitle: 'Campaign Offer',
-            requestTitle: 'Campaign Request',
+            offertitle: 'Offer',
+            requestTitle: 'Request',
             theme: ThemeData(
               appBarTheme: AppBarTheme(
                 brightness: Brightness.light,
@@ -138,8 +138,8 @@ class FlavorConfig {
         return FlavorValues(
           timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
           timebankName: 'Seva Exchange',
-          offertitle: 'Volunteer Offer',
-          requestTitle: 'Volunteer Request',
+          offertitle: 'Offer',
+          requestTitle: 'Request',
           theme: ThemeData(
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,

@@ -28,6 +28,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    UserData.shared.isFromLogin = true;
     return Scaffold(
       key: _scaffoldKey,
       body: Container(
