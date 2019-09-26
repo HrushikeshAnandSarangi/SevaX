@@ -1,4 +1,7 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -6,13 +9,20 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/request_model.dart' as prefix1;
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/workshop/workshop.dart';
+
+import '../core.dart';
+import '../core.dart';
 
 class HelpView extends StatefulWidget {
   final TabController controller;
@@ -27,7 +37,8 @@ class HelpViewState extends State<HelpView> {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
+    FirestoreManager.getTimeBankForId(
+            timebankId: FlavorConfig.values.timebankId)
         .then((timebank) {
       if (timebank.admins.contains(SevaCore.of(context).loggedInUser.email) ||
           timebank.coordinators
@@ -72,74 +83,77 @@ class RequestsState extends State<Requests> {
     _setORValue();
     return Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-            ),
-            Text(
-              'Timebank : ',
-              style: (TextStyle(fontWeight: FontWeight.w500)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-            ),
-            StreamBuilder<Object>(
-                stream: FirestoreManager.getTimebanksForUserStream(
-                    userId: SevaCore.of(context).loggedInUser.sevaUserID),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  timebankList = snapshot.data;
-                  // timebankList.forEach((t){
-                  //   if(t.name==timebankName){
-                  //     timebankId=t.id;
-                  //   }
-                  // });
-                  List<String> dropdownList = [];
-                  timebankList.forEach((t) {
-                    dropdownList.add(t.id);
-                  });
-                  //dropdownList.insert(0, 'All');
-                  return DropdownButton<String>(
-                    value: timebankId,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        timebankId = newValue;
-                        //print(timebankId);
-                      });
-                    },
-                    items: dropdownList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      if (value == 'All') {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      } else
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: FutureBuilder<Object>(
-                              future: FirestoreManager.getTimeBankForId(
-                                  timebankId: value),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError)
-                                  return new Text('Error: ${snapshot.error}');
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Offstage();
-                                }
-                                TimebankModel timebankModel = snapshot.data;
-                                return Text(timebankModel.name);
-                              }),
-                        );
-                    }).toList(),
-                  );
-                }),
-          ],
+        Offstage(
+          offstage: true,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+              ),
+              Text(
+                'Timebank : ',
+                style: (TextStyle(fontWeight: FontWeight.w500)),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+              ),
+              StreamBuilder<Object>(
+                  stream: FirestoreManager.getTimebanksForUserStream(
+                      userId: SevaCore.of(context).loggedInUser.sevaUserID),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    timebankList = snapshot.data;
+                    // timebankList.forEach((t){
+                    //   if(t.name==timebankName){
+                    //     timebankId=t.id;
+                    //   }
+                    // });
+                    List<String> dropdownList = [];
+                    timebankList.forEach((t) {
+                      dropdownList.add(t.id);
+                    });
+                    //dropdownList.insert(0, 'All');
+                    return DropdownButton<String>(
+                      value: timebankId,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          timebankId = newValue;
+                          //print(timebankId);
+                        });
+                      },
+                      items: dropdownList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        if (value == 'All') {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        } else
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: FutureBuilder<Object>(
+                                future: FirestoreManager.getTimeBankForId(
+                                    timebankId: value),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError)
+                                    return new Text('Error: ${snapshot.error}');
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Offstage();
+                                  }
+                                  TimebankModel timebankModel = snapshot.data;
+                                  return Text(timebankModel.name);
+                                }),
+                          );
+                      }).toList(),
+                    );
+                  }),
+            ],
+          ),
         ),
         Divider(
           color: Colors.grey,
@@ -314,7 +328,9 @@ class _RequestCardViewState extends State<RequestCardView> {
                                       SevaCore.of(context).loggedInUser.email)
                                   ? 'Withdraw Request'
                                   : 'Accept Request',
-                              style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
+                              style: TextStyle(
+                                color: FlavorConfig.values.buttonTextColor,
+                              ),
                             ),
                           ),
                         ),
@@ -350,75 +366,78 @@ class OffersState extends State<Offers> {
     _setORValue();
     return Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-            ),
-            Text(
-              'Timebank : ',
-              style: (TextStyle(fontWeight: FontWeight.w500)),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10),
-            ),
-            StreamBuilder<List<TimebankModel>>(
-                stream: FirestoreManager.getTimebanksForUserStream(
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  timebankList = snapshot.data;
-                  // timebankList.forEach((t){
-                  //   if(t.name==timebankName){
-                  //     timebankId=t.id;
-                  //   }
-                  // });
-                  List<String> dropdownList = [];
-                  timebankList.forEach((t) {
-                    dropdownList.add(t.id);
-                  });
-                  //dropdownList.insert(0, 'All');
-                  return DropdownButton<String>(
-                    value: timebankId,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        timebankId = newValue;
-                        //print(timebankId);
-                      });
-                    },
-                    items: dropdownList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      if (value == 'All') {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      } else
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: FutureBuilder<Object>(
-                              future: FirestoreManager.getTimeBankForId(
-                                  timebankId: value),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError)
-                                  return new Text('Error: ${snapshot.error}');
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Offstage();
-                                }
-                                TimebankModel timebankModel = snapshot.data;
-                                return Text(timebankModel.name);
-                              }),
-                        );
-                    }).toList(),
-                  );
-                }),
-          ],
+        Offstage(
+          offstage: true,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+              ),
+              Text(
+                'Timebank : ',
+                style: (TextStyle(fontWeight: FontWeight.w500)),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+              ),
+              StreamBuilder<List<TimebankModel>>(
+                  stream: FirestoreManager.getTimebanksForUserStream(
+                    userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    timebankList = snapshot.data;
+                    // timebankList.forEach((t){
+                    //   if(t.name==timebankName){
+                    //     timebankId=t.id;
+                    //   }
+                    // });
+                    List<String> dropdownList = [];
+                    timebankList.forEach((t) {
+                      dropdownList.add(t.id);
+                    });
+                    //dropdownList.insert(0, 'All');
+                    return DropdownButton<String>(
+                      value: timebankId,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          timebankId = newValue;
+                          //print(timebankId);
+                        });
+                      },
+                      items: dropdownList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        if (value == 'All') {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        } else
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: FutureBuilder<Object>(
+                                future: FirestoreManager.getTimeBankForId(
+                                    timebankId: value),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError)
+                                    return new Text('Error: ${snapshot.error}');
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Offstage();
+                                  }
+                                  TimebankModel timebankModel = snapshot.data;
+                                  return Text(timebankModel.name);
+                                }),
+                          );
+                      }).toList(),
+                    );
+                  }),
+            ],
+          ),
         ),
         Divider(
           color: Colors.grey,
@@ -641,19 +660,19 @@ class RequestListItems extends StatelessWidget {
                         child: Center(child: Text('No Requests')),
                       );
                     }
-                    return Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: ListView(
-                          children: requestModelList.map(
-                            (RequestModel requestModel) {
-                              return getRequestView(
-                                  requestModel, loggedintimezone);
-                            },
-                          ).toList(),
-                        ),
-                      ),
-                    );
+
+                    print(
+                        "LOG HERE --------------------------------------------------------------------------------------------------------" +
+                            SevaCore.of(context).loggedInUser.sevaUserID);
+
+                    var consolidatedList =
+                        GroupRequestCommons.groupAndConsolidateRequests(
+                            requestModelList,
+                            SevaCore.of(context).loggedInUser.sevaUserID);
+
+                    return formatListFrom(
+                        consolidatedList: consolidatedList,
+                        loggedintimezone: loggedintimezone);
                 }
               },
             );
@@ -691,19 +710,11 @@ class RequestListItems extends StatelessWidget {
                         child: Center(child: Text('No Requests')),
                       );
                     }
-                    return Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: ListView(
-                          children: requestModelList.map(
-                            (RequestModel requestModel) {
-                              return getRequestView(
-                                  requestModel, loggedintimezone);
-                            },
-                          ).toList(),
-                        ),
-                      ),
-                    );
+                    var consolidatedList =
+                        GroupRequestCommons.groupAndConsolidateRequests(
+                            requestModelList,
+                            SevaCore.of(context).loggedInUser.sevaUserID);
+                    return formatListFrom(consolidatedList: consolidatedList);
                 }
               },
             );
@@ -711,12 +722,49 @@ class RequestListItems extends StatelessWidget {
     }
   }
 
-  Widget getRequestView(RequestModel model, String loggedintimezone) {
+  Widget formatListFrom(
+      {List<RequestModelList> consolidatedList, String loggedintimezone}) {
+    return Expanded(
+      child: Container(
+        child: ListView(
+          children: consolidatedList.map((RequestModelList requestModel) {
+            return getRequestView(requestModel, loggedintimezone);
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget getRequestView(RequestModelList model, String loggedintimezone) {
+    switch (model.getType()) {
+      case RequestModelList.TITLE:
+        return Container(
+          margin: EdgeInsets.all(12),
+          child: Text(
+            GroupRequestCommons.getGroupTitle(
+                groupKey: (model as GroupTitle).groupTitle),
+          ),
+        );
+
+      case RequestModelList.REQUEST:
+        return getRequestListViewHoldder(
+          model: (model as RequestItem).requestModel,
+          loggedintimezone: loggedintimezone,
+        );
+
+      default:
+        return Text("DEFAULT");
+    }
+  }
+
+  Widget getRequestListViewHoldder(
+      {RequestModel model, String loggedintimezone}) {
     return Container(
-      decoration: containerDecoration,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      decoration: containerDecorationR,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       child: Card(
-        elevation: 0,
+        color: Colors.white,
+        elevation: 2,
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -790,11 +838,25 @@ class RequestListItems extends StatelessWidget {
 
   BoxDecoration get containerDecoration {
     return BoxDecoration(
-      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+      borderRadius: BorderRadius.all(Radius.circular(2.0)),
       boxShadow: [
         BoxShadow(
-            color: Colors.black.withAlpha(10),
-            spreadRadius: 4,
+            color: Colors.black.withAlpha(2),
+            spreadRadius: 6,
+            offset: Offset(0, 3),
+            blurRadius: 6)
+      ],
+      color: Colors.white,
+    );
+  }
+
+  BoxDecoration get containerDecorationR {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black.withAlpha(2),
+            spreadRadius: 6,
             offset: Offset(0, 3),
             blurRadius: 6)
       ],
@@ -833,18 +895,12 @@ class OfferListItems extends StatelessWidget {
                   ),
                 );
               }
-              return Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      OfferModel offer = offersList[index];
-                      return getOfferWidget(offer);
-                    },
-                    itemCount: offersList.length,
-                  ),
-                ),
-              );
+
+              //Here we apply grouping startegy
+                 var consolidatedList =
+                  GroupOfferCommons.groupAndConsolidateOffers(
+                      offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+              return formatListOffer(consolidatedList: consolidatedList);
           }
         },
       );
@@ -869,85 +925,116 @@ class OfferListItems extends StatelessWidget {
                   ),
                 );
               }
-              return Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      OfferModel offer = offersList[index];
-                      return getOfferWidget(offer);
-                    },
-                    itemCount: offersList.length,
-                  ),
-                ),
-              );
+
+              var consolidatedList =
+                  GroupOfferCommons.groupAndConsolidateOffers(
+                      offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+              return formatListOffer(consolidatedList: consolidatedList);
           }
         },
       );
     }
   }
 
-  Widget getOfferWidget(OfferModel model) {
+  Widget formatListOffer({List<OfferModelList> consolidatedList}) {
+    return Expanded(
+      child: Container(
+        child: ListView(
+          children: consolidatedList.map((OfferModelList offerModel) {
+            return getOfferWidget(offerModel);
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget getOfferWidget(OfferModelList model) {
     return Container(
       decoration: containerDecoration,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Card(
-        elevation: 0,
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              parentContext,
-              MaterialPageRoute(
-                builder: (context) => OfferCardView(offerModel: model),
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                StreamBuilder<UserModel>(
-                  stream: FirestoreManager.getUserForIdStream(
-                    sevaUserId: model.sevaUserId,
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return CircleAvatar(foregroundColor: Colors.red);
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircleAvatar();
-                    }
-                    UserModel user = snapshot.data;
-                    return ClipOval(
-                      child: SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: FadeInImage.assetNetwork(
-                            placeholder: 'lib/assets/images/profile.png',
-                            image: user.photoURL),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        model.title,
-                        style: Theme.of(parentContext).textTheme.subhead,
-                      ),
-                      Text(
-                        model.description,
-                        style: Theme.of(parentContext).textTheme.subtitle,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+      child: getOfferView(model),
+    );
+  }
+
+  Widget getOfferView(OfferModelList offerModelList){
+
+      switch(offerModelList.getType()){
+
+          case OfferModelList.TITLE:
+          return Container(
+          margin: EdgeInsets.all(12),
+          child: Text(
+            GroupOfferCommons.getGroupTitleForOffer(
+                groupKey: (offerModelList as OfferTitle).groupTitle),
+          ),
+        );
+
+          case OfferModelList.OFFER:
+          return getOfferViewHolder((offerModelList as OfferItem).offerModel);
+
+
+      }
+
+  }
+
+
+  Widget getOfferViewHolder(OfferModel model) {
+    return Card(
+      elevation: 2,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            parentContext,
+            MaterialPageRoute(
+              builder: (context) => OfferCardView(offerModel: model),
             ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              StreamBuilder<UserModel>(
+                stream: FirestoreManager.getUserForIdStream(
+                  sevaUserId: model.sevaUserId,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return CircleAvatar(foregroundColor: Colors.red);
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircleAvatar();
+                  }
+                  UserModel user = snapshot.data;
+                  return ClipOval(
+                    child: SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: FadeInImage.assetNetwork(
+                          placeholder: 'lib/assets/images/profile.png',
+                          image: user.photoURL),
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      model.title,
+                      style: Theme.of(parentContext).textTheme.subhead,
+                    ),
+                    Text(
+                      model.description,
+                      style: Theme.of(parentContext).textTheme.subtitle,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -967,7 +1054,7 @@ class OfferListItems extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(12.0)),
       boxShadow: [
         BoxShadow(
-            color: Colors.black.withAlpha(10),
+            color: Colors.black.withAlpha(0),
             spreadRadius: 4,
             offset: Offset(0, 3),
             blurRadius: 6)
@@ -976,3 +1063,42 @@ class OfferListItems extends StatelessWidget {
     );
   }
 }
+
+// class _MyAppState extends State<MyApp> {
+//   List<String> _products = ['Laptop'];
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       theme: ThemeData(primarySwatch: Colors.deepPurple),
+//       home: Scaffold(
+//         appBar: AppBar(title: Text('Long List App')),
+//         body: Column(children: [
+//           Container(
+//               margin: EdgeInsets.all(10.0),
+//               child: RaisedButton(
+//                   color: Theme.of(context).primaryColor,
+//                   splashColor: Colors.blueGrey,
+//                   textColor: Colors.white,
+//                   onPressed: () {
+//                     setState(() {
+//                       _products.add('Macbook');
+//                     });
+//                   },
+//                   child: Text('Add Laptops'))),
+//           Column(
+//               children: _products
+//                   .map((element) => Card(
+//                         child: Column(
+//                           children: <Widget>[
+//                             Image.asset('assets/macbook.jpg'),
+//                             Text(element,
+//                                 style: TextStyle(color: Colors.deepPurple))
+//                           ],
+//                         ),
+//                       ))
+//                   .toList()),
+//         ]),
+//       ),
+//     );
+//   }
+// }

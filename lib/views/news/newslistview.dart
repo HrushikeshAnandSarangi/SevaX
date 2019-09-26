@@ -34,7 +34,10 @@ class NewsListState extends State<NewsList> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Row(
+        
+        Offstage(
+          offstage: true,
+          child: Row(
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(left: 10),
@@ -102,6 +105,7 @@ class NewsListState extends State<NewsList> {
                   );
                 }),
           ],
+        ),
         ),
         Divider(
           color: Colors.grey,
@@ -186,10 +190,10 @@ class NewsListState extends State<NewsList> {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(16.0),
+        margin: EdgeInsets.all(8.0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(6.0),
             boxShadow: [
               BoxShadow(
                   color: Colors.black.withAlpha(25),
