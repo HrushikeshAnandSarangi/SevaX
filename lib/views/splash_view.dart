@@ -385,7 +385,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
-    UserData.shared._getSignedInUserDocs(userId);
+   // UserData.shared._getSignedInUserDocs(userId);
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     if (loggedInUser == null) {
@@ -394,6 +394,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    UserData.shared.user = loggedInUser;
 //    print(loggedInUser.requestStatus);
     print(loggedInUser.calendar);
 
@@ -476,7 +477,7 @@ class _SplashViewState extends State<SplashView> {
           },
           onSkipped: () {
             Navigator.pop(context);
-            loggedInUser.calendar = null;
+            //loggedInUser.calendar = null;
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping Calendar';
           },

@@ -55,7 +55,10 @@ class UserModel extends DataModel {
       this.interests = interestsList;
     }
     if (map.containsKey('calendar')) {
-      this.calendar = map['calender'];
+      this.calendar = map['calendar'];
+      print("----------------------- present");
+    } else {
+      print("----------------------- not present");
     }
     if (map.containsKey('otp')) {
       this.email = map['otp'];
