@@ -526,7 +526,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   color: Colors.white,
                 ),
       page: MyTaskPage(controller),
-      title: 'Tasks',
+      title: 'My Tasks',
       appBarActions: [],
       bottom: TabBar(
         labelColor: Colors.white,

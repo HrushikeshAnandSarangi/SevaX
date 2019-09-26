@@ -6,6 +6,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/workshop/workshop.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.APP;
