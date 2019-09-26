@@ -5,7 +5,9 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 
+import '../splash_view.dart';
 import 'timebank_congratsView.dart';
 
 class TimebankJoinRequest extends StatefulWidget {
@@ -74,7 +76,7 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
                           // the form is invalid.
                           //_navigateCongrats();
                           if (_formKey.currentState.validate()) {
-                            //_writeToDB();
+                           // _writeToDB();
                             _navigateCongrats();
                           }
                         },
@@ -121,8 +123,21 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
     );
   }
   void _navigateCongrats() {
-    Navigator.pop(context);
-
+    if(UserData.shared.isFromLogin) {
+      print(UserData.shared.user.requestStatus);
+      UserData.shared.user.calendar = {};
+      UserData.shared.user.requestStatus = "pending";
+      UserData.shared.updateUserData();
+      print(UserData.shared.user.requestStatus);
+//      Navigator.popUntil(context, (r) => r.isFirst);
+       Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+          builder: (context) => WaitingView()
+      ),
+    );
+    } else {
+      Navigator.pop(context);
+    }
    // Navigator.of(context).pushReplacement(
 //      MaterialPageRoute(
 //          builder: (context) => Congrats()

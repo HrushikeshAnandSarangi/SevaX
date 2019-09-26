@@ -311,6 +311,7 @@ class _RegisterPageState extends State<RegisterPage>
       user.photoURL = imageUrl;
       await FirestoreManager.updateUser(user: user);
       Navigator.pop(context, user);
+     // Navigator.popUntil(context, (r) => r.isFirst);
     } on PlatformException catch (error) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(

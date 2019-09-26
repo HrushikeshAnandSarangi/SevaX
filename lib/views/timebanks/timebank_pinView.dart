@@ -138,7 +138,8 @@ class _LoginSignupScreenState extends State<PinView> {
                         onPressed: (){
                           print('pressed skip');
                           //this._navigateCongrats();
-                          widget.onSkipped();
+                          //widget.onSkipped();
+                          _navigateCongrats();
                         },
                       ),
                     ),
@@ -191,12 +192,13 @@ class _LoginSignupScreenState extends State<PinView> {
   }
   void _navigateCongrats() {
 
+    Navigator.popUntil(context, (r) => r.isFirst);
     //widget.onSelectedOtp(controller.text);
-    Navigator.pop(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => SplashView(),
-      ),
-    );
+//    Navigator.pop(
+//      context,
+//      MaterialPageRoute(
+//        builder: (BuildContext context) => SplashView(),
+//      ),
+//    );
   }
 }

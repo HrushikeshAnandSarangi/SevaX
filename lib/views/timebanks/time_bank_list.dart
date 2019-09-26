@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
@@ -16,6 +17,7 @@ class TimeBankList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           title,
           style: TextStyle(color: Colors.white),
@@ -30,21 +32,24 @@ class TimeBankList extends StatelessWidget {
           )
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TimebankCreate(
-                timebankId: timebankid,
+      floatingActionButton: Visibility(
+        visible: !UserData.shared.isFromLogin,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TimebankCreate(
+                  timebankId: timebankid,
+                ),
               ),
-            ),
-          );
-        },
-        foregroundColor: FlavorConfig.values.buttonTextColor,
-        child: Icon(
-          Icons.add,
-          
+            );
+          },
+          foregroundColor: FlavorConfig.values.buttonTextColor,
+          child: Icon(
+            Icons.add,
+
+          ),
         ),
       ),
       body: Center(
@@ -147,14 +152,14 @@ class TimeBankList extends StatelessWidget {
                                     )),
                               ),
                               onTap: () {
-                                _showDialog(context,model.name);
-//                                Navigator.of(context).push(
-//                                  MaterialPageRoute(
-//                                    builder: (routeContext) {
-//                                      return TimebankView(timebankId: model.id);
-//                                    },
-//                                  ),
-//                                );
+                               // _showDialog(context,model.name);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (routeContext) {
+                                      return TimebankView(timebankId: model.id);
+                                    },
+                                  ),
+                                );
                               },
                             )
                           : Offstage();
@@ -191,7 +196,7 @@ class TimeBankList extends StatelessWidget {
                 print('Join clicked');
                // Navigator.of(context).pop();
                 //WaitingView
-                Navigator.of(context).pop();
+               // Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(

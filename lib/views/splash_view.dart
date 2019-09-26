@@ -10,6 +10,59 @@ import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
+import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
+
+
+//class UserData {
+//  static UserModel user;
+//
+//  UserData({
+//   this.user;
+//  });
+//
+//  Future updateUserData(UserModel user) async {
+//    await fireStoreManager.updateUser(user: user);
+//  }
+//  Future<UserModel> _getSignedInUserDocs(String userId) async {
+//    UserModel userModel = await fireStoreManager.getUserForId(
+//      sevaUserId: userId,
+//    );
+//    user = userModel;
+//    return user;
+//  }
+//}
+class UserData {
+  // singleton
+  static final UserData _singleton = UserData._internal();
+  factory UserData() => _singleton;
+  UserData._internal();
+  bool isFromLogin = true;
+  static UserData get shared => _singleton;
+
+  // variables
+  UserModel user = new UserModel();
+  String userId;
+  String locationStr;
+
+ // UserModel user = await _getSignedInUserDocs(userId);
+
+  Future updateUserData() async {
+    await fireStoreManager.updateUser(user: user);
+  }
+
+  Future _getSignedInUserDocs(String userId) async {
+    UserModel userModel = await fireStoreManager.getUserForId(
+      sevaUserId: userId,
+    );
+    user = userModel;
+  }
+
+  Future<String> _getLoggedInUserId() async {
+    userId = await PreferenceManager.loggedInUserId;
+    return userId;
+  }
+}
+
 
 class SplashView extends StatefulWidget {
   @override
@@ -19,6 +72,7 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
+
 
   @override
   void didChangeDependencies() {
@@ -320,6 +374,8 @@ class _SplashViewState extends State<SplashView> {
 
   Future<String> _getLoggedInUserId() async {
     String userId = await PreferenceManager.loggedInUserId;
+    UserData.shared.userId = userId;
+    print(userId);
     return userId;
   }
 
@@ -329,6 +385,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    UserData.shared._getSignedInUserDocs(userId);
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     if (loggedInUser == null) {
@@ -337,6 +394,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+//    print(loggedInUser.requestStatus);
 
     if (loggedInUser.skills == null) {
       await _navigateToSkillsView(loggedInUser);
@@ -346,17 +404,17 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToInterestsView(loggedInUser);
     }
 
-    if (loggedInUser.calendar == null) {
-      await _navigateToCalendarView(loggedInUser);
-    }
-
-    if (loggedInUser.otp == null) {
-      await _navigateToPinView(loggedInUser);
-    }
-
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+
+    if (loggedInUser.calendar == null) {
+      await _navigateToCalendarView(loggedInUser);
+    }
+    if (loggedInUser.requestStatus == "pending") {
+      await _navigateToWaitingView(loggedInUser);
+    }
+
 
     loadingMessage = 'Finalizing';
     _navigateToCoreView(loggedInUser);
@@ -396,6 +454,14 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
+  Future _navigateToWaitingView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => WaitingView(),
+      ),
+    );
+  }
+
   Future _navigateToCalendarView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -422,16 +488,16 @@ class _SplashViewState extends State<SplashView> {
       MaterialPageRoute(
         builder: (context) => PinView(
           onSelectedOtp: (otp) {
-            Navigator.pop(context);
-            loggedInUser.otp = otp;
-            updateUserData(loggedInUser);
-            loadingMessage = 'Checking Otp';
+//            Navigator.pop(context);
+//            loggedInUser.otp = otp;
+//            updateUserData(loggedInUser);
+//            loadingMessage = 'Checking Otp';
           },
           onSkipped: () {
-            Navigator.pop(context);
-            loggedInUser.otp = null;
-            updateUserData(loggedInUser);
-            loadingMessage = 'Skipping Otp';
+//            Navigator.pop(context);
+//            loggedInUser.otp = null;
+//            updateUserData(loggedInUser);
+//            loadingMessage = 'Skipping Otp';
           },
         ),
       ),

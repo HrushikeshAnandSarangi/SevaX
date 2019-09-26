@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/branch_list.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
@@ -44,6 +47,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   @override
   void initState() {
+    //SevaCore.of(context).loggedInUser = UserData.shared.user;
     super.initState();
   }
 
@@ -97,24 +101,27 @@ class _TimebankViewState extends State<TimebankView> {
                   )
                 ],
               ),
-              floatingActionButton: FloatingActionButton.extended(
-                icon: Icon(
-                  Icons.add,
+              floatingActionButton: Visibility(
+                visible: !UserData.shared.isFromLogin,
+                child: FloatingActionButton.extended(
+                  icon: Icon(
+                    Icons.add,
+                  ),
+                  foregroundColor: FlavorConfig.values.buttonTextColor,
+                  label: Text(
+                    'Create Branch',
+
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TimebankCreate(
+                            timebankId: timebankModel.id,
+                          )),
+                    );
+                  },
                 ),
-                foregroundColor: FlavorConfig.values.buttonTextColor,
-                label: Text(
-                  'Create Branch',
-                  
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TimebankCreate(
-                              timebankId: timebankModel.id,
-                            )),
-                  );
-                },
               ),
               body: SafeArea(
                 child: SingleChildScrollView(
@@ -490,7 +497,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   Widget _showCreateCampaignButton(BuildContext context) {
     if (timebankModel.creatorId ==
-        SevaCore.of(context).loggedInUser.sevaUserID) {
+        UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -511,7 +518,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   Widget _showJoinRequests(BuildContext context) {
     if (timebankModel.creatorId ==
-        SevaCore.of(context).loggedInUser.sevaUserID) {
+        UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -534,20 +541,20 @@ class _TimebankViewState extends State<TimebankView> {
     switch (section) {
       case 'timebanks':
         if (timebankModel.creatorId ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+            UserData.shared.user.sevaUserID) {
           return TimebankEdit(
             ownerModel: ownerModel,
             timebankModel: timebankModel,
           );
         } else {
-//          return TimebankJoinRequest(
-//            timebankModel: timebankModel,
-//            owner: ownerModel,
-//          );
-        return PinView(
-            timebankModel:timebankModel,
-             owner:ownerModel,
-        );
+          return TimebankJoinRequest(
+            timebankModel: timebankModel,
+            owner: ownerModel,
+          );
+//        return PinView(
+//            timebankModel:timebankModel,
+//             owner:ownerModel,
+//        );
         }
         break;
       case 'campaigns':
@@ -579,7 +586,7 @@ class _TimebankViewState extends State<TimebankView> {
     switch (section) {
       case 'timebanks':
         if (timebankModel.creatorId ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+            UserData.shared.user.sevaUserID) {
           return Text(
             'Edit Timebank',
             style: TextStyle(
@@ -595,7 +602,7 @@ class _TimebankViewState extends State<TimebankView> {
         break;
       case 'campaigns':
         if (timebankModel.creatorId ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+            UserData.shared.user.sevaUserID) {
           return Text(
             'Create a Campaign (Project)',
             style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
@@ -627,7 +634,7 @@ class _TimebankViewState extends State<TimebankView> {
   Widget _showManageMembersButton(BuildContext context) {
     assert(timebankModel.id != null);
     if (timebankModel.creatorId ==
-        SevaCore.of(context).loggedInUser.sevaUserID) {
+        UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
