@@ -5,7 +5,7 @@ class UserModel extends DataModel {
   String email;
   String fullname;
   List<String> interests;
-  Object calendar;
+  String calendar;
   List<String> membershipTimebanks;
   List<String> membershipCampaigns;
   String photoURL;
@@ -14,6 +14,11 @@ class UserModel extends DataModel {
   num currentBalance;
   String timezone;
   String otp;
+  String requestStatus;
+
+  String locationName;
+  String lat_lng;
+  //String
 
   UserModel(
       {this.bio,
@@ -28,7 +33,9 @@ class UserModel extends DataModel {
       this.currentBalance,
       this.calendar,
         this.otp,
+      this.requestStatus,
       this.timezone});
+
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('bio')) {
@@ -48,7 +55,7 @@ class UserModel extends DataModel {
       this.interests = interestsList;
     }
     if (map.containsKey('calendar')) {
-      this.calendar = null;
+      this.calendar = map['calender'];
     }
     if (map.containsKey('otp')) {
       this.email = map['otp'];
@@ -72,6 +79,9 @@ class UserModel extends DataModel {
       this.currentBalance = map['currentBalance'];
     } else {
       this.currentBalance = 0;
+    }
+    if (map.containsKey('requestStatus')) {
+      this.requestStatus = map['requestStatus'];
     }
     if (map.containsKey('timezone')) {
       this.timezone = map['timezone'];
@@ -102,6 +112,9 @@ class UserModel extends DataModel {
     if (this.calendar != null) {
       object['calendar'] = this.calendar;
     }
+    if (this.requestStatus != null) {
+      object['requestStatus'] = this.requestStatus;
+    }
     if (this.otp != null) {
       object['otp'] = this.otp;
     }
@@ -129,7 +142,8 @@ class UserModel extends DataModel {
     } else {
       object['timezone'] = 'PT';
     }
-
     return object;
   }
 }
+
+

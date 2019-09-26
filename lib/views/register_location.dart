@@ -1,11 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:sevaexchange/views/bioview.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
-
+import 'package:flutter_google_places/flutter_google_places.dart';
 import '../flavor_config.dart';
+import 'package:google_maps_webservice/places.dart';
+import 'dart:math';
+
+const kGoogleApiKey = "AIzaSyAsFTtNd5UvFnzDk9sTD0EyesFkWVKQoZY";
+// to get places detail (lat/lng)
+GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+
 
 typedef StringListCallback = void Function(Object calendar);
 class LocationView extends StatefulWidget {
@@ -23,6 +32,95 @@ class LocationView extends StatefulWidget {
     return _locationScreenState();
   }
 }
+final searchScaffoldKey = GlobalKey<ScaffoldState>();
+
+class CustomSearchScaffold extends PlacesAutocompleteWidget {
+
+
+  CustomSearchScaffold()
+      : super(
+    apiKey: kGoogleApiKey,
+    sessionToken: Uuid().generateV4(),
+    language: "en",
+    components: [],
+  );
+
+  @override
+  _CustomSearchScaffoldState createState() => _CustomSearchScaffoldState();
+}
+class Uuid {
+  final Random _random = Random();
+
+  String generateV4() {
+    // Generate xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx / 8-4-4-4-12.
+    final int special = 8 + _random.nextInt(4);
+
+    return '${_bitsDigits(16, 4)}${_bitsDigits(16, 4)}-'
+        '${_bitsDigits(16, 4)}-'
+        '4${_bitsDigits(12, 3)}-'
+        '${_printDigits(special, 1)}${_bitsDigits(12, 3)}-'
+        '${_bitsDigits(16, 4)}${_bitsDigits(16, 4)}${_bitsDigits(16, 4)}';
+  }
+
+  String _bitsDigits(int bitCount, int digitCount) =>
+      _printDigits(_generateBits(bitCount), digitCount);
+
+  int _generateBits(int bitCount) => _random.nextInt(1 << bitCount);
+
+  String _printDigits(int value, int count) =>
+      value.toRadixString(16).padLeft(count, '0');
+}
+
+class _CustomSearchScaffoldState extends PlacesAutocompleteState {
+  String locationText;
+  @override
+  Widget build(BuildContext context) {
+    final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
+    final body = PlacesAutocompleteResult(
+      onTap: (p) {
+        displayPrediction(p, searchScaffoldKey.currentState);
+      },
+      logo: Row(
+        children: [FlutterLogo()],
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
+    );
+    return Scaffold(key: searchScaffoldKey, appBar: appBar, body: body);
+  }
+
+  Future<Null> displayPrediction(Prediction p, ScaffoldState scaffold) async {
+    if (p != null) {
+      // get detail (lat/lng)
+      print(p.description);
+      PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
+      final lat = detail.result.geometry.location.lat;
+      final lng = detail.result.geometry.location.lng;
+      Navigator.pop(context,p.description);
+      scaffold.showSnackBar(
+        SnackBar(content: Text("${p.description} - $lat/$lng")),
+      );
+    }
+  }
+
+  @override
+  void onResponseError(PlacesAutocompleteResponse response) {
+    super.onResponseError(response);
+    searchScaffoldKey.currentState.showSnackBar(
+      SnackBar(content: Text(response.errorMessage)),
+    );
+  }
+
+  @override
+  void onResponse(PlacesAutocompleteResponse response) {
+    super.onResponse(response);
+    print(response);
+    if (response != null && response.predictions.isNotEmpty) {
+      searchScaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text("Got answer")),
+      );
+    }
+  }
+}
 
 enum SingingCharacter { Never, On, After}
 
@@ -30,6 +128,8 @@ class _locationScreenState extends State<LocationView> {
 
   final _minimumSpacing = 5.0;
   TextEditingController locationController = TextEditingController();
+  TextEditingController onController = TextEditingController();
+  TextEditingController afterController = TextEditingController();
 
   double _value = 0.0;
   double _secondValue = 0.0;
@@ -97,9 +197,13 @@ class _locationScreenState extends State<LocationView> {
   Widget build(BuildContext context) {
     // TODO: implement build
     TextStyle textStyle = Theme.of(context).textTheme.title;
+    String locationStr = "";
+
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text('Register',textAlign: TextAlign.center,style: TextStyle(fontSize: 20.0),),),
+        automaticallyImplyLeading: false,
+        title: Text('Location & Schedule',textAlign: TextAlign.left,textDirection: TextDirection.ltr,style: TextStyle(fontSize: 20.0,color: Colors.white)),
+        //Center(child: Text('Register',textAlign: TextAlign.left,textDirection: TextDirection.ltr,style: TextStyle(fontSize: 20.0,color: Colors.white)),),
       ),
       body: Container(
         padding: EdgeInsets.all(10.0),
@@ -110,15 +214,36 @@ class _locationScreenState extends State<LocationView> {
                   top: _minimumSpacing * 3, bottom: _minimumSpacing,left: 10.0,right: 5.0),
               child: TextField(
                 keyboardType: TextInputType.text,
-                style: textStyle,
+                style: TextStyle(
+                    fontSize: 15.0,
+                    fontStyle: FontStyle.normal
+                ),
                 controller: locationController,
                 decoration: InputDecoration(
                     labelText: "Location",
                     hintText: "Enter location",
-                    labelStyle: textStyle,
+                    labelStyle: TextStyle(
+                      fontSize: 15.0,
+                      fontStyle: FontStyle.normal
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     )),
+                onTap: () async {
+
+                  locationController.text  = await Navigator.push(context,
+                    MaterialPageRoute(
+                    builder: (BuildContext context) => new CustomSearchScaffold(),
+                    fullscreenDialog: true),
+                  );
+
+//                  locationController.text =  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (BuildContext context) => CustomSearchScaffold(),
+//                    ),
+//                  ) as String;
+                },
               ),
             ),
             paddingColumn(),
@@ -128,9 +253,9 @@ class _locationScreenState extends State<LocationView> {
                     child: Padding(
                       padding: EdgeInsets.only(left:12.0),
                       child:Text('Distance',style: TextStyle(
-                        fontSize: 17.0,
-                        // fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 15.0,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w600,
                       ),
                       ),
                     )
@@ -138,7 +263,7 @@ class _locationScreenState extends State<LocationView> {
                 Padding(
                   padding: EdgeInsets.only(left: 5.0,right: 5.0),
                   child: Text('$finalValue Miles',style: TextStyle(
-                    fontSize: 14.0,
+                    fontSize: 12.0,
                     // fontStyle: FontStyle.normal,
                     fontWeight: FontWeight.w500,)
                   ),
@@ -209,13 +334,13 @@ class _locationScreenState extends State<LocationView> {
                   height: 40,
                   width: 150,
                   child: TextField(
-                    keyboardType: TextInputType.text,
+                    keyboardType: TextInputType.datetime,
                     style: TextStyle(
                       fontSize: 14.0,
                       fontStyle: FontStyle.normal,
                       fontWeight: FontWeight.w400,
                     ),
-                    controller: locationController,
+                    controller: onController,
                     decoration: InputDecoration(
                         labelText: "Date",
                         hintText: "Selecte Date",
@@ -309,13 +434,13 @@ class _locationScreenState extends State<LocationView> {
             height: 40,
             width: 150,
             child: TextField(
-              keyboardType: TextInputType.text,
+              keyboardType: TextInputType.number,
               style: TextStyle(
-                fontSize: 14.0,
+                fontSize: 13.0,
                 fontStyle: FontStyle.normal,
                 fontWeight: FontWeight.w400,
               ),
-              controller: locationController,
+              controller: afterController,
               decoration: InputDecoration(
                   labelText: "Occurances",
                   hintText: "Enter occurances",
@@ -344,10 +469,14 @@ class _locationScreenState extends State<LocationView> {
     return Container(
       width: 50,
       child: RadioListTile<SingingCharacter>(
-        title: Text(radioBtnName),
+        title: Text(radioBtnName,style: TextStyle(
+          fontSize: 15.0,
+        ),),
         value: value,
         groupValue: _character,
-        onChanged: (SingingCharacter value) { setState(() { _character = value; }); },
+        onChanged: (SingingCharacter value) {
+          setState(() { _character = value; });
+          },
       ),
     );
   }
@@ -374,9 +503,9 @@ class _locationScreenState extends State<LocationView> {
         Expanded(child:Padding(
           padding: EdgeInsets.only(left:12.0),
           child: Text('Days Available',style: TextStyle(
-            fontSize: 13.0,
+            fontSize: 15.0,
             fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
           ),
         ),
@@ -385,6 +514,7 @@ class _locationScreenState extends State<LocationView> {
     );
   }
   Widget _repeatAfter(TextStyle textStyle) {
+    bool pressAttention = false;
     return Padding(padding: EdgeInsets.only(left: 10.0),
       child:Row(
         children: <Widget>[
@@ -401,7 +531,7 @@ class _locationScreenState extends State<LocationView> {
                   items: _numbers.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value,style: TextStyle(fontSize: 17.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
                     );
                   }).toList(),
                   value: _selectedNumber,
@@ -426,7 +556,7 @@ class _locationScreenState extends State<LocationView> {
                   items: _schedule.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value,style: TextStyle(fontSize: 17.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
                     );
                   }).toList(),
                   value: _selectedScheduleItem,
@@ -452,6 +582,7 @@ class _locationScreenState extends State<LocationView> {
             color: Colors.transparent,
             elevation: 0.0,
             onPressed: (){
+              pressAttention = !pressAttention;
               print('pressed skip');
             },
           )
@@ -529,6 +660,7 @@ class _locationScreenState extends State<LocationView> {
                 secondChild: Text(
                   value,
                   style: TextStyle(
+                    fontSize: 12.0,
                     color: Colors.black,
                   ),
                 ),
@@ -541,7 +673,7 @@ class _locationScreenState extends State<LocationView> {
   }
 
   void _navigateToPinView() {
-    Navigator.pop(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => PinView(),

@@ -11,12 +11,13 @@ class WaitingView extends StatefulWidget {
 
 
 class _waitingState extends State<WaitingView> {
-  String _timeBankStr = 'Newzeland';
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Center(child: Text('',textAlign: TextAlign.center,style: TextStyle(fontSize: 20.0),),),
       ),
       body: Container(

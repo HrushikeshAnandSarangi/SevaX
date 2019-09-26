@@ -568,14 +568,14 @@ class _ChipsTile extends StatelessWidget {
                       // color: Colors.deepPurple,
                       onPressed: () {
                         createOnSkip(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => CoreView(
-                              sevaUserID: null,
-                            ),
-                          ),
-                        );
+//                        Navigator.pushReplacement(
+//                          context,
+//                          MaterialPageRoute(
+//                            builder: (BuildContext context) => CoreView(
+//                              sevaUserID: null,
+//                            ),
+//                          ),
+//                        );
                       },
                       child: Text('Skip',
                           style: TextStyle(

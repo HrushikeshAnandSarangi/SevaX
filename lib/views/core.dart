@@ -9,6 +9,7 @@ import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/search_view.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
@@ -59,6 +60,7 @@ class _CoreViewState extends State<CoreView> {
   @override
   void initState() {
     super.initState();
+    UserData.shared.isFromLogin = false;
   }
 
   @override

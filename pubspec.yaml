@@ -52,6 +52,7 @@ dependencies:
   provider: ^3.0.0+1
   pin_code_text_field: ^1.2.1
   flutter_typeahead: ^1.6.1
+  flutter_google_places: ^0.2.3
 
 dev_dependencies:
   flutter_test:
