@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
@@ -85,6 +87,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
+  GeoFirePoint location;
 
   Future<void> writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -95,6 +98,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.postTimestamp = timestamp;
+    newsObject.location = location;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
@@ -331,8 +335,38 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 ],
               ),
 
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<GeoFirePoint>(
+                        builder: (context) => LocationPicker()),
+                  ).then((point) {
+                    if (point != null) location = point;
+                    print(location);
+                  });
+                },
+                child: SizedBox(
+                  width: 140,
+                  height: 30,
+                  child: Container(
+                    color: Colors.grey[200],
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Icon(Icons.add_location),
+                        ),
+                        Text('  '),
+                        Text('Add Location'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
               Container(
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 alignment: Alignment(0, 1),
                 padding: const EdgeInsets.only(top: 10.0),
                 child: RaisedButton(
@@ -341,12 +375,17 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   onPressed: () {
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
-
-                    if (formKey.currentState.validate()) {
-                      // If the form is valid, we want to show a Snackbar
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Creating Post')));
-                      writeToDB();
+                    if (location != null) {
+                      if (formKey.currentState.validate()) {
+                        // If the form is valid, we want to show a Snackbar
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text('Creating Post')));
+                        writeToDB();
+                      }
+                    } else {
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text('Location not added'),
+                      ));
                     }
                   },
                   child: Row(

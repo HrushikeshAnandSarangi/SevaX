@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -51,6 +53,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String title = '';
   String schedule = '';
   String description = '';
+  GeoFirePoint location;
 
   void _writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -65,6 +68,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       schedule: schedule,
       timebankId: widget.timebankId,
       timestamp: timestamp,
+      location: location
     );
     await FirestoreManager.createOffer(offerModel: model);
   }
@@ -145,6 +149,40 @@ class MyCustomFormState extends State<MyCustomForm> {
                   schedule = value;
                 },
               ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<GeoFirePoint>(
+                            builder: (context) => LocationPicker()),
+                      ).then((point) {
+                        if (point != null) location = point;
+                        print(location);
+                      });
+                    },
+                    child: SizedBox(
+                      width: 140,
+                      height: 30,
+                      child: Container(
+                        color: Colors.grey[200],
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Icon(Icons.add_location),
+                            ),
+                            Text('  '),
+                            Text('Add Location'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Center(
@@ -152,12 +190,17 @@ class MyCustomFormState extends State<MyCustomForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () {
+                      if(location!=null){
                       if (_formKey.currentState.validate()) {
                         Scaffold.of(context).showSnackBar(
                           SnackBar(content: Text('Creating Offer')),
                         );
                         _writeToDB();
                         Navigator.pop(context);
+                      }} else {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text('Location not added'),
+                      ));
                       }
                     },
                     child: Row(
