@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -7,6 +9,9 @@ import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/request_model.dart';
+
+Location location = new Location();
+Geoflutterfire geo = Geoflutterfire();
 
 Future<void> createRequest({@required RequestModel requestModel}) async {
   return await Firestore.instance
@@ -83,6 +88,47 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
       handleData: (snapshot, requestSink) {
         List<RequestModel> requestList = [];
         snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getNearRequestListStream({String timebankId}) async* {
+  LocationData pos = await location.getLocation();
+    double lat = pos.latitude;
+    double lng = pos.longitude;
+    GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+  var query = timebankId == null || timebankId == 'All'
+      ? Firestore.instance
+          .collection('requests')
+          .where('accepted', isEqualTo: false)
+      : Firestore.instance
+          .collection('requests')
+          .where('timebankId', isEqualTo: timebankId)
+          .where('accepted', isEqualTo: false);
+
+  var data = geo.collection(collectionRef: query).within(
+        center: center, 
+        radius: 20, 
+        field: 'location', 
+        strictMode: true
+      );
+
+  yield* data.transform(
+    StreamTransformer<List<DocumentSnapshot>, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.forEach(
           (documentSnapshot) {
             RequestModel model = RequestModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;

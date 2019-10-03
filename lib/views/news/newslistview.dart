@@ -30,6 +30,7 @@ class NewsListState extends State<NewsList> {
   String timebankName;
   String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
+  bool isNearme = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -46,68 +47,85 @@ class NewsListState extends State<NewsList> {
             Padding(
               padding: EdgeInsets.only(left: 10),
             ),
-            StreamBuilder<Object>(
-                stream: FirestoreManager.getTimebanksForUserStream(
-                    userId: SevaCore.of(context).loggedInUser.sevaUserID),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  timebankList = snapshot.data;
-                  // timebankList.forEach((t){
-                  //   if(t.name==timebankName){
-                  //     timebankId=t.id;
-                  //   }
-                  // });
-                  List<String> dropdownList = [];
-                  timebankList.forEach((t) {
-                    dropdownList.add(t.id);
-                  });
-                  dropdownList.insert(0, 'All');
-                  return DropdownButton<String>(
-                    value: timebankId,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        timebankId = newValue;
-                        //print(timebankId);
-                      });
-                    },
-                    items: dropdownList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      if (value == 'All') {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      } else
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: FutureBuilder<Object>(
-                              future: FirestoreManager.getTimeBankForId(
-                                  timebankId: value),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError)
-                                  return new Text('Error: ${snapshot.error}');
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Offstage();
-                                }
-                                TimebankModel timebankModel = snapshot.data;
-                                return Text(timebankModel.name);
-                              }),
-                        );
-                    }).toList(),
-                  );
-                }),
+            Expanded(
+              child: StreamBuilder<Object>(
+                  stream: FirestoreManager.getTimebanksForUserStream(
+                      userId: SevaCore.of(context).loggedInUser.sevaUserID),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    timebankList = snapshot.data;
+                    // timebankList.forEach((t){
+                    //   if(t.name==timebankName){
+                    //     timebankId=t.id;
+                    //   }
+                    // });
+                    List<String> dropdownList = [];
+                    timebankList.forEach((t) {
+                      dropdownList.add(t.id);
+                    });
+                    dropdownList.insert(0, 'All');
+                    return DropdownButton<String>(
+                      value: timebankId,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          timebankId = newValue;
+                          //print(timebankId);
+                        });
+                      },
+                      items: dropdownList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        if (value == 'All') {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        } else
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: FutureBuilder<Object>(
+                                future: FirestoreManager.getTimeBankForId(
+                                    timebankId: value),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError)
+                                    return new Text('Error: ${snapshot.error}');
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Offstage();
+                                  }
+                                  TimebankModel timebankModel = snapshot.data;
+                                  return Text(timebankModel.name);
+                                }),
+                          );
+                      }).toList(),
+                    );
+                  }),
+            ),
+            RaisedButton(
+              onPressed: () {
+                setState(() {
+                  if (isNearme == true)
+                    isNearme = false;
+                  else
+                    isNearme = true;
+                });
+              },
+              child: isNearme == false ? Text('Near Me') : Text('All'),
+              color: Theme.of(context).accentColor,
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 5),
+            ),
           ],
         ),
         Divider(
           color: Colors.grey,
           height: 0,
         ),
-        timebankId != 'All'
+        timebankId != 'All' && isNearme == false
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(timebankID: timebankId),
                 builder: (context, snapshot) {
@@ -137,35 +155,101 @@ class NewsListState extends State<NewsList> {
                   }
                 },
               )
-            : StreamBuilder<List<NewsModel>>(
-                stream: FirestoreManager.getAllNewsStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Center(child: CircularProgressIndicator());
-                      break;
-                    default:
-                      List<NewsModel> newsList = snapshot.data;
-                      if (newsList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(child: Text('Your feed is empty')),
-                        );
+            : timebankId == 'All' && isNearme == false
+                ? StreamBuilder<List<NewsModel>>(
+                    stream: FirestoreManager.getAllNewsStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError)
+                        return new Text('Error: ${snapshot.error}');
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Center(child: CircularProgressIndicator());
+                          break;
+                        default:
+                          List<NewsModel> newsList = snapshot.data;
+                          if (newsList.length == 0) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(child: Text('Your feed is empty')),
+                            );
+                          }
+                          return Expanded(
+                            child: ListView.builder(
+                              itemCount: newsList.length,
+                              itemBuilder: (context, index) {
+                                return getNewsCard(
+                                    newsList.elementAt(index), false);
+                              },
+                            ),
+                          );
                       }
-                      return Expanded(
-                        child: ListView.builder(
-                          itemCount: newsList.length,
-                          itemBuilder: (context, index) {
-                            return getNewsCard(
-                                newsList.elementAt(index), false);
-                          },
-                        ),
-                      );
-                  }
-                },
-              ),
+                    },
+                  )
+                : timebankId != 'All' && isNearme == true
+                    ? StreamBuilder<List<NewsModel>>(
+                        stream: FirestoreManager.getNearNewsStream(
+                            timebankID: timebankId),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError)
+                            return new Text('Error: ${snapshot.error}');
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Center(child: CircularProgressIndicator());
+                              break;
+                            default:
+                              List<NewsModel> newsList = snapshot.data;
+                              if (newsList.length == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      Center(child: Text('Your feed is empty')),
+                                );
+                              }
+                              return Expanded(
+                                child: ListView.builder(
+                                  itemCount: newsList.length,
+                                  itemBuilder: (context, index) {
+                                    return getNewsCard(
+                                        newsList.elementAt(index), false);
+                                  },
+                                ),
+                              );
+                          }
+                        },
+                      )
+                    : timebankId == 'All' && isNearme == true
+                        ? StreamBuilder<List<NewsModel>>(
+                            stream: FirestoreManager.getAllNearNewsStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError)
+                                return new Text('Error: ${snapshot.error}');
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                  break;
+                                default:
+                                  List<NewsModel> newsList = snapshot.data;
+                                  if (newsList.length == 0) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: Text('Your feed is empty')),
+                                    );
+                                  }
+                                  return Expanded(
+                                    child: ListView.builder(
+                                      itemCount: newsList.length,
+                                      itemBuilder: (context, index) {
+                                        return getNewsCard(
+                                            newsList.elementAt(index), false);
+                                      },
+                                    ),
+                                  );
+                              }
+                            },
+                          )
+                        : Offstage(),
       ],
     );
   }
