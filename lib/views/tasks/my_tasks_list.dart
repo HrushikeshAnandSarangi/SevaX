@@ -311,6 +311,8 @@ class TaskCardViewState extends State<TaskCardView> {
 
   final _formKey = GlobalKey<FormState>();
 
+ TextEditingController hoursController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -405,6 +407,7 @@ class TaskCardViewState extends State<TaskCardView> {
                         children: <Widget>[
                           Expanded(
                             child: TextFormField(
+                              controller: hoursController,
                               keyboardType: TextInputType.number,
                               inputFormatters: [
                                 BlacklistingTextInputFormatter(
@@ -497,8 +500,14 @@ class TaskCardViewState extends State<TaskCardView> {
   }
 
   void checkForReview() async {
-    if (selectedHourValue == null) {
-      return;
+
+
+    print("Length of hours ${hoursController.text}");
+
+
+    if (hoursController.text == null || hoursController.text.length == 0){
+     print("left bank");
+     return; 
     }
 
     Map results = await Navigator.of(context).push(MaterialPageRoute(

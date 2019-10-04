@@ -1,4 +1,4 @@
 storePassword=123456
 keyPassword=123456
 keyAlias=release-key
-storeFile=**/android/key.properties
+storeFile=PATH_TO_KEY_STORE_FILE

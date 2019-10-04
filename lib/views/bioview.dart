@@ -46,7 +46,7 @@ class _BioViewState extends State<BioView> {
               child: TextFormField(
                 style: TextStyle(fontSize: 18.0, color: Colors.black87),
                 decoration: InputDecoration(
-                  hintText: 'Your Bio and any #hashtags',
+                  hintText: 'Your Bio ',
                   border: InputBorder.none,
                 ),
                 keyboardType: TextInputType.multiline,
@@ -55,7 +55,7 @@ class _BioViewState extends State<BioView> {
                 maxLines: 20,
                 validator: (value) {
                   if (value.trim().isEmpty) {
-                    return 'Please enter a Bio and any #hashtags';
+                    return 'Please enter a Bio';
                   }
                   this.bio = value;
                 },
