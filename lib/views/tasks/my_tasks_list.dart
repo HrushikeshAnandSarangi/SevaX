@@ -1,9 +1,13 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/qna-module/ReviewLandingPage.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:intl/intl.dart';
 
@@ -46,6 +50,7 @@ class MyTaskPageState extends State<MyTaskPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
     return TabBarView(
       controller: widget.controller,
       children: [MyTasksList(), NotAcceptedTaskList(), CompletedList()],
@@ -472,49 +477,12 @@ class TaskCardViewState extends State<TaskCardView> {
                       padding: EdgeInsets.all(8.0),
                       child: RaisedButton(
                         color: Theme.of(context).accentColor,
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            int totalMinutes = int.parse(selectedMinuteValue) +
-                                (int.parse(selectedHourValue) * 60);
-
-                            this.requestModel.durationOfRequest = totalMinutes;
-
-                            TransactionModel transactionModel =
-                                TransactionModel(
-                              from: requestModel.sevaUserId,
-                              to: SevaCore.of(context).loggedInUser.sevaUserID,
-                              credits: totalMinutes / 60,
-                              timestamp: DateTime.now().millisecondsSinceEpoch,
-                            );
-
-                            if (requestModel.transactions == null) {
-                              requestModel.transactions = [transactionModel];
-                            } else if (!requestModel.transactions.any(
-                                (model) => model.to == transactionModel.to)) {
-                              requestModel.transactions.add(transactionModel);
-                            }
-
-                            FirestoreManager.requestComplete(
-                                model: requestModel);
-
-                            FirestoreManager.createTaskCompletedNotification(
-                              model: NotificationsModel(
-                                id: utils.Utils.getUuid(),
-                                data: requestModel.toMap(),
-                                type: NotificationType.RequestCompleted,
-                                senderUserId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .sevaUserID,
-                                targetUserId: requestModel.sevaUserId,
-                              ),
-                            );
-
-                            Navigator.of(context).pop();
-                          }
-                        },
+                        onPressed: checkForReview,
                         child: Text(
                           'Completed',
-                          style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
+                          style: TextStyle(
+                            color: FlavorConfig.values.buttonTextColor,
+                          ),
                         ),
                       ),
                     )
@@ -526,6 +494,91 @@ class TaskCardViewState extends State<TaskCardView> {
         ),
       ),
     );
+  }
+
+  void checkForReview() async {
+    if (selectedHourValue == null) {
+      return;
+    }
+
+    Map results = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
+        return ReviewFeedback.forVolunteer(
+          forVolunteer: false,
+        );
+      },
+    ));
+
+    if (results != null && results.containsKey('selection')) {
+      onActivityResult(results);
+    } else {
+      print("Operation Cancelled!");
+    }
+  }
+
+  Stream<List<ReviewModel>> getMyReview() async* {
+    var data = Firestore.instance
+        .collection("reviews")
+        .where("user_id", isEqualTo: "burhan@uipep.com")
+        .where("requestId", isEqualTo: "requestId")
+        .snapshots();
+    yield* data.transform(
+        StreamTransformer<QuerySnapshot, List<ReviewModel>>.fromHandlers(
+            handleData: (querySnapshot, reviewSink) {
+      querySnapshot.documents.forEach((document) {
+        
+      });
+    }));
+  }
+
+  void onActivityResult(Map results) {
+    // adds review to firestore
+    Firestore.instance.collection("reviews").add({
+      "reviewer": SevaCore.of(context).loggedInUser.email,
+      "reviewed": requestModel.email,
+      "ratings": results['selection'],
+      "requestId": requestModel.id,
+      "comments": (results['didComment'] ? results['comment'] : "No comments")
+    });
+
+    startTransaction();
+  }
+
+  void startTransaction() {
+    if (_formKey.currentState.validate()) {
+      int totalMinutes =
+          int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
+
+      this.requestModel.durationOfRequest = totalMinutes;
+
+      TransactionModel transactionModel = TransactionModel(
+        from: requestModel.sevaUserId,
+        to: SevaCore.of(context).loggedInUser.sevaUserID,
+        credits: totalMinutes / 60,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+      );
+
+      if (requestModel.transactions == null) {
+        requestModel.transactions = [transactionModel];
+      } else if (!requestModel.transactions
+          .any((model) => model.to == transactionModel.to)) {
+        requestModel.transactions.add(transactionModel);
+      }
+
+      FirestoreManager.requestComplete(model: requestModel);
+
+      FirestoreManager.createTaskCompletedNotification(
+        model: NotificationsModel(
+          id: utils.Utils.getUuid(),
+          data: requestModel.toMap(),
+          type: NotificationType.RequestCompleted,
+          senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+          targetUserId: requestModel.sevaUserId,
+        ),
+      );
+
+      Navigator.of(context).pop();
+    }
   }
 
   List<String> get minuteList {

@@ -155,6 +155,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.4"
+  flutter_google_places:
+    dependency: "direct main"
+    description:
+      name: flutter_google_places
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.3"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -193,6 +200,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.1"
+  google_maps_webservice:
+    dependency: transitive
+    description:
+      name: google_maps_webservice
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.15"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -270,6 +284,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0+2"
+  logging:
+    dependency: "direct main"
+    description:
+      name: logging
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.11.3+2"
   matcher:
     dependency: transitive
     description:
@@ -297,7 +318,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.2"
+    version: "1.6.4"
   path_drawing:
     dependency: transitive
     description:
@@ -353,7 +374,14 @@ packages:
       name: quiver
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.5"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.22.2"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -400,7 +428,7 @@ packages:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   term_glyph:
     dependency: transitive
     description:

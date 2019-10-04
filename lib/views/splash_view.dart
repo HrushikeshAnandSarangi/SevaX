@@ -410,14 +410,13 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToBioView(loggedInUser);
     }
 
-    if (loggedInUser.calendar == null) {
-      await _navigateToCalendarView(loggedInUser);
-    }
-    if (loggedInUser.requestStatus == "pending") {
-      await _navigateToWaitingView(loggedInUser);
-    }
+    // if (loggedInUser.calendar == null) {
+    //   await _navigateToCalendarView(loggedInUser);
+    // }
 
-
+    // if (loggedInUser.requestStatus == "pending") {
+    //   await _navigateToWaitingView(loggedInUser);
+    // }
 
     loadingMessage = 'Finalizing';
     _navigateToCoreView(loggedInUser);

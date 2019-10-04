@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -5,9 +8,9 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/utils/utils.dart' as prefix0;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 
 import 'package:shimmer/shimmer.dart';
 
@@ -476,6 +479,90 @@ class NotificationsView extends StatelessWidget {
     );
   }
 
+  void approveTransaction(RequestModel model, String userId,
+      String notificationId, SevaCore sevaCore) {
+    print("############  Transaction started.");
+    List<TransactionModel> transactions =
+        model.transactions.map((t) => t).toList();
+
+    model.transactions = transactions.map((t) {
+      if (t.to == userId && t.from == sevaCore.loggedInUser.sevaUserID) {
+        TransactionModel editedTransaction = t;
+        editedTransaction.isApproved = true;
+        return editedTransaction;
+      }
+      return t;
+    }).toList();
+
+    if (model.transactions.where((model) => model.isApproved).length ==
+        model.numberOfApprovals) {}
+
+    FirestoreManager.approveRequestCompletion(
+      model: model,
+      userId: userId,
+    );
+
+    FirestoreManager.readNotification(
+        notificationId, sevaCore.loggedInUser.email);
+
+    print("############ Completed transaction.");
+  }
+
+  void checkForFeedback(
+      {String userId,
+      UserModel user,
+      RequestModel model,
+      String notificationId,
+      BuildContext context,
+      SevaCore sevaCore}) async {
+    Map results = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
+        return ReviewFeedback.forVolunteer(
+          forVolunteer: true,
+        );
+      },
+    ));
+
+    if (results != null && results.containsKey('selection')) {
+      onActivityResult(
+        sevaCore: sevaCore,
+        requestModel: model,
+        userId: userId,
+        notificationId: notificationId,
+        context: context,
+        reviewer: model.email,
+        reviewed: user.email,
+        requestId: model.id,
+        results: results,
+      );
+    } else {
+      print("Operation Cancelled!");
+    }
+  }
+
+  void onActivityResult(
+      {SevaCore sevaCore,
+      RequestModel requestModel,
+      String userId,
+      String notificationId,
+      BuildContext context,
+      Map results,
+      String reviewer,
+      String reviewed,
+      String requestId}) {
+    // adds review to firestore
+    Firestore.instance.collection("reviews").add({
+      "reviewer": reviewer,
+      "reviewed": reviewed,
+      "ratings": results['selection'],
+      "requestId": requestId,
+      "comments": (results['didComment'] ? results['comment'] : "No comments")
+    });
+
+    print("Task completed");
+    approveTransaction(requestModel, userId, notificationId, sevaCore);
+  }
+
   Widget getNotificationRequestCompletedWidget(
     RequestModel model,
     String userId,
@@ -498,31 +585,13 @@ class NotificationsView extends StatelessWidget {
           actions: <Widget>[
             SlideAction(
               onTap: () {
-                List<TransactionModel> transactions =
-                    model.transactions.map((t) => t).toList();
-
-                model.transactions = transactions.map((t) {
-                  if (t.to == userId &&
-                      t.from == SevaCore.of(context).loggedInUser.sevaUserID) {
-                    TransactionModel editedTransaction = t;
-                    editedTransaction.isApproved = true;
-                    return editedTransaction;
-                  }
-                  return t;
-                }).toList();
-
-                if (model.transactions
-                        .where((model) => model.isApproved)
-                        .length ==
-                    model.numberOfApprovals) {}
-
-                FirestoreManager.approveRequestCompletion(
-                  model: model,
-                  userId: userId,
-                );
-
-                FirestoreManager.readNotification(
-                    notificationId, SevaCore.of(context).loggedInUser.email);
+                checkForFeedback(
+                    userId: userId,
+                    user: user,
+                    context: context,
+                    model: model,
+                    notificationId: notificationId,
+                    sevaCore: SevaCore.of(context));
               },
               child: Container(
                 padding: notificationPadding,

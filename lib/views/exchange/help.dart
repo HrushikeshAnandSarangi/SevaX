@@ -84,7 +84,7 @@ class RequestsState extends State<Requests> {
     return Column(
       children: <Widget>[
         Offstage(
-          offstage: true,
+          offstage: false,
           child: Row(
             children: <Widget>[
               Padding(

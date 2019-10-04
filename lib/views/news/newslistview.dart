@@ -36,7 +36,7 @@ class NewsListState extends State<NewsList> {
       children: <Widget>[
         
         Offstage(
-          offstage: true,
+          offstage: false,
           child: Row(
           children: <Widget>[
             Padding(
