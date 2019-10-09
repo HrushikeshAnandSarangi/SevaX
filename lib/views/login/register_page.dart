@@ -83,7 +83,6 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-
   bool get shouldObscure => this._shouldObscure;
   set shouldObscure(bool shouldObscure) {
     setState(() => this._shouldObscure = shouldObscure);
@@ -96,27 +95,29 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get _profileBtn {
     return SizedBox(
-        height: 35,
-        width: 120,
-        child: Container(
-          padding: EdgeInsets.only(top: 5.0),
-          child: RaisedButton(
-            onPressed: isLoading
-            ? null
-            : () {
-                imagePicker.showDialog(context);
-              },
-            color: Colors.grey,
-              child: Text(
-                this.isImageSelected,style: TextStyle(
-                color: Colors.white,
-                fontSize: 12.0,
-              ),
-              ),
+      height: 35,
+      width: 120,
+      child: Container(
+        padding: EdgeInsets.only(top: 5.0),
+        child: RaisedButton(
+          onPressed: isLoading
+              ? null
+              : () {
+                  imagePicker.showDialog(context);
+                },
+          color: Colors.grey,
+          child: Text(
+            this.isImageSelected,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12.0,
+            ),
           ),
         ),
+      ),
     );
   }
+
   Widget get _imagePicker {
     return SizedBox(
       height: 80,
@@ -147,7 +148,6 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
   }
-
 
   Widget get _formFields {
     return Form(
@@ -221,7 +221,8 @@ class _RegisterPageState extends State<RegisterPage>
     TextCapitalization capitalization = TextCapitalization.none,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0,left: 16.0,right: 16.0,top: 8.0),
+      padding:
+          const EdgeInsets.only(bottom: 8.0, left: 16.0, right: 16.0, top: 8.0),
       child: TextFormField(
         enabled: !isLoading,
         decoration: InputDecoration(
@@ -311,7 +312,7 @@ class _RegisterPageState extends State<RegisterPage>
       user.photoURL = imageUrl;
       await FirestoreManager.updateUser(user: user);
       Navigator.pop(context, user);
-     // Navigator.popUntil(context, (r) => r.isFirst);
+      // Navigator.popUntil(context, (r) => r.isFirst);
     } on PlatformException catch (error) {
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -369,50 +370,49 @@ class _RegisterPageState extends State<RegisterPage>
         children: <Widget>[
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? Text(
-            'Humanity\nFirst'.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              letterSpacing: 5,
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-          )
+                  'Humanity\nFirst'.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    letterSpacing: 5,
+                    fontSize: 24,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w700,
+                  ),
+                )
               : Offstage(),
           SizedBox(
             height: 16,
           ),
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? Image.asset(
-            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-            height: 70,
-            fit: BoxFit.fill,
-            width: 80,
-          )
+                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+                  height: 70,
+                  fit: BoxFit.fill,
+                  width: 80,
+                )
               : FlavorConfig.appFlavor == Flavor.TULSI
-              ? SvgPicture.asset(
-            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-            height: 100,
-            fit: BoxFit.fill,
-            width: 100,
-            color: Colors.white,
-          )
-              : FlavorConfig.appFlavor == Flavor.TOM
-              ? SvgPicture.asset(
-            'lib/assets/ts2020-logo-w.svg',
-            height: 90,
-            fit: BoxFit.fill,
-            width: 90,
-          )
-              : Image.asset(
-            'lib/assets/images/seva-x-logo.png',
-            height: 30,
-            fit: BoxFit.fill,
-            width: 100,
-          )
+                  ? SvgPicture.asset(
+                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
+                      height: 100,
+                      fit: BoxFit.fill,
+                      width: 100,
+                      color: Colors.white,
+                    )
+                  : FlavorConfig.appFlavor == Flavor.TOM
+                      ? SvgPicture.asset(
+                          'lib/assets/ts2020-logo-w.svg',
+                          height: 90,
+                          fit: BoxFit.fill,
+                          width: 90,
+                        )
+                      : Image.asset(
+                          'lib/assets/images/seva-x-logo.png',
+                          height: 30,
+                          fit: BoxFit.fill,
+                          width: 100,
+                        )
         ],
       ),
     );
   }
-
 }

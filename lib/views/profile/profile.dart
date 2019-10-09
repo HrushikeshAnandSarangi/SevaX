@@ -50,7 +50,8 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
+    FirestoreManager.getTimeBankForId(
+            timebankId: FlavorConfig.values.timebankId)
         .then((model) {
       setState(() {
         timebankModel = model;
@@ -255,7 +256,9 @@ class _ProfilePageState extends State<ProfilePage>
     return Chip(
       label: Text(
         value,
-        style: TextStyle(color:FlavorConfig.values.buttonTextColor,),
+        style: TextStyle(
+          color: FlavorConfig.values.buttonTextColor,
+        ),
       ),
       backgroundColor: Theme.of(context).accentColor,
     );
@@ -428,7 +431,8 @@ class _ProfilePageState extends State<ProfilePage>
             child: Row(
               children: <Widget>[
                 Spacer(),
-                Icon(Icons.exit_to_app, color: FlavorConfig.values.buttonTextColor),
+                Icon(Icons.exit_to_app,
+                    color: FlavorConfig.values.buttonTextColor),
                 SizedBox(
                   width: 8,
                 ),
@@ -656,7 +660,9 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get timebankslist {
     return getActionCards(
-      title: 'Timebanks List',
+      title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? 'Yang Gangs'
+          : 'Timebanks List',
       //subtitle: timebankModel == null ? "loading" : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
