@@ -19,6 +19,9 @@ class TimeBankList extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? 'Yang Gangs'
+          :
           title,
           style: TextStyle(color: Colors.white),
         ),
