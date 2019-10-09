@@ -108,6 +108,7 @@ class FireMapState extends State<FireMap> {
                 left: 0,
                 right: 0,
                 child: RaisedButton(
+                  textColor: Colors.white,
                   color: Theme.of(context).accentColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),

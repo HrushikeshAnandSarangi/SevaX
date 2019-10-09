@@ -154,6 +154,7 @@ class RequestsState extends State<Requests> {
               },
               child: isNearme == false ? Text('Near Me') : Text('All'),
               color: Theme.of(context).accentColor,
+              textColor: Colors.white,
             ),
             Padding(
               padding: EdgeInsets.only(right: 5),
@@ -458,6 +459,7 @@ class OffersState extends State<Offers> {
               },
               child: isNearme == false ? Text('Near Me') : Text('All'),
               color: Theme.of(context).accentColor,
+              textColor: Colors.white,
             ),
             Padding(
               padding: EdgeInsets.only(right: 5),

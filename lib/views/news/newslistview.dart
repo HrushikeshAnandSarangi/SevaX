@@ -115,6 +115,7 @@ class NewsListState extends State<NewsList> {
               },
               child: isNearme == false ? Text('Near Me') : Text('All'),
               color: Theme.of(context).accentColor,
+              textColor: Colors.white,
             ),
             Padding(
               padding: EdgeInsets.only(right: 5),
