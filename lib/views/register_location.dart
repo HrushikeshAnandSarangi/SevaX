@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/views/bioview.dart';
+import 'package:sevaexchange/views/popup.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
@@ -95,7 +97,10 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
       PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
       final lat = detail.result.geometry.location.lat;
       final lng = detail.result.geometry.location.lng;
-      Navigator.pop(context,p.description);
+      AvailabilityModel data = AvailabilityModel.empty();
+      data.lat_lng = "$lat,$lng";
+      data.location = p.description;
+      Navigator.pop(context,data);
       scaffold.showSnackBar(
         SnackBar(content: Text("${p.description} - $lat/$lng")),
       );
@@ -130,7 +135,7 @@ class _locationScreenState extends State<LocationView> {
   TextEditingController locationController = TextEditingController();
   TextEditingController onController = TextEditingController();
   TextEditingController afterController = TextEditingController();
-
+  TextEditingController myCommentsController = TextEditingController();
   double _value = 0.0;
   double _secondValue = 0.0;
 
@@ -159,6 +164,7 @@ class _locationScreenState extends State<LocationView> {
   List<MaterialColor> colorList;
   Set<String> selectedInterests = <String>[].toSet();
   SingingCharacter _character = SingingCharacter.Never;
+  AvailabilityModel totalData = AvailabilityModel.empty();
 
   @override
   void initState() {
@@ -223,26 +229,24 @@ class _locationScreenState extends State<LocationView> {
                     labelText: "Location",
                     hintText: "Enter location",
                     labelStyle: TextStyle(
-                      fontSize: 15.0,
-                      fontStyle: FontStyle.normal
+                        fontSize: 15.0,
+                        fontStyle: FontStyle.normal
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     )),
                 onTap: () async {
-
-                  locationController.text  = await Navigator.push(context,
+                  AvailabilityModel dataModel = AvailabilityModel.empty();
+                  dataModel  = await Navigator.push(context,
                     MaterialPageRoute(
-                    builder: (BuildContext context) => new CustomSearchScaffold(),
-                    fullscreenDialog: true),
+                        builder: (BuildContext context) => new CustomSearchScaffold(),
+                        fullscreenDialog: true),
                   );
-
-//                  locationController.text =  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (BuildContext context) => CustomSearchScaffold(),
-//                    ),
-//                  ) as String;
+                  setState(() {
+                    locationController.text = dataModel.location;
+                    totalData.location = dataModel.location;
+                    totalData.lat_lng = dataModel.lat_lng;
+                  });
                 },
               ),
             ),
@@ -289,74 +293,55 @@ class _locationScreenState extends State<LocationView> {
                     setState(() {
                       _value = value;
                       finalValue = _value.toStringAsFixed(0);
+                      totalData.distnace = '$finalValue Miles';
                     });
                   }),
             ),
-            paddingColumn(),
-            _daysAvailable(),
-            paddingColumn(),
             Row(
               children: <Widget>[
-                Expanded(
-                  child: list(),
-                ),
-                RaisedButton(
-                  focusColor: Colors.blue,
-                  highlightColor: Colors.white,
-                  child: Text('Show Calender',style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
+                Padding(
+                  padding: EdgeInsets.only(left:13.0),
+                  child: Text('Days Available',style: TextStyle(
+                    fontSize: 17.0,
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w500,
                   ),
-                    textAlign: TextAlign.start,
                   ),
-                  textColor: Colors.blue,
-                  color: Colors.transparent,
-                  elevation: 0.0,
-                  onPressed: (){
-                    print('pressed skip');
-                  },
-                )
-              ],
-            ),
-            paddingColumn(),
-            _titleRow('Repeat After'),
-            paddingColumn(),
-            _repeatAfter(textStyle),
-            paddingColumn(),
-            _titleRow('Ends'),
-            _ends('Never',SingingCharacter.Never),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: _ends('On',SingingCharacter.On),
                 ),
-                Container(
-                  height: 40,
-                  width: 150,
-                  child: TextField(
-                    keyboardType: TextInputType.datetime,
+                FlatButton(
+                  child: Text('Select Availability',
+                    textAlign: TextAlign.left,
                     style: TextStyle(
-                      fontSize: 14.0,
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w400,
+                      color: Colors.blue,
                     ),
-                    controller: onController,
-                    decoration: InputDecoration(
-                        labelText: "Date",
-                        hintText: "Selecte Date",
-                        labelStyle: TextStyle(
-                          fontSize: 13.0,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                        )),
                   ),
+                  onPressed: () {
+                    _openAddEntryDialog();
+                  },
                 ),
               ],
             ),
-            _endsOnTF(SingingCharacter.After),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: TextFormField(
+                enableInteractiveSelection: true,
+                controller: myCommentsController,
+                style: TextStyle(fontSize: 15.0, color: Colors.black87),
+                decoration: InputDecoration(
+                  hintText: '',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red, //this has no effect
+                    ),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+                enabled: true,
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
+              ),
+            ),
+            paddingColumn(),
             paddingColumn(),
             Padding(
               padding: EdgeInsets.all(15.0),
@@ -388,8 +373,7 @@ class _locationScreenState extends State<LocationView> {
                       color: Colors.transparent,
                       elevation: 0.0,
                       onPressed: (){
-                        _navigateToPinView();
-                       // widget.onSelectedCalendar({});
+                        print('pressed skip');
                       },
                     ),
                   ),
@@ -399,7 +383,6 @@ class _locationScreenState extends State<LocationView> {
             RaisedButton(
               padding: EdgeInsets.all(16),
               onPressed: () {
-                _navigateToTimebanks();
               },
               color: Theme.of(context).accentColor,
               child: Row(
@@ -415,11 +398,36 @@ class _locationScreenState extends State<LocationView> {
               shape: StadiumBorder(),
             ),
             paddingColumn(),
-            paddingColumn(),
           ],
         ),
       ),
     );
+  }
+
+  Future _openAddEntryDialog() async {
+    AvailabilityModel data = await Navigator.of(context).push(
+        new MaterialPageRoute<AvailabilityModel>(
+            builder: (BuildContext context) {
+              return new Availability();
+            },
+            fullscreenDialog: true));
+    setState(() {
+      totalData.weekArray = data.weekArray;
+      totalData.endsData = data.endsData;
+      totalData.endsStatus = data.endsStatus;
+      totalData.accurance_number = data.accurance_number;
+      totalData.repeatAfterStr = data.repeatAfterStr;
+      totalData.repeatNumber = data.repeatNumber;
+      String weekStr;
+//      for(var week in totalData.weekArray) {
+//        weekStr = weekStr + week;
+//      }
+      final string = totalData.weekArray.reduce((value, element) => value + ',' + element);
+      print(string);
+      myCommentsController.text = "User is available $string in week";
+      print(totalData.toMap());
+      //_items.add(data);
+    });
   }
   Widget _endsOnTF(SingingCharacter character) {
     if(character == SingingCharacter.Never || character == SingingCharacter.On) {
@@ -513,83 +521,83 @@ class _locationScreenState extends State<LocationView> {
       ],
     );
   }
-  Widget _repeatAfter(TextStyle textStyle) {
-    bool pressAttention = false;
-    return Padding(padding: EdgeInsets.only(left: 10.0),
-      child:Row(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                      color: Colors.grey, style: BorderStyle.solid, width: 1.5),
-                ),
-                child: DropdownButton<String>(
-                  items: _numbers.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
-                    );
-                  }).toList(),
-                  value: _selectedNumber,
-                  onChanged: (String newValueSelected) {
-                    setState(() {
-                      _selectedNumber = newValueSelected;
-                    });
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(10.0),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  border: Border.all(
-                      color: Colors.grey, style: BorderStyle.solid, width: 1.5),
-                ),
-                child: DropdownButton<String>(
-                  items: _schedule.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
-                    );
-                  }).toList(),
-                  value: _selectedScheduleItem,
-                  onChanged: (String newValueSelected) {
-                    setState(() {
-                      _selectedScheduleItem = newValueSelected;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-          RaisedButton(
-            focusColor: Colors.blue,
-            highlightColor: Colors.white,
-            child: Text('Never',style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-            ),
-              textAlign: TextAlign.start,
-            ),
-            textColor: Colors.blue,
-            color: Colors.transparent,
-            elevation: 0.0,
-            onPressed: (){
-              pressAttention = !pressAttention;
-              print('pressed skip');
-            },
-          )
-        ],
-      ),
-    );
-  }
+//  Widget _repeatAfter(TextStyle textStyle) {
+//    bool pressAttention = false;
+//    return Padding(padding: EdgeInsets.only(left: 10.0),
+//      child:Row(
+//        children: <Widget>[
+//          Row(
+//            children: <Widget>[
+//              Container(
+//                padding: EdgeInsets.symmetric(horizontal: 20.0),
+//                decoration: BoxDecoration(
+//                  borderRadius: BorderRadius.circular(15.0),
+//                  border: Border.all(
+//                      color: Colors.grey, style: BorderStyle.solid, width: 1.5),
+//                ),
+//                child: DropdownButton<String>(
+//                  items: _numbers.map((String value) {
+//                    return DropdownMenuItem<String>(
+//                      value: value,
+//                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+//                    );
+//                  }).toList(),
+//                  value: _selectedNumber,
+//                  onChanged: (String newValueSelected) {
+//                    setState(() {
+//                      _selectedNumber = newValueSelected;
+//                    });
+//                  },
+//                ),
+//              ),
+//              Padding(
+//                padding: EdgeInsets.all(10.0),
+//              ),
+//              Container(
+//                padding: EdgeInsets.symmetric(horizontal: 15.0),
+//                decoration: BoxDecoration(
+//                  borderRadius: BorderRadius.circular(15.0),
+//                  border: Border.all(
+//                      color: Colors.grey, style: BorderStyle.solid, width: 1.5),
+//                ),
+//                child: DropdownButton<String>(
+//                  items: _schedule.map((String value) {
+//                    return DropdownMenuItem<String>(
+//                      value: value,
+//                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+//                    );
+//                  }).toList(),
+//                  value: _selectedScheduleItem,
+//                  onChanged: (String newValueSelected) {
+//                    setState(() {
+//                      _selectedScheduleItem = newValueSelected;
+//                    });
+//                  },
+//                ),
+//              ),
+//            ],
+//          ),
+//          RaisedButton(
+//            focusColor: Colors.blue,
+//            highlightColor: Colors.white,
+//            child: Text('Never',style: TextStyle(
+//              fontSize: 15,
+//              fontWeight: FontWeight.w400,
+//            ),
+//              textAlign: TextAlign.start,
+//            ),
+//            textColor: Colors.blue,
+//            color: Colors.transparent,
+//            elevation: 0.0,
+//            onPressed: (){
+//              pressAttention = !pressAttention;
+//              print('pressed skip');
+//            },
+//          )
+//        ],
+//      ),
+//    );
+//  }
 
   Widget list() {
     return SingleChildScrollView(

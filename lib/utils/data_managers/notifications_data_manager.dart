@@ -40,6 +40,7 @@ Future<void> withdrawAcceptRequestNotification({
       .collection('notifications')
       .where('data', isEqualTo: dataMap)
       .getDocuments();
+  //error: The name 'dynamic' isn't a type so it can't be used as a type argument. (non_type_as_type_argument at [sevaexchange] lib/utils/search_manager.dart:21)
 
   data.documents.forEach((document) {
     Firestore.instance
