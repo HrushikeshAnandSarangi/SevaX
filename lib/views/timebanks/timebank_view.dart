@@ -109,16 +109,17 @@ class _TimebankViewState extends State<TimebankView> {
                   ),
                   foregroundColor: FlavorConfig.values.buttonTextColor,
                   label: Text(
-                    'Create Branch',
-
+                    FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                        ? 'Create Yang Gang'
+                        : 'Create Branch',
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => TimebankCreate(
-                            timebankId: timebankModel.id,
-                          )),
+                                timebankId: timebankModel.id,
+                              )),
                     );
                   },
                 ),
@@ -187,7 +188,9 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'View Branches',
+                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                                ? 'View Yang Gangs'
+                                : 'View Branches',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
@@ -273,10 +276,10 @@ class _TimebankViewState extends State<TimebankView> {
                                         padding: EdgeInsets.only(
                                             top: 10.0, left: 20.0),
                                         child: Text(
-                                          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Parent Yang Gang'
-          :
-                                          'Parent Timebank',
+                                          FlavorConfig.appFlavor ==
+                                                  Flavor.HUMANITY_FIRST
+                                              ? 'Parent Yang Gang'
+                                              : 'Parent Timebank',
                                           style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w700,
@@ -499,8 +502,7 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   Widget _showCreateCampaignButton(BuildContext context) {
-    if (timebankModel.creatorId ==
-        UserData.shared.user.sevaUserID) {
+    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -520,8 +522,7 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   Widget _showJoinRequests(BuildContext context) {
-    if (timebankModel.creatorId ==
-        UserData.shared.user.sevaUserID) {
+    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -543,8 +544,7 @@ class _TimebankViewState extends State<TimebankView> {
   Widget _whichRoute(String section) {
     switch (section) {
       case 'timebanks':
-        if (timebankModel.creatorId ==
-            UserData.shared.user.sevaUserID) {
+        if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return TimebankEdit(
             ownerModel: ownerModel,
             timebankModel: timebankModel,
@@ -588,8 +588,7 @@ class _TimebankViewState extends State<TimebankView> {
   Widget _whichButton(String section) {
     switch (section) {
       case 'timebanks':
-        if (timebankModel.creatorId ==
-            UserData.shared.user.sevaUserID) {
+        if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return Text(
             'Edit Timebank',
             style: TextStyle(
@@ -597,38 +596,47 @@ class _TimebankViewState extends State<TimebankView> {
                 color: Theme.of(context).accentColor),
           );
         } else {
-          return Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Request to join this Yang Gang'
-          :
-            'Request to join this Timebank!',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+          return Text(
+            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? 'Request to join this Yang Gang'
+                : 'Request to join this Timebank!',
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor),
           );
         }
         break;
       case 'campaigns':
-        if (timebankModel.creatorId ==
-            UserData.shared.user.sevaUserID) {
+        if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return Text(
             'Create a Campaign (Project)',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor),
           );
         } else {
           return Text(
             'Join a Campaign (Project)',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor),
           );
         }
         break;
       case 'viewcampaigns':
         return Text(
           'View Current Campaigns',
-          style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+          style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).accentColor),
         );
         break;
       case 'joinrequests':
         return Text(
           'View Timebank Join Requests',
-          style: TextStyle(fontWeight: FontWeight.w700, color:Theme.of(context).accentColor),
+          style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).accentColor),
         );
         break;
       default:
@@ -638,8 +646,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   Widget _showManageMembersButton(BuildContext context) {
     assert(timebankModel.id != null);
-    if (timebankModel.creatorId ==
-        UserData.shared.user.sevaUserID) {
+    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(

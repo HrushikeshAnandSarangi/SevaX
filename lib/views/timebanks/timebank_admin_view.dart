@@ -4,6 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -205,10 +206,10 @@ class _TimeBankAdminView extends StatelessWidget {
                       },
                     ),
                   ],
-                  child: getUserWidget(user),
+                  child: getUserWidget(user, context),
                 );
               }
-              return getUserWidget(user);
+              return getUserWidget(user, context);
             },
           );
         }).toList(),
@@ -253,10 +254,10 @@ class _TimeBankAdminView extends StatelessWidget {
                       },
                     ),
                   ],
-                  child: getUserWidget(user),
+                  child: getUserWidget(user, context),
                 );
               }
-              return getUserWidget(user);
+              return getUserWidget(user, context);
             },
           );
         }).toList(),
@@ -343,10 +344,10 @@ class _TimeBankAdminView extends StatelessWidget {
                       },
                     ),
                   ],
-                  child: getUserWidget(user),
+                  child: getUserWidget(user, context),
                 );
               }
-              return getUserWidget(user);
+              return getUserWidget(user, context);
             },
           );
         }).toList(),
@@ -354,7 +355,7 @@ class _TimeBankAdminView extends StatelessWidget {
     );
   }
 
-  Widget getUserWidget(UserModel user) {
+  Widget getUserWidget(UserModel user, BuildContext context) {
     return Card(
       child: ListTile(
         leading: CircleAvatar(
@@ -362,6 +363,16 @@ class _TimeBankAdminView extends StatelessWidget {
         ),
         title: Text(user.fullname),
         subtitle: Text(user.email),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfileViewer(
+                userEmail: user.email,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

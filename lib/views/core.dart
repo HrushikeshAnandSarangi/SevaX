@@ -443,12 +443,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   color: Colors.white,
                 ),
       page: HelpView(controller),
-      title: FlavorConfig.appFlavor == Flavor.APP ? 'Volunteer' : 'Campaign',
+      title: 'Volunteer' ,
       bottom: TabBar(
         labelColor: Colors.white,
         tabs: [
-          Tab(child: Text('${FlavorConfig.values.requestTitle}s')),
-          Tab(child: Text('${FlavorConfig.values.offertitle}s')),
+          Tab(child: Text('Campaign ${FlavorConfig.values.requestTitle}s')),
+          Tab(child: Text('Campaign ${FlavorConfig.values.offertitle}s')),
         ],
         controller: controller,
       ),

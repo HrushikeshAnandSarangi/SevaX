@@ -17,7 +17,7 @@ class TimeBankList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
         title: Text(
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
           ? 'Yang Gangs'
