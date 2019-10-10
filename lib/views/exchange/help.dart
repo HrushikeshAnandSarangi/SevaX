@@ -91,7 +91,9 @@ class RequestsState extends State<Requests> {
                 padding: EdgeInsets.only(left: 10),
               ),
               Text(
-                'Timebank : ',
+                FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                    ? 'Yang Gang'
+                    : 'Timebank : ',
                 style: (TextStyle(fontWeight: FontWeight.w500)),
               ),
               Padding(
@@ -374,7 +376,9 @@ class OffersState extends State<Offers> {
                 padding: EdgeInsets.only(left: 10),
               ),
               Text(
-                'Timebank : ',
+                FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                    ? 'Yang Gang'
+                    : 'Timebank : ',
                 style: (TextStyle(fontWeight: FontWeight.w500)),
               ),
               Padding(
@@ -897,7 +901,7 @@ class OfferListItems extends StatelessWidget {
               }
 
               //Here we apply grouping startegy
-                 var consolidatedList =
+              var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
               return formatListOffer(consolidatedList: consolidatedList);
@@ -956,12 +960,10 @@ class OfferListItems extends StatelessWidget {
     );
   }
 
-  Widget getOfferView(OfferModelList offerModelList){
-
-      switch(offerModelList.getType()){
-
-          case OfferModelList.TITLE:
-          return Container(
+  Widget getOfferView(OfferModelList offerModelList) {
+    switch (offerModelList.getType()) {
+      case OfferModelList.TITLE:
+        return Container(
           margin: EdgeInsets.all(12),
           child: Text(
             GroupOfferCommons.getGroupTitleForOffer(
@@ -969,14 +971,10 @@ class OfferListItems extends StatelessWidget {
           ),
         );
 
-          case OfferModelList.OFFER:
-          return getOfferViewHolder((offerModelList as OfferItem).offerModel);
-
-
-      }
-
+      case OfferModelList.OFFER:
+        return getOfferViewHolder((offerModelList as OfferItem).offerModel);
+    }
   }
-
 
   Widget getOfferViewHolder(OfferModel model) {
     return Card(

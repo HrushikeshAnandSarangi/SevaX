@@ -129,7 +129,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
+    FirestoreManager.getTimeBankForId(
+            timebankId: FlavorConfig.values.timebankId)
         .then((timebank) {
       if (timebank.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
@@ -298,7 +299,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
           }).toList();
         }(),
         currentIndex: _selectedIndex,
-        selectedItemColor: FlavorConfig.appFlavor == Flavor.TOM ? Colors.white : Theme.of(context).primaryColor,
+        selectedItemColor: FlavorConfig.appFlavor == Flavor.TOM
+            ? Colors.white
+            : Theme.of(context).primaryColor,
         onTap: (index) => setState(() {
           if (index == 3) {
             _settingModalBottomSheet(context);
@@ -713,7 +716,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     leading: new Icon(Icons.timeline,
                         color: Theme.of(context).primaryColor),
                     title: new Text(
-                      'Create Timebank',
+                      FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                          ? 'Create Yang Gang'
+                          : 'Create Timebank',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
