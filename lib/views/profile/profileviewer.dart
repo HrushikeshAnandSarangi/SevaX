@@ -76,50 +76,53 @@ class ProfileViewer extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Center(
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(
-                              MediaQuery.of(context).size.width / 2.6,
-                              0,
-                              MediaQuery.of(context).size.width / 2.6,
-                              0),
-                          child: OutlineButton(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).accentColor,
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.forum,
-                                  color: Theme.of(context).accentColor,
-                                ),
-                                Text(' Chat')
-                              ],
-                            ),
-                            onPressed: userEmail == loggedInEmail
-                                ? null
-                                : () {
-                                    print(userEmail);
+                      Container(
+                        // padding: EdgeInsets.fromLTRB(
+                        //     MediaQuery.of(context).size.width / 2.6,
+                        //     0,
+                        //     MediaQuery.of(context).size.width / 2.6,
+                        //     0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            OutlineButton(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).accentColor,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.forum,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  Text(' Chat')
+                                ],
+                              ),
+                              onPressed: userEmail == loggedInEmail
+                                  ? null
+                                  : () {
+                                      print(userEmail);
 
-                                    print(loggedInEmail);
-                                    List users = [userEmail, loggedInEmail];
-                                    users.sort();
-                                    ChatModel model = ChatModel();
-                                    model.user1 = users[0];
-                                    model.user2 = users[1];
-                                    print(model.user1);
-                                    print(model.user2);
-                                    createChat(chat: model);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ChatView(
-                                                useremail: userEmail,
-                                                chatModel: model,
-                                              )),
-                                    );
-                                  },
-                          ),
+                                      print(loggedInEmail);
+                                      List users = [userEmail, loggedInEmail];
+                                      users.sort();
+                                      ChatModel model = ChatModel();
+                                      model.user1 = users[0];
+                                      model.user2 = users[1];
+                                      print(model.user1);
+                                      print(model.user2);
+                                      createChat(chat: model);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatView(
+                                                  useremail: userEmail,
+                                                  chatModel: model,
+                                                )),
+                                      );
+                                    },
+                            ),
+                          ],
                         ),
                       ),
                       Container(

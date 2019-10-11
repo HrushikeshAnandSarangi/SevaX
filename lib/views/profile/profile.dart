@@ -637,12 +637,12 @@ class _ProfilePageState extends State<ProfilePage>
   Widget get administerTimebanks {
     return getActionCards(
       title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Humaity First'
+          ? 'Humanity First'
           : 'Root Timebank',
       subtitle: timebankModel == null
           ? "loading"
           : FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? ''
+              ? null
               : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
