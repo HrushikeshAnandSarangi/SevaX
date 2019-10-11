@@ -1,6 +1,8 @@
 import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/models.dart';
 
+import '../flavor_config.dart';
+
 class UserModel extends DataModel {
   String bio;
   String email;
@@ -19,6 +21,7 @@ class UserModel extends DataModel {
   String locationName;
   String lat_lng;
   AvailabilityModel availability;
+  String currentTimebank =  FlavorConfig.values.timebankId;
   //String
 
   UserModel(
