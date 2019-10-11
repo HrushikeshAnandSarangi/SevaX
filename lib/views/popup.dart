@@ -2,9 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/availability.dart';
 enum SingingCharacter { Never, On, After}
-enum Day {
-  Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
-}
 //class MyApp extends StatefulWidget {
 //
 //

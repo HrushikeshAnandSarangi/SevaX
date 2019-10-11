@@ -410,7 +410,7 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToBioView(loggedInUser);
     }
 
-     if (loggedInUser.calendar == null) {
+     if (loggedInUser.availability == null) {
        await _navigateToCalendarView(loggedInUser);
      }
 
@@ -468,15 +468,15 @@ class _SplashViewState extends State<SplashView> {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => LocationView(
-          onSelectedCalendar: (calendar) {
+          onSelectedCalendar: (availability) {
             Navigator.pop(context);
-            loggedInUser.calendar = calendar;
-            updateUserData(loggedInUser);
+            loggedInUser.availability = availability;
+            updateUserAvailableData(loggedInUser);
             loadingMessage = 'Updating Calendar';
           },
           onSkipped: () {
             Navigator.pop(context);
-            //loggedInUser.calendar = null;
+            loggedInUser.availability = null;
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping Calendar';
           },
@@ -550,6 +550,9 @@ class _SplashViewState extends State<SplashView> {
 
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
+  }
+  Future updateUserAvailableData(UserModel user) async {
+    await fireStoreManager.updateUserAvailability(user: user);
   }
 
   void _navigateToCoreView(UserModel loggedInUser) {

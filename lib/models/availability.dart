@@ -15,6 +15,39 @@ class AvailabilityModel  {
     // text = "";
     accurance_number = "0";
   }
+  AvailabilityModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('accurance_number')) {
+      this.accurance_number = map['accurance_number'];
+    }
+    if (map.containsKey('endsDate')) {
+      this.endsData = map['endsDate'];
+    }
+    if (map.containsKey('repeatAfterStr')) {
+      this.repeatAfterStr = map['repeatAfterStr'];
+    }
+    if (map.containsKey('endsStatus')) {
+      this.endsStatus = map['endsStatus'];
+    }
+    if (map.containsKey('repeatNumber')) {
+      this.repeatNumber = map['repeatNumber'];
+    }
+    if (map.containsKey('distnace')) {
+      this.endsData = map['distnace'];
+    }
+    if (map.containsKey('distnace')) {
+      this.repeatAfterStr = map['distnace'];
+    }
+    if (map.containsKey('location')) {
+      this.endsData = map['location'];
+    }
+    if (map.containsKey('lat_lng')) {
+      this.repeatAfterStr = map['lat_lng'];
+    }
+    if (map.containsKey('weekArray')) {
+      Set<String> interestsList = Set.castFrom(map['weekArray']);
+      this.weekArray = interestsList;
+    }
+  }
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
@@ -23,7 +56,7 @@ class AvailabilityModel  {
       object['accurance_number'] = this.accurance_number;
     }
     if (this.endsData != null && this.endsData.isNotEmpty) {
-      object['endsData'] = this.endsData;
+      object['endsDate'] = this.endsData;
     }
     if (this.distnace != null && this.distnace.isNotEmpty) {
       object['distnace'] = this.distnace;

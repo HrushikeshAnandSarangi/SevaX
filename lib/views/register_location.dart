@@ -160,7 +160,7 @@ class _locationScreenState extends State<LocationView> {
 
   var _numbers = ["1","2","3","4","5"];
   String _selectedNumber = "1";
-
+  String distanceValue;
   List<MaterialColor> colorList;
   Set<String> selectedInterests = <String>[].toSet();
   SingingCharacter _character = SingingCharacter.Never;
@@ -198,18 +198,70 @@ class _locationScreenState extends State<LocationView> {
     });
   }
 
+//  Widget showSnackBar(String message,BuildContext context) => AlertDialog(
+//      title: Text('Field Empty'),
+//      content: Text(message),
+//      actions: <Widget>[
+//        FlatButton(
+//          child: Text('Ok'),
+//          onPressed: () {
+//            Navigator.of(context).pop();
+//          },
+//        ),
+//      ],
+//    );
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     TextStyle textStyle = Theme.of(context).textTheme.title;
+    final ThemeData theme = Theme.of(context);
     String locationStr = "";
-
+    bool _canSave = false;
+    bool _locationValidate = false;
+   // bool _distnaceValidate = false;
+    bool _weekValidate = false;
+    //final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     return Scaffold(
+      //key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Location & Schedule',textAlign: TextAlign.left,textDirection: TextDirection.ltr,style: TextStyle(fontSize: 20.0,color: Colors.white)),
-        //Center(child: Text('Register',textAlign: TextAlign.left,textDirection: TextDirection.ltr,style: TextStyle(fontSize: 20.0,color: Colors.white)),),
+        actions: <Widget> [
+          new FlatButton(
+              child: new Text('SAVE', style: TextStyle(
+                color: Colors.white,
+              )),
+              onPressed:() {
+                bool checkFields = true;
+                String message;
+                 if(locationController.text == null || locationController.text.isEmpty) {
+//                   _scaffoldKey.currentState.showSnackBar(
+//                       SnackBar(
+//                         content: Text('Purchase Successful'),
+//                         duration: Duration(seconds: 3),
+//                       ));
+                 }
+//                 setState(() {
+//                   locationController.text.isEmpty ? _locationValidate = true : _locationValidate = false;
+//                 });
+                if(myCommentsController.text == null || myCommentsController.text.isEmpty) {
+                  checkFields = false;
+                  message = 'Please selecte your availability';
+                }
+                if(distanceValue == null || distanceValue.isEmpty) {
+                  checkFields = false;
+                  message = 'Please selecte your distance';
+                }
+                if(checkFields == false) {
+                  //this.showSnackBar(message, context);
+                } else {
+
+                }
+                widget.onSelectedCalendar(totalData);
+              },
+          )
+        ],
       ),
       body: Container(
         padding: EdgeInsets.all(10.0),
@@ -228,6 +280,7 @@ class _locationScreenState extends State<LocationView> {
                 decoration: InputDecoration(
                     labelText: "Location",
                     hintText: "Enter location",
+                    errorText: _locationValidate ? 'Please enter your location' : null,
                     labelStyle: TextStyle(
                         fontSize: 15.0,
                         fontStyle: FontStyle.normal
@@ -235,6 +288,8 @@ class _locationScreenState extends State<LocationView> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     )),
+                onChanged: (value) {
+                },
                 onTap: () async {
                   AvailabilityModel dataModel = AvailabilityModel.empty();
                   dataModel  = await Navigator.push(context,
@@ -293,6 +348,7 @@ class _locationScreenState extends State<LocationView> {
                     setState(() {
                       _value = value;
                       finalValue = _value.toStringAsFixed(0);
+                      distanceValue = _value.toStringAsFixed(0);
                       totalData.distnace = '$finalValue Miles';
                     });
                   }),
