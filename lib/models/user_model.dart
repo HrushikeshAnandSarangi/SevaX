@@ -1,6 +1,5 @@
+import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/models.dart';
-
-import '../flavor_config.dart';
 
 class UserModel extends DataModel {
   String bio;
@@ -17,9 +16,9 @@ class UserModel extends DataModel {
   String timezone;
   String otp;
   String requestStatus;
-  String currentTimebank =  FlavorConfig.values.timebankId;
   String locationName;
   String lat_lng;
+  AvailabilityModel availability;
   //String
 
   UserModel(
@@ -36,8 +35,8 @@ class UserModel extends DataModel {
       this.calendar,
         this.otp,
       this.requestStatus,
-      this.timezone,
-      });
+        this.availability,
+      this.timezone});
 
 
   UserModel.fromMap(Map<String, dynamic> map) {
@@ -59,9 +58,6 @@ class UserModel extends DataModel {
     }
     if (map.containsKey('calendar')) {
       this.calendar = map['calendar'];
-      print("----------------------- present");
-    } else {
-      print("----------------------- not present");
     }
     if (map.containsKey('otp')) {
       this.email = map['otp'];
@@ -93,6 +89,9 @@ class UserModel extends DataModel {
       this.timezone = map['timezone'];
     } else {
       this.timezone = 'PT';
+    }
+    if (map.containsKey('availability')) {
+      this.availability = AvailabilityModel.fromMap(map['availability']);
     }
   }
 
@@ -148,6 +147,11 @@ class UserModel extends DataModel {
     } else {
       object['timezone'] = 'PT';
     }
+    if (this.availability.weekArray.length != 0) {
+      object["availability"] = this.availability.toMap();
+      print(object["availability"]);
+    }
+
     return object;
   }
 }

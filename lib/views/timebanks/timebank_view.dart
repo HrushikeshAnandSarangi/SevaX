@@ -273,6 +273,9 @@ class _TimebankViewState extends State<TimebankView> {
                                         padding: EdgeInsets.only(
                                             top: 10.0, left: 20.0),
                                         child: Text(
+                                          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? 'Parent Yang Gang'
+          :
                                           'Parent Timebank',
                                           style: TextStyle(
                                             fontSize: 18.0,
@@ -594,7 +597,9 @@ class _TimebankViewState extends State<TimebankView> {
                 color: Theme.of(context).accentColor),
           );
         } else {
-          return Text(
+          return Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? 'Request to join this Yang Gang'
+          :
             'Request to join this Timebank!',
             style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
           );

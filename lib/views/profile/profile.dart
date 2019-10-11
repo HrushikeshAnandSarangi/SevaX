@@ -658,8 +658,14 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get administerTimebanks {
     return getActionCards(
-      title: 'Root Timebank',
-      subtitle: timebankModel == null ? "loading" : timebankModel.name,
+      title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? 'Humaity First'
+          : 'Root Timebank',
+      subtitle: timebankModel == null
+          ? "loading"
+          : FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+              ? ''
+              : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
@@ -682,7 +688,9 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get timebankslist {
     return getActionCards(
-      title: 'Timebanks List',
+      title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+          ? 'Yang Gangs'
+          : 'Timebanks List',
       //subtitle: timebankModel == null ? "loading" : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(

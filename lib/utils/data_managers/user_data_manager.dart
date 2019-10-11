@@ -17,10 +17,32 @@ Future<void> createUser({
 Future<void> updateUser({
   @required UserModel user,
 }) async {
+  //print(user.toMap());
+
+
+
   return await Firestore.instance
       .collection('users')
       .document(user.email)
       .updateData(user.toMap());
+}
+
+Future<void> updateUserAvailability({
+  @required UserModel user,
+}) async {
+  print("upadte user availability feature");
+
+//  return await Firestore.instance.collection("seva_stage").add({
+//    "Availability" : "abcd"
+//  });
+//  return await Firestore.instance
+//      .collection('users')
+//      .document(user.email)
+//      .updateData(user.availability.toMap());
+  return await Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .setData({"Availability":user.availability.toMap()});
 }
 
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
