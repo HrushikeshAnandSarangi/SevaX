@@ -13,12 +13,14 @@ import '../flavor_config.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'dart:math';
 
+import 'invitation/OnboardWithTimebankCode.dart';
+
 const kGoogleApiKey = "AIzaSyAsFTtNd5UvFnzDk9sTD0EyesFkWVKQoZY";
 // to get places detail (lat/lng)
 GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
-
 typedef StringListCallback = void Function(Object calendar);
+
 class LocationView extends StatefulWidget {
   final VoidCallback onSkipped;
   final StringListCallback onSelectedCalendar;
@@ -34,22 +36,22 @@ class LocationView extends StatefulWidget {
     return _locationScreenState();
   }
 }
+
 final searchScaffoldKey = GlobalKey<ScaffoldState>();
 
 class CustomSearchScaffold extends PlacesAutocompleteWidget {
-
-
   CustomSearchScaffold()
       : super(
-    apiKey: kGoogleApiKey,
-    sessionToken: Uuid().generateV4(),
-    language: "en",
-    components: [],
-  );
+          apiKey: kGoogleApiKey,
+          sessionToken: Uuid().generateV4(),
+          language: "en",
+          components: [],
+        );
 
   @override
   _CustomSearchScaffoldState createState() => _CustomSearchScaffoldState();
 }
+
 class Uuid {
   final Random _random = Random();
 
@@ -94,13 +96,14 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
     if (p != null) {
       // get detail (lat/lng)
       print(p.description);
-      PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
+      PlacesDetailsResponse detail =
+          await _places.getDetailsByPlaceId(p.placeId);
       final lat = detail.result.geometry.location.lat;
       final lng = detail.result.geometry.location.lng;
       AvailabilityModel data = AvailabilityModel.empty();
       data.lat_lng = "$lat,$lng";
       data.location = p.description;
-      Navigator.pop(context,data);
+      Navigator.pop(context, data);
       scaffold.showSnackBar(
         SnackBar(content: Text("${p.description} - $lat/$lng")),
       );
@@ -120,17 +123,16 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
     super.onResponse(response);
     print(response);
     if (response != null && response.predictions.isNotEmpty) {
-      searchScaffoldKey.currentState.showSnackBar(
-        SnackBar(content: Text("Got answer")),
-      );
+      // searchScaffoldKey.currentState.showSnackBar(
+      //   SnackBar(content: Text("Got answer")),
+      // );
     }
   }
 }
 
-enum SingingCharacter { Never, On, After}
+enum SingingCharacter { Never, On, After }
 
 class _locationScreenState extends State<LocationView> {
-
   final _minimumSpacing = 5.0;
   TextEditingController locationController = TextEditingController();
   TextEditingController onController = TextEditingController();
@@ -155,10 +157,10 @@ class _locationScreenState extends State<LocationView> {
     'Sa',
   ];
 
-  var _schedule = ["Day","Month","Year"];
+  var _schedule = ["Day", "Month", "Year"];
   String _selectedScheduleItem = "Day";
 
-  var _numbers = ["1","2","3","4","5"];
+  var _numbers = ["1", "2", "3", "4", "5"];
   String _selectedNumber = "1";
   String distanceValue;
   List<MaterialColor> colorList;
@@ -168,7 +170,6 @@ class _locationScreenState extends State<LocationView> {
 
   @override
   void initState() {
-
     colorList = Colors.primaries.map((color) {
       return color;
     }).toList();
@@ -177,15 +178,16 @@ class _locationScreenState extends State<LocationView> {
     _resumeProgressTimer();
     _secondProgressTimer =
         Timer.periodic(const Duration(milliseconds: 10), (_) {
-          setState(() {
-            _secondValue += 0.001;
-            if (_secondValue >= 1) {
-              _secondProgressTimer.cancel();
-            }
-          });
-        });
+      setState(() {
+        _secondValue += 0.001;
+        if (_secondValue >= 1) {
+          _secondProgressTimer.cancel();
+        }
+      });
+    });
     super.initState();
   }
+
   _resumeProgressTimer() {
     _progressTimer = Timer.periodic(const Duration(milliseconds: 10), (_) {
       setState(() {
@@ -219,47 +221,51 @@ class _locationScreenState extends State<LocationView> {
     String locationStr = "";
     bool _canSave = false;
     bool _locationValidate = false;
-   // bool _distnaceValidate = false;
+    // bool _distnaceValidate = false;
     bool _weekValidate = false;
     //final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     return Scaffold(
       //key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Location & Schedule',textAlign: TextAlign.left,textDirection: TextDirection.ltr,style: TextStyle(fontSize: 20.0,color: Colors.white)),
-        actions: <Widget> [
+        title: Text('Location & Schedule',
+            textAlign: TextAlign.left,
+            textDirection: TextDirection.ltr,
+            style: TextStyle(fontSize: 20.0, color: Colors.white)),
+        actions: <Widget>[
           new FlatButton(
-              child: new Text('SAVE', style: TextStyle(
-                color: Colors.white,
-              )),
-              onPressed:() {
-                bool checkFields = true;
-                String message;
-                 if(locationController.text == null || locationController.text.isEmpty) {
+            child: new Text('SAVE',
+                style: TextStyle(
+                  color: Colors.white,
+                )),
+            onPressed: () {
+              bool checkFields = true;
+              String message;
+              if (locationController.text == null ||
+                  locationController.text.isEmpty) {
 //                   _scaffoldKey.currentState.showSnackBar(
 //                       SnackBar(
 //                         content: Text('Purchase Successful'),
 //                         duration: Duration(seconds: 3),
 //                       ));
-                 }
+              }
 //                 setState(() {
 //                   locationController.text.isEmpty ? _locationValidate = true : _locationValidate = false;
 //                 });
-                if(myCommentsController.text == null || myCommentsController.text.isEmpty) {
-                  checkFields = false;
-                  message = 'Please selecte your availability';
-                }
-                if(distanceValue == null || distanceValue.isEmpty) {
-                  checkFields = false;
-                  message = 'Please selecte your distance';
-                }
-                if(checkFields == false) {
-                  //this.showSnackBar(message, context);
-                } else {
-
-                }
-                widget.onSelectedCalendar(totalData);
-              },
+              if (myCommentsController.text == null ||
+                  myCommentsController.text.isEmpty) {
+                checkFields = false;
+                message = 'Please selecte your availability';
+              }
+              if (distanceValue == null || distanceValue.isEmpty) {
+                checkFields = false;
+                message = 'Please selecte your distance';
+              }
+              if (checkFields == false) {
+                //this.showSnackBar(message, context);
+              } else {}
+              widget.onSelectedCalendar(totalData);
+            },
           )
         ],
       ),
@@ -269,32 +275,32 @@ class _locationScreenState extends State<LocationView> {
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
-                  top: _minimumSpacing * 3, bottom: _minimumSpacing,left: 10.0,right: 5.0),
+                  top: _minimumSpacing * 3,
+                  bottom: _minimumSpacing,
+                  left: 10.0,
+                  right: 5.0),
               child: TextField(
                 keyboardType: TextInputType.text,
-                style: TextStyle(
-                    fontSize: 15.0,
-                    fontStyle: FontStyle.normal
-                ),
+                style: TextStyle(fontSize: 15.0, fontStyle: FontStyle.normal),
                 controller: locationController,
                 decoration: InputDecoration(
                     labelText: "Location",
                     hintText: "Enter location",
-                    errorText: _locationValidate ? 'Please enter your location' : null,
-                    labelStyle: TextStyle(
-                        fontSize: 15.0,
-                        fontStyle: FontStyle.normal
-                    ),
+                    errorText:
+                        _locationValidate ? 'Please enter your location' : null,
+                    labelStyle:
+                        TextStyle(fontSize: 15.0, fontStyle: FontStyle.normal),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     )),
-                onChanged: (value) {
-                },
+                onChanged: (value) {},
                 onTap: () async {
                   AvailabilityModel dataModel = AvailabilityModel.empty();
-                  dataModel  = await Navigator.push(context,
+                  dataModel = await Navigator.push(
+                    context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => new CustomSearchScaffold(),
+                        builder: (BuildContext context) =>
+                            new CustomSearchScaffold(),
                         fullscreenDialog: true),
                   );
                   setState(() {
@@ -310,22 +316,24 @@ class _locationScreenState extends State<LocationView> {
               children: <Widget>[
                 Expanded(
                     child: Padding(
-                      padding: EdgeInsets.only(left:12.0),
-                      child:Text('Distance',style: TextStyle(
-                        fontSize: 15.0,
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      ),
-                    )
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5.0,right: 5.0),
-                  child: Text('$finalValue Miles',style: TextStyle(
-                    fontSize: 12.0,
-                    // fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w500,)
+                  padding: EdgeInsets.only(left: 12.0),
+                  child: Text(
+                    'Distance',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
+                )),
+                Padding(
+                  padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                  child: Text('$finalValue Miles',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                        // fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w500,
+                      )),
                 )
               ],
             ),
@@ -356,16 +364,19 @@ class _locationScreenState extends State<LocationView> {
             Row(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(left:13.0),
-                  child: Text('Days Available',style: TextStyle(
-                    fontSize: 17.0,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  padding: EdgeInsets.only(left: 13.0),
+                  child: Text(
+                    'Days Available',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
                 FlatButton(
-                  child: Text('Select Availability',
+                  child: Text(
+                    'Select Availability',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Colors.blue,
@@ -401,15 +412,12 @@ class _locationScreenState extends State<LocationView> {
             paddingColumn(),
             Padding(
               padding: EdgeInsets.all(15.0),
-              child:Row(
+              child: Row(
                 children: <Widget>[
                   Text(
                     'Have a timebank code?',
                     textDirection: TextDirection.ltr,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.grey
-                    ),
+                    style: TextStyle(fontSize: 16.0, color: Colors.grey),
                   ),
                   Container(
                     height: 40,
@@ -417,7 +425,8 @@ class _locationScreenState extends State<LocationView> {
                     child: RaisedButton(
                       focusColor: Colors.blue,
                       highlightColor: Colors.white,
-                      child: Text('Enter',
+                      child: Text(
+                        'Enter',
                         textDirection: TextDirection.ltr,
                         style: TextStyle(
                           fontSize: 15,
@@ -428,31 +437,36 @@ class _locationScreenState extends State<LocationView> {
                       textColor: Colors.blue,
                       color: Colors.transparent,
                       elevation: 0.0,
-                      onPressed: (){
-                        print('pressed skip');
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return OnBoardWithTimebank();
+                            },
+                          ),
+                        );
                       },
                     ),
                   ),
                 ],
               ),
             ),
-            RaisedButton(
-              padding: EdgeInsets.all(16),
-              onPressed: () {
-              },
-              color: Theme.of(context).accentColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(width: 16),
-                  Text(
-                    'Explore Time Banks',
-                    style: TextStyle(color: Colors.white,fontSize: 16.0),
-                  ),
-                ],
-              ),
-              shape: StadiumBorder(),
-            ),
+            // RaisedButton(
+            //   padding: EdgeInsets.all(16),
+            //   onPressed: () {},
+            //   color: Theme.of(context).accentColor,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: <Widget>[
+            //       SizedBox(width: 16),
+            //       Text(
+            //         'Explore Time Banks',
+            //         style: TextStyle(color: Colors.white, fontSize: 16.0),
+            //       ),
+            //     ],
+            //   ),
+            //   shape: StadiumBorder(),
+            // ),
             paddingColumn(),
           ],
         ),
@@ -461,8 +475,8 @@ class _locationScreenState extends State<LocationView> {
   }
 
   Future _openAddEntryDialog() async {
-    AvailabilityModel data = await Navigator.of(context).push(
-        new MaterialPageRoute<AvailabilityModel>(
+    AvailabilityModel data = await Navigator.of(context)
+        .push(new MaterialPageRoute<AvailabilityModel>(
             builder: (BuildContext context) {
               return new Availability();
             },
@@ -478,16 +492,19 @@ class _locationScreenState extends State<LocationView> {
 //      for(var week in totalData.weekArray) {
 //        weekStr = weekStr + week;
 //      }
-      final string = totalData.weekArray.reduce((value, element) => value + ',' + element);
+      final string =
+          totalData.weekArray.reduce((value, element) => value + ',' + element);
       print(string);
       myCommentsController.text = "User is available $string in week";
       print(totalData.toMap());
       //_items.add(data);
     });
   }
+
   Widget _endsOnTF(SingingCharacter character) {
-    if(character == SingingCharacter.Never || character == SingingCharacter.On) {
-      return _ends('After',SingingCharacter.After);
+    if (character == SingingCharacter.Never ||
+        character == SingingCharacter.On) {
+      return _ends('After', SingingCharacter.After);
     } else {
       return Row(
         children: <Widget>[
@@ -529,18 +546,23 @@ class _locationScreenState extends State<LocationView> {
     );
   }
 
-  Widget _ends(String radioBtnName,SingingCharacter value) {
+  Widget _ends(String radioBtnName, SingingCharacter value) {
     return Container(
       width: 50,
       child: RadioListTile<SingingCharacter>(
-        title: Text(radioBtnName,style: TextStyle(
-          fontSize: 15.0,
-        ),),
+        title: Text(
+          radioBtnName,
+          style: TextStyle(
+            fontSize: 15.0,
+          ),
+        ),
         value: value,
         groupValue: _character,
         onChanged: (SingingCharacter value) {
-          setState(() { _character = value; });
-          },
+          setState(() {
+            _character = value;
+          });
+        },
       ),
     );
   }
@@ -548,31 +570,38 @@ class _locationScreenState extends State<LocationView> {
   Widget _titleRow(String name) {
     return Row(
       children: <Widget>[
-        Expanded(child:Padding(
-          padding: EdgeInsets.only(left:12.0),
-          child: Text(name,style: TextStyle(
-            fontSize: 17.0,
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w500,
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: 12.0),
+            child: Text(
+              name,
+              style: TextStyle(
+                fontSize: 17.0,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
-          ),
-        ),
         ),
       ],
     );
   }
+
   Widget _daysAvailable() {
     return Row(
       children: <Widget>[
-        Expanded(child:Padding(
-          padding: EdgeInsets.only(left:12.0),
-          child: Text('Days Available',style: TextStyle(
-            fontSize: 15.0,
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: 12.0),
+            child: Text(
+              'Days Available',
+              style: TextStyle(
+                fontSize: 15.0,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
-          ),
-        ),
         ),
       ],
     );
@@ -657,13 +686,12 @@ class _locationScreenState extends State<LocationView> {
 
   Widget list() {
     return SingleChildScrollView(
-      child:Padding(
+      child: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
-          children:
-          interests.map((skill) {
+          children: interests.map((skill) {
             int index = interests.indexOf(skill);
             if (selectedInterests.contains(skill)) {
               return chip(skill, true, colorList[index]);
@@ -751,7 +779,7 @@ class _locationScreenState extends State<LocationView> {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => TimeBankList(
-          timebankid: FlavorConfig.values.timebankId ,
+          timebankid: FlavorConfig.values.timebankId,
           title: 'Timebanks List',
         ),
       ),
@@ -791,5 +819,4 @@ class _locationScreenState extends State<LocationView> {
       return Colors.white;
     }
   }
-
 }

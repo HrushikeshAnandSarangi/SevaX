@@ -123,7 +123,8 @@ class RequestsState extends State<Requests> {
                       value: timebankId,
                       onChanged: (String newValue) {
                         setState(() {
-                          SevaCore.of(context).loggedInUser.currentTimebank = newValue;
+                          SevaCore.of(context).loggedInUser.currentTimebank =
+                              newValue;
                           timebankId = newValue;
 
                           //print(timebankId);
@@ -412,7 +413,8 @@ class OffersState extends State<Offers> {
                       onChanged: (String newValue) {
                         setState(() {
                           timebankId = newValue;
-                          SevaCore.of(context).loggedInUser.currentTimebank = newValue;
+                          SevaCore.of(context).loggedInUser.currentTimebank =
+                              newValue;
                           //print(timebankId);
                         });
                       },

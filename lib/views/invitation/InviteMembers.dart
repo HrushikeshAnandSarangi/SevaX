@@ -41,40 +41,7 @@ class InviteMembersState extends State<InviteMembers> {
     );
   }
 
-  Future<TimebankCodeModel> getGroupInfo(String groupId) async {
-    // var document =
-    //     Firestore.instance.collection("timebankCodes").document("-LqjaEAW39PQwc6MqAyV").get();
-    // return await document.then((doc) {
-    //   return TimebankCodeModel.fromMap(doc);
-    // });
-  }
 
-  void getData() {
-    Firestore.instance
-        .collection("timebankCodes")
-        .where("timebankCode", isEqualTo: "vrrods")
-        .getDocuments()
-        .then((QuerySnapshot snapshot) {
-      print("Snapshot size ${snapshot.documents.length}");
-      snapshot.documents.forEach((f) => print('${f.data}}'));
-    });
-  }
-
-  /// Get [reviewList] for a [review]
-  Stream<void> _validateCode(BuildContext context) async* {
-    var data = await Firestore.instance
-        .collection("timebankCodes")
-        // .where("timebankCode", isEqualTo: "admih")
-        .snapshots();
-
-    yield* data.transform(
-        StreamTransformer<QuerySnapshot, TimebankCodeModel>.fromHandlers(
-            handleData: (snapshot, sink) {
-      print("Details are as : ${snapshot.documents}");
-    }));
-
-    print("Is here ${data}");
-  }
 
   Future<String> _asyncInputDialog(BuildContext context) async {
     String timebankCode = createCryptoRandomString();
