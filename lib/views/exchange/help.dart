@@ -115,39 +115,42 @@ class RequestsState extends State<Requests> {
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
                     });
-                    return DropdownButton<String>(
-                      value: timebankId,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          timebankId = newValue;
-                          //print(timebankId);
-                        });
-                      },
-                      items: dropdownList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        if (value == 'All') {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        } else
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: FutureBuilder<Object>(
-                                future: FirestoreManager.getTimeBankForId(
-                                    timebankId: value),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError)
-                                    return new Text('Error: ${snapshot.error}');
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Offstage();
-                                  }
-                                  TimebankModel timebankModel = snapshot.data;
-                                  return Text(timebankModel.name);
-                                }),
-                          );
-                      }).toList(),
+                    return Expanded(
+                      child: DropdownButton<String>(
+                        value: timebankId,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            timebankId = newValue;
+                            //print(timebankId);
+                          });
+                        },
+                        items: dropdownList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          if (value == 'All') {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          } else
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: FutureBuilder<Object>(
+                                  future: FirestoreManager.getTimeBankForId(
+                                      timebankId: value),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError)
+                                      return new Text(
+                                          'Error: ${snapshot.error}');
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Offstage();
+                                    }
+                                    TimebankModel timebankModel = snapshot.data;
+                                    return Text(timebankModel.name);
+                                  }),
+                            );
+                        }).toList(),
+                      ),
                     );
                   }),
               RaisedButton(
@@ -387,7 +390,7 @@ class OffersState extends State<Offers> {
     return Column(
       children: <Widget>[
         Offstage(
-          offstage: true,
+          offstage: false,
           child: Row(
             children: <Widget>[
               Padding(
@@ -423,39 +426,42 @@ class OffersState extends State<Offers> {
                       dropdownList.add(t.id);
                     });
                     //dropdownList.insert(0, 'All');
-                    return DropdownButton<String>(
-                      value: timebankId,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          timebankId = newValue;
-                          //print(timebankId);
-                        });
-                      },
-                      items: dropdownList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        if (value == 'All') {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        } else
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: FutureBuilder<Object>(
-                                future: FirestoreManager.getTimeBankForId(
-                                    timebankId: value),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError)
-                                    return new Text('Error: ${snapshot.error}');
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Offstage();
-                                  }
-                                  TimebankModel timebankModel = snapshot.data;
-                                  return Text(timebankModel.name);
-                                }),
-                          );
-                      }).toList(),
+                    return Expanded(
+                      child: DropdownButton<String>(
+                        value: timebankId,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            timebankId = newValue;
+                            //print(timebankId);
+                          });
+                        },
+                        items: dropdownList
+                            .map<DropdownMenuItem<String>>((String value) {
+                          if (value == 'All') {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          } else
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: FutureBuilder<Object>(
+                                  future: FirestoreManager.getTimeBankForId(
+                                      timebankId: value),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError)
+                                      return new Text(
+                                          'Error: ${snapshot.error}');
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Offstage();
+                                    }
+                                    TimebankModel timebankModel = snapshot.data;
+                                    return Text(timebankModel.name);
+                                  }),
+                            );
+                        }).toList(),
+                      ),
                     );
                   }),
               RaisedButton(

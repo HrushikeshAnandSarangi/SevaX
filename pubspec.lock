@@ -121,7 +121,7 @@ packages:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.5"
+    version: "5.1.6"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -193,7 +193,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-<<<<<<< HEAD
   flutter_typeahead:
     dependency: "direct main"
     description:
@@ -201,14 +200,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.1"
-  google_maps_webservice:
-    dependency: transitive
-    description:
-      name: google_maps_webservice
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.15"
-=======
   geoflutterfire:
     dependency: "direct main"
     description:
@@ -223,7 +214,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.21+6"
->>>>>>> geo-tag
+  google_maps_webservice:
+    dependency: transitive
+    description:
+      name: google_maps_webservice
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.15"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -287,7 +284,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.9"
-<<<<<<< HEAD
   keyboard_visibility:
     dependency: transitive
     description:
@@ -295,7 +291,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.6"
-=======
   location:
     dependency: "direct main"
     description:
@@ -303,7 +298,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.5"
->>>>>>> geo-tag
   logger:
     dependency: "direct main"
     description:
@@ -403,16 +397,12 @@ packages:
     source: hosted
     version: "2.0.5"
   rxdart:
-<<<<<<< HEAD
-    dependency: transitive
-=======
     dependency: "direct main"
->>>>>>> geo-tag
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.22.2"
+    version: "0.22.3"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -536,7 +526,7 @@ packages:
       name: yaml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.16"
+    version: "2.2.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
   flutter: ">=1.5.9-pre.94 <2.0.0"
