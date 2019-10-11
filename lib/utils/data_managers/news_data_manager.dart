@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'dart:async';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/news_model.dart';
+
+Location locations = new Location();
+Geoflutterfire geos = Geoflutterfire();
 
 Future<void> createNews({@required NewsModel newsObject}) async {
   await Firestore.instance
@@ -40,6 +45,41 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   }));
 }
 
+Stream<List<NewsModel>> getNearNewsStream({@required String timebankID}) async* {
+  LocationData pos = await locations.getLocation();
+    double lat = pos.latitude;
+    double lng = pos.longitude;
+    GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
+  var query = Firestore.instance
+      .collection('news')
+      .where('entity', isEqualTo: {
+        'entityType': 'timebanks',
+        'entityId': timebankID,
+        //'entityName': FlavorConfig.timebankName,
+      });
+      
+
+    var data = geos.collection(collectionRef: query).within(
+        center: center, 
+        radius: 20, 
+        field: 'location', 
+        strictMode: true
+      );
+
+  yield* data.transform(
+      StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
+          handleData: (querySnapshot, newsSink) {
+    List<NewsModel> modelList = [];
+    querySnapshot.forEach((document) {
+      modelList.add(NewsModel.fromMap(document.data));
+    });
+    modelList.sort((n1, n2){
+      return n2.postTimestamp.compareTo(n1.postTimestamp);
+    });
+    newsSink.add(modelList);
+  }));
+}
+
 Stream<List<NewsModel>> getAllNewsStream() async* {
   var data = Firestore.instance
       .collection('news')
@@ -52,6 +92,34 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
     List<NewsModel> modelList = [];
     querySnapshot.documents.forEach((document) {
       modelList.add(NewsModel.fromMap(document.data));
+    });
+    newsSink.add(modelList);
+  }));
+}
+
+Stream<List<NewsModel>> getAllNearNewsStream() async* {
+  LocationData pos = await locations.getLocation();
+    double lat = pos.latitude;
+    double lng = pos.longitude;
+    GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
+  var query = Firestore.instance
+      .collection('news');
+  var data = geos.collection(collectionRef: query).within(
+        center: center, 
+        radius: 20, 
+        field: 'location', 
+        strictMode: true
+      );      
+
+  yield* data.transform(
+      StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
+          handleData: (querySnapshot, newsSink) {
+    List<NewsModel> modelList = [];
+    querySnapshot.forEach((document) {
+      modelList.add(NewsModel.fromMap(document.data));
+    });
+    modelList.sort((n1, n2){
+      return n2.postTimestamp.compareTo(n1.postTimestamp);
     });
     newsSink.add(modelList);
   }));

@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+
 import 'models.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +16,7 @@ class OfferModel extends DataModel {
   List<String> requestList;
   int timestamp;
   String timebankId;
+  GeoFirePoint location;
 
   Color color;
 
@@ -29,6 +33,7 @@ class OfferModel extends DataModel {
     this.requestList,
     this.timestamp,
     this.timebankId,
+    this.location
   });
 
   OfferModel.fromMap(Map<String, dynamic> map) {
@@ -67,6 +72,16 @@ class OfferModel extends DataModel {
     }
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
+    }
+    if (map.containsKey('location')) {
+
+      GeoPoint geoPoint = map['location']['geopoint'];
+      this.location = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      print('locationHash: ${location.hash}');
+      print(map['location'].runtimeType);
+
+      // Map<String, dynamic> locationMap = Map.castFrom(map['location']);
+
     }
   }
 
@@ -108,6 +123,9 @@ class OfferModel extends DataModel {
     }
     if (this.timebankId != null) {
       map['timebankId'] = this.timebankId;
+    }
+    if (this.location != null) {
+      map['location'] = this.location.data;
     }
 
     return map;

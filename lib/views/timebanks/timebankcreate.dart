@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -52,6 +54,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
   TimebankModel timebankModel = TimebankModel();
   bool protectedVal = false;
+  GeoFirePoint location;
 
   void initState() {
     super.initState();
@@ -84,6 +87,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.protected = protectedVal;
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
+    timebankModel.location = location;
 
     createTimebank(timebankModel: timebankModel);
 
@@ -128,17 +132,22 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                 onPressed: () {
                                   // Validate will return true if the form is valid, or false if
                                   // the form is invalid.
-
-                                  if (_formKey.currentState.validate()) {
-                                    // If the form is valid, we want to show a Snackbar
-                                    _writeToDB();
-                                    if (parentTimebank.children == null)
-                                      parentTimebank.children = [];
-                                    parentTimebank.children
-                                        .add(timebankModel.id);
-                                    updateTimebank(
-                                        timebankModel: parentTimebank);
-                                    Navigator.pop(context);
+                                  if (location != null) {
+                                    if (_formKey.currentState.validate()) {
+                                      // If the form is valid, we want to show a Snackbar
+                                      _writeToDB();
+                                      if (parentTimebank.children == null)
+                                        parentTimebank.children = [];
+                                      parentTimebank.children
+                                          .add(timebankModel.id);
+                                      updateTimebank(
+                                          timebankModel: parentTimebank);
+                                      Navigator.pop(context);
+                                    }
+                                  } else {
+                                    Scaffold.of(context).showSnackBar(SnackBar(
+                                      content: Text('Location not added'),
+                                    ));
                                   }
                                 },
                                 child: Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -325,12 +334,45 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       style: TextStyle(fontSize: 16.0, color: Colors.blue),
                     ),
                   )),
-              Divider(),
+              
               Padding(
                 padding: EdgeInsets.only(top: 10.0),
                 child: _showMembers(),
               ),
-              Text(''),
+              
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<GeoFirePoint>(
+                          builder: (context) => LocationPicker()),
+                    ).then((point) {
+                      if (point != null) location = point;
+                      print(location);
+                    });
+                  },
+                  child: SizedBox(
+                    width: 140,
+                    height: 30,
+                    child: Container(
+                      color: Colors.grey[200],
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Icon(Icons.add_location),
+                          ),
+                          Text('  '),
+                          Text('Add Location'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Divider(),
               // Padding(
               //   padding: EdgeInsets.only(top: 8.0),
               //   child:

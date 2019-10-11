@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/duration_picker/calendar_widget.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
@@ -31,6 +33,7 @@ class _CreateRequestState extends State<CreateRequest> {
   //print('at createrequeststate = $isOfferRequest');
 
   // _CreateRequestState({this.isOfferRequest, this.sevaUserIdOffer});
+  
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +77,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final _formKey = GlobalKey<FormState>();
 
   RequestModel requestModel = RequestModel();
+  GeoFirePoint location;
 
   String _dateMessageStart = ' START date and time ';
   String _dateMessageEnd = '  END date and time ';
@@ -286,6 +290,40 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   requestModel.numberOfApprovals = int.parse(value);
                 },
               ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<GeoFirePoint>(
+                            builder: (context) => LocationPicker()),
+                      ).then((point) {
+                        if (point != null) location = point;
+                        print(location);
+                      });
+                    },
+                    child: SizedBox(
+                      width: 140,
+                      height: 30,
+                      child: Container(
+                        color: Colors.grey[200],
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Icon(Icons.add_location),
+                            ),
+                            Text('  '),
+                            Text('Add Location'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Center(
@@ -293,6 +331,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () async {
+                      if (location != null) {
                       requestModel.requestStart =
                           OfferDurationWidgetState.starttimestamp;
                       requestModel.requestEnd =
@@ -325,6 +364,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           Navigator.pop(context);
                         }
                         Navigator.pop(context);
+                      } }
+                      else {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text('Location not added'),
+                      ));
                       }
                     },
                     child: Row(
@@ -361,6 +405,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.postTimestamp = timestamp;
     requestModel.accepted = false;
     requestModel.acceptors = [];
+    requestModel.location=location;
 
     if (requestModel.requestStart == null) {
       requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;

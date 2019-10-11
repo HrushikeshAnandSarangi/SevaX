@@ -866,8 +866,6 @@ class NotificationsView extends StatelessWidget {
                 usersSet.add(user.email);
                 model.approvedUsers = usersSet.toList();
 
-                //int count = model.numberOfApprovals;
-
                 if (model.numberOfApprovals <= model.approvedUsers.length)
                   model.accepted = true;
 

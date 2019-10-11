@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
 
 class NewsModel extends DataModel {
@@ -11,6 +13,7 @@ class NewsModel extends DataModel {
   String newsImageUrl;
   String photoCredits;
   int postTimestamp;
+  GeoFirePoint location;
   EntityModel entity;
   List<String> likes;
 
@@ -25,6 +28,7 @@ class NewsModel extends DataModel {
       this.newsImageUrl,
       this.photoCredits,
       this.postTimestamp,
+      this.location,
       this.entity,
       this.likes});
 
@@ -59,6 +63,9 @@ class NewsModel extends DataModel {
     }
     if (this.postTimestamp != null) {
       map['posttimestamp'] = this.postTimestamp;
+    }
+    if (this.location != null) {
+      map['location'] = this.location.data;
     }
     if (this.entity != null) {
       map['entity'] = this.entity.toMap();
@@ -100,6 +107,16 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('posttimestamp')) {
       this.postTimestamp = map['posttimestamp'];
+    }
+    if (map.containsKey('location')) {
+
+      GeoPoint geoPoint = map['location']['geopoint'];
+      this.location = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      print('locationHash: ${location.hash}');
+      print(map['location'].runtimeType);
+
+      // Map<String, dynamic> locationMap = Map.castFrom(map['location']);
+
     }
     if (map.containsKey('entity')) {
       Map<String, dynamic> dataMap = Map.castFrom(map['entity']);
