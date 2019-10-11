@@ -74,7 +74,9 @@ class NewsListState extends State<NewsList> {
                     onChanged: (String newValue) {
                       setState(() {
                         timebankId = newValue;
+                         SevaCore.of(context).loggedInUser.currentTimebank = newValue;
                         //print(timebankId);
+                        didChangeDependencies();
                       });
                     },
                     items: dropdownList

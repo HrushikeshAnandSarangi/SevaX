@@ -4,6 +4,8 @@ import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 
 class ReviewFeedback extends StatefulWidget {
   final bool forVolunteer;
+  bool _validate = false;
+
   ReviewFeedback.forVolunteer({this.forVolunteer});
   @override
   State<StatefulWidget> createState() =>
@@ -15,6 +17,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   ReviewFeedbackState({this.forVolunteer});
 
   var toolbarTitle = "Review";
+  bool _validate = false;
 
   var questionIndex = 0;
   var totalScore = 0;
@@ -121,7 +124,9 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   controller: myCommentsController,
                   style: TextStyle(fontSize: 18.0, color: Colors.black87),
                   decoration: InputDecoration(
-                    hintText: 'Any final thoughts about your experience.',
+                    errorText: _validate ? 'Field can\'t be left blank' : null,
+                    hintText:
+                        'Take a minute to reflect on the experience and share a quick review.',
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.red, //this has no effect
@@ -138,7 +143,15 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   child: RaisedButton(
                     child: Text("Submit"),
                     onPressed: () {
-                      finishState(context);
+                      setState(() {
+                        myCommentsController.text.isEmpty
+                            ? _validate = true
+                            : _validate = false;
+                      });
+
+                      if (!_validate) {
+                        finishState(context);
+                      }
                     },
                   ),
                 )
@@ -147,6 +160,4 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           ),
         ));
   }
-
-
 }

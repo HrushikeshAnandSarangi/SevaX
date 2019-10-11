@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.APP;
@@ -50,7 +52,7 @@ class MainApplication extends StatelessWidget {
       auth: Auth(),
       child: MaterialApp(
         theme: FlavorConfig.values.theme,
-        // home: ReviewLandingPage(),
+        // home: OnBoardWithTimebank(),
         home: SplashView(),
       ),
     );

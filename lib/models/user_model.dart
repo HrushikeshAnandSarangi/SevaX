@@ -1,5 +1,7 @@
 import 'package:sevaexchange/models/models.dart';
 
+import '../flavor_config.dart';
+
 class UserModel extends DataModel {
   String bio;
   String email;
@@ -15,7 +17,7 @@ class UserModel extends DataModel {
   String timezone;
   String otp;
   String requestStatus;
-
+  String currentTimebank =  FlavorConfig.values.timebankId;
   String locationName;
   String lat_lng;
   //String
@@ -34,7 +36,8 @@ class UserModel extends DataModel {
       this.calendar,
         this.otp,
       this.requestStatus,
-      this.timezone});
+      this.timezone,
+      });
 
 
   UserModel.fromMap(Map<String, dynamic> map) {

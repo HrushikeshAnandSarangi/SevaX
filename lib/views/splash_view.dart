@@ -9,7 +9,6 @@ import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 
 
@@ -485,26 +484,26 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  Future _navigateToPinView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => PinView(
-          onSelectedOtp: (otp) {
-//            Navigator.pop(context);
-//            loggedInUser.otp = otp;
-//            updateUserData(loggedInUser);
-//            loadingMessage = 'Checking Otp';
-          },
-          onSkipped: () {
-//            Navigator.pop(context);
-//            loggedInUser.otp = null;
-//            updateUserData(loggedInUser);
-//            loadingMessage = 'Skipping Otp';
-          },
-        ),
-      ),
-    );
-  }
+//   Future _navigateToPinView(UserModel loggedInUser) async {
+//     await Navigator.of(context).push(
+//       MaterialPageRoute(
+//         builder: (context) => PinView(
+//           onSelectedOtp: (otp) {
+// //            Navigator.pop(context);
+// //            loggedInUser.otp = otp;
+// //            updateUserData(loggedInUser);
+// //            loadingMessage = 'Checking Otp';
+//           },
+//           onSkipped: () {
+// //            Navigator.pop(context);
+// //            loggedInUser.otp = null;
+// //            updateUserData(loggedInUser);
+// //            loadingMessage = 'Skipping Otp';
+//           },
+//         ),
+//       ),
+//     );
+//   }
 
   Future _navigateToInterestsView(UserModel loggedInUser) async {
     await Navigator.of(context).push(

@@ -6,61 +6,67 @@ class FeedbackConstants {
 
   static const FEEDBACK_QUESTIONS_FOR_ADMIN = const [
     {
-      FEEDBACK_TITLE: "How would you rate your experience in this cause?",
+      FEEDBACK_TITLE: "How would you rate your experience?",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
-        {ANSWER_TEXT: "Very Good", SCORE: 4},
-        {ANSWER_TEXT: "Good", SCORE: 3},
-        {ANSWER_TEXT: "Fair", SCORE: 2},
-        {ANSWER_TEXT: "Satsfactory.", SCORE: 1},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "okay", SCORE: 3},
+        {ANSWER_TEXT: "Not so good", SCORE: 2},
+        {ANSWER_TEXT: "Terrible", SCORE: 1},
       ]
     },
     {
-      FEEDBACK_TITLE: "Did you experience any diffculty in doing the task?",
+      FEEDBACK_TITLE:
+          "Did you experience any diffculty in completing the task?",
       ANSWERS: [
-        {ANSWER_TEXT: "No i really liked it", SCORE: 5},
-        {ANSWER_TEXT: "Awesome! Loved it.", SCORE: 4},
-        {ANSWER_TEXT: "Volunteer manager was rude", SCORE: 3},
-        {ANSWER_TEXT: "Lack of organisation", SCORE: 2}
+        {ANSWER_TEXT: "No difficulty at all", SCORE: 5},
+        {ANSWER_TEXT: "Only slightly", SCORE: 4},
+        {ANSWER_TEXT: "i had some difficulty", SCORE: 3},
       ]
     },
     {
-      FEEDBACK_TITLE: "Would you like to contribute more to this cause?",
+      FEEDBACK_TITLE: "How likely are you to volunteer again for this cause?",
       ANSWERS: [
-        {"text": "Yes i would.", SCORE: 5},
-        {"text": "May be, Not sure", SCORE: 4},
-        {"text": "No i can't", SCORE: 3},
+        {"text": "Yes i would", SCORE: 5},
+        {"text": "May be i would", SCORE: 4},
+        {"text": "No i would not", SCORE: 3},
       ]
     }
   ];
 
   static const FEEDBACK_QUESTIONS_FOR_VOLUNTEER = const [
     {
-      FEEDBACK_TITLE: "How would you rate your experience?",
+      FEEDBACK_TITLE: "How would you rate your experience with this volunteer?",
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
-        {ANSWER_TEXT: "Very Good", SCORE: 4},
-        {ANSWER_TEXT: "Good", SCORE: 3},
-        {ANSWER_TEXT: "Fair", SCORE: 2},
-        {ANSWER_TEXT: "Satsfactory.", SCORE: 1},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "okay", SCORE: 3},
+        {ANSWER_TEXT: "Not so good", SCORE: 2},
+        {ANSWER_TEXT: "Terrible", SCORE: 1},
       ]
     },
     {
-      FEEDBACK_TITLE: "Was the volunteer on time?",
+      FEEDBACK_TITLE: "Did the volunteer show up on time?",
       ANSWERS: [
-        {ANSWER_TEXT: "Yes he was", SCORE: 5},
-        {ANSWER_TEXT: "He was a bit late", SCORE: 4},
-        {ANSWER_TEXT: "He was too late", SCORE: 3},
-        {ANSWER_TEXT: "He didn't show up", SCORE: 2}
+        {ANSWER_TEXT: "On time", SCORE: 5},
+        {ANSWER_TEXT: "A bit late", SCORE: 4},
+        {ANSWER_TEXT: "Kept me waiting", SCORE: 3},
+        {ANSWER_TEXT: "Didn't show up", SCORE: 2}
       ]
     },
     {
-      FEEDBACK_TITLE:
-          "Would you like to consider this profile for future?",
+      FEEDBACK_TITLE: "Would you like recommend working with this volunteer again?",
       "answers": [
         {ANSWER_TEXT: "Yes i would", SCORE: 5},
-        {ANSWER_TEXT: "May be, Not sure", SCORE: 4},
-        {ANSWER_TEXT: "No i wont.", SCORE: 3},
+        {ANSWER_TEXT: "No i would not", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "How skillfull was this volunteer fir this particular service?",
+      "answers": [
+        {ANSWER_TEXT: "Highly skilled", SCORE: 5},
+        {ANSWER_TEXT: "Avergae", SCORE: 3},
+        {ANSWER_TEXT: "Not skilled at all", SCORE: 1},
       ]
     }
   ];

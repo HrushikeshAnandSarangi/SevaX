@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -50,7 +51,8 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
+    FirestoreManager.getTimeBankForId(
+            timebankId: FlavorConfig.values.timebankId)
         .then((model) {
       setState(() {
         timebankModel = model;
@@ -255,7 +257,9 @@ class _ProfilePageState extends State<ProfilePage>
     return Chip(
       label: Text(
         value,
-        style: TextStyle(color:FlavorConfig.values.buttonTextColor,),
+        style: TextStyle(
+          color: FlavorConfig.values.buttonTextColor,
+        ),
       ),
       backgroundColor: Theme.of(context).accentColor,
     );
@@ -428,7 +432,8 @@ class _ProfilePageState extends State<ProfilePage>
             child: Row(
               children: <Widget>[
                 Spacer(),
-                Icon(Icons.exit_to_app, color: FlavorConfig.values.buttonTextColor),
+                Icon(Icons.exit_to_app,
+                    color: FlavorConfig.values.buttonTextColor),
                 SizedBox(
                   width: 8,
                 ),
@@ -573,6 +578,7 @@ class _ProfilePageState extends State<ProfilePage>
         children: <Widget>[
           administerTimebanks,
           timebankslist,
+          joinViaCode,
           tasksWidget,
         ],
       ),
@@ -592,6 +598,26 @@ class _ProfilePageState extends State<ProfilePage>
           MaterialPageRoute(
             builder: (context) {
               return CompletedListPage();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget get joinViaCode {
+    return getActionCards(
+      title: 'Join via Timebank code',
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        bottomRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return OnBoardWithTimebank();
             },
           ),
         );
@@ -717,6 +743,9 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
+
+
+
 
   BoxDecoration getContainerDecoration({
     double radius = 12.0,

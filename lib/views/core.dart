@@ -22,6 +22,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import '../globals.dart' as globals;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'invitation/InviteMembers.dart';
 import 'notifications/notifications_page.dart';
 
 class SevaCore extends InheritedWidget {
@@ -128,16 +129,22 @@ class _SevaCoreViewState extends State<SevaCoreView>
   bool isNotification = false;
   @override
   void didChangeDependencies() {
+    print("didChangeDependencies called");
     // TODO: implement didChangeDependencies
-    FirestoreManager.getTimeBankForId(timebankId: FlavorConfig.values.timebankId)
+    FirestoreManager.getTimeBankForId(
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
         .then((timebank) {
       if (timebank.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         setState(() {
+          print("Admin access granted");
           isAdminOrCoordinator = true;
         });
+      } else {
+        // print("Admin access Revoked");
+        // isAdminOrCoordinator = false;
       }
       FirestoreManager.isUnreadNotification(
               SevaCore.of(context).loggedInUser.email)
@@ -298,7 +305,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
           }).toList();
         }(),
         currentIndex: _selectedIndex,
-        selectedItemColor: FlavorConfig.appFlavor == Flavor.TOM ? Colors.white : Theme.of(context).primaryColor,
+        selectedItemColor: FlavorConfig.appFlavor == Flavor.TOM
+            ? Colors.white
+            : Theme.of(context).primaryColor,
         onTap: (index) => setState(() {
           if (index == 3) {
             _settingModalBottomSheet(context);
@@ -752,6 +761,65 @@ class _SevaCoreViewState extends State<SevaCoreView>
                             },
                           )
                         }
+                    },
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey,
+                  ),
+                  new ListTile(
+                    leading: new Icon(Icons.link,
+                        color: Theme.of(context).primaryColor),
+                    title: new Text(
+                      'Invite members via code',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    onTap: () => {
+                      FirestoreManager.getTimeBankForId(
+                              timebankId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentTimebank)
+                          .then((timebank) {
+                        if (timebank.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                            timebank.coordinators.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InviteMembers(
+                                timebankId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentTimebank,
+                              ),
+                            ),
+                          );
+                          print("AUTHORISED to create");
+                        } else {
+                          print("NOT AUTHORISED to create");
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              // return object of type Dialog
+                              return AlertDialog(
+                                title: new Text("Permission Denied"),
+                                content: new Text(
+                                    "You need to be an Admin or Coordinator to have permission to invite users"),
+                                actions: <Widget>[
+                                  // usually buttons at the bottom of the dialog
+                                  new FlatButton(
+                                    child: new Text("Close"),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      }),
                     },
                   ),
                 ],

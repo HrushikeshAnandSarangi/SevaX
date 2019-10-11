@@ -62,6 +62,8 @@ class CommonAppBarViewModel extends BaseViewModel {
     );
   }
 
+
+
   void goToProfilePage(BuildContext context) {
     log.i('goToProfilePage:');
     Navigator.of(context).push(

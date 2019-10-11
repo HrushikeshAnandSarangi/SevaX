@@ -14,20 +14,20 @@ import 'timebank_join_request.dart';
 
 typedef StringListCallback = void Function(String otp);
 class PinView extends StatefulWidget {
-  final Widget child;
-  TimebankModel timebankModel;
-  UserModel owner;
-  final VoidCallback onSkipped;
-  final StringListCallback onSelectedOtp;
+  // final Widget child;
+  // TimebankModel timebankModel;
+  // UserModel owner;
+  // final VoidCallback onSkipped;
+  // final StringListCallback onSelectedOtp;
 
-  PinView({
-    Key key,
-    this.child,
-    @required this.timebankModel,
-    @required this.owner,
-    @required this.onSelectedOtp,
-    @required this.onSkipped,
-  }) : super(key: key);
+  // PinView({
+  //   Key key,
+  //   this.child,
+  //   @required this.timebankModel,
+  //   @required this.owner,
+  //   @required this.onSelectedOtp,
+  //   @required this.onSkipped,
+  // }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {

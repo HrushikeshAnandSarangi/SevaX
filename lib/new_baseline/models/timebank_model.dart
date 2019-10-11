@@ -56,6 +56,7 @@ class TimebankModel {
             : new List<String>.from(json["coordinators"].map((x) => x)),
         members: json["members"] == null
             ? null
+            
             : new List<String>.from(json["members"].map((x) => x)),
         protected: json["protected"] == null ? null : json["protected"],
         parentTimebankId: json["parent_timebank_id"] == null
