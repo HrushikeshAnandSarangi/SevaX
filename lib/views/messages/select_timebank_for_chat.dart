@@ -8,17 +8,17 @@ import '../core.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'chatview.dart';
 
-class NewChat extends StatefulWidget {
+class SelectTimeBankForNewChat extends StatefulWidget {
   bool isShare;
   NewsModel news;
 
-  NewChat(this.isShare, this.news);
+  SelectTimeBankForNewChat(this.isShare, this.news);
 
   @override
   NewChatState createState() => NewChatState();
 }
 
-class NewChatState extends State<NewChat> with TickerProviderStateMixin {
+class NewChatState extends State<SelectTimeBankForNewChat> with TickerProviderStateMixin {
   //TabController controller;
   final TextEditingController searchTextController = TextEditingController();
 

@@ -18,6 +18,7 @@ Future<void> updateUser({
   @required UserModel user,
 }) async {
   //print(user.toMap());
+
   return await Firestore.instance
       .collection('users')
       .document(user.email)
@@ -32,27 +33,14 @@ Future<void> updateUserAvailability({
 //  return await Firestore.instance.collection("seva_stage").add({
 //    "Availability" : "abcd"
 //  });
-  return await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .updateData({
-    "Availability":{
-      "accurance_number":user.availability.accurance_number,
-      "endsData":user.availability.endsData,
-      "endsStatus":user.availability.endsStatus,
-      "repeatNumber":user.availability.repeatNumber,
-      "repeatAfterStr":user.availability.repeatAfterStr,
-      "distance":user.availability.distnace,
-      "location":user.availability.location,
-      "lat_lng":user.availability.lat_lng,
-      "weekArray":user.availability.weekArray
-
-    }
-  });
 //  return await Firestore.instance
 //      .collection('users')
 //      .document(user.email)
-//      .setData({"Availability":user.availability.toMap()});
+//      .updateData(user.availability.toMap());
+  // return await Firestore.instance
+  //     .collection('users')
+  //     .document(user.email)
+  //     .setData({"Availability":user.availability.toMap()});
 }
 
 Future<UserModel> getUserForId({@required String sevaUserId}) async {

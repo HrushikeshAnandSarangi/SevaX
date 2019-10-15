@@ -464,26 +464,26 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  Future _navigateToCalendarView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => LocationView(
-          onSelectedCalendar: (availability) {
-            Navigator.pop(context);
-            loggedInUser.availability = availability;
-            updateUserAvailableData(loggedInUser);
-            loadingMessage = 'Updating Calendar';
-          },
-          onSkipped: () {
-            Navigator.pop(context);
-            loggedInUser.availability = null;
-            updateUserData(loggedInUser);
-            loadingMessage = 'Skipping Calendar';
-          },
-        ),
-      ),
-    );
-  }
+//  Future _navigateToCalendarView(UserModel loggedInUser) async {
+//    await Navigator.of(context).push(
+//      MaterialPageRoute(
+//        builder: (context) => LocationView(
+//          onSelectedCalendar: (availability) {
+//            Navigator.pop(context);
+//            loggedInUser.availability = availability;
+//            updateUserAvailableData(loggedInUser);
+//            loadingMessage = 'Updating Calendar';
+//          },
+//          onSkipped: () {
+//            Navigator.pop(context);
+//            loggedInUser.availability = null;
+//            updateUserData(loggedInUser);
+//            loadingMessage = 'Skipping Calendar';
+//          },
+//        ),
+//      ),
+//    );
+//  }
 //   Future _navigateToPinView(UserModel loggedInUser) async {
 //     await Navigator.of(context).push(
 //       MaterialPageRoute(
