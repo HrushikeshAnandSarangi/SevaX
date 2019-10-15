@@ -408,14 +408,15 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+//    String location = loggedInUser.availability.location;
+//    print(location);
+//     if (location == null) {
+//       await _navigateToCalendarView(loggedInUser);
+//     }
 
-     if (loggedInUser.availability == null) {
-       await _navigateToCalendarView(loggedInUser);
-     }
-
-     if (loggedInUser.requestStatus == "pending") {
-       await _navigateToWaitingView(loggedInUser);
-     }
+//     if (loggedInUser.requestStatus == "pending") {
+//       await _navigateToWaitingView(loggedInUser);
+//     }
 
     loadingMessage = 'Finalizing';
     _navigateToCoreView(loggedInUser);
@@ -483,7 +484,6 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
-
 //   Future _navigateToPinView(UserModel loggedInUser) async {
 //     await Navigator.of(context).push(
 //       MaterialPageRoute(
