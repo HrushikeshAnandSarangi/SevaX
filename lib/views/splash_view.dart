@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -11,6 +10,7 @@ import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
+
 
 //class UserData {
 //  static UserModel user;
@@ -43,7 +43,7 @@ class UserData {
   String userId;
   String locationStr;
 
-  // UserModel user = await _getSignedInUserDocs(userId);
+ // UserModel user = await _getSignedInUserDocs(userId);
 
   Future updateUserData() async {
     await fireStoreManager.updateUser(user: user);
@@ -62,6 +62,7 @@ class UserData {
   }
 }
 
+
 class SplashView extends StatefulWidget {
   @override
   _SplashViewState createState() => _SplashViewState();
@@ -70,6 +71,7 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
+
 
   @override
   void didChangeDependencies() {
@@ -81,26 +83,6 @@ class _SplashViewState extends State<SplashView> {
       });
       _initialized = true;
     }
-  }
-
-
-  Future<void> getUserForId({@required String sevaUserId}) async {
-    assert(sevaUserId != null && sevaUserId.isNotEmpty,
-        "Seva UserId cannot be null or empty");
-
-    UserModel userModel;
-    await Firestore.instance
-        .collection('users')
-        .where('sevauserid', isEqualTo: "6TSPDyOpdQbUmBcDwfwEWj7Zz0z1")
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      //   querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-      //     userModel = UserModel.fromMap(documentSnapshot.data);
-      // });
-        var length =  querySnapshot.documents.length;
-    });
-
-    // return userModel;
   }
 
   @override
@@ -402,7 +384,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
-    // UserData.shared._getSignedInUserDocs(userId);
+   // UserData.shared._getSignedInUserDocs(userId);
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     if (loggedInUser == null) {
@@ -426,14 +408,15 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+//    String location = loggedInUser.availability.location;
+//    print(location);
+//     if (location == null) {
+//       await _navigateToCalendarView(loggedInUser);
+//     }
 
-    //  if (loggedInUser.availability == null) {
-    //    await _navigateToCalendarView(loggedInUser);
-    //  }
-
-    //  if (loggedInUser.requestStatus == "pending") {
-    //    await _navigateToWaitingView(loggedInUser);
-    //  }
+//     if (loggedInUser.requestStatus == "pending") {
+//       await _navigateToWaitingView(loggedInUser);
+//     }
 
     loadingMessage = 'Finalizing';
     _navigateToCoreView(loggedInUser);
@@ -486,22 +469,21 @@ class _SplashViewState extends State<SplashView> {
       MaterialPageRoute(
         builder: (context) => LocationView(
           onSelectedCalendar: (availability) {
-            // Navigator.pop(context);
-            // loggedInUser.availability = availability;
-            // updateUserAvailableData(loggedInUser);
-            // loadingMessage = 'Updating Calendar';
+            Navigator.pop(context);
+            loggedInUser.availability = availability;
+            updateUserAvailableData(loggedInUser);
+            loadingMessage = 'Updating Calendar';
           },
           onSkipped: () {
-            // Navigator.pop(context);
-            // loggedInUser.availability = null;
-            // updateUserData(loggedInUser);
-            // loadingMessage = 'Skipping Calendar';
+            Navigator.pop(context);
+            loggedInUser.availability = null;
+            updateUserData(loggedInUser);
+            loadingMessage = 'Skipping Calendar';
           },
         ),
       ),
     );
   }
-
 //   Future _navigateToPinView(UserModel loggedInUser) async {
 //     await Navigator.of(context).push(
 //       MaterialPageRoute(
@@ -568,7 +550,6 @@ class _SplashViewState extends State<SplashView> {
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
   }
-
   Future updateUserAvailableData(UserModel user) async {
     await fireStoreManager.updateUserAvailability(user: user);
   }
