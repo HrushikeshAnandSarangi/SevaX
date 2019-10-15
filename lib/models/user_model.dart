@@ -20,7 +20,7 @@ class UserModel extends DataModel {
   String requestStatus;
   String locationName;
   String lat_lng;
-  AvailabilityModel availability;
+  AvailabilityModel availability = AvailabilityModel.empty();
   String currentTimebank =  FlavorConfig.values.timebankId;
   //String
 
@@ -93,9 +93,11 @@ class UserModel extends DataModel {
     } else {
       this.timezone = 'PT';
     }
-    if (map.containsKey('availability')) {
-      this.availability = AvailabilityModel.fromMap(map['availability']);
-    }
+//    if (map.containsKey('availability')) {
+//      this.availability = AvailabilityModel.empty();
+//      this.availability = AvailabilityModel.fromMap(map['availability']);
+//      print(this.availability);
+//    }
   }
 
   @override
@@ -150,10 +152,10 @@ class UserModel extends DataModel {
     } else {
       object['timezone'] = 'PT';
     }
-    if (this.availability.weekArray.length != 0) {
-      object["availability"] = this.availability.toMap();
-      print(object["availability"]);
-    }
+//    if (this.availability.weekArray.length != 0) {
+//      object["availability"] = this.availability.toMap();
+//      print(object["availability"]);
+//    }
 
     return object;
   }

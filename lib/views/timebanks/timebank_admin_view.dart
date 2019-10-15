@@ -155,6 +155,7 @@ class _TimeBankAdminView extends StatelessWidget {
     );
 
     if (model.admins.length == 0) return Container();
+    print(model.admins);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,

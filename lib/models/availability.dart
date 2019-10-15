@@ -35,7 +35,7 @@ class AvailabilityModel  {
       this.endsData = map['distnace'];
     }
     if (map.containsKey('distnace')) {
-      this.repeatAfterStr = map['distnace'];
+      this.repeatAfterStr = map['distance'];
     }
     if (map.containsKey('location')) {
       this.endsData = map['location'];
@@ -59,7 +59,7 @@ class AvailabilityModel  {
       object['endsDate'] = this.endsData;
     }
     if (this.distnace != null && this.distnace.isNotEmpty) {
-      object['distnace'] = this.distnace;
+      object['distance'] = this.distnace;
     }
     if (this.lat_lng != null && this.lat_lng.isNotEmpty) {
       object['lat_lng'] = this.lat_lng;
