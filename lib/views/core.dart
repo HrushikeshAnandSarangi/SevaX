@@ -659,7 +659,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                             context,
                             MaterialPageRoute(
                               builder: (context) => CreateRequest(
-                                timebankId: FlavorConfig.values.timebankId,
+                                timebankId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentTimebank,
                               ),
                             ),
                           )

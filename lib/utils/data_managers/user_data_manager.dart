@@ -19,8 +19,6 @@ Future<void> updateUser({
 }) async {
   //print(user.toMap());
 
-
-
   return await Firestore.instance
       .collection('users')
       .document(user.email)
@@ -39,10 +37,10 @@ Future<void> updateUserAvailability({
 //      .collection('users')
 //      .document(user.email)
 //      .updateData(user.availability.toMap());
-  return await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .setData({"Availability":user.availability.toMap()});
+  // return await Firestore.instance
+  //     .collection('users')
+  //     .document(user.email)
+  //     .setData({"Availability":user.availability.toMap()});
 }
 
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
