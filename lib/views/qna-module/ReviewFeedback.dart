@@ -149,7 +149,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                           myCommentsController.text.isEmpty
                               ? _validate = true
                               : _validate = false;
-                        } 
+                        }
                       });
 
                       if (!_validate) {
