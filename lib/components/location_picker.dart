@@ -46,7 +46,7 @@ class _LocationPickerState extends State<LocationPicker> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Map',
+          'Add Location',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -126,11 +126,19 @@ class _LocationPickerState extends State<LocationPicker> {
   Positioned get markLocationWidget {
     return Positioned(
       bottom: 50,
-      right: 30,
-      child: FlatButton(
-        child: Icon(Icons.pin_drop, color: Colors.white),
-        color: Colors.green,
-        onPressed: _addMarker,
+      right: 10,
+      left: 0,
+      child: Center(
+        child: RaisedButton.icon(
+          icon: Icon(Icons.pin_drop, color: Colors.white),
+          shape: StadiumBorder(),
+          label: Text(
+            'Pick Location',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Color(0xff007722),
+          onPressed: _addMarker,
+        ),
       ),
     );
   }

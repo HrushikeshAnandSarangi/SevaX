@@ -447,8 +447,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
       bottom: TabBar(
         labelColor: Colors.white,
         tabs: [
-          Tab(child: Text('Campaign ${FlavorConfig.values.requestTitle}s')),
-          Tab(child: Text('Campaign ${FlavorConfig.values.offertitle}s')),
+          Tab(child: Text('${FlavorConfig.values.requestTitle}s')),
+          Tab(child: Text('${FlavorConfig.values.offertitle}s')),
         ],
         controller: controller,
       ),

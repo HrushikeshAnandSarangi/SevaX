@@ -93,7 +93,7 @@ class RequestsState extends State<Requests> {
               ),
               Text(
                 FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                    ? 'Yang Gang'
+                    ? 'Yang Gang :'
                     : 'Timebank : ',
                 style: (TextStyle(fontWeight: FontWeight.w500)),
               ),
@@ -398,7 +398,7 @@ class OffersState extends State<Offers> {
               ),
               Text(
                 FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                    ? 'Yang Gang'
+                    ? 'Yang Gang :'
                     : 'Timebank : ',
                 style: (TextStyle(fontWeight: FontWeight.w500)),
               ),

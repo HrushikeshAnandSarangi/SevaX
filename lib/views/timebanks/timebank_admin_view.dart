@@ -89,13 +89,7 @@ class _TimeBankAdminView extends StatelessWidget {
       snap: false,
       pinned: true,
       elevation: 0,
-      actions: <Widget>[
-        IconButton(
-          tooltip: 'Add Members',
-          icon: Icon(Icons.add),
-          onPressed: () {},
-        ),
-      ],
+     
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
