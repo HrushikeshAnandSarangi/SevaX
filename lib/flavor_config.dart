@@ -59,8 +59,8 @@ class FlavorConfig {
         return FlavorValues(
           timebankId: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2',
           timebankName: 'Yang 2020',
-          offertitle: 'Offer',
-          requestTitle: 'Request',
+          offertitle: 'Volunteer Offer',
+          requestTitle: 'Campaign Request',
           theme: ThemeData(
             appBarTheme: AppBarTheme(
                 brightness: Brightness.light,

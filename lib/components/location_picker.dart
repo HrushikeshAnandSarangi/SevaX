@@ -90,11 +90,14 @@ class FireMapState extends State<FireMap> {
         ),
         Positioned(
             bottom: 50,
-            right: 30,
-            child: FlatButton(
-                child: Icon(Icons.pin_drop, color: Colors.white),
-                color: Colors.green,
-                onPressed: _addMarker)),
+            left: 10,
+            right: 10,
+            child: Center(
+              child: FlatButton(
+                  child: Icon(Icons.pin_drop, color: Colors.white),
+                  color: Colors.green,
+                  onPressed: _addMarker),
+            )),
         Positioned.fill(
           child: Center(
             child: Icon(
