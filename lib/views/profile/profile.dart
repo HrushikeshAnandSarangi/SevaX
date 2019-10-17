@@ -698,8 +698,7 @@ class _ProfilePageState extends State<ProfilePage>
         topLeft: Radius.circular(12),
       ),
       onTap: () {
-        Navigator.push(
-          context,
+        Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
               return TimeBankList(

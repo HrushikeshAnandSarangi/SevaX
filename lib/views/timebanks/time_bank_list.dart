@@ -17,7 +17,7 @@ class TimeBankList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
         title: Text(
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
           ? 'Yang Gangs'
@@ -80,7 +80,7 @@ class TimeBankList extends StatelessWidget {
                     stream: getTimebankModelStream(timebankId: childTimebankId),
                     builder: (context, snapshot) {
                       if (snapshot.hasError)
-                        return new Text('Error: ${snapshot.error}');
+                        return new Container(); //Text('Error: ${snapshot.error}');
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Offstage();
                       }
