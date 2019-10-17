@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 
 class ReviewFeedback extends StatefulWidget {
@@ -69,7 +70,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           alignment: Alignment.centerLeft,
           child: Text(
             getQuestions()[questionIndex][FeedbackConstants.FEEDBACK_TITLE],
-            style: TextStyle(fontSize: 19),
+            style: TextStyle(fontSize: 19, letterSpacing: 2),
           ),
         ),
         ...(getQuestions()[questionIndex][FeedbackConstants.ANSWERS] as List)
@@ -144,9 +145,11 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                     child: Text("Submit"),
                     onPressed: () {
                       setState(() {
-                        myCommentsController.text.isEmpty
-                            ? _validate = true
-                            : _validate = false;
+                        if (FlavorConfig.appFlavor == Flavor.APP) {
+                          myCommentsController.text.isEmpty
+                              ? _validate = true
+                              : _validate = false;
+                        } 
                       });
 
                       if (!_validate) {

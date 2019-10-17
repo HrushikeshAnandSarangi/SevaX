@@ -80,7 +80,8 @@ class TimeBankList extends StatelessWidget {
                     stream: getTimebankModelStream(timebankId: childTimebankId),
                     builder: (context, snapshot) {
                       if (snapshot.hasError)
-                        return new Text('Error: ${snapshot.error}');
+                        // return new Text('Error: ${snapshot.error}');
+                        return new Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Offstage();
                       }

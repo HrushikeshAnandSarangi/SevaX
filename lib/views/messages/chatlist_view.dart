@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/main.dart';
-import 'package:sevaexchange/main.dart' as prefix0;
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/messages/new_chat.dart';
+import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import '../core.dart';
 import 'package:shimmer/shimmer.dart';
+
+import 'list_members_timebank.dart';
 
 class ChatListView extends StatefulWidget {
   const ChatListView({Key key}) : super(key: key);
@@ -72,16 +77,84 @@ class _ChatListViewState extends State<ChatListView> {
         label: Text('New Chat'),
         foregroundColor: FlavorConfig.values.buttonTextColor,
         onPressed: () {
+
+            // return abc(context);
+
+            // print("tapped");
+        // checkTimebanksCount(context);    
+
+
           NewsModel news;
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => NewChat(false, news)),
+            // MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
           );
         },
       ),
     );
   }
 
+Widget abc(BuildContext context) {
+  List<TimebankModel> timebankList = [];
+  return StreamBuilder<List<TimebankModel>>(
+      stream: FirestoreManager.getTimebanksForUserStream(
+        userId: SevaCore.of(context).loggedInUser.sevaUserID,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        timebankList = snapshot.data;
+        // timebankList.forEach((t){
+        //   if(t.name==timebankName){
+        //     timebankId=t.id;
+        //   }
+        // });
+        List<String> dropdownList = [];
+        timebankList.forEach((t) {
+          dropdownList.add(t.id);
+        });
+
+        print("Length inside chat${dropdownList.length}");
+
+        return ListView.builder(
+            itemCount: timebankList.length,
+            itemBuilder: (context, index) {
+              TimebankModel timebank = timebankList.elementAt(index);
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListMambersForNewChat(),
+                    ),
+                  );
+                  // print("inside tap");
+                },
+                child: Card(
+                  margin: EdgeInsets.all(5),
+                  child: Container(
+                    margin: EdgeInsets.all(15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(timebank.name),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            });
+      });
+}
+
+
+// Widget checkTimebanksCount(BuildContext context) {
+//   return 
+// }
   Widget get taskShimmer {
     return Padding(
       padding: const EdgeInsets.all(8.0),

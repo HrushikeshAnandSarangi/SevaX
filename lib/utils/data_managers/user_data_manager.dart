@@ -101,6 +101,7 @@ Future<UserModel> getUserForEmail({
   //   currentBalance = walletSnapshot.data['currentBalance'];
   // }
 
+// 73191597
   // userModel.currentBalance = currentBalance;
 
   return userModel;

@@ -10,7 +10,7 @@ class FeedbackConstants {
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
-        {ANSWER_TEXT: "okay", SCORE: 3},
+        {ANSWER_TEXT: "Okay", SCORE: 3},
         {ANSWER_TEXT: "Not so good", SCORE: 2},
         {ANSWER_TEXT: "Terrible", SCORE: 1},
       ]
@@ -19,17 +19,17 @@ class FeedbackConstants {
       FEEDBACK_TITLE:
           "Did you experience any diffculty in completing the task?",
       ANSWERS: [
-        {ANSWER_TEXT: "No difficulty at all", SCORE: 5},
+        {ANSWER_TEXT: "No difficulty", SCORE: 5},
         {ANSWER_TEXT: "Only slightly", SCORE: 4},
-        {ANSWER_TEXT: "i had some difficulty", SCORE: 3},
+        {ANSWER_TEXT: "Yes, I had some difficulty", SCORE: 3},
       ]
     },
     {
       FEEDBACK_TITLE: "How likely are you to volunteer again for this cause?",
       ANSWERS: [
         {"text": "Yes i would", SCORE: 5},
-        {"text": "May be i would", SCORE: 4},
-        {"text": "No i would not", SCORE: 3},
+        {"text": "Maybe or Not Sure", SCORE: 4},
+        {"text": "No, I would not", SCORE: 3},
       ]
     }
   ];
@@ -40,7 +40,7 @@ class FeedbackConstants {
       ANSWERS: [
         {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
-        {ANSWER_TEXT: "okay", SCORE: 3},
+        {ANSWER_TEXT: "Okay", SCORE: 3},
         {ANSWER_TEXT: "Not so good", SCORE: 2},
         {ANSWER_TEXT: "Terrible", SCORE: 1},
       ]

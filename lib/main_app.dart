@@ -5,8 +5,13 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/messages/new_select_member.dart';
+import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
+
+import 'models/news_model.dart';
+import 'views/messages/list_members_timebank.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.APP;
@@ -48,13 +53,19 @@ void main() {
 class MainApplication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    NewsModel news;
+
     return AuthProvider(
       auth: Auth(),
       child: MaterialApp(
         theme: FlavorConfig.values.theme,
-        // home: OnBoardWithTimebank(),
+        // home: SelectMember(
+        //   timebankId: "73d0de2c-198b-4788-be64-a804700a88a4",
+        // ),
         home: SplashView(),
       ),
     );
   }
 }
+
+class News {}

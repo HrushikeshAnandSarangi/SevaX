@@ -25,7 +25,7 @@ class NewChatState extends State<NewChat> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    
+
     searchTextController.addListener(() {
       setState(() {});
     });
