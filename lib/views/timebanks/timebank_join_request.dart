@@ -33,6 +33,10 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
   void _writeToDB() {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
+    print(widget.owner.email);
+    print(SevaCore.of(context).loggedInUser.email);
+    //print(widget.owner.email);
+
     Firestore.instance
         .collection('join_requests_timebanks')
         .document(
@@ -76,8 +80,8 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
                           // the form is invalid.
                           //_navigateCongrats();
                           if (_formKey.currentState.validate()) {
-                           // _writeToDB();
-                            _navigateCongrats();
+                            _writeToDB();
+                            //_navigateCongrats();
                           }
                         },
                         child: Text(

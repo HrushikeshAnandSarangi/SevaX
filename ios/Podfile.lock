@@ -189,7 +189,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
@@ -241,7 +241,7 @@ EXTERNAL SOURCES:
   firebase_storage:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   image_cropper:
@@ -276,7 +276,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: f20243a1d828e0e9a3798b995174dedc16f1b32a
   FirebaseMessaging: 0ac5310133e6ada4cdd44d42e92038855214a5e9
   FirebaseStorage: 926d41552072b9fee67aa645760f05f87b7ce604
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   google_sign_in: 27e70a98b529f0b076d4b19f231b81da28b1750b
   GoogleAppMeasurement: a35a645835bae31b6bdc0576396bc23908f12a22
   GoogleSignIn: 7ff245e1a7b26d379099d3243a562f5747e23d39
