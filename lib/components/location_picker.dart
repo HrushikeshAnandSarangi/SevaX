@@ -1,16 +1,48 @@
+import 'dart:developer';
+
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:location/location.dart';
-
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 
-class LocationPicker extends StatelessWidget {
+import 'package:sevaexchange/flavor_config.dart';
+
+class LocationPicker extends StatefulWidget {
+  final Location location = new Location();
+  final Geoflutterfire geo = Geoflutterfire();
+  final Firestore firestore = Firestore.instance;
+  final LatLng defaultLocation;
+
+  LocationPicker({this.defaultLocation = const LatLng(41.678510, -87.494080)});
+
   @override
-  Widget build(BuildContext context) {
+  _LocationPickerState createState() => _LocationPickerState();
+}
+
+class _LocationPickerState extends State<LocationPicker> {
+  GoogleMapController _mapController;
+  LatLng target;
+  Set<Marker> markers = {};
+  LocationData locationData;
+
+  CameraPosition get initialCameraPosition {
+    return CameraPosition(target: widget.defaultLocation, zoom: 15);
+  }
+
+  @override
+  void initState() {
+    log('init state called for ${this.runtimeType.toString()}');
+    super.initState();
+    loadInitialLocation();
+  }
+
+  @override
+  Widget build(context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -18,145 +50,180 @@ class LocationPicker extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: FireMap(),
-    );
-  }
-}
-
-class FireMap extends StatefulWidget {
-  State createState() => FireMapState();
-}
-
-class FireMapState extends State<FireMap> {
-  GoogleMapController mapController;
-  Location location = new Location();
-
-  Firestore firestore = Firestore.instance;
-  Geoflutterfire geo = Geoflutterfire();
-
-  // Stateful Data
-  BehaviorSubject<double> radius = BehaviorSubject();
-
-  Stream<dynamic> query;
-
-  // Subscription
-  StreamSubscription subscription;
-  LatLng target;
-  Set<Marker> markers = {};
-  LocationData locationData;
-  GeoFirePoint point;
-
-  @override
-  void initState() {
-    super.initState();
-    radius.value = 100;
-    location.getLocation().then((lD) {
-      setState(() {
-        locationData = lD;
-      });
-      mapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(
-            target: LatLng(lD.latitude, lD.longitude),
-            zoom: 15,
-          ),
-        ),
-      );
-    });
-  }
-
-  @override
-  build(context) {
-    return Scaffold(
       body: Stack(children: [
-        Positioned.fill(
-          child: GoogleMap(
-            initialCameraPosition: CameraPosition(
-                target: LatLng(
-                    locationData != null ? locationData.latitude : 24.142,
-                    locationData != null ? locationData.longitude : -110.321),
-                zoom: 15),
-            onMapCreated: _onMapCreated,
-            myLocationEnabled: true,
-            mapType: MapType.normal,
-            compassEnabled: true,
-            markers: markers,
-            onCameraMove: (position) {
-              setState(() {
-                target = position.target;
-              });
-            },
-          ),
-        ),
-        Positioned(
-            bottom: 50,
-            right: 30,
-            child: FlatButton(
-                child: Icon(Icons.pin_drop, color: Colors.white),
-                color: Colors.green,
-                onPressed: _addMarker)),
-        Positioned.fill(
-          child: Center(
-            child: Icon(
-              Icons.location_searching,
-            ),
-          ),
-        ),
-        point != null
-            ? Positioned(
-                bottom: -8,
-                left: 0,
-                right: 0,
-                child: RaisedButton(
-                  textColor: Colors.white,
-                  color: Theme.of(context).accentColor,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
-                    child: Text(
-                      'Done',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context, point);
-                  },
-                ),
-              )
-            : Container(),
+        mapWidget,
+        markLocationWidget,
+        crosshair,
+        button,
       ]),
     );
   }
 
-  // Map Created Lifecycle Hook
-  _onMapCreated(GoogleMapController controller) {
-    // _startQuery();
-    setState(() {
-      mapController = controller;
-    });
+  Future loadInitialLocation() async {
+    log('loadCurrentLocation');
+    LocationData locationData;
+    try {
+      locationData = await widget.location.getLocation();
+      if (_mapController != null) {
+        animateToLocation(_mapController, locationData);
+      }
+      setState(() => this.locationData = locationData);
+    } on PlatformException catch (exception) {
+      if (exception.code == 'PERMISSION_DENIED') {
+        log('Permission Denied');
+        showRequirePermissionDialog();
+      }
+    }
   }
 
-  _addMarker() {
-    var marker = Marker(
-        markerId: MarkerId('1'),
-        position: target,
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(title: 'Marker'));
+  void showRequirePermissionDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Missing Permission'),
+          content: Text(
+              '${FlavorConfig.values.appName} requires permission to access your location.'),
+          actions: <Widget>[
+            RaisedButton(
+              child: Text(
+                'Open Settings',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                AppSettings.openAppSettings();
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ].reversed.toList(),
+        );
+      },
+      barrierDismissible: false,
+    );
+  }
+
+  Positioned get mapWidget {
+    return Positioned.fill(
+      child: GoogleMap(
+        initialCameraPosition: initialCameraPosition,
+        onMapCreated: _onMapCreated,
+        myLocationEnabled: true,
+        mapType: MapType.normal,
+        compassEnabled: true,
+        markers: markers,
+        onCameraMove: (position) {
+          setState(() => target = position.target);
+        },
+      ),
+    );
+  }
+
+  Positioned get markLocationWidget {
+    return Positioned(
+      bottom: 50,
+      right: 30,
+      child: FlatButton(
+        child: Icon(Icons.pin_drop, color: Colors.white),
+        color: Colors.green,
+        onPressed: _addMarker,
+      ),
+    );
+  }
+
+  Positioned get crosshair {
+    return Positioned.fill(
+      child: Center(
+        child: Icon(
+          Icons.location_searching,
+        ),
+      ),
+    );
+  }
+
+  Positioned get button {
+    return Positioned(
+      bottom: -8,
+      left: 0,
+      right: 0,
+      child: Offstage(
+        offstage: point == null,
+        child: RaisedButton(
+          textColor: Colors.white,
+          color: Theme.of(context).accentColor,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
+            child: Text(
+              'Done',
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          onPressed: () {
+            Navigator.pop(context, point);
+          },
+        ),
+      ),
+    );
+  }
+
+  GeoFirePoint get point {
+    if (markers == null || markers.isEmpty) return null;
+    Marker marker = markers.first;
+    if (marker.position == null) return null;
+    return widget.geo.point(
+      latitude: marker.position.latitude,
+      longitude: marker.position.longitude,
+    );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    if (controller == null) return;
+    setState(() => _mapController = controller);
+    if (this.locationData != null) {
+      animateToLocation(controller, locationData);
+    }
+  }
+
+  void _addMarker() {
+    log('_addMarker');
+    Marker marker = Marker(
+      markerId: MarkerId('1'),
+      position: target,
+      icon: BitmapDescriptor.defaultMarker,
+      infoWindow: InfoWindow(title: 'Marker'),
+    );
 
     setState(() {
       markers = {marker};
     });
-    point = geo.point(
-        latitude: marker.position.latitude,
-        longitude: marker.position.longitude);
-    // return firestore.collection('locations').document().setData({
-    //   'position': point.data,
-    //   'name': 'Yay I can be queried!'
-    // });
   }
 
-  @override
-  dispose() {
-    if (subscription != null) subscription.cancel();
-    super.dispose();
+  /// Animate to location corresponding to [locationData.latitude] and [locationData.longitude]
+  Future animateToLocation(
+    GoogleMapController mapController,
+    LocationData locationData,
+  ) async {
+    if (mapController == null) {
+      log('map contriller is null');
+      return;
+    }
+    if (locationData == null) {
+      log('location data is null');
+      return;
+    }
+
+    log('Updating camera postion');
+    CameraPosition newPosition = CameraPosition(
+      target: LatLng(locationData.latitude, locationData.longitude),
+      zoom: 15,
+    );
+
+    await mapController.animateCamera(
+      CameraUpdate.newCameraPosition(newPosition),
+    );
   }
 }
