@@ -368,14 +368,14 @@ class _SplashViewState extends State<SplashView> {
   void initiateLogin() {
     loadingMessage = 'Finding user docs';
     _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
-      print('Error checking login status: $error');
+      
     });
   }
 
   Future<String> _getLoggedInUserId() async {
     String userId = await PreferenceManager.loggedInUserId;
     UserData.shared.userId = userId;
-    print(userId);
+    
     return userId;
   }
 
@@ -395,8 +395,8 @@ class _SplashViewState extends State<SplashView> {
       return;
     }
     UserData.shared.user = loggedInUser;
-//    print(loggedInUser.requestStatus);
-    print(loggedInUser.calendar);
+
+    
 
     if (loggedInUser.skills == null) {
       await _navigateToSkillsView(loggedInUser);

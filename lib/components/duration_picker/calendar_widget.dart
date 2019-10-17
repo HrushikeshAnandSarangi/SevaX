@@ -267,8 +267,6 @@ class CalendarWidgetState extends State<CalendarWidget> {
 
   DateTime getSelectedDate(int dayNumber) {
     int day = dayNumber - _beginMonthPadding;
-    // var check = new DateTime(_currentDate.year, _currentDate.month, day, TimePickerState.hour, TimePickerState.minute);
-    // print(check);
     var date = DateTime(
       _currentDate.year,
       _currentDate.month,

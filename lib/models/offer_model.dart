@@ -20,21 +20,20 @@ class OfferModel extends DataModel {
 
   Color color;
 
-  OfferModel({
-    this.id,
-    this.title,
-    this.description,
-    this.email,
-    this.fullName,
-    this.sevaUserId,
-    this.schedule,
-    this.associatedRequest,
-    this.color,
-    this.requestList,
-    this.timestamp,
-    this.timebankId,
-    this.location
-  });
+  OfferModel(
+      {this.id,
+      this.title,
+      this.description,
+      this.email,
+      this.fullName,
+      this.sevaUserId,
+      this.schedule,
+      this.associatedRequest,
+      this.color,
+      this.requestList,
+      this.timestamp,
+      this.timebankId,
+      this.location});
 
   OfferModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -74,14 +73,9 @@ class OfferModel extends DataModel {
       this.timebankId = map['timebankId'];
     }
     if (map.containsKey('location')) {
-
       GeoPoint geoPoint = map['location']['geopoint'];
-      this.location = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-      print('locationHash: ${location.hash}');
-      print(map['location'].runtimeType);
-
-      // Map<String, dynamic> locationMap = Map.castFrom(map['location']);
-
+      this.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
   }
 

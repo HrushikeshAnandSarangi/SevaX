@@ -41,8 +41,6 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
 class ReviewLandingPageState extends State<ReviewLandingPage> {
   @override
   Widget build(BuildContext context) {
-    print("inside-------------------------------------------");
-
     getNewsStream( 
       timebankID: "ef9069a6-2e9b-4bae-b474-d0cfe206877f"
     );
@@ -56,7 +54,7 @@ class ReviewLandingPageState extends State<ReviewLandingPage> {
         query.transform(
           StreamTransformer<QuerySnapshot, ReviewModel>.fromHandlers(
             handleData: (snapshot, userSink) async {
-              print("inside-------------------------------------------");
+              
             },
           ),
         );

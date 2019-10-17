@@ -256,7 +256,7 @@ class _TimebankViewState extends State<TimebankView> {
                                                       EntityType.Timebank;
                                                   joinRequestModel.accepted =
                                                       null;
-                                                  print('$joinRequestModel');
+                                                  
                                                   if (formkey.currentState
                                                       .validate()) {
                                                     await createJoinRequest(

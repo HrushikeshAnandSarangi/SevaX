@@ -152,10 +152,6 @@ class TimeBankList extends StatelessWidget {
             new FlatButton(
               child: new Text("Join"),
               onPressed: () {
-                print('Join clicked');
-                // Navigator.of(context).pop();
-                //WaitingView
-                // Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(

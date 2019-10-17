@@ -109,14 +109,8 @@ class NewsModel extends DataModel {
       this.postTimestamp = map['posttimestamp'];
     }
     if (map.containsKey('location')) {
-
       GeoPoint geoPoint = map['location']['geopoint'];
       this.location = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-      print('locationHash: ${location.hash}');
-      print(map['location'].runtimeType);
-
-      // Map<String, dynamic> locationMap = Map.castFrom(map['location']);
-
     }
     if (map.containsKey('entity')) {
       Map<String, dynamic> dataMap = Map.castFrom(map['entity']);

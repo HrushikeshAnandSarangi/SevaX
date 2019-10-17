@@ -76,7 +76,7 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
                           // the form is invalid.
                           //_navigateCongrats();
                           if (_formKey.currentState.validate()) {
-                           // _writeToDB();
+                            // _writeToDB();
                             _navigateCongrats();
                           }
                         },
@@ -122,26 +122,18 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
       ),
     );
   }
+
   void _navigateCongrats() {
-    if(UserData.shared.isFromLogin) {
-      print(UserData.shared.user.requestStatus);
+    if (UserData.shared.isFromLogin) {
       UserData.shared.user.calendar = "done";
       UserData.shared.user.requestStatus = "pending";
       UserData.shared.updateUserData();
-      print(UserData.shared.user.requestStatus);
-//      Navigator.popUntil(context, (r) => r.isFirst);
-       Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-          builder: (context) => WaitingView()
-      ),
-    );
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => WaitingView()),
+      );
     } else {
       Navigator.pop(context);
     }
-   // Navigator.of(context).pushReplacement(
-//      MaterialPageRoute(
-//          builder: (context) => Congrats()
-//      ),
-//    );
   }
 }

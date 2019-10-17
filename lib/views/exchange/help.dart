@@ -121,7 +121,6 @@ class RequestsState extends State<Requests> {
                         onChanged: (String newValue) {
                           setState(() {
                             timebankId = newValue;
-                            //print(timebankId);
                           });
                         },
                         items: dropdownList
@@ -416,23 +415,17 @@ class OffersState extends State<Offers> {
                       return Center(child: CircularProgressIndicator());
                     }
                     timebankList = snapshot.data;
-                    // timebankList.forEach((t){
-                    //   if(t.name==timebankName){
-                    //     timebankId=t.id;
-                    //   }
-                    // });
                     List<String> dropdownList = [];
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
                     });
-                    //dropdownList.insert(0, 'All');
+
                     return Expanded(
                       child: DropdownButton<String>(
                         value: timebankId,
                         onChanged: (String newValue) {
                           setState(() {
                             timebankId = newValue;
-                            //print(timebankId);
                           });
                         },
                         items: dropdownList
@@ -624,19 +617,15 @@ class OfferCardView extends StatelessWidget {
                                         ),
                                       );
                                     } else {
-                                      print("alert check");
-
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          // return object of type Dialog
                                           return AlertDialog(
                                             title:
                                                 new Text("Permission Denied"),
                                             content: new Text(
                                                 "You need to be an Admin or Coordinator to have permission to send request to offers"),
                                             actions: <Widget>[
-                                              // usually buttons at the bottom of the dialog
                                               new FlatButton(
                                                 child: new Text("Close"),
                                                 onPressed: () {
@@ -914,10 +903,6 @@ class RequestListItems extends StatelessWidget {
                         child: Center(child: Text('No Requests')),
                       );
                     }
-
-                    print(
-                        "LOG HERE --------------------------------------------------------------------------------------------------------" +
-                            SevaCore.of(context).loggedInUser.sevaUserID);
 
                     var consolidatedList =
                         GroupRequestCommons.groupAndConsolidateRequests(

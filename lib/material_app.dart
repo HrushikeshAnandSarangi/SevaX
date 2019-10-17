@@ -173,7 +173,6 @@ class ScrollExample extends StatelessWidget {
           );
         },
         onSuggestionSelected: (String suggestion) {
-          print("Suggestion selected");
         },
       ),
       SizedBox(height: 500),

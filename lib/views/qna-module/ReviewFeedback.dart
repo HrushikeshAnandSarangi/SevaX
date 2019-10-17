@@ -54,7 +54,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   Widget getFeebackQuestions() {
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((LogRecord rec) {
-      print('${rec.level.name}: ${rec.time}: ${rec.message}');
+      
     });
 
     return Column(
@@ -93,7 +93,6 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
     setState(() {
       questionIndex++;
       totalScore = totalScore += score;
-      print("Quiz score $totalScore");
     });
   }
 

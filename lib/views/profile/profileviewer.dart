@@ -101,16 +101,12 @@ class ProfileViewer extends StatelessWidget {
                               onPressed: userEmail == loggedInEmail
                                   ? null
                                   : () {
-                                      print(userEmail);
-
-                                      print(loggedInEmail);
+                                      
                                       List users = [userEmail, loggedInEmail];
                                       users.sort();
                                       ChatModel model = ChatModel();
                                       model.user1 = users[0];
                                       model.user2 = users[1];
-                                      print(model.user1);
-                                      print(model.user2);
                                       createChat(chat: model);
                                       Navigator.push(
                                         context,

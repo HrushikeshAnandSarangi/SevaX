@@ -332,7 +332,7 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print(error);
+      
     }
     isLoading = false;
     _processLogin(user);
@@ -352,11 +352,11 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print(error);
+      
     }
     isLoading = false;
     if (user == null) {
-      print('Invalid user');
+      
       return;
     }
 

@@ -68,7 +68,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   void _writeToDB() {
     // _checkTimebankName();
     // if (!_exists) {
-    print('writeToDB');
+    
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
     globals.addedMembersId.forEach((m) {
@@ -94,9 +94,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
 
-    // } else {
-    //   print('timebank name exists');
-    // }
+    
   }
 
   @override
@@ -350,7 +348,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           builder: (context) => LocationPicker()),
                     ).then((point) {
                       if (point != null) location = point;
-                      print(location);
+                      
                     });
                   },
                   child: SizedBox(
@@ -387,7 +385,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     if (globals.addedMembersId == []) {
       Text('');
     } else {
-      print('dkcjzdlcj - ' + globals.addedMembersId.toString());
+      
       Text(globals.addedMembersId.toString());
     }
   }

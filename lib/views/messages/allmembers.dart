@@ -116,7 +116,7 @@ class _ResultViewState extends State<ResultView> {
 
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    print('Build view');
+    
     if (widget.controller.text.trim().isEmpty) {
       return StreamBuilder<prefix0.TimebankModel>(
         stream:
@@ -189,8 +189,6 @@ class _ResultViewState extends State<ResultView> {
                         ChatModel model = ChatModel();
                         model.user1 = users[0];
                         model.user2 = users[1];
-                        print(model.user1);
-                        print(model.user2);
                         createChat(chat: model).then(
                           (_) {
                             Navigator.push(
@@ -277,8 +275,6 @@ class _ResultViewState extends State<ResultView> {
                       ChatModel model = ChatModel();
                       model.user1 = users[0];
                       model.user2 = users[1];
-                      print(model.user1);
-                      print(model.user2);
                       createChat(chat: model).then(
                         (_) {
                           Navigator.push(

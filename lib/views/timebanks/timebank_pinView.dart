@@ -100,8 +100,7 @@ class _LoginSignupScreenState extends State<PinView> {
                     });
                   },
                   onDone: (text){
-                    print("DONE $text");
-                    //widget.onSelectedOtp(controller.text);
+                    
                   },
                   pinCodeTextFieldLayoutType: PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
                   wrapAlignment: WrapAlignment.start,
@@ -137,9 +136,7 @@ class _LoginSignupScreenState extends State<PinView> {
                         color: Colors.transparent,
                         elevation: 0.0,
                         onPressed: (){
-                          print('pressed skip');
-                          //this._navigateCongrats();
-                          //widget.onSkipped();
+                          
                           _navigateCongrats();
                         },
                       ),
@@ -153,7 +150,7 @@ class _LoginSignupScreenState extends State<PinView> {
                           textColor: Colors.white,
                           color: Colors.blue,
                           onPressed: (){
-                            print('pressed Next');
+                            
                             this._checkFields();
                           },
                           shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))

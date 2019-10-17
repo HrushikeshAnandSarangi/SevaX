@@ -162,7 +162,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
               selectedInterests.add(suggestion);
               interests.remove(suggestion);
             }
-            print("Suggestion selected $suggestion");
+            
           },
         ),
       ),
@@ -354,7 +354,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
               selectedSkills.add(suggestion);
               skills.remove(suggestion);
             }
-            print("Suggestion selected $suggestion");
+            
           },
         ),
       ),
@@ -727,7 +727,7 @@ class _SkillViewState extends State<SkillView> {
                     _selectedTools.add(name);
                   }
                   globals.skills = _selectedTools.toList();
-                  print(_selectedTools.toList());
+                  
                 });
               },
       );
@@ -781,7 +781,7 @@ _setPreferencesSkip(BuildContext context) async {
 }
 
 _updateSkillsToDB(BuildContext context) {
-  print('writeToDB');
+  
   Firestore.instance
       .collection('users')
       .document(SevaCore.of(context).loggedInUser.email)
@@ -796,12 +796,11 @@ _updateSkillsToDB(BuildContext context) {
     'photourl': SevaCore.of(context).loggedInUser.photoURL
   });
   _setPreferencesNext(context);
-  // Navigator.pushReplacement(
-  //     context, MaterialPageRoute(builder: (BuildContext context) => BioView()));
+  
 }
 
 createOnSkip(BuildContext context) {
-  print('writeToDB');
+  
   Firestore.instance
       .collection('users')
       .document(SevaCore.of(context).loggedInUser.email)

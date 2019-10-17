@@ -118,11 +118,6 @@ class RequestModel extends DataModel {
 
       GeoPoint geoPoint = map['location']['geopoint'];
       this.location = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-      print('locationHash: ${location.hash}');
-      print(map['location'].runtimeType);
-
-      // Map<String, dynamic> locationMap = Map.castFrom(map['location']);
-
     }
   }
 

@@ -19,7 +19,7 @@ class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
-  //print('at createrequest = $isOfferRequest');
+  
   CreateRequest({Key key, this.isOfferRequest, this.offer, this.timebankId})
       : super(key: key);
 
@@ -28,13 +28,7 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
-  // final bool isOfferRequest;
-  // final String sevaUserIdOffer;
-  //print('at createrequeststate = $isOfferRequest');
-
-  // _CreateRequestState({this.isOfferRequest, this.sevaUserIdOffer});
   
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -301,7 +295,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             builder: (context) => LocationPicker()),
                       ).then((point) {
                         if (point != null) location = point;
-                        print(location);
+                        
                       });
                     },
                     child: SizedBox(
@@ -336,18 +330,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           OfferDurationWidgetState.starttimestamp;
                       requestModel.requestEnd =
                           OfferDurationWidgetState.endtimestamp;
-                      print('Start time: ${requestModel.requestStart}');
-                      print('End time: ${requestModel.requestEnd}');
                       if (_formKey.currentState.validate()) {
-                        print(
-                            'before checking to create notification = ${widget.isOfferRequest}');
                         await _writeToDB();
 
                         if (widget.isOfferRequest == true) {
-                          print(
-                              'after checking to create notification = ${widget.isOfferRequest}');
                           OfferModel offer = widget.offer;
-                          //String sevaUserIdOffer = offer.sevaUserId;
+                      
 
                           Set<String> offerRequestList = () {
                             if (offer.requestList == null) return [];

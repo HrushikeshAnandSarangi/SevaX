@@ -502,11 +502,11 @@ class TaskCardViewState extends State<TaskCardView> {
   void checkForReview() async {
 
 
-    print("Length of hours ${hoursController.text}");
+    
 
 
     if (hoursController.text == null || hoursController.text.length == 0){
-     print("left bank");
+    
      return; 
     }
 
@@ -521,7 +521,7 @@ class TaskCardViewState extends State<TaskCardView> {
     if (results != null && results.containsKey('selection')) {
       onActivityResult(results);
     } else {
-      print("Operation Cancelled!");
+      
     }
   }
 

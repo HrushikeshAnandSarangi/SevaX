@@ -70,7 +70,7 @@ class NewsListState extends State<NewsList> {
                     onChanged: (String newValue) {
                       setState(() {
                         timebankId = newValue;
-                        //print(timebankId);
+                        
                       });
                     },
                     items: dropdownList

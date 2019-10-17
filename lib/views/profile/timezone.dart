@@ -124,7 +124,6 @@ class TimezoneListState extends State<TimezoneList> {
                   subtitle: Text('${format.format(localtime)}'),
                   onTap: () {
                     setState(() {
-                      // print('Check balance : ${userModel.currentBalance}');
                       userModel.timezone = model.timezoneAbb;
                       updateUser(user: userModel);
                     });
@@ -138,7 +137,6 @@ class TimezoneListState extends State<TimezoneList> {
 
   Widget getIcon(String isSelected, String userTimezone) {
     if (isSelected == userTimezone) {
-      print(isSelected);
       return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Icon(

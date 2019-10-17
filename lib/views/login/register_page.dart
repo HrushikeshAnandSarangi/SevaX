@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -300,7 +301,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Future createUser() async {
-    print('Called createUser');
+    log('Called createUser');
     Auth auth = AuthProvider.of(context).auth;
     try {
       UserModel user = await auth.createUserWithEmailAndPassword(
@@ -325,7 +326,7 @@ class _RegisterPageState extends State<RegisterPage>
       );
       return null;
     } catch (error) {
-      print('createUser: error: ${error.toString()}');
+      log('createUser: error: ${error.toString()}');
       return null;
     }
   }

@@ -34,14 +34,13 @@ class MembersManageState extends State<MembersManage> {
         builder: (context, snapshots) {
           if (snapshots.hasError) return Text('Error: ${snapshots.error}');
           if (snapshots.connectionState == ConnectionState.waiting) {
-            print('Waiting for members');
             return Center(
               child: CircularProgressIndicator(),
             );
           }
-          print('Got members');
+
           TimebankModel timebankSnapshotModel = snapshots.data;
-          print('${'-' * 10}\n${timebankSnapshotModel.toMap()}\n${'-' * 10}');
+
           return ListView(
             children: timebankSnapshotModel.members.map((member) {
               return StreamBuilder<UserModel>(
@@ -50,12 +49,11 @@ class MembersManageState extends State<MembersManage> {
                   if (userSnapshot.hasError)
                     return Text('Error: ${userSnapshot.error}');
                   if (userSnapshot.connectionState == ConnectionState.waiting) {
-                    print('Waiting for Users');
                     return Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                  print('Got users');
+
                   UserModel userModel = userSnapshot.data;
                   return Slidable(
                     delegate: SlidableDrawerDelegate(),
@@ -94,23 +92,6 @@ class MembersManageState extends State<MembersManage> {
 
                           timebankSnapshotModel.members = existingMembers;
 
-//                          indexItemNumber = globals
-//                              .currentTimebankMembersFullname
-//                              .indexOf(item);
-//                          print(indexItemNumber);
-//
-//                          _tempEmail = globals
-//                              .currentTimebankMembersEmail[indexItemNumber];
-//
-//                          globals.currentTimebankMembersEmail
-//                              .removeAt(indexItemNumber);
-//                          globals.currentTimebankMembersFullname
-//                              .removeAt(indexItemNumber);
-//                          globals.currentTimebankMembersPhotoURL
-//                              .removeAt(indexItemNumber);
-//                          print(globals.currentTimebankMembers.toString());
-//                          print('docID - ' + docID);
-
                           Firestore.instance
                               .collection('timebanks')
                               .document(timebankSnapshotModel.id)
@@ -135,97 +116,4 @@ class MembersManageState extends State<MembersManage> {
       ),
     );
   }
-
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//      appBar: AppBar(
-//        title: Text('Manage Members'),
-//      ),
-//      body: StreamBuilder<DocumentSnapshot>(
-//        stream: Firestore.instance
-//            .collection('timebanks')
-//            .document(docID)
-//            // .orderBy('posttimestamp', descending: true)
-//            .snapshots(),
-//        builder: (context, snapshot) {
-//          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-//          switch (snapshot.connectionState) {
-//            case ConnectionState.waiting:
-//              return Center(child: CircularProgressIndicator());
-//            default:
-//              globals.currentTimebankMembersEmail = List<String>.from(snapshot.data['membersemail']);
-//              globals.currentTimebankMembersFullname = List<String>.from(snapshot.data['membersfullname']);
-//              globals.currentTimebankMembersPhotoURL = List<String>.from(snapshot.data['membersphotourl']);
-//              // var memberList = snapshot.data['members'];
-//
-//              return Column(
-//                children: globals.currentTimebankMembersFullname
-//                    .map(
-//                      (item) => Slidable(
-//                            delegate: SlidableDrawerDelegate(),
-//                            actionExtentRatio: 0.25,
-//                            child: Container(
-//                              color: Colors.white,
-//                              child: ListTile(
-//                                contentPadding: EdgeInsets.only(left: 25.0),
-//                                title: Text(item),
-//                              ),
-//                            ),
-//                            actions: <Widget>[
-//                               IconSlideAction(
-//                                caption: 'Coordinator',
-//                                color: Colors.green,
-//                                icon: Icons.security,
-//                                onTap: () => print('Coordinator'),
-//                              ),
-//                              IconSlideAction(
-//                                caption: 'Admin',
-//                                color: Colors.blue,
-//                                icon: Icons.security,
-//                                onTap: () => print('Admin'),
-//                              ),
-//                            ],
-//                            secondaryActions: <Widget>[
-//                              IconSlideAction(
-//                                caption: 'Delete',
-//                                color: Colors.red,
-//                                icon: Icons.delete,
-//                                onTap: () {
-//                                  print(item + ' deleted');
-//                                  indexItemNumber = globals.currentTimebankMembersFullname.indexOf(item);
-//                                  print(indexItemNumber);
-//
-//                                  _tempEmail = globals.currentTimebankMembersEmail[indexItemNumber];
-//
-//                                  globals.currentTimebankMembersEmail.removeAt(indexItemNumber);
-//                                  globals.currentTimebankMembersFullname.removeAt(indexItemNumber);
-//                                  globals.currentTimebankMembersPhotoURL.removeAt(indexItemNumber);
-//                                  print(globals.currentTimebankMembers.toString());
-//                                  print('docID - ' + docID);
-//                                  Firestore.instance.collection('timebanks').document(docID).updateData({
-//                                    'membersemail': globals.currentTimebankMembersEmail,
-//                                    'membersfullname': globals.currentTimebankMembersFullname,
-//                                    'membersphotourl': globals.currentTimebankMembersPhotoURL,
-//                                  });
-//
-//                                Firestore.instance
-//                                      .collection('users')
-//                                      .document(_tempEmail)
-//                                      .updateData({
-//                                        'membership_timebanks': FieldValue.arrayRemove([docID])
-//                                  });
-//
-//                                },
-//                              ),
-//                            ],
-//                          ),
-//                    )
-//                    .toList(),
-//              );
-//          }
-//        },
-//      ),
-//    );
-//  }
 }

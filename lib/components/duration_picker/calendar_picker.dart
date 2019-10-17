@@ -1,4 +1,6 @@
 // import 'package:business/main.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'time_picker_widget.dart';
 import 'calendar_widget.dart';
@@ -40,7 +42,7 @@ class CalendarPickerState extends State<CalendarPicker> {
                   title: 'Start',
                   onPressed: () {
                     setState(() => selectionType = SelectionType.START_DATE);
-                    print("start date : $startDate");
+                    log("start date : $startDate");
                   },
                   dateTime: startDate,
                   isSelected: selectionType == SelectionType.START_DATE,
@@ -51,7 +53,7 @@ class CalendarPickerState extends State<CalendarPicker> {
                   title: 'End',
                   onPressed: () {
                     setState(() => selectionType = SelectionType.END_DATE);
-                    print("end date : $endDate");
+                    log("end date : $endDate");
                   },
                   dateTime: endDate,
                   isSelected: selectionType == SelectionType.END_DATE,

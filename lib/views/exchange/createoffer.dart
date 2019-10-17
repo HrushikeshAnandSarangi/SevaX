@@ -160,7 +160,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                             builder: (context) => LocationPicker()),
                       ).then((point) {
                         if (point != null) location = point;
-                        print(location);
                       });
                     },
                     child: SizedBox(

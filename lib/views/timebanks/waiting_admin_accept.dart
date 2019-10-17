@@ -55,29 +55,7 @@ class _waitingState extends State<WaitingView> {
               Padding(
                 padding: EdgeInsets.all(20.0),
               ),
-//              Column(
-//                children: <Widget>[
-//                  Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        child: SizedBox(
-//                          height: 50,
-//                          child: RaisedButton(
-//                            child: Text('Proceed',),
-//                            textColor: Colors.white,
-//                            color: Colors.blue,
-//                            onPressed: () {
-//                              print('Pressed proceed btn');
-//                              Navigator.pop(context);
-//                            },
-//                            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
-//                          ),
-//                        ),
-//                      ),
-//                    ],
-//                  )
-//                ],
-//              ),
+
             ],
           )
       ),

@@ -73,7 +73,7 @@ class _CongratsState extends State<Congrats> {
                             textColor: Colors.white,
                             color: Colors.blue,
                             onPressed: () {
-                              print('Pressed proceed btn');
+                              
                               Navigator.pop(context);
                             },
                             shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),

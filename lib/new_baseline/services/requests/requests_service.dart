@@ -192,9 +192,6 @@ class RequestService extends BaseService {
 
     num transactionvalue = model.durationOfRequest / 60;
     String credituser = model.approvedUsers.toString();
-    print(credituser);
-    print(user.email);
-
     await Firestore.instance
         .collection('users')
         .document(user.email)
@@ -208,14 +205,8 @@ class RequestService extends BaseService {
           .where((transactionModel) {
             if (transactionModel.from == model.sevaUserId &&
                 transactionModel.to == userId) {
-              print(
-                  'CREDIT DATA: ${transactionModel.from} == ${model.sevaUserId}');
-              print('CREDIT DATA: ${transactionModel.to} == $userId');
               return true;
             } else {
-              print(
-                  'CREDIT DATA: ${transactionModel.from} == ${model.sevaUserId}');
-              print('CREDIT DATA: ${transactionModel.to} == $userId');
               return false;
             }
           })

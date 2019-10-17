@@ -193,88 +193,11 @@ class _DataScrollPickerState extends State<DataScrollPicker> {
           setState(() {
             _selectedIndex = index;
             widget.onValueSelected(widget.dataList.elementAt(index));
-            // TimePickerState.hour = index;
+            
           });
-          // print("Hour: ${TimePickerState.hour}");
+          
         },
       ),
     );
   }
 }
-
-// Minute
-
-// class DataScrollPickerMin extends StatefulWidget {
-//   final List<String> dataList;
-//   DataScrollPickerMin(this.dataList);
-
-//   @override
-//   _DataScrollPickerMinState createState() => _DataScrollPickerMinState();
-// }
-
-// class _DataScrollPickerMinState extends State<DataScrollPickerMin> {
-//   PageController _pageController;
-//   int _selectedIndex;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _selectedIndex = 0;
-//     _pageController = PageController(
-//       initialPage: 0,
-//       viewportFraction: 0.4,
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 110,
-//       child: PageView(
-//         scrollDirection: Axis.vertical,
-//         controller: _pageController,
-//         children: widget.dataList.map((data) {
-//           int index = widget.dataList.indexOf(data);
-
-//           return GestureDetector(
-//             onTap: () {
-//               print(index);
-//               _pageController.animateToPage(
-//                 index,
-//                 duration: Duration(milliseconds: 200),
-//                 curve: Curves.easeOut,
-//               );
-//             },
-//             child: Container(
-//               color: _selectedIndex == index
-//                   ? Color(0xfff2f2f2)
-//                   : Colors.transparent,
-//               child: Center(
-//                 child: Text(
-//                   data,
-//                   style: TextStyle(
-//                     fontWeight: FontWeight.bold,
-//                     color: _selectedIndex == index
-//                         ? Theme.of(context).primaryColor
-//                         : Color(0xffcccccc),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           );
-//         }).toList(),
-//         onPageChanged: (index) {
-//           setState(() {
-//             _selectedIndex = index;
-//             //TimePickerState.minute = index;
-//             // if (index == 0) TimePickerState.minute = 0;
-//             // if (index == 1) TimePickerState.minute = 15;
-//             // if (index == 2) TimePickerState.minute = 30;
-//             // if (index == 3) TimePickerState.minute = 45;
-//           });
-//           // print("Minute: ${TimePickerState.minute}");
-//         },
-//       ),
-//     );
-//   }
-// }

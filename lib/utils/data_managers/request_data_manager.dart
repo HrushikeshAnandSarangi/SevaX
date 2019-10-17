@@ -261,9 +261,6 @@ Future<void> approveRequestCompletion({
 
   num transactionvalue = model.durationOfRequest / 60;
   String credituser = model.approvedUsers.toString();
-  print(credituser);
-  print(user.email);
-
   if (FlavorConfig.appFlavor == Flavor.APP) {
     await Firestore.instance
         .collection('users')
@@ -280,14 +277,8 @@ Future<void> approveRequestCompletion({
           .where((transactionModel) {
             if (transactionModel.from == model.sevaUserId &&
                 transactionModel.to == userId) {
-              print(
-                  'DEBIT DATA: ${transactionModel.to} == ${model.sevaUserId}');
-              print('DEBIT DATA: ${transactionModel.from} == $userId');
               return true;
             } else {
-              print(
-                  'DEBIT DATA: ${transactionModel.to} == ${model.sevaUserId}');
-              print('DEBIT DATA: ${transactionModel.from} == $userId');
               return false;
             }
           })
@@ -310,14 +301,8 @@ Future<void> approveRequestCompletion({
         .where((transactionModel) {
           if (transactionModel.from == model.sevaUserId &&
               transactionModel.to == userId) {
-            print(
-                'CREDIT DATA: ${transactionModel.from} == ${model.sevaUserId}');
-            print('CREDIT DATA: ${transactionModel.to} == $userId');
             return true;
           } else {
-            print(
-                'CREDIT DATA: ${transactionModel.from} == ${model.sevaUserId}');
-            print('CREDIT DATA: ${transactionModel.to} == $userId');
             return false;
           }
         })

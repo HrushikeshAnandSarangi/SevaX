@@ -247,7 +247,7 @@ class _BranchViewState extends State<BranchView> {
                                                       EntityType.Timebank;
                                                   joinRequestModel.accepted =
                                                       null;
-                                                  print('$joinRequestModel');
+
                                                   if (formkey.currentState
                                                       .validate()) {
                                                     await createJoinRequest(
@@ -269,17 +269,7 @@ class _BranchViewState extends State<BranchView> {
                                       );
                                     },
                                   ),
-                        // FlatButton(
-                        //   onPressed: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //         builder: (context) => _whichRoute('timebanks'),
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: _whichButton('timebanks'),
-                        // ),
+
                         _showCreateCampaignButton(context),
                         _showJoinRequests(context),
                         FlatButton(
