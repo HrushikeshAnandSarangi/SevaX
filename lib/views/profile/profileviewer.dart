@@ -101,7 +101,6 @@ class ProfileViewer extends StatelessWidget {
                               onPressed: userEmail == loggedInEmail
                                   ? null
                                   : () {
-                                      
                                       List users = [userEmail, loggedInEmail];
                                       users.sort();
                                       ChatModel model = ChatModel();
@@ -515,7 +514,9 @@ Widget getChipWidgets(List<dynamic> strings, BuildContext context) {
                 backgroundColor: Theme.of(context).accentColor,
                 label: Text(
                   item,
-                  style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
+                  style: TextStyle(
+                    color: FlavorConfig.values.buttonTextColor,
+                  ),
                 ),
               ))
           .toList());

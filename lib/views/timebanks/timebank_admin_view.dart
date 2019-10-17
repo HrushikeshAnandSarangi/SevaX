@@ -89,7 +89,6 @@ class _TimeBankAdminView extends StatelessWidget {
       snap: false,
       pinned: true,
       elevation: 0,
-     
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(

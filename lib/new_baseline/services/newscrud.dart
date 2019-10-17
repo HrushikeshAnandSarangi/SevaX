@@ -30,8 +30,7 @@ class CrudMethods {
         .collection('news')
         .document(selectedDoc)
         .updateData(newValues)
-        .catchError((e) {
-    });
+        .catchError((e) {});
   }
 
   deleteData(docId) {
@@ -39,7 +38,6 @@ class CrudMethods {
         .collection('news')
         .document(docId)
         .delete()
-        .catchError((e) {
-    });
+        .catchError((e) {});
   }
 }

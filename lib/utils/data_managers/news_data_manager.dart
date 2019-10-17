@@ -45,26 +45,21 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   }));
 }
 
-Stream<List<NewsModel>> getNearNewsStream({@required String timebankID}) async* {
+Stream<List<NewsModel>> getNearNewsStream(
+    {@required String timebankID}) async* {
   LocationData pos = await locations.getLocation();
-    double lat = pos.latitude;
-    double lng = pos.longitude;
-    GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance
-      .collection('news')
-      .where('entity', isEqualTo: {
-        'entityType': 'timebanks',
-        'entityId': timebankID,
-        //'entityName': FlavorConfig.timebankName,
-      });
-      
+  double lat = pos.latitude;
+  double lng = pos.longitude;
+  GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
+  var query = Firestore.instance.collection('news').where('entity', isEqualTo: {
+    'entityType': 'timebanks',
+    'entityId': timebankID,
+    //'entityName': FlavorConfig.timebankName,
+  });
 
-    var data = geos.collection(collectionRef: query).within(
-        center: center, 
-        radius: 20, 
-        field: 'location', 
-        strictMode: true
-      );
+  var data = geos
+      .collection(collectionRef: query)
+      .within(center: center, radius: 20, field: 'location', strictMode: true);
 
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
@@ -73,7 +68,7 @@ Stream<List<NewsModel>> getNearNewsStream({@required String timebankID}) async* 
     querySnapshot.forEach((document) {
       modelList.add(NewsModel.fromMap(document.data));
     });
-    modelList.sort((n1, n2){
+    modelList.sort((n1, n2) {
       return n2.postTimestamp.compareTo(n1.postTimestamp);
     });
     newsSink.add(modelList);
@@ -99,17 +94,13 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
 
 Stream<List<NewsModel>> getAllNearNewsStream() async* {
   LocationData pos = await locations.getLocation();
-    double lat = pos.latitude;
-    double lng = pos.longitude;
-    GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance
-      .collection('news');
-  var data = geos.collection(collectionRef: query).within(
-        center: center, 
-        radius: 20, 
-        field: 'location', 
-        strictMode: true
-      );      
+  double lat = pos.latitude;
+  double lng = pos.longitude;
+  GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
+  var query = Firestore.instance.collection('news');
+  var data = geos
+      .collection(collectionRef: query)
+      .within(center: center, radius: 20, field: 'location', strictMode: true);
 
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
@@ -118,7 +109,7 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
     querySnapshot.forEach((document) {
       modelList.add(NewsModel.fromMap(document.data));
     });
-    modelList.sort((n1, n2){
+    modelList.sort((n1, n2) {
       return n2.postTimestamp.compareTo(n1.postTimestamp);
     });
     newsSink.add(modelList);

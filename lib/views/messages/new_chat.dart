@@ -111,7 +111,7 @@ class _ResultViewState extends State<ResultView> {
 
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    
+
     if (widget.controller.text.trim().isEmpty) {
       return StreamBuilder<List<ChatModel>>(
         stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
@@ -149,8 +149,8 @@ class _ResultViewState extends State<ResultView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    AllMembersChat(widget.isShare, widget.news)),
+                                builder: (context) => AllMembersChat(
+                                    widget.isShare, widget.news)),
                           );
                         },
                         child: Text(

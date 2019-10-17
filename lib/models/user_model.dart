@@ -32,10 +32,9 @@ class UserModel extends DataModel {
       this.skills,
       this.currentBalance,
       this.calendar,
-        this.otp,
+      this.otp,
       this.requestStatus,
       this.timezone});
-
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('bio')) {
@@ -145,5 +144,3 @@ class UserModel extends DataModel {
     return object;
   }
 }
-
-

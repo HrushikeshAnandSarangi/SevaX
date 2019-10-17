@@ -41,8 +41,9 @@ class NewsListState extends State<NewsList> {
               padding: EdgeInsets.only(left: 10),
             ),
             Text(
-              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? 'Yang Gang :':
-              'Timebank : ',
+              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                  ? 'Yang Gang :'
+                  : 'Timebank : ',
               style: (TextStyle(fontWeight: FontWeight.w500)),
             ),
             Padding(
@@ -70,7 +71,6 @@ class NewsListState extends State<NewsList> {
                     onChanged: (String newValue) {
                       setState(() {
                         timebankId = newValue;
-                        
                       });
                     },
                     items: dropdownList

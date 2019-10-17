@@ -14,7 +14,6 @@ class ReviewLandingPage extends StatefulWidget {
 
 String textView = "Approve Transaction";
 
-
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   var data = Firestore.instance
       .collection('news')
@@ -37,13 +36,10 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
   }));
 }
 
-
 class ReviewLandingPageState extends State<ReviewLandingPage> {
   @override
   Widget build(BuildContext context) {
-    getNewsStream( 
-      timebankID: "ef9069a6-2e9b-4bae-b474-d0cfe206877f"
-    );
+    getNewsStream(timebankID: "ef9069a6-2e9b-4bae-b474-d0cfe206877f");
 
     var query = Firestore.instance
         .collection("reviews")
@@ -51,13 +47,11 @@ class ReviewLandingPageState extends State<ReviewLandingPage> {
         // .where("requestId", isEqualTo: "requestId")
         .snapshots();
 
-        query.transform(
-          StreamTransformer<QuerySnapshot, ReviewModel>.fromHandlers(
-            handleData: (snapshot, userSink) async {
-              
-            },
-          ),
-        );
+    query.transform(
+      StreamTransformer<QuerySnapshot, ReviewModel>.fromHandlers(
+        handleData: (snapshot, userSink) async {},
+      ),
+    );
 
     return MaterialApp(
       home: Scaffold(
@@ -102,12 +96,11 @@ class ReviewModel {
   String comments;
   String user_id;
 
-  String toString(){
-    return "Ratings ${ratings} \n" + 
-            "RequestId ${req_Id} \n" + 
-            "Comments ${comments} \n" + 
-            "UserID ${user_id} \n" + 
-            "Ratings ${ratings} \n" ; 
+  String toString() {
+    return "Ratings ${ratings} \n" +
+        "RequestId ${req_Id} \n" +
+        "Comments ${comments} \n" +
+        "UserID ${user_id} \n" +
+        "Ratings ${ratings} \n";
   }
-
 }

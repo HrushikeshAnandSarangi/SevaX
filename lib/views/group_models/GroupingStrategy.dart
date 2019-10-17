@@ -32,7 +32,6 @@ class RequestItem extends RequestModelList {
 }
 
 class GroupRequestCommons {
-     
   static List<RequestModelList> groupAndConsolidateRequests(
       List<RequestModel> requestList, String sevaUserId) {
     var hashedList =
@@ -90,10 +89,7 @@ class GroupRequestCommons {
         return "Others";
     }
   }
-
- 
 }
-
 
 //For offers
 
@@ -127,7 +123,6 @@ class OfferItem extends OfferModelList {
 }
 
 class GroupOfferCommons {
-     
   static List<OfferModelList> groupAndConsolidateOffers(
       List<OfferModel> offerList, String sevaUserId) {
     var hashedList =
@@ -185,6 +180,4 @@ class GroupOfferCommons {
         return "Others";
     }
   }
-
- 
 }

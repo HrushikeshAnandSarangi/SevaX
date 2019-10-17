@@ -481,7 +481,6 @@ class NotificationsView extends StatelessWidget {
 
   void approveTransaction(RequestModel model, String userId,
       String notificationId, SevaCore sevaCore) {
-    
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
 
@@ -504,8 +503,6 @@ class NotificationsView extends StatelessWidget {
 
     FirestoreManager.readNotification(
         notificationId, sevaCore.loggedInUser.email);
-
-    
   }
 
   void checkForFeedback(
@@ -535,9 +532,7 @@ class NotificationsView extends StatelessWidget {
         requestId: model.id,
         results: results,
       );
-    } else {
-      
-    }
+    } else {}
   }
 
   void onActivityResult(

@@ -67,8 +67,9 @@ class TimeBankList extends StatelessWidget {
             TimebankModel rootTB = snapshot.data;
             if (rootTB.children.length < 1 || rootTB.children == null) {
               return Center(
-                child: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ? Text('No Yang Gangs') :
-                 Text('No Sub Timebanks'),
+                child: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                    ? Text('No Yang Gangs')
+                    : Text('No Sub Timebanks'),
               );
             } else {
               return ListView.builder(

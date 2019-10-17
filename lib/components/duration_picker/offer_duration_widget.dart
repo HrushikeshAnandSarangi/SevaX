@@ -84,7 +84,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       starttimestamp = DateTime.now().millisecondsSinceEpoch;
     else
       starttimestamp = startTime.millisecondsSinceEpoch;
-    
+
     return getDateTimeWidget(startTime, DurationType.START);
   }
 

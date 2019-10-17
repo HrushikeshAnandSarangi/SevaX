@@ -99,7 +99,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                 FlatButton(
                   onPressed: () {
                     isofferrequest = true;
-                    
+
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
@@ -230,7 +230,9 @@ class _SelectRequestViewState extends State<SelectRequestView> {
               },
               child: Text(
                 'Send Request',
-                style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
+                style: TextStyle(
+                  color: FlavorConfig.values.buttonTextColor,
+                ),
               ),
             ),
           ),

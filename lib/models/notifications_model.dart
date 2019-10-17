@@ -9,15 +9,14 @@ class NotificationsModel extends DataModel {
   bool isRead;
   String timebankId;
 
-  NotificationsModel({
-    this.id,
-    this.type,
-    this.data,
-    this.targetUserId,
-    this.isRead = false,
-    this.senderUserId,
-    this.timebankId
-  });
+  NotificationsModel(
+      {this.id,
+      this.type,
+      this.data,
+      this.targetUserId,
+      this.isRead = false,
+      this.senderUserId,
+      this.timebankId});
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {

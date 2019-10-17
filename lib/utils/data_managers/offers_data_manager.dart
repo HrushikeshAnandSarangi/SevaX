@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:meta/meta.dart';
+
 Location loc = new Location();
 Geoflutterfire geoflutterfire = Geoflutterfire();
 
@@ -39,9 +40,9 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
 
 Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
   LocationData pos = await loc.getLocation();
-    double lat = pos.latitude;
-    double lng = pos.longitude;
-    GeoFirePoint center = geoflutterfire.point(latitude: lat, longitude: lng);
+  double lat = pos.latitude;
+  double lng = pos.longitude;
+  GeoFirePoint center = geoflutterfire.point(latitude: lat, longitude: lng);
   var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
           .collection('offers')
@@ -51,12 +52,9 @@ Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
           .where('timebankId', isEqualTo: timebankId)
           .where('assossiatedRequest', isNull: true);
 
-  var data = geoflutterfire.collection(collectionRef: query).within(
-        center: center, 
-        radius: 20, 
-        field: 'location', 
-        strictMode: true
-      );
+  var data = geoflutterfire
+      .collection(collectionRef: query)
+      .within(center: center, radius: 20, field: 'location', strictMode: true);
 
   yield* data.transform(
     StreamTransformer<List<DocumentSnapshot>, List<OfferModel>>.fromHandlers(

@@ -19,7 +19,7 @@ class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
-  
+
   CreateRequest({Key key, this.isOfferRequest, this.offer, this.timebankId})
       : super(key: key);
 
@@ -28,7 +28,6 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
-  
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -295,7 +294,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             builder: (context) => LocationPicker()),
                       ).then((point) {
                         if (point != null) location = point;
-                        
                       });
                     },
                     child: SizedBox(
@@ -326,37 +324,37 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     color: Theme.of(context).accentColor,
                     onPressed: () async {
                       if (location != null) {
-                      requestModel.requestStart =
-                          OfferDurationWidgetState.starttimestamp;
-                      requestModel.requestEnd =
-                          OfferDurationWidgetState.endtimestamp;
-                      if (_formKey.currentState.validate()) {
-                        await _writeToDB();
+                        requestModel.requestStart =
+                            OfferDurationWidgetState.starttimestamp;
+                        requestModel.requestEnd =
+                            OfferDurationWidgetState.endtimestamp;
+                        if (_formKey.currentState.validate()) {
+                          await _writeToDB();
 
-                        if (widget.isOfferRequest == true) {
-                          OfferModel offer = widget.offer;
-                      
+                          if (widget.isOfferRequest == true) {
+                            OfferModel offer = widget.offer;
 
-                          Set<String> offerRequestList = () {
-                            if (offer.requestList == null) return [];
-                            return offer.requestList;
-                          }()
-                              .toSet();
-                          offerRequestList.add(requestModel.id);
-                          offer.requestList = offerRequestList.toList();
-                          FirestoreManager.updateOfferWithRequest(offer: offer);
-                          sendOfferRequest(
-                              offerModel: widget.offer,
-                              requestSevaID: requestModel.sevaUserId);
-                          Navigator.pop(context);
+                            Set<String> offerRequestList = () {
+                              if (offer.requestList == null) return [];
+                              return offer.requestList;
+                            }()
+                                .toSet();
+                            offerRequestList.add(requestModel.id);
+                            offer.requestList = offerRequestList.toList();
+                            FirestoreManager.updateOfferWithRequest(
+                                offer: offer);
+                            sendOfferRequest(
+                                offerModel: widget.offer,
+                                requestSevaID: requestModel.sevaUserId);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
                           Navigator.pop(context);
                         }
-                        Navigator.pop(context);
-                      } }
-                      else {
+                      } else {
                         Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Location not added'),
-                      ));
+                          content: Text('Location not added'),
+                        ));
                       }
                     },
                     child: Row(
@@ -393,7 +391,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.postTimestamp = timestamp;
     requestModel.accepted = false;
     requestModel.acceptors = [];
-    requestModel.location=location;
+    requestModel.location = location;
 
     if (requestModel.requestStart == null) {
       requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;

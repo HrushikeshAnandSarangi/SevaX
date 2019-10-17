@@ -55,8 +55,7 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE:
-          "Would you like to consider this profile for future?",
+      FEEDBACK_TITLE: "Would you like to consider this profile for future?",
       "answers": [
         {ANSWER_TEXT: "Yes i would", SCORE: 5},
         {ANSWER_TEXT: "May be, Not sure", SCORE: 4},

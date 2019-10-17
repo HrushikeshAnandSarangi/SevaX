@@ -102,9 +102,10 @@ class TimebankRequests extends StatelessWidget {
 
                               usersSet.add(model.userId);
                               timebankModel.members = usersSet.toList();
-                              model.accepted=true;
+                              model.accepted = true;
                               await createJoinRequest(model: model);
-                              await updateTimebank(timebankModel: timebankModel);
+                              await updateTimebank(
+                                  timebankModel: timebankModel);
                             },
                             child: Container(
                               padding: EdgeInsets.all(2),
@@ -123,7 +124,7 @@ class TimebankRequests extends StatelessWidget {
                           SlideAction(
                             closeOnTap: true,
                             onTap: () async {
-                              model.accepted=false;
+                              model.accepted = false;
                               await createJoinRequest(model: model);
                             },
                             child: Container(
@@ -224,6 +225,8 @@ class CampaignRequests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Center(child: Text('Coming soon'),);
+    return Center(
+      child: Text('Coming soon'),
+    );
   }
 }

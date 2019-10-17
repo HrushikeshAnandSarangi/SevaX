@@ -110,7 +110,8 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('location')) {
       GeoPoint geoPoint = map['location']['geopoint'];
-      this.location = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      this.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
     if (map.containsKey('entity')) {
       Map<String, dynamic> dataMap = Map.castFrom(map['entity']);

@@ -116,7 +116,7 @@ class _ResultViewState extends State<ResultView> {
 
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    
+
     if (widget.controller.text.trim().isEmpty) {
       return StreamBuilder<prefix0.TimebankModel>(
         stream:

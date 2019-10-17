@@ -103,11 +103,12 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
   );
 }
 
-Stream<List<RequestModel>> getNearRequestListStream({String timebankId}) async* {
+Stream<List<RequestModel>> getNearRequestListStream(
+    {String timebankId}) async* {
   LocationData pos = await location.getLocation();
-    double lat = pos.latitude;
-    double lng = pos.longitude;
-    GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+  double lat = pos.latitude;
+  double lng = pos.longitude;
+  GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
           .collection('requests')
@@ -117,12 +118,9 @@ Stream<List<RequestModel>> getNearRequestListStream({String timebankId}) async* 
           .where('timebankId', isEqualTo: timebankId)
           .where('accepted', isEqualTo: false);
 
-  var data = geo.collection(collectionRef: query).within(
-        center: center, 
-        radius: 20, 
-        field: 'location', 
-        strictMode: true
-      );
+  var data = geo
+      .collection(collectionRef: query)
+      .within(center: center, radius: 20, field: 'location', strictMode: true);
 
   yield* data.transform(
     StreamTransformer<List<DocumentSnapshot>, List<RequestModel>>.fromHandlers(

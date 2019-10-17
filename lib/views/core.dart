@@ -443,7 +443,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   color: Colors.white,
                 ),
       page: HelpView(controller),
-      title: 'Volunteer' ,
+      title: 'Volunteer',
       bottom: TabBar(
         labelColor: Colors.white,
         tabs: [
@@ -452,9 +452,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
         ],
         controller: controller,
       ),
-      appBarActions: [
-        
-      ],
+      appBarActions: [],
     );
   }
 

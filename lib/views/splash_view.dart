@@ -12,7 +12,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 
-
 //class UserData {
 //  static UserModel user;
 //
@@ -44,7 +43,7 @@ class UserData {
   String userId;
   String locationStr;
 
- // UserModel user = await _getSignedInUserDocs(userId);
+  // UserModel user = await _getSignedInUserDocs(userId);
 
   Future updateUserData() async {
     await fireStoreManager.updateUser(user: user);
@@ -63,7 +62,6 @@ class UserData {
   }
 }
 
-
 class SplashView extends StatefulWidget {
   @override
   _SplashViewState createState() => _SplashViewState();
@@ -72,7 +70,6 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
-
 
   @override
   void didChangeDependencies() {
@@ -367,15 +364,15 @@ class _SplashViewState extends State<SplashView> {
 
   void initiateLogin() {
     loadingMessage = 'Finding user docs';
-    _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
-      
-    });
+    _getLoggedInUserId()
+        .then(handleLoggedInUserIdResponse)
+        .catchError((error) {});
   }
 
   Future<String> _getLoggedInUserId() async {
     String userId = await PreferenceManager.loggedInUserId;
     UserData.shared.userId = userId;
-    
+
     return userId;
   }
 
@@ -385,7 +382,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
-   // UserData.shared._getSignedInUserDocs(userId);
+    // UserData.shared._getSignedInUserDocs(userId);
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     if (loggedInUser == null) {
@@ -395,8 +392,6 @@ class _SplashViewState extends State<SplashView> {
       return;
     }
     UserData.shared.user = loggedInUser;
-
-    
 
     if (loggedInUser.skills == null) {
       await _navigateToSkillsView(loggedInUser);

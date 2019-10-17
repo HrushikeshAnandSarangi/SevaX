@@ -21,7 +21,6 @@ class SplashScreen extends StatefulWidget {
 
   @override
   SplashScreenState createState() => new SplashScreenState();
-  
 }
 
 // image carousel

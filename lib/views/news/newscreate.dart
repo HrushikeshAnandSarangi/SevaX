@@ -343,7 +343,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         builder: (context) => LocationPicker()),
                   ).then((point) {
                     if (point != null) location = point;
-                    
                   });
                 },
                 child: SizedBox(

@@ -59,17 +59,16 @@ class MyCustomFormState extends State<MyCustomForm> {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     OfferModel model = OfferModel(
-      email: SevaCore.of(context).loggedInUser.email,
-      fullName: SevaCore.of(context).loggedInUser.fullname,
-      title: title,
-      id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
-      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      description: description,
-      schedule: schedule,
-      timebankId: widget.timebankId,
-      timestamp: timestamp,
-      location: location
-    );
+        email: SevaCore.of(context).loggedInUser.email,
+        fullName: SevaCore.of(context).loggedInUser.fullname,
+        title: title,
+        id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        description: description,
+        schedule: schedule,
+        timebankId: widget.timebankId,
+        timestamp: timestamp,
+        location: location);
     await FirestoreManager.createOffer(offerModel: model);
   }
 
@@ -189,17 +188,18 @@ class MyCustomFormState extends State<MyCustomForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () {
-                      if(location!=null){
-                      if (_formKey.currentState.validate()) {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Creating Offer')),
-                        );
-                        _writeToDB();
-                        Navigator.pop(context);
-                      }} else {
+                      if (location != null) {
+                        if (_formKey.currentState.validate()) {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text('Creating Offer')),
+                          );
+                          _writeToDB();
+                          Navigator.pop(context);
+                        }
+                      } else {
                         Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Location not added'),
-                      ));
+                          content: Text('Location not added'),
+                        ));
                       }
                     },
                     child: Row(

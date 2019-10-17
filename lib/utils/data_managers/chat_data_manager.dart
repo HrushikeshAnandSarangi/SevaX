@@ -13,7 +13,8 @@ Future<void> createChat({
   chat.rootTimebank = FlavorConfig.values.timebankId;
   return await Firestore.instance
       .collection('chatsnew')
-      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
+      .document(
+          chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
       .setData(chat.toMap(), merge: true);
 }
 
@@ -24,7 +25,8 @@ Future<void> updateChat({
   // log.i('updateChat: MessageModel: ${chat.toMap()}');
   return await Firestore.instance
       .collection('chatsnew')
-      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
+      .document(
+          chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
       .updateData(chat.toMap());
 }
 

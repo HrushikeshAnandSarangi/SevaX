@@ -37,8 +37,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        
+      onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
@@ -118,8 +117,6 @@ class ResultView extends StatefulWidget {
 
 class _ResultViewState extends State<ResultView> {
   Widget build(BuildContext context) {
-    
-    
     if (widget.controller.text.trim().isEmpty) {
       return Center(child: Text('Enter a Search String'));
     }

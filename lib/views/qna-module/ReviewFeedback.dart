@@ -53,9 +53,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
   Widget getFeebackQuestions() {
     Logger.root.level = Level.ALL;
-    Logger.root.onRecord.listen((LogRecord rec) {
-      
-    });
+    Logger.root.onRecord.listen((LogRecord rec) {});
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -146,6 +144,4 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           ),
         ));
   }
-
-
 }

@@ -74,10 +74,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           title: Text('Interests'),
         ),
         body: Column(
-          children: <Widget>[
-            ScrollExample(context),
-            list()
-          ],
+          children: <Widget>[ScrollExample(context), list()],
         ),
         bottomNavigationBar: ButtonBar(
           children: <Widget>[
@@ -102,6 +99,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
       ),
     );
   }
+
   Widget list() {
     if (selectedInterests.length > 0) {
       return Padding(
@@ -109,8 +107,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
         child: Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
-          children:
-          selectedInterests.map((interest) {
+          children: selectedInterests.map((interest) {
             int index = interests.indexOf(interest);
             //if (selectedSkills.contains(skill)) {
             return chip(interest, false, colorList[index]);
@@ -125,7 +122,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
     );
   }
 
-
   Widget ScrollExample(BuildContext context) {
     //final List<String> items = List.generate(5, (index) => "Item $index");
 //
@@ -135,21 +131,19 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
     return Container(
       child:
-      //Column(children: [
-      Padding(
+          //Column(children: [
+          Padding(
         padding: EdgeInsets.all(10.0),
-        child:TypeAheadField<String>(
+        child: TypeAheadField<String>(
           getImmediateSuggestions: true,
           textFieldConfiguration: TextFieldConfiguration(
             decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Search for interests'),
+                border: OutlineInputBorder(), hintText: 'Search for interests'),
           ),
-
           suggestionsCallback: (String pattern) async {
             return interests
                 .where((item) =>
-                item.toLowerCase().startsWith(pattern.toLowerCase()))
+                    item.toLowerCase().startsWith(pattern.toLowerCase()))
                 .toList();
           },
           itemBuilder: (context, String suggestion) {
@@ -162,7 +156,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
               selectedInterests.add(suggestion);
               interests.remove(suggestion);
             }
-            
           },
         ),
       ),
@@ -278,11 +271,13 @@ class SkillViewNew extends StatefulWidget {
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
 }
+
 class Skill {
   String skillName;
   bool isSelected;
-  Skill(this.skillName,this.isSelected);
+  Skill(this.skillName, this.isSelected);
 }
+
 class _SkillViewNewState extends State<SkillViewNew> {
   List<String> skills = const [
     'Curators',
@@ -296,15 +291,17 @@ class _SkillViewNewState extends State<SkillViewNew> {
     'Baseball',
   ];
 
-  List<Skill> skillsList = [Skill('Curators',false),
-                            Skill('Developers',false),
-                            Skill('Writer',false),
-                            Skill('Advertisers',false),
-                            Skill('Customer',false),
-                            Skill('Sports',false),
-                            Skill('Adventure',false),
-                            Skill('Culture',false),
-                            Skill('Baseball',false)];
+  List<Skill> skillsList = [
+    Skill('Curators', false),
+    Skill('Developers', false),
+    Skill('Writer', false),
+    Skill('Advertisers', false),
+    Skill('Customer', false),
+    Skill('Sports', false),
+    Skill('Adventure', false),
+    Skill('Culture', false),
+    Skill('Baseball', false)
+  ];
   List<MaterialColor> colorList;
   Set<String> selectedSkills = <String>[].toSet();
   @override
@@ -327,21 +324,19 @@ class _SkillViewNewState extends State<SkillViewNew> {
 
     return Container(
       child:
-      //Column(children: [
-      Padding(
+          //Column(children: [
+          Padding(
         padding: EdgeInsets.all(10.0),
-        child:TypeAheadField<String>(
+        child: TypeAheadField<String>(
           getImmediateSuggestions: true,
           textFieldConfiguration: TextFieldConfiguration(
             decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Search for skills'),
+                border: OutlineInputBorder(), hintText: 'Search for skills'),
           ),
-
           suggestionsCallback: (String pattern) async {
             return skills
                 .where((item) =>
-                item.toLowerCase().startsWith(pattern.toLowerCase()))
+                    item.toLowerCase().startsWith(pattern.toLowerCase()))
                 .toList();
           },
           itemBuilder: (context, String suggestion) {
@@ -354,7 +349,6 @@ class _SkillViewNewState extends State<SkillViewNew> {
               selectedSkills.add(suggestion);
               skills.remove(suggestion);
             }
-            
           },
         ),
       ),
@@ -404,6 +398,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       ),
     );
   }
+
   Widget list() {
     if (selectedSkills.length > 0) {
       return Padding(
@@ -411,12 +406,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
         child: Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
-          children:
-          selectedSkills.map((skill) {
+          children: selectedSkills.map((skill) {
             int index = skills.indexOf(skill);
             //if (selectedSkills.contains(skill)) {
-              return chip(skill, false, colorList[index]);
-           // }
+            return chip(skill, false, colorList[index]);
+            // }
             //return chip(skill, false, colorList[index]);
           }).toList(),
         ),
@@ -727,7 +721,6 @@ class _SkillViewState extends State<SkillView> {
                     _selectedTools.add(name);
                   }
                   globals.skills = _selectedTools.toList();
-                  
                 });
               },
       );
@@ -781,7 +774,6 @@ _setPreferencesSkip(BuildContext context) async {
 }
 
 _updateSkillsToDB(BuildContext context) {
-  
   Firestore.instance
       .collection('users')
       .document(SevaCore.of(context).loggedInUser.email)
@@ -796,11 +788,9 @@ _updateSkillsToDB(BuildContext context) {
     'photourl': SevaCore.of(context).loggedInUser.photoURL
   });
   _setPreferencesNext(context);
-  
 }
 
 createOnSkip(BuildContext context) {
-  
   Firestore.instance
       .collection('users')
       .document(SevaCore.of(context).loggedInUser.email)

@@ -12,7 +12,9 @@ Future<void> createJoinRequest({@required JoinRequestModel model}) async {
       .where('user_id', isEqualTo: model.userId);
   QuerySnapshot snapshot = await query.getDocuments();
   DocumentSnapshot document =
-      snapshot.documents?.length > 0 && snapshot.documents != null ? snapshot.documents.first : null;
+      snapshot.documents?.length > 0 && snapshot.documents != null
+          ? snapshot.documents.first
+          : null;
   if (document != null)
     return await Firestore.instance
         .collection('join_requests')
@@ -41,9 +43,9 @@ Stream<List<JoinRequestModel>> getTimebankJoinRequest({
         List<JoinRequestModel> joinrequestList = [];
         snapshot.documents.forEach(
           (documentSnapshot) {
-            JoinRequestModel model = JoinRequestModel.fromMap(documentSnapshot.data);
-            if(model.accepted == null)
-            joinrequestList.add(model);
+            JoinRequestModel model =
+                JoinRequestModel.fromMap(documentSnapshot.data);
+            if (model.accepted == null) joinrequestList.add(model);
           },
         );
         joinrequestSink.add(joinrequestList);

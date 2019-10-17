@@ -68,7 +68,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   void _writeToDB() {
     // _checkTimebankName();
     // if (!_exists) {
-    
+
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
     globals.addedMembersId.forEach((m) {
@@ -93,8 +93,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
-
-    
   }
 
   @override
@@ -148,10 +146,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                     ));
                                   }
                                 },
-                                child: Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Create Yang Gang'
-          :
-                                  'Create Timebank',
+                                child: Text(
+                                  FlavorConfig.appFlavor ==
+                                          Flavor.HUMANITY_FIRST
+                                      ? 'Create Yang Gang'
+                                      : 'Create Timebank',
                                   style: TextStyle(fontSize: 16.0),
                                 ),
                                 textColor: Colors.blue,
@@ -332,12 +331,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       style: TextStyle(fontSize: 16.0, color: Colors.blue),
                     ),
                   )),
-              
+
               Padding(
                 padding: EdgeInsets.only(top: 10.0),
                 child: _showMembers(),
               ),
-              
+
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
@@ -348,7 +347,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           builder: (context) => LocationPicker()),
                     ).then((point) {
                       if (point != null) location = point;
-                      
                     });
                   },
                   child: SizedBox(
@@ -385,7 +383,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     if (globals.addedMembersId == []) {
       Text('');
     } else {
-      
       Text(globals.addedMembersId.toString());
     }
   }

@@ -9,7 +9,7 @@ Future<void> createAcceptRequestNotification({
 }) async {
   UserModel user =
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
-      notificationsModel.timebankId = FlavorConfig.values.timebankId;
+  notificationsModel.timebankId = FlavorConfig.values.timebankId;
 
   Firestore.instance
       .collection('users')

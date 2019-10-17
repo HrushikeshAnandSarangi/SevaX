@@ -193,9 +193,7 @@ class _DataScrollPickerState extends State<DataScrollPicker> {
           setState(() {
             _selectedIndex = index;
             widget.onValueSelected(widget.dataList.elementAt(index));
-            
           });
-          
         },
       ),
     );

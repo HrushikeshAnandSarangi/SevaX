@@ -189,7 +189,6 @@ class _ChatViewState extends State<ChatView> {
                       textCapitalization: TextCapitalization.sentences,
                       validator: (value) {
                         if (value.isEmpty) {
-                          
                           return 'Please type message';
                         }
                         messageModel.message = value;
@@ -211,7 +210,7 @@ class _ChatViewState extends State<ChatView> {
                     if (_formKey.currentState.validate()) {
                       String loggedInEmailId =
                           SevaCore.of(context).loggedInUser.email;
-                      
+
                       messageModel.fromId = loggedInEmailId;
                       messageModel.toId = widget.useremail;
                       messageModel.timestamp =

@@ -26,28 +26,27 @@ class RequestModel extends DataModel {
 
   Color color;
 
-  RequestModel({
-    this.id,
-    this.title,
-    this.description,
-    this.durationOfRequest,
-    this.email,
-    this.fullName,
-    this.sevaUserId,
-    this.photoUrl,
-    this.accepted,
-    this.postTimestamp,
-    this.requestEnd,
-    this.requestStart,
-    this.acceptors,
-    this.color,
-    this.transactions,
-    this.rejectedReason,
-    this.timebankId,
-    this.approvedUsers = const [],
-    this.numberOfApprovals = 1,
-    this.location
-  });
+  RequestModel(
+      {this.id,
+      this.title,
+      this.description,
+      this.durationOfRequest,
+      this.email,
+      this.fullName,
+      this.sevaUserId,
+      this.photoUrl,
+      this.accepted,
+      this.postTimestamp,
+      this.requestEnd,
+      this.requestStart,
+      this.acceptors,
+      this.color,
+      this.transactions,
+      this.rejectedReason,
+      this.timebankId,
+      this.approvedUsers = const [],
+      this.numberOfApprovals = 1,
+      this.location});
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -115,9 +114,9 @@ class RequestModel extends DataModel {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
     if (map.containsKey('location')) {
-
       GeoPoint geoPoint = map['location']['geopoint'];
-      this.location = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      this.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
   }
 

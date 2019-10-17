@@ -162,8 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                 validator: _validateEmailId,
                 onSaved: _saveEmail,
                 decoration: InputDecoration(
-                  enabledBorder:
-                  UnderlineInputBorder(
+                  enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)),
                   labelText: 'EMAIL',
                   labelStyle: textStyle,
@@ -231,7 +230,9 @@ class _LoginPageState extends State<LoginPage> {
                         SizedBox(width: 16),
                         Text(
                           'SIGN IN',
-                          style: TextStyle(color: FlavorConfig.values.buttonTextColor,),
+                          style: TextStyle(
+                            color: FlavorConfig.values.buttonTextColor,
+                          ),
                         ),
                       ],
                     ),
@@ -331,9 +332,7 @@ class _LoginPageState extends State<LoginPage> {
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
-    } on Exception catch (error) {
-      
-    }
+    } on Exception catch (error) {}
     isLoading = false;
     _processLogin(user);
   }
@@ -351,12 +350,9 @@ class _LoginPageState extends State<LoginPage> {
       );
     } on PlatformException catch (erorr) {
       handlePlatformException(erorr);
-    } on Exception catch (error) {
-      
-    }
+    } on Exception catch (error) {}
     isLoading = false;
     if (user == null) {
-      
       return;
     }
 
