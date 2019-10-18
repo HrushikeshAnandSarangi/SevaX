@@ -100,6 +100,9 @@ Stream<List<MessageModel>> getMessagesforChat({
             MessageModel model = MessageModel.fromMap(documentSnapshot.data);
 
             messagelist.add(model);
+            messagelist.sort((m1,m2){
+              return m1.timestamp.compareTo(m2.timestamp);
+            });
           },
         );
         messageSink.add(messagelist);

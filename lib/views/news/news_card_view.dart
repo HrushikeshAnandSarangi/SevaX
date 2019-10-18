@@ -175,6 +175,7 @@ class NewsCardView extends StatelessWidget {
               ),
               onPressed: () {
                 _deleteNews(context);
+                Navigator.pop(context);
               },
             ),
           ],
