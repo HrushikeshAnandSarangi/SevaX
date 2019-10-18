@@ -49,7 +49,7 @@ Future<void> createmessage({
 
 //Get chats for a user
 Stream<List<ChatModel>> getChatsforUser({
-  @required String email,
+  @required String email, 
 }) async* {
   // log.i('getChatsforUser: Email: $email');
   var data = Firestore.instance.collection('chatsnew').snapshots();
@@ -61,11 +61,13 @@ Stream<List<ChatModel>> getChatsforUser({
         snapshot.documents.forEach(
           (documentSnapshot) {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
-            if ((model.user1 == email || model.user2 == email) &&
+              print("executing chat size ${snapshot.documents.length}");
+              if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
                 model.rootTimebank == FlavorConfig.values.timebankId) {
               chatlist.add(model);
             }
+            print("Final chat size  :  ${chatlist.length}" );
           },
         );
         chatSink.add(chatlist);

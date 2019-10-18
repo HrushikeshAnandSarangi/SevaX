@@ -28,7 +28,7 @@ class FeedbackConstants {
       FEEDBACK_TITLE: "How likely are you to volunteer again for this cause?",
       ANSWERS: [
         {"text": "Yes i would", SCORE: 5},
-        {"text": "Maybe or Not Sure", SCORE: 4},
+        {"text": "Maybe", SCORE: 4},
         {"text": "No, I would not", SCORE: 3},
       ]
     }

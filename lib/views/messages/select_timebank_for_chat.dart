@@ -16,17 +16,21 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context, false),
+            ),
             backgroundColor: Theme.of(context).primaryColor,
             title: Text("Select Timebank"),
           ),
-          body: abc(context)),
+          body: getTimebanks(context)),
     );
   }
 }
 
 List<String> dropdownList = [];
 
-Widget abc(BuildContext context) {
+Widget getTimebanks(BuildContext context) {
   List<TimebankModel> timebankList = [];
   return StreamBuilder<List<TimebankModel>>(
       stream: FirestoreManager.getTimebanksForUserStream(
@@ -38,15 +42,11 @@ Widget abc(BuildContext context) {
           return Center(child: CircularProgressIndicator());
         }
         timebankList = snapshot.data;
-        // timebankList.forEach((t){
-        //   if(t.name==timebankName){
-        //     timebankId=t.id;
-        //   }
-        // });
         timebankList.forEach((t) {
           dropdownList.add(t.id);
         });
 
+        // Navigator.pop(context);
         print("Length ${dropdownList.length}");
 
         return ListView.builder(

@@ -22,6 +22,7 @@ class UserModel extends DataModel {
   String lat_lng;
   // AvailabilityModel availability;
   String currentTimebank =  FlavorConfig.values.timebankId;
+  int associatedWithTimebanks = 1;
   //String
 
   UserModel(

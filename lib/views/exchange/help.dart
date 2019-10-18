@@ -118,6 +118,12 @@ class RequestsState extends State<Requests> {
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
                     });
+                    SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+                        dropdownList.length;
+
+                    print(
+                        "AssociatedWithTimebanks Timebank count updated to ${dropdownList.length}");
+
                     //dropdownList.insert(0, 'All');
                     return DropdownButton<String>(
                       value: timebankId,
@@ -407,12 +413,19 @@ class OffersState extends State<Offers> {
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
                     });
+                    //update the timebank count;
+                    SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+                        dropdownList.length;
+                    print(
+                        "AssociatedWithTimebanks Timebank count updated to ${dropdownList.length}");
+
                     //dropdownList.insert(0, 'All');
                     return DropdownButton<String>(
                       value: timebankId,
                       onChanged: (String newValue) {
                         setState(() {
                           timebankId = newValue;
+
                           SevaCore.of(context).loggedInUser.currentTimebank =
                               newValue;
                           //print(timebankId);
