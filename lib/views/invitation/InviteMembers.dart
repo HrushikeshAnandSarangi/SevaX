@@ -25,13 +25,16 @@ class InviteMembersState extends State<InviteMembers> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text("Invite users via code"),
-        ),
+            backgroundColor: Theme.of(context).primaryColor,
+            title: Text("Timebank codes"),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context, false),
+            )),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Theme.of(context).primaryColor,
           icon: Icon(Icons.add),
-          label: Text("Genrate New"),
+          label: Text("Generate New"),
           onPressed: () {
             _asyncInputDialog(context);
           },
@@ -40,8 +43,6 @@ class InviteMembersState extends State<InviteMembers> {
       ),
     );
   }
-
-
 
   Future<String> _asyncInputDialog(BuildContext context) async {
     String timebankCode = createCryptoRandomString();
@@ -53,7 +54,7 @@ class InviteMembersState extends State<InviteMembers> {
           false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Code Genrated"),
+          title: Text("Code generated"),
           content: new Row(
             children: <Widget>[
               Text(timebankCode + " is your code."),
@@ -77,7 +78,7 @@ class InviteMembersState extends State<InviteMembers> {
               onPressed: () {
                 var today = new DateTime.now();
                 var oneDayFromToday =
-                    today.add(new Duration(days: 1)).millisecondsSinceEpoch;
+                    today.add(new Duration(days: 30)).millisecondsSinceEpoch;
 
                 registerTimebankCode(
                     timebankCode: timebankCode,

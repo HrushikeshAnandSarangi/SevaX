@@ -15,6 +15,7 @@ import '../core.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'list_members_timebank.dart';
+import 'new_select_member.dart';
 
 class ChatListView extends StatefulWidget {
   const ChatListView({Key key}) : super(key: key);
@@ -77,83 +78,89 @@ class _ChatListViewState extends State<ChatListView> {
         label: Text('New Chat'),
         foregroundColor: FlavorConfig.values.buttonTextColor,
         onPressed: () {
+          if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SelectTimeBankForNewChat()),
+            );
+          } else {
+            MaterialPageRoute(
+                builder: (context) => SelectMember(
+                      timebankId:
+                          SevaCore.of(context).loggedInUser.currentTimebank,
+                    ));
+          }
 
-            // return abc(context);
-
-            // print("tapped");
-        // checkTimebanksCount(context);    
-
-
-          NewsModel news;
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NewChat(false, news)),
-            // MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
-          );
+          // NewsModel news;
+          // Navigator.push(
+          //   context,
+          //   // MaterialPageRoute(builder: (context) => NewChat(false, news)),
+          //   MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
+          // );
         },
       ),
     );
   }
 
-Widget abc(BuildContext context) {
-  List<TimebankModel> timebankList = [];
-  return StreamBuilder<List<TimebankModel>>(
-      stream: FirestoreManager.getTimebanksForUserStream(
-        userId: SevaCore.of(context).loggedInUser.sevaUserID,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        timebankList = snapshot.data;
-        // timebankList.forEach((t){
-        //   if(t.name==timebankName){
-        //     timebankId=t.id;
-        //   }
-        // });
-        List<String> dropdownList = [];
-        timebankList.forEach((t) {
-          dropdownList.add(t.id);
-        });
+  Widget abc(BuildContext context) {
+    List<TimebankModel> timebankList = [];
+    return StreamBuilder<List<TimebankModel>>(
+        stream: FirestoreManager.getTimebanksForUserStream(
+          userId: SevaCore.of(context).loggedInUser.sevaUserID,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          timebankList = snapshot.data;
+          // timebankList.forEach((t){
+          //   if(t.name==timebankName){
+          //     timebankId=t.id;
+          //   }
+          // });
+          List<String> dropdownList = [];
+          timebankList.forEach((t) {
+            dropdownList.add(t.id);
+          });
 
-        print("Length inside chat${dropdownList.length}");
+          print("Length inside chat${dropdownList.length}");
 
-        return ListView.builder(
-            itemCount: timebankList.length,
-            itemBuilder: (context, index) {
-              TimebankModel timebank = timebankList.elementAt(index);
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ListMambersForNewChat(),
-                    ),
-                  );
-                  // print("inside tap");
-                },
-                child: Card(
-                  margin: EdgeInsets.all(5),
-                  child: Container(
-                    margin: EdgeInsets.all(15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(timebank.name),
-                      ],
+          return ListView.builder(
+              itemCount: timebankList.length,
+              itemBuilder: (context, index) {
+                TimebankModel timebank = timebankList.elementAt(index);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ListMambersForNewChat(),
+                      ),
+                    );
+                    // print("inside tap");
+                  },
+                  child: Card(
+                    margin: EdgeInsets.all(5),
+                    child: Container(
+                      margin: EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(timebank.name),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            });
-      });
-}
-
+                );
+              });
+        });
+  }
 
 // Widget checkTimebanksCount(BuildContext context) {
-//   return 
+//   return
 // }
   Widget get taskShimmer {
     return Padding(

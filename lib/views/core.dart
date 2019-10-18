@@ -661,8 +661,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                             MaterialPageRoute(
                               builder: (context) => CreateRequest(
                                 timebankId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentTimebank,
+                                    .loggedInUser
+                                    .currentTimebank,
                               ),
                             ),
                           )
@@ -798,9 +798,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                               ),
                             ),
                           );
-                          print("AUTHORISED to create");
                         } else {
-                          print("NOT AUTHORISED to create");
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {

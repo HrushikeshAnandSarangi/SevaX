@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -9,6 +11,9 @@ import 'package:sevaexchange/views/core.dart';
 
 import 'dart:ui';
 
+import '../../flavor_config.dart';
+import 'chatview.dart';
+
 class SelectMember extends StatefulWidget {
   final String timebankId;
 
@@ -16,7 +21,6 @@ class SelectMember extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _SelectMemberState();
   }
 }
@@ -24,11 +28,46 @@ class SelectMember extends StatefulWidget {
 class _SelectMemberState extends State<SelectMember> {
   @override
   Widget build(BuildContext context) {
+    var color = Theme.of(context);
+
+    print("Color ${color.primaryColor}");
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        backgroundColor: getAppBarBackgroundColor(),
+        title: Text(
+          "Select member",
+          style: TextStyle(color: Colors.white),
+        ),
+        elevation: 0,
+        actions: <Widget>[],
+      ),
       body: _SelectMembersView(
         timebankId: widget.timebankId,
       ),
     );
+  }
+
+  Color getAppBarBackgroundColor() {
+    switch (FlavorConfig.appFlavor) {
+      case Flavor.HUMANITY_FIRST:
+        return Colors.indigo;
+
+      case Flavor.TOM:
+        return Color.fromARGB(255, 11, 40, 161);
+
+      case Flavor.TULSI:
+        return Color.fromARGB(255, 26, 50, 102);
+
+      case Flavor.APP:
+        return Color.fromARGB(255, 109, 110, 172);
+
+      default:
+      return Color.fromARGB(255, 109, 110, 172);
+    }
   }
 }
 
@@ -71,73 +110,12 @@ class _SelectMembersView extends StatelessWidget {
   ) {
     return CustomScrollView(
       slivers: <Widget>[
-        getAppBar(context, timebankModel),
         SliverList(
           delegate: SliverChildListDelegate(
             getContent(context, timebankModel),
           ),
         ),
       ],
-    );
-  }
-
-  Widget getAppBar(BuildContext context, TimebankModel timebankModel) {
-    return SliverAppBar(
-      iconTheme: IconThemeData(color: Colors.white),
-      // backgroundColor: Theme.of(context).primaryColor,
-      backgroundColor: Theme.of(context).primaryColor,
-      expandedHeight: 20,
-      floating: false,
-      snap: false,
-      pinned: true,
-      title: Text(
-        "Select member",
-        style: TextStyle(color: Colors.white),
-      ),
-      elevation: 0,
-      actions: <Widget>[],
-      // flexibleSpace: FlexibleSpaceBar(
-      //   centerTitle: true,
-      //   title: Text(
-      //     timebankModel.name,
-      //     style: TextStyle(color: Colors.white),
-      //   ),
-      //   collapseMode: CollapseMode.pin,
-      //   background: Stack(
-      //     children: <Widget>[
-      //       Positioned(
-      //         right: 0,
-      //         left: 0,
-      //         top: 0,
-      //         bottom: 0,
-      //         child: Center(
-      //           child: Container(
-      //             height: 130,
-      //             width: 130,
-      //             margin: EdgeInsets.all(16),
-      //             decoration: ShapeDecoration(
-      //               shadows: [
-      //                 BoxShadow(
-      //                   color: Colors.black.withAlpha(30),
-      //                   spreadRadius: 0,
-      //                   offset: Offset(0, 4),
-      //                   blurRadius: 17,
-      //                 )
-      //               ],
-      //               shape: CircleBorder(),
-      //             ),
-      //             child: ClipOval(
-      //               child: FadeInImage.assetNetwork(
-      //                 placeholder: 'lib/assets/images/noimagefound.png',
-      //                 image: timebankModel.photoUrl,
-      //               ),
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 
@@ -207,10 +185,10 @@ class _SelectMembersView extends StatelessWidget {
                       },
                     ),
                   ],
-                  child: getUserWidget(user),
+                  child: getUserWidget(user, context),
                 );
               }
-              return getUserWidget(user);
+              return getUserWidget(user, context);
             },
           );
         }).toList(),
@@ -255,10 +233,10 @@ class _SelectMembersView extends StatelessWidget {
                       },
                     ),
                   ],
-                  child: getUserWidget(user),
+                  child: getUserWidget(user, context),
                 );
               }
-              return getUserWidget(user);
+              return getUserWidget(user, context);
             },
           );
         }).toList(),
@@ -344,10 +322,10 @@ class _SelectMembersView extends StatelessWidget {
                       },
                     ),
                   ],
-                  child: getUserWidget(user),
+                  child: getUserWidget(user, context),
                 );
               }
-              return getUserWidget(user);
+              return getUserWidget(user, context);
             },
           );
         }).toList(),
@@ -355,10 +333,53 @@ class _SelectMembersView extends StatelessWidget {
     );
   }
 
-  Widget getUserWidget(UserModel user) {
+  Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        print("Tapped on ${user.email}");
+      onTap: () async {
+        print(user.email +
+            " Tapped on new chat for " +
+            SevaCore.of(context).loggedInUser.email);
+
+        if (user.email == SevaCore.of(context).loggedInUser.email) {
+          return null;
+        } else {
+          List users = [user.email, SevaCore.of(context).loggedInUser.email];
+          print("Listing users");
+          users.sort();
+          ChatModel model = ChatModel();
+          model.user1 = users[0];
+          model.user2 = users[1];
+          print("Model1" + model.user1);
+          print("Model2" + model.user2);
+
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => ChatView(
+          //             useremail: user.email,
+          //             chatModel: model,
+          //             isFromShare: false,
+          //             news: NewsModel(),
+          //           )),
+          // );
+          await createChat(chat: model).then(
+            (_) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ChatView(
+                          useremail: user.email,
+                          chatModel: model,
+                          isFromShare: false,
+                          news: NewsModel(),
+                        )),
+              );
+            },
+          );
+        }
+        return user.email == SevaCore.of(context).loggedInUser.email
+            ? null
+            : () {};
       },
       child: Card(
         child: ListTile(
@@ -370,6 +391,22 @@ class _SelectMembersView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Create a [chat]
+  Future<void> createChat({
+    @required ChatModel chat,
+  }) async {
+    // log.i('createChat: MessageModel: ${chat.toMap()}');
+    chat.rootTimebank = FlavorConfig.values.timebankId;
+    return Firestore.instance
+        .collection('chatsnew')
+        .document(chat.user1 +
+            '*' +
+            chat.user2 +
+            '*' +
+            FlavorConfig.values.timebankId)
+        .setData(chat.toMap(), merge: true);
   }
 
   Widget getSectionTitle(BuildContext context, String title) {
