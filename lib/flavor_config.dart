@@ -12,14 +12,15 @@ class FlavorValues {
   final ThemeData theme;
   final Color buttonTextColor;
 
-  FlavorValues(
-      {@required this.appName,
-      @required this.timebankName,
-      @required this.timebankId,
-      this.requestTitle = 'Request',
-      this.offertitle = 'Offer',
-      this.theme,
-      this.buttonTextColor = Colors.white});
+  FlavorValues({
+    @required this.appName,
+    @required this.timebankName,
+    @required this.timebankId,
+    this.requestTitle = 'Request',
+    this.offertitle = 'Offer',
+    this.theme,
+    this.buttonTextColor = Colors.white,
+  });
 }
 
 class FlavorConfig {
