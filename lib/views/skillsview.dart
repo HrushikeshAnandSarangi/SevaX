@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -60,6 +62,12 @@ class _InterestViewNewState extends State<InterestViewNew> {
       return color;
     }).toList();
     colorList.shuffle();
+    getInterestsForTimebank(timebankId: FlavorConfig.values.timebankId)
+        .then((onValue) {
+      setState(() {
+        if (onValue != null && onValue.isNotEmpty) interests = onValue;
+      });
+    });
   }
 
   @override
@@ -291,17 +299,17 @@ class _SkillViewNewState extends State<SkillViewNew> {
     'Baseball',
   ];
 
-  List<Skill> skillsList = [
-    Skill('Curators', false),
-    Skill('Developers', false),
-    Skill('Writer', false),
-    Skill('Advertisers', false),
-    Skill('Customer', false),
-    Skill('Sports', false),
-    Skill('Adventure', false),
-    Skill('Culture', false),
-    Skill('Baseball', false)
-  ];
+  // List<Skill> skillsList = [
+  //   Skill('Curators', false),
+  //   Skill('Developers', false),
+  //   Skill('Writer', false),
+  //   Skill('Advertisers', false),
+  //   Skill('Customer', false),
+  //   Skill('Sports', false),
+  //   Skill('Adventure', false),
+  //   Skill('Culture', false),
+  //   Skill('Baseball', false)
+  // ];
   List<MaterialColor> colorList;
   Set<String> selectedSkills = <String>[].toSet();
   @override
@@ -313,6 +321,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
     colorList.shuffle();
     //skillsList.add();
 //    skillsList.add(Skill('Curators',false));
+    getSkillsForTimebank(timebankId: FlavorConfig.values.timebankId)
+        .then((onValue) {
+      setState(() {
+        if (onValue != null && onValue.isNotEmpty) skills = onValue;
+      });
+    });
   }
 
   Widget ScrollExample(BuildContext context) {
