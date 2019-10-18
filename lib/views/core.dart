@@ -66,6 +66,7 @@ class _CoreViewState extends State<CoreView> {
 
   @override
   void didChangeDependencies() {
+   // SevaCore.of(context).loggedInUser.sevaUserID = "92tbswcvisf026ZRQnKbiGDoq8v2";
     user = UserModel(
       sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
       email: SevaCore.of(context).loggedInUser.email,

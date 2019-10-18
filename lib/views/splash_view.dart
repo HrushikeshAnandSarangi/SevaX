@@ -6,6 +6,7 @@ import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
+import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
@@ -369,6 +370,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<String> _getLoggedInUserId() async {
     String userId = await PreferenceManager.loggedInUserId;
+    print("user id: $userId");
     UserData.shared.userId = userId;
     print(userId);
     return userId;
@@ -406,7 +408,7 @@ class _SplashViewState extends State<SplashView> {
     }
 //    String location = loggedInUser.availability.location;
 //    print(location);
-//     if (location == null) {
+//     if (loggedInUser.availability == null) {
 //       await _navigateToCalendarView(loggedInUser);
 //     }
 
@@ -468,6 +470,7 @@ class _SplashViewState extends State<SplashView> {
 //            Navigator.pop(context);
 //            loggedInUser.availability = availability;
 //            updateUserAvailableData(loggedInUser);
+//           // updateUserWeekDay(loggedInUser);
 //            loadingMessage = 'Updating Calendar';
 //          },
 //          onSkipped: () {
@@ -546,11 +549,6 @@ class _SplashViewState extends State<SplashView> {
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
   }
-
-  Future updateUserAvailableData(UserModel user) async {
-    await fireStoreManager.updateUserAvailability(user: user);
-  }
-
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
     Navigator.of(context).pushReplacement(

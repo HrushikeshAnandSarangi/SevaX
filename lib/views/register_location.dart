@@ -159,7 +159,7 @@ class _locationScreenState extends State<LocationView> {
 
   var _schedule = ["Day", "Month", "Year"];
   String _selectedScheduleItem = "Day";
-
+  bool _canSave = false;
   var _numbers = ["1", "2", "3", "4", "5"];
   String _selectedNumber = "1";
   String distanceValue;
@@ -219,7 +219,6 @@ class _locationScreenState extends State<LocationView> {
     TextStyle textStyle = Theme.of(context).textTheme.title;
     final ThemeData theme = Theme.of(context);
     String locationStr = "";
-    bool _canSave = false;
     bool _locationValidate = false;
     // bool _distnaceValidate = false;
     bool _weekValidate = false;
@@ -235,10 +234,8 @@ class _locationScreenState extends State<LocationView> {
         actions: <Widget>[
           new FlatButton(
             child: new Text('SAVE',
-                style: TextStyle(
-                  color: Colors.white,
-                )),
-            onPressed: () {
+                style: theme.textTheme.body1.copyWith(color: _canSave ? Colors.white : new Color.fromRGBO(255, 255, 255, 0.5))),
+            onPressed: _canSave ? () {
               bool checkFields = true;
               String message;
               if (locationController.text == null ||
@@ -257,15 +254,8 @@ class _locationScreenState extends State<LocationView> {
                 checkFields = false;
                 message = 'Please selecte your availability';
               }
-              if (distanceValue == null || distanceValue.isEmpty) {
-                checkFields = false;
-                message = 'Please selecte your distance';
-              }
-              if (checkFields == false) {
-                //this.showSnackBar(message, context);
-              } else {}
               widget.onSelectedCalendar(totalData);
-            },
+            }: null,
           )
         ],
       ),
@@ -403,7 +393,7 @@ class _locationScreenState extends State<LocationView> {
                     borderRadius: BorderRadius.circular(5.0),
                   ),
                 ),
-                enabled: true,
+                enabled: false,
                 keyboardType: TextInputType.multiline,
                 maxLines: 5,
               ),
@@ -496,6 +486,9 @@ class _locationScreenState extends State<LocationView> {
           totalData.weekArray.reduce((value, element) => value + ',' + element);
       print(string);
       myCommentsController.text = "User is available $string in week";
+      setState(() {
+        _canSave = true;
+      });
       print(totalData.toMap());
       //_items.add(data);
     });

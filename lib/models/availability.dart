@@ -15,7 +15,7 @@ class AvailabilityModel  {
     // text = "";
     accurance_number = "0";
   }
-  AvailabilityModel.fromMap(Map<String, dynamic> map) {
+  AvailabilityModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('accurance_number')) {
       this.accurance_number = map['accurance_number'];
     }
@@ -34,11 +34,8 @@ class AvailabilityModel  {
     if (map.containsKey('distnace')) {
       this.endsData = map['distnace'];
     }
-    if (map.containsKey('distnace')) {
-      this.repeatAfterStr = map['distance'];
-    }
-    if (map.containsKey('location')) {
-      this.endsData = map['location'];
+    if (map.containsKey('endsData')) {
+      this.endsData = map['endsData'];
     }
     if (map.containsKey('lat_lng')) {
       this.repeatAfterStr = map['lat_lng'];

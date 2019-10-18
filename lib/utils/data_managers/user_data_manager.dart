@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/models/availability.dart';
 
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/views/popup.dart';
 
 /// Create a [user]
 Future<void> createUser({
@@ -25,23 +27,37 @@ Future<void> updateUser({
       .updateData(user.toMap());
 }
 
-Future<void> updateUserAvailability({
-  @required UserModel user,
-}) async {
-  print("upadte user availability feature");
-
-//  return await Firestore.instance.collection("seva_stage").add({
-//    "Availability" : "abcd"
-//  });
+//Future<void> updateUserAvailability({
+//  @required UserModel user,
+//}) async {
+//  print("upadte user availability feature");
+//  print(user.availability.weekArray);
+////  return await Firestore.instance.collection("seva_stage").add({
+////    "Availability" : "abcd"
+////  });
 //  return await Firestore.instance
 //      .collection('users')
 //      .document(user.email)
-//      .updateData(user.availability.toMap());
-  // return await Firestore.instance
-  //     .collection('users')
-  //     .document(user.email)
-  //     .setData({"Availability":user.availability.toMap()});
-}
+//      .updateData({"availability":{
+//    "lat_lng":user.availability.lat_lng,
+//    "location":user.availability.location,
+//    "distnace":user.availability.distnace,
+//    "accurance_number":user.availability.accurance_number,
+//    "endsData":user.availability.endsData,
+//    "endsStatus":user.availability.endsStatus,
+//    "repeatAfterStr":user.availability.repeatAfterStr,
+//    "repeatNumber":user.availability.repeatNumber,
+//    //"weekArray":user.availability.weekArray,
+//
+//  }});
+//  // return await Firestore.instance
+//  //     .collection('users')
+//  //     .document(user.email)
+//  //     .setData({"Availability":user.availability.toMap()});
+//}
+
+
+
 
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/availability.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 enum SingingCharacter { Never, On, After}
 //class MyApp extends StatefulWidget {
 //
@@ -60,7 +62,6 @@ class AvailabilityState extends State<Availability> {
     colorList.shuffle();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -75,6 +76,7 @@ class AvailabilityState extends State<Availability> {
               onPressed: _canSave ? () {
                 //_data.weekArray = this.selectedInterests;
                 this.checkWeekDayAndStore();
+                //this.updateUserWeekDay()
                 Navigator.of(context).pop(_data);
               } : null
           )
@@ -407,7 +409,7 @@ class AvailabilityState extends State<Availability> {
         ],
       ),
     );
-  }
+  }   //
   Widget list() {
     return SingleChildScrollView(
       child: Padding(
