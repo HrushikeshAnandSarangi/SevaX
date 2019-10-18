@@ -66,7 +66,7 @@ class NewsListState extends State<NewsList> {
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
                   });
-                  dropdownList.insert(0, 'All');
+                  //dropdownList.insert(0, 'All');
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
