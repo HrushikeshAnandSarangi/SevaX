@@ -306,7 +306,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         TextFormField(
                           decoration: InputDecoration(
                             hintText: 'Your news and any #hashtags',
-                            labelText: '+ News and #hashtags',
+                            labelText: '+ #hashtags',
                             border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(10.0),
