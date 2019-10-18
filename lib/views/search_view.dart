@@ -4,6 +4,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
+import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';

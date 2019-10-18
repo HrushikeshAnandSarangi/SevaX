@@ -17,20 +17,21 @@ class NewsModel extends DataModel {
   EntityModel entity;
   List<String> likes;
 
-  NewsModel(
-      {this.id,
-      this.title,
-      this.subheading,
-      this.description,
-      this.email,
-      this.fullName,
-      this.sevaUserId,
-      this.newsImageUrl,
-      this.photoCredits,
-      this.postTimestamp,
-      this.location,
-      this.entity,
-      this.likes});
+  NewsModel({
+    this.id,
+    this.title,
+    this.subheading,
+    this.description,
+    this.email,
+    this.fullName,
+    this.sevaUserId,
+    this.newsImageUrl,
+    this.photoCredits,
+    this.postTimestamp,
+    this.location,
+    this.entity,
+    this.likes,
+  });
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -122,7 +123,7 @@ class NewsModel extends DataModel {
       this.likes = likesList;
     } else
       this.likes = [];
-  }
+    }
 }
 
 class EntityModel extends DataModel {

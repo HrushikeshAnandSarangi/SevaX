@@ -129,3 +129,7 @@ Future<NewsModel> getNewsForId(String newsId) async {
 
   return newsModel;
 }
+
+Future deleteNews(NewsModel newsModel) async {
+  await Firestore.instance.collection('news').document(newsModel.id).delete();
+}

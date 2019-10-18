@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'dart:async';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
