@@ -13,12 +13,16 @@ import 'dart:async';
 import 'package:sevaexchange/flavor_config.dart';
 
 class LocationPicker extends StatefulWidget {
+  final GeoFirePoint selectedLocation;
   final Location location = new Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
   final LatLng defaultLocation;
 
-  LocationPicker({this.defaultLocation = const LatLng(41.678510, -87.494080)});
+  LocationPicker({
+    this.defaultLocation = const LatLng(41.678510, -87.494080),
+    this.selectedLocation,
+  });
 
   @override
   _LocationPickerState createState() => _LocationPickerState();
@@ -39,6 +43,18 @@ class _LocationPickerState extends State<LocationPicker> {
     log('init state called for ${this.runtimeType.toString()}');
     super.initState();
     loadInitialLocation();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.selectedLocation != null) {
+      target = LatLng(
+        widget.selectedLocation.latitude,
+        widget.selectedLocation.longitude,
+      );
+      _addMarker();
+    }
   }
 
   @override
@@ -65,7 +81,20 @@ class _LocationPickerState extends State<LocationPicker> {
     try {
       locationData = await widget.location.getLocation();
       if (_mapController != null) {
-        animateToLocation(_mapController, locationData);
+        if (widget.selectedLocation != null) {
+          animateToLocation(
+            _mapController,
+            location: LatLng(
+              widget.selectedLocation.latitude,
+              widget.selectedLocation.longitude,
+            ),
+          );
+        } else {
+          animateToLocation(
+            _mapController,
+            locationData: locationData,
+          );
+        }
       }
       setState(() => this.locationData = locationData);
     } on PlatformException catch (exception) {
@@ -137,7 +166,8 @@ class _LocationPickerState extends State<LocationPicker> {
             style: TextStyle(color: Colors.white),
           ),
           color: Color(0xff007722),
-          onPressed: _addMarker,
+          onPressed:
+              _mapController != null && target != null ? _addMarker : null,
         ),
       ),
     );
@@ -192,12 +222,26 @@ class _LocationPickerState extends State<LocationPicker> {
     if (controller == null) return;
     setState(() => _mapController = controller);
     if (this.locationData != null) {
-      animateToLocation(controller, locationData);
+      if (widget.selectedLocation != null) {
+        animateToLocation(
+          controller,
+          location: LatLng(
+            widget.selectedLocation.latitude,
+            widget.selectedLocation.longitude,
+          ),
+        );
+      } else {
+        animateToLocation(
+          controller,
+          locationData: locationData,
+        );
+      }
     }
   }
 
   void _addMarker() {
     log('_addMarker');
+
     Marker marker = Marker(
       markerId: MarkerId('1'),
       position: target,
@@ -212,21 +256,25 @@ class _LocationPickerState extends State<LocationPicker> {
 
   /// Animate to location corresponding to [locationData.latitude] and [locationData.longitude]
   Future animateToLocation(
-    GoogleMapController mapController,
+    GoogleMapController mapController, {
     LocationData locationData,
-  ) async {
+    LatLng location,
+  }) async {
     if (mapController == null) {
       log('map contriller is null');
       return;
     }
-    if (locationData == null) {
+    if (locationData == null && widget.selectedLocation == null) {
       log('location data is null');
       return;
     }
 
     log('Updating camera postion');
     CameraPosition newPosition = CameraPosition(
-      target: LatLng(locationData.latitude, locationData.longitude),
+      target: LatLng(
+        locationData?.latitude ?? location.latitude,
+        locationData?.longitude ?? location.longitude,
+      ),
       zoom: 15,
     );
 

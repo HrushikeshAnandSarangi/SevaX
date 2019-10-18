@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
@@ -88,6 +91,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   List<DataModel> dataList = [];
   DataModel selectedEntity;
   GeoFirePoint location;
+  String selectedAddress;
 
   Future<void> writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -334,36 +338,29 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   Text(""),
                 ],
               ),
-
-              GestureDetector(
-                onTap: () {
+              FlatButton.icon(
+                icon: Icon(Icons.add_location),
+                label: Text(
+                  selectedAddress == null || selectedAddress.isEmpty
+                      ? 'Add Location'
+                      : selectedAddress,
+                ),
+                color: Colors.grey[200],
+                onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute<GeoFirePoint>(
-                        builder: (context) => LocationPicker()),
+                      builder: (context) => LocationPicker(
+                        selectedLocation: location,
+                      ),
+                    ),
                   ).then((point) {
                     if (point != null) location = point;
+                    _getLocation();
+                    log('ReceivedLocation: $selectedAddress');
                   });
                 },
-                child: SizedBox(
-                  width: 140,
-                  height: 30,
-                  child: Container(
-                    color: Colors.grey[200],
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Icon(Icons.add_location),
-                        ),
-                        Text('  '),
-                        Text('Add Location'),
-                      ],
-                    ),
-                  ),
-                ),
               ),
-
               Container(
                 margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 alignment: Alignment(0, 1),
@@ -468,5 +465,35 @@ class NewsCreateFormState extends State<NewsCreateForm> {
         },
       ),
     );
+  }
+
+  Future _getLocation() async {
+    List<Placemark> placemarkList = await Geolocator().placemarkFromCoordinates(
+      location.latitude,
+      location.longitude,
+    );
+    if (placemarkList != null && placemarkList.isNotEmpty) {
+      Placemark placemark = placemarkList.first;
+      setState(() {
+        this.selectedAddress = _getAddress(placemark);
+      });
+    }
+  }
+
+  String _getAddress(Placemark placemark) {
+    String address = '';
+    if (placemark.name != null && placemark.name.isNotEmpty) {
+      address += placemark.name;
+    }
+    if (placemark.locality != null && placemark.locality.isNotEmpty) {
+      if (address.isNotEmpty) address += ', ';
+      address += placemark.locality;
+    }
+    if (placemark.administrativeArea != null &&
+        placemark.administrativeArea.isNotEmpty) {
+      if (address.isNotEmpty) address += ', ';
+      address += placemark.administrativeArea;
+    }
+    return address;
   }
 }
