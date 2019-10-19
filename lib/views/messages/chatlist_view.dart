@@ -85,11 +85,13 @@ class _ChatListViewState extends State<ChatListView> {
                   builder: (context) => SelectTimeBankForNewChat()),
             );
           } else {
-            MaterialPageRoute(
-                builder: (context) => SelectMember(
-                      timebankId:
-                          SevaCore.of(context).loggedInUser.currentTimebank,
-                    ));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SelectMember(
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                        ),),);
           }
 
           // NewsModel news;
