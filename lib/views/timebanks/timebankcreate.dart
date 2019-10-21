@@ -18,10 +18,7 @@ class TimebankCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? 'Start a Yang Gang'
-              : "Start a Timebank",
+        title: Text('Create a ${FlavorConfig.values.timebankTitle}',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
@@ -146,11 +143,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                     ));
                                   }
                                 },
-                                child: Text(
-                                  FlavorConfig.appFlavor ==
-                                          Flavor.HUMANITY_FIRST
-                                      ? 'Create Yang Gang'
-                                      : 'Create Timebank',
+                                child: Text('Create ${FlavorConfig.values.timebankTitle}'
+                                  ,
                                   style: TextStyle(fontSize: 16.0),
                                 ),
                                 textColor: Colors.blue,

@@ -2,6 +2,8 @@ import 'dart:collection';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 
+import '../../flavor_config.dart';
+
 abstract class RequestModelList {
   static const int TITLE = 91;
   static const int REQUEST = 12;
@@ -174,7 +176,7 @@ class GroupOfferCommons {
         return "My Offers";
 
       case "Others":
-        return "Timebank Offers";
+        return "${FlavorConfig.values.timebankTitle} Offers";
 
       default:
         return "Others";

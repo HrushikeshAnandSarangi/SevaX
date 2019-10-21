@@ -7,6 +7,8 @@ import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../flavor_config.dart';
+
 class JoinRequestView extends StatefulWidget {
   final String timebankId;
   JoinRequestView({this.timebankId});
@@ -35,7 +37,7 @@ class JoinRequestViewState extends State<JoinRequestView>
         bottom: TabBar(
           labelColor: Colors.white,
           tabs: [
-            Tab(child: Text('Timebanks')),
+            Tab(child: Text('${FlavorConfig.values.timebankTitle}s')),
             Tab(child: Text('Campaigns')),
           ],
           controller: _tabController,

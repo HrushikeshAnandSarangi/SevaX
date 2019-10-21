@@ -170,7 +170,7 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         timebankModel.admins.contains(loggedInUser)
                             ? FlatButton(
-                                child: Text('View Requests'),
+                                child: Text('View Join Requests',style: TextStyle(fontWeight: FontWeight.bold),),
                                 textColor: Theme.of(context).accentColor,
                                 disabledTextColor:
                                     Theme.of(context).accentColor,
@@ -188,7 +188,7 @@ class _TimebankViewState extends State<TimebankView> {
                                 ? Offstage()
                                 : FlatButton(
                                     child:
-                                        Text('Request to join this Timebank'),
+                                        Text('Request to join this ${FlavorConfig.values.timebankTitle}'),
                                     textColor: Theme.of(context).accentColor,
                                     disabledTextColor:
                                         Theme.of(context).accentColor,
@@ -199,7 +199,7 @@ class _TimebankViewState extends State<TimebankView> {
                                           // return object of type Dialog
                                           return AlertDialog(
                                             title: new Text(
-                                                "Why do you want to join the timebank? "),
+                                                "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
                                             content: Form(
                                               key: formkey,
                                               child: TextFormField(
@@ -391,11 +391,8 @@ class _TimebankViewState extends State<TimebankView> {
                                       Padding(
                                         padding: EdgeInsets.only(
                                             top: 10.0, left: 20.0),
-                                        child: Text(
-                                          FlavorConfig.appFlavor ==
-                                                  Flavor.HUMANITY_FIRST
-                                              ? 'Parent Yang Gang'
-                                              : 'Parent Timebank',
+                                        child: Text('Parent ${FlavorConfig.values.timebankTitle}'
+                                          ,
                                           style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w700,
@@ -706,16 +703,14 @@ class _TimebankViewState extends State<TimebankView> {
       case 'timebanks':
         if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return Text(
-            'Edit Timebank',
+            'Edit ${FlavorConfig.values.timebankTitle}',
             style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).accentColor),
           );
         } else {
           return Text(
-            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? 'Request to join this Yang Gang'
-                : 'Request to join this Timebank!',
+            'Request to join this ${FlavorConfig.values.timebankTitle}',
             style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).accentColor),
@@ -747,14 +742,6 @@ class _TimebankViewState extends State<TimebankView> {
               color: Theme.of(context).accentColor),
         );
         break;
-      case 'joinrequests':
-        return Text(
-          'View Timebank Join Requests',
-          style: TextStyle(
-              fontWeight: FontWeight.w700,
-              color: Theme.of(context).accentColor),
-        );
-        break;
       default:
         return null;
     }
@@ -762,7 +749,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   Widget _showManageMembersButton(BuildContext context) {
     assert(timebankModel.id != null);
-    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
+    if (timebankModel.admins.contains(UserData.shared.user.sevaUserID)  ) {
       return FlatButton(
         onPressed: () {
           Navigator.push(

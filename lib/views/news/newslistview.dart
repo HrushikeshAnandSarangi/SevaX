@@ -42,9 +42,7 @@ class NewsListState extends State<NewsList> {
               padding: EdgeInsets.only(left: 10),
             ),
             Text(
-              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                  ? 'Yang Gang :'
-                  : 'Timebank : ',
+              FlavorConfig.values.timebankTitle,
               style: (TextStyle(fontWeight: FontWeight.w500)),
             ),
             Padding(

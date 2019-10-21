@@ -607,7 +607,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get joinViaCode {
     return getActionCards(
-      title: 'Join via Timebank code',
+      title: 'Join via ${FlavorConfig.values.timebankTitle} code',
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         bottomRight: Radius.circular(12),
@@ -688,9 +688,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get timebankslist {
     return getActionCards(
-      title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'List of Yang Gangs'
-          : 'Timebanks List',
+      title: 'List of ${FlavorConfig.values.timebankTitle}',
       //subtitle: timebankModel == null ? "loading" : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
