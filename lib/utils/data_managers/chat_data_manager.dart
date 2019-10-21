@@ -51,7 +51,7 @@ Future<void> createmessage({
 
 //Get chats for a user
 Stream<List<ChatModel>> getChatsforUser({
-  @required String email, 
+  @required String email,
 }) async* {
   // log.i('getChatsforUser: Email: $email');
   var data = Firestore.instance.collection('chatsnew').snapshots();
@@ -63,13 +63,13 @@ Stream<List<ChatModel>> getChatsforUser({
         snapshot.documents.forEach(
           (documentSnapshot) {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
-              print("executing chat size ${snapshot.documents.length}");
-              if ((model.user1 == email || model.user2 == email) &&
+            print("executing chat size ${snapshot.documents.length}");
+            if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
                 model.rootTimebank == FlavorConfig.values.timebankId) {
               chatlist.add(model);
             }
-            print("Final chat size  :  ${chatlist.length}" );
+            print("Final chat size  :  ${chatlist.length}");
           },
         );
         chatSink.add(chatlist);
@@ -102,7 +102,7 @@ Stream<List<MessageModel>> getMessagesforChat({
             MessageModel model = MessageModel.fromMap(documentSnapshot.data);
 
             messagelist.add(model);
-            messagelist.sort((m1,m2){
+            messagelist.sort((m1, m2) {
               return m1.timestamp.compareTo(m2.timestamp);
             });
           },

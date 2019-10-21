@@ -188,8 +188,6 @@ Stream<List<NotificationsModel>> getNotifications({
       },
     ),
   );
-
-
 }
 
 Future<bool> isUnreadNotification(String userEmail) async {

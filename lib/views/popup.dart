@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
-enum SingingCharacter { Never, On, After}
+
+enum SingingCharacter { Never, On, After }
+
 //class MyApp extends StatefulWidget {
 //
 //
@@ -16,14 +18,12 @@ class Availability extends StatefulWidget {
 }
 
 class AvailabilityState extends State<Availability> {
-
   bool _canSave = false;
   AvailabilityModel _data = new AvailabilityModel.empty();
   TextEditingController locationController = TextEditingController();
   TextEditingController myCommentsController = TextEditingController();
   void _setCanSave(bool save) {
-    if (save != _canSave)
-      setState(() => _canSave = save);
+    if (save != _canSave) setState(() => _canSave = save);
   }
 
   bool _done = false;
@@ -45,7 +45,6 @@ class AvailabilityState extends State<Availability> {
   var _numbers = ["1", "2", "3", "4", "5"];
   String _selectedNumber = "1";
 
-
   List<MaterialColor> colorList;
   Set<String> selectedInterests = <String>[].toSet();
   SingingCharacter _character = SingingCharacter.Never;
@@ -55,13 +54,13 @@ class AvailabilityState extends State<Availability> {
 
   @override
   void initState() {
-
     colorList = Colors.primaries.map((color) {
       return color;
     }).toList();
     colorList.shuffle();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -70,16 +69,21 @@ class AvailabilityState extends State<Availability> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Availability"),
-        actions: <Widget> [
+        actions: <Widget>[
           new FlatButton(
-              child: new Text('SAVE', style: theme.textTheme.body1.copyWith(color: _canSave ? Colors.white : new Color.fromRGBO(255, 255, 255, 0.5))),
-              onPressed: _canSave ? () {
-                //_data.weekArray = this.selectedInterests;
-                this.checkWeekDayAndStore();
-                //this.updateUserWeekDay()
-                Navigator.of(context).pop(_data);
-              } : null
-          )
+              child: new Text('SAVE',
+                  style: theme.textTheme.body1.copyWith(
+                      color: _canSave
+                          ? Colors.white
+                          : new Color.fromRGBO(255, 255, 255, 0.5))),
+              onPressed: _canSave
+                  ? () {
+                      //_data.weekArray = this.selectedInterests;
+                      this.checkWeekDayAndStore();
+                      //this.updateUserWeekDay()
+                      Navigator.of(context).pop(_data);
+                    }
+                  : null)
         ],
       ),
       body: Container(
@@ -89,11 +93,13 @@ class AvailabilityState extends State<Availability> {
             //paddingColumn(),
             Padding(
               padding: EdgeInsets.all(12.0),
-              child: Text('Days Available',style: TextStyle(
-                fontSize: 17.0,
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w500,
-              ),
+              child: Text(
+                'Days Available',
+                style: TextStyle(
+                  fontSize: 17.0,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
             //paddingColumn(),
@@ -104,93 +110,104 @@ class AvailabilityState extends State<Availability> {
             paddingColumn(),
             _repeatAfter(textStyle),
             paddingColumn(),
-            _ends('Never',SingingCharacter.Never),
-            _ends('On',SingingCharacter.On),
-            _character == SingingCharacter.On ?
-            Container(
-              height: 50,
-              width: 100,
-              padding: EdgeInsets.only(left: 30.0,right: 100.0),
-              child: TextField(
-                keyboardType: TextInputType.text,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w400,
-                ),
-                controller: locationController,
-                decoration: InputDecoration(
-                    labelText: "Date",
-                    hintText: "Selecte Date",
-                    labelStyle: TextStyle(
-                      fontSize: 13.0,
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w400,
+            _ends('Never', SingingCharacter.Never),
+            _ends('On', SingingCharacter.On),
+            _character == SingingCharacter.On
+                ? Container(
+                    height: 50,
+                    width: 100,
+                    padding: EdgeInsets.only(left: 30.0, right: 100.0),
+                    child: TextField(
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      controller: locationController,
+                      decoration: InputDecoration(
+                          labelText: "Date",
+                          hintText: "Selecte Date",
+                          labelStyle: TextStyle(
+                            fontSize: 13.0,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          )),
+                      onChanged: (value) {
+                        setState(() {
+                          _data.endsData = value;
+                        });
+                      },
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                onChanged: (value) {
-                  setState(() {
-                    _data.endsData = value;
-                  });
-                },
-              ),
-            ) : Padding(
-              padding: EdgeInsets.all(1.0),
-            ),
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(1.0),
+                  ),
             _ends('After', SingingCharacter.After),
-            _character == SingingCharacter.After ?
-            Container(
-              height: 50,
-              width: 150,
-              padding: EdgeInsets.only(left: 30.0,right: 100.0),
-              child: TextField(
-                keyboardType: TextInputType.text,
-                style: TextStyle(
-                  fontSize: 14.0,
-                  fontStyle: FontStyle.normal,
-                  fontWeight: FontWeight.w400,
-                ),
-                controller: myCommentsController,
-                decoration: InputDecoration(
-                    labelText: "Occurances",
-                    hintText: "Enter occurances",
-                    labelStyle: TextStyle(
-                      fontSize: 13.0,
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.w400,
+            _character == SingingCharacter.After
+                ? Container(
+                    height: 50,
+                    width: 150,
+                    padding: EdgeInsets.only(left: 30.0, right: 100.0),
+                    child: TextField(
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      controller: myCommentsController,
+                      decoration: InputDecoration(
+                          labelText: "Occurances",
+                          hintText: "Enter occurances",
+                          labelStyle: TextStyle(
+                            fontSize: 13.0,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                          )),
+                      onChanged: (value) {
+                        setState(() {
+                          _data.accurance_number = value;
+                          _setCanSave(value.isNotEmpty);
+                        });
+                      },
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    )),
-                onChanged: (value) {
-                  setState(() {
-                    _data.accurance_number = value;
-                    _setCanSave(value.isNotEmpty);
-                  });
-                },
-              ),
-            ): Padding(padding: EdgeInsets.all(1.0),),
+                  )
+                : Padding(
+                    padding: EdgeInsets.all(1.0),
+                  ),
           ],
         ),
       ),
     );
   }
-  Widget _ends(String radioBtnName,SingingCharacter value) {
+
+  Widget _ends(String radioBtnName, SingingCharacter value) {
     return Container(
       width: 50,
       child: RadioListTile<SingingCharacter>(
         title: Text(radioBtnName),
         value: value,
         groupValue: _character,
-        onChanged: (SingingCharacter value) { setState(() { _character = value; }); },
+        onChanged: (SingingCharacter value) {
+          setState(() {
+            _character = value;
+          });
+        },
       ),
     );
   }
+
   Widget _endsOnTF(SingingCharacter character) {
-    if(character == SingingCharacter.Never || character == SingingCharacter.On) {
-      return _ends('After',SingingCharacter.After);
+    if (character == SingingCharacter.Never ||
+        character == SingingCharacter.On) {
+      return _ends('After', SingingCharacter.After);
     } else {
       return Row(
         children: <Widget>[
@@ -231,27 +248,33 @@ class AvailabilityState extends State<Availability> {
       );
     }
   }
+
   Widget _titleRow(String name) {
     return Row(
       children: <Widget>[
-        Expanded(child:Padding(
-          padding: EdgeInsets.only(left:12.0),
-          child: Text(name,style: TextStyle(
-            fontSize: 17.0,
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.w500,
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: 12.0),
+            child: Text(
+              name,
+              style: TextStyle(
+                fontSize: 17.0,
+                fontStyle: FontStyle.normal,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
-          ),
-        ),
         ),
       ],
     );
   }
+
   Widget paddingColumn() {
     return Padding(
       padding: EdgeInsets.all(8.0),
     );
   }
+
 //  Widget _repeatAfter1(TextStyle textStyle) {
 //    return Padding(padding: EdgeInsets.only(left: 10.0),
 //      child:Row(
@@ -333,8 +356,9 @@ class AvailabilityState extends State<Availability> {
 //  }
   Widget _repeatAfter(TextStyle textStyle) {
     bool pressAttention = false;
-    return Padding(padding: EdgeInsets.only(left: 10.0),
-      child:Row(
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0),
+      child: Row(
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -349,7 +373,12 @@ class AvailabilityState extends State<Availability> {
                   items: _numbers.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.center,
+                      ),
                     );
                   }).toList(),
                   value: _selectedNumber,
@@ -375,7 +404,12 @@ class AvailabilityState extends State<Availability> {
                   items: _schedule.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value,style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.w400),textAlign: TextAlign.center,),
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.center,
+                      ),
                     );
                   }).toList(),
                   value: _selectedScheduleItem,
@@ -392,16 +426,18 @@ class AvailabilityState extends State<Availability> {
           RaisedButton(
             focusColor: Colors.blue,
             highlightColor: Colors.white,
-            child: Text('Never',style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w400,
-            ),
+            child: Text(
+              'Never',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+              ),
               textAlign: TextAlign.start,
             ),
             textColor: Colors.blue,
             color: Colors.transparent,
             elevation: 0.0,
-            onPressed: (){
+            onPressed: () {
               pressAttention = !pressAttention;
               print('pressed skip');
             },
@@ -409,7 +445,8 @@ class AvailabilityState extends State<Availability> {
         ],
       ),
     );
-  }   //
+  } //
+
   Widget list() {
     return SingleChildScrollView(
       child: Padding(
@@ -417,8 +454,7 @@ class AvailabilityState extends State<Availability> {
         child: Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
-          children:
-          interests.map((skill) {
+          children: interests.map((skill) {
             int index = interests.indexOf(skill);
             if (selectedInterests.contains(skill)) {
               return chip(skill, true, colorList[index]);
@@ -429,6 +465,7 @@ class AvailabilityState extends State<Availability> {
       ),
     );
   }
+
   Widget chip(String value, bool selected, Color color) {
     return Container(
       margin: EdgeInsets.all(10.0),
@@ -451,12 +488,11 @@ class AvailabilityState extends State<Availability> {
               } else {
                 selectedInterests.add(value);
               }
-              if(selectedInterests.length != 0) {
+              if (selectedInterests.length != 0) {
                 _canSave = true;
               } else {
                 _canSave = false;
               }
-
             });
           },
           child: Material(
@@ -494,10 +530,11 @@ class AvailabilityState extends State<Availability> {
       ),
     );
   }
+
   void checkWeekDayAndStore() {
     _data.weekArray = Set<String>();
-    for(var day in this.selectedInterests) {
-      switch(day) {
+    for (var day in this.selectedInterests) {
+      switch (day) {
         case "Su":
           _data.weekArray.add('Sunday');
           break;
@@ -552,8 +589,6 @@ class AvailabilityState extends State<Availability> {
     ];
   }
 }
-
-
 
 //class _MyAppState extends State<MyApp> {
 //  final _formKey = GlobalKey<FormState>();

@@ -86,12 +86,13 @@ class _ChatListViewState extends State<ChatListView> {
             );
           } else {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SelectMember(
-                          timebankId:
-                              SevaCore.of(context).loggedInUser.currentTimebank,
-                        ),),);
+              context,
+              MaterialPageRoute(
+                builder: (context) => SelectMember(
+                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                ),
+              ),
+            );
           }
 
           // NewsModel news;

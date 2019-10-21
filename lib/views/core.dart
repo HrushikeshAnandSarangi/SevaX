@@ -667,7 +667,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   new ListTile(
                     leading: new Icon(Icons.timeline,
                         color: Theme.of(context).primaryColor),
-                    title: new Text('Create a ${FlavorConfig.values.timebankTitle}',
+                    title: new Text(
+                      'Create a ${FlavorConfig.values.timebankTitle}',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {

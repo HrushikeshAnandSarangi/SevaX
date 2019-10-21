@@ -15,8 +15,6 @@ class BioView extends StatefulWidget {
   _BioViewState createState() => _BioViewState();
 }
 
-
-
 class _BioViewState extends State<BioView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String bio = '';

@@ -56,9 +56,6 @@ Future<void> updateUser({
 //  //     .setData({"Availability":user.availability.toMap()});
 //}
 
-
-
-
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");

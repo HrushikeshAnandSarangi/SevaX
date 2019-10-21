@@ -88,8 +88,7 @@ class TimeBankList extends StatelessWidget {
                       return model.id != FlavorConfig.values.timebankId
                           ? GestureDetector(
                               child: Card(
-                                child: 
-                                Padding(
+                                child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     children: <Widget>[
@@ -100,7 +99,9 @@ class TimeBankList extends StatelessWidget {
                                           backgroundImage: _getImage(model),
                                         ),
                                       ),
-                                      SizedBox(width: 8,),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
                                       Container(
                                         child: Text(
                                           model.name,

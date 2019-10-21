@@ -170,7 +170,10 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         timebankModel.admins.contains(loggedInUser)
                             ? FlatButton(
-                                child: Text('View Join Requests',style: TextStyle(fontWeight: FontWeight.bold),),
+                                child: Text(
+                                  'View Join Requests',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                                 textColor: Theme.of(context).accentColor,
                                 disabledTextColor:
                                     Theme.of(context).accentColor,
@@ -187,8 +190,8 @@ class _TimebankViewState extends State<TimebankView> {
                             : timebankModel.members.contains(loggedInUser)
                                 ? Offstage()
                                 : FlatButton(
-                                    child:
-                                        Text('Request to join this ${FlavorConfig.values.timebankTitle}'),
+                                    child: Text(
+                                        'Request to join this ${FlavorConfig.values.timebankTitle}'),
                                     textColor: Theme.of(context).accentColor,
                                     disabledTextColor:
                                         Theme.of(context).accentColor,
@@ -391,8 +394,8 @@ class _TimebankViewState extends State<TimebankView> {
                                       Padding(
                                         padding: EdgeInsets.only(
                                             top: 10.0, left: 20.0),
-                                        child: Text('Parent ${FlavorConfig.values.timebankTitle}'
-                                          ,
+                                        child: Text(
+                                          'Parent ${FlavorConfig.values.timebankTitle}',
                                           style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w700,
@@ -749,7 +752,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   Widget _showManageMembersButton(BuildContext context) {
     assert(timebankModel.id != null);
-    if (timebankModel.admins.contains(UserData.shared.user.sevaUserID)  ) {
+    if (timebankModel.admins.contains(UserData.shared.user.sevaUserID)) {
       return FlatButton(
         onPressed: () {
           Navigator.push(

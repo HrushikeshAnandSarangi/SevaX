@@ -547,6 +547,7 @@ class _SplashViewState extends State<SplashView> {
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
   }
+
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
     Navigator.of(context).pushReplacement(

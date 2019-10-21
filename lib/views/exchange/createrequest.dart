@@ -51,9 +51,6 @@ class _CreateRequestState extends State<CreateRequest> {
         timebankId: widget.timebankId,
       ),
     );
-
-
-
   }
 }
 
@@ -81,8 +78,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   String _dateMessageStart = ' START date and time ';
   String _dateMessageEnd = '  END date and time ';
   String hoursMessage = ' Click to Set Duration';
-    String selectedAddress;
-
+  String selectedAddress;
 
   String _selectedTimebankId;
 
@@ -293,28 +289,28 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               ),
               Center(
                 child: FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Text(
-                  selectedAddress == null || selectedAddress.isEmpty
-                      ? 'Add Location'
-                      : selectedAddress,
-                ),
-                color: Colors.grey[200],
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<GeoFirePoint>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
+                  icon: Icon(Icons.add_location),
+                  label: Text(
+                    selectedAddress == null || selectedAddress.isEmpty
+                        ? 'Add Location'
+                        : selectedAddress,
+                  ),
+                  color: Colors.grey[200],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<GeoFirePoint>(
+                        builder: (context) => LocationPicker(
+                          selectedLocation: location,
+                        ),
                       ),
-                    ),
-                  ).then((point) {
-                    if (point != null) location = point;
-                    _getLocation();
-                    log('ReceivedLocation: $selectedAddress');
-                  });
-                },
-              ),
+                    ).then((point) {
+                      if (point != null) location = point;
+                      _getLocation();
+                      log('ReceivedLocation: $selectedAddress');
+                    });
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -405,7 +401,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     await FirestoreManager.createRequest(requestModel: requestModel);
   }
 
-    Future _getLocation() async {
+  Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,
       location.longitude,

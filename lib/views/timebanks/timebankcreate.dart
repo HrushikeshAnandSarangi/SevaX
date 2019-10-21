@@ -18,7 +18,8 @@ class TimebankCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create a ${FlavorConfig.values.timebankTitle}',
+        title: Text(
+          'Create a ${FlavorConfig.values.timebankTitle}',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
@@ -143,8 +144,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                     ));
                                   }
                                 },
-                                child: Text('Create ${FlavorConfig.values.timebankTitle}'
-                                  ,
+                                child: Text(
+                                  'Create ${FlavorConfig.values.timebankTitle}',
                                   style: TextStyle(fontSize: 16.0),
                                 ),
                                 textColor: Colors.blue,

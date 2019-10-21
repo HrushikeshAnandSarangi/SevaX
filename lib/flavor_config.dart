@@ -13,16 +13,15 @@ class FlavorValues {
   final Color buttonTextColor;
   final String timebankTitle;
 
-  FlavorValues({
-    @required this.appName,
-    @required this.timebankName,
-    @required this.timebankId,
-    this.requestTitle = 'Request',
-    this.offertitle = 'Offer',
-    this.theme,
-    this.buttonTextColor = Colors.white,
-    this.timebankTitle = 'Timebank'
-  });
+  FlavorValues(
+      {@required this.appName,
+      @required this.timebankName,
+      @required this.timebankId,
+      this.requestTitle = 'Request',
+      this.offertitle = 'Offer',
+      this.theme,
+      this.buttonTextColor = Colors.white,
+      this.timebankTitle = 'Timebank'});
 }
 
 class FlavorConfig {

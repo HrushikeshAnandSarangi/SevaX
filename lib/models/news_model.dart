@@ -123,7 +123,7 @@ class NewsModel extends DataModel {
       this.likes = likesList;
     } else
       this.likes = [];
-    }
+  }
 }
 
 class EntityModel extends DataModel {

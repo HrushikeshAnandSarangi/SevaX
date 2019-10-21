@@ -749,9 +749,6 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-
-
-
   BoxDecoration getContainerDecoration({
     double radius = 12.0,
     Color color = Colors.white,
