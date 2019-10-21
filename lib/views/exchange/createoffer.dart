@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
@@ -6,6 +8,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/main.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class CreateOffer extends StatelessWidget {
@@ -54,6 +57,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String schedule = '';
   String description = '';
   GeoFirePoint location;
+  String selectedAddress;
 
   void _writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -151,33 +155,28 @@ class MyCustomFormState extends State<MyCustomForm> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: GestureDetector(
-                    onTap: () {
+                  child: FlatButton.icon(
+                    icon: Icon(Icons.add_location),
+                    label: Text(
+                      selectedAddress == null || selectedAddress.isEmpty
+                          ? 'Add Location'
+                          : selectedAddress,
+                    ),
+                    color: Colors.grey[200],
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute<GeoFirePoint>(
-                            builder: (context) => LocationPicker()),
+                          builder: (context) => LocationPicker(
+                            selectedLocation: location,
+                          ),
+                        ),
                       ).then((point) {
                         if (point != null) location = point;
+                        _getLocation();
+                        log('ReceivedLocation: $selectedAddress');
                       });
                     },
-                    child: SizedBox(
-                      width: 140,
-                      height: 30,
-                      child: Container(
-                        color: Colors.grey[200],
-                        child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Icon(Icons.add_location),
-                            ),
-                            Text('  '),
-                            Text('Add Location'),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
                 ),
               ),
@@ -228,5 +227,16 @@ class MyCustomFormState extends State<MyCustomForm> {
         ),
       ),
     );
+  }
+
+  Future _getLocation() async {
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+    log('_getLocation: $address');
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 }

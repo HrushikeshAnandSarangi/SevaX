@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -11,6 +13,7 @@ import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -75,6 +78,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   String _dateMessageStart = ' START date and time ';
   String _dateMessageEnd = '  END date and time ';
   String hoursMessage = ' Click to Set Duration';
+    String selectedAddress;
+
 
   String _selectedTimebankId;
 
@@ -284,37 +289,29 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 },
               ),
               Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<GeoFirePoint>(
-                            builder: (context) => LocationPicker()),
-                      ).then((point) {
-                        if (point != null) location = point;
-                      });
-                    },
-                    child: SizedBox(
-                      width: 140,
-                      height: 30,
-                      child: Container(
-                        color: Colors.grey[200],
-                        child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Icon(Icons.add_location),
-                            ),
-                            Text('  '),
-                            Text('Add Location'),
-                          ],
-                        ),
+                child: FlatButton.icon(
+                icon: Icon(Icons.add_location),
+                label: Text(
+                  selectedAddress == null || selectedAddress.isEmpty
+                      ? 'Add Location'
+                      : selectedAddress,
+                ),
+                color: Colors.grey[200],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<GeoFirePoint>(
+                      builder: (context) => LocationPicker(
+                        selectedLocation: location,
                       ),
                     ),
-                  ),
-                ),
+                  ).then((point) {
+                    if (point != null) location = point;
+                    _getLocation();
+                    log('ReceivedLocation: $selectedAddress');
+                  });
+                },
+              ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -403,5 +400,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     if (requestModel.id == null) return;
     await FirestoreManager.createRequest(requestModel: requestModel);
+  }
+
+    Future _getLocation() async {
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 }
