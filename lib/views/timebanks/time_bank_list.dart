@@ -88,26 +88,31 @@ class TimeBankList extends StatelessWidget {
                       return model.id != FlavorConfig.values.timebankId
                           ? GestureDetector(
                               child: Card(
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      child: CircleAvatar(
-                                        minRadius: 40.0,
-                                        backgroundColor: Colors.grey,
-                                        backgroundImage: _getImage(model),
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Text(
-                                        model.name,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 18.0,
-                                          color: Colors.black,
+                                child: 
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: CircleAvatar(
+                                          minRadius: 32.0,
+                                          backgroundColor: Colors.grey,
+                                          backgroundImage: _getImage(model),
                                         ),
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(width: 8,),
+                                      Container(
+                                        child: Text(
+                                          model.name,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18.0,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                               onTap: () {
