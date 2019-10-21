@@ -109,8 +109,7 @@ class BioFormState extends State<BioForm> {
                   initialValue: SevaCore.of(context).loggedInUser.bio,
                   style: TextStyle(fontSize: 18.0, color: Colors.black87),
                   decoration: InputDecoration(
-                      hintText: 'Your Bio. ',
-                      border: InputBorder.none),
+                      hintText: 'Your Bio. ', border: InputBorder.none),
                   keyboardType: TextInputType.multiline,
                   maxLines: 20,
                   validator: (value) {

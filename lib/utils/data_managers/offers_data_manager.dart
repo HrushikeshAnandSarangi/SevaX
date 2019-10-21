@@ -1,10 +1,15 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:meta/meta.dart';
+
+Location loc = new Location();
+Geoflutterfire geoflutterfire = Geoflutterfire();
 
 Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
   var query = timebankId == null || timebankId == 'All'
@@ -23,6 +28,39 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
       handleData: (snapshot, offerSink) {
         List<OfferModel> offerList = [];
         snapshot.documents.forEach((snapshot) {
+          OfferModel model = OfferModel.fromMap(snapshot.data);
+          model.id = snapshot.documentID;
+          offerList.add(model);
+        });
+        offerSink.add(offerList);
+      },
+    ),
+  );
+}
+
+Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
+  LocationData pos = await loc.getLocation();
+  double lat = pos.latitude;
+  double lng = pos.longitude;
+  GeoFirePoint center = geoflutterfire.point(latitude: lat, longitude: lng);
+  var query = timebankId == null || timebankId == 'All'
+      ? Firestore.instance
+          .collection('offers')
+          .where('assossiatedRequest', isNull: true)
+      : Firestore.instance
+          .collection('offers')
+          .where('timebankId', isEqualTo: timebankId)
+          .where('assossiatedRequest', isNull: true);
+
+  var data = geoflutterfire
+      .collection(collectionRef: query)
+      .within(center: center, radius: 20, field: 'location', strictMode: true);
+
+  yield* data.transform(
+    StreamTransformer<List<DocumentSnapshot>, List<OfferModel>>.fromHandlers(
+      handleData: (snapshot, offerSink) {
+        List<OfferModel> offerList = [];
+        snapshot.forEach((snapshot) {
           OfferModel model = OfferModel.fromMap(snapshot.data);
           model.id = snapshot.documentID;
           offerList.add(model);

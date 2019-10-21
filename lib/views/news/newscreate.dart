@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
@@ -6,6 +11,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import '../../main.dart';
@@ -85,6 +91,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
+  GeoFirePoint location;
+  String selectedAddress;
 
   Future<void> writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -95,6 +103,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.postTimestamp = timestamp;
+    newsObject.location = location;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
@@ -302,7 +311,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         TextFormField(
                           decoration: InputDecoration(
                             hintText: 'Your news and any #hashtags',
-                            labelText: '+ News and #hashtags',
+                            labelText: '+ #hashtags',
                             border: OutlineInputBorder(
                               borderRadius: const BorderRadius.all(
                                 const Radius.circular(10.0),
@@ -330,9 +339,31 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   Text(""),
                 ],
               ),
-
+              FlatButton.icon(
+                icon: Icon(Icons.add_location),
+                label: Text(
+                  selectedAddress == null || selectedAddress.isEmpty
+                      ? 'Add Location'
+                      : selectedAddress,
+                ),
+                color: Colors.grey[200],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<GeoFirePoint>(
+                      builder: (context) => LocationPicker(
+                        selectedLocation: location,
+                      ),
+                    ),
+                  ).then((point) {
+                    if (point != null) location = point;
+                    _getLocation();
+                    log('ReceivedLocation: $selectedAddress');
+                  });
+                },
+              ),
               Container(
-                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 alignment: Alignment(0, 1),
                 padding: const EdgeInsets.only(top: 10.0),
                 child: RaisedButton(
@@ -341,12 +372,17 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   onPressed: () {
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
-
-                    if (formKey.currentState.validate()) {
-                      // If the form is valid, we want to show a Snackbar
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Creating Post')));
-                      writeToDB();
+                    if (location != null) {
+                      if (formKey.currentState.validate()) {
+                        // If the form is valid, we want to show a Snackbar
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text('Creating Post')));
+                        writeToDB();
+                      }
+                    } else {
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text('Location not added'),
+                      ));
                     }
                   },
                   child: Row(
@@ -430,5 +466,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
         },
       ),
     );
+  }
+
+  Future _getLocation() async {
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 }

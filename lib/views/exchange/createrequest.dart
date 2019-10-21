@@ -1,14 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/duration_picker/calendar_widget.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -17,7 +22,7 @@ class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
-  //print('at createrequest = $isOfferRequest');
+
   CreateRequest({Key key, this.isOfferRequest, this.offer, this.timebankId})
       : super(key: key);
 
@@ -26,12 +31,6 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
-  // final bool isOfferRequest;
-  // final String sevaUserIdOffer;
-  //print('at createrequeststate = $isOfferRequest');
-
-  // _CreateRequestState({this.isOfferRequest, this.sevaUserIdOffer});
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -77,10 +76,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final _formKey = GlobalKey<FormState>();
 
   RequestModel requestModel = RequestModel();
+  GeoFirePoint location;
 
   String _dateMessageStart = ' START date and time ';
   String _dateMessageEnd = '  END date and time ';
   String hoursMessage = ' Click to Set Duration';
+    String selectedAddress;
+
 
   String _selectedTimebankId;
 
@@ -289,6 +291,31 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   requestModel.numberOfApprovals = int.parse(value);
                 },
               ),
+              Center(
+                child: FlatButton.icon(
+                icon: Icon(Icons.add_location),
+                label: Text(
+                  selectedAddress == null || selectedAddress.isEmpty
+                      ? 'Add Location'
+                      : selectedAddress,
+                ),
+                color: Colors.grey[200],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<GeoFirePoint>(
+                      builder: (context) => LocationPicker(
+                        selectedLocation: location,
+                      ),
+                    ),
+                  ).then((point) {
+                    if (point != null) location = point;
+                    _getLocation();
+                    log('ReceivedLocation: $selectedAddress');
+                  });
+                },
+              ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Center(
@@ -296,38 +323,38 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () async {
-                      requestModel.requestStart =
-                          OfferDurationWidgetState.starttimestamp;
-                      requestModel.requestEnd =
-                          OfferDurationWidgetState.endtimestamp;
-                      print('Start time: ${requestModel.requestStart}');
-                      print('End time: ${requestModel.requestEnd}');
-                      if (_formKey.currentState.validate()) {
-                        print(
-                            'before checking to create notification = ${widget.isOfferRequest}');
-                        await _writeToDB();
+                      if (location != null) {
+                        requestModel.requestStart =
+                            OfferDurationWidgetState.starttimestamp;
+                        requestModel.requestEnd =
+                            OfferDurationWidgetState.endtimestamp;
+                        if (_formKey.currentState.validate()) {
+                          await _writeToDB();
 
-                        if (widget.isOfferRequest == true) {
-                          print(
-                              'after checking to create notification = ${widget.isOfferRequest}');
-                          OfferModel offer = widget.offer;
-                          //String sevaUserIdOffer = offer.sevaUserId;
+                          if (widget.isOfferRequest == true) {
+                            OfferModel offer = widget.offer;
 
-                          Set<String> offerRequestList = () {
-                            if (offer.requestList == null) return [];
-                            return offer.requestList;
-                          }()
-                              .toSet();
-                          offerRequestList.add(requestModel.id);
-                          offer.requestList = offerRequestList.toList();
-                          FirestoreManager.updateOfferWithRequest(offer: offer);
-                          sendOfferRequest(
-                              offerModel: widget.offer,
-                              requestSevaID: requestModel.sevaUserId);
-                          Navigator.pop(context);
+                            Set<String> offerRequestList = () {
+                              if (offer.requestList == null) return [];
+                              return offer.requestList;
+                            }()
+                                .toSet();
+                            offerRequestList.add(requestModel.id);
+                            offer.requestList = offerRequestList.toList();
+                            FirestoreManager.updateOfferWithRequest(
+                                offer: offer);
+                            sendOfferRequest(
+                                offerModel: widget.offer,
+                                requestSevaID: requestModel.sevaUserId);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
                           Navigator.pop(context);
                         }
-                        Navigator.pop(context);
+                      } else {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Location not added'),
+                        ));
                       }
                     },
                     child: Row(
@@ -364,6 +391,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.postTimestamp = timestamp;
     requestModel.accepted = false;
     requestModel.acceptors = [];
+    requestModel.location = location;
 
     if (requestModel.requestStart == null) {
       requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
@@ -375,5 +403,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     if (requestModel.id == null) return;
     await FirestoreManager.createRequest(requestModel: requestModel);
+  }
+
+    Future _getLocation() async {
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 }

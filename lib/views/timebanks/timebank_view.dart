@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/branch_list.dart';
+import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
@@ -30,7 +30,6 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
-import 'join_request_view.dart';
 
 class TimebankView extends StatefulWidget {
   final String timebankId;
@@ -45,12 +44,11 @@ class TimebankView extends StatefulWidget {
 
 class _TimebankViewState extends State<TimebankView> {
   TimebankModel timebankModel;
+  JoinRequestModel joinRequestModel = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
-  JoinRequestModel joinRequestModel = new JoinRequestModel();
   final formkey = GlobalKey<FormState>();
-
 
   @override
   void initState() {
@@ -66,7 +64,6 @@ class _TimebankViewState extends State<TimebankView> {
 
   StreamBuilder<TimebankModel> timebankStreamBuilder(
       BuildContext buildcontext) {
-
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
           timebankId: widget.timebankId),
@@ -118,16 +115,17 @@ class _TimebankViewState extends State<TimebankView> {
                   ),
                   foregroundColor: FlavorConfig.values.buttonTextColor,
                   label: Text(
-                    'Create Branch',
-
+                    FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                        ? 'Create Yang Gang'
+                        : 'Create Branch',
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => TimebankCreate(
-                            timebankId: timebankModel.id,
-                          )),
+                                timebankId: timebankModel.id,
+                              )),
                     );
                   },
                 ),
@@ -170,122 +168,127 @@ class _TimebankViewState extends State<TimebankView> {
                           padding: EdgeInsets.only(left: 20.0),
                           child: Divider(color: Colors.deepPurple),
                         ),
-//                        FlatButton(
-//                          onPressed: () {
-//                            this._navigateToTimebank(context);
-//                          },
-//                          child: _whichButton('timebanks'),
-//                        ),
                         timebankModel.admins.contains(loggedInUser)
                             ? FlatButton(
-                          child: Text('View Requests'),
-                          textColor: Theme.of(context).accentColor,
-                          disabledTextColor:
-                          Theme.of(context).accentColor,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => JoinRequestView(
-                                    timebankId: timebankModel.id,
-                                  )),
-                            );
-                          },
-                        )
+                                child: Text('View Requests'),
+                                textColor: Theme.of(context).accentColor,
+                                disabledTextColor:
+                                    Theme.of(context).accentColor,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => JoinRequestView(
+                                              timebankId: timebankModel.id,
+                                            )),
+                                  );
+                                },
+                              )
                             : timebankModel.members.contains(loggedInUser)
-                            ? Offstage()
-                            : FlatButton(
-                          child:
-                          Text('Request to join this Timebank'),
-                          textColor: Theme.of(context).accentColor,
-                          disabledTextColor:
-                          Theme.of(context).accentColor,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                // return object of type Dialog
-                                return AlertDialog(
-                                  title: new Text(
-                                      "Why do you want to join the timebank? "),
-                                  content: Form(
-                                    key: formkey,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                        hintText: 'Reason',
-                                        labelText: 'Reason',
-                                        // labelStyle: textStyle,
-                                        // labelStyle: textStyle,
-                                        // labelText: 'Description',
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                          const BorderRadius.all(
-                                            const Radius.circular(
-                                                20.0),
-                                          ),
-                                          borderSide: new BorderSide(
-                                            color: Colors.black,
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                      ),
-                                      keyboardType:
-                                      TextInputType.multiline,
-                                      maxLines: 1,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        joinRequestModel.reason =
-                                            value;
-                                      },
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    // usually buttons at the bottom of the dialog
-                                    new FlatButton(
-                                      child: new Text(
-                                        "Send Join Request",
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .accentColor),
-                                      ),
-                                      onPressed: () async {
-                                        joinRequestModel.userId =
-                                            loggedInUser;
-                                        joinRequestModel
-                                            .timestamp = DateTime
-                                            .now()
-                                            .millisecondsSinceEpoch;
+                                ? Offstage()
+                                : FlatButton(
+                                    child:
+                                        Text('Request to join this Timebank'),
+                                    textColor: Theme.of(context).accentColor,
+                                    disabledTextColor:
+                                        Theme.of(context).accentColor,
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          // return object of type Dialog
+                                          return AlertDialog(
+                                            title: new Text(
+                                                "Why do you want to join the timebank? "),
+                                            content: Form(
+                                              key: formkey,
+                                              child: TextFormField(
+                                                decoration: InputDecoration(
+                                                  hintText: 'Reason',
+                                                  labelText: 'Reason',
+                                                  // labelStyle: textStyle,
+                                                  // labelStyle: textStyle,
+                                                  // labelText: 'Description',
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      const Radius.circular(
+                                                          20.0),
+                                                    ),
+                                                    borderSide: new BorderSide(
+                                                      color: Colors.black,
+                                                      width: 1.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                keyboardType:
+                                                    TextInputType.multiline,
+                                                maxLines: 1,
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please enter some text';
+                                                  }
+                                                  joinRequestModel.reason =
+                                                      value;
+                                                },
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              // usually buttons at the bottom of the dialog
+                                              new FlatButton(
+                                                child: new Text(
+                                                  "Send Join Request",
+                                                  style: TextStyle(
+                                                      color: Theme.of(context)
+                                                          .accentColor),
+                                                ),
+                                                onPressed: () async {
+                                                  joinRequestModel.userId =
+                                                      loggedInUser;
+                                                  joinRequestModel
+                                                      .timestamp = DateTime
+                                                          .now()
+                                                      .millisecondsSinceEpoch;
 
-                                        joinRequestModel.entityId =
-                                            timebankModel.id;
-                                        joinRequestModel.entityType =
-                                            EntityType.Timebank;
-                                        joinRequestModel.accepted =
-                                        null;
-                                        print('$joinRequestModel');
-                                        if (formkey.currentState
-                                            .validate()) {
-                                          await createJoinRequest(
-                                              model:
-                                              joinRequestModel);
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                    ),
-                                    new FlatButton(
-                                      child: new Text("Close"),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                        ),
+                                                  joinRequestModel.entityId =
+                                                      timebankModel.id;
+                                                  joinRequestModel.entityType =
+                                                      EntityType.Timebank;
+                                                  joinRequestModel.accepted =
+                                                      null;
+
+                                                  if (formkey.currentState
+                                                      .validate()) {
+                                                    await createJoinRequest(
+                                                        model:
+                                                            joinRequestModel);
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                },
+                                              ),
+                                              new FlatButton(
+                                                child: new Text("Close"),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                        // FlatButton(
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => _whichRoute('timebanks'),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: _whichButton('timebanks'),
+                        // ),
                         _showCreateCampaignButton(context),
                         _showJoinRequests(context),
                         FlatButton(
@@ -301,7 +304,9 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'View Branches',
+                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                                ? 'View Yang Gangs'
+                                : 'View Branches',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
@@ -387,10 +392,10 @@ class _TimebankViewState extends State<TimebankView> {
                                         padding: EdgeInsets.only(
                                             top: 10.0, left: 20.0),
                                         child: Text(
-                                          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Parent Yang Gang'
-          :
-                                          'Parent Timebank',
+                                          FlavorConfig.appFlavor ==
+                                                  Flavor.HUMANITY_FIRST
+                                              ? 'Parent Yang Gang'
+                                              : 'Parent Timebank',
                                           style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w700,
@@ -519,7 +524,7 @@ class _TimebankViewState extends State<TimebankView> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 20, bottom: 30),
+                          padding: EdgeInsets.only(left: 20, bottom: 80),
                           child: Row(
                             children: <Widget>[
                               Text(
@@ -532,75 +537,75 @@ class _TimebankViewState extends State<TimebankView> {
                             ],
                           ),
                         ),
-                         StreamBuilder<UserModel>(
-                           stream: FirestoreManager.getUserForIdStream(
-                               sevaUserId: timebankModel.creatorId),
-                           builder: (context, snapshot) {
-                             if (snapshot.hasError)
-                               return Text('Error: ${snapshot.error}');
-                             switch (snapshot.connectionState) {
-                               case ConnectionState.waiting:
-                                 return Center(
-                                     child: CircularProgressIndicator());
-                                 break;
-                               default:
-                                 UserModel ownerModel = snapshot.data;
-                                 this.ownerModel = ownerModel;
-                                 return FlatButton(
-                                   onPressed: ownerModel != null
-                                       ? () {
-                                           Navigator.push(
-                                               context,
-                                               MaterialPageRoute(
-                                                   builder: (context) =>
-                                                       ProfileViewer(
-                                                         userEmail:
-                                                             ownerModel.email,
-                                                       )));
-                                         }
-                                       : null,
-                                   child: Row(
-                                     children: <Widget>[
-                                       Padding(
-                                         padding: const EdgeInsets.only(
-                                             left: 5.0,
-                                             right: 8.0,
-                                             top: 2.0,
-                                             bottom: 8.0),
-                                         child: CircleAvatar(
-                                           // minRadius: 20.0,
-                                           backgroundImage: ownerModel == null ||
-                                                   ownerModel.photoURL == null ||
-                                                   ownerModel.photoURL.isEmpty
-                                               ? AssetImage(
-                                                   'lib/assets/images/noimagefound.png')
-                                               : NetworkImage(
-                                                   ownerModel.photoURL),
-                                         ),
-                                       ),
-                                       Flexible(
-                                         child: Container(
-                                           padding: EdgeInsets.only(right: 13.0),
-                                           child: ownerModel != null &&
-                                                   ownerModel.fullname != null
-                                               ? Text(
-                                                   ownerModel.fullname,
-                                                   overflow:
-                                                       TextOverflow.ellipsis,
-                                                   style: TextStyle(
-                                                     fontSize: 18.0,
-                                                   ),
-                                                 )
-                                               : Container(),
-                                         ),
-                                       ),
-                                     ],
-                                   ),
-                                 );
-                             }
-                           },
-                         ),
-                        getTextWidgets(context),
+                        // StreamBuilder<UserModel>(
+                        //   stream: FirestoreManager.getUserForIdStream(
+                        //       sevaUserId: timebankModel.creatorId),
+                        //   builder: (context, snapshot) {
+                        //     if (snapshot.hasError)
+                        //       return Text('Error: ${snapshot.error}');
+                        //     switch (snapshot.connectionState) {
+                        //       case ConnectionState.waiting:
+                        //         return Center(
+                        //             child: CircularProgressIndicator());
+                        //         break;
+                        //       default:
+                        //         UserModel ownerModel = snapshot.data;
+                        //         this.ownerModel = ownerModel;
+                        //         return FlatButton(
+                        //           onPressed: ownerModel != null
+                        //               ? () {
+                        //                   Navigator.push(
+                        //                       context,
+                        //                       MaterialPageRoute(
+                        //                           builder: (context) =>
+                        //                               ProfileViewer(
+                        //                                 userEmail:
+                        //                                     ownerModel.email,
+                        //                               )));
+                        //                 }
+                        //               : null,
+                        //           child: Row(
+                        //             children: <Widget>[
+                        //               Padding(
+                        //                 padding: const EdgeInsets.only(
+                        //                     left: 28.0,
+                        //                     right: 8.0,
+                        //                     top: 8.0,
+                        //                     bottom: 8.0),
+                        //                 child: CircleAvatar(
+                        //                   // minRadius: 20.0,
+                        //                   backgroundImage: ownerModel == null ||
+                        //                           ownerModel.photoURL == null ||
+                        //                           ownerModel.photoURL.isEmpty
+                        //                       ? AssetImage(
+                        //                           'lib/assets/images/noimagefound.png')
+                        //                       : NetworkImage(
+                        //                           ownerModel.photoURL),
+                        //                 ),
+                        //               ),
+                        //               Flexible(
+                        //                 child: Container(
+                        //                   padding: EdgeInsets.only(right: 13.0),
+                        //                   child: ownerModel != null &&
+                        //                           ownerModel.fullname != null
+                        //                       ? Text(
+                        //                           ownerModel.fullname,
+                        //                           overflow:
+                        //                               TextOverflow.ellipsis,
+                        //                           style: TextStyle(
+                        //                             fontSize: 18.0,
+                        //                           ),
+                        //                         )
+                        //                       : Container(),
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         );
+                        //     }
+                        //   },
+                        // ),
+                        //getTextWidgets(context),
                       ],
                     ),
                   ),
@@ -613,8 +618,7 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   Widget _showCreateCampaignButton(BuildContext context) {
-    if (timebankModel.creatorId ==
-        UserData.shared.user.sevaUserID) {
+    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -634,8 +638,7 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   Widget _showJoinRequests(BuildContext context) {
-    if (timebankModel.creatorId ==
-        UserData.shared.user.sevaUserID) {
+    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -657,8 +660,7 @@ class _TimebankViewState extends State<TimebankView> {
   Widget _whichRoute(String section) {
     switch (section) {
       case 'timebanks':
-        if (timebankModel.creatorId ==
-            UserData.shared.user.sevaUserID) {
+        if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return TimebankEdit(
             ownerModel: ownerModel,
             timebankModel: timebankModel,
@@ -702,8 +704,7 @@ class _TimebankViewState extends State<TimebankView> {
   Widget _whichButton(String section) {
     switch (section) {
       case 'timebanks':
-        if (timebankModel.creatorId ==
-            UserData.shared.user.sevaUserID) {
+        if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return Text(
             'Edit Timebank',
             style: TextStyle(
@@ -711,73 +712,57 @@ class _TimebankViewState extends State<TimebankView> {
                 color: Theme.of(context).accentColor),
           );
         } else {
-          if(timebankModel.members.contains(UserData.shared.user.sevaUserID))
-          return Text('View Timebank',style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor));
-          else
-          return Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Request to join this Yang Gang'
-          : 'Request to join this Timebank!',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+          return Text(
+            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? 'Request to join this Yang Gang'
+                : 'Request to join this Timebank!',
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor),
           );
         }
         break;
       case 'campaigns':
-        if (timebankModel.creatorId ==
-            UserData.shared.user.sevaUserID) {
+        if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return Text(
             'Create a Campaign (Project)',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor),
           );
         } else {
           return Text(
             'Join a Campaign (Project)',
-            style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).accentColor),
           );
         }
         break;
       case 'viewcampaigns':
         return Text(
           'View Current Campaigns',
-          style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).accentColor),
+          style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).accentColor),
         );
         break;
       case 'joinrequests':
         return Text(
           'View Timebank Join Requests',
-          style: TextStyle(fontWeight: FontWeight.w700, color:Theme.of(context).accentColor),
+          style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Theme.of(context).accentColor),
         );
         break;
       default:
         return null;
     }
   }
-  Widget _navigateToTimebank(BuildContext context) {
-    assert(timebankModel.id != null);
-    if(timebankModel.members.contains(UserData.shared.user.sevaUserID)) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) {
-            return TimebankAdminPage(
-              timebankId: timebankModel.id,
-            );
-          },
-        ),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => _whichRoute('timebanks'),
-        ),
-      );
-    }
-  }
 
   Widget _showManageMembersButton(BuildContext context) {
     assert(timebankModel.id != null);
-    if (timebankModel.creatorId ==
-        UserData.shared.user.sevaUserID) {
+    if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -818,7 +803,7 @@ class _TimebankViewState extends State<TimebankView> {
                 stream: FirestoreManager.getUserForEmailStream(member),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return Container(); //Text(snapshot.error.toString());
+                    return Text(snapshot.error.toString());
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Container();

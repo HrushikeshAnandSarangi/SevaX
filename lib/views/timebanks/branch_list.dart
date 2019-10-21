@@ -9,7 +9,9 @@ import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 
 class BranchList extends StatelessWidget {
   final String timebankid;
-  BranchList({@required this.timebankid,});
+  BranchList({
+    @required this.timebankid,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(

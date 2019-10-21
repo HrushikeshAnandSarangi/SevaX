@@ -4,62 +4,89 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
-
     {
       "name": "Tulsi-release",
       "type": "dart",
       "request": "launch",
       "program": "lib/main_tulsi.dart",
-      "args": ["--flavor", "tulsi", "--release"]
+      "args": [
+        "--flavor",
+        "tulsi",
+        "--release"
+      ]
     },
     {
       "name": "Tom-release",
       "type": "dart",
       "request": "launch",
       "program": "lib/main_tom.dart",
-      "args": ["--flavor", "tom", "--release"]
+      "args": [
+        "--flavor",
+        "tom",
+        "--release"
+      ]
     },
     {
       "name": "App-release",
       "type": "dart",
       "request": "launch",
       "program": "lib/main_app.dart",
-      "args": ["--flavor", "app", "--release"]
+      "args": [
+        "--flavor",
+        "app",
+        "--release"
+      ]
     },
     {
       "name": "HumanityFirst-release",
       "type": "dart",
       "request": "launch",
       "program": "lib/main_humanity_first.dart",
-      "args": ["--flavor", "humanityfirst", "--release"]
+      "args": [
+        "--flavor",
+        "humanityfirst",
+        "--release"
+      ]
     },
     {
       "name": "Tulsi",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_tulsi.dart",
-      "args": ["--flavor", "tulsi"]
+      "args": [
+        "--flavor",
+        "tulsi"
+      ]
     },
     {
       "name": "Tom",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_tom.dart",
-      "args": ["--flavor", "tom"]
+      "args": [
+        "--flavor",
+        "tom"
+      ]
     },
     {
       "name": "App",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_app.dart",
-      "args": ["--flavor", "app"]
+      "args": [
+        "--flavor",
+        "app"
+      ]
     },
     {
       "name": "HumanityFirst",
       "request": "launch",
       "type": "dart",
       "program": "lib/main_humanity_first.dart",
-      "args": ["--flavor", "humanityfirst"]
+      "args": [
+        "--flavor",
+        "humanityfirst"
+      ]
     }
   ]
 }

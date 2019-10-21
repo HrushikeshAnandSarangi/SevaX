@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,7 +24,7 @@ class Auth {
     } on Exception catch (error) {
       throw error;
     } catch (error) {
-      print('Google sign in exception. Error: ${error.toString()}');
+      log('Google sign in exception. Error: ${error.toString()}');
     }
 
     if (googleUser == null) return null;
@@ -55,7 +56,7 @@ class Auth {
     } on Exception catch (error) {
       throw error;
     } catch (error) {
-      print('Auth: signInWithEmailAndPassword: $error');
+      log('Auth: signInWithEmailAndPassword: $error');
     }
     return _processGoogleUser(user);
   }
@@ -75,7 +76,7 @@ class Auth {
     } on PlatformException catch (error) {
       throw error;
     } catch (error) {
-      print('createUserWithEmailAndPassword: error: ${error.toString()}');
+      log('createUserWithEmailAndPassword: error: ${error.toString()}');
       return null;
     }
   }
@@ -97,7 +98,7 @@ class Auth {
       );
       return loggedInUser;
     } catch (error) {
-      print('Error while fetching user:\n${error.toString()}');
+      log('Error while fetching user:\n${error.toString()}');
       return null;
     }
   }

@@ -20,9 +20,8 @@ class TimeBankList extends StatelessWidget {
         //automaticallyImplyLeading: false,
         title: Text(
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Yang Gangs'
-          :
-          title,
+              ? 'Yang Gangs'
+              : title,
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
@@ -51,7 +50,6 @@ class TimeBankList extends StatelessWidget {
           foregroundColor: FlavorConfig.values.buttonTextColor,
           child: Icon(
             Icons.add,
-
           ),
         ),
       ),
@@ -69,7 +67,9 @@ class TimeBankList extends StatelessWidget {
             TimebankModel rootTB = snapshot.data;
             if (rootTB.children.length < 1 || rootTB.children == null) {
               return Center(
-                child: Text('No Sub Timebanks'),
+                child: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                    ? Text('No Yang Gangs')
+                    : Text('No Sub Timebanks'),
               );
             } else {
               return ListView.builder(
@@ -88,74 +88,35 @@ class TimeBankList extends StatelessWidget {
                       return model.id != FlavorConfig.values.timebankId
                           ? GestureDetector(
                               child: Card(
-                                child: Container(
-                                    padding: EdgeInsets.only(top: 5.0),
-                                    constraints: BoxConstraints.expand(
-                                      height: 120.0,
-                                    ),
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Positioned(
-                                          left: 10,
-                                          child: CircleAvatar(
-                                            minRadius: 40.0,
-                                            backgroundColor: Colors.grey,
-                                            backgroundImage: _getImage(model),
-                                          ),
+                                child: 
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        child: CircleAvatar(
+                                          minRadius: 32.0,
+                                          backgroundColor: Colors.grey,
+                                          backgroundImage: _getImage(model),
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.only(
-                                              left: 100.0, right: 5.0),
-                                          child: Wrap(
-                                            children: <Widget>[
-                                              Text(
-                                                model.name,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 18.0,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 10.0,
-                                          right: 100.0,
-                                          child: Icon(
-                                            Icons.notifications_none,
+                                      ),
+                                      SizedBox(width: 8,),
+                                      Container(
+                                        child: Text(
+                                          model.name,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 18.0,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        Positioned(
-                                          bottom: 10.0,
-                                          right: 145.0,
-                                          child: Icon(
-                                            Icons.favorite_border,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 10.0,
-                                          right: 55.0,
-                                          child: Icon(
-                                            Icons.chat_bubble_outline,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 10.0,
-                                          right: 10.0,
-                                          child: Icon(
-                                            Icons.share,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    )),
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
                               onTap: () {
-                               // _showDialog(context,model.name);
+                                // _showDialog(context,model.name);
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (routeContext) {
@@ -176,7 +137,8 @@ class TimeBankList extends StatelessWidget {
       ),
     );
   }
-  void _showDialog(BuildContext context,String name) {
+
+  void _showDialog(BuildContext context, String name) {
     // flutter defined function
     showDialog(
       context: context,
@@ -196,17 +158,12 @@ class TimeBankList extends StatelessWidget {
             new FlatButton(
               child: new Text("Join"),
               onPressed: () {
-                print('Join clicked');
-               // Navigator.of(context).pop();
-                //WaitingView
-               // Navigator.of(context).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) => WaitingView(),
                   ),
                 );
-
               },
             ),
           ],

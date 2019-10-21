@@ -23,10 +23,10 @@ class _AddMembersState extends State<AddMembers> {
           style: TextStyle(fontSize: 18.0, color: Colors.white),
           textInputAction: TextInputAction.search,
           decoration: InputDecoration(
-            hintText: 'Search People by Email',            
-            hintStyle: TextStyle(fontSize: 18.0, color: Colors.white54),
-            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white))
-          ),
+              hintText: 'Search People by Email',
+              hintStyle: TextStyle(fontSize: 18.0, color: Colors.white54),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white))),
           onChanged: (value) {
             setState(() {
               _searchValue = value;

@@ -664,7 +664,7 @@ class _ProfilePageState extends State<ProfilePage>
       subtitle: timebankModel == null
           ? "loading"
           : FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? ''
+              ? null
               : timebankModel.name,
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
@@ -689,7 +689,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget get timebankslist {
     return getActionCards(
       title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Yang Gangs'
+          ? 'List of Yang Gangs'
           : 'Timebanks List',
       //subtitle: timebankModel == null ? "loading" : timebankModel.name,
       trailingIcon: Icons.navigate_next,

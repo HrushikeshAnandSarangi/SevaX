@@ -21,7 +21,6 @@ class FirestoreService extends BaseService {
       {@required String userEmail}) async* {
     log.i('getEntityDataListStream: EmailID: $userEmail');
 
-
     var campaignSnapshotStream = Firestore.instance
         .collection('campaigns')
         .where('membersemail', arrayContains: userEmail)

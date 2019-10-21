@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sevaexchange/views/news/news_card_view.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -30,50 +31,45 @@ class NewsListState extends State<NewsList> {
   String timebankName;
   String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
+  bool isNearme = false;
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Offstage(
-          offstage: false,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-              ),
-              Text(
-                'Timebank : ',
-                style: (TextStyle(fontWeight: FontWeight.w500)),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-              ),
-              StreamBuilder<Object>(
-                  stream: FirestoreManager.getTimebanksForUserStream(
-                      userId: SevaCore.of(context).loggedInUser.sevaUserID),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError)
-                      return new Text('Error: ${snapshot.error}');
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    timebankList = snapshot.data;
-                    // timebankList.forEach((t){
-                    //   if(t.name==timebankName){
-                    //     timebankId=t.id;
-                    //   }
-                    // });
-                    List<String> dropdownList = [];
-                    timebankList.forEach((t) {
-                      dropdownList.add(t.id);
-                    });
-                    SevaCore.of(context).loggedInUser.associatedWithTimebanks =
-                        dropdownList.length;
-                        print("AssociatedWithTimebanks Timebank count updated to ${dropdownList.length}");
-                    //dropdownList.insert(0, 'All');
-
-                    return DropdownButton<String>(
-                      value: timebankId,
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+            ),
+            Text(
+              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                  ? 'Yang Gang :'
+                  : 'Timebank : ',
+              style: (TextStyle(fontWeight: FontWeight.w500)),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+            ),
+            Expanded(
+              child: StreamBuilder<Object>(
+                stream: FirestoreManager.getTimebanksForUserStream(
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError)
+                    return new Text('Error: ${snapshot.error}');
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  timebankList = snapshot.data;
+                  List<String> dropdownList = [];
+                  timebankList.forEach((t) {
+                    dropdownList.add(t.id);
+                  });
+                  SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+                      dropdownList.length;
+                  return DropdownButton<String>(
+                    value: timebankId,
                       onChanged: (String newValue) {
                         setState(() {
                           timebankId = newValue;
@@ -82,41 +78,58 @@ class NewsListState extends State<NewsList> {
                           didChangeDependencies();
                         });
                       },
-                      items: dropdownList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        if (value == 'All') {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        } else
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: FutureBuilder<Object>(
-                                future: FirestoreManager.getTimeBankForId(
-                                    timebankId: value),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError)
-                                    return new Text('Error: ${snapshot.error}');
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Offstage();
-                                  }
-                                  TimebankModel timebankModel = snapshot.data;
-                                  return Text(timebankModel.name);
-                                }),
-                          );
-                      }).toList(),
-                    );
-                  }),
-            ],
-          ),
+                    items: dropdownList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      if (value == 'All') {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      } else
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: FutureBuilder<Object>(
+                              future: FirestoreManager.getTimeBankForId(
+                                  timebankId: value),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError)
+                                  return new Text('Error: ${snapshot.error}');
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Offstage();
+                                }
+                                TimebankModel timebankModel = snapshot.data;
+                                return Text(timebankModel.name);
+                              }),
+                        );
+                    }).toList(),
+                  );
+                },
+              ),
+            ),
+            RaisedButton(
+              onPressed: () {
+                setState(() {
+                  if (isNearme == true)
+                    isNearme = false;
+                  else
+                    isNearme = true;
+                });
+              },
+              child: isNearme == false ? Text('Near Me') : Text('All'),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 5),
+            ),
+          ],
         ),
         Divider(
           color: Colors.grey,
           height: 0,
         ),
-        timebankId != 'All'
+        timebankId != 'All' && isNearme == false
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(timebankID: timebankId),
                 builder: (context, snapshot) {
@@ -146,35 +159,101 @@ class NewsListState extends State<NewsList> {
                   }
                 },
               )
-            : StreamBuilder<List<NewsModel>>(
-                stream: FirestoreManager.getAllNewsStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return Center(child: CircularProgressIndicator());
-                      break;
-                    default:
-                      List<NewsModel> newsList = snapshot.data;
-                      if (newsList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(child: Text('Your feed is empty')),
-                        );
+            : timebankId == 'All' && isNearme == false
+                ? StreamBuilder<List<NewsModel>>(
+                    stream: FirestoreManager.getAllNewsStream(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError)
+                        return new Text('Error: ${snapshot.error}');
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Center(child: CircularProgressIndicator());
+                          break;
+                        default:
+                          List<NewsModel> newsList = snapshot.data;
+                          if (newsList.length == 0) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(child: Text('Your feed is empty')),
+                            );
+                          }
+                          return Expanded(
+                            child: ListView.builder(
+                              itemCount: newsList.length,
+                              itemBuilder: (context, index) {
+                                return getNewsCard(
+                                    newsList.elementAt(index), false);
+                              },
+                            ),
+                          );
                       }
-                      return Expanded(
-                        child: ListView.builder(
-                          itemCount: newsList.length,
-                          itemBuilder: (context, index) {
-                            return getNewsCard(
-                                newsList.elementAt(index), false);
-                          },
-                        ),
-                      );
-                  }
-                },
-              ),
+                    },
+                  )
+                : timebankId != 'All' && isNearme == true
+                    ? StreamBuilder<List<NewsModel>>(
+                        stream: FirestoreManager.getNearNewsStream(
+                            timebankID: timebankId),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError)
+                            return new Text('Error: ${snapshot.error}');
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return Center(child: CircularProgressIndicator());
+                              break;
+                            default:
+                              List<NewsModel> newsList = snapshot.data;
+                              if (newsList.length == 0) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child:
+                                      Center(child: Text('Your feed is empty')),
+                                );
+                              }
+                              return Expanded(
+                                child: ListView.builder(
+                                  itemCount: newsList.length,
+                                  itemBuilder: (context, index) {
+                                    return getNewsCard(
+                                        newsList.elementAt(index), false);
+                                  },
+                                ),
+                              );
+                          }
+                        },
+                      )
+                    : timebankId == 'All' && isNearme == true
+                        ? StreamBuilder<List<NewsModel>>(
+                            stream: FirestoreManager.getAllNearNewsStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError)
+                                return new Text('Error: ${snapshot.error}');
+                              switch (snapshot.connectionState) {
+                                case ConnectionState.waiting:
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                  break;
+                                default:
+                                  List<NewsModel> newsList = snapshot.data;
+                                  if (newsList.length == 0) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: Text('Your feed is empty')),
+                                    );
+                                  }
+                                  return Expanded(
+                                    child: ListView.builder(
+                                      itemCount: newsList.length,
+                                      itemBuilder: (context, index) {
+                                        return getNewsCard(
+                                            newsList.elementAt(index), false);
+                                      },
+                                    ),
+                                  );
+                              }
+                            },
+                          )
+                        : Offstage(),
       ],
     );
   }
@@ -528,128 +607,3 @@ class NewsListState extends State<NewsList> {
   }
 }
 
-class NewsCardView extends StatelessWidget {
-  final NewsModel newsModel;
-
-  NewsCardView({Key key, @required this.newsModel}) : super(key: key) {
-    assert(newsModel.title != null, 'News title cannot be null');
-    assert(newsModel.description != null, 'News description cannot be null');
-    assert(newsModel.fullName != null, 'Full name cannot be null');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          newsModel.title,
-          style: TextStyle(fontSize: 16.0, color: Colors.white),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {
-              bool isShare = true;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => NewChat(isShare, newsModel)));
-            },
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          // padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-                child: Text(
-                  newsModel.title,
-                  style: TextStyle(
-                      fontSize: 28.0,
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Padding(padding: EdgeInsets.all(5.0)),
-                          Text(
-                            newsModel.fullName,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 0.0, 10.0, 10.0),
-                child: Text(
-                  timeAgo.format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                      newsModel.postTimestamp,
-                    ),
-                  ),
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black54,
-                  ),
-                ),
-              ),
-              Container(
-                child: newsModel.newsImageUrl != null
-                    ? Hero(
-                        tag: newsModel.id,
-                        child: Image.network(
-                          newsModel.newsImageUrl,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Image.asset('lib/assets/images/noimagefound.png'),
-              ),
-              Center(
-                child: Container(
-                  child: Text(
-                    newsModel.photoCredits != null
-                        ? 'Credits: ${newsModel.photoCredits}'
-                        : '',
-                    style:
-                        TextStyle(fontSize: 15.0, fontStyle: FontStyle.italic),
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      newsModel.description,
-                      style: TextStyle(fontSize: 18.0, height: 1.4),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

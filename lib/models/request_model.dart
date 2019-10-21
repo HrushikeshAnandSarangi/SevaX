@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:flutter/material.dart';
 
@@ -20,30 +22,31 @@ class RequestModel extends DataModel {
   String timebankId;
   int numberOfApprovals;
   List<String> approvedUsers;
+  GeoFirePoint location;
 
   Color color;
 
-  RequestModel({
-    this.id,
-    this.title,
-    this.description,
-    this.durationOfRequest,
-    this.email,
-    this.fullName,
-    this.sevaUserId,
-    this.photoUrl,
-    this.accepted,
-    this.postTimestamp,
-    this.requestEnd,
-    this.requestStart,
-    this.acceptors,
-    this.color,
-    this.transactions,
-    this.rejectedReason,
-    this.timebankId,
-    this.approvedUsers = const [],
-    this.numberOfApprovals = 1,
-  });
+  RequestModel(
+      {this.id,
+      this.title,
+      this.description,
+      this.durationOfRequest,
+      this.email,
+      this.fullName,
+      this.sevaUserId,
+      this.photoUrl,
+      this.accepted,
+      this.postTimestamp,
+      this.requestEnd,
+      this.requestStart,
+      this.acceptors,
+      this.color,
+      this.transactions,
+      this.rejectedReason,
+      this.timebankId,
+      this.approvedUsers = const [],
+      this.numberOfApprovals = 1,
+      this.location});
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -110,6 +113,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
+    if (map.containsKey('location')) {
+      GeoPoint geoPoint = map['location']['geopoint'];
+      this.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    }
   }
 
   @override
@@ -170,6 +178,9 @@ class RequestModel extends DataModel {
     }
     if (this.numberOfApprovals != null) {
       object['numberOfApprovals'] = this.numberOfApprovals;
+    }
+    if (this.location != null) {
+      object['location'] = this.location.data;
     }
     if (this.id != null) {
       object['id'] = this.id;

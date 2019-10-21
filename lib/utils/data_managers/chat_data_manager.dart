@@ -13,7 +13,8 @@ Future<void> createChat({
   chat.rootTimebank = FlavorConfig.values.timebankId;
   return await Firestore.instance
       .collection('chatsnew')
-      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
+      .document(
+          chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
       .setData(chat.toMap(), merge: true);
 }
 
@@ -24,7 +25,8 @@ Future<void> updateChat({
   // log.i('updateChat: MessageModel: ${chat.toMap()}');
   return await Firestore.instance
       .collection('chatsnew')
-      .document(chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
+      .document(
+          chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
       .updateData(chat.toMap());
 }
 
@@ -100,6 +102,9 @@ Stream<List<MessageModel>> getMessagesforChat({
             MessageModel model = MessageModel.fromMap(documentSnapshot.data);
 
             messagelist.add(model);
+            messagelist.sort((m1,m2){
+              return m1.timestamp.compareTo(m2.timestamp);
+            });
           },
         );
         messageSink.add(messagelist);

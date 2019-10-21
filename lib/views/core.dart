@@ -450,7 +450,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   color: Colors.white,
                 ),
       page: HelpView(controller),
-      title: FlavorConfig.appFlavor == Flavor.APP ? 'Volunteer' : 'Campaign',
+      title: 'Volunteer',
       bottom: TabBar(
         labelColor: Colors.white,
         tabs: [
@@ -459,64 +459,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
         ],
         controller: controller,
       ),
-      appBarActions: [
-        // IconButton(
-        //   icon: Icon(Icons.notifications_none),
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => NotificationsPage(),
-        //       ),
-        //     );
-        //   },
-        // ),
-        // IconButton(
-        //   icon: Icon(Icons.add),
-        //   onPressed: () {
-        //     if (globals.orCreateSelector == 0) {
-        //       if (isAdminOrCoordinator) {
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //             builder: (context) => CreateRequest(),
-        //           ),
-        //         );
-        //       } else {
-        //         print("alert check");
-
-        //         showDialog(
-        //           context: context,
-        //           builder: (BuildContext context) {
-        //             // return object of type Dialog
-        //             return AlertDialog(
-        //               title: new Text("Permission Denied"),
-        //               content: new Text(
-        //                   "You need to be an Admin or Coordinator to have permission to create campaigns"),
-        //               actions: <Widget>[
-        //                 // usually buttons at the bottom of the dialog
-        //                 new FlatButton(
-        //                   child: new Text("Close"),
-        //                   onPressed: () {
-        //                     Navigator.of(context).pop();
-        //                   },
-        //                 ),
-        //               ],
-        //             );
-        //           },
-        //         );
-        //       }
-        //     } else {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => CreateOffer(),
-        //         ),
-        //       );
-        //     }
-        //   },
-        // ),
-      ],
+      appBarActions: [],
     );
   }
 

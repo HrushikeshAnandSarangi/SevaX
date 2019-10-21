@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,10 +16,8 @@ class CrudMethods {
   Future<void> addNews(newsData) async {
     if (isLoggedIn()) {
       Firestore.instance.collection('news').add(newsData).catchError((e) {
-        print(e);
+        log('addNews: error: $e');
       });
-    } else {
-      print('You need to be logged in');
     }
   }
 
@@ -31,9 +30,7 @@ class CrudMethods {
         .collection('news')
         .document(selectedDoc)
         .updateData(newValues)
-        .catchError((e) {
-      print(e);
-    });
+        .catchError((e) {});
   }
 
   deleteData(docId) {
@@ -41,8 +38,6 @@ class CrudMethods {
         .collection('news')
         .document(docId)
         .delete()
-        .catchError((e) {
-      print(e);
-    });
+        .catchError((e) {});
   }
 }

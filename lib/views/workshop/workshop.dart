@@ -39,4 +39,3 @@ class TwoListsWorkshop extends State<WorkshopView> {
     );
   }
 }
-

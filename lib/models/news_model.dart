@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
 
 class NewsModel extends DataModel {
@@ -11,22 +13,25 @@ class NewsModel extends DataModel {
   String newsImageUrl;
   String photoCredits;
   int postTimestamp;
+  GeoFirePoint location;
   EntityModel entity;
   List<String> likes;
 
-  NewsModel(
-      {this.id,
-      this.title,
-      this.subheading,
-      this.description,
-      this.email,
-      this.fullName,
-      this.sevaUserId,
-      this.newsImageUrl,
-      this.photoCredits,
-      this.postTimestamp,
-      this.entity,
-      this.likes});
+  NewsModel({
+    this.id,
+    this.title,
+    this.subheading,
+    this.description,
+    this.email,
+    this.fullName,
+    this.sevaUserId,
+    this.newsImageUrl,
+    this.photoCredits,
+    this.postTimestamp,
+    this.location,
+    this.entity,
+    this.likes,
+  });
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
@@ -59,6 +64,9 @@ class NewsModel extends DataModel {
     }
     if (this.postTimestamp != null) {
       map['posttimestamp'] = this.postTimestamp;
+    }
+    if (this.location != null) {
+      map['location'] = this.location.data;
     }
     if (this.entity != null) {
       map['entity'] = this.entity.toMap();
@@ -101,6 +109,11 @@ class NewsModel extends DataModel {
     if (map.containsKey('posttimestamp')) {
       this.postTimestamp = map['posttimestamp'];
     }
+    if (map.containsKey('location')) {
+      GeoPoint geoPoint = map['location']['geopoint'];
+      this.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    }
     if (map.containsKey('entity')) {
       Map<String, dynamic> dataMap = Map.castFrom(map['entity']);
       this.entity = EntityModel.fromMap(dataMap);
@@ -110,7 +123,7 @@ class NewsModel extends DataModel {
       this.likes = likesList;
     } else
       this.likes = [];
-  }
+    }
 }
 
 class EntityModel extends DataModel {

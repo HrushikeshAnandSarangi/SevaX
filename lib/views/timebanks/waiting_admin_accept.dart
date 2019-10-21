@@ -6,19 +6,22 @@ class WaitingView extends StatefulWidget {
     // TODO: implement createState
     return _waitingState();
   }
-
 }
 
-
 class _waitingState extends State<WaitingView> {
-
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Center(child: Text('',textAlign: TextAlign.center,style: TextStyle(fontSize: 20.0),),),
+        title: Center(
+          child: Text(
+            '',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ),
       ),
       body: Container(
           padding: EdgeInsets.all(20.0),
@@ -55,40 +58,23 @@ class _waitingState extends State<WaitingView> {
               Padding(
                 padding: EdgeInsets.all(20.0),
               ),
-//              Column(
-//                children: <Widget>[
-//                  Row(
-//                    children: <Widget>[
-//                      Expanded(
-//                        child: SizedBox(
-//                          height: 50,
-//                          child: RaisedButton(
-//                            child: Text('Proceed',),
-//                            textColor: Colors.white,
-//                            color: Colors.blue,
-//                            onPressed: () {
-//                              print('Pressed proceed btn');
-//                              Navigator.pop(context);
-//                            },
-//                            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0)),
-//                          ),
-//                        ),
-//                      ),
-//                    ],
-//                  )
-//                ],
-//              ),
             ],
-          )
-      ),
+          )),
     );
   }
+
   Widget get logo {
 //    lib/assets/images/waiting.jpg
     AssetImage assetImage = AssetImage('lib/assets/images/waiting.jpg');
-    Image image = Image(image: assetImage,width: 300,height: 300,);
+    Image image = Image(
+      image: assetImage,
+      width: 300,
+      height: 300,
+    );
 
     // TODO: implement build
-    return Container(child:image,);
+    return Container(
+      child: image,
+    );
   }
 }

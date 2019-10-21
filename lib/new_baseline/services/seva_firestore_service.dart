@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/news_model.dart';
 
@@ -29,7 +30,7 @@ class SevaFirestoreService {
     return Firestore.instance.runTransaction(createTransaction).then((mapData) {
       return NewsModel.fromMap(mapData);
     }).catchError((error) {
-      print('error: $error');
+      log('error: $error');
       return null;
     });
   }
@@ -61,7 +62,7 @@ class SevaFirestoreService {
         .runTransaction(updateTransaction)
         .then((result) => result['updated'])
         .catchError((error) {
-      print('error: $error');
+      log('error: $error');
       return false;
     });
   }
@@ -78,7 +79,7 @@ class SevaFirestoreService {
         .runTransaction(deleteTransaction)
         .then((result) => result['deleted'])
         .catchError((error) {
-      print('error: $error');
+      log('error: $error');
       return false;
     });
   }

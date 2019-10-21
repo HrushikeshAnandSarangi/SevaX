@@ -11,8 +11,8 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'timebank_join_request.dart';
 //import 'package:sevaexchange/views/core.dart';
 
-
 typedef StringListCallback = void Function(String otp);
+
 class PinView extends StatefulWidget {
   // final Widget child;
   // TimebankModel timebankModel;
@@ -57,7 +57,13 @@ class _LoginSignupScreenState extends State<PinView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child:Text("OTP",textAlign: TextAlign.center,style: TextStyle(color: Colors.white),),),
+        title: Center(
+          child: Text(
+            "OTP",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ),
       body: Container(
         child: Column(
@@ -70,8 +76,10 @@ class _LoginSignupScreenState extends State<PinView> {
                   //child: Text(thisText, style: Theme.of(context).textTheme.title),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 20.0,right: 20.0,top: 10.0,bottom: 25.0),
-                  child:Text('Enter the code you recieved from your timebank Coordinator to see the exchange opportunities for your group',
+                  padding: EdgeInsets.only(
+                      left: 20.0, right: 20.0, top: 10.0, bottom: 25.0),
+                  child: Text(
+                    'Enter the code you recieved from your timebank Coordinator to see the exchange opportunities for your group',
                     textDirection: TextDirection.ltr,
                     style: TextStyle(
                       fontSize: 17.0,
@@ -80,8 +88,12 @@ class _LoginSignupScreenState extends State<PinView> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10.0,bottom: 10.0),
-                  child: Text('Enter 5 Digit Code',textDirection: TextDirection.ltr,textAlign: TextAlign.left,),
+                  padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
+                  child: Text(
+                    'Enter 5 Digit Code',
+                    textDirection: TextDirection.ltr,
+                    textAlign: TextAlign.left,
+                  ),
                 ),
                 PinCodeTextField(
                   autofocus: false,
@@ -99,15 +111,15 @@ class _LoginSignupScreenState extends State<PinView> {
                       hasError = false;
                     });
                   },
-                  onDone: (text){
-                    print("DONE $text");
-                    //widget.onSelectedOtp(controller.text);
-                  },
-                  pinCodeTextFieldLayoutType: PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
+                  onDone: (text) {},
+                  pinCodeTextFieldLayoutType:
+                      PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
                   wrapAlignment: WrapAlignment.start,
-                  pinBoxDecoration: ProvidedPinBoxDecoration.defaultPinBoxDecoration,
+                  pinBoxDecoration:
+                      ProvidedPinBoxDecoration.defaultPinBoxDecoration,
                   pinTextStyle: TextStyle(fontSize: 30.0),
-                  pinTextAnimatedSwitcherTransition: ProvidedPinBoxTextAnimation.scalingTransition,
+                  pinTextAnimatedSwitcherTransition:
+                      ProvidedPinBoxTextAnimation.scalingTransition,
                   pinTextAnimatedSwitcherDuration: Duration(milliseconds: 100),
                 ),
                 Visibility(
@@ -136,10 +148,7 @@ class _LoginSignupScreenState extends State<PinView> {
                         textColor: Colors.blue,
                         color: Colors.transparent,
                         elevation: 0.0,
-                        onPressed: (){
-                          print('pressed skip');
-                          //this._navigateCongrats();
-                          //widget.onSkipped();
+                        onPressed: () {
                           _navigateCongrats();
                         },
                       ),
@@ -149,15 +158,16 @@ class _LoginSignupScreenState extends State<PinView> {
                     ),
                     Expanded(
                       child: RaisedButton(
-                          child: Text('NEXT',),
+                          child: Text(
+                            'NEXT',
+                          ),
                           textColor: Colors.white,
                           color: Colors.blue,
-                          onPressed: (){
-                            print('pressed Next');
+                          onPressed: () {
                             this._checkFields();
                           },
-                          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0))
-                      ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(30.0))),
                     ),
                     Padding(
                       padding: EdgeInsets.all(10.0),
@@ -174,6 +184,7 @@ class _LoginSignupScreenState extends State<PinView> {
       ),
     );
   }
+
   void _checkFields() {
     if (controller.text.length == 5) {
       this._navigateCongrats();
@@ -191,8 +202,8 @@ class _LoginSignupScreenState extends State<PinView> {
       }
     }
   }
-  void _navigateCongrats() {
 
+  void _navigateCongrats() {
     UserData.shared.user.calendar = "done";
     UserData.shared.user.requestStatus = "Accepted";
     UserData.shared.updateUserData();

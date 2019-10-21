@@ -481,7 +481,6 @@ class NotificationsView extends StatelessWidget {
 
   void approveTransaction(RequestModel model, String userId,
       String notificationId, SevaCore sevaCore) {
-    print("############  Transaction started.");
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
 
@@ -504,8 +503,6 @@ class NotificationsView extends StatelessWidget {
 
     FirestoreManager.readNotification(
         notificationId, sevaCore.loggedInUser.email);
-
-    print("############ Completed transaction.");
   }
 
   void checkForFeedback(
@@ -535,9 +532,7 @@ class NotificationsView extends StatelessWidget {
         requestId: model.id,
         results: results,
       );
-    } else {
-      print("Operation Cancelled!");
-    }
+    } else {}
   }
 
   void onActivityResult(
@@ -558,8 +553,6 @@ class NotificationsView extends StatelessWidget {
       "requestId": requestId,
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
-
-    print("Task completed");
     approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
@@ -865,8 +858,6 @@ class NotificationsView extends StatelessWidget {
 
                 usersSet.add(user.email);
                 model.approvedUsers = usersSet.toList();
-
-                //int count = model.numberOfApprovals;
 
                 if (model.numberOfApprovals <= model.approvedUsers.length)
                   model.accepted = true;

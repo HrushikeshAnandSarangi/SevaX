@@ -9,6 +9,7 @@ Future<void> createAcceptRequestNotification({
 }) async {
   UserModel user =
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
+  notificationsModel.timebankId = FlavorConfig.values.timebankId;
 
   Firestore.instance
       .collection('users')
@@ -71,6 +72,7 @@ Future<void> createRequestApprovalNotification({
   UserModel user = await getUserForId(
     sevaUserId: model.targetUserId,
   );
+  model.timebankId = FlavorConfig.values.timebankId;
 
   Firestore.instance
       .collection('users')
@@ -82,6 +84,7 @@ Future<void> createRequestApprovalNotification({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  model.timebankId = FlavorConfig.values.timebankId;
   await Firestore.instance
       .collection('users')
       .document(user.email)
@@ -94,6 +97,7 @@ Future<void> createTaskCompletedApprovedNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  model.timebankId = FlavorConfig.values.timebankId;
   await Firestore.instance
       .collection('users')
       .document(user.email)
@@ -106,6 +110,7 @@ Future<void> createTransactionNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  model.timebankId = FlavorConfig.values.timebankId;
   await Firestore.instance
       .collection('users')
       .document(user.email)
@@ -118,6 +123,7 @@ Future<void> offerAcceptNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  model.timebankId = FlavorConfig.values.timebankId;
   await Firestore.instance
       .collection('users')
       .document(user.email)
@@ -130,6 +136,7 @@ Future<void> offerRejectNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  model.timebankId = FlavorConfig.values.timebankId;
   await Firestore.instance
       .collection('users')
       .document(user.email)
@@ -158,6 +165,7 @@ Stream<List<NotificationsModel>> getNotifications({
       .document(userEmail)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
+      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
   yield* data.transform(
@@ -192,6 +200,7 @@ Future<bool> isUnreadNotification(String userEmail) async {
       .document(userEmail)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
+      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .getDocuments()
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {

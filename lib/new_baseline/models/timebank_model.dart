@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+
 class TimebankModel {
   String id;
   String name;
@@ -16,86 +19,98 @@ class TimebankModel {
   String rootTimebankId;
   List<String> children;
   double balance;
+  GeoFirePoint location;
 
-  TimebankModel({
-    this.id,
-    this.name,
-    this.missionStatement,
-    this.emailId,
-    this.phoneNumber,
-    this.address,
-    this.creatorId,
-    this.photoUrl,
-    this.createdAt,
-    this.admins,
-    this.coordinators,
-    this.members,
-    this.protected,
-    this.parentTimebankId,
-    this.rootTimebankId,
-    this.children,
-    this.balance,
-  });
+  TimebankModel(
+      {this.id,
+      this.name,
+      this.missionStatement,
+      this.emailId,
+      this.phoneNumber,
+      this.address,
+      this.creatorId,
+      this.photoUrl,
+      this.createdAt,
+      this.admins,
+      this.coordinators,
+      this.members,
+      this.protected,
+      this.parentTimebankId,
+      this.rootTimebankId,
+      this.children,
+      this.balance,
+      this.location});
 
-  factory TimebankModel.fromMap(Map<String, dynamic> json) => new TimebankModel(
-        id: json["id"] == null ? null : json["id"],
-        name: json["name"] == null ? null : json["name"],
-        missionStatement:
-            json["missionStatement"] == null ? null : json["missionStatement"],
-        emailId: json["email_id"] == null ? null : json["email_id"],
-        phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
-        address: json["address"] == null ? null : json["address"],
-        creatorId: json["creator_id"] == null ? null : json["creator_id"],
-        photoUrl: json["photo_url"] == null ? null : json["photo_url"],
-        createdAt: json["created_at"] == null ? null : json["created_at"],
-        admins: json["admins"] == null
-            ? null
-            : new List<String>.from(json["admins"].map((x) => x)),
-        coordinators: json["coordinators"] == null
-            ? null
-            : new List<String>.from(json["coordinators"].map((x) => x)),
-        members: json["members"] == null
-            ? null
-            
-            : new List<String>.from(json["members"].map((x) => x)),
-        protected: json["protected"] == null ? null : json["protected"],
-        parentTimebankId: json["parent_timebank_id"] == null
-            ? null
-            : json["parent_timebank_id"],
-        rootTimebankId:
-            json["root_timebank_id"] == null ? null : json["root_timebank_id"],
-        children: json["children"] == null
-            ? null
-            : new List<String>.from(json["children"].map((x) => x)),
-        balance: json["balance"] == null ? null : json["balance"].toDouble(),
-      );
+  factory TimebankModel.fromMap(Map<String, dynamic> json) {
+    TimebankModel timebankModel = new TimebankModel(
+      id: json["id"] == null ? null : json["id"],
+      name: json["name"] == null ? null : json["name"],
+      missionStatement:
+          json["missionStatement"] == null ? null : json["missionStatement"],
+      emailId: json["email_id"] == null ? null : json["email_id"],
+      phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
+      address: json["address"] == null ? null : json["address"],
+      creatorId: json["creator_id"] == null ? null : json["creator_id"],
+      photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+      createdAt: json["created_at"] == null ? null : json["created_at"],
+      admins: json["admins"] == null
+          ? null
+          : new List<String>.from(json["admins"].map((x) => x)),
+      coordinators: json["coordinators"] == null
+          ? null
+          : new List<String>.from(json["coordinators"].map((x) => x)),
+      members: json["members"] == null
+          ? null
+          : new List<String>.from(json["members"].map((x) => x)),
+      protected: json["protected"] == null ? null : json["protected"],
+      parentTimebankId: json["parent_timebank_id"] == null
+          ? null
+          : json["parent_timebank_id"],
+      rootTimebankId:
+          json["root_timebank_id"] == null ? null : json["root_timebank_id"],
+      children: json["children"] == null
+          ? null
+          : new List<String>.from(json["children"].map((x) => x)),
+      balance: json["balance"] == null ? null : json["balance"].toDouble(),
+    );
+    if (json.containsKey('location')) {
+      GeoPoint geoPoint = json['location']['geopoint'];
+      timebankModel.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    }
+    return timebankModel;
+  }
 
-  Map<String, dynamic> toMap() => {
-        "id": id == null ? null : id,
-        "name": name == null ? null : name,
-        "missionStatement": missionStatement == null ? null : missionStatement,
-        "email_id": emailId == null ? null : emailId,
-        "phone_number": phoneNumber == null ? null : phoneNumber,
-        "address": address == null ? null : address,
-        "creator_id": creatorId == null ? null : creatorId,
-        "photo_url": photoUrl == null ? null : photoUrl,
-        "created_at": createdAt == null ? null : createdAt,
-        "admins": admins == null
-            ? null
-            : new List<dynamic>.from(admins.map((x) => x)),
-        "coordinators": coordinators == null
-            ? null
-            : new List<dynamic>.from(coordinators.map((x) => x)),
-        "members": members == null
-            ? null
-            : new List<dynamic>.from(members.map((x) => x)),
-        "protected": protected == null ? null : protected,
-        "parent_timebank_id":
-            parentTimebankId == null ? null : parentTimebankId,
-        "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
-        "children": children == null
-            ? null
-            : new List<dynamic>.from(children.map((x) => x)),
-        "balance": balance == null ? null : balance,
-      };
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {
+      "id": id == null ? null : id,
+      "name": name == null ? null : name,
+      "missionStatement": missionStatement == null ? null : missionStatement,
+      "email_id": emailId == null ? null : emailId,
+      "phone_number": phoneNumber == null ? null : phoneNumber,
+      "address": address == null ? null : address,
+      "creator_id": creatorId == null ? null : creatorId,
+      "photo_url": photoUrl == null ? null : photoUrl,
+      "created_at": createdAt == null ? null : createdAt,
+      "admins":
+          admins == null ? null : new List<dynamic>.from(admins.map((x) => x)),
+      "coordinators": coordinators == null
+          ? null
+          : new List<dynamic>.from(coordinators.map((x) => x)),
+      "members": members == null
+          ? null
+          : new List<dynamic>.from(members.map((x) => x)),
+      "protected": protected == null ? null : protected,
+      "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
+      "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
+      "children": children == null
+          ? null
+          : new List<dynamic>.from(children.map((x) => x)),
+      "balance": balance == null ? null : balance,
+    };
+    if (this.location != null) {
+      map['location'] = this.location.data;
+    }
+    return map;
+  }
 }

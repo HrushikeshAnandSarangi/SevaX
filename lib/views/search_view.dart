@@ -4,6 +4,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
+import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
@@ -37,8 +38,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        print('check');
+      onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
@@ -118,8 +118,6 @@ class ResultView extends StatefulWidget {
 
 class _ResultViewState extends State<ResultView> {
   Widget build(BuildContext context) {
-    
-    print('Build view');
     if (widget.controller.text.trim().isEmpty) {
       return Center(child: Text('Enter a Search String'));
     }

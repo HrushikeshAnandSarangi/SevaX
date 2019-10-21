@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'dart:async';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
@@ -189,7 +190,6 @@ class _ChatViewState extends State<ChatView> {
                       textCapitalization: TextCapitalization.sentences,
                       validator: (value) {
                         if (value.isEmpty) {
-                          //print('error');
                           return 'Please type message';
                         }
                         messageModel.message = value;
@@ -211,7 +211,7 @@ class _ChatViewState extends State<ChatView> {
                     if (_formKey.currentState.validate()) {
                       String loggedInEmailId =
                           SevaCore.of(context).loggedInUser.email;
-                      print(loggedInEmailId);
+
                       messageModel.fromId = loggedInEmailId;
                       messageModel.toId = widget.useremail;
                       messageModel.timestamp =

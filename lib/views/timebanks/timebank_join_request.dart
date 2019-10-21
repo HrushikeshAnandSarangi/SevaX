@@ -33,10 +33,6 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
   void _writeToDB() {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
-    print(widget.owner.email);
-    print(SevaCore.of(context).loggedInUser.email);
-    //print(widget.owner.email);
-
     Firestore.instance
         .collection('join_requests_timebanks')
         .document(
@@ -126,26 +122,18 @@ class _TimebankJoinRequestState extends State<TimebankJoinRequest> {
       ),
     );
   }
+
   void _navigateCongrats() {
-    if(UserData.shared.isFromLogin) {
-      print(UserData.shared.user.requestStatus);
+    if (UserData.shared.isFromLogin) {
       UserData.shared.user.calendar = "done";
       UserData.shared.user.requestStatus = "pending";
       UserData.shared.updateUserData();
-      print(UserData.shared.user.requestStatus);
-//      Navigator.popUntil(context, (r) => r.isFirst);
-       Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-          builder: (context) => WaitingView()
-      ),
-    );
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => WaitingView()),
+      );
     } else {
       Navigator.pop(context);
     }
-   // Navigator.of(context).pushReplacement(
-//      MaterialPageRoute(
-//          builder: (context) => Congrats()
-//      ),
-//    );
   }
 }

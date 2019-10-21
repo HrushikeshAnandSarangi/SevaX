@@ -15,7 +15,6 @@
 		841816BD22E8249800662488 /* Tulsi.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 841816BC22E8249800662488 /* Tulsi.xcconfig */; };
 		841816C122E827FB00662488 /* HumanityFirst.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */; };
 		843A33BE22E98FF2007859C8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 843A33BD22E98FF2007859C8 /* GoogleService-Info.plist */; };
-		844D7DD77675B45BFCA09196 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D23F6DABEACC2D74138073A /* libPods-Runner.a */; };
 		84B3E20D2326712800278F2D /* Tom.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 84B3E20C2326712800278F2D /* Tom.xcconfig */; };
 		84B3E20F2326713E00278F2D /* Tom-release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 84B3E20E2326713E00278F2D /* Tom-release.xcconfig */; };
 		84F9F41B22EAB68B00D79D77 /* HumanityFirst-release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */; };
@@ -29,6 +28,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		C2E9C69DEDDEF3EA5C3B05EB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2792F5893C3FBF0A7B1362A3 /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +49,7 @@
 /* Begin PBXFileReference section */
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		2792F5893C3FBF0A7B1362A3 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		3B80C3931E831B6300D905FE /* App.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = App.framework; path = Flutter/App.framework; sourceTree = "<group>"; };
 		51A7BCCB9075B2497D1F0F13 /* Pods-Runner.release-app.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-app.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-app.xcconfig"; sourceTree = "<group>"; };
@@ -64,12 +65,12 @@
 		841816BC22E8249800662488 /* Tulsi.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Tulsi.xcconfig; path = Flutter/Tulsi.xcconfig; sourceTree = "<group>"; };
 		841816C022E827FB00662488 /* HumanityFirst.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = HumanityFirst.xcconfig; path = Flutter/HumanityFirst.xcconfig; sourceTree = "<group>"; };
 		843A33BD22E98FF2007859C8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		844C8C3A23504021002A0D1C /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		84B3E20C2326712800278F2D /* Tom.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Tom.xcconfig; path = Flutter/Tom.xcconfig; sourceTree = "<group>"; };
 		84B3E20E2326713E00278F2D /* Tom-release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Tom-release.xcconfig"; path = "Flutter/Tom-release.xcconfig"; sourceTree = "<group>"; };
 		84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "HumanityFirst-release.xcconfig"; path = "Flutter/HumanityFirst-release.xcconfig"; sourceTree = "<group>"; };
 		84F9F41922EAB68A00D79D77 /* App-release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "App-release.xcconfig"; path = "Flutter/App-release.xcconfig"; sourceTree = "<group>"; };
 		84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Tulsi-release.xcconfig"; path = "Flutter/Tulsi-release.xcconfig"; sourceTree = "<group>"; };
-		8D23F6DABEACC2D74138073A /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		9740EEBA1CF902C7004384FC /* Flutter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Flutter.framework; path = Flutter/Flutter.framework; sourceTree = "<group>"; };
@@ -93,7 +94,7 @@
 			files = (
 				9705A1C61CF904A100538489 /* Flutter.framework in Frameworks */,
 				3B80C3941E831B6300D905FE /* App.framework in Frameworks */,
-				844D7DD77675B45BFCA09196 /* libPods-Runner.a in Frameworks */,
+				C2E9C69DEDDEF3EA5C3B05EB /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,7 +122,7 @@
 		5D12EED24D6AE8C6F353F091 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8D23F6DABEACC2D74138073A /* libPods-Runner.a */,
+				2792F5893C3FBF0A7B1362A3 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,6 +170,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				844C8C3A23504021002A0D1C /* Runner.entitlements */,
 				7AFFD8ED1D35381100E5BB4D /* AppDelegate.h */,
 				7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -446,6 +448,7 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -529,6 +532,7 @@
 			baseConfigurationReference = 841816BA22E8247500662488 /* App.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -612,6 +616,7 @@
 			baseConfigurationReference = 841816BC22E8249800662488 /* Tulsi.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -695,6 +700,7 @@
 			baseConfigurationReference = 841816C022E827FB00662488 /* HumanityFirst.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -772,6 +778,7 @@
 			baseConfigurationReference = 84F9F41922EAB68A00D79D77 /* App-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -849,6 +856,7 @@
 			baseConfigurationReference = 84F9F41A22EAB68B00D79D77 /* Tulsi-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -926,6 +934,7 @@
 			baseConfigurationReference = 84F9F41822EAB68A00D79D77 /* HumanityFirst-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -1009,6 +1018,7 @@
 			baseConfigurationReference = 84B3E20C2326712800278F2D /* Tom.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -1086,6 +1096,7 @@
 			baseConfigurationReference = 84B3E20E2326713E00278F2D /* Tom-release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -1219,6 +1230,7 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;
@@ -1246,6 +1258,7 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = Yang;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 5;

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -59,13 +61,13 @@ class MembersManageCampaignState extends State<MembersManageCampaign> {
                         caption: 'Coordinator',
                         color: Colors.green,
                         icon: Icons.security,
-                        onTap: () => print('Coordinator'),
+                        onTap: () => log('Coordinator'),
                       ),
                       IconSlideAction(
                         caption: 'Admin',
                         color: Colors.blue,
                         icon: Icons.security,
-                        onTap: () => print('Admin'),
+                        onTap: () => log('Admin'),
                       ),
                     ],
                     secondaryActions: <Widget>[

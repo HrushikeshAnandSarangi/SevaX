@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/main.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class CreateOffer extends StatelessWidget {
@@ -51,21 +56,23 @@ class MyCustomFormState extends State<MyCustomForm> {
   String title = '';
   String schedule = '';
   String description = '';
+  GeoFirePoint location;
+  String selectedAddress;
 
   void _writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     OfferModel model = OfferModel(
-      email: SevaCore.of(context).loggedInUser.email,
-      fullName: SevaCore.of(context).loggedInUser.fullname,
-      title: title,
-      id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
-      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      description: description,
-      schedule: schedule,
-      timebankId: widget.timebankId,
-      timestamp: timestamp,
-    );
+        email: SevaCore.of(context).loggedInUser.email,
+        fullName: SevaCore.of(context).loggedInUser.fullname,
+        title: title,
+        id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        description: description,
+        schedule: schedule,
+        timebankId: widget.timebankId,
+        timestamp: timestamp,
+        location: location);
     await FirestoreManager.createOffer(offerModel: model);
   }
 
@@ -145,6 +152,34 @@ class MyCustomFormState extends State<MyCustomForm> {
                   schedule = value;
                 },
               ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: FlatButton.icon(
+                    icon: Icon(Icons.add_location),
+                    label: Text(
+                      selectedAddress == null || selectedAddress.isEmpty
+                          ? 'Add Location'
+                          : selectedAddress,
+                    ),
+                    color: Colors.grey[200],
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<GeoFirePoint>(
+                          builder: (context) => LocationPicker(
+                            selectedLocation: location,
+                          ),
+                        ),
+                      ).then((point) {
+                        if (point != null) location = point;
+                        _getLocation();
+                        log('ReceivedLocation: $selectedAddress');
+                      });
+                    },
+                  ),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Center(
@@ -152,12 +187,18 @@ class MyCustomFormState extends State<MyCustomForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Creating Offer')),
-                        );
-                        _writeToDB();
-                        Navigator.pop(context);
+                      if (location != null) {
+                        if (_formKey.currentState.validate()) {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text('Creating Offer')),
+                          );
+                          _writeToDB();
+                          Navigator.pop(context);
+                        }
+                      } else {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text('Location not added'),
+                        ));
                       }
                     },
                     child: Row(
@@ -186,5 +227,16 @@ class MyCustomFormState extends State<MyCustomForm> {
         ),
       ),
     );
+  }
+
+  Future _getLocation() async {
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+    log('_getLocation: $address');
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 }

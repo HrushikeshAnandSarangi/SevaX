@@ -7,19 +7,23 @@ class NotificationsModel extends DataModel {
   String targetUserId;
   String senderUserId;
   bool isRead;
+  String timebankId;
 
-  NotificationsModel({
-    this.id,
-    this.type,
-    this.data,
-    this.targetUserId,
-    this.isRead = false,
-    this.senderUserId,
-  });
+  NotificationsModel(
+      {this.id,
+      this.type,
+      this.data,
+      this.targetUserId,
+      this.isRead = false,
+      this.senderUserId,
+      this.timebankId});
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
       this.id = map['id'];
+    }
+    if (map.containsKey('timebankId')) {
+      this.timebankId = map['timebankId'];
     }
 
     if (map.containsKey('senderUserId')) {
@@ -76,6 +80,9 @@ class NotificationsModel extends DataModel {
 
     if (this.id != null) {
       map['id'] = this.id;
+    }
+    if (this.timebankId != null) {
+      map['timebankId'] = this.timebankId;
     }
 
     if (this.senderUserId != null) {
