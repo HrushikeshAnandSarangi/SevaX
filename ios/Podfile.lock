@@ -1,4 +1,6 @@
 PODS:
+  - "app_settings (1.0.6+2)":
+    - Flutter
   - BoringSSL-GRPC (0.0.3):
     - BoringSSL-GRPC/Implementation (= 0.0.3)
     - BoringSSL-GRPC/Interface (= 0.0.3)
@@ -103,6 +105,10 @@ PODS:
   - Flutter (1.0.0)
   - geoflutterfire (0.0.1):
     - Flutter
+  - geolocator (5.1.4):
+    - Flutter
+  - google_api_availability (2.0.1):
+    - Flutter
   - google_maps_flutter (0.0.1):
     - Flutter
     - GoogleMaps
@@ -180,6 +186,8 @@ PODS:
   - leveldb-library (1.20)
   - location (0.0.1):
     - Flutter
+  - location_permissions (2.0.3):
+    - Flutter
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
     - nanopb/encode (= 0.3.901)
@@ -194,6 +202,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - app_settings (from `.symlinks/plugins/app_settings/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -203,6 +212,8 @@ DEPENDENCIES:
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
   - geoflutterfire (from `.symlinks/plugins/geoflutterfire/ios`)
+  - geolocator (from `.symlinks/plugins/geolocator/ios`)
+  - google_api_availability (from `.symlinks/plugins/google_api_availability/ios`)
   - google_maps_flutter (from `.symlinks/plugins/google_maps_flutter/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_cropper (from `.symlinks/plugins/image_cropper/ios`)
@@ -210,6 +221,7 @@ DEPENDENCIES:
   - intro_slider (from `.symlinks/plugins/intro_slider/ios`)
   - keyboard_visibility (from `.symlinks/plugins/keyboard_visibility/ios`)
   - location (from `.symlinks/plugins/location/ios`)
+  - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
@@ -242,6 +254,8 @@ SPEC REPOS:
     - Reachability
 
 EXTERNAL SOURCES:
+  app_settings:
+    :path: ".symlinks/plugins/app_settings/ios"
   camera:
     :path: ".symlinks/plugins/camera/ios"
   cloud_firestore:
@@ -260,6 +274,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/flutter/ios"
   geoflutterfire:
     :path: ".symlinks/plugins/geoflutterfire/ios"
+  geolocator:
+    :path: ".symlinks/plugins/geolocator/ios"
+  google_api_availability:
+    :path: ".symlinks/plugins/google_api_availability/ios"
   google_maps_flutter:
     :path: ".symlinks/plugins/google_maps_flutter/ios"
   google_sign_in:
@@ -274,12 +292,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/keyboard_visibility/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+  location_permissions:
+    :path: ".symlinks/plugins/location_permissions/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
     :path: ".symlinks/plugins/url_launcher/ios"
 
 SPEC CHECKSUMS:
+  app_settings: 27651d311385d34d91afa163c0e4539cfd0c4c5d
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
   camera: d56ad165545ae5a0ffb892376033760a969c68c8
   cloud_firestore: 0ac494d23db743f104b95d3291946afec187b74c
@@ -300,6 +321,8 @@ SPEC CHECKSUMS:
   FirebaseStorage: 926d41552072b9fee67aa645760f05f87b7ce604
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   geoflutterfire: 2a6493e01fb6eef1a6c9046b1baf9a943d0c5ffe
+  geolocator: c98cc4a1f2558c11fa5db0fccad80883cde6eb4f
+  google_api_availability: 163b30f802e6148c67f092aa4501c90ddd8eec8d
   google_maps_flutter: 78a52114c898b42ea647919679a4c58b70abe876
   google_sign_in: 27e70a98b529f0b076d4b19f231b81da28b1750b
   GoogleAppMeasurement: a35a645835bae31b6bdc0576396bc23908f12a22
@@ -316,6 +339,7 @@ SPEC CHECKSUMS:
   keyboard_visibility: 96a24de806fe6823c3ad956c01ba2ec6d056616f
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  location_permissions: 195ff2a1182fa9029ef3f2653156961ee5a1e40b
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 3f617b9a6e73605565086864c9bc26b2bf2dd5a3
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96

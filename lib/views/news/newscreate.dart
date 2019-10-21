@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import '../../main.dart';
@@ -468,32 +469,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   }
 
   Future _getLocation() async {
-    List<Placemark> placemarkList = await Geolocator().placemarkFromCoordinates(
+    String address = await LocationUtility().getFormattedAddress(
       location.latitude,
       location.longitude,
     );
-    if (placemarkList != null && placemarkList.isNotEmpty) {
-      Placemark placemark = placemarkList.first;
-      setState(() {
-        this.selectedAddress = _getAddress(placemark);
-      });
-    }
-  }
 
-  String _getAddress(Placemark placemark) {
-    String address = '';
-    if (placemark.name != null && placemark.name.isNotEmpty) {
-      address += placemark.name;
-    }
-    if (placemark.locality != null && placemark.locality.isNotEmpty) {
-      if (address.isNotEmpty) address += ', ';
-      address += placemark.locality;
-    }
-    if (placemark.administrativeArea != null &&
-        placemark.administrativeArea.isNotEmpty) {
-      if (address.isNotEmpty) address += ', ';
-      address += placemark.administrativeArea;
-    }
-    return address;
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 }
