@@ -66,7 +66,7 @@ class _CoreViewState extends State<CoreView> {
 
   @override
   void didChangeDependencies() {
-   // SevaCore.of(context).loggedInUser.sevaUserID = "92tbswcvisf026ZRQnKbiGDoq8v2";
+    // SevaCore.of(context).loggedInUser.sevaUserID = "92tbswcvisf026ZRQnKbiGDoq8v2";
     user = UserModel(
       sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
       email: SevaCore.of(context).loggedInUser.email,
@@ -668,7 +668,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     leading: new Icon(Icons.timeline,
                         color: Theme.of(context).primaryColor),
                     title: new Text(
-                      'Create Timebank',
+                      FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                          ? 'Create Yang Gang'
+                          : 'Create Timebank',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
@@ -730,7 +732,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                 SevaCore.of(context).loggedInUser.sevaUserID) ||
                             timebank.coordinators.contains(
                                 SevaCore.of(context).loggedInUser.sevaUserID)) {
-                          Navigator.of(context).pop();
+                          // Navigator.of(context).pop();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

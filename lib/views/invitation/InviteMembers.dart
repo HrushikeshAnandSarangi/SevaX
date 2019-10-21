@@ -4,12 +4,12 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:numberpicker/numberpicker.dart';
 
 import 'TimebankCodeModel.dart';
 
 class InviteMembers extends StatefulWidget {
   final String timebankId;
+
   InviteMembers({this.timebankId});
 
   @override
@@ -22,25 +22,23 @@ class InviteMembersState extends State<InviteMembers> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text("Timebank codes"),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
-            )),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Theme.of(context).primaryColor,
-          icon: Icon(Icons.add),
-          label: Text("Generate New"),
-          onPressed: () {
-            _asyncInputDialog(context);
-          },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Timebank codes",
+          style: TextStyle(color: Colors.white),
         ),
-        body: InvitationListView.forTimebank(timebankId: timebankId),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        icon: Icon(Icons.add),
+        label: Text("Generate New"),
+        onPressed: () {
+          _asyncInputDialog(context);
+        },
+      ),
+      body: InvitationListView.forTimebank(timebankId: timebankId),
     );
   }
 

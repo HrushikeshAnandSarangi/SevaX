@@ -33,11 +33,6 @@ class _SelectMemberState extends State<SelectMember> {
     print("Color ${color.primaryColor}");
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context, false),
-        ),
-        backgroundColor: getAppBarBackgroundColor(),
         title: Text(
           "Select member",
           style: TextStyle(color: Colors.white),
@@ -66,7 +61,7 @@ class _SelectMemberState extends State<SelectMember> {
         return Color.fromARGB(255, 109, 110, 172);
 
       default:
-      return Color.fromARGB(255, 109, 110, 172);
+        return Color.fromARGB(255, 109, 110, 172);
     }
   }
 }
@@ -352,16 +347,6 @@ class _SelectMembersView extends StatelessWidget {
           print("Model1" + model.user1);
           print("Model2" + model.user2);
 
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => ChatView(
-          //             useremail: user.email,
-          //             chatModel: model,
-          //             isFromShare: false,
-          //             news: NewsModel(),
-          //           )),
-          // );
           await createChat(chat: model).then(
             (_) {
               Navigator.push(

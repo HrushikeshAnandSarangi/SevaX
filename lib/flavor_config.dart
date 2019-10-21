@@ -11,6 +11,7 @@ class FlavorValues {
   final String offertitle;
   final ThemeData theme;
   final Color buttonTextColor;
+  final String timebankTitle;
 
   FlavorValues({
     @required this.appName,
@@ -20,6 +21,7 @@ class FlavorValues {
     this.offertitle = 'Offer',
     this.theme,
     this.buttonTextColor = Colors.white,
+    this.timebankTitle = 'Timebank'
   });
 }
 
@@ -60,6 +62,7 @@ class FlavorConfig {
       case Flavor.HUMANITY_FIRST:
         return FlavorValues(
           appName: 'Humanity First',
+          timebankTitle: 'Yang Gang',
           timebankId: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2',
           timebankName: 'Yang 2020',
           offertitle: 'Volunteer Offer',

@@ -13,17 +13,14 @@ class SelectTimeBankForNewChat extends StatefulWidget {
 class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context, false),
-            ),
-            backgroundColor: Theme.of(context).primaryColor,
-            title: Text("Select Timebank"),
-          ),
-          body: getTimebanks(context)),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Select Timebank",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: getTimebanks(context),
     );
   }
 }
@@ -63,11 +60,6 @@ Widget getTimebanks(BuildContext context) {
                       ),
                     ),
                   );
-
-                  // home: SelectMember(
-                  //   timebankId: "73d0de2c-198b-4788-be64-a804700a88a4",
-                  // ),
-                  // print("inside tap");
                 },
                 child: Card(
                   margin: EdgeInsets.all(5),
