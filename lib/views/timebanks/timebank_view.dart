@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
@@ -13,7 +14,6 @@ import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -45,6 +45,7 @@ class TimebankView extends StatefulWidget {
 class _TimebankViewState extends State<TimebankView> {
   TimebankModel timebankModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
+  JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -54,11 +55,51 @@ class _TimebankViewState extends State<TimebankView> {
   void initState() {
     //SevaCore.of(context).loggedInUser = UserData.shared.user;
     super.initState();
+    //this.getRequestData = new JoinRequestModel();
   }
 
+  Future getJoinRequestData() async {
+    this.getRequestData = new JoinRequestModel();
+    this.getRequestData = await getRequestStatusForId(timebankId: SevaCore.of(context).loggedInUser.currentTimebank);
+  }
+
+  Future<JoinRequestModel> getRequestStatusForId({@required String timebankId}) async {
+    assert(timebankId != null && timebankId.isNotEmpty,
+    "Seva UserId cannot be null or empty");
+
+    JoinRequestModel joinRequest;
+    await Firestore.instance
+        .collection('join_requests')
+        .where('entity_type', isEqualTo: 'Timebank')
+        .where('entity_id', isEqualTo: timebankId)
+        .where('user_id',isEqualTo: SevaCore.of(context).loggedInUser.sevaUserID)
+        .getDocuments()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+        joinRequest = JoinRequestModel.fromMap(documentSnapshot.data);
+        print("joining data $joinRequest");
+      });
+    });
+    
+    
+//    await Firestore.instance
+//        .collection('users')
+//        .where('sevauserid', isEqualTo: sevaUserId)
+//        .getDocuments()
+//        .then((QuerySnapshot querySnapshot) {
+//      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+//        userModel = UserModel.fromMap(documentSnapshot.data);
+//      });
+//    });
+
+    return joinRequest;
+  }
   @override
   Widget build(BuildContext buildcontext) {
     loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
+    this.getJoinRequestData().catchError((error) {
+      print(error);
+    });
     return timebankStreamBuilder(buildcontext);
   }
 
@@ -293,7 +334,7 @@ class _TimebankViewState extends State<TimebankView> {
                         //   child: _whichButton('timebanks'),
                         // ),
                         _showCreateCampaignButton(context),
-                        _showJoinRequests(context),
+                        //_showJoinRequests(context),
                         FlatButton(
                           onPressed: () {
                             Navigator.push(
@@ -833,8 +874,7 @@ class _TimebankViewState extends State<TimebankView> {
 
     return Padding(
       padding: const EdgeInsets.only(left: 20.0),
-      child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: list),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list),
     );
   }
 

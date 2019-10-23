@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:sevaexchange/views/core.dart';
+import '../../flavor_config.dart';
 import '../splash_view.dart';
 
 class OnBoardWithTimebank extends StatefulWidget {
@@ -22,7 +23,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       appBar: AppBar(
         title: Center(
           child: Text(
-            "Enter Timebank code",
+            "Enter ${FlavorConfig.values.timebankTitle} code",
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white),
           ),
@@ -42,7 +43,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   padding: EdgeInsets.only(
                       left: 20.0, right: 20.0, top: 10.0, bottom: 25.0),
                   child: Text(
-                    'Enter the code you recieved from your Timebank Coordinator to see the exchange opportunities for your group.',
+                    'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
                     textDirection: TextDirection.ltr,
                     style: TextStyle(
                       fontSize: 17.0,
@@ -53,7 +54,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
                   child: Text(
-                    'Enter 5 Digit Code',
+                    'Enter ${FlavorConfig.values.timebankTitle} code',
                     textDirection: TextDirection.ltr,
                     textAlign: TextAlign.left,
                   ),
@@ -115,7 +116,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                             'NEXT',
                           ),
                           textColor: Colors.white,
-                          color: Colors.blue,
+                          color: Theme.of(context).primaryColor,
                           onPressed: () {
                             print('pressed Next');
 

@@ -113,7 +113,6 @@ class _EditSkillsState extends State<EditSkills> {
   Widget build(BuildContext context) {
       return Scaffold(
         appBar: AppBar(
-          //automaticallyImplyLeading: false,
           title: Text('Edit Skills',style: TextStyle(color: Colors.white),),
         ),
         body: SingleChildScrollView(

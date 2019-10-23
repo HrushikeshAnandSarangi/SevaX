@@ -140,6 +140,7 @@ class _EditInterestsState extends State<EditInterests> {
 
   Future updateUserData() async {
     await fireStoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
+    Navigator.of(context).pop();
   }
   Widget chip(String value, bool selected, Color color) {
     return Container(

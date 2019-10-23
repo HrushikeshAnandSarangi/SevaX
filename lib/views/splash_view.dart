@@ -170,9 +170,10 @@ class _SplashViewState extends State<SplashView> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(255, 9, 46, 108),
-              Color.fromARGB(255, 88, 138, 224),
-              Colors.white,
+              Color.fromARGB(255, 4, 47, 110),
+              Color.fromARGB(255, 4, 47, 110),
+              Color.fromARGB(255, 4, 47, 110),
+              //Colors.white,
             ],
             stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
@@ -204,7 +205,7 @@ class _SplashViewState extends State<SplashView> {
               if (loadingMessage != null && loadingMessage.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(loadingMessage),
+                  child: Text(loadingMessage,style: TextStyle(color: Colors.white)),
                 ),
               Container(
                 margin: EdgeInsets.only(top: 8),
@@ -268,7 +269,7 @@ class _SplashViewState extends State<SplashView> {
                   padding: const EdgeInsets.only(top: 32.0),
                   child: Text(
                     loadingMessage,
-                    style: TextStyle(color: Colors.white.withAlpha(120)),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               Container(

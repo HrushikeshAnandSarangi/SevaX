@@ -163,6 +163,8 @@ class _ProfilePageState extends State<ProfilePage>
               height: 32,
             ),
             skillsAndInterest,
+            //editInterests,
+            //editSkills,
             SizedBox(
               height: 32,
             ),
@@ -182,51 +184,17 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget get skillsAndInterest {
-    if (user.skills == null || user.skills.isEmpty) {
-      if (user.interests == null || user.interests.isEmpty) return Container();
-    }
+//    if (user.skills == null || user.skills.isEmpty) {
+//      if (user.interests == null || user.interests.isEmpty) return Container();
+//    }
     return Container(
       padding: EdgeInsets.all(8),
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 0.0),
       decoration: getContainerDecoration(),
       child: Column(
         children: [
-          if (user.interests != null && user.interests.length != 0)
-            // ExpansionTile(
-            //   trailing: Icon(
-            //     Icons.navigate_next,
-            //     color: Colors.black,
-            //   ),
-            //   title: Text(
-            //     'My Interests',
-            //     style: TextStyle(
-            //       color: Colors.black,
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            //   children: user.interests.map((interest) {
-            //     return getDataChip(interest);
-            //   }).toList(),
-            // ),
-            getParentWidget(
-              title: 'My Interests',
-              childList: ChildList(
-                mainAxisSize: MainAxisSize.min,
-                children: user.interests.map((interest) {
-                  return getDataChip(interest);
-                }).toList(),
-              ),
-            ),
-          if (user.interests != null && user.interests.length != 0) Divider(),
-          if (user.skills != null && user.skills.length != 0)
-            getParentWidget(
-              title: 'My Skills',
-              childList: ChildList(
-                children: user.skills.map((skill) {
-                  return getDataChip(skill);
-                }).toList(),
-              ),
-            ),
+          editInterests,
+          editSkills,
         ],
       ),
     );
@@ -634,6 +602,46 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget get editSkills {
+    return getActionCards(
+      title: 'My Skills',
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        bottomRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return EditSkills();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget get editInterests {
+    return getActionCards(
+      title: 'My Interests',
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        bottomRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return EditInterests();
+            },
+          ),
+        );
+      },
+    );
+  }
+
   Widget get joinViaCode {
     return getActionCards(
       title: 'Join via ${FlavorConfig.values.timebankTitle} code',
@@ -718,7 +726,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget get timebankslist {
     return getActionCards(
       //title: 'List of ${FlavorConfig.values.timebankTitle}',
-      title: FlavorConfig.values.timebankName == "Yang 2020" ? " List of Yang Gang Chapters" : "List of ${FlavorConfig.values.timebankTitle}",
+      title: FlavorConfig.values.timebankName == "Yang 2020" ? "List of Yang Gang Chapters" : "List of ${FlavorConfig.values.timebankTitle}",
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
