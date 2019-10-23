@@ -20,7 +20,7 @@ class TimeBankList extends StatelessWidget {
         //automaticallyImplyLeading: false,
         title: Text(
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? 'Yang Gangs'
+              ? 'Yang Gangs' //Chapters
               : title,
           style: TextStyle(color: Colors.white),
         ),

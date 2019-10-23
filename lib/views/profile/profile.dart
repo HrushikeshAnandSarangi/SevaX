@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/profile/edit_interests.dart';
+import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -241,6 +243,15 @@ class _ProfilePageState extends State<ProfilePage>
           Icons.navigate_next,
           color: Colors.black,
         ),
+        onTap: () {
+          //print("Tapped");
+          if(title == 'My Interests') {
+            this.navigateToeditInterests();
+          } else if(title == 'My Skills') {
+            this.navigateToeditskills();
+          }
+
+        },
         title: Text(
           title,
           style: TextStyle(
@@ -248,6 +259,24 @@ class _ProfilePageState extends State<ProfilePage>
             fontWeight: FontWeight.w500,
           ),
         ),
+      ),
+    );
+  }
+  void navigateToeditskills() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return EditSkills();
+        },
+      ),
+    );
+  }
+  void navigateToeditInterests() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return EditInterests();
+        },
       ),
     );
   }
@@ -688,8 +717,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get timebankslist {
     return getActionCards(
-      title: 'List of ${FlavorConfig.values.timebankTitle}',
-      //subtitle: timebankModel == null ? "loading" : timebankModel.name,
+      //title: 'List of ${FlavorConfig.values.timebankTitle}',
+      title: FlavorConfig.values.timebankName == "Yang 2020" ? " List of Yang Gang Chapters" : "List of ${FlavorConfig.values.timebankTitle}",
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),

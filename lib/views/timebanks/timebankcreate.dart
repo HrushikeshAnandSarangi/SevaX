@@ -30,6 +30,7 @@ class TimebankCreate extends StatelessWidget {
     );
   }
 }
+//FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Codes" : "Timebank codes"
 
 // Create a Form Widget
 class TimebankCreateForm extends StatefulWidget {
@@ -160,8 +161,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'Timebank Name',
-                  labelText: 'Timebank Name',
+                  hintText: FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank Name",
+                  labelText: FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank Name",
                   // labelStyle: textStyle,
                   // labelStyle: textStyle,
                   // labelText: 'Description',

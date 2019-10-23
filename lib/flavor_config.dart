@@ -61,7 +61,7 @@ class FlavorConfig {
       case Flavor.HUMANITY_FIRST:
         return FlavorValues(
           appName: 'Humanity First',
-          timebankTitle: 'Yang Gang',
+          timebankTitle: 'Yang Gang ',
           timebankId: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2',
           timebankName: 'Yang 2020',
           offertitle: 'Volunteer Offer',
@@ -69,13 +69,13 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
                 brightness: Brightness.light,
-                color: Colors.indigo,
+                color: Color.fromARGB(255, 4, 47, 110),
                 elevation: 4,
                 actionsIconTheme: IconThemeData(color: Colors.white),
                 iconTheme: IconThemeData(color: Colors.white)),
             brightness: Brightness.light,
             primarySwatch: Colors.indigo,
-            primaryColor: Colors.indigo,
+            primaryColor: Color.fromARGB(255, 4, 47, 110),
             accentColor: Colors.red[900],
             indicatorColor: Colors.red[900],
             primaryColorBrightness: Brightness.light,
