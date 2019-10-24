@@ -13,16 +13,15 @@ class FlavorValues {
   final Color buttonTextColor;
   final String timebankTitle;
 
-  FlavorValues({
-    @required this.appName,
-    @required this.timebankName,
-    @required this.timebankId,
-    this.requestTitle = 'Request',
-    this.offertitle = 'Offer',
-    this.theme,
-    this.buttonTextColor = Colors.white,
-    this.timebankTitle = 'Timebank'
-  });
+  FlavorValues(
+      {@required this.appName,
+      @required this.timebankName,
+      @required this.timebankId,
+      this.requestTitle = 'Request',
+      this.offertitle = 'Offer',
+      this.theme,
+      this.buttonTextColor = Colors.white,
+      this.timebankTitle = 'Timebank'});
 }
 
 class FlavorConfig {
@@ -70,13 +69,13 @@ class FlavorConfig {
           theme: ThemeData(
             appBarTheme: AppBarTheme(
                 brightness: Brightness.light,
-                color: Colors.indigo,
+                color: Color.fromARGB(255, 4, 47, 110),
                 elevation: 4,
                 actionsIconTheme: IconThemeData(color: Colors.white),
                 iconTheme: IconThemeData(color: Colors.white)),
             brightness: Brightness.light,
             primarySwatch: Colors.indigo,
-            primaryColor: Colors.indigo,
+            primaryColor: Color.fromARGB(255, 4, 47, 110),
             accentColor: Colors.red[900],
             indicatorColor: Colors.red[900],
             primaryColorBrightness: Brightness.light,

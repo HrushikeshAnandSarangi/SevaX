@@ -1,0 +1,257 @@
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/skills_interest_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
+import '../../flavor_config.dart';
+
+class EditSkills extends StatefulWidget {
+
+  @override
+  _EditSkillsState createState() => _EditSkillsState();
+}
+
+
+class _EditSkillsState extends State<EditSkills> {
+//  List<String> skills = const [
+//    'Curators',
+//    'Developers',
+//    'Writer',
+//    'Advertisers',
+//    'Customer',
+//    'Sports',
+//    'Adventure',
+//    'Culture',
+//    'Baseball',
+//  ];
+
+  List<String> skills = FlavorConfig.values.timebankName == "Yang 2020" ? const [
+    "data entry",
+    "research",
+    "graphic design",
+    "coding/development",
+    "photography",
+    "videography",
+    "multilingual/translations",
+  ] : [
+    'Curators',
+    'Developers',
+    'Writer',
+    'Advertisers',
+    'Customer',
+    'Sports',
+    'Adventure',
+    'Culture',
+    'Baseball',
+  ];
+  List<MaterialColor> colorList;
+  Set<String> selectedSkills = <String>[].toSet();
+  @override
+  void initState() {
+    super.initState();
+    colorList = Colors.primaries.map((color) {
+      return color;
+    }).toList();
+    colorList.shuffle();
+    getSkillsForTimebank(timebankId: FlavorConfig.values.timebankId)
+        .then((onValue) {
+      setState(() {
+        if (onValue != null && onValue.isNotEmpty)
+          skills = onValue;
+      });
+      this.selectedSkills = <String>[].toSet();
+      this.selectedSkills = SevaCore.of(context).loggedInUser.skills.toSet();
+    });
+  }
+
+  Widget ScrollExample(BuildContext context) {
+    //final List<String> items = List.generate(5, (index) => "Item $index");
+//
+//  List<String> some = items.where((item) {
+//    item.isSelected = false;
+//  }).cast<String>().toList();
+
+    return Container(
+      child:
+      //Column(children: [
+      Padding(
+        padding: EdgeInsets.all(10.0),
+        child: TypeAheadField<String>(
+          getImmediateSuggestions: true,
+          textFieldConfiguration: TextFieldConfiguration(
+            decoration: InputDecoration(
+                border: OutlineInputBorder(), hintText: 'Search for skills'),
+          ),
+          suggestionsCallback: (String pattern) async {
+            return skills
+                .where((item) =>
+                item.toLowerCase().startsWith(pattern.toLowerCase()))
+                .toList();
+          },
+          itemBuilder: (context, String suggestion) {
+            return ListTile(
+              title: Text(suggestion),
+            );
+          },
+          onSuggestionSelected: (String suggestion) {
+            if (skills.contains(suggestion)) {
+              selectedSkills.add(suggestion);
+              //skills.remove(suggestion);
+            }
+          },
+        ),
+      ),
+      //child: SizedBox(height: 500),
+      //]),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Edit Skills',style: TextStyle(color: Colors.white),),
+        ),
+        body: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                ScrollExample(context),
+                list(),
+              ],
+            )),
+        bottomNavigationBar: ButtonBar(
+          children: <Widget>[
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                SevaCore.of(context).loggedInUser.skills = this.selectedSkills.toList();
+                this.updateUserData();
+              },
+              child: Text(
+                'Update Skills',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+    );
+  }
+  Future updateUserData() async {
+    await fireStoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
+    Navigator.of(context).pop();
+  }
+  Widget list() {
+    if (selectedSkills.length > 0) {
+      return Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: selectedSkills.map((skill) {
+            int index = skills.indexOf(skill);
+            return chip(skill, false, colorList[index]);
+          }).toList(),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+    );
+  }
+
+  Widget chip(String value, bool selected, Color color) {
+    return Container(
+      margin: EdgeInsets.all(4),
+      decoration: ShapeDecoration(
+        shape: StadiumBorder(
+          side: BorderSide(
+            color: color,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Material(
+        color: Colors.white.withAlpha(0),
+        child: InkWell(
+          customBorder: StadiumBorder(),
+          onTap: () {
+            if (skills.contains(value)) {
+              setState(() {
+                selectedSkills.remove(value);
+                print(selectedSkills);
+              });
+            }
+          },
+          child: Material(
+            elevation: selected ? 3 : 0,
+            shape: StadiumBorder(),
+            child: AnimatedContainer(
+              curve: Curves.easeIn,
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              duration: Duration(milliseconds: 250),
+              decoration: ShapeDecoration(
+                shape: StadiumBorder(),
+                color: selected ? color : null,
+              ),
+              child: AnimatedCrossFade(
+                duration: Duration(milliseconds: 250),
+                crossFadeState: selected
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                firstChild: Text(
+                  value,
+                  style: TextStyle(
+                    color: getTextColor(color),
+                  ),
+                ),
+                secondChild: Text(
+                  value,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color getTextColor(Color materialColor) {
+    List<MaterialColor> lights = [
+      Colors.blue,
+      Colors.lightBlue,
+      Colors.cyan,
+      Colors.lightGreen,
+      Colors.lime,
+      Colors.yellow,
+      Colors.amber,
+      Colors.orange,
+    ];
+
+    List<MaterialColor> darks = [
+      Colors.red,
+      Colors.pink,
+      Colors.purple,
+      Colors.deepPurple,
+      Colors.indigo,
+      Colors.teal,
+      Colors.green,
+      Colors.deepOrange,
+      Colors.brown,
+      Colors.blueGrey,
+    ];
+
+    if (lights.contains(materialColor)) {
+      return Colors.black;
+    } else if (darks.contains(materialColor)) {
+      return Colors.white;
+    } else {
+      return Colors.white;
+    }
+  }
+}

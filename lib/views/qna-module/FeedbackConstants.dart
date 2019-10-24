@@ -55,14 +55,16 @@ class FeedbackConstants {
       ]
     },
     {
-      FEEDBACK_TITLE: "Would you like recommend working with this volunteer again?",
+      FEEDBACK_TITLE:
+          "Would you like recommend working with this volunteer again?",
       "answers": [
         {ANSWER_TEXT: "Yes i would", SCORE: 5},
         {ANSWER_TEXT: "No i would not", SCORE: 2},
       ]
     },
     {
-      FEEDBACK_TITLE: "How skillfull was this volunteer fir this particular service?",
+      FEEDBACK_TITLE:
+          "How skillfull was this volunteer fir this particular service?",
       "answers": [
         {ANSWER_TEXT: "Highly skilled", SCORE: 5},
         {ANSWER_TEXT: "Avergae", SCORE: 3},

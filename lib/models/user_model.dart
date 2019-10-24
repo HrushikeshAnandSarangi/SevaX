@@ -20,8 +20,8 @@ class UserModel extends DataModel {
   String requestStatus;
   String locationName;
   String lat_lng;
-   //AvailabilityModel availability;
-  String currentTimebank =  FlavorConfig.values.timebankId;
+  //AvailabilityModel availability;
+  String currentTimebank = FlavorConfig.values.timebankId;
   int associatedWithTimebanks = 1;
   //String
 
@@ -39,7 +39,7 @@ class UserModel extends DataModel {
       this.calendar,
       this.otp,
       this.requestStatus,
-         //this.availability,
+      //this.availability,
       this.timezone});
 
   UserModel.fromMap(Map<String, dynamic> map) {

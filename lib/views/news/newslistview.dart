@@ -42,9 +42,7 @@ class NewsListState extends State<NewsList> {
               padding: EdgeInsets.only(left: 10),
             ),
             Text(
-              FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                  ? 'Yang Gang :'
-                  : 'Timebank : ',
+              FlavorConfig.values.timebankTitle,
               style: (TextStyle(fontWeight: FontWeight.w500)),
             ),
             Padding(
@@ -70,14 +68,14 @@ class NewsListState extends State<NewsList> {
                       dropdownList.length;
                   return DropdownButton<String>(
                     value: timebankId,
-                      onChanged: (String newValue) {
-                        setState(() {
-                          timebankId = newValue;
-                          SevaCore.of(context).loggedInUser.currentTimebank =
-                              newValue;
-                          didChangeDependencies();
-                        });
-                      },
+                    onChanged: (String newValue) {
+                      setState(() {
+                        timebankId = newValue;
+                        SevaCore.of(context).loggedInUser.currentTimebank =
+                            newValue;
+                        didChangeDependencies();
+                      });
+                    },
                     items: dropdownList
                         .map<DropdownMenuItem<String>>((String value) {
                       if (value == 'All') {
@@ -606,4 +604,3 @@ class NewsListState extends State<NewsList> {
     );
   }
 }
-

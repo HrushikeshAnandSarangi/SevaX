@@ -38,9 +38,13 @@ class _LoginPageState extends State<LoginPage> {
             end: Alignment.bottomCenter,
             colors: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? [
-                    Color.fromARGB(255, 23, 54, 134),
-                    Color.fromARGB(255, 115, 132, 176),
-                    Color.fromARGB(255, 214, 222, 234),
+
+//                    Color.fromARGB(255, 23, 54, 134),
+//                    Color.fromARGB(255, 115, 132, 176),
+//                    Color.fromARGB(255, 214, 222, 234),
+                      Theme.of(context).primaryColor,
+                     // Colors.white,
+                      Theme.of(context).primaryColor,
                   ]
                 : FlavorConfig.appFlavor == Flavor.TULSI
                     ? [
@@ -159,11 +163,16 @@ class _LoginPageState extends State<LoginPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 style: textStyle,
+                cursorColor: Colors.white,
                 validator: _validateEmailId,
                 onSaved: _saveEmail,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white)),
+                      borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
                   labelText: 'EMAIL',
                   labelStyle: textStyle,
                 ),
@@ -174,11 +183,16 @@ class _LoginPageState extends State<LoginPage> {
               child: TextFormField(
                 obscureText: _shouldObscurePassword,
                 style: textStyle,
+                cursorColor: Colors.white,
                 validator: _validatePassword,
                 onSaved: _savePassword,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white)),
+                      borderSide: BorderSide(color: Colors.white)
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
                   labelText: 'PASSWORD',
                   labelStyle: textStyle,
                   suffix: GestureDetector(
@@ -257,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Text(
                 'Create an Account',
-                style: TextStyle(color: Theme.of(context).accentColor),
+                style: TextStyle(color: Theme.of(context).accentColor,fontWeight: FontWeight.w700),
               ),
             )
           ],

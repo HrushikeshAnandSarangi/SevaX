@@ -234,28 +234,33 @@ class _locationScreenState extends State<LocationView> {
         actions: <Widget>[
           new FlatButton(
             child: new Text('SAVE',
-                style: theme.textTheme.body1.copyWith(color: _canSave ? Colors.white : new Color.fromRGBO(255, 255, 255, 0.5))),
-            onPressed: _canSave ? () {
-              bool checkFields = true;
-              String message;
-              if (locationController.text == null ||
-                  locationController.text.isEmpty) {
+                style: theme.textTheme.body1.copyWith(
+                    color: _canSave
+                        ? Colors.white
+                        : new Color.fromRGBO(255, 255, 255, 0.5))),
+            onPressed: _canSave
+                ? () {
+                    bool checkFields = true;
+                    String message;
+                    if (locationController.text == null ||
+                        locationController.text.isEmpty) {
 //                   _scaffoldKey.currentState.showSnackBar(
 //                       SnackBar(
 //                         content: Text('Purchase Successful'),
 //                         duration: Duration(seconds: 3),
 //                       ));
-              }
+                    }
 //                 setState(() {
 //                   locationController.text.isEmpty ? _locationValidate = true : _locationValidate = false;
 //                 });
-              if (myCommentsController.text == null ||
-                  myCommentsController.text.isEmpty) {
-                checkFields = false;
-                message = 'Please selecte your availability';
-              }
-              widget.onSelectedCalendar(totalData);
-            }: null,
+                    if (myCommentsController.text == null ||
+                        myCommentsController.text.isEmpty) {
+                      checkFields = false;
+                      message = 'Please selecte your availability';
+                    }
+                    widget.onSelectedCalendar(totalData);
+                  }
+                : null,
           )
         ],
       ),

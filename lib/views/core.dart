@@ -24,6 +24,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'invitation/InviteMembers.dart';
 import 'notifications/notifications_page.dart';
+import 'package:connectivity/connectivity.dart';
 
 class SevaCore extends InheritedWidget {
   final UserModel loggedInUser;
@@ -43,6 +44,16 @@ class SevaCore extends InheritedWidget {
 
   static SevaCore of(BuildContext context) {
     return context.inheritFromWidgetOfExactType(SevaCore) as SevaCore;
+  }
+
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
   }
 }
 
@@ -668,9 +679,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     leading: new Icon(Icons.timeline,
                         color: Theme.of(context).primaryColor),
                     title: new Text(
-                      FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                          ? 'Create Yang Gang'
-                          : 'Create Timebank',
+                      'Create a ${FlavorConfig.values.timebankTitle}',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {

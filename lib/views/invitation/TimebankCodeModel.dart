@@ -9,8 +9,6 @@ class TimebankCodeModel {
   int validUpto;
   List<String> usersOnBoarded;
 
-
-
   TimebankCodeModel(
       {this.createdOn, this.timebankCode, this.timebankId, this.validUpto});
 
@@ -20,7 +18,8 @@ class TimebankCodeModel {
     this.timebankId = data['timebankId'];
     this.validUpto = data['validUpto'];
 
-    this.usersOnBoarded = data['usersOnboarded'] == null ?
-      null : new List<String>.from( data['usersOnboarded'].map( (u) => u));
+    this.usersOnBoarded = data['usersOnboarded'] == null
+        ? null
+        : new List<String>.from(data['usersOnboarded'].map((u) => u));
   }
 }

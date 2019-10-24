@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/profile/edit_interests.dart';
+import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -161,6 +163,8 @@ class _ProfilePageState extends State<ProfilePage>
               height: 32,
             ),
             skillsAndInterest,
+            //editInterests,
+            //editSkills,
             SizedBox(
               height: 32,
             ),
@@ -180,51 +184,17 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget get skillsAndInterest {
-    if (user.skills == null || user.skills.isEmpty) {
-      if (user.interests == null || user.interests.isEmpty) return Container();
-    }
+//    if (user.skills == null || user.skills.isEmpty) {
+//      if (user.interests == null || user.interests.isEmpty) return Container();
+//    }
     return Container(
-      padding: EdgeInsets.all(8),
+      //padding: EdgeInsets.all(5),
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 0.0),
       decoration: getContainerDecoration(),
       child: Column(
         children: [
-          if (user.interests != null && user.interests.length != 0)
-            // ExpansionTile(
-            //   trailing: Icon(
-            //     Icons.navigate_next,
-            //     color: Colors.black,
-            //   ),
-            //   title: Text(
-            //     'My Interests',
-            //     style: TextStyle(
-            //       color: Colors.black,
-            //       fontWeight: FontWeight.w500,
-            //     ),
-            //   ),
-            //   children: user.interests.map((interest) {
-            //     return getDataChip(interest);
-            //   }).toList(),
-            // ),
-            getParentWidget(
-              title: 'My Interests',
-              childList: ChildList(
-                mainAxisSize: MainAxisSize.min,
-                children: user.interests.map((interest) {
-                  return getDataChip(interest);
-                }).toList(),
-              ),
-            ),
-          if (user.interests != null && user.interests.length != 0) Divider(),
-          if (user.skills != null && user.skills.length != 0)
-            getParentWidget(
-              title: 'My Skills',
-              childList: ChildList(
-                children: user.skills.map((skill) {
-                  return getDataChip(skill);
-                }).toList(),
-              ),
-            ),
+          editInterests,
+          editSkills,
         ],
       ),
     );
@@ -241,6 +211,15 @@ class _ProfilePageState extends State<ProfilePage>
           Icons.navigate_next,
           color: Colors.black,
         ),
+        onTap: () {
+          //print("Tapped");
+          if(title == 'My Interests') {
+            this.navigateToeditInterests();
+          } else if(title == 'My Skills') {
+            this.navigateToeditskills();
+          }
+
+        },
         title: Text(
           title,
           style: TextStyle(
@@ -248,6 +227,24 @@ class _ProfilePageState extends State<ProfilePage>
             fontWeight: FontWeight.w500,
           ),
         ),
+      ),
+    );
+  }
+  void navigateToeditskills() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return EditSkills();
+        },
+      ),
+    );
+  }
+  void navigateToeditInterests() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return EditInterests();
+        },
       ),
     );
   }
@@ -605,9 +602,49 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget get editSkills {
+    return getActionCards(
+      title: 'My Skills',
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        bottomRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return EditSkills();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget get editInterests {
+    return getActionCards(
+      title: 'My Interests',
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        bottomRight: Radius.circular(12),
+        bottomLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return EditInterests();
+            },
+          ),
+        );
+      },
+    );
+  }
+
   Widget get joinViaCode {
     return getActionCards(
-      title: 'Join via Timebank code',
+      title: 'Join via ${FlavorConfig.values.timebankTitle} code',
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         bottomRight: Radius.circular(12),
@@ -688,10 +725,8 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get timebankslist {
     return getActionCards(
-      title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'List of Yang Gangs'
-          : 'Timebanks List',
-      //subtitle: timebankModel == null ? "loading" : timebankModel.name,
+      //title: 'List of ${FlavorConfig.values.timebankTitle}',
+      title: FlavorConfig.values.timebankName == "Yang 2020" ? "List of Yang Gang Chapters" : "List of ${FlavorConfig.values.timebankTitle}",
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
@@ -750,9 +785,6 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
-
-
-
 
   BoxDecoration getContainerDecoration({
     double radius = 12.0,

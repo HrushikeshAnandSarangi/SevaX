@@ -40,7 +40,14 @@ class InterestViewNew extends StatefulWidget {
 }
 
 class _InterestViewNewState extends State<InterestViewNew> {
-  List<String> interests = const [
+
+  List<String> interests = FlavorConfig.values.timebankName == "Yang 2020" ? const [
+    'Host an event',
+    'Check in attendees',
+    'Canvassing Neighborhoods',
+    'Make calls to voters',
+    'Send texts to voters',
+  ] : [
     'Branding',
     'Campaigning',
     'Kids',
@@ -287,7 +294,27 @@ class Skill {
 }
 
 class _SkillViewNewState extends State<SkillViewNew> {
-  List<String> skills = const [
+//  List<String> skills = const [
+//    'Curators',
+//    'Developers',
+//    'Writer',
+//    'Advertisers',
+//    'Customer',
+//    'Sports',
+//    'Adventure',
+//    'Culture',
+//    'Baseball',
+//  ];
+
+  List<String> skills = FlavorConfig.values.timebankName == "Yang 2020" ? const [
+    "data entry",
+    "research",
+    "graphic design",
+    "coding/development",
+    "photography",
+    "videography",
+    "multilingual/translations",
+  ] : [
     'Curators',
     'Developers',
     'Writer',
@@ -299,6 +326,15 @@ class _SkillViewNewState extends State<SkillViewNew> {
     'Baseball',
   ];
 
+ // FlavorConfig.values.timebankName == "Yang 2020" ?
+
+//  -data entry
+//  -research
+//  -graphic design
+//  -coding/development
+//  -photography
+//  -videography
+//  -multilingual/translations
   // List<Skill> skillsList = [
   //   Skill('Curators', false),
   //   Skill('Developers', false),

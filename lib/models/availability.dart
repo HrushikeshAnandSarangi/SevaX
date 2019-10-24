@@ -1,5 +1,4 @@
-
-class AvailabilityModel  {
+class AvailabilityModel {
   //String text;
   String accurance_number;
   String endsData;
@@ -10,7 +9,15 @@ class AvailabilityModel  {
   String location;
   String lat_lng;
   Set<String> weekArray;
-  AvailabilityModel(this.accurance_number,this.weekArray,this.endsData,this.endsStatus,this.repeatAfterStr,this.repeatNumber,this.lat_lng,this.distnace);
+  AvailabilityModel(
+      this.accurance_number,
+      this.weekArray,
+      this.endsData,
+      this.endsStatus,
+      this.repeatAfterStr,
+      this.repeatNumber,
+      this.lat_lng,
+      this.distnace);
   AvailabilityModel.empty() {
     // text = "";
     accurance_number = "0";
@@ -71,8 +78,7 @@ class AvailabilityModel  {
     if (this.repeatNumber != null && this.repeatNumber.isNotEmpty) {
       object['repeatNumber'] = this.repeatNumber;
     }
-    if (this.weekArray != null &&
-        this.weekArray.isNotEmpty) {
+    if (this.weekArray != null && this.weekArray.isNotEmpty) {
       object['weekArray'] = this.weekArray;
     }
     return object;

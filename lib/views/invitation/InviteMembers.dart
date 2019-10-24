@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 import 'TimebankCodeModel.dart';
 
@@ -25,7 +26,7 @@ class InviteMembersState extends State<InviteMembers> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Timebank codes",
+          FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Codes" : "Timebank codes",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -33,7 +34,7 @@ class InviteMembersState extends State<InviteMembers> {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         icon: Icon(Icons.add),
-        label: Text("Generate New"),
+        label: Text("Generate Code"),
         onPressed: () {
           _asyncInputDialog(context);
         },
@@ -149,7 +150,7 @@ class InvitationListView extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text("Timebank code : " + timebankCode.timebankCode),
+                        Text(FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Code : " + timebankCode.timebankCode : "Timebank code : " + timebankCode.timebankCode),
                         Text(
                             "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
                         Text(DateTime.now().millisecondsSinceEpoch >
