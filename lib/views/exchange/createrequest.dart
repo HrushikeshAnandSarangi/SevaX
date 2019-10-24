@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
+import 'package:sevaexchange/views/workshop/workshop.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -51,9 +53,6 @@ class _CreateRequestState extends State<CreateRequest> {
         timebankId: widget.timebankId,
       ),
     );
-
-
-
   }
 }
 
@@ -81,8 +80,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   String _dateMessageStart = ' START date and time ';
   String _dateMessageEnd = '  END date and time ';
   String hoursMessage = ' Click to Set Duration';
-    String selectedAddress;
-
+  String selectedAddress;
 
   String _selectedTimebankId;
 
@@ -291,30 +289,31 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   requestModel.numberOfApprovals = int.parse(value);
                 },
               ),
+              addVolunteersForAdmin(),
               Center(
                 child: FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Text(
-                  selectedAddress == null || selectedAddress.isEmpty
-                      ? 'Add Location'
-                      : selectedAddress,
-                ),
-                color: Colors.grey[200],
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<GeoFirePoint>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
+                  icon: Icon(Icons.add_location),
+                  label: Text(
+                    selectedAddress == null || selectedAddress.isEmpty
+                        ? 'Add Location'
+                        : selectedAddress,
+                  ),
+                  color: Colors.grey[200],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<GeoFirePoint>(
+                        builder: (context) => LocationPicker(
+                          selectedLocation: location,
+                        ),
                       ),
-                    ),
-                  ).then((point) {
-                    if (point != null) location = point;
-                    _getLocation();
-                    log('ReceivedLocation: $selectedAddress');
-                  });
-                },
-              ),
+                    ).then((point) {
+                      if (point != null) location = point;
+                      _getLocation();
+                      log('ReceivedLocation: $selectedAddress');
+                    });
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -384,6 +383,37 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
+  Map onActivityResult;
+  Widget addVolunteersForAdmin() {
+    return Container(
+      margin: EdgeInsets.all(10),
+      width: double.infinity,
+      child: RaisedButton(
+        child: Text("Assign to volunteers"),
+        onPressed: () async {
+          print("addVolunteersForAdmin():");
+
+          onActivityResult = await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SelectMembersInGroup(
+                    SevaCore.of(context).loggedInUser.currentTimebank,
+                    onActivityResult == null
+                        ? null
+                        : onActivityResult['membersSelected'],
+                  )));
+
+          if (onActivityResult != null &&
+              onActivityResult.containsKey("membersSelected")) {
+            print("Data is present");
+          } else {
+            //no users where selected
+          }
+
+          // SelectMembersInGroup
+        },
+      ),
+    );
+  }
+
   Future _writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
@@ -405,7 +435,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     await FirestoreManager.createRequest(requestModel: requestModel);
   }
 
-    Future _getLocation() async {
+  Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,
       location.longitude,
