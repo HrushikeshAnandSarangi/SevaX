@@ -188,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage>
 //      if (user.interests == null || user.interests.isEmpty) return Container();
 //    }
     return Container(
-      padding: EdgeInsets.all(8),
+      //padding: EdgeInsets.all(5),
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 0.0),
       decoration: getContainerDecoration(),
       child: Column(

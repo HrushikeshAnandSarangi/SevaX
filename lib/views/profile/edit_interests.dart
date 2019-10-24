@@ -13,11 +13,14 @@ class EditInterests extends StatefulWidget {
 class _EditInterestsState extends State<EditInterests> {
 
   List<String> interests = FlavorConfig.values.timebankName == "Yang 2020" ? const [
-    'Host an event',
-    'Check in attendees',
-    'Canvassing Neighborhoods',
+    'Block Walk',
+    'Crowd control',
+    'Cleaning campaign office',
     'Make calls to voters',
     'Send texts to voters',
+    "Host a meet and greet",
+    "Canvassing Neighborhoods",
+    "Phone Bank",
   ] : [
     'Branding',
     'Campaigning',

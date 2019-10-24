@@ -97,9 +97,9 @@ class _TimebankViewState extends State<TimebankView> {
   @override
   Widget build(BuildContext buildcontext) {
     loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
-    this.getJoinRequestData().catchError((error) {
-      print(error);
-    });
+//    this.getJoinRequestData().catchError((error) {
+//      print(error);
+//    });
     return timebankStreamBuilder(buildcontext);
   }
 
@@ -579,6 +579,7 @@ class _TimebankViewState extends State<TimebankView> {
                           ),
                         ),
                         // StreamBuilder<UserModel>(
+                        //
                         //   stream: FirestoreManager.getUserForIdStream(
                         //       sevaUserId: timebankModel.creatorId),
                         //   builder: (context, snapshot) {
