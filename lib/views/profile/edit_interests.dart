@@ -45,8 +45,14 @@ class _EditInterestsState extends State<EditInterests> {
     colorList.shuffle();
     getInterestsForTimebank(timebankId: FlavorConfig.values.timebankId)
         .then((onValue) {
+          print(onValue);
       setState(() {
-        if (onValue != null && onValue.isNotEmpty) interests = onValue;
+        if (onValue != null && onValue.isNotEmpty) {
+          interests = onValue;
+        } else {
+          print(interests);
+        }
+
       });
       this.selectedInterests = <String>[].toSet();
       this.selectedInterests = SevaCore.of(context).loggedInUser.interests.toSet();
@@ -88,6 +94,7 @@ class _EditInterestsState extends State<EditInterests> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: selectedInterests.map((interest) {
+            print(interest);
             int index = interests.indexOf(interest);
             return chip(interest, false, colorList[index]);
           }).toList(),

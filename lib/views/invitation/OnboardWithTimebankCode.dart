@@ -43,7 +43,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   padding: EdgeInsets.only(
                       left: 20.0, right: 20.0, top: 10.0, bottom: 25.0),
                   child: Text(
-                    'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
+                    //'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
+                    'Enter the code you received from your local ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank"} Admin to see the volunteer opportunities.',
                     textDirection: TextDirection.ltr,
                     style: TextStyle(
                       fontSize: 17.0,
@@ -174,7 +175,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 mode: TimeBankResponseModes.CODE_EXPIRED,
                 dialogTitle: "Code Expired!",
                 dialogSubTitle:
-                    "This timebank code has been expired, please request the admin for a noew one!");
+                    "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!");
           } else {
             //code matche and is alive
 
@@ -204,7 +205,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   mode: TimeBankResponseModes.ONBOARDED,
                   dialogTitle: "Awesome!",
                   dialogSubTitle:
-                      "You have been onboaded to ${timeBank.data['name'].toString()} successfully.\nYou can switch to this timebank.");
+                      "You have been onboaded to ${timeBank.data['name'].toString()} successfully.\nYou can switch to this ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"}.");
               response.then((onValue) {
                 print("onboadrd");
                 Navigator.popUntil(
@@ -219,7 +220,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           mode: TimeBankResponseModes.NO_CODE,
           dialogTitle: "Not found!",
           dialogSubTitle:
-              "We were unable to find the timebank code, please check and try again.",
+              "We were unable to find the ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code, please check and try again.",
         );
 
         selected.then((TimeBankResponseModes data) {
