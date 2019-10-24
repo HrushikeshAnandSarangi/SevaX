@@ -168,8 +168,10 @@ class ProfileViewer extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child:
-                            getChipWidgets(snapshot.data['interests'], context),
+                        child: snapshot.data['interests'] != null ?
+                            getChipWidgets(snapshot.data['interests'], context) : Padding(
+                          padding: EdgeInsets.all(5.0),
+                        ),
                       ),
 
                       Container(
@@ -183,7 +185,10 @@ class ProfileViewer extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child: getChipWidgets(snapshot.data['skills'], context),
+                        child: snapshot.data['skills'] != null ?
+                        getChipWidgets(snapshot.data['skills'], context) : Padding(
+                          padding: EdgeInsets.all(5.0),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(20.0),
@@ -504,20 +509,20 @@ Color _getChipColor() {
 }
 
 Widget getChipWidgets(List<dynamic> strings, BuildContext context) {
-  return Wrap(
-      spacing: 5.0,
-      alignment: WrapAlignment.start,
-      children: strings
-          .map((item) => ActionChip(
-                padding: EdgeInsets.all(3.0),
-                onPressed: () {},
-                backgroundColor: Theme.of(context).accentColor,
-                label: Text(
-                  item,
-                  style: TextStyle(
-                    color: FlavorConfig.values.buttonTextColor,
-                  ),
-                ),
-              ))
-          .toList());
+    return Wrap(
+        spacing: 5.0,
+        alignment: WrapAlignment.start,
+        children: strings
+            .map((item) => ActionChip(
+          padding: EdgeInsets.all(3.0),
+          onPressed: () {},
+          backgroundColor: Theme.of(context).accentColor,
+          label: Text(
+            item,
+            style: TextStyle(
+              color: FlavorConfig.values.buttonTextColor,
+            ),
+          ),
+        ))
+            .toList());
 }
