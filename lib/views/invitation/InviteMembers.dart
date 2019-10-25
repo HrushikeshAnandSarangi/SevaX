@@ -50,6 +50,7 @@ class InviteMembersState extends State<InviteMembers> {
     return showDialog<String>(
       context: context,
       barrierDismissible:
+
           false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(

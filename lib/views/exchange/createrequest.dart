@@ -3,22 +3,16 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/components/duration_picker/calendar_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/main.dart';
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/select_request_view.dart';
-import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
-import 'package:sevaexchange/views/workshop/workshop.dart';
+import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -35,7 +29,6 @@ class CreateRequest extends StatefulWidget {
 class _CreateRequestState extends State<CreateRequest> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -289,7 +282,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   requestModel.numberOfApprovals = int.parse(value);
                 },
               ),
-              addVolunteersForAdmin(),
+              if (FlavorConfig.appFlavor != Flavor.APP)
+                addVolunteersForAdmin(),
               Center(
                 child: FlatButton.icon(
                   icon: Icon(Icons.add_location),
@@ -327,6 +321,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             OfferDurationWidgetState.starttimestamp;
                         requestModel.requestEnd =
                             OfferDurationWidgetState.endtimestamp;
+
+                        //adding some members for humanity first
+                        List<String> arrayOfSelectedMembers = List();
+                        selectedUsers
+                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
+                        requestModel.approvedUsers = arrayOfSelectedMembers;
+                        //adding some members for humanity first
+
                         if (_formKey.currentState.validate()) {
                           await _writeToDB();
 
@@ -383,28 +385,44 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
+  Map<String, UserModel> selectedUsers;
   Map onActivityResult;
+
+  String memberAssignment = "Assign to volunteers";
+
   Widget addVolunteersForAdmin() {
+    if (selectedUsers == null) {
+      selectedUsers = HashMap();
+    }
+
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
       child: RaisedButton(
-        child: Text("Assign to volunteers"),
+        child: Text(memberAssignment),
         onPressed: () async {
           print("addVolunteersForAdmin():");
 
+          print(" Selected users before ${selectedUsers.length}");
+
           onActivityResult = await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
-                    SevaCore.of(context).loggedInUser.currentTimebank,
-                    onActivityResult == null
-                        ? null
-                        : onActivityResult['membersSelected'],
-                  )));
+                  SevaCore.of(context).loggedInUser.currentTimebank,
+                  selectedUsers)));
 
           if (onActivityResult != null &&
               onActivityResult.containsKey("membersSelected")) {
-            print("Data is present");
+            selectedUsers = onActivityResult['membersSelected'];
+            setState(() {
+              if (selectedUsers.length == 0)
+                memberAssignment = "Assign to volunteers";
+              else
+                memberAssignment =
+                    "${selectedUsers.length} volunteers selected";
+            });
+            print("Data is present Selected users ${selectedUsers.length}");
           } else {
+            print("No users where selected");
             //no users where selected
           }
 
