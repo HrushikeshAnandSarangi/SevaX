@@ -183,14 +183,14 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
             style: TextStyle(
                 color: widget.userSelected.containsKey(user.email)
                     ? Colors.white
-                    : Colors.blue),
+                    : Colors.black),
           ),
           subtitle: Text(
             user.email,
             style: TextStyle(
                 color: widget.userSelected.containsKey(user.email)
                     ? Colors.white
-                    : Colors.blue),
+                    : Colors.black),
           ),
         ),
       ),
