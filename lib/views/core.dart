@@ -382,7 +382,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   color: Colors.white,
                 ),
       page: NewsListView(),
-      title: 'Feed',
+      title: 'Feeds',
       appBarActions: [
         // IconButton(
         //   icon: Icon(Icons.notifications_none),

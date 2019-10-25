@@ -31,18 +31,23 @@ class HelpViewState extends State<HelpView> {
   static bool isAdminOrCoordinator = false;
   @override
   void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     FirestoreManager.getTimeBankForId(
             timebankId: FlavorConfig.values.timebankId)
         .then((timebank) {
-      if (timebank.admins.contains(SevaCore.of(context).loggedInUser.email) ||
+      if (timebank.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
-              .contains(SevaCore.of(context).loggedInUser.email)) {
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         setState(() {
           isAdminOrCoordinator = true;
         });
+      } else {
+//        print(SevaCore.of(context).loggedInUser.sevaUserID);
+//        print(timebank.admins);
       }
     });
-    super.didChangeDependencies();
+
   }
 
   @override

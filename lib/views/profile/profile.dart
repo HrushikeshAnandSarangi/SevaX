@@ -627,8 +627,8 @@ class _ProfilePageState extends State<ProfilePage>
       title: 'My Interests',
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
-        bottomRight: Radius.circular(12),
-        bottomLeft: Radius.circular(12),
+        topRight: Radius.circular(12),
+        topLeft: Radius.circular(12),
       ),
       onTap: () {
         Navigator.of(context).push(

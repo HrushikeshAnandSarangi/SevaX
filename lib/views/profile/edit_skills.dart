@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -151,8 +153,9 @@ class _EditSkillsState extends State<EditSkills> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: selectedSkills.map((skill) {
-            int index = skills.indexOf(skill);
-            return chip(skill, false, colorList[index]);
+            final _random = new Random();
+            var element = colorList[_random.nextInt(colorList.length)];
+            return chip(skill, false, element);
           }).toList(),
         ),
       );

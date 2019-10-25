@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/utils/data_managers/skills_interest_data_manager.dart';
@@ -45,8 +47,14 @@ class _EditInterestsState extends State<EditInterests> {
     colorList.shuffle();
     getInterestsForTimebank(timebankId: FlavorConfig.values.timebankId)
         .then((onValue) {
+          print(onValue);
       setState(() {
-        if (onValue != null && onValue.isNotEmpty) interests = onValue;
+        if (onValue != null && onValue.isNotEmpty) {
+          interests = onValue;
+        } else {
+          print(interests);
+        }
+
       });
       this.selectedInterests = <String>[].toSet();
       this.selectedInterests = SevaCore.of(context).loggedInUser.interests.toSet();
@@ -88,8 +96,9 @@ class _EditInterestsState extends State<EditInterests> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: selectedInterests.map((interest) {
-            int index = interests.indexOf(interest);
-            return chip(interest, false, colorList[index]);
+            final _random = new Random();
+            var element = colorList[_random.nextInt(colorList.length)];
+            return chip(interest, false, element);
           }).toList(),
         ),
       );
