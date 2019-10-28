@@ -68,9 +68,9 @@ class GoogleAuthenticationService extends BaseService {
       idToken: googleAuth.idToken,
     );
 
-    FirebaseUser user = await _firebaseAuth.signInWithCredential(
+    FirebaseUser user = (await _firebaseAuth.signInWithCredential(
       credential,
-    );
+    )) as FirebaseUser;
 
     log.i('handleGoogleSignIn: Got Firebase user');
     return user;

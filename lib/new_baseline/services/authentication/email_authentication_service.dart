@@ -50,10 +50,10 @@ class EmailAuthenticationService extends BaseService {
     FirebaseUser user;
 
     try {
-      user = await _firebaseAuth.createUserWithEmailAndPassword(
+      user = (await _firebaseAuth.createUserWithEmailAndPassword(
         email: emailId,
         password: password,
-      );
+      )) as FirebaseUser;
     } on PlatformException catch (error) {
       log.e('register: Exception ${error.toString()}');
       throw error;
@@ -90,10 +90,10 @@ class EmailAuthenticationService extends BaseService {
 
     FirebaseUser user;
     try {
-      user = await _firebaseAuth.signInWithEmailAndPassword(
+      user = (await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )) as FirebaseUser;
     } on PlatformException catch (error) {
       log.e('loginWithEmailAndPassword: Exception { ${error.toString()} }');
       throw error;

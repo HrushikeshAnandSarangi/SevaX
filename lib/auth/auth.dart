@@ -35,9 +35,11 @@ class Auth {
       idToken: googleAuth.idToken,
     );
 
-    FirebaseUser user = await _firebaseAuth.signInWithCredential(
+    //AuthResult user = await _firebaseAuth.signInWithCredential(credential);
+
+    FirebaseUser user = (await _firebaseAuth.signInWithCredential(
       credential,
-    );
+    )) as FirebaseUser;
 
     return _processGoogleUser(user);
   }
@@ -49,10 +51,10 @@ class Auth {
   }) async {
     FirebaseUser user;
     try {
-      user = await _firebaseAuth.signInWithEmailAndPassword(
+      user = (await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )) as FirebaseUser;
     } on Exception catch (error) {
       throw error;
     } catch (error) {
@@ -68,10 +70,10 @@ class Auth {
     @required String displayName,
   }) async {
     try {
-      FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
+      FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      )) as FirebaseUser;
       return _processEmailPasswordUser(user, displayName);
     } on PlatformException catch (error) {
       throw error;
