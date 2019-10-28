@@ -325,11 +325,11 @@ SPEC CHECKSUMS:
   app_settings: 27651d311385d34d91afa163c0e4539cfd0c4c5d
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
   camera: d56ad165545ae5a0ffb892376033760a969c68c8
-  cloud_firestore: 0ac494d23db743f104b95d3291946afec187b74c
+  cloud_firestore: c9493dd01ad88934d926e18cc5a92a0129bf2c32
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   Firebase: bc9cfc7a96c73268656d5aaab453ff1b4b530e0e
   firebase_analytics: b0d7c086f5a50042153fd0441dafef51bde36cd0
-  firebase_auth: 00d6e1ab6d890cd6d3c624df61702e3a7072d1e3
+  firebase_auth: 1e3b7bdd37b9fbd4ef75ba1d985b00be09e02d3d
   firebase_core: ae55ea92448ec8675d325da4db22cf3b4d58a54d
   firebase_messaging: 0d5c04cc40f58bd4bf7f2992c91050f9bc01bec3
   firebase_storage: 52b0c06e27af628b627be28d32b4b540f6b67cf7
@@ -372,7 +372,7 @@ SPEC CHECKSUMS:
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: 1feebfa37bb57264736e16865e7ffae7fc99b523
   TOCropViewController: 0a075f02c253e88095143bbac7b013fc6fba5090
-  url_launcher: 0067ddb8f10d36786672aa0722a21717dba3a298
+  url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
 
 PODFILE CHECKSUM: fb9c640745d369c357b1f0db8d1151344d45fe11
 

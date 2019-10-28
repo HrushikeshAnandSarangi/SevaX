@@ -473,7 +473,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       location.latitude,
       location.longitude,
     );
-
     setState(() {
       this.selectedAddress = address;
     });
