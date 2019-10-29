@@ -198,7 +198,7 @@ class _SplashViewState extends State<SplashView> {
                 height: 16,
               ),
               Image.asset(
-                'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+                'lib/assets/images/new_yang.png',
                 height: 140,
                 width: 140,
               ),
@@ -565,7 +565,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> _precacheImage() async {
     return await precacheImage(
-      AssetImage('lib/assets/Y_from_Andrew_Yang_2020_logo.png'),
+      AssetImage('lib/assets/images/new_yang.png'),
       context,
     );
   }

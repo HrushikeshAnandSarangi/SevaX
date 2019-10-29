@@ -23,6 +23,9 @@ class UserModel extends DataModel {
   //AvailabilityModel availability;
   String currentTimebank = FlavorConfig.values.timebankId;
   int associatedWithTimebanks = 1;
+  String tokens;
+
+
   //String
 
   UserModel(
@@ -40,9 +43,15 @@ class UserModel extends DataModel {
       this.otp,
       this.requestStatus,
       //this.availability,
-      this.timezone});
+      this.timezone,
+      this.tokens});
 
   UserModel.fromMap(Map<String, dynamic> map) {
+
+    if(map.containsKey('tokens')){
+        this.tokens = map['tokens'];
+    }
+    
     if (map.containsKey('bio')) {
       this.bio = map['bio'];
     }

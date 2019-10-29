@@ -36,7 +36,12 @@ class TimeBankList extends StatelessWidget {
       ),
       floatingActionButton: Visibility(
         visible: !UserData.shared.isFromLogin,
-        child: FloatingActionButton(
+        child: FloatingActionButton.extended(
+          label: Text(
+            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? 'Create Yang Gang'
+                : 'Create Branch'
+          ),
           onPressed: () {
             Navigator.push(
               context,
@@ -48,7 +53,7 @@ class TimeBankList extends StatelessWidget {
             );
           },
           foregroundColor: FlavorConfig.values.buttonTextColor,
-          child: Icon(
+          icon: Icon(
             Icons.add,
           ),
         ),

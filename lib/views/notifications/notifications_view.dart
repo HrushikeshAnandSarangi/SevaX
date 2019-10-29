@@ -1,5 +1,7 @@
 //import 'dart:ffi';
 
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -11,6 +13,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:shimmer/shimmer.dart';
 
@@ -830,6 +833,26 @@ class NotificationsView extends StatelessWidget {
     );
   }
 
+  Future<http.Response> scheduleNotification(
+      {RequestModel model, UserModel userModel}) {
+    var url =
+        "https://us-central1-sevaexchange.cloudfunctions.net/sendNotifications";
+
+    var body = jsonEncode({
+      "request_start": model.requestStart,
+      "notification": {
+        "title": "${model.title} event is about to start sometime",
+        "body": "${model.title} would be starting in less than two hours",
+        "icon": "firebase-icon.png"
+      },
+      "data": {"message": "Enter your message here"},
+      "to": userModel.tokens
+    });
+
+    return http.post(url,
+        headers: {"Content-Type": "application/json"}, body: body);
+  }
+
   Widget getNotificationAcceptedWidget(
       RequestModel model, String userId, String notificationId) {
     return StreamBuilder<UserModel>(
@@ -852,7 +875,7 @@ class NotificationsView extends StatelessWidget {
           actions: <Widget>[
             SlideAction(
               closeOnTap: true,
-              onTap: () {
+              onTap: () async {
                 List<String> approvedUsers = model.approvedUsers;
                 Set<String> usersSet = approvedUsers.toSet();
 
@@ -861,7 +884,20 @@ class NotificationsView extends StatelessWidget {
 
                 if (model.numberOfApprovals <= model.approvedUsers.length)
                   model.accepted = true;
+                print(
+                    "${model.requestStart} -> User Approved -> ${user.tokens} ");
+                var scheduledNotificationResponse =
+                    await scheduleNotification(model: model, userModel: user);
+                if (scheduledNotificationResponse.statusCode == 200) {
+                  print("notification was scheduled successfully");
+                } else {
+                  print("Couldn't schedule a notificaation");
+                }
+                print("Reached EOF");
 
+                // return;
+
+                // Approve user
                 FirestoreManager.approveAcceptRequest(
                   requestModel: model,
                   approvedUserId: user.sevaUserID,

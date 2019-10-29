@@ -119,10 +119,10 @@ class _LoginPageState extends State<LoginPage> {
           ),
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? Image.asset(
-                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-                  height: 70,
+                  'lib/assets/images/new_yang.png',
+                  height: 90,
                   fit: BoxFit.fill,
-                  width: 80,
+                  width: 180,
                 )
               : FlavorConfig.appFlavor == Flavor.TULSI
                   ? SvgPicture.asset(
@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget get content {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       child: Form(
         key: _formKey,
         child: Column(

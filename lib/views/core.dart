@@ -683,40 +683,35 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      if (isAdminOrCoordinator)
-                        {
-                          Navigator.of(context).pop(),
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TimebankCreate(
-                                timebankId: FlavorConfig.values.timebankId,
-                              ),
-                            ),
-                          )
-                        }
+                      if (FlavorConfig.appFlavor != Flavor.APP)
+                        {createSubTimebank(context)}
                       else
                         {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: new Text("Permission Denied"),
-                                content: new Text(
-                                    "You need to be an Admin or Coordinator to have permission to create timebanks"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  new FlatButton(
-                                    child: new Text("Close"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          )
+                          if (isAdminOrCoordinator)
+                            {createSubTimebank(context)}
+                          else
+                            {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  // return object of type Dialog
+                                  return AlertDialog(
+                                    title: new Text("Permission Denied"),
+                                    content: new Text(
+                                        "You need to be an Admin or Coordinator to have permission to create timebanks"),
+                                    actions: <Widget>[
+                                      // usually buttons at the bottom of the dialog
+                                      new FlatButton(
+                                        child: new Text("Close"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
+                            }
                         }
                     },
                   ),
@@ -745,7 +740,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => InviteMembers(
+                              builder: (context) => InviteMembers( 
                                 timebankId: SevaCore.of(context)
                                     .loggedInUser
                                     .currentTimebank,
@@ -782,6 +777,18 @@ class _SevaCoreViewState extends State<SevaCoreView>
             ),
           );
         });
+  }
+
+  void createSubTimebank(BuildContext context) {
+    Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimebankCreate(
+          timebankId: FlavorConfig.values.timebankId,
+        ),
+      ),
+    );
   }
 }
 

@@ -148,8 +148,10 @@ class _TimebankViewState extends State<TimebankView> {
                   )
                 ],
               ),
+
               floatingActionButton: Visibility(
-                visible: !UserData.shared.isFromLogin,
+                visible: FlavorConfig.appFlavor != Flavor.APP ? false : true ,
+                // visible: !UserData.shared.isFromLogin,
                 child: FloatingActionButton.extended(
                   icon: Icon(
                     Icons.add,
