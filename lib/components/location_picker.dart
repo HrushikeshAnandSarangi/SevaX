@@ -11,6 +11,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/availability.dart';
+import 'package:sevaexchange/models/location_model.dart';
+
+import 'get_location.dart';
 
 class LocationPicker extends StatefulWidget {
   final GeoFirePoint selectedLocation;
@@ -49,11 +53,13 @@ class _LocationPickerState extends State<LocationPicker> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (widget.selectedLocation != null) {
-      target = LatLng(
-        widget.selectedLocation.latitude,
-        widget.selectedLocation.longitude,
-      );
-      _addMarker();
+      if (target == null) {
+        target = LatLng(
+          widget.selectedLocation.latitude,
+          widget.selectedLocation.longitude,
+        );
+        _addMarker();
+      }
     }
   }
 
@@ -65,6 +71,37 @@ class _LocationPickerState extends State<LocationPicker> {
           'Add Location',
           style: TextStyle(color: Colors.white),
         ),
+        actions: <Widget>[
+      IconButton(
+      icon: Icon(
+        Icons.search,
+        color: Colors.white,
+      ),
+      onPressed: () async {
+        LocationDataModel dataModel = LocationDataModel("",null,null);
+        dataModel = await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) =>
+              new CustomSearchScaffold1(),
+              fullscreenDialog: true),
+        );
+        this.target = LatLng(
+            dataModel.lat,
+            dataModel.lng
+        );
+        _mapController.animateCamera(
+          CameraUpdate.newCameraPosition(CameraPosition(
+            target: target,
+            zoom: 15,
+          )),
+        );
+        setState(() {
+          this._addMarker();
+        });
+      },
+    ),
+        ],
       ),
       body: Stack(children: [
         mapWidget,
@@ -241,7 +278,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   void _addMarker() {
     log('_addMarker');
-
+    print(target);
     Marker marker = Marker(
       markerId: MarkerId('1'),
       position: target,
