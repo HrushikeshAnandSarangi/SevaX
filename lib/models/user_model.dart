@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/views/core.dart';
 
 import '../flavor_config.dart';
 
@@ -24,8 +26,8 @@ class UserModel extends DataModel {
   String currentTimebank = FlavorConfig.values.timebankId;
   int associatedWithTimebanks = 1;
   String tokens;
-
-
+  List<String> blockedMembers;
+  bool acceptedEULA = false;
   //String
 
   UserModel(
@@ -44,14 +46,31 @@ class UserModel extends DataModel {
       this.requestStatus,
       //this.availability,
       this.timezone,
-      this.tokens});
+      this.tokens,
+      this.blockedMembers,
+      this.acceptedEULA});
 
   UserModel.fromMap(Map<String, dynamic> map) {
+    print("--------->" + map.toString());
 
-    if(map.containsKey('tokens')){
-        this.tokens = map['tokens'];
+    if (map.containsKey('tokens')) {
+      this.tokens = map['tokens'];
     }
-    
+
+    if (map.containsKey('acceptedEULA')) {
+      this.acceptedEULA = map['acceptedEULA'];
+    }
+
+    if (map.containsKey('blockedMembers')) {
+      print("Blocked Data present");
+      List<String> blockedMembers = List.castFrom(map['blockedMembers']);
+      this.blockedMembers = blockedMembers;
+      // SevaCore.of(context).loggedInUser.blockedMembers = blockedMembers;
+    } else {
+      this.blockedMembers = List();
+      print("Blocked Data not present");
+    }
+
     if (map.containsKey('bio')) {
       this.bio = map['bio'];
     }
@@ -68,9 +87,11 @@ class UserModel extends DataModel {
       List<String> interestsList = List.castFrom(map['interests']);
       this.interests = interestsList;
     }
+
     if (map.containsKey('calendar')) {
       this.calendar = map['calendar'];
     }
+    
     if (map.containsKey('otp')) {
       this.email = map['otp'];
     }

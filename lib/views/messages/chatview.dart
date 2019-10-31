@@ -11,11 +11,8 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sevaexchange/views/news/newslistview.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
-import 'new_chat.dart';
 
 class ChatView extends StatefulWidget {
   final String useremail;
@@ -188,7 +185,7 @@ class _ChatViewState extends State<ChatView> {
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
-                      validator: (value) {
+                      validator: (value) {                        
                         if (value.isEmpty) {
                           return 'Please type message';
                         }

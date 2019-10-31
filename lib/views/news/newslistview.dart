@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -436,7 +437,12 @@ class NewsListState extends State<NewsList> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            NewChat(isShare, news),
+                                            // NewChat(isShare, news),
+                                            SelectMember.shareFeed(
+                                              timebankId : SevaCore.of(context).loggedInUser.currentTimebank,
+                                              newsModel: news,
+                                              isFromShare: isShare,
+                                            ),
                                       ),
                                     );
                                   },

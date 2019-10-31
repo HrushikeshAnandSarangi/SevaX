@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -13,6 +15,8 @@ class ProfileViewer extends StatelessWidget {
   final String userEmail;
 
   ProfileViewer({Key key, this.userEmail}) : super(key: key);
+
+  UserModel userModel;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +44,19 @@ class ProfileViewer extends StatelessWidget {
                 case ConnectionState.waiting:
                   return Center(child: CircularProgressIndicator());
                 default:
+                   userModel = UserModel.fromMap(snapshot.data.data);
+                  // memberFullName = userModel.fullname;
+                  // memberSevaUserId = userModel.sevaUserID;
+
+                  print( "User  Model" + userModel.toString());
+                  
+                  // memberFullName = snapshot.data['fullname'];
+                  // memberSevaUserId = snapshot.data['sevauserid'];
+                  // List<String, String> abc = (List<String, String>) snapshot.data['sevauserid'];
+                  // memberVisibilityStatus = List.castFrom() ;
+
+                  print("BlockedUsers ${userModel.blockedMembers}" ); 
+
                   return SingleChildScrollView(
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +85,7 @@ class ProfileViewer extends StatelessWidget {
                         padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
                         child: Center(
                           child: Text(
-                            snapshot.data['fullname'],
+                            userModel.fullname,
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 17.0),
                             // overflow: TextOverflow.ellipsis,
@@ -95,7 +112,7 @@ class ProfileViewer extends StatelessWidget {
                                     Icons.forum,
                                     color: Theme.of(context).accentColor,
                                   ),
-                                  Text(' Chat')
+                                  Text(' Chat'),
                                 ],
                               ),
                               onPressed: userEmail == loggedInEmail
@@ -115,6 +132,81 @@ class ProfileViewer extends StatelessWidget {
                                                   chatModel: model,
                                                 )),
                                       );
+                                    },
+                            ),
+                            Container(
+                              width: 10,
+                            ),
+                            OutlineButton(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).accentColor,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.block,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  Text('  ${SevaCore.of(context).loggedInUser.blockedMembers.contains(userModel.sevaUserID)}'),
+                                ],
+                              ),
+                              onPressed: userEmail == loggedInEmail
+                                  ? null
+                                  : () {
+                                      var onDialogActviityResult =
+                                          blockMemberDialogView(
+                                        context,
+                                      );
+
+                                      onDialogActviityResult.then((result) {
+                                        print("result " + result);
+                                        switch (result) {
+                                          case "BLOCK":
+                                            Firestore.instance
+                                                .collection("users")
+                                                .document(SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .email)
+                                                .updateData({
+                                              'blockedMembers':
+                                                  FieldValue.arrayUnion(
+                                                      [userModel.sevaUserID])
+                                            });
+                                            break;
+
+                                          case "UNBLOCK":
+                                            Firestore.instance
+                                                .collection("users")
+                                                .document(SevaCore.of(context)
+                                                    .loggedInUser
+                                                    .email)
+                                                .updateData({
+                                              'blockedMembers':
+                                                  FieldValue.arrayRemove(
+                                                      [userModel.sevaUserID])
+                                            });
+
+                                            break;
+
+                                          case "CANCEL":
+                                            break;
+                                        }
+                                      });
+
+                                      // List users = [userEmail, loggedInEmail];
+                                      // users.sort();
+                                      // ChatModel model = ChatModel();
+                                      // model.user1 = users[0];
+                                      // model.user2 = users[1];
+                                      // createChat(chat: model);
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) => ChatView(
+                                      //             useremail: userEmail,
+                                      //             chatModel: model,
+                                      //           )),
+                                      // );
                                     },
                             ),
                           ],
@@ -168,10 +260,12 @@ class ProfileViewer extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child: snapshot.data['interests'] != null ?
-                            getChipWidgets(snapshot.data['interests'], context) : Padding(
-                          padding: EdgeInsets.all(5.0),
-                        ),
+                        child: snapshot.data['interests'] != null
+                            ? getChipWidgets(
+                                snapshot.data['interests'], context)
+                            : Padding(
+                                padding: EdgeInsets.all(5.0),
+                              ),
                       ),
 
                       Container(
@@ -185,10 +279,11 @@ class ProfileViewer extends StatelessWidget {
                       ),
                       Container(
                         padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child: snapshot.data['skills'] != null ?
-                        getChipWidgets(snapshot.data['skills'], context) : Padding(
-                          padding: EdgeInsets.all(5.0),
-                        ),
+                        child: snapshot.data['skills'] != null
+                            ? getChipWidgets(snapshot.data['skills'], context)
+                            : Padding(
+                                padding: EdgeInsets.all(5.0),
+                              ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(20.0),
@@ -219,6 +314,79 @@ class ProfileViewer extends StatelessWidget {
                   ));
               }
             }));
+  }
+
+  Future<String> blockMemberDialogView(BuildContext viewContext) async {
+    return showDialog(
+      context: viewContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Block ${userModel.fullname.split(' ')[0]}."),
+          content: new Text(
+              "${userModel.fullname.split(' ')[0]} will no longer be available to send you messages"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("CANCEL"),
+              onPressed: () {
+                Navigator.of(context).pop("CANCEL");
+              },
+            ),
+            new FlatButton(
+              child: new Text("BLOCK"),
+              onPressed: () {
+                Navigator.of(context).pop("BLOCK");
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    // return showDialog<String>(
+    //   context: context,
+    //   barrierDismissible:
+    //       false, // dialog is dismissible with a tap on the barrier
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: Text("Code generated"),
+    //       content: new Row(
+    //         children: <Widget>[
+    //           Text(
+    //               "Blocked members will no longer be available to send you messages"),
+    //         ],
+    //       ),
+    //       actions: <Widget>[
+    //         FlatButton(
+    //           child: Text(
+    //             'CANCEL',
+    //             style: TextStyle(color: Theme.of(context).primaryColor),
+    //           ),
+    //           onPressed: () {
+    //             Navigator.of(context).pop();
+    //           },
+    //         ),
+    //         FlatButton(
+    //           child: Text(
+    //             'BLOCK',
+    //             style: TextStyle(color: Colors.green),
+    //           ),
+    //           onPressed: () {
+    //             // var today = new DateTime.now();
+    //             // var oneDayFromToday =
+    //             //     today.add(new Duration(days: 30)).millisecondsSinceEpoch;
+
+    //             // registerTimebankCode(
+    //             //     timebankCode: timebankCode,
+    //             //     timebankId: timebankId,
+    //             //     validUpto: oneDayFromToday);
+
+    //             Navigator.of(context).pop("BLOCKED");
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 }
 
@@ -509,20 +677,20 @@ Color _getChipColor() {
 }
 
 Widget getChipWidgets(List<dynamic> strings, BuildContext context) {
-    return Wrap(
-        spacing: 5.0,
-        alignment: WrapAlignment.start,
-        children: strings
-            .map((item) => ActionChip(
-          padding: EdgeInsets.all(3.0),
-          onPressed: () {},
-          backgroundColor: Theme.of(context).accentColor,
-          label: Text(
-            item,
-            style: TextStyle(
-              color: FlavorConfig.values.buttonTextColor,
-            ),
-          ),
-        ))
-            .toList());
+  return Wrap(
+      spacing: 5.0,
+      alignment: WrapAlignment.start,
+      children: strings
+          .map((item) => ActionChip(
+                padding: EdgeInsets.all(3.0),
+                onPressed: () {},
+                backgroundColor: Theme.of(context).accentColor,
+                label: Text(
+                  item,
+                  style: TextStyle(
+                    color: FlavorConfig.values.buttonTextColor,
+                  ),
+                ),
+              ))
+          .toList());
 }
