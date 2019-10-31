@@ -28,6 +28,9 @@ class UserModel extends DataModel {
   String tokens;
   List<String> blockedMembers;
   bool acceptedEULA = false;
+  List<String> reportedUsers;
+
+
   //String
 
   UserModel(
@@ -47,14 +50,18 @@ class UserModel extends DataModel {
       //this.availability,
       this.timezone,
       this.tokens,
+      this.reportedUsers,
       this.blockedMembers,
       this.acceptedEULA});
 
   UserModel.fromMap(Map<String, dynamic> map) {
-    print("--------->" + map.toString());
 
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
+    }
+    if (map.containsKey('reportedUsers')) {
+      List<String> reportedUsersList = List.castFrom(map['reportedUsers']);
+      this.reportedUsers = reportedUsersList;
     }
 
     if (map.containsKey('acceptedEULA')) {
@@ -87,11 +94,9 @@ class UserModel extends DataModel {
       List<String> interestsList = List.castFrom(map['interests']);
       this.interests = interestsList;
     }
-
     if (map.containsKey('calendar')) {
       this.calendar = map['calendar'];
     }
-    
     if (map.containsKey('otp')) {
       this.email = map['otp'];
     }
@@ -149,6 +154,9 @@ class UserModel extends DataModel {
     }
     if (this.calendar != null) {
       object['calendar'] = this.calendar;
+    }
+    if (this.reportedUsers != null && this.reportedUsers.isNotEmpty) {
+      object['reportedUsers'] = this.reportedUsers;
     }
     if (this.requestStatus != null) {
       object['requestStatus'] = this.requestStatus;

@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/profile/edit_interests.dart';
 import 'package:sevaexchange/views/profile/edit_skills.dart';
+import 'package:sevaexchange/views/profile/reported_users.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
@@ -49,6 +50,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   AnimationController appbarAnimationController;
   AnimationController flexibleAnimationController;
+  bool isAdminOrCoordinator = false;
 
   @override
   void initState() {
@@ -106,6 +108,24 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    FirestoreManager.getTimeBankForId(
+        timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
+        .then((timebank) {
+      if (timebank.admins
+          .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+          timebank.coordinators
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        setState(() {
+          print("Admin access granted");
+          isAdminOrCoordinator = true;
+        });
+      } else {
+        // print("Admin access Revoked");
+        // isAdminOrCoordinator = false;
+      }
+    });
+
     FirestoreManager.getUserForIdStream(
       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
     ).listen((userModel) {
@@ -577,9 +597,37 @@ class _ProfilePageState extends State<ProfilePage>
           timebankslist,
           joinViaCode,
           tasksWidget,
+          reportsData,
         ],
       ),
     );
+  }
+
+  Widget get reportsData {
+
+    if (isAdminOrCoordinator) {
+      return getActionCards(
+        title: 'Reported users',
+        trailingIcon: Icons.navigate_next,
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(12),
+          bottomLeft: Radius.circular(12),
+        ),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return ReportedUsersPage(
+                  timebankId: FlavorConfig.values.timebankId,
+                );
+              },
+            ),
+          );
+        },
+      );
+    } else {
+      return Offstage();
+    }
   }
 
   Widget get tasksWidget {

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'dart:math';
-
+import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/views/profile/profileedit.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -13,9 +13,9 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 
 class ProfileViewer extends StatefulWidget {
   final String userEmail;
+  UserModel userModel;
 
   ProfileViewer({this.userEmail});
-  UserModel userModel;
 
   @override
   State<StatefulWidget> createState() {
@@ -27,6 +27,8 @@ class ProfileViewerState extends State<ProfileViewer> {
   @override
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+    UserModel userData = SevaCore.of(context).loggedInUser;
+
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
@@ -42,7 +44,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                 .collection('users')
                 .document(widget.userEmail)
                 .snapshots(),
-            builder: (BuildContext context,
+            builder: (BuildContext firebasecontext,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasError)
                 return new Text('Error: ${snapshot.error}');
@@ -50,19 +52,8 @@ class ProfileViewerState extends State<ProfileViewer> {
                 case ConnectionState.waiting:
                   return Center(child: CircularProgressIndicator());
                 default:
-                  widget.userModel = UserModel.fromMap(snapshot.data.data);
-                  // memberFullName = userModel.fullname;
-                  // memberSevaUserId = userModel.sevaUserID;
 
-                  print("User  Model" + widget.userModel.toString());
-
-                  // memberFullName = snapshot.data['fullname'];
-                  // memberSevaUserId = snapshot.data['sevauserid'];
-                  // List<String, String> abc = (List<String, String>) snapshot.data['sevauserid'];
-                  // memberVisibilityStatus = List.castFrom() ;
-
-                  print("BlockedUsers ${widget.userModel.blockedMembers}");
-
+                widget.userModel = UserModel.fromMap(snapshot.data.data);
                   return SingleChildScrollView(
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,6 +133,116 @@ class ProfileViewerState extends State<ProfileViewer> {
                                                 )),
                                       );
                                     },
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 5.0),
+                            ),
+                            OutlineButton(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).accentColor,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.flag,
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  Text(' Report Member')
+                                ],
+                              ),
+                              onPressed:
+                              widget.userEmail == loggedInEmail
+                                  ? null
+                                  : () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext viewContext) {
+                                    // return object of type Dialog
+                                    return AlertDialog(
+                                  title: Text('Report Member?'),
+                                  content: Text('Do you want to report this member to admin?'),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Cancel'),
+                                      onPressed: () {
+                                        Navigator.of(viewContext).pop();
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text('Report'),
+                                      onPressed: () {
+
+                                        print(snapshot.data['sevauserid']);
+
+                                        Firestore.instance.collection('reported_users_list')
+                                            .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+                                            .where('reporterId', isEqualTo: userData.sevaUserID)
+                                            .where('reportedId', isEqualTo: snapshot.data['sevauserid'])
+                                            .snapshots()
+                                            .listen(
+                                                (data) {
+                                                  if (data.documents.length == 0) {
+                                                    Firestore.instance
+                                                        .collection('reported_users_list')
+                                                        .add({
+                                                      "reporterId": userData.sevaUserID,
+                                                      "reportedId": snapshot.data['sevauserid'],
+                                                      "timebankId": FlavorConfig.values.timebankId
+                                                    })
+                                                        .then((result) => {
+                                                      Navigator.pop(viewContext),
+                                                      Navigator.of(context).pop()
+                                                    })
+                                                        .catchError((err) => print(err));
+                                                  } else {
+                                                    Navigator.pop(viewContext);
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                }
+                                        );
+
+
+//                                        if (userData.reportedUsers == null) {
+////                                          userData.reportedUsers = List<String>();
+////                                          userData.reportedUsers.add(snapshot.data['sevauserid']);
+////                                          updateUserData(viewContext);
+//                                          Firestore.instance
+//                                              .collection('reported_users_list')
+//                                              .add({
+//                                            "reporterId": userData.sevaUserID,
+//                                            "reportedId": snapshot.data['sevauserid'],
+//                                            "timebankId": FlavorConfig.values.timebankId
+//                                          })
+//                                              .then((result) => {
+//                                            Navigator.pop(viewContext),
+//                                            Navigator.of(context).pop()
+//                                          })
+//                                              .catchError((err) => print(err));
+//                                        } else if (!userData.reportedUsers.contains(snapshot.data['sevauserid'])) {
+////                                          userData.reportedUsers.add(
+////                                              snapshot.data['sevauserid']);
+////                                          updateUserData(viewContext);
+//                                          Firestore.instance
+//                                              .collection('reported_users_list')
+//                                              .add({
+//                                            "reporterId": userData.sevaUserID,
+//                                            "reportedId": snapshot.data['sevauserid'],
+//                                            "timebankId": FlavorConfig.values.timebankId
+//                                          })
+//                                              .then((result) => {
+//                                            Navigator.pop(viewContext),
+//                                            Navigator.of(context).pop()
+//                                          })
+//                                              .catchError((err) => print(err));
+//                                        }
+                                      },
+                                    ),
+
+                                  ],
+                                );
+                                  },
+                                );
+                              },
                             ),
                             Container(
                               width: 10,
