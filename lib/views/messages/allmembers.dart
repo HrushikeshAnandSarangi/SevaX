@@ -255,6 +255,56 @@ class _ResultViewState extends State<ResultView> {
 
   Widget getMemberListView(String userId, BuildContext parentContext) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+
+//    FirestoreManager.getUserForId(sevaUserId: userId).then((user) {
+//      return user.email == loggedInEmail
+//          ? Offstage()
+//          : Card(
+//        child: ListTile(
+//          onTap: () {
+//            List users = [user.email, loggedInEmail];
+//            users.sort();
+//            ChatModel model = ChatModel();
+//            model.user1 = users[0];
+//            model.user2 = users[1];
+//            createChat(chat: model).then(
+//                  (_) {
+//                Navigator.push(
+//                  context,
+//                  MaterialPageRoute(
+//                      builder: (context) => ChatView(
+//                        useremail: user.email,
+//                        chatModel: model,
+//                        isFromShare: widget.isShare,
+//                        news: widget.news,
+//                      )),
+//                );
+//              },
+//            );
+//          },
+//          leading: user.photoURL != null
+//              ? ClipOval(
+//            child: FadeInImage.assetNetwork(
+//              fadeInCurve: Curves.easeIn,
+//              fadeInDuration: Duration(milliseconds: 400),
+//              fadeOutDuration: Duration(milliseconds: 200),
+//              width: 50,
+//              height: 50,
+//              placeholder: 'lib/assets/images/noimagefound.png',
+//              image: user.photoURL,
+//            ),
+//          )
+//              : CircleAvatar(),
+//          title: Text(user.fullname),
+//          subtitle: Text(user.email),
+//        ),
+//      );
+//    }).catchError((error) {
+//      return Offstage();
+//    });
+
+
+
     return StreamBuilder<Object>(
         stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
         builder: (context, snapshot) {

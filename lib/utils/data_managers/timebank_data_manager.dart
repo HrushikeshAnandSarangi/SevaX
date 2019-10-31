@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/reports_model.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
@@ -42,7 +43,7 @@ Future<List<TimebankModel>> getTimeBanksForUser(
 }
 
 /// Get all timebanknew associated with a User as a Stream
-Stream<List<TimebankModel>> getTimebanksForUserStream(
+Stream<List<TimebankModel>> getTimebanksForUserStream (
     {@required String userId}) async* {
   var data = Firestore.instance
       .collection('timebanknew')
@@ -62,6 +63,30 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
         );
 
         timebankSink.add(modelList);
+      },
+    ),
+  );
+}
+
+Stream<List<ReportModel>> getReportedUsersStream (
+    {@required String timebankId}) async* {
+  var data = Firestore.instance
+      .collection('reported_users_list')
+      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<ReportModel>>.fromHandlers(
+      handleData: (snapshot, reportsList) {
+        List<ReportModel> modelList = [];
+        snapshot.documents.forEach(
+              (documentSnapshot) {
+                ReportModel model = ReportModel.fromMap(documentSnapshot.data);
+            if (model.timebankId == FlavorConfig.values.timebankId)
+              modelList.add(model);
+          },
+        );
+        reportsList.add(modelList);
       },
     ),
   );

@@ -24,6 +24,7 @@ class UserModel extends DataModel {
   String currentTimebank = FlavorConfig.values.timebankId;
   int associatedWithTimebanks = 1;
   String tokens;
+  List<String> reportedUsers;
 
 
   //String
@@ -44,14 +45,18 @@ class UserModel extends DataModel {
       this.requestStatus,
       //this.availability,
       this.timezone,
-      this.tokens});
+      this.tokens,
+        this.reportedUsers});
 
   UserModel.fromMap(Map<String, dynamic> map) {
 
     if(map.containsKey('tokens')){
         this.tokens = map['tokens'];
     }
-    
+    if (map.containsKey('reportedUsers')) {
+      List<String> reportedUsersList = List.castFrom(map['reportedUsers']);
+      this.reportedUsers = reportedUsersList;
+    }
     if (map.containsKey('bio')) {
       this.bio = map['bio'];
     }
@@ -128,6 +133,9 @@ class UserModel extends DataModel {
     }
     if (this.calendar != null) {
       object['calendar'] = this.calendar;
+    }
+    if (this.reportedUsers != null && this.reportedUsers.isNotEmpty) {
+      object['reportedUsers'] = this.reportedUsers;
     }
     if (this.requestStatus != null) {
       object['requestStatus'] = this.requestStatus;

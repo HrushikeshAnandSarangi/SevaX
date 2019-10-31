@@ -27,6 +27,17 @@ Future<void> updateUser({
       .updateData(user.toMap());
 }
 
+//Future<void> addReportUser({
+//  @required String userId,
+//}) async {
+////print(user.toMap());
+//
+//return await Firestore.instance
+//    .collection('reportedUsersList')
+//.document(user.email)
+//.updateData(user.toMap());
+//}
+
 //Future<void> updateUserAvailability({
 //  @required UserModel user,
 //}) async {
