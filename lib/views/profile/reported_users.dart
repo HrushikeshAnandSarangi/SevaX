@@ -158,7 +158,7 @@ class _ReportedUsersView extends StatelessWidget {
                               requests.remove(user.sevaUserID);
                               doc.reference.delete();
                               print('Removed Reported user');
-                              //break;
+                              break;
                             }
                           }
                         });

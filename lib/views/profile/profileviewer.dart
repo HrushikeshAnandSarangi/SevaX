@@ -18,11 +18,7 @@ class ProfileViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     UserModel userData = SevaCore.of(context).loggedInUser;
-    Future updateUserData(BuildContext someContext) async {
-      await fireStoreManager.updateUser(user: userData);
-      Navigator.of(someContext).pop();
-      Navigator.of(context).pop();
-    }
+
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
@@ -167,10 +163,9 @@ class ProfileViewer extends StatelessWidget {
                                             .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
                                             .where('reporterId', isEqualTo: userData.sevaUserID)
                                             .where('reportedId', isEqualTo: snapshot.data['sevauserid'])
-                                            .snapshots()
-                                            .listen(
-                                                (data) {
-                                                  if (data.documents.length == 0) {
+                                            .getDocuments()
+                                            .then((data) {
+                                                if (data.documents.length == 0) {
                                                     Firestore.instance
                                                         .collection('reported_users_list')
                                                         .add({
@@ -187,43 +182,7 @@ class ProfileViewer extends StatelessWidget {
                                                     Navigator.pop(viewContext);
                                                     Navigator.of(context).pop();
                                                   }
-                                                }
-                                        );
-
-
-//                                        if (userData.reportedUsers == null) {
-////                                          userData.reportedUsers = List<String>();
-////                                          userData.reportedUsers.add(snapshot.data['sevauserid']);
-////                                          updateUserData(viewContext);
-//                                          Firestore.instance
-//                                              .collection('reported_users_list')
-//                                              .add({
-//                                            "reporterId": userData.sevaUserID,
-//                                            "reportedId": snapshot.data['sevauserid'],
-//                                            "timebankId": FlavorConfig.values.timebankId
-//                                          })
-//                                              .then((result) => {
-//                                            Navigator.pop(viewContext),
-//                                            Navigator.of(context).pop()
-//                                          })
-//                                              .catchError((err) => print(err));
-//                                        } else if (!userData.reportedUsers.contains(snapshot.data['sevauserid'])) {
-////                                          userData.reportedUsers.add(
-////                                              snapshot.data['sevauserid']);
-////                                          updateUserData(viewContext);
-//                                          Firestore.instance
-//                                              .collection('reported_users_list')
-//                                              .add({
-//                                            "reporterId": userData.sevaUserID,
-//                                            "reportedId": snapshot.data['sevauserid'],
-//                                            "timebankId": FlavorConfig.values.timebankId
-//                                          })
-//                                              .then((result) => {
-//                                            Navigator.pop(viewContext),
-//                                            Navigator.of(context).pop()
-//                                          })
-//                                              .catchError((err) => print(err));
-//                                        }
+                                        });
                                       },
                                     ),
 
