@@ -11,13 +11,19 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 
-class ProfileViewer extends StatelessWidget {
+class ProfileViewer extends StatefulWidget {
   final String userEmail;
 
-  ProfileViewer({Key key, this.userEmail}) : super(key: key);
-
+  ProfileViewer({this.userEmail});
   UserModel userModel;
 
+  @override
+  State<StatefulWidget> createState() {
+    return ProfileViewerState();
+  }
+}
+
+class ProfileViewerState extends State<ProfileViewer> {
   @override
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
@@ -34,7 +40,7 @@ class ProfileViewer extends StatelessWidget {
         body: StreamBuilder<DocumentSnapshot>(
             stream: Firestore.instance
                 .collection('users')
-                .document(userEmail)
+                .document(widget.userEmail)
                 .snapshots(),
             builder: (BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -44,18 +50,18 @@ class ProfileViewer extends StatelessWidget {
                 case ConnectionState.waiting:
                   return Center(child: CircularProgressIndicator());
                 default:
-                   userModel = UserModel.fromMap(snapshot.data.data);
+                  widget.userModel = UserModel.fromMap(snapshot.data.data);
                   // memberFullName = userModel.fullname;
                   // memberSevaUserId = userModel.sevaUserID;
 
-                  print( "User  Model" + userModel.toString());
-                  
+                  print("User  Model" + widget.userModel.toString());
+
                   // memberFullName = snapshot.data['fullname'];
                   // memberSevaUserId = snapshot.data['sevauserid'];
                   // List<String, String> abc = (List<String, String>) snapshot.data['sevauserid'];
                   // memberVisibilityStatus = List.castFrom() ;
 
-                  print("BlockedUsers ${userModel.blockedMembers}" ); 
+                  print("BlockedUsers ${widget.userModel.blockedMembers}");
 
                   return SingleChildScrollView(
                       child: Column(
@@ -85,7 +91,7 @@ class ProfileViewer extends StatelessWidget {
                         padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
                         child: Center(
                           child: Text(
-                            userModel.fullname,
+                            widget.userModel.fullname,
                             style: TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 17.0),
                             // overflow: TextOverflow.ellipsis,
@@ -115,10 +121,13 @@ class ProfileViewer extends StatelessWidget {
                                   Text(' Chat'),
                                 ],
                               ),
-                              onPressed: userEmail == loggedInEmail
+                              onPressed: widget.userEmail == loggedInEmail
                                   ? null
                                   : () {
-                                      List users = [userEmail, loggedInEmail];
+                                      List users = [
+                                        widget.userEmail,
+                                        loggedInEmail
+                                      ];
                                       users.sort();
                                       ChatModel model = ChatModel();
                                       model.user1 = users[0];
@@ -128,7 +137,7 @@ class ProfileViewer extends StatelessWidget {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => ChatView(
-                                                  useremail: userEmail,
+                                                  useremail: widget.userEmail,
                                                   chatModel: model,
                                                 )),
                                       );
@@ -137,78 +146,84 @@ class ProfileViewer extends StatelessWidget {
                             Container(
                               width: 10,
                             ),
-                            OutlineButton(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).accentColor,
+                            Offstage(
+                              offstage: true,
+                              child: OutlineButton(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor,
+                                ),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.block,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                    Text(
+                                        '   ${SevaCore.of(context).loggedInUser.blockedMembers.contains(widget.userModel.sevaUserID)}'),
+                                  ],
+                                ),
+                                onPressed: widget.userEmail == loggedInEmail
+                                    ? null
+                                    : () {
+                                        var onDialogActviityResult =
+                                            blockMemberDialogView(
+                                          context,
+                                        );
+
+                                        onDialogActviityResult.then((result) {
+                                          print("result " + result);
+                                          switch (result) {
+                                            case "BLOCK":
+                                              Firestore.instance
+                                                  .collection("users")
+                                                  .document(SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .email)
+                                                  .updateData({
+                                                'blockedMembers':
+                                                    FieldValue.arrayUnion([
+                                                  widget.userModel.sevaUserID
+                                                ])
+                                              });
+                                              break;
+
+                                            case "UNBLOCK":
+                                              Firestore.instance
+                                                  .collection("users")
+                                                  .document(SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .email)
+                                                  .updateData({
+                                                'blockedMembers':
+                                                    FieldValue.arrayRemove([
+                                                  widget.userModel.sevaUserID
+                                                ])
+                                              });
+
+                                              break;
+
+                                            case "CANCEL":
+                                              break;
+                                          }
+                                        });
+
+                                        // List users = [userEmail, loggedInEmail];
+                                        // users.sort();
+                                        // ChatModel model = ChatModel();
+                                        // model.user1 = users[0];
+                                        // model.user2 = users[1];
+                                        // createChat(chat: model);
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) => ChatView(
+                                        //             useremail: userEmail,
+                                        //             chatModel: model,
+                                        //           )),
+                                        // );
+                                      },
                               ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.block,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  Text('  ${SevaCore.of(context).loggedInUser.blockedMembers.contains(userModel.sevaUserID)}'),
-                                ],
-                              ),
-                              onPressed: userEmail == loggedInEmail
-                                  ? null
-                                  : () {
-                                      var onDialogActviityResult =
-                                          blockMemberDialogView(
-                                        context,
-                                      );
-
-                                      onDialogActviityResult.then((result) {
-                                        print("result " + result);
-                                        switch (result) {
-                                          case "BLOCK":
-                                            Firestore.instance
-                                                .collection("users")
-                                                .document(SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .email)
-                                                .updateData({
-                                              'blockedMembers':
-                                                  FieldValue.arrayUnion(
-                                                      [userModel.sevaUserID])
-                                            });
-                                            break;
-
-                                          case "UNBLOCK":
-                                            Firestore.instance
-                                                .collection("users")
-                                                .document(SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .email)
-                                                .updateData({
-                                              'blockedMembers':
-                                                  FieldValue.arrayRemove(
-                                                      [userModel.sevaUserID])
-                                            });
-
-                                            break;
-
-                                          case "CANCEL":
-                                            break;
-                                        }
-                                      });
-
-                                      // List users = [userEmail, loggedInEmail];
-                                      // users.sort();
-                                      // ChatModel model = ChatModel();
-                                      // model.user1 = users[0];
-                                      // model.user2 = users[1];
-                                      // createChat(chat: model);
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //       builder: (context) => ChatView(
-                                      //             useremail: userEmail,
-                                      //             chatModel: model,
-                                      //           )),
-                                      // );
-                                    },
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -321,9 +336,9 @@ class ProfileViewer extends StatelessWidget {
       context: viewContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Block ${userModel.fullname.split(' ')[0]}."),
+          title: new Text("Block ${widget.userModel.fullname.split(' ')[0]}."),
           content: new Text(
-              "${userModel.fullname.split(' ')[0]} will no longer be available to send you messages"),
+              "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages"),
           actions: <Widget>[
             new FlatButton(
               child: new Text("CANCEL"),
