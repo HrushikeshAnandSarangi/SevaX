@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:shimmer/shimmer.dart';
@@ -43,7 +44,7 @@ class _ReportedUsersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<ReportModel>>(
-      stream: FirestoreManager.getReportedUsersStream(
+      stream: getReportedUsersStream(
         timebankId: timebankId,
       ),
       builder: (context, snapshot) {

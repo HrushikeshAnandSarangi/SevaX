@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -9,6 +10,7 @@ import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 
 //class UserData {
@@ -205,7 +207,8 @@ class _SplashViewState extends State<SplashView> {
               if (loadingMessage != null && loadingMessage.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 32.0),
-                  child: Text(loadingMessage,style: TextStyle(color: Colors.white)),
+                  child: Text(loadingMessage,
+                      style: TextStyle(color: Colors.white)),
                 ),
               Container(
                 margin: EdgeInsets.only(top: 8),
@@ -387,12 +390,16 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     if (loggedInUser == null) {
-      // TODO: Fix this
+      
       loadingMessage = 'Creating user documents';
       _navigateToLoginPage();
       return;
     }
     UserData.shared.user = loggedInUser;
+
+    if (!loggedInUser.acceptedEULA) {
+      await _navigateToEULA(loggedInUser);
+    }
 
     if (loggedInUser.skills == null) {
       await _navigateToSkillsView(loggedInUser);
@@ -430,6 +437,33 @@ class _SplashViewState extends State<SplashView> {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => LoginPage(),
     ));
+  }
+
+  Future _navigateToEULA(UserModel loggedInUser) async {
+    
+    print("EULA -> ${loggedInUser.toString()}");
+
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EulaAgreement(),
+      ),
+    );
+
+    if (results != null && results['response'] == "ACCEPTED") {
+      //UPDATE THE DB HERE 
+      //print("${SevaCore.of(context).loggedInUser.email} User has agreed to EULA");
+
+      await Firestore.instance.collection('users').document(
+        loggedInUser.email
+      ).updateData({
+          'acceptedEULA' : true
+      }).then((onValue){
+        print("Updating EULA Agreemet confirmation");
+      }).catchError((onError){
+        print("Error Updating EULA");
+      });
+
+    }
   }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {

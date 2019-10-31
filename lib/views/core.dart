@@ -83,6 +83,16 @@ class _CoreViewState extends State<CoreView> {
       email: SevaCore.of(context).loggedInUser.email,
       photoURL: SevaCore.of(context).loggedInUser.photoURL,
     );
+
+    if (user.blockedMembers != null) {
+      SevaCore.of(context).loggedInUser.blockedMembers = user.blockedMembers;
+      print("Updated blocked");
+    } else {
+      print("blocked users not init");
+    }
+
+    print("Seva Core User -> ${user.toString()}");
+
     FirestoreManager.getUserForId(sevaUserId: widget.sevaUserID).then((user) {
       if (mounted) {
         setState(() => this.user = user);
@@ -740,7 +750,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => InviteMembers( 
+                              builder: (context) => InviteMembers(
                                 timebankId: SevaCore.of(context)
                                     .loggedInUser
                                     .currentTimebank,

@@ -1,6 +1,7 @@
+import 'dart:ui' as prefix0;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -16,8 +17,13 @@ import 'chatview.dart';
 
 class SelectMember extends StatefulWidget {
   final String timebankId;
+  NewsModel newsModel;
+  bool isFromShare = false;
 
   SelectMember({@required this.timebankId});
+
+  SelectMember.shareFeed(
+      {this.timebankId, this.newsModel, this.isFromShare = true});
 
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +40,7 @@ class _SelectMemberState extends State<SelectMember> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select member",
+          widget.isFromShare ? "Share with" : "Select member",
           style: TextStyle(color: Colors.white),
         ),
         elevation: 0,
@@ -42,39 +48,25 @@ class _SelectMemberState extends State<SelectMember> {
       ),
       body: _SelectMembersView(
         timebankId: widget.timebankId,
+        isFromShare: widget.isFromShare,
+        newsModel: widget.newsModel,
       ),
     );
-  }
-
-  Color getAppBarBackgroundColor() {
-    switch (FlavorConfig.appFlavor) {
-      case Flavor.HUMANITY_FIRST:
-        return Colors.indigo;
-
-      case Flavor.TOM:
-        return Color.fromARGB(255, 11, 40, 161);
-
-      case Flavor.TULSI:
-        return Color.fromARGB(255, 26, 50, 102);
-
-      case Flavor.APP:
-        return Color.fromARGB(255, 109, 110, 172);
-
-      default:
-        return Color.fromARGB(255, 109, 110, 172);
-    }
   }
 }
 
 class _SelectMembersView extends StatelessWidget {
   final String timebankId;
+  final bool isFromShare;
+  final NewsModel newsModel;
 
-  _SelectMembersView({
-    @required this.timebankId,
-  });
+  _SelectMembersView(
+      {@required this.timebankId, this.isFromShare, this.newsModel});
 
   @override
   Widget build(BuildContext context) {
+    print("SelectMembers ---->");
+
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
         timebankId: timebankId,
@@ -116,133 +108,11 @@ class _SelectMembersView extends StatelessWidget {
 
   List<Widget> getContent(BuildContext context, TimebankModel model) {
     return [
-      // getAdminList(context, model),
-      getCoordinationList(context, model),
       getMembersList(context, model),
-      SizedBox(height: 48),
     ];
   }
 
-  Widget getAdminList(BuildContext context, TimebankModel model) {
-    bool isAdmin = model.admins.contains(
-        //SevaCore.of(context).loggedInUser.sevaUserID,
-        "rmybIeNJHycTx64sU2wHUo5tQNa2");
-
-    if (model.admins.length == 0) return Container();
-    print(model.admins);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        getSectionTitle(context, 'Admins'),
-        ...model.admins.map((admin) {
-          return FutureBuilder<UserModel>(
-            future: FirestoreManager.getUserForId(sevaUserId: admin),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) return Text(snapshot.error.toString());
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return shimmerWidget;
-              }
-              UserModel user = snapshot.data;
-              if (isAdmin) {
-                return Slidable(
-                  delegate: SlidableDrawerDelegate(),
-                  actions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.close,
-                      color: Colors.red,
-                      caption: 'Remove',
-                      onTap: () {
-                        List<String> admins =
-                            model.admins.map((s) => s).toList();
-                        admins.remove(user.sevaUserID);
-                        updateTimebank(model, admins: admins);
-                      },
-                    ),
-                  ],
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.arrow_downward,
-                      color: Colors.orange,
-                      caption: 'Coordinator',
-                      onTap: () {
-                        List<String> admins =
-                            model.admins.map((s) => s).toList();
-                        List<String> coordinators =
-                            model.coordinators.map((s) => s).toList();
-                        coordinators.add(user.sevaUserID);
-                        admins.remove(user.sevaUserID);
-                        updateTimebank(
-                          model,
-                          coordinators: coordinators,
-                          admins: admins,
-                        );
-                      },
-                    ),
-                  ],
-                  child: getUserWidget(user, context),
-                );
-              }
-              return getUserWidget(user, context);
-            },
-          );
-        }).toList(),
-      ],
-    );
-  }
-
-  Widget getCoordinationList(BuildContext context, TimebankModel model) {
-    bool isAdmin = model.admins.contains(
-        // SevaCore.of(context).loggedInUser.sevaUserID,
-        "rmybIeNJHycTx64sU2wHUo5tQNa2");
-    if (model.coordinators == null || model.coordinators.isEmpty)
-      return Container();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        getSectionTitle(context, 'Coordinators'),
-        ...model.coordinators.map((coordinator) {
-          return FutureBuilder<UserModel>(
-            future: FirestoreManager.getUserForId(sevaUserId: coordinator),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) return Text(snapshot.error.toString());
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return shimmerWidget;
-              }
-              UserModel user = snapshot.data;
-              if (isAdmin) {
-                return Slidable(
-                  delegate: SlidableDrawerDelegate(),
-                  actions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.close,
-                      color: Colors.red,
-                      caption: 'Remove',
-                      onTap: () {
-                        List<String> coordinators =
-                            model.coordinators.map((s) => s).toList();
-                        coordinators.remove(user.sevaUserID);
-                        updateTimebank(model, coordinators: coordinators);
-                      },
-                    ),
-                  ],
-                  child: getUserWidget(user, context),
-                );
-              }
-              return getUserWidget(user, context);
-            },
-          );
-        }).toList(),
-      ],
-    );
-  }
-
   Widget getMembersList(BuildContext context, TimebankModel model) {
-    bool isAdmin = model.admins.contains(
-        // SevaCore.of(context).loggedInUser.sevaUserID,
-        "rmybIeNJHycTx64sU2wHUo5tQNa2");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -256,71 +126,12 @@ class _SelectMembersView extends StatelessWidget {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
-              if (isAdmin) {
-                return Slidable(
-                  delegate: SlidableDrawerDelegate(),
-                  actions: <Widget>[
-                    if (!model.admins.contains(user.sevaUserID))
-                      IconSlideAction(
-                        icon: Icons.supervisor_account,
-                        color: Colors.green,
-                        caption: 'Admin',
-                        onTap: () {
-                          List<String> admins =
-                              model.admins.map((s) => s).toList();
-                          List<String> coordinators =
-                              model.coordinators.map((s) => s).toList();
-                          admins.add(user.sevaUserID);
-                          coordinators.remove(user.sevaUserID);
-                          updateTimebank(
-                            model,
-                            admins: admins,
-                            coordinators: coordinators,
-                          );
-                        },
-                      ),
-                    if (!model.coordinators.contains(user.sevaUserID) &&
-                        !model.admins.contains(user.sevaUserID))
-                      IconSlideAction(
-                        icon: Icons.supervised_user_circle,
-                        color: Colors.orange,
-                        caption: 'Coordinator',
-                        onTap: () {
-                          List<String> coordinators =
-                              model.coordinators.map((s) => s).toList();
-                          coordinators.add(user.sevaUserID);
-                          updateTimebank(model, coordinators: coordinators);
-                        },
-                      ),
-                  ],
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.close,
-                      color: Colors.red,
-                      caption: 'Remove',
-                      onTap: () {
-                        List<String> admins =
-                            model.admins.map((s) => s).toList();
-                        List<String> coordinators =
-                            model.coordinators.map((s) => s).toList();
-                        List<String> members =
-                            model.members.map((s) => s).toList();
-                        admins.remove(user.sevaUserID);
-                        coordinators.remove(user.sevaUserID);
-                        members.remove(user.sevaUserID);
-                        updateTimebank(
-                          model,
-                          members: members,
-                          admins: admins,
-                          coordinators: coordinators,
-                        );
-                      },
-                    ),
-                  ],
-                  child: getUserWidget(user, context),
-                );
+              if (user.email == SevaCore.of(context).loggedInUser.email) {
+                print("Removed my item");
+                return Offstage();
+              } else {
+                return getUserWidget(user, context);
               }
-              return getUserWidget(user, context);
             },
           );
         }).toList(),
@@ -331,6 +142,7 @@ class _SelectMembersView extends StatelessWidget {
   Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
       onTap: () async {
+
         print(user.email +
             " Tapped on new chat for " +
             SevaCore.of(context).loggedInUser.email);
@@ -355,8 +167,8 @@ class _SelectMembersView extends StatelessWidget {
                     builder: (context) => ChatView(
                           useremail: user.email,
                           chatModel: model,
-                          isFromShare: false,
-                          news: NewsModel(),
+                          isFromShare: isFromShare,
+                          news: isFromShare ? newsModel : NewsModel(),
                         )),
               );
             },
