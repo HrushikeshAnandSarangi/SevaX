@@ -886,14 +886,14 @@ class NotificationsView extends StatelessWidget {
                   model.accepted = true;
                 print(
                     "${model.requestStart} -> User Approved -> ${user.tokens} ");
-                var scheduledNotificationResponse =
-                    await scheduleNotification(model: model, userModel: user);
-                if (scheduledNotificationResponse.statusCode == 200) {
-                  print("notification was scheduled successfully");
-                } else {
-                  print("Couldn't schedule a notificaation");
-                }
-                print("Reached EOF");
+                //commenting out the api post request
+                // var scheduledNotificationResponse =
+                //     await scheduleNotification(model: model, userModel: user);
+                // if (scheduledNotificationResponse.statusCode == 200) {
+                //   print("notification was scheduled successfully");
+                // } else {
+                //   print("Couldn't schedule a notificaation");
+                // }
 
                 // return;
 
