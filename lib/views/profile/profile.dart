@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/profile/edit_interests.dart';
+import 'package:sevaexchange/views/profile/edit_profilepic.dart';
 import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/profile/reported_users.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
@@ -347,20 +348,32 @@ class _ProfilePageState extends State<ProfilePage>
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: ShapeDecoration(
-                            shape: CircleBorder(
-                              side: BorderSide(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                            ),
-                            image: DecorationImage(
-                              image: NetworkImage(user.photoURL),
+                        GestureDetector(
+                          child: Container(
+                               height: 50,
+                               width: 50,
+                               decoration: ShapeDecoration(
+                                  shape: CircleBorder(
+                                    side: BorderSide(
+                                   color: Colors.white,
+                                   width: 2,
+                                ),
+                             ),
+                             image: DecorationImage(
+                                image: NetworkImage(user.photoURL),
+                             ),
                             ),
                           ),
+                          onTap: () {
+                            print('Getsure Pressed');
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return EditProfilePic();
+                                },
+                              ),
+                            );
+                          },
                         ),
                         SizedBox(
                           width: 16,

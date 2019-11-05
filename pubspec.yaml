@@ -61,7 +61,6 @@ dependencies:
   app_settings: ^1.0.6+2
   geolocator: ^5.1.4+1
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -247,27 +247,49 @@ class _RegisterPageState extends State<RegisterPage>
             : () async {
                 isLoading = true;
                 if (selectedImage == null) {
-                  _scaffoldKey.currentState.removeCurrentSnackBar();
-                  _scaffoldKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text('Select an image to get started'),
-                      action: SnackBarAction(
-                        label: 'Dismiss',
-                        onPressed: () =>
-                            _scaffoldKey.currentState.hideCurrentSnackBar(),
-                      ),
-                    ),
+                   showDialog(
+                    context: context,
+                       builder: (BuildContext viewContext) {
+                     // return object of type Dialog
+                     return AlertDialog(
+                       title: Text('Add Photo?'),
+                       content: Text('Do you want to add profile pic?'),
+                       actions: <Widget>[
+                         FlatButton(
+                           child: Text('Skip'),
+                           onPressed: () async {
+                             Navigator.pop(viewContext);
+                             if (!_formKey.currentState.validate()) {
+                               isLoading = false;
+                               return;
+                             }
+                             _formKey.currentState.save();
+                             await createUser();
+                             isLoading = false;
+                           },
+                         ),
+                         FlatButton(
+                           child: Text('Add Photo'),
+                           onPressed: () {
+                             Navigator.pop(viewContext);
+                             imagePicker.showDialog(context);
+                               isLoading = false;
+                               return;
+                           },
+                         ),
+                       ],
+                     );
+                   },
                   );
+                } else {
+                  if (!_formKey.currentState.validate()) {
+                    isLoading = false;
+                    return;
+                  }
+                  _formKey.currentState.save();
+                  await createUser();
                   isLoading = false;
-                  return;
                 }
-                if (!_formKey.currentState.validate()) {
-                  isLoading = false;
-                  return;
-                }
-                _formKey.currentState.save();
-                await createUser();
-                isLoading = false;
               },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -309,8 +331,12 @@ class _RegisterPageState extends State<RegisterPage>
         password: password,
         displayName: fullName,
       );
-      String imageUrl = await uploadImage(user.email);
-      user.photoURL = imageUrl;
+      if (this.selectedImage != null) {
+        String imageUrl = await uploadImage(user.email);
+        user.photoURL = imageUrl;
+      } else {
+          user.photoURL = "https://homepages.cae.wisc.edu/~ece533/images/cat.png";
+      }
       await FirestoreManager.updateUser(user: user);
       Navigator.pop(context, user);
       // Navigator.popUntil(context, (r) => r.isFirst);
@@ -336,6 +362,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
+     // File some = File.fromRawPath();
       isImageSelected = 'Update Photo';
     });
   }
@@ -352,6 +379,7 @@ class _RegisterPageState extends State<RegisterPage>
         customMetadata: <String, String>{'activity': 'News Image'},
       ),
     );
+   // StorageUploadTask uploadTask = ref.putFile(File.)
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
     return imageURL;
   }

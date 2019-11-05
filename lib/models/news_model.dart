@@ -16,6 +16,7 @@ class NewsModel extends DataModel {
   GeoFirePoint location;
   EntityModel entity;
   List<String> likes;
+  List<String> reports;
 
   NewsModel({
     this.id,
@@ -31,6 +32,7 @@ class NewsModel extends DataModel {
     this.location,
     this.entity,
     this.likes,
+    this.reports,
   });
 
   Map<String, dynamic> toMap() {
@@ -75,6 +77,11 @@ class NewsModel extends DataModel {
       map['likes'] = this.likes;
     } else
       map['likes'] = [];
+    if (this.reports != null) {
+      map['reports'] = this.reports;
+    } else
+      map['reports'] = [];
+
     return map;
   }
 
@@ -123,6 +130,12 @@ class NewsModel extends DataModel {
       this.likes = likesList;
     } else
       this.likes = [];
+    if (map.containsKey('reports')) {
+      List<String> likesList = List.castFrom(map['reports']);
+      this.reports = likesList;
+    } else
+      this.reports = [];
+
   }
 }
 
