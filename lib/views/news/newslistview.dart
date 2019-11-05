@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
@@ -153,14 +154,12 @@ class NewsListState extends State<NewsList> {
                         child: ListView.builder(
                           itemCount: newsList.length,
                           itemBuilder: (context, index) {
-                            print("User Details -->" +
-                                SevaCore.of(context)
-                                    .loggedInUser
-                                    .blockedMembers
-                                    .toString());
-
-                            return getNewsCard(
-                                newsList.elementAt(index), false);
+                            if (newsList.elementAt(index).reports.length > 2) {
+                              return Offstage();
+                            } else {
+                              return getNewsCard(
+                                  newsList.elementAt(index), false);
+                            }
                           },
                         ),
                       );
@@ -451,21 +450,88 @@ class NewsListState extends State<NewsList> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 2),
                                     child: FlavorConfig.appFlavor ==
-                                                Flavor.HUMANITY_FIRST ||
-                                            FlavorConfig.appFlavor == Flavor.APP
+                                        Flavor.HUMANITY_FIRST ||
+                                        FlavorConfig.appFlavor == Flavor.APP
                                         ? Icon(
-                                            Icons.share,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            size: 20,
-                                          )
+                                      Icons.flag,
+                                      size: 20,
+                                    )
                                         : SvgPicture.asset(
-                                            'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
-                                            height: 20,
-                                            width: 20,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
+                                      'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
+                                      height: 20,
+                                      width: 20,
+                                      color:
+                                      Theme.of(context).primaryColor,
+                                    ),
+                                  ),
+                                      () {
+                                         if (news.reports.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                                           showDialog(
+                                             context: context,
+                                             builder: (BuildContext viewContextS) {
+                                               // return object of type Dialog
+                                               return AlertDialog(
+                                                 title: Text('Already reported!'),
+                                                 content: Text('You already reported this feed'),
+                                                 actions: <Widget>[
+                                                   FlatButton(
+                                                     child: Text('OK'),
+                                                     onPressed: () {
+                                                       Navigator.of(viewContextS).pop();
+                                                     },
+                                                   ),
+                                                 ],
+                                               );
+                                             },
+                                           );
+                                         } else {
+                                           showDialog(
+                                             context: context,
+                                             builder: (BuildContext viewContext) {
+                                               // return object of type Dialog
+                                               return AlertDialog(
+                                                 title: Text('Report Feed?'),
+                                                 content: Text('Do you want to report this feed?'),
+                                                 actions: <Widget>[
+                                                   FlatButton(
+                                                     child: Text('Cancel'),
+                                                     onPressed: () {
+                                                       Navigator.of(viewContext).pop();
+                                                     },
+                                                   ),
+                                                   FlatButton(
+                                                     child: Text('Report Feed'),
+                                                     onPressed: () {
+                                                       if (news.reports.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+                                                         print('already in reports');
+                                                       } else {
+                                                         news.reports.add(SevaCore.of(context).loggedInUser.sevaUserID);
+                                                         Firestore.instance
+                                                             .collection('news')
+                                                             .document(news.id).updateData({
+                                                           'reports':news.reports
+                                                         });
+                                                       }
+                                                       Navigator.of(viewContext).pop();
+                                                     },
+                                                   ),
+                                                 ],
+                                               );
+                                             },
+                                           );
+                                         }
+                                  },
+                                ),
+                                getOptionButtons(
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    child: Icon(
+                                      Icons.share,
+                                      color:
+                                      Theme.of(context).primaryColor,
+                                      size: 20,
+                                    ),
                                   ),
                                   () {
                                     bool isShare = true;
@@ -475,12 +541,10 @@ class NewsListState extends State<NewsList> {
                                         builder: (context) =>
                                             // NewChat(isShare, news),
                                             SelectMember.shareFeed(
-                                          timebankId: SevaCore.of(context)
-                                              .loggedInUser
-                                              .currentTimebank,
-                                          newsModel: news,
-                                          isFromShare: isShare,
-                                        ),
+                                              timebankId : SevaCore.of(context).loggedInUser.currentTimebank,
+                                              newsModel: news,
+                                              isFromShare: isShare,
+                                            ),
                                       ),
                                     );
                                   },
