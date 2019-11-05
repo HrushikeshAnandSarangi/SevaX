@@ -48,6 +48,7 @@ class _ChatListViewState extends State<ChatListView> {
           if (chatListSnapshot.hasError) {
             return new Text('Error: ${chatListSnapshot.error}');
           }
+
           switch (chatListSnapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -55,9 +56,11 @@ class _ChatListViewState extends State<ChatListView> {
               );
             default:
               List<ChatModel> chatModelList = chatListSnapshot.data;
+
               if (chatModelList.length == 0) {
                 return Center(child: Text('No Chats'));
               }
+
               return Container(
                 padding: EdgeInsets.only(left: 15.0, right: 15.0),
                 child: ListView(
@@ -207,6 +210,23 @@ class _ChatListViewState extends State<ChatListView> {
               return taskShimmer;
             }
             UserModel user = snapshot.data;
+            // filter blocked content
+            if (SevaCore.of(context)
+                    .loggedInUser
+                    .blockedMembers
+                    .contains(user.sevaUserID) ||
+                SevaCore.of(context)
+                    .loggedInUser
+                    .blockedBy
+                    .contains(user.sevaUserID)) {
+              print("USER BLOCKED");
+
+              return Offstage();
+            } else {
+              print(
+                  "USER PERMITTED  ${SevaCore.of(context).loggedInUser.blockedMembers}  ${user.sevaUserID}");
+            }
+
             return Container(
               child: Card(
                 elevation: 0,
@@ -274,6 +294,23 @@ class _ChatListViewState extends State<ChatListView> {
               return taskShimmer;
             }
             UserModel user = snapshot.data;
+
+            if (SevaCore.of(context)
+                    .loggedInUser
+                    .blockedMembers
+                    .contains(user.sevaUserID) ||
+                SevaCore.of(context)
+                    .loggedInUser
+                    .blockedBy
+                    .contains(user.sevaUserID)) {
+              print("USER BLOCKED");
+
+              // return Offstage();
+            } else {
+              print(
+                  "USER PERMITTED 2-> ${SevaCore.of(context).loggedInUser.blockedMembers}  ${user.email}");
+            }
+
             return Container(
               child: Card(
                 elevation: 0,

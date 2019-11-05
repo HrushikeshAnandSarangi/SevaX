@@ -26,10 +26,10 @@ class UserModel extends DataModel {
   String currentTimebank = FlavorConfig.values.timebankId;
   int associatedWithTimebanks = 1;
   String tokens;
-  List<String> blockedMembers;
   bool acceptedEULA = false;
-  List<String> reportedUsers;
-
+  List<String> reportedUsers = [];
+  List<String> blockedBy = [];
+  List<String> blockedMembers = [];
 
   //String
 
@@ -52,10 +52,10 @@ class UserModel extends DataModel {
       this.tokens,
       this.reportedUsers,
       this.blockedMembers,
-      this.acceptedEULA});
+      this.acceptedEULA,
+      this.blockedBy});
 
   UserModel.fromMap(Map<String, dynamic> map) {
-
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
     }
@@ -76,6 +76,16 @@ class UserModel extends DataModel {
     } else {
       this.blockedMembers = List();
       print("Blocked Data not present");
+    }
+
+    if (map.containsKey('blockedBy')) {
+      List<String> blockedBy = List.castFrom(map['blockedBy']);
+      this.blockedBy = blockedBy;
+      print("data updated");
+
+    } else {
+      this.blockedBy = List();
+      print("data not found");
     }
 
     if (map.containsKey('bio')) {
@@ -128,9 +138,14 @@ class UserModel extends DataModel {
     } else {
       this.timezone = 'PT';
     }
-//     if (map.containsKey('availability')) {
-//       this.availability = AvailabilityModel.fromMap(map['availability']);
-//     }
+
+  }
+
+
+  UserModel setBlockedMembers(List<String> blockedMembers){
+      var tempOutput = new List<String>.from(blockedMembers);
+      this.blockedMembers = tempOutput;
+      return this;
   }
 
   @override

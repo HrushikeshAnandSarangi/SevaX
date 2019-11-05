@@ -25,8 +25,10 @@ class CampaignsView extends StatelessWidget {
     // _getAvatarURL();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Campaigns'),
-        backgroundColor: Colors.deepPurple,
+        title: Text('Projects', style: TextStyle(
+          color: Colors.white
+        ),),
+        backgroundColor: Theme.of(context).primaryColor,
         centerTitle: false,
       ),
       body: CampaignsList(

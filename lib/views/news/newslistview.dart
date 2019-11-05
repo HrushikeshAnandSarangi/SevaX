@@ -140,6 +140,9 @@ class NewsListState extends State<NewsList> {
                       break;
                     default:
                       List<NewsModel> newsList = snapshot.data;
+
+                      newsList = filterBlockedContent(newsList, context);
+
                       if (newsList.length == 0) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -150,6 +153,12 @@ class NewsListState extends State<NewsList> {
                         child: ListView.builder(
                           itemCount: newsList.length,
                           itemBuilder: (context, index) {
+                            print("User Details -->" +
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .blockedMembers
+                                    .toString());
+
                             return getNewsCard(
                                 newsList.elementAt(index), false);
                           },
@@ -170,6 +179,8 @@ class NewsListState extends State<NewsList> {
                           break;
                         default:
                           List<NewsModel> newsList = snapshot.data;
+                          newsList = filterBlockedContent(newsList, context);
+
                           if (newsList.length == 0) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -201,6 +212,9 @@ class NewsListState extends State<NewsList> {
                               break;
                             default:
                               List<NewsModel> newsList = snapshot.data;
+                              newsList =
+                                  filterBlockedContent(newsList, context);
+
                               if (newsList.length == 0) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -233,6 +247,9 @@ class NewsListState extends State<NewsList> {
                                   break;
                                 default:
                                   List<NewsModel> newsList = snapshot.data;
+                                  newsList =
+                                      filterBlockedContent(newsList, context);
+
                                   if (newsList.length == 0) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -255,6 +272,25 @@ class NewsListState extends State<NewsList> {
                         : Offstage(),
       ],
     );
+  }
+
+  List<NewsModel> filterBlockedContent(
+      List<NewsModel> newsList, BuildContext context) {
+    List<NewsModel> filteredNewsList = [];
+
+    newsList.forEach((news) {
+      SevaCore.of(context)
+                  .loggedInUser
+                  .blockedMembers
+                  .contains(news.sevaUserId) ||
+              SevaCore.of(context)
+                  .loggedInUser
+                  .blockedBy
+                  .contains(news.sevaUserId)
+          ? print("Removed blocked content")
+          : filteredNewsList.add(news);
+    });
+    return filteredNewsList;
   }
 
   Widget getNewsCard(NewsModel news, bool isFromMessage) {
@@ -439,10 +475,12 @@ class NewsListState extends State<NewsList> {
                                         builder: (context) =>
                                             // NewChat(isShare, news),
                                             SelectMember.shareFeed(
-                                              timebankId : SevaCore.of(context).loggedInUser.currentTimebank,
-                                              newsModel: news,
-                                              isFromShare: isShare,
-                                            ),
+                                          timebankId: SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentTimebank,
+                                          newsModel: news,
+                                          isFromShare: isShare,
+                                        ),
                                       ),
                                     );
                                   },

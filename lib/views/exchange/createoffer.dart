@@ -90,7 +90,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             children: <Widget>[
               Text(' '),
               TextFormField(
-                decoration: InputDecoration(hintText: 'Offer Title'),
+                decoration: InputDecoration(hintText: 'Volunteer Offer Title'),
                 keyboardType: TextInputType.text,
                 style: textStyle,
                 validator: (value) {
@@ -106,7 +106,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               TextFormField(
                 decoration: InputDecoration(
                   hintText: 'Your Offer and any #hashtags',
-                  labelText: 'Offer Description',
+                  labelText: 'Volunteer Offer Description',
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),

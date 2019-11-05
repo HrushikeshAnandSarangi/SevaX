@@ -171,7 +171,7 @@ Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {
     StreamTransformer<DocumentSnapshot, UserModel>.fromHandlers(
       handleData: (snapshot, userSink) {
         UserModel model = UserModel.fromMap(snapshot.data);
-        model.sevaUserID = snapshot.documentID;
+        // model.sevaUserID = snapshot.documentID;
         userSink.add(model);
       },
     ),

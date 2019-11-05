@@ -36,7 +36,8 @@ class HelpViewState extends State<HelpView> {
     FirestoreManager.getTimeBankForId(
             timebankId: FlavorConfig.values.timebankId)
         .then((timebank) {
-      if (timebank.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+      if (timebank.admins
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         setState(() {
@@ -47,7 +48,6 @@ class HelpViewState extends State<HelpView> {
 //        print(timebank.admins);
       }
     });
-
   }
 
   @override
@@ -695,6 +695,10 @@ class NearRequestListItems extends StatelessWidget {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
+
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
+
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -742,15 +746,22 @@ class NearRequestListItems extends StatelessWidget {
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
+                  //filter
+
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
+
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
+
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Center(child: Text('No Requests')),
                       );
                     }
+
                     return Expanded(
                       child: Container(
                         padding: EdgeInsets.only(left: 15.0, right: 15.0),
@@ -769,6 +780,24 @@ class NearRequestListItems extends StatelessWidget {
             );
           });
     }
+  }
+
+  List<RequestModel> filterBlockedRequestsContent(
+      {List<RequestModel> requestModelList, BuildContext context}) {
+    List<RequestModel> filteredList = [];
+
+    requestModelList.forEach((request) => SevaCore.of(context)
+                .loggedInUser
+                .blockedMembers
+                .contains(request.sevaUserId) ||
+            SevaCore.of(context)
+                .loggedInUser
+                .blockedBy
+                .contains(request.sevaUserId)
+        ? "Filtering blocked content"
+        : filteredList.add(request));
+
+    return filteredList;
   }
 
   Widget getRequestView(RequestModel model, String loggedintimezone) {
@@ -900,6 +929,9 @@ class RequestListItems extends StatelessWidget {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
+
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -946,6 +978,10 @@ class RequestListItems extends StatelessWidget {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
+
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
+
                     if (requestModelList.length == 0) {
                       return Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -962,6 +998,24 @@ class RequestListItems extends StatelessWidget {
             );
           });
     }
+  }
+
+  List<RequestModel> filterBlockedRequestsContent(
+      {List<RequestModel> requestModelList, BuildContext context}) {
+    List<RequestModel> filteredList = [];
+
+    requestModelList.forEach((request) => SevaCore.of(context)
+                .loggedInUser
+                .blockedMembers
+                .contains(request.sevaUserId) ||
+            SevaCore.of(context)
+                .loggedInUser
+                .blockedBy
+                .contains(request.sevaUserId)
+        ? "Filtering blocked content"
+        : filteredList.add(request));
+
+    return filteredList;
   }
 
   Widget formatListFrom(
@@ -1128,6 +1182,8 @@ class OfferListItems extends StatelessWidget {
               );
             default:
               List<OfferModel> offersList = snapshot.data;
+              offersList = filterBlockedOffersContent(
+                  context: context, requestModelList: offersList);
 
               if (offersList.length == 0) {
                 return Padding(
@@ -1159,6 +1215,10 @@ class OfferListItems extends StatelessWidget {
               );
             default:
               List<OfferModel> offersList = snapshot.data;
+
+              offersList = filterBlockedOffersContent(
+                  context: context, requestModelList: offersList);
+
               if (offersList.length == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -1176,6 +1236,24 @@ class OfferListItems extends StatelessWidget {
         },
       );
     }
+  }
+
+  List<OfferModel> filterBlockedOffersContent(
+      {List<OfferModel> requestModelList, BuildContext context}) {
+    List<OfferModel> filteredList = [];
+
+    requestModelList.forEach((request) => SevaCore.of(context)
+                .loggedInUser
+                .blockedMembers
+                .contains(request.sevaUserId) ||
+            SevaCore.of(context)
+                .loggedInUser
+                .blockedBy
+                .contains(request.sevaUserId)
+        ? "Filtering blocked content"
+        : filteredList.add(request));
+
+    return filteredList;
   }
 
   Widget formatListOffer({List<OfferModelList> consolidatedList}) {
@@ -1321,6 +1399,8 @@ class NearOfferListItems extends StatelessWidget {
               );
             default:
               List<OfferModel> offersList = snapshot.data;
+              offersList = filterBlockedOffersContent(
+                  context: context, requestModelList: offersList);
 
               if (offersList.length == 0) {
                 return Padding(
@@ -1358,6 +1438,9 @@ class NearOfferListItems extends StatelessWidget {
               );
             default:
               List<OfferModel> offersList = snapshot.data;
+              offersList = filterBlockedOffersContent(
+                  context: context, requestModelList: offersList);
+
               if (offersList.length == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -1382,6 +1465,24 @@ class NearOfferListItems extends StatelessWidget {
         },
       );
     }
+  }
+
+  List<OfferModel> filterBlockedOffersContent(
+      {List<OfferModel> requestModelList, BuildContext context}) {
+    List<OfferModel> filteredList = [];
+
+    requestModelList.forEach((request) => SevaCore.of(context)
+                .loggedInUser
+                .blockedMembers
+                .contains(request.sevaUserId) ||
+            SevaCore.of(context)
+                .loggedInUser
+                .blockedBy
+                .contains(request.sevaUserId)
+        ? "Filtering blocked content"
+        : filteredList.add(request));
+
+    return filteredList;
   }
 
   Widget getOfferWidget(OfferModel model) {

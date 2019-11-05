@@ -27,7 +27,7 @@ import 'notifications/notifications_page.dart';
 //import 'package:connectivity/connectivity.dart';
 
 class SevaCore extends InheritedWidget {
-  final UserModel loggedInUser;
+  UserModel loggedInUser;
 
   SevaCore({
     @required this.loggedInUser,
@@ -96,6 +96,9 @@ class _CoreViewState extends State<CoreView> {
     FirestoreManager.getUserForId(sevaUserId: widget.sevaUserID).then((user) {
       if (mounted) {
         setState(() => this.user = user);
+        print("mounting data ");
+      } else {
+        print("skipping mount as data is alredy mounted");
       }
     });
 

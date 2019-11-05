@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 class ProfileViewer extends StatefulWidget {
   final String userEmail;
   UserModel userModel;
+  bool isBlocked = false;
 
   ProfileViewer({this.userEmail});
 
@@ -52,347 +53,408 @@ class ProfileViewerState extends State<ProfileViewer> {
                 case ConnectionState.waiting:
                   return Center(child: CircularProgressIndicator());
                 default:
-
-                widget.userModel = UserModel.fromMap(snapshot.data.data);
+                  widget.userModel = UserModel.fromMap(snapshot.data.data);
+                  widget.isBlocked =
+                      widget.userModel.blockedBy.contains(userData.sevaUserID);
                   return SingleChildScrollView(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        height: 110.0,
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.only(top: 25.0),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        snapshot.data['photourl'] ?? ''),
-                                    minRadius: 40.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: 110.0,
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.only(top: 25.0),
+                                    child: CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                          snapshot.data['photourl'] ?? ''),
+                                      minRadius: 40.0,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
-                        child: Center(
-                          child: Text(
-                            widget.userModel.fullname,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 17.0),
-                            // overflow: TextOverflow.ellipsis,
-                            // maxLines: 2,
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      Container(
-                        // padding: EdgeInsets.fromLTRB(
-                        //     MediaQuery.of(context).size.width / 2.6,
-                        //     0,
-                        //     MediaQuery.of(context).size.width / 2.6,
-                        //     0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            OutlineButton(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).accentColor,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.forum,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  Text(' Chat'),
-                                ],
-                              ),
-                              onPressed: widget.userEmail == loggedInEmail
-                                  ? null
-                                  : () {
-                                      List users = [
-                                        widget.userEmail,
-                                        loggedInEmail
-                                      ];
-                                      users.sort();
-                                      ChatModel model = ChatModel();
-                                      model.user1 = users[0];
-                                      model.user2 = users[1];
-                                      createChat(chat: model);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ChatView(
-                                                  useremail: widget.userEmail,
-                                                  chatModel: model,
-                                                )),
-                                      );
-                                    },
+                        Container(
+                          padding: EdgeInsets.only(top: 15.0, bottom: 10.0),
+                          child: Center(
+                            child: Text(
+                              widget.userModel.fullname,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800, fontSize: 17.0),
+                              // overflow: TextOverflow.ellipsis,
+                              // maxLines: 2,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.0),
-                            ),
-                            OutlineButton(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).accentColor,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.flag,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  Text(' Report Member')
-                                ],
-                              ),
-                              onPressed:
-                              widget.userEmail == loggedInEmail
-                                  ? null
-                                  : () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext viewContext) {
-                                    // return object of type Dialog
-                                    return AlertDialog(
-                                  title: Text('Report Member?'),
-                                  content: Text('Do you want to report this member to admin?'),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.of(viewContext).pop();
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text('Report'),
-                                      onPressed: () {
-
-                                        print(snapshot.data['sevauserid']);
-
-                                        Firestore.instance.collection('reported_users_list')
-                                            .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
-                                            .where('reporterId', isEqualTo: userData.sevaUserID)
-                                            .where('reportedId', isEqualTo: snapshot.data['sevauserid'])
-                                            .getDocuments()
-                                            .then((data) {
-                                                if (data.documents.length == 0) {
-                                                    Firestore.instance
-                                                        .collection('reported_users_list')
-                                                        .add({
-                                                      "reporterId": userData.sevaUserID,
-                                                      "reportedId": snapshot.data['sevauserid'],
-                                                      "timebankId": FlavorConfig.values.timebankId
-                                                    })
-                                                        .then((result) => {
-                                                      Navigator.pop(viewContext),
-                                                      Navigator.of(context).pop()
-                                                    })
-                                                        .catchError((err) => print(err));
-                                                  } else {
-                                                    Navigator.pop(viewContext);
-                                                    Navigator.of(context).pop();
-                                                  }
-                                        });
-                                      },
-                                    ),
-
-                                  ],
-                                );
-                                  },
-                                );
-                              },
-                            ),
-                            Container(
-                              width: 10,
-                            ),
-                            Offstage(
-                              offstage: true,
-                              child: OutlineButton(
+                          ),
+                        ),
+                        Container(
+                          // padding: EdgeInsets.fromLTRB(
+                          //     MediaQuery.of(context).size.width / 2.6,
+                          //     0,
+                          //     MediaQuery.of(context).size.width / 2.6,
+                          //     0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              OutlineButton(
                                 borderSide: BorderSide(
                                   color: Theme.of(context).accentColor,
                                 ),
                                 child: Row(
                                   children: <Widget>[
                                     Icon(
-                                      Icons.block,
+                                      Icons.forum,
                                       color: Theme.of(context).accentColor,
                                     ),
-                                    Text(
-                                        '   ${SevaCore.of(context).loggedInUser.blockedMembers.contains(widget.userModel.sevaUserID)}'),
+                                    Text(' Chat'),
                                   ],
                                 ),
                                 onPressed: widget.userEmail == loggedInEmail
                                     ? null
                                     : () {
-                                        var onDialogActviityResult =
-                                            blockMemberDialogView(
+                                        List users = [
+                                          widget.userEmail,
+                                          loggedInEmail
+                                        ];
+                                        users.sort();
+                                        ChatModel model = ChatModel();
+                                        model.user1 = users[0];
+                                        model.user2 = users[1];
+                                        createChat(chat: model);
+                                        Navigator.push(
                                           context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ChatView(
+                                                    useremail: widget.userEmail,
+                                                    chatModel: model,
+                                                  )),
                                         );
-
-                                        onDialogActviityResult.then((result) {
-                                          print("result " + result);
-                                          switch (result) {
-                                            case "BLOCK":
-                                              Firestore.instance
-                                                  .collection("users")
-                                                  .document(SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .email)
-                                                  .updateData({
-                                                'blockedMembers':
-                                                    FieldValue.arrayUnion([
-                                                  widget.userModel.sevaUserID
-                                                ])
-                                              });
-                                              break;
-
-                                            case "UNBLOCK":
-                                              Firestore.instance
-                                                  .collection("users")
-                                                  .document(SevaCore.of(context)
-                                                      .loggedInUser
-                                                      .email)
-                                                  .updateData({
-                                                'blockedMembers':
-                                                    FieldValue.arrayRemove([
-                                                  widget.userModel.sevaUserID
-                                                ])
-                                              });
-
-                                              break;
-
-                                            case "CANCEL":
-                                              break;
-                                          }
-                                        });
-
-                                        // List users = [userEmail, loggedInEmail];
-                                        // users.sort();
-                                        // ChatModel model = ChatModel();
-                                        // model.user1 = users[0];
-                                        // model.user2 = users[1];
-                                        // createChat(chat: model);
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) => ChatView(
-                                        //             useremail: userEmail,
-                                        //             chatModel: model,
-                                        //           )),
-                                        // );
                                       },
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child: Divider(
-                          color: Colors.deepPurple,
-                        ),
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.only(left: 25.0, right: 25.0, top: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              'Bio and CV',
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w700),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child: Text(
-                          snapshot.data['bio'] ?? '',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.w400),
-                        ),
-                      ),
-
-                      // Container(
-                      //   padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 15.0),
-                      //   child: Text(
-                      //     'My Interests',
-                      //     style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
-                      //   ),
-                      // ),
-
-                      Container(
-                        padding:
-                            EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
-                        child: Text(
-                          'My Interests',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child: snapshot.data['interests'] != null
-                            ? getChipWidgets(
-                                snapshot.data['interests'], context)
-                            : Padding(
-                                padding: EdgeInsets.all(5.0),
+                              Padding(
+                                padding: EdgeInsets.only(left: 5.0),
                               ),
-                      ),
-
-                      Container(
-                        padding:
-                            EdgeInsets.only(left: 25.0, right: 25.0, top: 25.0),
-                        child: Text(
-                          'My Skills',
-                          style: TextStyle(
-                              fontSize: 16.0, fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                        child: snapshot.data['skills'] != null
-                            ? getChipWidgets(snapshot.data['skills'], context)
-                            : Padding(
-                                padding: EdgeInsets.all(5.0),
+                              Container(
+                                width: 10,
                               ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(20.0),
-                      ),
+                              Offstage(
+                                offstage: false,
+                                child: OutlineButton(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(context).accentColor,
+                                  ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.block,
+                                        color: Theme.of(context).accentColor,
+                                      ),
+                                      Text(widget.isBlocked
+                                          ? 'Unblock'
+                                          : 'Block'),
+                                    ],
+                                  ),
+                                  onPressed: widget.userEmail == loggedInEmail
+                                      ? null
+                                      : () {
+                                          var onDialogActviityResult =
+                                              blockMemberDialogView(
+                                            context,
+                                          );
 
-                      // Container(
-                      //   padding: EdgeInsets.only(left: 25.0, top: 15.0, right: 25.0),
-                      //   child: TaskButton(),
-                      // ),
-                      // Container(
-                      //   padding: EdgeInsets.only(left: 25.0, top: 15.0, right: 25.0),
-                      //   child: HoursExchangeButton(),
-                      // ),
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                      ),
-                      // Container(
-                      //   padding: EdgeInsets.only(left: 25.0, top: 15.0, right: 25.0),
-                      //   child: Text('appName  - ' + _appName + 'appName  - ' + _appName +
-                      //               'packageName  - ' + _packageName +
-                      //               'version  - ' + _version +
-                      //               'BuildNumber  - ' + _buildNumber),
-                      // ),
-                      // Container(
-                      //   child: Text(' '),
-                      // ),
-                    ],
-                  ));
+                                          onDialogActviityResult.then((result) {
+                                            print("result " + result);
+
+                                            switch (result) {
+                                              case "BLOCK":
+                                                blockMember(ACTION.BLOCK);
+                                                break;
+
+                                              case "UNBLOCK":
+                                                blockMember(ACTION.UNBLOCK);
+
+                                                break;
+
+                                              case "CANCEL":
+                                                break;
+                                            }
+                                          });
+                                        },
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              OutlineButton(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor,
+                                ),
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.flag,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                    Text(' Report Member')
+                                  ],
+                                ),
+                                onPressed: widget.userEmail == loggedInEmail
+                                    ? null
+                                    : () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext viewContext) {
+                                            // return object of type Dialog
+                                            return AlertDialog(
+                                              title: Text('Report Member?'),
+                                              content: Text(
+                                                  'Do you want to report this member to admin?'),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('Cancel'),
+                                                  onPressed: () {
+                                                    Navigator.of(viewContext)
+                                                        .pop();
+                                                  },
+                                                ),
+                                                FlatButton(
+                                                  child: Text('Report'),
+                                                  onPressed: () {
+                                                    print(snapshot
+                                                        .data['sevauserid']);
+
+                                                    Firestore.instance
+                                                        .collection(
+                                                            'reported_users_list')
+                                                        .where('timebankId',
+                                                            isEqualTo:
+                                                                FlavorConfig
+                                                                    .values
+                                                                    .timebankId)
+                                                        .where('reporterId',
+                                                            isEqualTo: userData
+                                                                .sevaUserID)
+                                                        .where('reportedId',
+                                                            isEqualTo: snapshot
+                                                                    .data[
+                                                                'sevauserid'])
+                                                        .getDocuments()
+                                                        .then((data) {
+                                                      if (data.documents
+                                                              .length ==
+                                                          0) {
+                                                        Firestore.instance
+                                                            .collection(
+                                                                'reported_users_list')
+                                                            .add({
+                                                              "reporterId":
+                                                                  userData
+                                                                      .sevaUserID,
+                                                              "reportedId":
+                                                                  snapshot.data[
+                                                                      'sevauserid'],
+                                                              "timebankId":
+                                                                  FlavorConfig
+                                                                      .values
+                                                                      .timebankId
+                                                            })
+                                                            .then((result) => {
+                                                                  Navigator.pop(
+                                                                      viewContext),
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop()
+                                                                })
+                                                            .catchError((err) =>
+                                                                print(err));
+                                                      } else {
+                                                        Navigator.pop(
+                                                            viewContext);
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      }
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Divider(
+                            color: Colors.deepPurple,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                'Bio and CV',
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: Text(
+                            snapshot.data['bio'] ?? '',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.w400),
+                          ),
+                        ),
+
+                        // Container(
+                        //   padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 15.0),
+                        //   child: Text(
+                        //     'My Interests',
+                        //     style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
+                        //   ),
+                        // ),
+
+                        Container(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: Text(
+                            'My Interests',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: snapshot.data['interests'] != null
+                              ? getChipWidgets(
+                                  snapshot.data['interests'], context)
+                              : Padding(
+                                  padding: EdgeInsets.all(5.0),
+                                ),
+                        ),
+
+                        Container(
+                          padding: EdgeInsets.only(
+                              left: 25.0, right: 25.0, top: 25.0),
+                          child: Text(
+                            'My Skills',
+                            style: TextStyle(
+                                fontSize: 16.0, fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 25.0, right: 25.0),
+                          child: snapshot.data['skills'] != null
+                              ? getChipWidgets(snapshot.data['skills'], context)
+                              : Padding(
+                                  padding: EdgeInsets.all(5.0),
+                                ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(20.0),
+                        ),
+
+                        // Container(
+                        //   padding: EdgeInsets.only(left: 25.0, top: 15.0, right: 25.0),
+                        //   child: TaskButton(),
+                        // ),
+                        // Container(
+                        //   padding: EdgeInsets.only(left: 25.0, top: 15.0, right: 25.0),
+                        //   child: HoursExchangeButton(),
+                        // ),
+                        Padding(
+                          padding: EdgeInsets.all(10.0),
+                        ),
+
+                        // Container(
+                        //   padding: EdgeInsets.only(left: 25.0, top: 15.0, right: 25.0),
+                        //   child: Text('appName  - ' + _appName + 'appName  - ' + _appName +
+                        //               'packageName  - ' + _packageName +
+                        //               'version  - ' + _version +
+                        //               'BuildNumber  - ' + _buildNumber),
+                        // ),
+                        // Container(
+                        //   child: Text(' '),
+                        // ),
+                      ],
+                    ),
+                  );
               }
             }));
+  }
+
+  void blockMember(ACTION action) {
+    switch (action) {
+      case ACTION.BLOCK:
+        Firestore.instance
+            .collection("users")
+            .document(SevaCore.of(context).loggedInUser.email)
+            .updateData({
+          'blockedMembers': FieldValue.arrayUnion([widget.userModel.sevaUserID])
+        });
+        Firestore.instance
+            .collection("users")
+            .document(widget.userModel.email)
+            .updateData({
+          'blockedBy': FieldValue.arrayUnion(
+              [SevaCore.of(context).loggedInUser.sevaUserID])
+        });
+        setState(() {
+          widget.isBlocked = !widget.isBlocked;
+          var updateUser = SevaCore.of(context).loggedInUser;
+          var blockedMembers = List<String>.from(updateUser.blockedMembers);
+          blockedMembers.add(widget.userModel.sevaUserID);
+          SevaCore.of(context).loggedInUser =
+              updateUser.setBlockedMembers(blockedMembers);
+        });
+        break;
+
+      case ACTION.UNBLOCK:
+        Firestore.instance
+            .collection("users")
+            .document(SevaCore.of(context).loggedInUser.email)
+            .updateData({
+          'blockedMembers':
+              FieldValue.arrayRemove([widget.userModel.sevaUserID])
+        });
+        Firestore.instance
+            .collection("users")
+            .document(widget.userModel.email)
+            .updateData({
+          'blockedBy': FieldValue.arrayRemove(
+              [SevaCore.of(context).loggedInUser.sevaUserID])
+        });
+
+        setState(() {
+          widget.isBlocked = !widget.isBlocked;
+          var updateUser = SevaCore.of(context).loggedInUser;
+          var blockedMembers = List<String>.from(updateUser.blockedMembers);
+          blockedMembers.remove(widget.userModel.sevaUserID);
+          SevaCore.of(context).loggedInUser =
+              updateUser.setBlockedMembers(blockedMembers);
+        });
+        break;
+    }
   }
 
   Future<String> blockMemberDialogView(BuildContext viewContext) async {
@@ -400,9 +462,12 @@ class ProfileViewerState extends State<ProfileViewer> {
       context: viewContext,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: new Text("Block ${widget.userModel.fullname.split(' ')[0]}."),
-          content: new Text(
-              "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages"),
+          title: new Text(widget.isBlocked
+              ? 'Unblock'
+              : 'Block' + " ${widget.userModel.fullname.split(' ')[0]}."),
+          content: new Text( 
+              widget.isBlocked ? '${widget.userModel.fullname.split(' ')[0]}  would be unblocked' : 
+              "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
           actions: <Widget>[
             new FlatButton(
               child: new Text("CANCEL"),
@@ -411,61 +476,17 @@ class ProfileViewerState extends State<ProfileViewer> {
               },
             ),
             new FlatButton(
-              child: new Text("BLOCK"),
+              child: new Text(widget.isBlocked ? 'UNBLOCK' : 'BLOCK'),
               onPressed: () {
-                Navigator.of(context).pop("BLOCK");
+                widget.isBlocked
+                    ? Navigator.of(context).pop("UNBLOCK")
+                    : Navigator.of(context).pop("BLOCK");
               },
             ),
           ],
         );
       },
     );
-
-    // return showDialog<String>(
-    //   context: context,
-    //   barrierDismissible:
-    //       false, // dialog is dismissible with a tap on the barrier
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       title: Text("Code generated"),
-    //       content: new Row(
-    //         children: <Widget>[
-    //           Text(
-    //               "Blocked members will no longer be available to send you messages"),
-    //         ],
-    //       ),
-    //       actions: <Widget>[
-    //         FlatButton(
-    //           child: Text(
-    //             'CANCEL',
-    //             style: TextStyle(color: Theme.of(context).primaryColor),
-    //           ),
-    //           onPressed: () {
-    //             Navigator.of(context).pop();
-    //           },
-    //         ),
-    //         FlatButton(
-    //           child: Text(
-    //             'BLOCK',
-    //             style: TextStyle(color: Colors.green),
-    //           ),
-    //           onPressed: () {
-    //             // var today = new DateTime.now();
-    //             // var oneDayFromToday =
-    //             //     today.add(new Duration(days: 30)).millisecondsSinceEpoch;
-
-    //             // registerTimebankCode(
-    //             //     timebankCode: timebankCode,
-    //             //     timebankId: timebankId,
-    //             //     validUpto: oneDayFromToday);
-
-    //             Navigator.of(context).pop("BLOCKED");
-    //           },
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
   }
 }
 
@@ -773,3 +794,5 @@ Widget getChipWidgets(List<dynamic> strings, BuildContext context) {
               ))
           .toList());
 }
+
+enum ACTION { BLOCK, UNBLOCK }

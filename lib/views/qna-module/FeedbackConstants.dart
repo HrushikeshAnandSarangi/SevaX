@@ -27,7 +27,7 @@ class FeedbackConstants {
     {
       FEEDBACK_TITLE: "How likely are you to volunteer again for this cause?",
       ANSWERS: [
-        {"text": "Yes i would", SCORE: 5},
+        {"text": "Yes, I would", SCORE: 5},
         {"text": "Maybe", SCORE: 4},
         {"text": "No, I would not", SCORE: 3},
       ]
@@ -58,7 +58,7 @@ class FeedbackConstants {
       FEEDBACK_TITLE:
           "Would you like recommend working with this volunteer again?",
       "answers": [
-        {ANSWER_TEXT: "Yes i would", SCORE: 5},
+        {ANSWER_TEXT: "Yes, I would", SCORE: 5},
         {ANSWER_TEXT: "No i would not", SCORE: 2},
       ]
     },
@@ -67,7 +67,7 @@ class FeedbackConstants {
           "How skillfull was this volunteer fir this particular service?",
       "answers": [
         {ANSWER_TEXT: "Highly skilled", SCORE: 5},
-        {ANSWER_TEXT: "Avergae", SCORE: 3},
+        {ANSWER_TEXT: "Average", SCORE: 3},
         {ANSWER_TEXT: "Not skilled at all", SCORE: 1},
       ]
     }

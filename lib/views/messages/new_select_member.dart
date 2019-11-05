@@ -112,7 +112,23 @@ class _SelectMembersView extends StatelessWidget {
     ];
   }
 
+  TimebankModel filterBlockedContent(
+      TimebankModel timebank, BuildContext context) {
+    List<String> filteredMembers = [];
+
+    timebank.members.forEach((member) {
+      SevaCore.of(context).loggedInUser.blockedMembers.contains(member) ||
+              SevaCore.of(context).loggedInUser.blockedBy.contains(member)
+          ? print("Removed blocked content")
+          : filteredMembers.add(member);
+    });
+    timebank.members = filteredMembers;
+    return timebank;
+  }
+  
   Widget getMembersList(BuildContext context, TimebankModel model) {
+    model = filterBlockedContent(model, context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -142,7 +158,6 @@ class _SelectMembersView extends StatelessWidget {
   Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-
         print(user.email +
             " Tapped on new chat for " +
             SevaCore.of(context).loggedInUser.email);

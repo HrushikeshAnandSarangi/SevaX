@@ -38,7 +38,7 @@ class JoinRequestViewState extends State<JoinRequestView>
           labelColor: Colors.white,
           tabs: [
             Tab(child: Text('${FlavorConfig.values.timebankTitle}s')),
-            Tab(child: Text('Campaigns')),
+            Tab(child: Text('Projects')),
           ],
           controller: _tabController,
         ),

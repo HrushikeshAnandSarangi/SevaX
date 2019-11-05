@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/profile/edit_bio.dart';
 import 'package:sevaexchange/views/profile/edit_interests.dart';
 import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/profile/reported_users.dart';
@@ -23,6 +24,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 
 import 'package:sevaexchange/views/transaction_history.dart';
+import 'edit_name.dart';
 import 'timezone.dart';
 import 'package:tree_view/tree_view.dart';
 
@@ -110,10 +112,10 @@ class _ProfilePageState extends State<ProfilePage>
     super.didChangeDependencies();
 
     FirestoreManager.getTimeBankForId(
-        timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
         .then((timebank) {
       if (timebank.admins
-          .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         setState(() {
@@ -215,6 +217,8 @@ class _ProfilePageState extends State<ProfilePage>
         children: [
           editInterests,
           editSkills,
+          editBio,
+          editFullname,
         ],
       ),
     );
@@ -233,12 +237,11 @@ class _ProfilePageState extends State<ProfilePage>
         ),
         onTap: () {
           //print("Tapped");
-          if(title == 'My Interests') {
+          if (title == 'My Interests') {
             this.navigateToeditInterests();
-          } else if(title == 'My Skills') {
+          } else if (title == 'My Skills') {
             this.navigateToeditskills();
           }
-
         },
         title: Text(
           title,
@@ -250,6 +253,7 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
+
   void navigateToeditskills() {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -259,6 +263,7 @@ class _ProfilePageState extends State<ProfilePage>
       ),
     );
   }
+
   void navigateToeditInterests() {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -604,7 +609,6 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget get reportsData {
-
     if (isAdminOrCoordinator) {
       return getActionCards(
         title: 'Reported users',
@@ -683,6 +687,49 @@ class _ProfilePageState extends State<ProfilePage>
           MaterialPageRoute(
             builder: (context) {
               return EditInterests();
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget get editBio {
+    return getActionCards(
+      title: 'Edit Bio',
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(12),
+        topLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return EditBio(SevaCore.of(context).loggedInUser.bio);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget get editFullname {
+    return getActionCards(
+      title: 'Edit Fullname',
+      trailingIcon: Icons.navigate_next,
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(12),
+        topLeft: Radius.circular(12),
+      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              print(
+                  "------------------${SevaCore.of(context).loggedInUser.fullname}------------------");
+
+              return EditName(SevaCore.of(context).loggedInUser.fullname);
             },
           ),
         );
@@ -774,7 +821,9 @@ class _ProfilePageState extends State<ProfilePage>
   Widget get timebankslist {
     return getActionCards(
       //title: 'List of ${FlavorConfig.values.timebankTitle}',
-      title: FlavorConfig.values.timebankName == "Yang 2020" ? "List of Yang Gang Chapters" : "List of ${FlavorConfig.values.timebankTitle}",
+      title: FlavorConfig.values.timebankName == "Yang 2020"
+          ? "List of Yang Gang Chapters"
+          : "List of ${FlavorConfig.values.timebankTitle}",
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
