@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/availability.dart';
+import 'package:sevaexchange/models/models.dart';
 
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/popup.dart';
@@ -26,6 +27,16 @@ Future<void> updateUser({
       .document(user.email)
       .updateData(user.toMap());
 }
+//Future<void> updateTimebank({
+//  @required TimebankModel timebankModel,
+//}) async {
+//  //print(user.toMap());
+//
+//  return await Firestore.instance
+//      .collection('timebanknew')
+//      .document(timebankModel.id)
+//      .updateData(timebankModel.toMap());
+//}
 
 //Future<void> addReportUser({
 //  @required String userId,
