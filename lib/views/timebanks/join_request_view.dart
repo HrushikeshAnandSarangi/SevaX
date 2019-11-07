@@ -173,6 +173,8 @@ class TimebankRequests extends StatelessWidget {
                                         context: context,
                                         builder: (BuildContext viewContext) {
                                           return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(Radius.circular(25.0))),
                                             content: Form(
                                               //key: _formKey,
                                               child: Column(
