@@ -218,7 +218,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         ),
                       ),
                       image: DecorationImage(
-                        image: NetworkImage(widget.user.photoURL),
+                        image: NetworkImage(SevaCore.of(context).loggedInUser.photoURL),
                       ),
                     ),
                   ),

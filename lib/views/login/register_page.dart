@@ -335,7 +335,7 @@ class _RegisterPageState extends State<RegisterPage>
         String imageUrl = await uploadImage(user.email);
         user.photoURL = imageUrl;
       } else {
-          user.photoURL = "https://homepages.cae.wisc.edu/~ece533/images/cat.png";
+          user.photoURL = "https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg";
       }
       await FirestoreManager.updateUser(user: user);
       Navigator.pop(context, user);

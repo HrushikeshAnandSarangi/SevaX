@@ -184,6 +184,8 @@ class TimebankRequests extends StatelessWidget {
                                         context: context,
                                         builder: (BuildContext viewContext) {
                                           return AlertDialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(Radius.circular(25.0))),
                                             content: Form(
                                               //key: _formKey,
                                               child: Column(
@@ -203,11 +205,36 @@ class TimebankRequests extends StatelessWidget {
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.all(8.0),
-                                                    child: Text(userModel.fullname),
+                                                    child: Text(
+                                                      userModel.fullname,
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.all(8.0),
                                                     child: Text(userModel.bio),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(userModel.email),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                        "Reason to join:",
+                                                      style: TextStyle(
+                                                        decoration: TextDecoration.underline,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(4.0),
+                                                    child: Text(model.reason),
                                                   ),
                                                 ],
                                               ),
