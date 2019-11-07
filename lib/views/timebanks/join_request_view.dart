@@ -179,6 +179,42 @@ class TimebankRequests extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                   ),
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext viewContext) {
+                                          return AlertDialog(
+                                            content: Form(
+                                              //key: _formKey,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: <Widget>[
+                                                  _getCloseButton(viewContext),
+                                                  Container(
+                                                    height: 70,
+                                                    width: 70,
+                                                    child: CircleAvatar(
+                                                      backgroundImage:
+                                                      NetworkImage(userModel.photoURL),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(userModel.fullname),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(userModel.bio),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        });
+                                  },
                                 ),
                               );
                             }),
@@ -186,6 +222,35 @@ class TimebankRequests extends StatelessWidget {
                     });
               });
         });
+  }
+
+  Widget _getCloseButton(BuildContext context) {
+        return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        alignment: FractionalOffset.topRight,
+        child: Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'lib/assets/images/close.png',
+              ),
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Decoration get notificationDecoration => ShapeDecoration(

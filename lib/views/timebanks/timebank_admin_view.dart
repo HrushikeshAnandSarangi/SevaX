@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/timebanks/edit_timebank.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -88,6 +89,25 @@ class _TimeBankAdminView extends StatelessWidget {
       snap: false,
       pinned: true,
       elevation: 0,
+      actions: <Widget>[
+        timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID ? Offstage() :
+        IconButton(
+          icon: Icon(
+            Icons.edit,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditTimebankPic(
+                  timebankModel: timebankModel,
+                ),
+              ),
+            );
+            },
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
