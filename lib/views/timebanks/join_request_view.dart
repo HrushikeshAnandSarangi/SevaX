@@ -194,11 +194,36 @@ class TimebankRequests extends StatelessWidget {
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.all(8.0),
-                                                    child: Text(userModel.fullname),
+                                                    child: Text(
+                                                      userModel.fullname,
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
                                                   ),
                                                   Padding(
                                                     padding: EdgeInsets.all(8.0),
                                                     child: Text(userModel.bio),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(userModel.email),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                        "Reason to join:",
+                                                      style: TextStyle(
+                                                        decoration: TextDecoration.underline,
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding: EdgeInsets.all(4.0),
+                                                    child: Text(model.reason),
                                                   ),
                                                 ],
                                               ),

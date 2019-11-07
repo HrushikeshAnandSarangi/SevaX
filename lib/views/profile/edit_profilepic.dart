@@ -216,7 +216,9 @@ class _EditProfilePicState extends State<EditProfilePic>
   Future createUser() async {
     if (this.selectedImage != null) {
       String imageUrl = await uploadImage(SevaCore.of(context).loggedInUser.email);
-      SevaCore.of(context).loggedInUser.photoURL = imageUrl;
+      setState(() {
+        SevaCore.of(context).loggedInUser.photoURL = imageUrl;
+      });
     }
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
   }
