@@ -39,7 +39,7 @@ class _EditNameState extends State<EditName> {
             iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: Theme.of(context).primaryColor,
             title: Text(
-              'Update name',
+              'Edit name',
               style: TextStyle(color: Colors.white),
             ),
           ),

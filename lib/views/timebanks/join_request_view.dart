@@ -30,10 +30,21 @@ class JoinRequestViewState extends State<JoinRequestView>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Join Requests',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Container(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Join Requests',
+              style: TextStyle(color: Colors.white),
+            ),
+            Text(
+              'Swipe right to add and swipe left to cancel ',
+              style: TextStyle(color: Colors.white, fontSize: 8),
+            )
+          ],
+        )),
         bottom: TabBar(
           labelColor: Colors.white,
           tabs: [

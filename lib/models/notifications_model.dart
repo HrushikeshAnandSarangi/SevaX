@@ -35,6 +35,11 @@ class NotificationsModel extends DataModel {
       if (typeString == 'RequestAccept') {
         this.type = NotificationType.RequestAccept;
       }
+
+      if (typeString == 'JoinRequest') {
+        this.type = NotificationType.JoinRequest;
+      }
+
       if (typeString == 'RequestApprove') {
         this.type = NotificationType.RequestApprove;
       }
@@ -72,6 +77,13 @@ class NotificationsModel extends DataModel {
     if (map.containsKey('isRead')) {
       this.isRead = map['isRead'];
     }
+  }
+
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "${this.type} -- ${this.isRead} -- ";
   }
 
   @override
@@ -119,4 +131,5 @@ enum NotificationType {
   TransactionDebit,
   OfferAccept,
   OfferReject,
+  JoinRequest,
 }

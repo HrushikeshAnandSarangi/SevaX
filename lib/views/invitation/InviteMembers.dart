@@ -5,6 +5,13 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
+    as prefix0;
+import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:share/share.dart';
 
 import 'TimebankCodeModel.dart';
 
@@ -26,7 +33,9 @@ class InviteMembersState extends State<InviteMembers> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Codes" : "Timebank codes",
+          FlavorConfig.values.timebankName == "Yang 2020"
+              ? "Yang Gang Codes"
+              : "Timebank codes",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -50,7 +59,6 @@ class InviteMembersState extends State<InviteMembers> {
     return showDialog<String>(
       context: context,
       barrierDismissible:
-
           false, // dialog is dismissible with a tap on the barrier
       builder: (BuildContext context) {
         return AlertDialog(
@@ -109,8 +117,6 @@ class InviteMembersState extends State<InviteMembers> {
     }).then((doc) {
       // task completed
     });
-
-    print("Code registered");
   }
 }
 
@@ -120,6 +126,8 @@ class InvitationListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    setTimebankDetails();
+
     return StreamBuilder<List<TimebankCodeModel>>(
         stream: getTimebankCodes(timebankId: timebankId),
         builder: (context, snapshot) {
@@ -143,22 +151,41 @@ class InvitationListView extends StatelessWidget {
               itemCount: codeList.length,
               itemBuilder: (context, index) {
                 TimebankCodeModel timebankCode = codeList.elementAt(index);
-                return Card(
-                  margin: EdgeInsets.all(5),
-                  child: Container(
-                    margin: EdgeInsets.all(15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Code : " + timebankCode.timebankCode : "Timebank code : " + timebankCode.timebankCode),
-                        Text(
-                            "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
-                        Text(DateTime.now().millisecondsSinceEpoch >
-                                timebankCode.validUpto
-                            ? "Expired"
-                            : "Active"),
-                      ],
+                return GestureDetector(
+                  child: Card(
+                    margin: EdgeInsets.all(5),
+                    child: Container(
+                      margin: EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(FlavorConfig.values.timebankName == "Yang 2020"
+                              ? "Yang Gang Code : " + timebankCode.timebankCode
+                              : "Timebank code : " + timebankCode.timebankCode),
+                          Text(
+                              "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
+                          Text(
+                            DateTime.now().millisecondsSinceEpoch >
+                                    timebankCode.validUpto
+                                ? "Expired"
+                                : "Active",
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Share.share(
+                                  "Hey come and join me on ${timebBank.name} by using the code \"${timebankCode.timebankCode}\". In case you dont have the app installed, you can install from google playstore https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst");
+                            },
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Text(
+                                'Share code',
+                                style: TextStyle(color: Colors.blue),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -187,5 +214,11 @@ class InvitationListView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  prefix0.TimebankModel timebBank;
+  Future setTimebankDetails() async {
+    timebBank = await FirestoreManager.getTimeBankForId(timebankId: timebankId);
+    print("Timebank name --> ${timebBank.name}");
   }
 }

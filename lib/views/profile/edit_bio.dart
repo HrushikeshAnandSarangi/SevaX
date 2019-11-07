@@ -43,7 +43,7 @@ class _EditBioState extends State<EditBio> {
             iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: Theme.of(context).primaryColor,
             title: Text(
-              'Update Bio',
+              'Edit Bio',
               style: TextStyle(color: Colors.white),
             ),
           ),

@@ -183,7 +183,6 @@ Stream<List<NotificationsModel>> getNotifications({
           } else
             notifications.add(model);
         });
-
         notificationSink.add(notifications);
       },
     ),

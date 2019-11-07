@@ -1,7 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/join_req_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
+import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/new_baseline/models/notifications_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/utils.dart' as prefix1;
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
@@ -12,6 +17,7 @@ import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -60,19 +66,22 @@ class _TimebankViewState extends State<TimebankView> {
 
   Future getJoinRequestData() async {
     this.getRequestData = new JoinRequestModel();
-    this.getRequestData = await getRequestStatusForId(timebankId: SevaCore.of(context).loggedInUser.currentTimebank);
+    this.getRequestData = await getRequestStatusForId(
+        timebankId: SevaCore.of(context).loggedInUser.currentTimebank);
   }
 
-  Future<JoinRequestModel> getRequestStatusForId({@required String timebankId}) async {
+  Future<JoinRequestModel> getRequestStatusForId(
+      {@required String timebankId}) async {
     assert(timebankId != null && timebankId.isNotEmpty,
-    "Seva UserId cannot be null or empty");
+        "Seva UserId cannot be null or empty");
 
     JoinRequestModel joinRequest;
     await Firestore.instance
         .collection('join_requests')
         .where('entity_type', isEqualTo: 'Timebank')
         .where('entity_id', isEqualTo: timebankId)
-        .where('user_id',isEqualTo: SevaCore.of(context).loggedInUser.sevaUserID)
+        .where('user_id',
+            isEqualTo: SevaCore.of(context).loggedInUser.sevaUserID)
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
@@ -80,8 +89,7 @@ class _TimebankViewState extends State<TimebankView> {
         print("joining data $joinRequest");
       });
     });
-    
-    
+
 //    await Firestore.instance
 //        .collection('users')
 //        .where('sevauserid', isEqualTo: sevaUserId)
@@ -94,6 +102,7 @@ class _TimebankViewState extends State<TimebankView> {
 
     return joinRequest;
   }
+
   @override
   Widget build(BuildContext buildcontext) {
     loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -148,9 +157,8 @@ class _TimebankViewState extends State<TimebankView> {
                   )
                 ],
               ),
-
               floatingActionButton: Visibility(
-                visible: FlavorConfig.appFlavor != Flavor.APP ? false : true ,
+                visible: FlavorConfig.appFlavor != Flavor.APP ? false : true,
                 // visible: !UserData.shared.isFromLogin,
                 child: FloatingActionButton.extended(
                   icon: Icon(
@@ -241,7 +249,7 @@ class _TimebankViewState extends State<TimebankView> {
                                     onPressed: () {
                                       showDialog(
                                         context: context,
-                                        builder: (BuildContext context) {
+                                        builder: (BuildContext dialogContext) {
                                           // return object of type Dialog
                                           return AlertDialog(
                                             title: new Text(
@@ -308,7 +316,59 @@ class _TimebankViewState extends State<TimebankView> {
                                                     await createJoinRequest(
                                                         model:
                                                             joinRequestModel);
-                                                    Navigator.of(context).pop();
+
+                                                    JoinRequestNotificationModel
+                                                        joinReqModel =
+                                                        JoinRequestNotificationModel(
+                                                            timebankId:
+                                                                timebankModel
+                                                                    .id,
+                                                            timebankTitle:
+                                                                timebankModel
+                                                                    .name);
+
+                                                    NotificationsModel
+                                                        notification =
+                                                        NotificationsModel(
+                                                      id: utils.Utils.getUuid(),
+                                                      targetUserId:
+                                                          timebankModel
+                                                              .creatorId,
+                                                      senderUserId:
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .sevaUserID,
+                                                      type: prefix0
+                                                          .NotificationType
+                                                          .JoinRequest,
+                                                      data:
+                                                          joinReqModel.toMap(),
+                                                    );
+                                                    notification.timebankId =
+                                                        FlavorConfig
+                                                            .values.timebankId;
+
+                                                    UserModel timebankCreator =
+                                                        await FirestoreManager
+                                                            .getUserForId(
+                                                                sevaUserId:
+                                                                    timebankModel
+                                                                        .creatorId);
+
+                                                    await Firestore.instance
+                                                        .collection('users')
+                                                        .document(
+                                                            timebankCreator
+                                                                .email)
+                                                        .collection(
+                                                            "notifications")
+                                                        .document(
+                                                            notification.id)
+                                                        .setData(notification
+                                                            .toMap());
+                                                    // return;
+                                                    Navigator.of(dialogContext)
+                                                        .pop();
                                                   }
                                                 },
                                               ),
@@ -414,6 +474,23 @@ class _TimebankViewState extends State<TimebankView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CreateOffer(
+                                        timebankId: timebankModel.id,
+                                      )),
+                            );
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'View Members',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TimebankAdminPage(
                                         timebankId: timebankModel.id,
                                       )),
                             );
@@ -877,7 +954,8 @@ class _TimebankViewState extends State<TimebankView> {
 
     return Padding(
       padding: const EdgeInsets.only(left: 20.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: list),
+      child:
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: list),
     );
   }
 

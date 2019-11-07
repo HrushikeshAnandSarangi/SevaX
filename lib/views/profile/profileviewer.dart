@@ -115,7 +115,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                                     Text(' Chat'),
                                   ],
                                 ),
-                                onPressed: widget.userEmail == loggedInEmail
+                                onPressed: widget.userEmail == loggedInEmail || widget.isBlocked
                                     ? null
                                     : () {
                                         List users = [

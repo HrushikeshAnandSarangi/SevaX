@@ -669,7 +669,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get editSkills {
     return getActionCards(
-      title: 'My Skills',
+      title: ' Skills',
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         bottomRight: Radius.circular(12),
@@ -729,7 +729,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get editFullname {
     return getActionCards(
-      title: 'Edit Fullname',
+      title: 'Edit name',
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),

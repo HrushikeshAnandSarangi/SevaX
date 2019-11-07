@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -121,8 +120,10 @@ class _TimeBankAdminView extends StatelessWidget {
                   ),
                   child: ClipOval(
                     child: FadeInImage.assetNetwork(
-                      placeholder: 'lib/assets/images/noimagefound.png',
-                      image: timebankModel.photoUrl,
+                      placeholder: 'lib/assets/images/profile.png',
+                      image: timebankModel.photoUrl == null
+                          ? 'lib/assets/images/profile.png'
+                          : timebankModel.photoUrl,
                     ),
                   ),
                 ),

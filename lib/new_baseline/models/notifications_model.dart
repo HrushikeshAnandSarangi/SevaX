@@ -89,4 +89,5 @@ enum NotificationType {
   TransactionDebit,
   OfferAccept,
   OfferReject,
+  JoinRequest
 }
