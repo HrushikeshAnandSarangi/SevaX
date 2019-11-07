@@ -240,7 +240,7 @@ class _ProfilePageState extends State<ProfilePage>
           //print("Tapped");
           if (title == 'My Interests') {
             this.navigateToeditInterests();
-          } else if (title == 'My Skills') {
+          } else if (title == ' Skills') {
             this.navigateToeditskills();
           }
         },
