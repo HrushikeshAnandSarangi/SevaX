@@ -33,7 +33,7 @@ class NewsCreate extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            "Create News Post",
+            "Create feed",
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: false,
@@ -260,8 +260,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           padding: EdgeInsets.only(bottom: 20.0),
                           child: TextFormField(
                             decoration: InputDecoration(
-                              hintText: 'Your post title',
-                              labelText: '+ Post Title',
+                              hintText: 'Your feed title',
+                              labelText: '+ Feed Title',
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(10.0),
@@ -395,7 +395,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ),
                       Text(' '),
                       Text(
-                        'Save News Post',
+                        'Create feed',
                         style: TextStyle(
                           color: FlavorConfig.values.buttonTextColor,
                         ),

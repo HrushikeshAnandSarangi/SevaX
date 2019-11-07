@@ -22,7 +22,7 @@ class CreateOffer extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          "Create Offer",
+          "Create volunteer offer",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
@@ -90,7 +90,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             children: <Widget>[
               Text(' '),
               TextFormField(
-                decoration: InputDecoration(hintText: 'Volunteer Offer Title'),
+                decoration: InputDecoration(hintText: 'Volunteer offer title'),
                 keyboardType: TextInputType.text,
                 style: textStyle,
                 validator: (value) {
@@ -105,8 +105,8 @@ class MyCustomFormState extends State<MyCustomForm> {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'Your Offer and any #hashtags',
-                  labelText: 'Volunteer Offer Description',
+                  hintText: 'Your offer and any #hashtags',
+                  labelText: 'Volunteer offer description',
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
@@ -211,7 +211,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         ),
                         Text(' '),
                         Text(
-                          'Create Offer',
+                          'Create volunteer offer',
                           style: TextStyle(
                             color: FlavorConfig.values.buttonTextColor,
                           ),

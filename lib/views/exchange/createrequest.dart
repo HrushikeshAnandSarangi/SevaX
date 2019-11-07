@@ -35,7 +35,7 @@ class _CreateRequestState extends State<CreateRequest> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          "Create Request",
+          "Create Campign Request",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
@@ -109,7 +109,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(hintText: 'Request Title'),
+                decoration: InputDecoration(hintText: 'Campign request title'),
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
                 style: textStyle,
@@ -236,8 +236,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'Your Request and any #hashtags',
-                  labelText: 'Request',
+                  hintText: 'Your Campign Request and any #hashtags',
+                  labelText: 'Campign request description',
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
@@ -368,7 +368,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         ),
                         Text(' '),
                         Text(
-                          'Pin Request',
+                          'Pin Campign Request',
                           style: TextStyle(
                             color: FlavorConfig.values.buttonTextColor,
                           ),

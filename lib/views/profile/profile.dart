@@ -238,9 +238,9 @@ class _ProfilePageState extends State<ProfilePage>
         ),
         onTap: () {
           //print("Tapped");
-          if (title == 'My Interests') {
+          if (title == 'Edit Interests') {
             this.navigateToeditInterests();
-          } else if (title == ' Skills') {
+          } else if (title == 'Edit Skills') {
             this.navigateToeditskills();
           }
         },
@@ -669,7 +669,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get editSkills {
     return getActionCards(
-      title: ' Skills',
+      title: 'Edit Skills',
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         bottomRight: Radius.circular(12),
@@ -689,7 +689,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget get editInterests {
     return getActionCards(
-      title: 'My Interests',
+      title: 'Edit Interests',
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
