@@ -429,7 +429,7 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'Create News Feed',
+                            'Create feed',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
@@ -479,6 +479,7 @@ class _TimebankViewState extends State<TimebankView> {
                             );
                           },
                         ),
+                        !timebankModel.members.contains(loggedInUser) ? Offstage() :    
                         FlatButton(
                           child: Text(
                             'View Members',
@@ -625,38 +626,39 @@ class _TimebankViewState extends State<TimebankView> {
                             },
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10.0, left: 20.0),
-                          child: Text(
-                            'Closed :',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w700,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10.0, left: 20.0),
-                          child: Text(
-                            '${timebankModel.protected}',
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20, bottom: 80),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                'Manage Members',
-                                style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              _showManageMembersButton(context)
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(top: 10.0, left: 20.0),
+                        //   child: Text(
+                        //     'Closed :',
+                        //     style: TextStyle(
+                        //       fontSize: 18.0,
+                        //       fontWeight: FontWeight.w700,
+                        //       decoration: TextDecoration.underline,
+                        //     ),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(top: 10.0, left: 20.0),
+                        //   child: Text(
+                        //     '${timebankModel.protected}',
+                        //     style: TextStyle(fontSize: 18.0),
+                        //   ),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(left: 20, bottom: 80),
+                        //   child: Row(
+                        //     children: <Widget>[
+                        //       Text(
+                        //         'Manage Members',
+                        //         style: TextStyle(
+                        //             fontSize: 18.0,
+                        //             fontWeight: FontWeight.w700),
+                        //       ),
+                        //       //Hiding as of now as now the admin can see the same from view members page
+                        //       //_showManageMembersButton(context)
+                        //     ],
+                        //   ),
+                        // ),
                         // StreamBuilder<UserModel>(
                         //
                         //   stream: FirestoreManager.getUserForIdStream(

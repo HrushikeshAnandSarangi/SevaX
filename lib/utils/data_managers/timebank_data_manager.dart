@@ -43,7 +43,7 @@ Future<List<TimebankModel>> getTimeBanksForUser(
 }
 
 /// Get all timebanknew associated with a User as a Stream
-Stream<List<TimebankModel>> getTimebanksForUserStream (
+Stream<List<TimebankModel>> getTimebanksForUserStream(
     {@required String userId}) async* {
   var data = Firestore.instance
       .collection('timebanknew')
@@ -68,7 +68,7 @@ Stream<List<TimebankModel>> getTimebanksForUserStream (
   );
 }
 
-Stream<List<ReportModel>> getReportedUsersStream (
+Stream<List<ReportModel>> getReportedUsersStream(
     {@required String timebankId}) async* {
   var data = Firestore.instance
       .collection('reported_users_list')
@@ -80,8 +80,8 @@ Stream<List<ReportModel>> getReportedUsersStream (
       handleData: (snapshot, reportsList) {
         List<ReportModel> modelList = [];
         snapshot.documents.forEach(
-              (documentSnapshot) {
-                ReportModel model = ReportModel.fromMap(documentSnapshot.data);
+          (documentSnapshot) {
+            ReportModel model = ReportModel.fromMap(documentSnapshot.data);
             if (model.timebankId == FlavorConfig.values.timebankId)
               modelList.add(model);
           },
@@ -133,6 +133,31 @@ Stream<TimebankModel> getTimebankModelStream(
         TimebankModel model = TimebankModel.fromMap(snapshot.data);
         model.id = snapshot.documentID;
         modelSink.add(model);
+      },
+    ),
+  );
+}
+
+Stream<List<TimebankModel>> getChildTimebanks(
+    {@required String timebankId}) async* {
+  var data = Firestore.instance
+      .collection('timebanknew')
+      .where('parent_timebank_id', isEqualTo: timebankId)
+      .orderBy('name', descending: false)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
+      handleData: (snapshot, reportsList) {
+        List<TimebankModel> modelList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
+            // if (model.timebankId == FlavorConfig.values.timebankId)
+            modelList.add(model);
+          },
+        );
+        reportsList.add(modelList);
       },
     ),
   );

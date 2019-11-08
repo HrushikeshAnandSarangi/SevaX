@@ -174,7 +174,7 @@ class InvitationListView extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               Share.share(
-                                  "Hey come and join me on ${timebBank.name} by using the code \"${timebankCode.timebankCode}\". In case you dont have the app installed, you can install from google playstore https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst");
+                                  "Hello Fellow Yang Gang \nPlease join me on the Humanity First App by using the code \"${timebankCode.timebankCode}\" In case you don't have the app installed already, you can install it from the Google Play Store at  https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst&hl=en  or in the App Store at https://apps.apple.com/us/app/humanity-first-app-official/id1466915003 Looking forward to growing the Yang Gang movement with you!");
                             },
                             child: Container(
                               margin: EdgeInsets.fromLTRB(0, 10, 0, 10),

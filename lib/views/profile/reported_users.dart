@@ -26,7 +26,12 @@ class _ReportedUsersPageState extends State<ReportedUsersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Reported Users',style: TextStyle(color: Colors.white),),),
+      appBar: AppBar(
+        title: Text(
+          'Reported Users',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: _ReportedUsersView(
         timebankId: widget.timebankId,
       ),
@@ -68,9 +73,9 @@ class _ReportedUsersView extends StatelessWidget {
   }
 
   Widget getDataScrollView(
-      BuildContext context,
-      List<ReportModel> reportedList,
-      ) {
+    BuildContext context,
+    List<ReportModel> reportedList,
+  ) {
     return CustomScrollView(
       slivers: <Widget>[
         //getAppBar(context, reportedList),
@@ -86,8 +91,8 @@ class _ReportedUsersView extends StatelessWidget {
   List<Widget> getContent(BuildContext context, List<ReportModel> model) {
     return [
       getAdminList(context, model),
-//      getCoordinationList(context, model),
-//      getMembersList(context, model),
+      //getCoordinationList(context, model),
+      //getMembersList(context, model),
       SizedBox(height: 48),
     ];
   }
@@ -97,7 +102,7 @@ class _ReportedUsersView extends StatelessWidget {
       SevaCore.of(context).loggedInUser.sevaUserID,
     );
 
-    if (model.length == 0) 
+    if (model.length == 0)
       return Center(
         child: Container(
           padding: EdgeInsets.only(top: 10.0),
@@ -111,7 +116,8 @@ class _ReportedUsersView extends StatelessWidget {
       children: <Widget>[
         ...model.map((reportedUser) {
           return FutureBuilder<UserModel>(
-            future: FirestoreManager.getUserForId(sevaUserId: reportedUser.reportedId),
+            future: FirestoreManager.getUserForId(
+                sevaUserId: reportedUser.reportedId),
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text(snapshot.error.toString());
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -128,20 +134,26 @@ class _ReportedUsersView extends StatelessWidget {
                       caption: 'Remove',
                       onTap: () {
                         List<ReportModel> requests =
-                        model.map((s) => s).toList();
+                            model.map((s) => s).toList();
                         Firestore.instance
-                            .collection('timebanknew').document(this.timebankId)
-                            .updateData({'members':FieldValue.arrayRemove([user.sevaUserID])});
-                      Firestore.instance.collection('reported_users_list').getDocuments().then((snapshot) {
-                        for (DocumentSnapshot doc in snapshot.documents) {
-                          if (doc.data['reportedId'] == user.sevaUserID) {
-                            requests.remove(user.sevaUserID);
-                            doc.reference.delete();
-                            print('Removed Reported user');
-                            break;
+                            .collection('timebanknew')
+                            .document(this.timebankId)
+                            .updateData({
+                          'members': FieldValue.arrayRemove([user.sevaUserID])
+                        });
+                        Firestore.instance
+                            .collection('reported_users_list')
+                            .getDocuments()
+                            .then((snapshot) {
+                          for (DocumentSnapshot doc in snapshot.documents) {
+                            if (doc.data['reportedId'] == user.sevaUserID) {
+                              requests.remove(user.sevaUserID);
+                              doc.reference.delete();
+                              print('Removed Reported user');
+                              break;
+                            }
                           }
-                        }
-                      });
+                        });
                       },
                     ),
                   ],
@@ -152,8 +164,11 @@ class _ReportedUsersView extends StatelessWidget {
                       caption: 'Ignore',
                       onTap: () {
                         List<ReportModel> requests =
-                        model.map((s) => s).toList();
-                        Firestore.instance.collection('reported_users_list').getDocuments().then((snapshot) {
+                            model.map((s) => s).toList();
+                        Firestore.instance
+                            .collection('reported_users_list')
+                            .getDocuments()
+                            .then((snapshot) {
                           for (DocumentSnapshot doc in snapshot.documents) {
                             if (doc.data['reportedId'] == user.sevaUserID) {
                               requests.remove(user.sevaUserID);
@@ -177,7 +192,6 @@ class _ReportedUsersView extends StatelessWidget {
     );
   }
 
-
   Widget getUserWidget(UserModel user, BuildContext context) {
     if (user == null) return Offstage();
     return Card(
@@ -187,8 +201,7 @@ class _ReportedUsersView extends StatelessWidget {
         ),
         title: Text(user.fullname),
         subtitle: Text(user.email),
-        onTap: () {
-        },
+        onTap: () {},
       ),
     );
   }

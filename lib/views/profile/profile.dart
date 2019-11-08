@@ -355,18 +355,18 @@ class _ProfilePageState extends State<ProfilePage>
                       children: <Widget>[
                         GestureDetector(
                           child: Container(
-                               height: 50,
-                               width: 50,
-                               decoration: ShapeDecoration(
-                                  shape: CircleBorder(
-                                    side: BorderSide(
-                                   color: Colors.white,
-                                   width: 2,
+                            height: 50,
+                            width: 50,
+                            decoration: ShapeDecoration(
+                              shape: CircleBorder(
+                                side: BorderSide(
+                                  color: Colors.white,
+                                  width: 2,
                                 ),
-                             ),
-                             image: DecorationImage(
+                              ),
+                              image: DecorationImage(
                                 image: NetworkImage(user.photoURL),
-                             ),
+                              ),
                             ),
                           ),
                           onTap: () {
@@ -802,33 +802,36 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget get administerTimebanks {
-    return getActionCards(
-      title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-          ? 'Humanity First'
-          : 'Root Timebank',
-      subtitle: timebankModel == null
-          ? "loading"
-          : FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? null
-              : timebankModel.name,
-      trailingIcon: Icons.navigate_next,
-      borderRadius: BorderRadius.only(
-        topRight: Radius.circular(12),
-        topLeft: Radius.circular(12),
-      ),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return TimebankAdminPage(
-                timebankId: FlavorConfig.values.timebankId,
+    
+    return !timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)
+        ? Offstage()
+        : getActionCards(
+            title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? 'Humanity First'
+                : 'Root Timebank',
+            subtitle: timebankModel == null
+                ? "loading"
+                : FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                    ? null
+                    : timebankModel.name,
+            trailingIcon: Icons.navigate_next,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(12),
+              topLeft: Radius.circular(12),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return TimebankAdminPage(
+                      timebankId: FlavorConfig.values.timebankId,
+                    );
+                  },
+                ),
               );
             },
-          ),
-        );
-      },
-    );
+          );
   }
 
   Widget get timebankslist {

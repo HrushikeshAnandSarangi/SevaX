@@ -61,7 +61,9 @@ class _EditTimebankPicState extends State<EditTimebankPic>
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020" ? "Update Yang gang" : "Update Timebank",
+          FlavorConfig.values.timebankName == "Yang 2020"
+              ? "Update Yang gang"
+              : "Update Timebank",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -92,8 +94,11 @@ class _EditTimebankPicState extends State<EditTimebankPic>
                     decoration: InputDecoration(
                         labelText: "Name",
                         //errorText: nameController.text.isEmpty == true ? FlavorConfig.values.timebankName == "Yang 2020" ? "Enter Yang gang name" : "Enter Timebank name" : "",
-                       // errorStyle:,
-                        hintText: FlavorConfig.values.timebankName == "Yang 2020" ? "Enter Yang gang name" : "Enter Timebank name",
+                        // errorStyle:,
+                        hintText:
+                            FlavorConfig.values.timebankName == "Yang 2020"
+                                ? "Enter Yang gang name"
+                                : "Enter Timebank name",
                         labelStyle: TextStyle(
                           fontSize: 13.0,
                           fontStyle: FontStyle.normal,
@@ -103,9 +108,7 @@ class _EditTimebankPicState extends State<EditTimebankPic>
                           borderRadius: BorderRadius.circular(5.0),
                         )),
                     onChanged: (value) {
-                      setState(() {
-
-                      });
+                      setState(() {});
                     },
                   ),
                 ),
@@ -128,6 +131,7 @@ class _EditTimebankPicState extends State<EditTimebankPic>
   set isLoading(bool isLoading) {
     setState(() => this._isLoading = isLoading);
   }
+
   Widget get registerButton {
     return Padding(
       padding: const EdgeInsets.all(40),
@@ -135,16 +139,17 @@ class _EditTimebankPicState extends State<EditTimebankPic>
         onPressed: isLoading
             ? null
             : () async {
-          isLoading = true;
-          if (selectedImage == null && widget.timebankModel.name == nameController.text) {
-            isLoading = false;
-          } else {
-            widget.timebankModel.name = nameController.text;
-            await updateTimebank();
-            isLoading = false;
-            Navigator.pop(context);
-          }
-        },
+                isLoading = true;
+                if (selectedImage == null &&
+                    widget.timebankModel.name == nameController.text) {
+                  isLoading = false;
+                } else {
+                  widget.timebankModel.name = nameController.text;
+                  await updateTimebank();
+                  isLoading = false;
+                  Navigator.pop(context);
+                }
+              },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -160,18 +165,22 @@ class _EditTimebankPicState extends State<EditTimebankPic>
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                FlavorConfig.values.timebankName == "Yang 2020" ? "Update Yang gang" : "Update Timebank",
+                FlavorConfig.values.timebankName == "Yang 2020"
+                    ? "Update Yang gang"
+                    : "Update Timebank",
               ),
             ),
           ],
         ),
-        color: selectedImage == null && widget.timebankModel.name == nameController.text ? Colors.grey :Theme.of(context).accentColor,
+        color: selectedImage == null &&
+                widget.timebankModel.name == nameController.text
+            ? Colors.grey
+            : Theme.of(context).accentColor,
         textColor: FlavorConfig.values.buttonTextColor,
         shape: StadiumBorder(),
       ),
     );
   }
-
 
   Widget get _profileBtn {
     return SizedBox(
@@ -183,8 +192,8 @@ class _EditTimebankPicState extends State<EditTimebankPic>
           onPressed: isLoading
               ? null
               : () {
-            imagePicker.showDialog(context);
-          },
+                  imagePicker.showDialog(context);
+                },
           color: Colors.grey,
           child: Text(
             this.isImageSelected,
@@ -199,25 +208,43 @@ class _EditTimebankPicState extends State<EditTimebankPic>
   }
 
   Widget get _imagePicker {
-    return SizedBox(
-      height: 200,
-      width: 200,
-      child: Container(
-//        onTap: isLoading
-//            ? null
-//            : () {
-//                imagePicker.showDialog(context);
-//              },
+    if (widget.timebankModel.photoUrl == null) {
+      return SizedBox(
+        height: 200,
+        width: 200,
         child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            image: DecorationImage(
-              image: selectedImage != null ? FileImage(selectedImage) : NetworkImage(widget.timebankModel.photoUrl),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              image: DecorationImage(
+                image: selectedImage != null
+                    ? FileImage(selectedImage)
+                    : AssetImage('lib/assets/images/profile.png'),
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      return SizedBox(
+        height: 200,
+        width: 200,
+        child: Container(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              image: DecorationImage(
+                image: selectedImage != null
+                    ? FileImage(selectedImage)
+                    : NetworkImage(widget.timebankModel.photoUrl == null
+                        ? 'lib/assets/images/profile.png'
+                        : widget.timebankModel.photoUrl),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -229,6 +256,7 @@ class _EditTimebankPicState extends State<EditTimebankPic>
       isImageSelected = 'Update Photo';
     });
   }
+
   Future updateTimebank() async {
     if (this.selectedImage != null) {
       String imageUrl = await _uploadImage();
@@ -236,6 +264,7 @@ class _EditTimebankPicState extends State<EditTimebankPic>
     }
     await FirestoreManager.updateTimebank(timebankModel: widget.timebankModel);
   }
+
   @override
   Future<String> _uploadImage() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -244,7 +273,7 @@ class _EditTimebankPicState extends State<EditTimebankPic>
         .ref()
         .child('timebanklogos')
         .child(
-        SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+            SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
     StorageUploadTask uploadTask = ref.putFile(
       selectedImage,
       StorageMetadata(
@@ -255,7 +284,6 @@ class _EditTimebankPicState extends State<EditTimebankPic>
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
     return imageURL;
   }
-
 
 //  Future<String> uploadImage(String email) async {
 //    StorageReference ref = FirebaseStorage.instance
@@ -280,47 +308,47 @@ class _EditTimebankPicState extends State<EditTimebankPic>
         children: <Widget>[
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? Text(
-            'Humanity\nFirst'.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              letterSpacing: 5,
-              fontSize: 24,
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.w700,
-            ),
-          )
+                  'Humanity\nFirst'.toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    letterSpacing: 5,
+                    fontSize: 24,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w700,
+                  ),
+                )
               : Offstage(),
           SizedBox(
             height: 16,
           ),
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? Image.asset(
-            'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
-            height: 70,
-            fit: BoxFit.fill,
-            width: 80,
-          )
+                  'lib/assets/Y_from_Andrew_Yang_2020_logo.png',
+                  height: 70,
+                  fit: BoxFit.fill,
+                  width: 80,
+                )
               : FlavorConfig.appFlavor == Flavor.TULSI
-              ? SvgPicture.asset(
-            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
-            height: 100,
-            fit: BoxFit.fill,
-            width: 100,
-            color: Colors.white,
-          )
-              : FlavorConfig.appFlavor == Flavor.TOM
-              ? SvgPicture.asset(
-            'lib/assets/ts2020-logo-w.svg',
-            height: 90,
-            fit: BoxFit.fill,
-            width: 90,
-          )
-              : Image.asset(
-            'lib/assets/images/seva-x-logo.png',
-            height: 30,
-            fit: BoxFit.fill,
-            width: 100,
-          )
+                  ? SvgPicture.asset(
+                      'lib/assets/tulsi_icons/tulsi2020_icons_tulsi2020-logo.svg',
+                      height: 100,
+                      fit: BoxFit.fill,
+                      width: 100,
+                      color: Colors.white,
+                    )
+                  : FlavorConfig.appFlavor == Flavor.TOM
+                      ? SvgPicture.asset(
+                          'lib/assets/ts2020-logo-w.svg',
+                          height: 90,
+                          fit: BoxFit.fill,
+                          width: 90,
+                        )
+                      : Image.asset(
+                          'lib/assets/images/seva-x-logo.png',
+                          height: 30,
+                          fit: BoxFit.fill,
+                          width: 100,
+                        )
         ],
       ),
     );
