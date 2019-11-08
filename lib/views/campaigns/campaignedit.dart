@@ -157,8 +157,8 @@ class CampaignEditFormState extends State<CampaignEditForm> {
               TextFormField(
                 initialValue: widget.campaignModel.name,
                 decoration: InputDecoration(
-                  hintText: 'Campaign Name',
-                  labelText: 'Campaign Name',
+                  hintText: 'Project Name',
+                  labelText: 'Project Name',
                   // labelStyle: textStyle,
                   // labelStyle: textStyle,
                   // labelText: 'Description',
