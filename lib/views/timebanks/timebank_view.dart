@@ -418,13 +418,15 @@ class _TimebankViewState extends State<TimebankView> {
                                 color: Theme.of(context).accentColor),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BranchList(
-                                        timebankid: timebankModel.id,
-                                      )),
-                            );
+                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                                ? Navigator.pop(context)
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BranchList(
+                                              timebankid: timebankModel.id,
+                                            )),
+                                  );
                           },
                         ),
                         FlatButton(
@@ -479,24 +481,25 @@ class _TimebankViewState extends State<TimebankView> {
                             );
                           },
                         ),
-                        !timebankModel.members.contains(loggedInUser) ? Offstage() :    
-                        FlatButton(
-                          child: Text(
-                            'View Members',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => TimebankAdminPage(
-                                        timebankId: timebankModel.id,
-                                      )),
-                            );
-                          },
-                        ),
+                        !timebankModel.members.contains(loggedInUser)
+                            ? Offstage()
+                            : FlatButton(
+                                child: Text(
+                                  'View Members',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Theme.of(context).accentColor),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => TimebankAdminPage(
+                                              timebankId: timebankModel.id,
+                                            )),
+                                  );
+                                },
+                              ),
                         timebankModel.parentTimebankId != null
                             ? FutureBuilder<Object>(
                                 future: FirestoreManager.getTimeBankForId(
@@ -846,14 +849,14 @@ class _TimebankViewState extends State<TimebankView> {
       case 'campaigns':
         if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return Text(
-            'Create a Campaign (Project)',
+            'Create a project',
             style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).accentColor),
           );
         } else {
           return Text(
-            'Join a Campaign (Project)',
+            'Join a project',
             style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).accentColor),
@@ -862,7 +865,7 @@ class _TimebankViewState extends State<TimebankView> {
         break;
       case 'viewcampaigns':
         return Text(
-          'View Current Campaigns',
+          'View projects',
           style: TextStyle(
               fontWeight: FontWeight.w700,
               color: Theme.of(context).accentColor),

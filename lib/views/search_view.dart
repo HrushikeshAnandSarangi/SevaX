@@ -6,9 +6,12 @@ import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
+import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
+
+import 'core.dart';
 
 class SearchView extends StatefulWidget {
   final TabController controller;
@@ -46,8 +49,37 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           leading: Container(
-              padding: EdgeInsets.fromLTRB(15, 5, 0, 0),
-              child: Icon(Icons.search)),
+            margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
+            child: IconButton(
+              icon: Hero(
+                tag: 'profilehero',
+                child: Container(
+                  height: 36,
+                  width: 36,
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(
+                      side: BorderSide(
+                        color: Colors.white,
+                        width: 1,
+                      ),
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          SevaCore.of(context).loggedInUser.photoURL),
+                    ),
+                  ),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileView(),
+                  ),
+                );
+              },
+            ),
+          ),
           title: Container(
             padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
             child: TextField(

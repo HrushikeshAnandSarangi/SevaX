@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
@@ -18,9 +19,9 @@ class TimeBankList extends StatelessWidget {
         appBar: AppBar(
           //automaticallyImplyLeading: false,
           title: Text(
-            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? 'Yang Gangs' //Chapters
-                : title,
+            FlavorConfig.values.timebankName == "Yang 2020"
+                ? "Yang Gang Chapters"
+                : "List of ${FlavorConfig.values.timebankTitle}",
             style: TextStyle(color: Colors.white),
           ),
           actions: <Widget>[
@@ -124,14 +125,6 @@ class TimeBankList extends StatelessWidget {
     );
   }
 
-  ImageProvider _getImage(TimebankModel model) {
-    if (model.photoUrl == null) {
-      return AssetImage('lib/assets/images/profile.png');
-    } else {
-      return NetworkImage(model.photoUrl);
-    }
-  }
-
   Widget getContent(BuildContext context, List<TimebankModel> timebankList) {
     return Column(
       children: <Widget>[
@@ -183,69 +176,14 @@ class TimeBankList extends StatelessWidget {
       ],
     );
   }
+
+  ImageProvider _getImage(TimebankModel model) {
+    if (model.photoUrl == null) {
+      return AssetImage('lib/assets/images/profile.png');
+    } else {
+      return NetworkImage(model.photoUrl);
+    }
+  }
+  
 }
 
-//         return ListView.builder(
-//           itemCount: rootTB.children.length,
-//           itemBuilder: (BuildContext listContext, int i) {
-//             String childTimebankId = rootTB.children.elementAt(i);
-//             return StreamBuilder<Object>(
-//               stream: getTimebankModelStream(timebankId: childTimebankId),
-//               builder: (context, snapshot) {
-//                 if (snapshot.hasError)
-//                   return new Container(); //Text('Error: ${snapshot.error}');
-//                 if (snapshot.connectionState == ConnectionState.waiting) {
-//                   return Offstage();
-//                 }
-//                 TimebankModel model = snapshot.data;
-//                 return model.id != FlavorConfig.values.timebankId
-//                     ? GestureDetector(
-//                         child: Card(
-//                           child: Padding(
-//                             padding: const EdgeInsets.all(8.0),
-//                             child: Row(
-//                               children: <Widget>[
-//                                 Container(
-//                                   child: CircleAvatar(
-//                                     minRadius: 32.0,
-//                                     backgroundColor: Colors.grey,
-//                                     backgroundImage: _getImage(model),
-//                                   ),
-//                                 ),
-//                                 SizedBox(
-//                                   width: 8,
-//                                 ),
-//                                 Container(
-//                                   child: Text(
-//                                     model.name,
-//                                     style: TextStyle(
-//                                       fontWeight: FontWeight.w500,
-//                                       fontSize: 18.0,
-//                                       color: Colors.black,
-//                                     ),
-//                                   ),
-//                                 )
-//                               ],
-//                             ),
-//                           ),
-//                         ),
-//                         onTap: () {
-//                           // _showDialog(context,model.name);
-//                           Navigator.of(context).push(
-//                             MaterialPageRoute(
-//                               builder: (routeContext) {
-//                                 return TimebankView(timebankId: model.id);
-//                               },
-//                             ),
-//                           );
-//                         },
-//                       )
-//                     : Offstage();
-//               },
-//             );
-//           },
-//         );
-//       }
-//     },
-//   ),
-// ),

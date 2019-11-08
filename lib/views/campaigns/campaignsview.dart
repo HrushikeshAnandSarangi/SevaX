@@ -25,9 +25,10 @@ class CampaignsView extends StatelessWidget {
     // _getAvatarURL();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Projects', style: TextStyle(
-          color: Colors.white
-        ),),
+        title: Text(
+          'Projects',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: false,
       ),
@@ -64,6 +65,12 @@ class CampaignsList extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           default:
+            if (campaignSnapshot.data.length == 0) {
+              return Center(
+                child: Text('No Projects'),
+              );
+            }
+
             return ListView(
               children: campaignSnapshot.data.map(
                 (CampaignModel campaignModel) {

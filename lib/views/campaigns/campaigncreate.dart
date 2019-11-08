@@ -19,7 +19,9 @@ class CampaignCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Start a Campaign"),
+        title: Text("Create a project", style: TextStyle(
+          color: Colors.white
+        ),),
         centerTitle: false,
       ),
       body: CampaignCreateForm(
@@ -107,38 +109,12 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
+              Center(
+                child:Padding(
                     padding: EdgeInsets.all(0.0),
                     child: CampaignAvatar(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Container(
-                        child: FlatButton(
-                      // color: Colors.blue,
-                      onPressed: () {
-                        // Validate will return true if the form is valid, or false if
-                        // the form is invalid.
-
-                        if (_formKey.currentState.validate()) {
-                          // If the form is valid, we want to show a Snackbar
-                          _writeToDB();
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Text(
-                        'Create Campaign',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      textColor: Colors.blue,
-                    )),
-                  ),
-                ],
-              ),
-
+              ),              
               Padding(
                 padding: EdgeInsets.all(15.0),
               ),
@@ -297,6 +273,27 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
                 child: _showMembers(),
               ),
               Text(''),
+              Container(
+                alignment: Alignment.center,
+                        child: RaisedButton(
+                          color: Colors.red,
+                      // color: Colors.blue,
+                      onPressed: () {
+                        // Validate will return true if the form is valid, or false if
+                        // the form is invalid.
+
+                        if (_formKey.currentState.validate()) {
+                          // If the form is valid, we want to show a Snackbar
+                          _writeToDB();
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Text(
+                        'Create Project',
+                        style: TextStyle(fontSize: 16.0,color: Colors.white),
+                      ),
+                      textColor: Colors.blue,
+                    )),
               // Padding(
               //   padding: EdgeInsets.only(top: 8.0),
               //   child:

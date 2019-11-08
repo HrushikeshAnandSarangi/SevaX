@@ -46,12 +46,12 @@ class _LocationPickerState extends State<LocationPicker> {
   void initState() {
     log('init state called for ${this.runtimeType.toString()}');
     super.initState();
-    loadInitialLocation();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    loadInitialLocation();
     if (widget.selectedLocation != null) {
       if (target == null) {
         target = LatLng(
@@ -176,7 +176,7 @@ class _LocationPickerState extends State<LocationPicker> {
   Positioned get mapWidget {
     return Positioned.fill(
       child: GoogleMap(
-        initialCameraPosition: initialCameraPosition,
+        initialCameraPosition:initialCameraPosition,
         onMapCreated: _onMapCreated,
         myLocationEnabled: true,
         mapType: MapType.normal,
@@ -257,6 +257,7 @@ class _LocationPickerState extends State<LocationPicker> {
 
   void _onMapCreated(GoogleMapController controller) {
     if (controller == null) return;
+    //loadInitialLocation();
     setState(() => _mapController = controller);
     if (this.locationData != null) {
       if (widget.selectedLocation != null) {
@@ -274,6 +275,7 @@ class _LocationPickerState extends State<LocationPicker> {
         );
       }
     }
+
   }
 
   void _addMarker() {

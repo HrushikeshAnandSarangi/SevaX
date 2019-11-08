@@ -88,7 +88,7 @@ class TimebankRequests extends StatelessWidget {
           }
           List<JoinRequestModel> joinrequestModelList = snapshot.data;
           if (joinrequestModelList.length == 0) {
-            return Center(child: Text('No Pending Tasks'));
+            return Center(child: Text('No Pending join requests'));
           }
           return ListView.builder(
               itemCount: joinrequestModelList.length,
