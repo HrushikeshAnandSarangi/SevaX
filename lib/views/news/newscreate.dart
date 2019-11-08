@@ -146,8 +146,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.initState();
 
     dataList.add(EntityModel(entityType: EntityType.general));
-    fetchCurrentLocation();
-
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
 //        .then((List<TimebankModel> timeBankModelList) {
 //      setState(() {
@@ -411,26 +409,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
             ],
           )),
         ));
-  }
-
-  fetchCurrentLocation() async {
-    print("STARTING LOCATION SERVICE");
-    var location = Location();
-    location.changeSettings(accuracy: prefix1.LocationAccuracy.POWERSAVE,
-        interval: 1000,
-        distanceFilter: 500);
-    if (!await location.hasPermission()) {
-      await location.requestPermission();
-    }
-
-    try {
-      await location.onLocationChanged().listen((LocationData currentLocation) {
-        print(currentLocation.latitude);
-        print(currentLocation.longitude);
-      });
-    } catch (error) {
-      location = null;
-    }
   }
 
   Widget get entityDropdown {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -140,7 +141,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
   @override
   void initState() {
     super.initState();
-
+    fetchCurrentLocation();
     pages = [
       newsPageProperty,
       exchangePageProperty,
@@ -178,6 +179,25 @@ class _SevaCoreViewState extends State<SevaCoreView>
       });
     });
     super.didChangeDependencies();
+  }
+  fetchCurrentLocation() async {
+    print("STARTING LOCATION SERVICE");
+    var location = Location();
+    location.changeSettings(accuracy: LocationAccuracy.POWERSAVE,
+        interval: 1000,
+        distanceFilter: 500);
+    if (!await location.hasPermission()) {
+      await location.requestPermission();
+    }
+
+    try {
+      await location.onLocationChanged().listen((LocationData currentLocation) {
+        print(currentLocation.latitude);
+        print(currentLocation.longitude);
+      });
+    } catch (error) {
+      location = null;
+    }
   }
 
   @override
