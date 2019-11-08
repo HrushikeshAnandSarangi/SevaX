@@ -189,6 +189,7 @@ class _LocationPickerState extends State<LocationPicker> {
     );
   }
 
+
   Positioned get markLocationWidget {
     return Positioned(
       bottom: 50,

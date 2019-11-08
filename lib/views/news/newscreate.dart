@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
+import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
@@ -144,7 +146,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.initState();
 
     dataList.add(EntityModel(entityType: EntityType.general));
-
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
 //        .then((List<TimebankModel> timeBankModelList) {
 //      setState(() {

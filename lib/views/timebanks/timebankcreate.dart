@@ -104,58 +104,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: TimebankAvatar(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Container(
-                        child: FutureBuilder<Object>(
-                            future:
-                                getTimeBankForId(timebankId: widget.timebankId),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) return Text('Error');
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) return Offstage();
-                              TimebankModel parentTimebank = snapshot.data;
-                              return FlatButton(
-                                // color: Colors.blue,
-                                onPressed: () {
-                                  // Validate will return true if the form is valid, or false if
-                                  // the form is invalid.
-                                  if (location != null) {
-                                    if (_formKey.currentState.validate()) {
-                                      // If the form is valid, we want to show a Snackbar
-                                      _writeToDB();
-                                      if (parentTimebank.children == null)
-                                        parentTimebank.children = [];
-                                      parentTimebank.children
-                                          .add(timebankModel.id);
-                                      updateTimebank(
-                                          timebankModel: parentTimebank);
-                                      Navigator.pop(context);
-                                    }
-                                  } else {
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text('Location not added'),
-                                    ));
-                                  }
-                                },
-                                child: Text(
-                                  'Create ${FlavorConfig.values.timebankTitle}',
-                                  style: TextStyle(fontSize: 16.0),
-                                ),
-                                textColor: Colors.blue,
-                              );
-                            })),
-                  ),
-                ],
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: TimebankAvatar(),
+                )
               ),
-
               Padding(
                 padding: EdgeInsets.all(15.0),
               ),
@@ -365,6 +319,50 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 ),
               ),
               Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Container(
+                  alignment: Alignment.center,
+                    child: FutureBuilder<Object>(
+                        future:
+                        getTimeBankForId(timebankId: widget.timebankId),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) return Text('Error');
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) return Offstage();
+                          TimebankModel parentTimebank = snapshot.data;
+                          return RaisedButton(
+                            // color: Colors.blue,
+                            color: Colors.red,
+                            onPressed: () {
+                              // Validate will return true if the form is valid, or false if
+                              // the form is invalid.
+                              if (location != null) {
+                                if (_formKey.currentState.validate()) {
+                                  // If the form is valid, we want to show a Snackbar
+                                  _writeToDB();
+                                  if (parentTimebank.children == null)
+                                    parentTimebank.children = [];
+                                  parentTimebank.children
+                                      .add(timebankModel.id);
+                                  updateTimebank(
+                                      timebankModel: parentTimebank);
+                                  Navigator.pop(context);
+                                }
+                              } else {
+                                Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text('Location not added'),
+                                ));
+                              }
+                            },
+                            child: Text(
+                              'Create ${FlavorConfig.values.timebankTitle}',
+                              style: TextStyle(fontSize: 16.0,color: Colors.white),
+                            ),
+                            textColor: Colors.blue,
+                          );
+                        })),
+              ),
               // Padding(
               //   padding: EdgeInsets.only(top: 8.0),
               //   child:
