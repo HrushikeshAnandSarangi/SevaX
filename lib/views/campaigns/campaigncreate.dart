@@ -19,7 +19,7 @@ class CampaignCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Start a Campaign"),
+        title: Text("Create a campaign"),
         centerTitle: false,
       ),
       body: CampaignCreateForm(

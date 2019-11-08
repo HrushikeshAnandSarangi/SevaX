@@ -429,7 +429,7 @@ class _TimebankViewState extends State<TimebankView> {
                         ),
                         FlatButton(
                           child: Text(
-                            'Create News Feed',
+                            'Create feed',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).accentColor),
@@ -844,14 +844,14 @@ class _TimebankViewState extends State<TimebankView> {
       case 'campaigns':
         if (timebankModel.creatorId == UserData.shared.user.sevaUserID) {
           return Text(
-            'Create a Campaign (Project)',
+            'Create a project',
             style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).accentColor),
           );
         } else {
           return Text(
-            'Join a Campaign (Project)',
+            'Join a project',
             style: TextStyle(
                 fontWeight: FontWeight.w700,
                 color: Theme.of(context).accentColor),
@@ -860,7 +860,7 @@ class _TimebankViewState extends State<TimebankView> {
         break;
       case 'viewcampaigns':
         return Text(
-          'View Current Campaigns',
+          'View current campaigns',
           style: TextStyle(
               fontWeight: FontWeight.w700,
               color: Theme.of(context).accentColor),
