@@ -46,12 +46,12 @@ class _LocationPickerState extends State<LocationPicker> {
   void initState() {
     log('init state called for ${this.runtimeType.toString()}');
     super.initState();
+    loadInitialLocation();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    loadInitialLocation();
     if (widget.selectedLocation != null) {
       if (target == null) {
         target = LatLng(
@@ -72,35 +72,35 @@ class _LocationPickerState extends State<LocationPicker> {
           style: TextStyle(color: Colors.white),
         ),
         actions: <Widget>[
-      IconButton(
-      icon: Icon(
-        Icons.search,
-        color: Colors.white,
-      ),
-      onPressed: () async {
-        LocationDataModel dataModel = LocationDataModel("",null,null);
-        dataModel = await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) =>
-              new CustomSearchScaffold1(),
-              fullscreenDialog: true),
-        );
-        this.target = LatLng(
-            dataModel.lat,
-            dataModel.lng
-        );
-        _mapController.animateCamera(
-          CameraUpdate.newCameraPosition(CameraPosition(
-            target: target,
-            zoom: 15,
-          )),
-        );
-        setState(() {
-          this._addMarker();
-        });
-      },
-    ),
+          IconButton(
+            icon: Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              LocationDataModel dataModel = LocationDataModel("",null,null);
+              dataModel = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                    new CustomSearchScaffold1(),
+                    fullscreenDialog: true),
+              );
+              this.target = LatLng(
+                  dataModel.lat,
+                  dataModel.lng
+              );
+              _mapController.animateCamera(
+                CameraUpdate.newCameraPosition(CameraPosition(
+                  target: target,
+                  zoom: 15,
+                )),
+              );
+              setState(() {
+                this._addMarker();
+              });
+            },
+          ),
         ],
       ),
       body: Stack(children: [
@@ -176,7 +176,7 @@ class _LocationPickerState extends State<LocationPicker> {
   Positioned get mapWidget {
     return Positioned.fill(
       child: GoogleMap(
-        initialCameraPosition:initialCameraPosition,
+        initialCameraPosition: initialCameraPosition,
         onMapCreated: _onMapCreated,
         myLocationEnabled: true,
         mapType: MapType.normal,
@@ -188,7 +188,6 @@ class _LocationPickerState extends State<LocationPicker> {
       ),
     );
   }
-
 
   Positioned get markLocationWidget {
     return Positioned(
@@ -205,7 +204,7 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
           color: Color(0xff007722),
           onPressed:
-              _mapController != null && target != null ? _addMarker : null,
+          _mapController != null && target != null ? _addMarker : null,
         ),
       ),
     );
@@ -258,7 +257,6 @@ class _LocationPickerState extends State<LocationPicker> {
 
   void _onMapCreated(GoogleMapController controller) {
     if (controller == null) return;
-    //loadInitialLocation();
     setState(() => _mapController = controller);
     if (this.locationData != null) {
       if (widget.selectedLocation != null) {
@@ -276,7 +274,6 @@ class _LocationPickerState extends State<LocationPicker> {
         );
       }
     }
-
   }
 
   void _addMarker() {
@@ -296,10 +293,10 @@ class _LocationPickerState extends State<LocationPicker> {
 
   /// Animate to location corresponding to [locationData.latitude] and [locationData.longitude]
   Future animateToLocation(
-    GoogleMapController mapController, {
-    LocationData locationData,
-    LatLng location,
-  }) async {
+      GoogleMapController mapController, {
+        LocationData locationData,
+        LatLng location,
+      }) async {
     if (mapController == null) {
       log('map contriller is null');
       return;

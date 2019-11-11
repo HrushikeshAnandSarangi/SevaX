@@ -698,7 +698,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         context,
                         MaterialPageRoute(
                           builder: (context) => CreateOffer(
-                            timebankId: FlavorConfig.values.timebankId,
+                            timebankId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentTimebank,
                           ),
                         ),
                       )

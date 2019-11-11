@@ -18,6 +18,8 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 
 import '../core.dart';
+import 'edit_offer.dart';
+import 'edit_request.dart';
 
 class HelpView extends StatefulWidget {
   final TabController controller;
@@ -227,6 +229,28 @@ class _RequestCardViewState extends State<RequestCardView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ?
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditRequest(
+                    timebankId: SevaCore.of(context)
+                        .loggedInUser
+                        .currentTimebank,
+                    requestModel: widget.requestItem,
+                  ),
+                ),
+              );
+            },
+          ) : Offstage(),
+        ],
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
@@ -507,6 +531,28 @@ class OfferCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => UpdateOffer(
+                    timebankId: SevaCore.of(context)
+                        .loggedInUser
+                        .currentTimebank,
+                    offerModel: offerModel,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(

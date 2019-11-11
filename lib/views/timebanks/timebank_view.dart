@@ -803,8 +803,8 @@ class _TimebankViewState extends State<TimebankView> {
         }
         break;
       case 'campaigns':
-        if (timebankModel.creatorId ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+        if (timebankModel.admins.contains(
+            SevaCore.of(context).loggedInUser.sevaUserID)) {
           return CampaignCreate(
             timebankModel: timebankModel,
           );
