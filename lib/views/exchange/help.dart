@@ -417,32 +417,41 @@ class _RequestCardViewState extends State<RequestCardView> {
                             ),
                           ),
                         ),
-
                         widget.requestItem.sevaUserId !=
-                  SevaCore.of(context).loggedInUser.sevaUserID ? Offstage() :
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            color: Theme.of(context).accentColor,
-                            onPressed: () {
-                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        RequestStatusView(
-                                          requestId: widget.requestItem.id,
-                                        ),
-                                    fullscreenDialog: true),
-                              );
-                            },
-                            child: Text(
-                              'View Approved Members',
-                              style: TextStyle(
-                                color: FlavorConfig.values.buttonTextColor,
+                                SevaCore.of(context).loggedInUser.sevaUserID
+                            ? Offstage()
+                            : Container(
+                                padding: EdgeInsets.all(8.0),
+                                child: RaisedButton(
+                                  color: Theme.of(context).accentColor,
+                                  onPressed: widget.requestItem.approvedUsers
+                                              .length <
+                                          1
+                                      ? null
+                                      : () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        RequestStatusView(
+                                                          requestId: widget
+                                                              .requestItem.id,
+                                                        ),
+                                                fullscreenDialog: true),
+                                          );
+                                        },
+                                  child: Text(
+                                    widget.requestItem.approvedUsers.length < 1
+                                        ? 'No Approved members yet'
+                                        : 'View Approved Members',
+                                    style: TextStyle(
+                                      color:
+                                          FlavorConfig.values.buttonTextColor,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ),

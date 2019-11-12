@@ -57,6 +57,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
           future: membersInRequest,
           builder: (builderContext, snapshot) {
             if (snapshot.hasData) {
+                            
               return ListView(
                 children: <Widget>[
                   ...snapshot.data.map((member) {
