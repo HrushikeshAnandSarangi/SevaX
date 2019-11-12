@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -105,9 +106,16 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 
 Stream<List<RequestModel>> getNearRequestListStream(
     {String timebankId}) async* {
-  LocationData pos = await location.getLocation();
-  double lat = pos.latitude;
-  double lng = pos.longitude;
+  // LocationData pos = await location.getLocation();
+  // double lat = pos.latitude;
+  // double lng = pos.longitude;
+
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
+  userLocation = await geolocator.getCurrentPosition();
+  double lat = userLocation.latitude;
+  double lng = userLocation.longitude;
+
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance

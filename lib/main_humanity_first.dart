@@ -5,6 +5,7 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.HUMANITY_FIRST;
@@ -51,6 +52,9 @@ class MainApplication extends StatelessWidget {
       child: MaterialApp(
         theme: FlavorConfig.values.theme,
         home: SplashView(),
+        // home: RequestStatusView(
+        //   requestId: "venki@gmail.com*1573544299069",
+        // ),
       ),
     );
   }

@@ -9,6 +9,7 @@ import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
+import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
 import 'models/news_model.dart';
 import 'views/messages/list_members_timebank.dart';
@@ -59,10 +60,10 @@ class MainApplication extends StatelessWidget {
       auth: Auth(),
       child: MaterialApp(
         theme: FlavorConfig.values.theme,
-        // home: SelectMember(
-        //   timebankId: "73d0de2c-198b-4788-be64-a804700a88a4",
-        // ),
-        home: SplashView(),
+        home: RequestStatusView(
+          requestId: "venki@gmail.com*1573544299069",
+        ),
+        // home: SplashView(),
       ),
     );
   }

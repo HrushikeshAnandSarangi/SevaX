@@ -68,6 +68,34 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
   );
 }
 
+
+/// Get all timebanknew associated with a User as a Stream
+Stream<List<TimebankModel>> getTimebanksForAdmins(
+    {@required String userId}) async* {
+  var data = Firestore.instance
+      .collection('timebanknew')
+      .where('admins', arrayContains: userId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
+      handleData: (snapshot, timebankSink) {
+        List<TimebankModel> modelList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
+            if (model.rootTimebankId == FlavorConfig.values.timebankId)
+              modelList.add(model);
+          },
+        );
+
+        timebankSink.add(modelList);
+      },
+    ),
+  );
+}
+
+
 Stream<List<ReportModel>> getReportedUsersStream(
     {@required String timebankId}) async* {
   var data = Firestore.instance

@@ -180,10 +180,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
     });
     super.didChangeDependencies();
   }
+
   fetchCurrentLocation() async {
     print("STARTING LOCATION SERVICE");
     var location = Location();
-    location.changeSettings(accuracy: LocationAccuracy.POWERSAVE,
+    location.changeSettings(
+        accuracy: LocationAccuracy.POWERSAVE,
         interval: 1000,
         distanceFilter: 500);
     if (!await location.hasPermission()) {
@@ -238,7 +240,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         ),
                       ),
                       image: DecorationImage(
-                        image: NetworkImage(SevaCore.of(context).loggedInUser.photoURL),
+                        image: NetworkImage(
+                            SevaCore.of(context).loggedInUser.photoURL),
                       ),
                     ),
                   ),
@@ -760,49 +763,48 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      FirestoreManager.getTimeBankForId(
-                              timebankId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentTimebank)
-                          .then((timebank) {
-                        if (timebank.admins.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID) ||
-                            timebank.coordinators.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID)) {
-                          // Navigator.of(context).pop();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => InviteMembers(
-                                timebankId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentTimebank,
-                              ),
-                            ),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: new Text("Permission Denied"),
-                                content: new Text(
-                                    "You need to be an Admin or Coordinator to have permission to invite users"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  new FlatButton(
-                                    child: new Text("Close"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      }),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InviteMembers(),
+                        ),
+                      ),
+
+                      // FirestoreManager.getTimebanksForAdmins(
+                      //         userId:  SevaCore.of(context)
+                      //             .loggedInUser
+                      //             .sevaUserID)
+                      //     .then((timebank) {
+                      //   if (timebank.admins.contains(
+                      //           SevaCore.of(context).loggedInUser.sevaUserID) ||
+                      //       timebank.coordinators.contains(
+                      //           SevaCore.of(context).loggedInUser.sevaUserID)) {
+                      //     // Navigator.of(context).pop();
+
+                      //   } else {
+                      //     // showDialog(
+                      //     //   context: context,
+                      //     //   builder: (BuildContext context) {
+                      //     //     // return object of type Dialog
+                      //     //     return AlertDialog(
+                      //     //       title: new Text("Permission Denied"),
+                      //     //       content: new Text(
+                      //     //           "You need to be an Admin or Coordinator to have permission to invite users"),
+                      //     //       actions: <Widget>[
+                      //     //         // usually buttons at the bottom of the dialog
+                      //     //         new FlatButton(
+                      //     //           child: new Text("Close"),
+                      //     //           onPressed: () {
+                      //     //             Navigator.of(context).pop();
+                      //     //           },
+                      //     //         ),
+                      //     //       ],
+                      //     //     );
+                      //     //   },
+                      //     // );
+                      //   }
+                      // }
+                      // ),
                     },
                   ),
                 ],
@@ -811,6 +813,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
           );
         });
   }
+
+
+
+  // Future<String>
 
   void createSubTimebank(BuildContext context) {
     Navigator.of(context).pop();

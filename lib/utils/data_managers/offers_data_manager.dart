@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
@@ -39,9 +40,16 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
 }
 
 Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
-  LocationData pos = await loc.getLocation();
-  double lat = pos.latitude;
-  double lng = pos.longitude;
+  // LocationData pos = await loc.getLocation();
+  // double lat = pos.latitude;
+  // double lng = pos.longitude;
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
+
+  userLocation = await geolocator.getCurrentPosition();
+  double lat = userLocation.latitude;
+  double lng = userLocation.longitude;
+
   GeoFirePoint center = geoflutterfire.point(latitude: lat, longitude: lng);
   var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance

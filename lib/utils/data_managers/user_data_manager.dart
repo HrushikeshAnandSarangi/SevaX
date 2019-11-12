@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/models.dart';
-
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/views/popup.dart';
 
 /// Create a [user]
 Future<void> createUser({

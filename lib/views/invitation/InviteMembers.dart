@@ -4,29 +4,25 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
     as prefix0;
-import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:share/share.dart';
 
+import '../core.dart';
 import 'TimebankCodeModel.dart';
 
 class InviteMembers extends StatefulWidget {
-  final String timebankId;
-
-  InviteMembers({this.timebankId});
-
   @override
-  State<StatefulWidget> createState() => InviteMembersState(timebankId);
+  State<StatefulWidget> createState() => InviteMembersState();
 }
 
 class InviteMembersState extends State<InviteMembers> {
-  final String timebankId;
-  InviteMembersState(this.timebankId);
+  String timebankId;
+  InviteMembersState();
+  List<prefix0.TimebankModel> timebankList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +35,205 @@ class InviteMembersState extends State<InviteMembers> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      body: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+              ),
+              Text(
+                FlavorConfig.values.timebankTitle,
+                style: (TextStyle(fontWeight: FontWeight.w500)),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+              ),
+              Expanded(
+                child: StreamBuilder<Object>(
+                  stream: FirestoreManager.getTimebanksForAdmins(
+                    userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return new Text('Error: ${snapshot.error}');
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    timebankList = snapshot.data;
+
+                    if (!(timebankList.length > 0)){
+                      return Container(
+                        margin: EdgeInsets.fromLTRB(10, 15, 10, 10),
+                        child: Text("No admin"),
+                      );
+                    }
+
+                    List<String> dropdownList = [];
+                    timebankList.forEach((t) {
+                      dropdownList.add(t.id);
+                    });
+                    print("Dropdown -> ${dropdownList.length} ${timebankId}");
+                    return DropdownButton<String>(
+                      value: timebankId,
+                      hint: Text('Select Yang gang'),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          timebankId = newValue;
+                        });
+                      },
+                      items: dropdownList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+
+                          value: value == null ? 'Select yang gang' : value,
+                          child: FutureBuilder<Object>(
+                              future: FirestoreManager.getTimeBankForId(
+                                  timebankId: value),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError)
+                                  return new Text('Error: ${snapshot.error}');
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Offstage();
+                                }
+                                prefix0.TimebankModel timebankModel =
+                                    snapshot.data;
+                                return Text(timebankModel.name);
+                              }),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 0,
+          ),
+          timebankId == null || !(timebankList.length > 0)
+              ? Container(
+                margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                child: Center(
+                  child: Offstage(),
+                ),
+              )
+              : StreamBuilder<List<TimebankCodeModel>>(
+                  stream: getTimebankCodes(timebankId: timebankId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    print("timebank Code --> ${timebankId}" );
+                    List<TimebankCodeModel> codeList =
+                        snapshot.data.reversed.toList();
+
+                    if (codeList.length == 0) {
+                      return Center(
+                        child: Text('No codes genrated yet.'),
+                      );
+                    }
+                    return Expanded(
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: codeList.length,
+                          itemBuilder: (context, index) {
+                            TimebankCodeModel timebankCode =
+                                codeList.elementAt(index);
+                            return GestureDetector(
+                              child: Card(
+                                margin: EdgeInsets.all(5),
+                                child: Container(
+                                  margin: EdgeInsets.all(15),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(FlavorConfig.values.timebankName ==
+                                              "Yang 2020"
+                                          ? "Yang Gang Code : " +
+                                              timebankCode.timebankCode
+                                          : "Timebank code : " +
+                                              timebankCode.timebankCode),
+                                      Text(
+                                          "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
+                                      Text(
+                                        DateTime.now().millisecondsSinceEpoch >
+                                                timebankCode.validUpto
+                                            ? "Expired"
+                                            : "Active",
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Share.share(
+                                              "Hello Fellow Yang Gang \nPlease join me on the Humanity First App by using the code \"${timebankCode.timebankCode}\" In case you don't have the app installed already, you can install it from the Google Play Store at  https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst&hl=en  or in the App Store at https://apps.apple.com/us/app/humanity-first-app-official/id1466915003 Looking forward to growing the Yang Gang movement with you!");
+                                        },
+                                        child: Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                          child: Text(
+                                            'Share code',
+                                            style:
+                                                TextStyle(color: Colors.blue),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                    );
+
+                    // return SizedBox(
+                    //     height: MediaQuery.of(context).size.height - 120,
+                    //     child: );
+                  })
+        ],
+      ),
+            
+      floatingActionButton: timebankId == null || timebankList.length < 1 ? Offstage() : FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         icon: Icon(Icons.add),
-        label: Text("Generate Code"),
+        label:Text("Generate Code"),
         onPressed: () {
           _asyncInputDialog(context);
         },
       ),
-      body: InvitationListView.forTimebank(timebankId: timebankId),
+    );
+  }
+
+  Stream<List<TimebankCodeModel>> getTimebankCodes({
+    String timebankId,
+  }) async* {
+    var data = Firestore.instance
+        .collection('timebankCodes')
+        .where('timebankId', isEqualTo: timebankId)
+        .snapshots();
+
+    yield* data.transform(
+      StreamTransformer<QuerySnapshot, List<TimebankCodeModel>>.fromHandlers(
+        handleData: (querySnapshot, timebankCodeSink) {
+          List<TimebankCodeModel> timebankCodes = [];
+          querySnapshot.documents.forEach((documentSnapshot) {
+            timebankCodes.add(TimebankCodeModel.fromMap(
+              documentSnapshot.data,
+            ));
+          });
+          timebankCodeSink.add(timebankCodes);
+        },
+      ),
     );
   }
 
@@ -120,105 +305,158 @@ class InviteMembersState extends State<InviteMembers> {
   }
 }
 
-class InvitationListView extends StatelessWidget {
-  final String timebankId;
-  InvitationListView.forTimebank({this.timebankId});
+// class InvitationListView extends StatelessWidget {
+//   final String timebankId;
+//   InvitationListView.forTimebank({this.timebankId});
+//   List<prefix0.TimebankModel> timebankList = [];
 
-  @override
-  Widget build(BuildContext context) {
-    setTimebankDetails();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: <Widget>[
+//         Row(
+//           children: <Widget>[
+//             Padding(
+//               padding: EdgeInsets.only(left: 10),
+//             ),
+//             Text(
+//               FlavorConfig.values.timebankTitle,
+//               style: (TextStyle(fontWeight: FontWeight.w500)),
+//             ),
+//             Padding(
+//               padding: EdgeInsets.only(left: 10),
+//             ),
+//             Expanded(
+//               child: StreamBuilder<Object>(
+//                 stream: FirestoreManager.getTimebanksForUserStream(
+//                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
+//                 ),
+//                 builder: (context, snapshot) {
+//                   if (snapshot.hasError)
+//                     return new Text('Error: ${snapshot.error}');
+//                   if (snapshot.connectionState == ConnectionState.waiting) {
+//                     return Center(child: CircularProgressIndicator());
+//                   }
+//                   timebankList = snapshot.data;
+//                   List<String> dropdownList = [];
+//                   timebankList.forEach((t) {
+//                     dropdownList.add(t.id);
+//                   });
+//                   SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+//                       dropdownList.length;
+//                   return DropdownButton<String>(
+//                     value: timebankId,
+//                     onChanged: (String newValue) {},
+//                     items: dropdownList
+//                         .map<DropdownMenuItem<String>>((String value) {
+//                       if (value == 'All') {
+//                         return DropdownMenuItem<String>(
+//                           value: value,
+//                           child: Text(value),
+//                         );
+//                       } else
+//                         return DropdownMenuItem<String>(
+//                           value: value,
+//                           child: FutureBuilder<Object>(
+//                               future: FirestoreManager.getTimeBankForId(
+//                                   timebankId: value),
+//                               builder: (context, snapshot) {
+//                                 if (snapshot.hasError)
+//                                   return new Text('Error: ${snapshot.error}');
+//                                 if (snapshot.connectionState ==
+//                                     ConnectionState.waiting) {
+//                                   return Offstage();
+//                                 }
+//                                 prefix0.TimebankModel timebankModel =
+//                                     snapshot.data;
+//                                 return Text(timebankModel.name);
+//                               }),
+//                         );
+//                     }).toList(),
+//                   );
+//                 },
+//               ),
+//             ),
+//           ],
+//         ),
+//         Divider(
+//           color: Colors.grey,
+//           height: 0,
+//         ),
+//         StreamBuilder<List<TimebankCodeModel>>(
+//             stream: getTimebankCodes(timebankId: timebankId),
+//             builder: (context, snapshot) {
+//               if (snapshot.hasError) {
+//                 return Text(snapshot.error.toString());
+//               }
 
-    return StreamBuilder<List<TimebankCodeModel>>(
-        stream: getTimebankCodes(timebankId: timebankId),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
+//               if (snapshot.connectionState == ConnectionState.waiting) {
+//                 return Center(child: CircularProgressIndicator());
+//               }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
+//               List<TimebankCodeModel> codeList =
+//                   snapshot.data.reversed.toList();
 
-          List<TimebankCodeModel> codeList = snapshot.data.reversed.toList();
+//               if (codeList.length == 0) {
+//                 return Center(
+//                   child: Text('No codes genrated yet.'),
+//                 );
+//               }
 
-          if (codeList.length == 0) {
-            return Center(
-              child: Text('No codes genrated yet.'),
-            );
-          }
+//               return ListView.builder(
+//                   itemCount: codeList.length,
+//                   itemBuilder: (context, index) {
+//                     TimebankCodeModel timebankCode = codeList.elementAt(index);
+//                     return GestureDetector(
+//                       child: Card(
+//                         margin: EdgeInsets.all(5),
+//                         child: Container(
+//                           margin: EdgeInsets.all(15),
+//                           child: Column(
+//                             mainAxisAlignment: MainAxisAlignment.start,
+//                             crossAxisAlignment: CrossAxisAlignment.start,
+//                             children: <Widget>[
+//                               Text(FlavorConfig.values.timebankName ==
+//                                       "Yang 2020"
+//                                   ? "Yang Gang Code : " +
+//                                       timebankCode.timebankCode
+//                                   : "Timebank code : " +
+//                                       timebankCode.timebankCode),
+//                               Text(
+//                                   "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
+//                               Text(
+//                                 DateTime.now().millisecondsSinceEpoch >
+//                                         timebankCode.validUpto
+//                                     ? "Expired"
+//                                     : "Active",
+//                               ),
+//                               GestureDetector(
+//                                 onTap: () {
+//                                   Share.share(
+//                                       "Hello Fellow Yang Gang \nPlease join me on the Humanity First App by using the code \"${timebankCode.timebankCode}\" In case you don't have the app installed already, you can install it from the Google Play Store at  https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst&hl=en  or in the App Store at https://apps.apple.com/us/app/humanity-first-app-official/id1466915003 Looking forward to growing the Yang Gang movement with you!");
+//                                 },
+//                                 child: Container(
+//                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+//                                   child: Text(
+//                                     'Share code',
+//                                     style: TextStyle(color: Colors.blue),
+//                                   ),
+//                                 ),
+//                               )
+//                             ],
+//                           ),
+//                         ),
+//                       ),
+//                     );
+//                   });
+//             })
+//       ],
+//     );
+//   }
 
-          return ListView.builder(
-              itemCount: codeList.length,
-              itemBuilder: (context, index) {
-                TimebankCodeModel timebankCode = codeList.elementAt(index);
-                return GestureDetector(
-                  child: Card(
-                    margin: EdgeInsets.all(5),
-                    child: Container(
-                      margin: EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(FlavorConfig.values.timebankName == "Yang 2020"
-                              ? "Yang Gang Code : " + timebankCode.timebankCode
-                              : "Timebank code : " + timebankCode.timebankCode),
-                          Text(
-                              "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
-                          Text(
-                            DateTime.now().millisecondsSinceEpoch >
-                                    timebankCode.validUpto
-                                ? "Expired"
-                                : "Active",
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Share.share(
-                                  "Hello Fellow Yang Gang \nPlease join me on the Humanity First App by using the code \"${timebankCode.timebankCode}\" In case you don't have the app installed already, you can install it from the Google Play Store at  https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst&hl=en  or in the App Store at https://apps.apple.com/us/app/humanity-first-app-official/id1466915003 Looking forward to growing the Yang Gang movement with you!");
-                            },
-                            child: Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              child: Text(
-                                'Share code',
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              });
-        });
-  }
-
-  Stream<List<TimebankCodeModel>> getTimebankCodes({
-    String timebankId,
-  }) async* {
-    var data = Firestore.instance
-        .collection('timebankCodes')
-        .where('timebankId', isEqualTo: timebankId)
-        .snapshots();
-
-    yield* data.transform(
-      StreamTransformer<QuerySnapshot, List<TimebankCodeModel>>.fromHandlers(
-        handleData: (querySnapshot, timebankCodeSink) {
-          List<TimebankCodeModel> timebankCodes = [];
-          querySnapshot.documents.forEach((documentSnapshot) {
-            timebankCodes.add(TimebankCodeModel.fromMap(
-              documentSnapshot.data,
-            ));
-          });
-          timebankCodeSink.add(timebankCodes);
-        },
-      ),
-    );
-  }
-
-  prefix0.TimebankModel timebBank;
-  Future setTimebankDetails() async {
-    timebBank = await FirestoreManager.getTimeBankForId(timebankId: timebankId);
-    print("Timebank name --> ${timebBank.name}");
-  }
-}
+//   prefix0.TimebankModel timebBank;
+//   Future setTimebankDetails() async {
+//     timebBank = await FirestoreManager.getTimeBankForId(timebankId: timebankId);
+//     print("Timebank name --> ${timebBank.name}");
+//   }
+// }

@@ -186,8 +186,6 @@ class _ProfilePageState extends State<ProfilePage>
               height: 32,
             ),
             skillsAndInterest,
-            //editInterests,
-            //editSkills,
             SizedBox(
               height: 32,
             ),

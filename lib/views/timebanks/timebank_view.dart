@@ -744,7 +744,8 @@ class _TimebankViewState extends State<TimebankView> {
   }
 
   Widget _showCreateCampaignButton(BuildContext context) {
-    if (timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+    if (timebankModel.admins
+        .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
       return FlatButton(
         onPressed: () {
           Navigator.push(
@@ -803,8 +804,8 @@ class _TimebankViewState extends State<TimebankView> {
         }
         break;
       case 'campaigns':
-        if (timebankModel.creatorId ==
-            SevaCore.of(context).loggedInUser.sevaUserID) {
+        if (timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           return CampaignCreate(
             timebankModel: timebankModel,
           );
@@ -847,7 +848,8 @@ class _TimebankViewState extends State<TimebankView> {
         }
         break;
       case 'campaigns':
-        if (timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           return Text(
             'Create a project',
             style: TextStyle(

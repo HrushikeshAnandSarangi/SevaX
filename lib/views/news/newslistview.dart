@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
@@ -133,6 +133,8 @@ class NewsListState extends State<NewsList> {
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(timebankID: timebankId),
                 builder: (context, snapshot) {
+                  print("getting news stream ${snapshot.data}");
+
                   if (snapshot.hasError)
                     return new Text('Error: ${snapshot.error}');
                   switch (snapshot.connectionState) {
@@ -203,6 +205,10 @@ class NewsListState extends State<NewsList> {
                         stream: FirestoreManager.getNearNewsStream(
                             timebankID: timebankId),
                         builder: (context, snapshot) {
+                          
+                          print(
+                              "Getting news stream for near me ${snapshot.connectionState}");
+
                           if (snapshot.hasError)
                             return new Text('Error: ${snapshot.error}');
                           switch (snapshot.connectionState) {
@@ -211,6 +217,9 @@ class NewsListState extends State<NewsList> {
                               break;
                             default:
                               List<NewsModel> newsList = snapshot.data;
+
+                              print(
+                                  "News list from near me ${newsList.length}");
                               newsList =
                                   filterBlockedContent(newsList, context);
 
@@ -450,76 +459,91 @@ class NewsListState extends State<NewsList> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 2),
                                     child: FlavorConfig.appFlavor ==
-                                        Flavor.HUMANITY_FIRST ||
-                                        FlavorConfig.appFlavor == Flavor.APP
+                                                Flavor.HUMANITY_FIRST ||
+                                            FlavorConfig.appFlavor == Flavor.APP
                                         ? Icon(
-                                      Icons.flag,
-                                      size: 20,
-                                    )
+                                            Icons.flag,
+                                            size: 20,
+                                          )
                                         : SvgPicture.asset(
-                                      'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
-                                      height: 20,
-                                      width: 20,
-                                      color:
-                                      Theme.of(context).primaryColor,
-                                    ),
+                                            'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
+                                            height: 20,
+                                            width: 20,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
                                   ),
-                                      () {
-                                         if (news.reports.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-                                           showDialog(
-                                             context: context,
-                                             builder: (BuildContext viewContextS) {
-                                               // return object of type Dialog
-                                               return AlertDialog(
-                                                 title: Text('Already reported!'),
-                                                 content: Text('You already reported this feed'),
-                                                 actions: <Widget>[
-                                                   FlatButton(
-                                                     child: Text('OK'),
-                                                     onPressed: () {
-                                                       Navigator.of(viewContextS).pop();
-                                                     },
-                                                   ),
-                                                 ],
-                                               );
-                                             },
-                                           );
-                                         } else {
-                                           showDialog(
-                                             context: context,
-                                             builder: (BuildContext viewContext) {
-                                               // return object of type Dialog
-                                               return AlertDialog(
-                                                 title: Text('Report Feed?'),
-                                                 content: Text('Do you want to report this feed?'),
-                                                 actions: <Widget>[
-                                                   FlatButton(
-                                                     child: Text('Cancel'),
-                                                     onPressed: () {
-                                                       Navigator.of(viewContext).pop();
-                                                     },
-                                                   ),
-                                                   FlatButton(
-                                                     child: Text('Report Feed'),
-                                                     onPressed: () {
-                                                       if (news.reports.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-                                                         print('already in reports');
-                                                       } else {
-                                                         news.reports.add(SevaCore.of(context).loggedInUser.sevaUserID);
-                                                         Firestore.instance
-                                                             .collection('news')
-                                                             .document(news.id).updateData({
-                                                           'reports':news.reports
-                                                         });
-                                                       }
-                                                       Navigator.of(viewContext).pop();
-                                                     },
-                                                   ),
-                                                 ],
-                                               );
-                                             },
-                                           );
-                                         }
+                                  () {
+                                    if (news.reports.contains(
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID)) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext viewContextS) {
+                                          // return object of type Dialog
+                                          return AlertDialog(
+                                            title: Text('Already reported!'),
+                                            content: Text(
+                                                'You already reported this feed'),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text('OK'),
+                                                onPressed: () {
+                                                  Navigator.of(viewContextS)
+                                                      .pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext viewContext) {
+                                          // return object of type Dialog
+                                          return AlertDialog(
+                                            title: Text('Report Feed?'),
+                                            content: Text(
+                                                'Do you want to report this feed?'),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text('Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(viewContext)
+                                                      .pop();
+                                                },
+                                              ),
+                                              FlatButton(
+                                                child: Text('Report Feed'),
+                                                onPressed: () {
+                                                  if (news.reports.contains(
+                                                      SevaCore.of(context)
+                                                          .loggedInUser
+                                                          .sevaUserID)) {
+                                                    print('already in reports');
+                                                  } else {
+                                                    news.reports.add(
+                                                        SevaCore.of(context)
+                                                            .loggedInUser
+                                                            .sevaUserID);
+                                                    Firestore.instance
+                                                        .collection('news')
+                                                        .document(news.id)
+                                                        .updateData({
+                                                      'reports': news.reports
+                                                    });
+                                                  }
+                                                  Navigator.of(viewContext)
+                                                      .pop();
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   },
                                 ),
                                 getOptionButtons(
@@ -528,8 +552,7 @@ class NewsListState extends State<NewsList> {
                                         horizontal: 6, vertical: 2),
                                     child: Icon(
                                       Icons.share,
-                                      color:
-                                      Theme.of(context).primaryColor,
+                                      color: Theme.of(context).primaryColor,
                                       size: 20,
                                     ),
                                   ),
@@ -541,10 +564,12 @@ class NewsListState extends State<NewsList> {
                                         builder: (context) =>
                                             // NewChat(isShare, news),
                                             SelectMember.shareFeed(
-                                              timebankId : SevaCore.of(context).loggedInUser.currentTimebank,
-                                              newsModel: news,
-                                              isFromShare: isShare,
-                                            ),
+                                          timebankId: SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentTimebank,
+                                          newsModel: news,
+                                          isFromShare: isShare,
+                                        ),
                                       ),
                                     );
                                   },

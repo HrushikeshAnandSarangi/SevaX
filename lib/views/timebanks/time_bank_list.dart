@@ -75,9 +75,13 @@ class TimeBankList extends StatelessWidget {
         }
         List<TimebankModel> reportedList = snapshot.data;
         return Container(
-          child: getDataScrollView(
-            context,
-            reportedList,
+          child: ListView(
+            children: <Widget>[
+              getDataScrollView(
+                context,
+                reportedList,
+              )
+            ],
           ),
         );
       },
@@ -184,6 +188,4 @@ class TimeBankList extends StatelessWidget {
       return NetworkImage(model.photoUrl);
     }
   }
-  
 }
-

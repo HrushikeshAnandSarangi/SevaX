@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'dart:async';
@@ -47,9 +48,13 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
 
 Stream<List<NewsModel>> getNearNewsStream(
     {@required String timebankID}) async* {
-  LocationData pos = await locations.getLocation();
-  double lat = pos.latitude;
-  double lng = pos.longitude;
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
+
+  userLocation = await geolocator.getCurrentPosition();
+  double lat = userLocation.latitude;
+  double lng = userLocation.longitude;
+
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('news').where('entity', isEqualTo: {
     'entityType': 'timebanks',
@@ -93,9 +98,13 @@ Stream<List<NewsModel>> getAllNewsStream() async* {
 }
 
 Stream<List<NewsModel>> getAllNearNewsStream() async* {
-  LocationData pos = await locations.getLocation();
-  double lat = pos.latitude;
-  double lng = pos.longitude;
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
+
+  userLocation = await geolocator.getCurrentPosition();
+  double lat = userLocation.latitude;
+  double lng = userLocation.longitude;
+
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('news');
   var data = geos
