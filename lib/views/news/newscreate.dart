@@ -373,6 +373,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   onPressed: () {
                     // Validate will return true if the form is valid, or false if
                     // the form is invalid.
+                    if (globals.newsImageURL == null) {
+                      Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text('Select an image to post')));
+                      return;
+                    }
+
                     if (location != null) {
                       if (formKey.currentState.validate()) {
                         // If the form is valid, we want to show a Snackbar
