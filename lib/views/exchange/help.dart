@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
@@ -250,6 +251,37 @@ class _RequestCardViewState extends State<RequestCardView> {
               );
             },
           ) : Offstage(),
+         widget.requestItem.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID && widget.requestItem.acceptors.length == 0 ?
+         IconButton(
+           icon: Icon(Icons.delete),
+           onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext viewcontext) {
+                    return AlertDialog(
+                      title: Text('Are you sure you want to delete this request?'),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('No'),
+                          onPressed: () {
+                            Navigator.pop(viewcontext);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('Yes'),
+                          onPressed: () {
+                            deleteRequest(requestModel:widget.requestItem);
+                            Navigator.pop(viewcontext);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  }
+
+                );
+           },
+         ) : Offstage()
         ],
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
@@ -389,6 +421,18 @@ class _RequestCardViewState extends State<RequestCardView> {
           }),
     );
   }
+
+  Future<void> deleteRequest({
+    @required RequestModel requestModel,
+  }) async {
+    print(requestModel.toMap());
+
+    return await Firestore.instance
+        .collection('requests')
+        .document(requestModel.id)
+        .delete();
+  }
+
 }
 
 class Offers extends StatefulWidget {
@@ -532,7 +576,7 @@ class OfferCardView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-
+          offerModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ?
           IconButton(
             icon: Icon(
               Icons.edit,
@@ -551,7 +595,38 @@ class OfferCardView extends StatelessWidget {
                 ),
               );
             },
-          ),
+          ) : Offstage(),
+          offerModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID && offerModel.requestList.length == 0 ?
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext viewcontext) {
+                    return AlertDialog(
+                      title: Text('Are you sure you want to delete this offer?'),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('No'),
+                          onPressed: () {
+                            Navigator.pop(viewcontext);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('Yes'),
+                          onPressed: () {
+                            deleteOffer(offerModel:offerModel);
+                            Navigator.pop(viewcontext);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    );
+                  }
+
+              );
+            },
+          ) : Offstage()
         ],
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
@@ -701,6 +776,15 @@ class OfferCardView extends StatelessWidget {
             );
           }),
     );
+  }
+  Future<void> deleteOffer({
+    @required OfferModel offerModel,
+  }) async {
+
+    return await Firestore.instance
+        .collection('offers')
+        .document(offerModel.id)
+        .delete();
   }
 }
 

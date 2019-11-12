@@ -369,7 +369,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   var data = Firestore.instance
       .collection('requests')
       .where('approvedUsers', arrayContains: userEmail)
-      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where('root_timebank_id', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
   yield* data.transform(

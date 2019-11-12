@@ -88,6 +88,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
    this.location = widget.requestModel.location;
+   //this.selectedUsers = widget.requestModel.approvedUsers;
   }
 
   @override
