@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/news/edit_news.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/views/messages/new_chat.dart';
@@ -32,7 +34,22 @@ class NewsCardView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () => _shareNews(context),
-          )
+          ) ,
+          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ?
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NewsEdit(
+                    newsModel: newsModel,
+                    timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                  ),
+                ),
+              );
+            },
+          ) : Offstage()
         ],
       ),
       body: SafeArea(

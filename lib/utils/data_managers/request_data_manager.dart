@@ -377,7 +377,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   var data = Firestore.instance
       .collection('requests')
       .where('approvedUsers', arrayContains: userEmail)
-      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where("root_timebank_id" , isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
   yield* data.transform(
@@ -393,6 +393,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
             if (transaction.to == userId) isCompletedByUser = true;
           });
           if (!isCompletedByUser) {
+            // model.timebankId/
             requestModelList.add(model);
           }
         });

@@ -57,7 +57,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Center(
-        child: Text('You have 0 Not-Accepted Tasks'),
+        child: Text('There are currenlty none'),
       );
     }
     return ListView.builder(

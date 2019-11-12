@@ -454,6 +454,7 @@ class NewsListState extends State<NewsList> {
                                     },
                                   ),
                                 ),
+                                news.sevaUserId != SevaCore.of(context).loggedInUser.sevaUserID ?
                                 getOptionButtons(
                                   Padding(
                                     padding: EdgeInsets.symmetric(
@@ -545,7 +546,7 @@ class NewsListState extends State<NewsList> {
                                       );
                                     }
                                   },
-                                ),
+                                ) : Offstage(),
                                 getOptionButtons(
                                   Padding(
                                     padding: EdgeInsets.symmetric(

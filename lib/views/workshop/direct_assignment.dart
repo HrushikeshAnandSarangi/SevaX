@@ -10,6 +10,8 @@ import 'package:sevaexchange/views/core.dart';
 
 import 'dart:ui';
 
+import '../../flavor_config.dart';
+
 class SelectMembersInGroup extends StatefulWidget {
   String timebankId;
   HashMap<String, UserModel> userSelected;
@@ -60,7 +62,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         ],
       ),
       body: getList(
-        timebankId: widget.timebankId,
+        timebankId: FlavorConfig.values.timebankName == "Yang 2020" ? FlavorConfig.values.timebankId : widget.timebankId,
       ),
     );
   }

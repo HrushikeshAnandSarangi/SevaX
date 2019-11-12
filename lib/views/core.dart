@@ -62,7 +62,6 @@ class CoreView extends StatefulWidget {
   final String sevaUserID;
 
   CoreView({@required this.sevaUserID});
-
   @override
   _CoreViewState createState() => _CoreViewState();
 }
@@ -625,7 +624,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NewsCreate(
-                                  timebankId: FlavorConfig.values.timebankId,
+                                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                                 ),
                               ),
                             )
@@ -701,7 +700,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         context,
                         MaterialPageRoute(
                           builder: (context) => CreateOffer(
-                            timebankId: FlavorConfig.values.timebankId,
+                            timebankId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentTimebank,
                           ),
                         ),
                       )

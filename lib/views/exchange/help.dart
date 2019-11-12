@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
@@ -16,8 +17,11 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
 import '../core.dart';
+import 'edit_offer.dart';
+import 'edit_request.dart';
 
 class HelpView extends StatefulWidget {
   final TabController controller;
@@ -227,6 +231,63 @@ class _RequestCardViewState extends State<RequestCardView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          widget.requestItem.sevaUserId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
+              ? IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditRequest(
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                          requestModel: widget.requestItem,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Offstage(),
+          widget.requestItem.sevaUserId ==
+                      SevaCore.of(context).loggedInUser.sevaUserID &&
+                  widget.requestItem.acceptors.length == 0
+              ? IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext viewcontext) {
+                          return AlertDialog(
+                            title: Text(
+                                'Are you sure you want to delete this request?'),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('No'),
+                                onPressed: () {
+                                  Navigator.pop(viewcontext);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Yes'),
+                                onPressed: () {
+                                  deleteRequest(
+                                      requestModel: widget.requestItem);
+                                  Navigator.pop(viewcontext);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                )
+              : Offstage()
+        ],
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
@@ -356,6 +417,32 @@ class _RequestCardViewState extends State<RequestCardView> {
                             ),
                           ),
                         ),
+
+                        widget.requestItem.sevaUserId !=
+                  SevaCore.of(context).loggedInUser.sevaUserID ? Offstage() :
+                        Container(
+                          padding: EdgeInsets.all(8.0),
+                          child: RaisedButton(
+                            color: Theme.of(context).accentColor,
+                            onPressed: () {
+                               Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        RequestStatusView(
+                                          requestId: widget.requestItem.id,
+                                        ),
+                                    fullscreenDialog: true),
+                              );
+                            },
+                            child: Text(
+                              'View Approved Members',
+                              style: TextStyle(
+                                color: FlavorConfig.values.buttonTextColor,
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -364,6 +451,17 @@ class _RequestCardViewState extends State<RequestCardView> {
             );
           }),
     );
+  }
+
+  Future<void> deleteRequest({
+    @required RequestModel requestModel,
+  }) async {
+    print(requestModel.toMap());
+
+    return await Firestore.instance
+        .collection('requests')
+        .document(requestModel.id)
+        .delete();
   }
 }
 
@@ -507,6 +605,61 @@ class OfferCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          offerModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+              ? IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdateOffer(
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                          offerModel: offerModel,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Offstage(),
+          offerModel.sevaUserId ==
+                      SevaCore.of(context).loggedInUser.sevaUserID &&
+                  offerModel.requestList.length == 0
+              ? IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext viewcontext) {
+                          return AlertDialog(
+                            title: Text(
+                                'Are you sure you want to delete this offer?'),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text('No'),
+                                onPressed: () {
+                                  Navigator.pop(viewcontext);
+                                },
+                              ),
+                              FlatButton(
+                                child: Text('Yes'),
+                                onPressed: () {
+                                  deleteOffer(offerModel: offerModel);
+                                  Navigator.pop(viewcontext);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                )
+              : Offstage()
+        ],
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
@@ -655,6 +808,15 @@ class OfferCardView extends StatelessWidget {
             );
           }),
     );
+  }
+
+  Future<void> deleteOffer({
+    @required OfferModel offerModel,
+  }) async {
+    return await Firestore.instance
+        .collection('offers')
+        .document(offerModel.id)
+        .delete();
   }
 }
 

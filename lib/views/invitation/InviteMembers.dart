@@ -66,7 +66,7 @@ class InviteMembersState extends State<InviteMembers> {
                     if (!(timebankList.length > 0)){
                       return Container(
                         margin: EdgeInsets.fromLTRB(10, 15, 10, 10),
-                        child: Text("No admin"),
+                        child: Text("Yang gang admins can only create codes"),
                       );
                     }
 

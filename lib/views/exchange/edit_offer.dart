@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
@@ -11,9 +12,10 @@ import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
-class CreateOffer extends StatelessWidget {
+class UpdateOffer extends StatelessWidget {
   final String timebankId;
-  CreateOffer({this.timebankId});
+  OfferModel offerModel;
+  UpdateOffer({this.timebankId,this.offerModel});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,31 +24,33 @@ class CreateOffer extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          "Create volunteer offer",
+          "Update volunteer offer",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
       ),
-      body: MyCustomForm(
+      body: MyCustomOfferForm(
         timebankId: timebankId,
+        offerModel: offerModel,
       ),
     );
   }
 }
 
 // Create a Form Widget
-class MyCustomForm extends StatefulWidget {
+class MyCustomOfferForm extends StatefulWidget {
   final String timebankId;
-  MyCustomForm({this.timebankId});
+  OfferModel offerModel;
+  MyCustomOfferForm({this.timebankId,this.offerModel});
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  MyCustomOfferFormState createState() {
+    return MyCustomOfferFormState();
   }
 }
 
 // Create a corresponding State class. This class will hold the data related to
 // the form.
-class MyCustomFormState extends State<MyCustomForm> {
+class MyCustomOfferFormState extends State<MyCustomOfferForm> {
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
   //
@@ -58,15 +62,15 @@ class MyCustomFormState extends State<MyCustomForm> {
   String description = '';
   GeoFirePoint location;
   String selectedAddress;
-  String timebankId;
-
   String _selectedTimebankId;
+  OfferModel offerModel;
 
   @override
   void initState() {
     super.initState();
     _selectedTimebankId = widget.timebankId;
-    this.timebankId = _selectedTimebankId;
+    //this.offerModel.timebankId = _selectedTimebankId;
+    this.location = widget.offerModel.location;
   }
 
   void _writeToDB() async {
@@ -101,8 +105,12 @@ class MyCustomFormState extends State<MyCustomForm> {
               Text(' '),
               TextFormField(
                 decoration: InputDecoration(hintText: 'Volunteer offer title'),
+                initialValue: widget.offerModel.title,
                 keyboardType: TextInputType.text,
                 style: textStyle,
+                onChanged: (value) {
+                  widget.offerModel.title = value;
+                },
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter the subject of your Offer';
@@ -114,6 +122,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 padding: EdgeInsets.all(15.0),
               ),
               TextFormField(
+                initialValue: widget.offerModel.description,
                 decoration: InputDecoration(
                   hintText: 'Your offer and any #hashtags',
                   labelText: 'Volunteer offer description',
@@ -129,6 +138,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
                 keyboardType: TextInputType.multiline,
                 maxLines: 10,
+                onChanged: (value) {
+                  widget.offerModel.description = value;
+                },
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
@@ -140,6 +152,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 padding: EdgeInsets.all(15.0),
               ),
               TextFormField(
+                initialValue: widget.offerModel.schedule,
                 decoration: InputDecoration(
                   hintText: 'Describe My Availability',
                   labelText: 'Availability',
@@ -155,6 +168,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,
+                onChanged: (value) {
+                  widget.offerModel.schedule = value;
+                },
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter some text';
@@ -169,7 +185,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     icon: Icon(Icons.add_location),
                     label: Text(
                       selectedAddress == null || selectedAddress.isEmpty
-                          ? 'Add Location'
+                          ? '${this._getLocation()}'
                           : selectedAddress,
                     ),
                     color: Colors.grey[200],
@@ -200,9 +216,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                       if (location != null) {
                         if (_formKey.currentState.validate()) {
                           Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Creating Offer')),
+                            SnackBar(content: Text('Update Offer')),
                           );
-                          _writeToDB();
+                          widget.offerModel.location = this.location;
+                          //_writeToDB();
+                          this.updateOffer(offerModel: widget.offerModel);
                           Navigator.pop(context);
                         }
                       } else {
@@ -221,7 +239,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         ),
                         Text(' '),
                         Text(
-                          'Create volunteer offer',
+                          'Update volunteer offer',
                           style: TextStyle(
                             color: FlavorConfig.values.buttonTextColor,
                           ),
@@ -237,6 +255,17 @@ class MyCustomFormState extends State<MyCustomForm> {
         ),
       ),
     );
+  }
+
+  Future<void> updateOffer({
+    @required OfferModel offerModel,
+  }) async {
+    print(offerModel.toMap());
+
+    return await Firestore.instance
+        .collection('offers')
+        .document(offerModel.id)
+        .updateData(offerModel.toMap());
   }
 
   Future _getLocation() async {

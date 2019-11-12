@@ -75,12 +75,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
 
   Widget getUserWidget(MemberForRequest userSelected, BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ProfileViewer(
-                  userEmail: userSelected.email,
-                )));
-      },
+      onTap: () {},
       child: Card(
         child: ListTile(
           leading: CircleAvatar(
