@@ -410,6 +410,9 @@ class _SplashViewState extends State<SplashView> {
           }
         } else {
           //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
+          _navigateToUpdatePage();
+          onValue.data.containsKey("latest_build_number");
+          print(onValue.data.containsKey("latest_build_number"));
         }
       });
     });

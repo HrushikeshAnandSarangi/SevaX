@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
+import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -647,7 +648,17 @@ class NewsListState extends State<NewsList> {
           padding: const EdgeInsets.all(8.0),
           child: child,
         ),
-        onTap: onPressed,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UpdateApp(
+                //userEmail: emailId,
+              ),
+            ),
+          );
+        }
+        //onPressed,
         // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         // padding: EdgeInsets.all(0),
       ),
