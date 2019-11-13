@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:store_redirect/store_redirect.dart';
 // import 'package:open_appstore/open_appstore.dart';
@@ -34,7 +33,7 @@ class UpdateApp extends StatelessWidget {
               const APP_STORE_URL =
                   'https://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftwareUpdate?id=YOUR-APP-ID&mt=8';
               const PLAY_STORE_URL =
-                  'https://play.google.com/store/apps/details?id=YOUR-APP-ID';
+                  'https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst';
               PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
                 String appName = packageInfo.appName;
                 String packageName = packageInfo.packageName;
