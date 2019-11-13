@@ -384,39 +384,50 @@ class _SplashViewState extends State<SplashView> {
     return userId;
   }
 
-  Future checkVersion() async {
-    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      String appName = packageInfo.appName;
-      String packageName = packageInfo.packageName;
-      String version = packageInfo.version;
-
-      String buildNumber = packageInfo.buildNumber;
-
-      Firestore.instance
-          .collection("vitals")
-          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
-          .get()
-          .then((onValue) {
-        if (Platform.isAndroid) {
-          // we are on android platform
-          if (onValue.data.containsKey("latest_build_number")) {
-            var latestBuildNumber = onValue.data['latest_build_number'];
-            if (int.parse(buildNumber) < latestBuildNumber) {
-              print("App is Out of date");
-              _navigateToUpdatePage();
-            } else {
-              print("App is up to date");
-            }
-          }
-        } else {
-          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
-          _navigateToUpdatePage();
-          onValue.data.containsKey("latest_build_number");
-          print(onValue.data.containsKey("latest_build_number"));
-        }
-      });
-    });
-  }
+//  Future checkVersion() async {
+//    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+//      String appName = packageInfo.appName;
+//      String packageName = packageInfo.packageName;
+//      String version = packageInfo.version;
+//
+//      String buildNumber = packageInfo.buildNumber;
+//
+//      Firestore.instance
+//          .collection("vitals")
+//          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
+//          .get()
+//          .then((onValue) {
+//        if (Platform.isAndroid) {
+//          // we are on android platform
+//          if (onValue.data.containsKey("latest_build_number")) {
+//            var latestBuildNumber = onValue.data['latest_build_number'];
+//            if (int.parse(buildNumber) < latestBuildNumber) {
+//              print("App is Out of date");
+//              _navigateToUpdatePage();
+//            } else {
+//              print("App is up to date");
+//            }
+//          }
+//        } else {
+//          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
+//
+//          if (onValue.data.containsKey("latest_version_number")) {
+//            var latestBuildNumber = onValue.data['latest_version_number'];
+//            if (int.parse(buildNumber) < latestBuildNumber) {
+//              print("App is Out of date");
+//              _navigateToUpdatePage();
+//            } else {
+//              print("App is up to date");
+//            }
+//          }
+//
+////          _navigateToUpdatePage();
+////          onValue.data.containsKey("latest_build_number");
+////          print(onValue.data.containsKey("latest_build_number"));
+//        }
+//      });
+//    });
+//  }
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
@@ -464,6 +475,16 @@ class _SplashViewState extends State<SplashView> {
             }
           }
         } else {
+          if (onValue.data.containsKey("latest_version_number")) {
+            var latestVersionNumber = onValue.data['latest_version_number'];
+            if (version != latestVersionNumber) {
+              print("App is Out of date");
+              return false;
+            } else {
+              return true;
+            }
+          }
+
           return true;
           //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number");
         }

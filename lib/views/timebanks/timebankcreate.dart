@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -5,6 +7,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views//membersadd.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -54,6 +57,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   TimebankModel timebankModel = TimebankModel();
   bool protectedVal = false;
   GeoFirePoint location;
+  String selectedAddress;
 
   void initState() {
     super.initState();
@@ -286,39 +290,73 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 padding: EdgeInsets.only(top: 10.0),
                 child: _showMembers(),
               ),
-
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<GeoFirePoint>(
-                          builder: (context) => LocationPicker()),
-                    ).then((point) {
-                      if (point != null) location = point;
-                      // point.
-                    });
-                  },
-                  child: SizedBox(
-                    width: 140,
-                    height: 30,
-                    child: Container(
-                      color: Colors.grey[200],
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Icon(Icons.add_location),
-                          ),
-                          Text('  '),
-                          Text('Add Location'),
-                        ],
-                      ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: FlatButton.icon(
+                    icon: Icon(Icons.add_location),
+                    label: Text(
+                      selectedAddress == null || selectedAddress.isEmpty
+                          ? 'Add Location'
+                          : selectedAddress,
                     ),
+                    color: Colors.grey[200],
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<GeoFirePoint>(
+                          builder: (context) => LocationPicker(
+                            selectedLocation: location,
+                          ),
+                        ),
+                      ).then((point) {
+                        if (point != null) location = point;
+                        _getLocation();
+                        log('ReceivedLocation: $selectedAddress');
+                      });
+                    },
                   ),
                 ),
               ),
+//              Padding(
+//                padding: const EdgeInsets.all(8.0),
+//                child: GestureDetector(
+//                  onTap: () {
+//                    Navigator.push(
+//                      context,
+//                      MaterialPageRoute<GeoFirePoint>(
+//                          builder: (context) => LocationPicker(
+//                              selectedLocation: location
+//                          )),
+//                    ).then((point) {
+//                      if (point != null) location = point;
+//                      _getLocation();
+//                      //log('ReceivedLocation: $selectedAddress');
+//                    });
+//                  },
+//                  child: SizedBox(
+//                    width: 140,
+//                    height: 30,
+//                    child: Container(
+//                      color: Colors.grey[200],
+//                      child: Row(
+//                        children: <Widget>[
+//                          Padding(
+//                            padding: const EdgeInsets.all(2.0),
+//                            child: Icon(Icons.add_location),
+//                          ),
+//                          Text('  '),
+//                          Text(
+//                            selectedAddress == null || selectedAddress.isEmpty
+//                                ? 'Add Location'
+//                                : selectedAddress,
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                  ),
+//                ),
+//              ),
               Divider(),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -372,6 +410,16 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ],
           )),
         ));
+  }
+  Future _getLocation() async {
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+    log('_getLocation: $address');
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 
   _showMembers() {

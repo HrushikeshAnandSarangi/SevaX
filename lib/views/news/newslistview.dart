@@ -648,17 +648,18 @@ class NewsListState extends State<NewsList> {
           padding: const EdgeInsets.all(8.0),
           child: child,
         ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UpdateApp(
-                //userEmail: emailId,
-              ),
-            ),
-          );
-        }
-        //onPressed,
+        onTap: onPressed
+//        {
+//          Navigator.push(
+//            context,
+//            MaterialPageRoute(
+//              builder: (context) => UpdateApp(
+//                //userEmail: emailId,
+//              ),
+//            ),
+//          );
+//        }
+        ,
         // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         // padding: EdgeInsets.all(0),
       ),
