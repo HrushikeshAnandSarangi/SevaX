@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -5,6 +7,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views//membersadd.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -54,6 +57,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   TimebankModel timebankModel = TimebankModel();
   bool protectedVal = false;
   GeoFirePoint location;
+
+  String selectedAddress;
 
   void initState() {
     super.initState();
@@ -105,18 +110,21 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Center(
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: TimebankAvatar(),
-                )
-              ),
+                  child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: TimebankAvatar(),
+              )),
               Padding(
                 padding: EdgeInsets.all(15.0),
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank Name",
-                  labelText: FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank Name",
+                  hintText: FlavorConfig.values.timebankName == "Yang 2020"
+                      ? "Yang Gang Chapter"
+                      : "Timebank Name",
+                  labelText: FlavorConfig.values.timebankName == "Yang 2020"
+                      ? "Yang Gang Chapter"
+                      : "Timebank Name",
                   // labelStyle: textStyle,
                   // labelStyle: textStyle,
                   // labelText: 'Description',
@@ -297,6 +305,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           builder: (context) => LocationPicker()),
                     ).then((point) {
                       if (point != null) location = point;
+                      _getLocation();
+                      log('ReceivedLocation: $selectedAddress');
                       // point.
                     });
                   },
@@ -312,7 +322,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             child: Icon(Icons.add_location),
                           ),
                           Text('  '),
-                          Text('Add Location'),
+                          Text(
+                            selectedAddress == null || selectedAddress.isEmpty
+                                ? 'Add Location'
+                                : selectedAddress,
+                          ),
                         ],
                       ),
                     ),
@@ -323,10 +337,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
-                  alignment: Alignment.center,
+                    alignment: Alignment.center,
                     child: FutureBuilder<Object>(
-                        future:
-                        getTimeBankForId(timebankId: widget.timebankId),
+                        future: getTimeBankForId(timebankId: widget.timebankId),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) return Text('Error');
                           if (snapshot.connectionState ==
@@ -344,10 +357,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                   _writeToDB();
                                   if (parentTimebank.children == null)
                                     parentTimebank.children = [];
-                                  parentTimebank.children
-                                      .add(timebankModel.id);
-                                  updateTimebank(
-                                      timebankModel: parentTimebank);
+                                  parentTimebank.children.add(timebankModel.id);
+                                  updateTimebank(timebankModel: parentTimebank);
                                   Navigator.pop(context);
                                 }
                               } else {
@@ -358,7 +369,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             },
                             child: Text(
                               'Create ${FlavorConfig.values.timebankTitle}',
-                              style: TextStyle(fontSize: 16.0,color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.white),
                             ),
                             textColor: Colors.blue,
                           );
@@ -380,5 +392,21 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     } else {
       Text(globals.addedMembersId.toString());
     }
+  }
+
+  Future _getLocation() async {
+    
+    print("Selected Address -->  $selectedAddress");
+
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+
+    print("Address --> ${address}");
+
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 }

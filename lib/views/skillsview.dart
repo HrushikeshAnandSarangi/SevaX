@@ -40,24 +40,25 @@ class InterestViewNew extends StatefulWidget {
 }
 
 class _InterestViewNewState extends State<InterestViewNew> {
-
-  List<String> interests = FlavorConfig.values.timebankName == "Yang 2020" ? const [
-    'Host an event',
-    'Check in attendees',
-    'Canvassing Neighborhoods',
-    'Make calls to voters',
-    'Send texts to voters',
-  ] : [
-    'Branding',
-    'Campaigning',
-    'Kids',
-    'Animals',
-    'Music',
-    'Movies',
-    'Adventure',
-    'Culture',
-    'Food',
-  ];
+  List<String> interests = FlavorConfig.values.timebankName == "Yang 2020"
+      ? const [
+          'Host an event',
+          'Check in attendees',
+          'Canvassing Neighborhoods',
+          'Make calls to voters',
+          'Send texts to voters',
+        ]
+      : [
+          'Branding',
+          'Campaigning',
+          'Kids',
+          'Animals',
+          'Music',
+          'Movies',
+          'Adventure',
+          'Culture',
+          'Food',
+        ];
 
   List<MaterialColor> colorList;
   Set<String> selectedInterests = <String>[].toSet();
@@ -86,9 +87,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text('Interests', style: TextStyle(
-            color: Colors.white
-          ),),
+          title: Text(
+            'Interests',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: Column(
           children: <Widget>[ScrollExample(context), list()],
@@ -308,27 +310,29 @@ class _SkillViewNewState extends State<SkillViewNew> {
 //    'Baseball',
 //  ];
 
-  List<String> skills = FlavorConfig.values.timebankName == "Yang 2020" ? const [
-    "Data entry",
-    "Research",
-    "Graphic design",
-    "Coding/development",
-    "Photography",
-    "Videography",
-    "Multilingual/translations",
-  ] : [
-    'Curators',
-    'Developers',
-    'Writer',
-    'Advertisers',
-    'Customer',
-    'Sports',
-    'Adventure',
-    'Culture',
-    'Baseball',
-  ];
+  List<String> skills = FlavorConfig.values.timebankName == "Yang 2020"
+      ? const [
+          "Data entry",
+          "Research",
+          "Graphic design",
+          "Coding/development",
+          "Photography",
+          "Videography",
+          "Multilingual/translations",
+        ]
+      : [
+          'Curators',
+          'Developers',
+          'Writer',
+          'Advertisers',
+          'Customer',
+          'Sports',
+          'Adventure',
+          'Culture',
+          'Baseball',
+        ];
 
- // FlavorConfig.values.timebankName == "Yang 2020" ?
+  // FlavorConfig.values.timebankName == "Yang 2020" ?
 
 //  -data entry
 //  -research
@@ -418,7 +422,10 @@ class _SkillViewNewState extends State<SkillViewNew> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text('Skills'),
+          title: Text(
+            'Skills',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: SingleChildScrollView(
             child: Column(
