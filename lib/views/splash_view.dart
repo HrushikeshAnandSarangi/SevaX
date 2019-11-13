@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
@@ -380,17 +383,49 @@ class _SplashViewState extends State<SplashView> {
     return userId;
   }
 
+  Future checkVersion() async {
+    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      String version = packageInfo.version;
+
+      String buildNumber = packageInfo.buildNumber;
+
+      Firestore.instance
+          .collection("vitals")
+          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
+          .get()
+          .then((onValue) {
+        if (Platform.isAndroid) {
+          // we are on android platform
+          if (onValue.data.containsKey("latest_build_number")) {
+            var latestBuildNumber = onValue.data['latest_build_number'];
+            if (int.parse(buildNumber) < latestBuildNumber) {
+              print("App is Out of date");
+            } else {
+              print("App is up to date");
+            }
+          }
+        } else {
+          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
+        }
+      });
+    });
+  }
+
   Future<void> handleLoggedInUserIdResponse(String userId) async {
+    //check member's app version
+
+    await checkVersion();
+
     if (userId == null || userId.isEmpty) {
       loadingMessage = 'Initializing Login';
       _navigateToLoginPage();
       return;
     }
-    // UserData.shared._getSignedInUserDocs(userId);
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     if (loggedInUser == null) {
-      
       loadingMessage = 'Creating user documents';
       _navigateToLoginPage();
       return;
@@ -412,6 +447,9 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+
+    // if ()
+
 //    String location = loggedInUser.availability.location;
 //    print(location);
 //     if (loggedInUser.availability == null) {
@@ -440,7 +478,6 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToEULA(UserModel loggedInUser) async {
-    
     print("EULA -> ${loggedInUser.toString()}");
 
     Map results = await Navigator.of(context).push(
@@ -450,19 +487,17 @@ class _SplashViewState extends State<SplashView> {
     );
 
     if (results != null && results['response'] == "ACCEPTED") {
-      //UPDATE THE DB HERE 
+      //UPDATE THE DB HERE
       //print("${SevaCore.of(context).loggedInUser.email} User has agreed to EULA");
 
-      await Firestore.instance.collection('users').document(
-        loggedInUser.email
-      ).updateData({
-          'acceptedEULA' : true
-      }).then((onValue){
+      await Firestore.instance
+          .collection('users')
+          .document(loggedInUser.email)
+          .updateData({'acceptedEULA': true}).then((onValue) {
         print("Updating EULA Agreemet confirmation");
-      }).catchError((onError){
+      }).catchError((onError) {
         print("Error Updating EULA");
       });
-
     }
   }
 
