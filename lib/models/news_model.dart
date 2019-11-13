@@ -17,6 +17,7 @@ class NewsModel extends DataModel {
   EntityModel entity;
   List<String> likes;
   List<String> reports;
+  String root_timebank_id;
 
   NewsModel({
     this.id,
@@ -33,10 +34,14 @@ class NewsModel extends DataModel {
     this.entity,
     this.likes,
     this.reports,
+    this.root_timebank_id,
   });
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
+    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
+      map['root_timebank_id'] = this.root_timebank_id;
+    }
     if (this.id != null && this.id.isNotEmpty) {
       map['id'] = this.id;
     }
@@ -91,6 +96,9 @@ class NewsModel extends DataModel {
     }
     if (map.containsKey('title')) {
       this.title = map['title'];
+    }
+    if (map.containsKey('root_timebank_id')) {
+      this.root_timebank_id = map['root_timebank_id'];
     }
     if (map.containsKey('subheading')) {
       this.subheading = map['subheading'];
