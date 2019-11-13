@@ -15,6 +15,7 @@ import 'package:sevaexchange/views/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
+import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -402,6 +403,7 @@ class _SplashViewState extends State<SplashView> {
             var latestBuildNumber = onValue.data['latest_build_number'];
             if (int.parse(buildNumber) < latestBuildNumber) {
               print("App is Out of date");
+              _navigateToUpdatePage();
             } else {
               print("App is up to date");
             }
@@ -414,9 +416,45 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
-    //check member's app version
 
-    await checkVersion();
+
+    //check app version
+    bool isLatestVersion = await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      String appName = packageInfo.appName;
+      String packageName = packageInfo.packageName;
+      String version = packageInfo.version;
+
+      String buildNumber = packageInfo.buildNumber;
+
+      return Firestore.instance
+          .collection("vitals")
+          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
+          .get()
+          .then((onValue) {
+        if (Platform.isAndroid) {
+          // we are on android platform
+          if (onValue.data.containsKey("latest_build_number")) {
+            var latestBuildNumber = onValue.data['latest_build_number'];
+            if (int.parse(buildNumber) < latestBuildNumber) {
+              print("App is Out of date");
+              return false;
+            } else {
+              print("App is up to date");
+              return true;
+            }
+          }
+        } else {
+          return true;
+          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
+        }
+        return true;
+      });
+    });
+
+    if (!isLatestVersion) {
+      _navigateToUpdatePage();
+      return;
+    }
 
     if (userId == null || userId.isEmpty) {
       loadingMessage = 'Initializing Login';
@@ -474,6 +512,12 @@ class _SplashViewState extends State<SplashView> {
   Future _navigateToLoginPage() async {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (context) => LoginPage(),
+    ));
+  }
+
+  Future _navigateToUpdatePage() async {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => UpdateApp(),
     ));
   }
 
