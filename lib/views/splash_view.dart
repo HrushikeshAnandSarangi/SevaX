@@ -416,10 +416,9 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
-
-
     //check app version
-    bool isLatestVersion = await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    bool isLatestVersion =
+        await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
       String appName = packageInfo.appName;
       String packageName = packageInfo.packageName;
       String version = packageInfo.version;
@@ -445,7 +444,7 @@ class _SplashViewState extends State<SplashView> {
           }
         } else {
           return true;
-          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
+          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number"); 
         }
         return true;
       });
