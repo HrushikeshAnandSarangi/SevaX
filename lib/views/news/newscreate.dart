@@ -106,6 +106,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.postTimestamp = timestamp;
     newsObject.location = location;
+    newsObject.root_timebank_id = FlavorConfig.values.timebankId;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
