@@ -440,6 +440,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.accepted = false;
     requestModel.acceptors = [];
     requestModel.location = location;
+    requestModel.root_timebank_id = FlavorConfig.values.timebankId;
+    //requestModel.r
 
     if (requestModel.requestStart == null) {
       requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
