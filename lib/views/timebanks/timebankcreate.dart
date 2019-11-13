@@ -297,6 +297,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           builder: (context) => LocationPicker()),
                     ).then((point) {
                       if (point != null) location = point;
+                      // point.
                     });
                   },
                   child: SizedBox(

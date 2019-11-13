@@ -416,9 +416,25 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
+    if (userId == null || userId.isEmpty) {
+      loadingMessage = 'Initializing Login';
+      _navigateToLoginPage();
+      return;
+    }
+
+    UserModel loggedInUser = await _getSignedInUserDocs(userId);
+    if (loggedInUser == null) {
+      loadingMessage = 'Creating user documents';
+      _navigateToLoginPage();
+      return;
+    }
+    UserData.shared.user = loggedInUser;
+
     //check app version
     bool isLatestVersion =
         await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+      print("retrieved data");
+
       String appName = packageInfo.appName;
       String packageName = packageInfo.packageName;
       String version = packageInfo.version;
@@ -430,6 +446,8 @@ class _SplashViewState extends State<SplashView> {
           .document(Platform.isAndroid ? "vital_android" : "vital_ios")
           .get()
           .then((onValue) {
+        print("retrieved vitals from firebase");
+
         if (Platform.isAndroid) {
           // we are on android platform
           if (onValue.data.containsKey("latest_build_number")) {
@@ -444,7 +462,7 @@ class _SplashViewState extends State<SplashView> {
           }
         } else {
           return true;
-          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number"); 
+          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number");
         }
         return true;
       });
@@ -454,20 +472,6 @@ class _SplashViewState extends State<SplashView> {
       _navigateToUpdatePage();
       return;
     }
-
-    if (userId == null || userId.isEmpty) {
-      loadingMessage = 'Initializing Login';
-      _navigateToLoginPage();
-      return;
-    }
-
-    UserModel loggedInUser = await _getSignedInUserDocs(userId);
-    if (loggedInUser == null) {
-      loadingMessage = 'Creating user documents';
-      _navigateToLoginPage();
-      return;
-    }
-    UserData.shared.user = loggedInUser;
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);

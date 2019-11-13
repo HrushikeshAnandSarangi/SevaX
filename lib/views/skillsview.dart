@@ -86,7 +86,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text('Interests'),
+          title: Text('Interests', style: TextStyle(
+            color: Colors.white
+          ),),
         ),
         body: Column(
           children: <Widget>[ScrollExample(context), list()],
@@ -307,13 +309,13 @@ class _SkillViewNewState extends State<SkillViewNew> {
 //  ];
 
   List<String> skills = FlavorConfig.values.timebankName == "Yang 2020" ? const [
-    "data entry",
-    "research",
-    "graphic design",
-    "coding/development",
-    "photography",
-    "videography",
-    "multilingual/translations",
+    "Data entry",
+    "Research",
+    "Graphic design",
+    "Coding/development",
+    "Photography",
+    "Videography",
+    "Multilingual/translations",
   ] : [
     'Curators',
     'Developers',
