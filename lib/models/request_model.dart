@@ -23,7 +23,7 @@ class RequestModel extends DataModel {
   int numberOfApprovals;
   List<String> approvedUsers;
   GeoFirePoint location;
-
+  String root_timebank_id;
   Color color;
 
   RequestModel(
@@ -46,11 +46,15 @@ class RequestModel extends DataModel {
       this.timebankId,
       this.approvedUsers = const [],
       this.numberOfApprovals = 1,
-      this.location});
+      this.location,
+        this.root_timebank_id,});
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
       this.id = map['id'];
+    }
+    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
+      map['root_timebank_id'] = this.root_timebank_id;
     }
     if (map.containsKey('title')) {
       this.title = map['title'];
@@ -126,6 +130,9 @@ class RequestModel extends DataModel {
 
     if (this.title != null && this.title.isNotEmpty) {
       object['title'] = this.title;
+    }
+    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
+      object['root_timebank_id'] = this.root_timebank_id;
     }
     if (this.description != null && this.description.isNotEmpty) {
       object['description'] = this.description;
