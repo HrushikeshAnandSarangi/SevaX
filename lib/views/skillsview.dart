@@ -92,7 +92,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: Column(
+        body: ListView(
           children: <Widget>[ScrollExample(context), list()],
         ),
         bottomNavigationBar: ButtonBar(
@@ -428,7 +428,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           ),
         ),
         body: SingleChildScrollView(
-            child: Column(
+            child: ListView(
           children: <Widget>[
             ScrollExample(context),
             list(),

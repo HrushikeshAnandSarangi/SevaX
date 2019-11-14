@@ -67,7 +67,7 @@ class _EditInterestsState extends State<EditInterests> {
         appBar: AppBar(
           title: Text('Edit Interests',style: TextStyle(color: Colors.white),),
         ),
-        body: Column(
+        body: ListView(
           children: <Widget>[ScrollExample(context), list()],
         ),
         bottomNavigationBar: ButtonBar(
@@ -90,16 +90,18 @@ class _EditInterestsState extends State<EditInterests> {
 
   Widget list() {
     if (selectedInterests.length > 0) {
-      return Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: selectedInterests.map((interest) {
-            final _random = new Random();
-            var element = colorList[_random.nextInt(colorList.length)];
-            return chip(interest, false, element);
-          }).toList(),
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: selectedInterests.map((interest) {
+              final _random = new Random();
+              var element = colorList[_random.nextInt(colorList.length)];
+              return chip(interest, false, element);
+            }).toList(),
+          ),
         ),
       );
     }

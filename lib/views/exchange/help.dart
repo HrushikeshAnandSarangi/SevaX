@@ -33,12 +33,13 @@ class HelpView extends StatefulWidget {
 
 class HelpViewState extends State<HelpView> {
   static bool isAdminOrCoordinator = false;
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     FirestoreManager.getTimeBankForId(
-            timebankId: FlavorConfig.values.timebankId)
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
         .then((timebank) {
       if (timebank.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
@@ -70,6 +71,7 @@ class Requests extends StatefulWidget {
   final BuildContext parentContext;
 
   Requests(this.parentContext);
+
   @override
   RequestsState createState() => RequestsState();
 }
@@ -82,6 +84,7 @@ class RequestsState extends State<Requests> {
   String timebankId = FlavorConfig.values.timebankId;
   bool isNearme = false;
   List<TimebankModel> timebankList = [];
+
   @override
   Widget build(BuildContext context) {
     _setORValue();
@@ -196,6 +199,7 @@ class RequestsState extends State<Requests> {
 
 class RequestCardView extends StatefulWidget {
   final RequestModel requestItem;
+
   RequestCardView({
     Key key,
     @required this.requestItem,
@@ -478,6 +482,7 @@ class Offers extends StatefulWidget {
   final BuildContext parentContext;
 
   Offers(this.parentContext);
+
   @override
   OffersState createState() => OffersState();
 }
@@ -756,52 +761,50 @@ class OfferCardView extends StatelessWidget {
                                     //     },
                                     //   ),
                                     // );
-
-                                    if (FlavorConfig.appFlavor == Flavor.APP) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectRequestView(
-                                            offerModel: offerModel,
-                                            sevaUserIdOffer: sevaUserIdOffer,
+                                    FirestoreManager.getTimeBankForId(
+                                            timebankId:
+                                                this.offerModel.timebankId)
+                                        .then((timebank) {
+                                      if (timebank.admins.contains(
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID) ||
+                                          timebank.coordinators.contains(
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID)) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SelectRequestView(
+                                              offerModel: offerModel,
+                                              sevaUserIdOffer: sevaUserIdOffer,
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    } else if (HelpViewState
-                                            .isAdminOrCoordinator ==
-                                        true) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectRequestView(
-                                            offerModel: offerModel,
-                                            sevaUserIdOffer: sevaUserIdOffer,
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title:
-                                                new Text("Permission Denied"),
-                                            content: new Text(
-                                                "You need to be an Admin or Coordinator to have permission to send request to offers"),
-                                            actions: <Widget>[
-                                              new FlatButton(
-                                                child: new Text("Close"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
+                                        );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title:
+                                                  new Text("Permission Denied"),
+                                              content: new Text(
+                                                  "You need to be an Admin or Coordinator to have permission to send request to offers"),
+                                              actions: <Widget>[
+                                                new FlatButton(
+                                                  child: new Text("Close"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    });
                                   },
                             child: Text(
                               'Send Request',
@@ -832,6 +835,7 @@ class OfferCardView extends StatelessWidget {
 class NearRequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const NearRequestListItems({Key key, this.timebankId, this.parentContext})
       : super(key: key);
 
@@ -1066,6 +1070,7 @@ class NearRequestListItems extends StatelessWidget {
 class RequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const RequestListItems({Key key, this.timebankId, this.parentContext})
       : super(key: key);
 
@@ -1335,6 +1340,7 @@ class RequestListItems extends StatelessWidget {
 class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const OfferListItems({Key key, this.parentContext, this.timebankId})
       : super(key: key);
 
@@ -1552,6 +1558,7 @@ class OfferListItems extends StatelessWidget {
 class NearOfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const NearOfferListItems({Key key, this.parentContext, this.timebankId})
       : super(key: key);
 
