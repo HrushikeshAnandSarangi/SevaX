@@ -1,8 +1,11 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -17,6 +20,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
 import '../core.dart';
@@ -604,18 +608,26 @@ class OffersState extends State<Offers> {
   }
 }
 
-class OfferCardView extends StatelessWidget {
+class OfferCardView extends StatefulWidget {
   final OfferModel offerModel;
   String sevaUserIdOffer;
 
-  OfferCardView({Key key, @required this.offerModel}) : super(key: key);
+  OfferCardView({this.offerModel});
 
+  @override
+  State<StatefulWidget> createState() {
+    return OfferCardViewState();
+  }
+}
+
+class OfferCardViewState extends State<OfferCardView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          offerModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+          widget.offerModel.sevaUserId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID
               ? IconButton(
                   icon: Icon(
                     Icons.edit,
@@ -628,16 +640,16 @@ class OfferCardView extends StatelessWidget {
                         builder: (context) => UpdateOffer(
                           timebankId:
                               SevaCore.of(context).loggedInUser.currentTimebank,
-                          offerModel: offerModel,
+                          offerModel: widget.offerModel,
                         ),
                       ),
                     );
                   },
                 )
               : Offstage(),
-          offerModel.sevaUserId ==
+          widget.offerModel.sevaUserId ==
                       SevaCore.of(context).loggedInUser.sevaUserID &&
-                  offerModel.requestList.length == 0
+                  widget.offerModel.requestList.length == 0
               ? IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -657,7 +669,7 @@ class OfferCardView extends StatelessWidget {
                               FlatButton(
                                 child: Text('Yes'),
                                 onPressed: () {
-                                  deleteOffer(offerModel: offerModel);
+                                  deleteOffer(offerModel: widget.offerModel);
                                   Navigator.pop(viewcontext);
                                   Navigator.pop(context);
                                 },
@@ -672,7 +684,7 @@ class OfferCardView extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          offerModel.title,
+          widget.offerModel.title,
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -695,7 +707,7 @@ class OfferCardView extends StatelessWidget {
                   padding: EdgeInsets.all(10.0),
                   child: Container(
                     padding: EdgeInsets.all(10.0),
-                    color: offerModel.color,
+                    color: widget.offerModel.color,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -703,7 +715,7 @@ class OfferCardView extends StatelessWidget {
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
                           child: Text(
-                            offerModel.title,
+                            widget.offerModel.title,
                             style: TextStyle(
                               fontSize: 18.0,
                               fontWeight: FontWeight.w700,
@@ -712,12 +724,14 @@ class OfferCardView extends StatelessWidget {
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
-                          child: RichTextView(text: offerModel.description),
+                          child:
+                              RichTextView(text: widget.offerModel.description),
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
                           alignment: Alignment(-1.0, 0.0),
-                          child: Text('Posted By: ' + offerModel.fullName),
+                          child:
+                              Text('Posted By: ' + widget.offerModel.fullName),
                         ),
                         Container(
                           padding: EdgeInsets.all(8.0),
@@ -728,7 +742,7 @@ class OfferCardView extends StatelessWidget {
                                   getDateTimeAccToUserTimezone(
                                       dateTime:
                                           DateTime.fromMillisecondsSinceEpoch(
-                                              offerModel.timestamp),
+                                              widget.offerModel.timestamp),
                                       timezoneAbb: usertimezone),
                                 ),
                           ),
@@ -741,30 +755,24 @@ class OfferCardView extends StatelessWidget {
                           padding: EdgeInsets.all(8.0),
                           child: RaisedButton(
                             color: Theme.of(context).accentColor,
-                            onPressed: offerModel.sevaUserId ==
-                                    SevaCore.of(context).loggedInUser.sevaUserID
+                            onPressed: widget.offerModel.sevaUserId ==
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID ||
+                                    widget.offerModel.acceptedOffer
                                 ? null
                                 : () {
-                                    sevaUserIdOffer = offerModel.sevaUserId;
-//                        Navigator.pop(context);
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) {
-                                    //       return SelectRequestView(
-                                    //         offerModel: offerModel,
-                                    //       );
-                                    //     },
-                                    //   ),
-                                    // );
-
+                                    widget.sevaUserIdOffer =
+                                        widget.offerModel.sevaUserId;
                                     if (FlavorConfig.appFlavor == Flavor.APP) {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               SelectRequestView(
-                                            offerModel: offerModel,
-                                            sevaUserIdOffer: sevaUserIdOffer,
+                                            offerModel: widget.offerModel,
+                                            sevaUserIdOffer:
+                                                widget.sevaUserIdOffer,
                                           ),
                                         ),
                                       );
@@ -776,35 +784,22 @@ class OfferCardView extends StatelessWidget {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               SelectRequestView(
-                                            offerModel: offerModel,
-                                            sevaUserIdOffer: sevaUserIdOffer,
+                                            offerModel: widget.offerModel,
+                                            sevaUserIdOffer:
+                                                widget.sevaUserIdOffer,
                                           ),
                                         ),
                                       );
                                     } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title:
-                                                new Text("Permission Denied"),
-                                            content: new Text(
-                                                "You need to be an Admin or Coordinator to have permission to send request to offers"),
-                                            actions: <Widget>[
-                                              new FlatButton(
-                                                child: new Text("Close"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                      //print("Send notification");
+                                      // only admins can do that
+                                      _makePostRequest(widget.offerModel);
                                     }
                                   },
                             child: Text(
-                              'Send Request',
+                              widget.offerModel.acceptedOffer
+                                  ? 'Offer Accepted'
+                                  : 'Accept Offer',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -817,6 +812,46 @@ class OfferCardView extends StatelessWidget {
             );
           }),
     );
+  }
+
+  String offerStatusLabel;
+  _makePostRequest(OfferModel offerModel) async {
+    // set up POST request arguments
+    String url =
+        'https://us-central1-sevaexchange.cloudfunctions.net/acceptOffer';
+    Map<String, String> headers = {"Content-type": "application/json"};
+    Map<String, String> body = {
+      'id': offerModel.id,
+      'email': offerModel.email,
+      'notificationId': utils.Utils.getUuid(),
+      'acceptorSevaId': SevaCore.of(context).loggedInUser.sevaUserID,
+      'timebankId': FlavorConfig.values.timebankId,
+      'sevaUserId': offerModel.sevaUserId,
+    };
+
+    setState(() {
+      widget.offerModel.acceptedOffer = true;
+    });
+
+    // make POST request
+    Response response =
+        await post(url, headers: headers, body: json.encode(body));
+    // check the status code for the result
+    int statusCode = response.statusCode;
+
+    if (statusCode == 200) {
+      print("Request completed successfully");
+    } else {
+      print("Request failed");
+    }
+    // this API passes back the id of the new item added to the body
+    // String body = response.body;
+    // {
+    //   "title": "Hello",
+    //   "body": "body text",
+    //   "userId": 1,
+    //   "id": 101
+    // }
   }
 
   Future<void> deleteOffer({

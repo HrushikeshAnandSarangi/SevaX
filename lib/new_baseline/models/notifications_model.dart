@@ -57,6 +57,9 @@ class NotificationModel {
       if (typeString == 'OfferReject') {
         notificationModel.type = NotificationType.OfferReject;
       }
+      if (typeString == 'AcceptedOffer') {
+        notificationModel.type = NotificationType.AcceptedOffer;
+      }
     }
     return notificationModel;
   }
@@ -73,7 +76,6 @@ class NotificationModel {
     if (this.type != null) {
       map['type'] = this.type.toString().split('.').last;
     }
-
     return map;
   }
 }
@@ -89,5 +91,6 @@ enum NotificationType {
   TransactionDebit,
   OfferAccept,
   OfferReject,
-  JoinRequest
+  JoinRequest,
+  AcceptedOffer
 }

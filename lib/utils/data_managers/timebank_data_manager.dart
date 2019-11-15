@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
+import 'package:sevaexchange/new_baseline/models/offer_model.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/exchange/help.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
   return await Firestore.instance
@@ -68,7 +71,6 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
   );
 }
 
-
 /// Get all timebanknew associated with a User as a Stream
 Stream<List<TimebankModel>> getTimebanksForAdmins(
     {@required String userId}) async* {
@@ -94,7 +96,6 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
     ),
   );
 }
-
 
 Stream<List<ReportModel>> getReportedUsersStream(
     {@required String timebankId}) async* {
@@ -186,6 +187,30 @@ Stream<List<TimebankModel>> getChildTimebanks(
           },
         );
         reportsList.add(modelList);
+      },
+    ),
+  );
+}
+
+Stream<List<prefix0.OfferModel>> getOffersApprovedByAdmin(
+    {@required String timebankId}) async* {
+  var data = Firestore.instance
+      .collection('offers')
+      .where('offerAccepted', isEqualTo: true)
+      .where('timebankId', isEqualTo: timebankId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<prefix0.OfferModel>>.fromHandlers(
+      handleData: (snapshot, offersList) {
+        List<prefix0.OfferModel> modelList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            prefix0.OfferModel model = prefix0.OfferModel.fromMap(documentSnapshot.data);
+            modelList.add(model);
+          },
+        );
+        offersList.add(modelList);
       },
     ),
   );

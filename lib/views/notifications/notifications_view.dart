@@ -46,7 +46,7 @@ class NotificationsView extends StatelessWidget {
           itemCount: notifications.length,
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);
-            print("Notification widget ${notification.toString()}");
+            print("Notification widgets ${notification.type}");
 
             switch (notification.type) {
               case NotificationType.RequestAccept:
@@ -197,6 +197,28 @@ class NotificationsView extends StatelessWidget {
                 break;
               case NotificationType.OfferReject:
                 // TODO: Handle this case.
+                break;
+              case NotificationType.AcceptedOffer:
+                print("Offere accepted");
+                OfferAcceptedNotificationModel acceptedOffer =
+                    OfferAcceptedNotificationModel.fromMap(notification.data);
+                return FutureBuilder<UserModel>(
+                    future: FirestoreManager.getUserForId(
+                        sevaUserId: acceptedOffer.acceptedBy),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return notificationShimmer;
+                      }
+                      UserModel user = snapshot.data;
+                      return getOfferAcceptedNotificationView(
+                          user, notification.id, acceptedOffer, context);
+                    });
+
+                // return Text(
+                //     'Acceptance Request ' + acceptedOffer.notificationContent);
                 break;
             }
           },
@@ -761,6 +783,32 @@ class NotificationsView extends StatelessWidget {
                       )),
             );
           },
+        ));
+  }
+
+  Widget getOfferAcceptedNotificationView(UserModel user, String notificationId,
+      OfferAcceptedNotificationModel model, BuildContext context) {
+    return Dismissible(
+        background: dismissibleBackground,
+        key: Key(Utils.getUuid()),
+        onDismissed: (direction) {
+          String userEmail = SevaCore.of(context).loggedInUser.email;
+          FirestoreManager.readNotification(notificationId, userEmail);
+        },
+        child: GestureDetector(
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              title: Text("Offer Accepted"),
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(user.photoURL),
+              ),
+              subtitle: Text(
+                  '${user.fullname.toLowerCase()} has shown interest in your offer'),
+            ),
+          ),
+          onTap: () {},
         ));
   }
 

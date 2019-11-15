@@ -32,3 +32,43 @@ class JoinRequestNotificationModel extends DataModel {
     return object;
   }
 }
+
+class OfferAcceptedNotificationModel extends DataModel {
+  String acceptedBy;
+  String notificationContent;
+  String offerId;
+
+  OfferAcceptedNotificationModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('acceptedBy')) {
+      this.acceptedBy = map['acceptedBy'];
+    }
+
+    if (map.containsKey('notificationContent')) {
+      this.notificationContent = map['notificationContent'];
+    }
+
+    if (map.containsKey('offerId')) {
+      this.offerId = map['offerId'];
+    }
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> object = {};
+
+    if (this.acceptedBy != null && this.acceptedBy.isNotEmpty) {
+      object['acceptedBy'] = this.acceptedBy;
+    }
+
+    if (this.notificationContent != null &&
+        this.notificationContent.isNotEmpty) {
+      object['notificationContent'] = this.notificationContent;
+    }
+
+    if (this.offerId != null && this.offerId.isNotEmpty) {
+      object['offerId'] = this.offerId;
+    }
+
+    return object;
+  }
+}

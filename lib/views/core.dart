@@ -624,7 +624,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                               context,
                               MaterialPageRoute(
                                 builder: (context) => NewsCreate(
-                                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                                  timebankId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .currentTimebank,
                                 ),
                               ),
                             )
@@ -814,8 +816,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
           );
         });
   }
-
-
 
   // Future<String>
 

@@ -5,6 +5,7 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
 void main() {
@@ -52,8 +53,8 @@ class MainApplication extends StatelessWidget {
       child: MaterialApp(
         theme: FlavorConfig.values.theme,
         home: SplashView(),
-        // home: RequestStatusView(
-        //   requestId: "venki@gmail.com*1573544299069",
+        // home: AcceptedOffers(
+        //   timebankId: "2d7c63b5-0e37-4ccd-9e83-461fa703fcaa",
         // ),
       ),
     );

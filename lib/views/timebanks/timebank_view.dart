@@ -19,6 +19,7 @@ import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -500,6 +501,26 @@ class _TimebankViewState extends State<TimebankView> {
                                   );
                                 },
                               ),
+                        !timebankModel.members.contains(loggedInUser)
+                            ? Offstage()
+                            : FlatButton(
+                                child: Text(
+                                  'View Accepted Offers',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Theme.of(context).accentColor),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AcceptedOffers(
+                                              timebankId: timebankModel.id,
+                                            )),
+                                  );
+                                },
+                              ),
+
                         timebankModel.parentTimebankId != null
                             ? FutureBuilder<Object>(
                                 future: FirestoreManager.getTimeBankForId(
@@ -804,8 +825,8 @@ class _TimebankViewState extends State<TimebankView> {
         }
         break;
       case 'campaigns':
-        if (timebankModel.admins.contains(
-            SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
           return CampaignCreate(
             timebankModel: timebankModel,
           );

@@ -67,6 +67,10 @@ class NotificationsModel extends DataModel {
       if (typeString == 'OfferReject') {
         this.type = NotificationType.OfferReject;
       }
+
+      if (typeString == 'AcceptedOffer') {
+        this.type = NotificationType.AcceptedOffer;
+      }
     }
     if (map.containsKey('data')) {
       this.data = Map.castFrom(map['data']);
@@ -78,7 +82,6 @@ class NotificationsModel extends DataModel {
       this.isRead = map['isRead'];
     }
   }
-
 
   @override
   String toString() {
@@ -132,4 +135,5 @@ enum NotificationType {
   OfferAccept,
   OfferReject,
   JoinRequest,
+  AcceptedOffer
 }
