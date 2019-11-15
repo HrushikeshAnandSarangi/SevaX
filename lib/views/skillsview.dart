@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -42,11 +44,14 @@ class InterestViewNew extends StatefulWidget {
 class _InterestViewNewState extends State<InterestViewNew> {
   List<String> interests = FlavorConfig.values.timebankName == "Yang 2020"
       ? const [
-          'Host an event',
-          'Check in attendees',
-          'Canvassing Neighborhoods',
+          'Block Walk',
+          'Crowd control',
+          'Cleaning campaign office',
           'Make calls to voters',
           'Send texts to voters',
+          "Host a meet and greet",
+          "Canvassing Neighborhoods",
+          "Phone Bank"
         ]
       : [
           'Branding',
@@ -73,8 +78,14 @@ class _InterestViewNewState extends State<InterestViewNew> {
     getInterestsForTimebank(timebankId: FlavorConfig.values.timebankId)
         .then((onValue) {
       setState(() {
-        if (onValue != null && onValue.isNotEmpty) interests = onValue;
+        if (onValue != null && onValue.isNotEmpty) {
+          interests = onValue;
+        } else {
+          print(interests);
+        }
       });
+      this.selectedInterests = <String>[].toSet();
+      //this.selectedInterests = SevaCore.of(context).loggedInUser.interests.toSet();
     });
   }
 
@@ -127,11 +138,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: selectedInterests.map((interest) {
-            int index = interests.indexOf(interest);
-            //if (selectedSkills.contains(skill)) {
-            return chip(interest, false, colorList[index]);
-            // }
-            //return chip(skill, false, colorList[index]);
+            //int index = interests.indexOf(interest);
+            final _random = new Random();
+            var element = colorList[_random.nextInt(colorList.length)];
+            return chip(interest, false, element);
           }).toList(),
         ),
       );
@@ -173,7 +183,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           onSuggestionSelected: (String suggestion) {
             if (interests.contains(suggestion)) {
               selectedInterests.add(suggestion);
-              interests.remove(suggestion);
+              //interests.remove(suggestion);
             }
           },
         ),
@@ -294,6 +304,7 @@ class SkillViewNew extends StatefulWidget {
 class Skill {
   String skillName;
   bool isSelected;
+
   Skill(this.skillName, this.isSelected);
 }
 
@@ -354,6 +365,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   // ];
   List<MaterialColor> colorList;
   Set<String> selectedSkills = <String>[].toSet();
+
   @override
   void initState() {
     super.initState();
@@ -403,7 +415,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           onSuggestionSelected: (String suggestion) {
             if (skills.contains(suggestion)) {
               selectedSkills.add(suggestion);
-              skills.remove(suggestion);
+              //skills.remove(suggestion);
             }
           },
         ),
@@ -427,13 +439,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-        body: SingleChildScrollView(
-            child: ListView(
+        body: ListView(
           children: <Widget>[
             ScrollExample(context),
             list(),
           ],
-        )),
+        ),
         bottomNavigationBar: ButtonBar(
           children: <Widget>[
             FlatButton(

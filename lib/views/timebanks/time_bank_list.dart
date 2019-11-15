@@ -80,6 +80,9 @@ class TimeBankList extends StatelessWidget {
               getDataScrollView(
                 context,
                 reportedList,
+              ),
+              Container(
+                height: 100,
               )
             ],
           ),
@@ -151,12 +154,14 @@ class TimeBankList extends StatelessWidget {
                             width: 8,
                           ),
                           Container(
-                            child: Text(
-                              model.name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18.0,
-                                color: Colors.black,
+                            child: Expanded(
+                              child: Text(
+                                model.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.0,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           )
