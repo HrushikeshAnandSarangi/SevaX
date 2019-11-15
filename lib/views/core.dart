@@ -62,6 +62,7 @@ class CoreView extends StatefulWidget {
   final String sevaUserID;
 
   CoreView({@required this.sevaUserID});
+
   @override
   _CoreViewState createState() => _CoreViewState();
 }
@@ -77,7 +78,7 @@ class _CoreViewState extends State<CoreView> {
 
   @override
   void didChangeDependencies() {
-    // SevaCore.of(context).loggedInUser.sevaUserID = "92tbswcvisf026ZRQnKbiGDoq8v2";
+    //SevaCore.of(context).loggedInUser.sevaUserID = "XPmGqqpXdggfISBsG1653kPeLx32";
     user = UserModel(
       sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
       email: SevaCore.of(context).loggedInUser.email,
@@ -126,6 +127,7 @@ class _CoreViewState extends State<CoreView> {
 
 class SevaCoreView extends StatefulWidget {
   final UserModel user;
+
   SevaCoreView({Key key, this.user}) : super(key: key);
 
   @override
@@ -152,6 +154,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
 
   bool isAdminOrCoordinator = false;
   bool isNotification = false;
+
   @override
   void didChangeDependencies() {
     print("didChangeDependencies called");
@@ -643,10 +646,16 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      if (isAdminOrCoordinator ||
-                          FlavorConfig.appFlavor == Flavor.APP)
-                        {
-                          Navigator.of(context).pop(),
+                      FirestoreManager.getTimeBankForId(
+                              timebankId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentTimebank)
+                          .then((timebank) {
+                        if (timebank.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+                            timebank.coordinators.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                          Navigator.of(context).pop();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -656,10 +665,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                     .currentTimebank,
                               ),
                             ),
-                          )
-                        }
-                      else
-                        {
+                          );
+                        } else {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -679,8 +686,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                 ],
                               );
                             },
-                          )
+                          );
                         }
+                      }),
                     },
                   ),
                   Divider(

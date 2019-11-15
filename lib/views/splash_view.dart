@@ -38,9 +38,13 @@ import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 class UserData {
   // singleton
   static final UserData _singleton = UserData._internal();
+
   factory UserData() => _singleton;
+
   UserData._internal();
+
   bool isFromLogin = true;
+
   static UserData get shared => _singleton;
 
   // variables
@@ -75,6 +79,7 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
+  bool mainForced = false;
 
   @override
   void didChangeDependencies() {
@@ -465,8 +470,17 @@ class _SplashViewState extends State<SplashView> {
         if (Platform.isAndroid) {
           // we are on android platform
           if (onValue.data.containsKey("latest_build_number")) {
+            var isForced = onValue.data['forced'];
             var latestBuildNumber = onValue.data['latest_build_number'];
+            var latestVersionNumber = onValue.data['latest_version_number'];
+            int result = int.parse(version.replaceAll(".", ""));
+            int verionNumber =
+                int.parse(latestVersionNumber.replaceAll(".", ""));
+            print(result);
+            print(verionNumber);
+
             if (int.parse(buildNumber) < latestBuildNumber) {
+              this.mainForced = isForced;
               print("App is Out of date");
               return false;
             } else {
@@ -477,8 +491,16 @@ class _SplashViewState extends State<SplashView> {
         } else {
           if (onValue.data.containsKey("latest_version_number")) {
             var latestVersionNumber = onValue.data['latest_version_number'];
-            if (version != latestVersionNumber) {
+            var isForced = onValue.data['forced'];
+            int result = int.parse(version.replaceAll(".", ""));
+            int verionNumber =
+                int.parse(latestVersionNumber.replaceAll(".", ""));
+//            print(result);
+//            print(verionNumber);
+
+            if (result < verionNumber) {
               print("App is Out of date");
+              this.mainForced = isForced;
               return false;
             } else {
               return true;
@@ -493,8 +515,7 @@ class _SplashViewState extends State<SplashView> {
     });
 
     if (!isLatestVersion) {
-      _navigateToUpdatePage();
-      return;
+      await _navigateToUpdatePage(loggedInUser, mainForced);
     }
 
     if (!loggedInUser.acceptedEULA) {
@@ -542,9 +563,16 @@ class _SplashViewState extends State<SplashView> {
     ));
   }
 
-  Future _navigateToUpdatePage() async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => UpdateApp(),
+  Future _navigateToUpdatePage(UserModel loggedInUser, bool forced) async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => UpdateView(
+        isForced: forced,
+        onSkipped: () {
+          Navigator.pop(context);
+          updateUserData(loggedInUser);
+          //this.isLatestVersion = !this.isLatestVersion;
+        },
+      ),
     ));
   }
 

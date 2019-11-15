@@ -31,13 +31,13 @@ class _EditSkillsState extends State<EditSkills> {
 //  ];
 
   List<String> skills = FlavorConfig.values.timebankName == "Yang 2020" ? const [
-    "data entry",
-    "research",
-    "graphic design",
-    "coding/development",
-    "photography",
-    "videography",
-    "multilingual/translations",
+    "Data entry",
+    "Research",
+    "Graphic design",
+    "Coding/development",
+    "Photography",
+    "Videography",
+    "Multilingual/translations",
   ] : [
     'Curators',
     'Developers',
@@ -118,7 +118,7 @@ class _EditSkillsState extends State<EditSkills> {
           title: Text('Edit Skills',style: TextStyle(color: Colors.white),),
         ),
         body: SingleChildScrollView(
-            child: Column(
+            child: ListView(
               children: <Widget>[
                 ScrollExample(context),
                 list(),

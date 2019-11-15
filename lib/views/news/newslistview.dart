@@ -14,7 +14,7 @@ import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-
+import 'package:sevaexchange/globals.dart' as globals;
 import '../../flavor_config.dart';
 import '../core.dart';
 
@@ -111,10 +111,14 @@ class NewsListState extends State<NewsList> {
             RaisedButton(
               onPressed: () {
                 setState(() {
-                  if (isNearme == true)
+                  if (isNearme == true) {
                     isNearme = false;
-                  else
+                    //globals.nearme = isNearme;
+                  }
+                  else {
                     isNearme = true;
+                    //globals.nearme = isNearme;
+                  }
                 });
               },
               child: isNearme == false ? Text('Near Me') : Text('All'),

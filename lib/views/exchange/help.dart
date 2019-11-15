@@ -37,12 +37,13 @@ class HelpView extends StatefulWidget {
 
 class HelpViewState extends State<HelpView> {
   static bool isAdminOrCoordinator = false;
+
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     FirestoreManager.getTimeBankForId(
-            timebankId: FlavorConfig.values.timebankId)
+            timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
         .then((timebank) {
       if (timebank.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
@@ -612,6 +613,8 @@ class OfferCardView extends StatefulWidget {
   final OfferModel offerModel;
   String sevaUserIdOffer;
 
+  bool isAdmin = false;
+
   OfferCardView({this.offerModel});
 
   @override
@@ -622,7 +625,33 @@ class OfferCardView extends StatefulWidget {
 
 class OfferCardViewState extends State<OfferCardView> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
+        .then((timebank) {
+      if (timebank.admins
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+          timebank.coordinators
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+        if (widget.isAdmin == false) {
+          setState(() {
+            widget.isAdmin = true;
+          });
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
+        .then((timebank) {
+      if (timebank.admins
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+          timebank.coordinators
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
+    });
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -700,6 +729,7 @@ class OfferCardViewState extends State<OfferCardView> {
             }
             UserModel userModel = snapshot.data;
             String usertimezone = userModel.timezone;
+
             return SingleChildScrollView(
               child: ConstrainedBox(
                 constraints: BoxConstraints(),
@@ -759,47 +789,68 @@ class OfferCardViewState extends State<OfferCardView> {
                                         SevaCore.of(context)
                                             .loggedInUser
                                             .sevaUserID ||
-                                    widget.offerModel.acceptedOffer
+                                    (widget.isAdmin &&
+                                        widget.offerModel.acceptedOffer)
                                 ? null
                                 : () {
                                     widget.sevaUserIdOffer =
                                         widget.offerModel.sevaUserId;
-                                    if (FlavorConfig.appFlavor == Flavor.APP) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectRequestView(
-                                            offerModel: widget.offerModel,
-                                            sevaUserIdOffer:
-                                                widget.sevaUserIdOffer,
-                                          ),
-                                        ),
-                                      );
-                                    } else if (HelpViewState
-                                            .isAdminOrCoordinator ==
-                                        true) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SelectRequestView(
-                                            offerModel: widget.offerModel,
-                                            sevaUserIdOffer:
-                                                widget.sevaUserIdOffer,
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      //print("Send notification");
-                                      // only admins can do that
-                                      _makePostRequest(widget.offerModel);
-                                    }
+
+                                    FirestoreManager.getTimeBankForId(
+                                            timebankId:
+                                                widget.offerModel.timebankId)
+                                        .then((timebank) {
+                                      if (timebank.admins.contains(
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID) ||
+                                          timebank.coordinators.contains(
+                                              SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .sevaUserID)) {
+                                        setState(() {
+                                          widget.isAdmin = true;
+                                        });
+
+                                        _makePostRequest(widget.offerModel);
+//                                  Navigator.push(
+//                                    context,
+//                                    MaterialPageRoute(
+//                                      builder: (context) =>
+//                                          SelectRequestView(
+//                                            offerModel: offerModel,
+//                                            sevaUserIdOffer: sevaUserIdOffer,
+//                                          ),
+//                                    ),
+//                                  );
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title:
+                                                  new Text("Permission Denied"),
+                                              content: new Text(
+                                                  "You need to be an Admin or Coordinator to have permission to send request to offers"),
+                                              actions: <Widget>[
+                                                new FlatButton(
+                                                  child: new Text("Close"),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    });
                                   },
                             child: Text(
-                              widget.offerModel.acceptedOffer
-                                  ? 'Offer Accepted'
-                                  : 'Accept Offer',
+                              !widget.offerModel.acceptedOffer ||
+                                      !widget.isAdmin
+                                  ? 'Accept Offer'
+                                  : 'Offer Accepted',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -1370,6 +1421,7 @@ class RequestListItems extends StatelessWidget {
 class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const OfferListItems({Key key, this.parentContext, this.timebankId})
       : super(key: key);
 
