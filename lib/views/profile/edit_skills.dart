@@ -117,13 +117,12 @@ class _EditSkillsState extends State<EditSkills> {
         appBar: AppBar(
           title: Text('Edit Skills',style: TextStyle(color: Colors.white),),
         ),
-        body: SingleChildScrollView(
-            child: ListView(
-              children: <Widget>[
-                ScrollExample(context),
-                list(),
-              ],
-            )),
+        body: ListView(
+          children: <Widget>[
+            ScrollExample(context),
+            list(),
+          ],
+        ),
         bottomNavigationBar: ButtonBar(
           children: <Widget>[
             RaisedButton(
