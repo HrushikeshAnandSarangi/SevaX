@@ -64,9 +64,13 @@ Stream<List<ChatModel>> getChatsforUser({
           (documentSnapshot) {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
             print("executing chat size ${snapshot.documents.length}");
-            if ((model.user1 == email || model.user2 == email) &&
-                model.lastMessage != null &&
-                model.rootTimebank == FlavorConfig.values.timebankId) {
+            // if ((model.user1 == email || model.user2 == email) && model.lastMessage != null &&
+            if ((model.user1 == "anitha.beberg@gmail.com" ||
+                    model.user2 == "anitha.beberg@gmail.com") &&
+                model.lastMessage != null 
+                // if (model.lastMessage != null && 
+                // && model.rootTimebank == FlavorConfig.values.timebankId
+                ) {
               chatlist.add(model);
             }
             print("Final chat size  :  ${chatlist.length}");

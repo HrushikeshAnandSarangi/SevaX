@@ -55,12 +55,11 @@ class _ChatListViewState extends State<ChatListView> {
                 child: CircularProgressIndicator(),
               );
             default:
+              print("Chat Model list ${chatListSnapshot.data}");
               List<ChatModel> chatModelList = chatListSnapshot.data;
-
               if (chatModelList.length == 0) {
                 return Center(child: Text('No Chats'));
               }
-
               return Container(
                 padding: EdgeInsets.only(left: 15.0, right: 15.0),
                 child: ListView(
@@ -194,12 +193,15 @@ class _ChatListViewState extends State<ChatListView> {
   }
 
   Widget getMessageListView(ChatModel chatModel, BuildContext parentContext) {
+    print("--->" + chatModel.toString());
     String lastmessage;
     if (chatModel.lastMessage == null) {
       lastmessage = '';
     } else
       lastmessage = chatModel.lastMessage;
-    if (chatModel.user1 == SevaCore.of(context).loggedInUser.email) {
+
+    // if (chatModel.user1 == SevaCore.of(context).loggedInUser.email) {
+    if (chatModel.user1 == "anitha.beberg@gmail.com") {
       return StreamBuilder<Object>(
           stream: getUserForEmailStream(chatModel.user2),
           builder: (context, snapshot) {
@@ -249,15 +251,22 @@ class _ChatListViewState extends State<ChatListView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         ClipOval(
-                          child: SizedBox(
-                            height: 45,
-                            width: 45,
-                            child: FadeInImage.assetNetwork(
-                                placeholder: 'lib/assets/images/profile.png',
-                                image: user.photoURL),
-                          ),
-                        ),
-                        SizedBox(width: 16),
+                            child: Container(
+                          width: 30,
+                          height: 30,
+                          child: Image.network(
+                              user.photoURL),
+                        )),
+                        // Image.asset('lib/assets/images/waiting.jpg'),
+                        // ClipOval(
+                        //   child: Container(
+                        //     height: 45,
+                        //     width: 45,
+                        //     child: Image.network(
+                        //         'http://bluefaqs.com/wp-content/uploads/2010/06/Conifer.jpg'),
+                        //   ),
+                        // ),
+                        Container(width: 16),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,7 +292,9 @@ class _ChatListViewState extends State<ChatListView> {
               ),
             );
           });
-    } else if (chatModel.user2 == SevaCore.of(context).loggedInUser.email) {
+    }
+    // else if (chatModel.user2 == SevaCore.of(context).loggedInUser.email) {
+    else if (chatModel.user2 == "anita.beberg@gmail.com") {
       return StreamBuilder<Object>(
           stream: getUserForEmailStream(chatModel.user1),
           builder: (context, snapshot) {
@@ -304,8 +315,6 @@ class _ChatListViewState extends State<ChatListView> {
                     .blockedBy
                     .contains(user.sevaUserID)) {
               print("USER BLOCKED");
-
-              // return Offstage();
             } else {
               print(
                   "USER PERMITTED 2-> ${SevaCore.of(context).loggedInUser.blockedMembers}  ${user.email}");

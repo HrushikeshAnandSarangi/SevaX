@@ -5,6 +5,7 @@ class ChatModel extends DataModel {
   String user2;
   String lastMessage;
   String rootTimebank;
+  int timestamp;
 
   ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
 
@@ -21,6 +22,10 @@ class ChatModel extends DataModel {
     }
     if (map.containsKey('rootTimebank')) {
       this.rootTimebank = map['rootTimebank'];
+    }
+
+    if (map.containsKey('timestamp')) {
+      this.timestamp = map['timestamp'];
     }
   }
 
@@ -44,6 +49,14 @@ class ChatModel extends DataModel {
       map['rootTimebank'] = this.rootTimebank;
     }
 
+    timestamp = DateTime.now().millisecondsSinceEpoch;
+
     return map;
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "User 1 :  ${this.user1}  -- User 2 : ${this.user2} -- lastMessage ${this.lastMessage}  -- ${this.rootTimebank}";
   }
 }
