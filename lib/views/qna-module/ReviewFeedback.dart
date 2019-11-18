@@ -124,7 +124,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   decoration: InputDecoration(
                     errorText: _validate ? 'Field can\'t be left blank' : null,
                     hintText:
-                        'Take a minute to reflect on the experience and share a quick review.',
+                        'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: Colors.red, //this has no effect

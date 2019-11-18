@@ -34,28 +34,30 @@ class TimeBankList extends StatelessWidget {
             )
           ],
         ),
-        floatingActionButton: Visibility(
-          visible: !UserData.shared.isFromLogin,
-          child: FloatingActionButton.extended(
-            label: Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? 'Create Yang Gang'
-                : 'Create Branch'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TimebankCreate(
-                    timebankId: timebankid,
+        floatingActionButton: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+            ? Visibility(
+                visible: !UserData.shared.isFromLogin,
+                child: FloatingActionButton.extended(
+                  label: Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                      ? 'Create Yang Gang'
+                      : 'Create Branch'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TimebankCreate(
+                          timebankId: timebankid,
+                        ),
+                      ),
+                    );
+                  },
+                  foregroundColor: FlavorConfig.values.buttonTextColor,
+                  icon: Icon(
+                    Icons.add,
                   ),
                 ),
-              );
-            },
-            foregroundColor: FlavorConfig.values.buttonTextColor,
-            icon: Icon(
-              Icons.add,
-            ),
-          ),
-        ),
+              )
+            : Offstage(),
         body: getSubTimebanks(timebankid));
   }
 

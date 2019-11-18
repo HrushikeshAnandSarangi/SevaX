@@ -43,7 +43,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         // versionCode flutterVersionCode.toInteger()
-        versionCode 47
+        versionCode 48
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
