@@ -4,9 +4,6 @@ import 'package:package_info/package_info.dart';
 import 'package:store_redirect/store_redirect.dart';
 // import 'package:open_appstore/open_appstore.dart';
 
-
-
-
 class UpdateView extends StatefulWidget {
   final VoidCallback onSkipped;
   bool isForced;
@@ -33,17 +30,14 @@ class UpdateAppState extends State<UpdateView> {
       ),
       bottomNavigationBar: ButtonBar(
         children: <Widget>[
-          !widget.isForced ? FlatButton(
-            onPressed: () {
-              widget.onSkipped();
-//              onPressed: () {
-//                Navigator.of(context).pushReplacement(MaterialPageRoute(
-//                  builder: (context) => SplashView(),
-//                ));
-//              },
-            },
-            child: Text('Skip'),
-          ): Offstage(),
+          !widget.isForced
+              ? FlatButton(
+                  onPressed: () {
+                    widget.onSkipped();
+                  },
+                  child: Text('Skip'),
+                )
+              : Offstage(),
           RaisedButton(
             color: Theme.of(context).primaryColor,
             onPressed: () {
@@ -59,26 +53,30 @@ class UpdateAppState extends State<UpdateView> {
 
                 String buildNumber = packageInfo.buildNumber;
                 print("Package info --> $packageName");
-                StoreRedirect.redirect(androidAppId: packageName,
-                    iOSAppId: "1466915003");
-
+                StoreRedirect.redirect(
+                    androidAppId: packageName, iOSAppId: "1466915003");
               });
 
               // OpenAppstore.launch(
               //     androidAppId: "${packageName}", iOSAppId: "284882215");
             },
-            child: Text("Update App",style: TextStyle(color: Colors.white),),
+            child: Text(
+              "Update App",
+              style: TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),
       body: Container(
         margin: EdgeInsets.all(25),
         alignment: Alignment.center,
-          child: Text(
-            "There is an update available with the app, Please tap on update to use the latest version of the app",
-            style: TextStyle(fontSize: 16.0,),
-            textAlign: TextAlign.center,
+        child: Text(
+          "There is an update available with the app, Please tap on update to use the latest version of the app",
+          style: TextStyle(
+            fontSize: 16.0,
           ),
+          textAlign: TextAlign.center,
+        ),
       ),
 //      Column(
 //        mainAxisAlignment: MainAxisAlignment.center,
