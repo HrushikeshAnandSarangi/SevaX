@@ -34,13 +34,13 @@ class TimeBankList extends StatelessWidget {
             )
           ],
         ),
-        floatingActionButton: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+        floatingActionButton: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST 
             ? Visibility(
                 visible: !UserData.shared.isFromLogin,
                 child: FloatingActionButton.extended(
                   label: Text(FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? 'Create Yang Gang'
-                      : 'Create Branch'),
+                      : 'Create Timebank'),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -138,10 +138,13 @@ class TimeBankList extends StatelessWidget {
     return Column(
       children: <Widget>[
         ...timebankList.map((model) {
+          if (model.id == 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2') {
+            return Offstage();
+          }
+
           return model.id != FlavorConfig.values.timebankId
               ? GestureDetector(
                   child: Card(
-
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(

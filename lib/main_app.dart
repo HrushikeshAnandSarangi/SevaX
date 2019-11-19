@@ -60,9 +60,10 @@ class MainApplication extends StatelessWidget {
       auth: Auth(),
       child: MaterialApp(
         theme: FlavorConfig.values.theme,
-        home: SplashView(
-        ),
-        // home: SplashView(),
+        // home: RequestStatusView(
+        //   requestId: "anitha.beberg@gmail.com*1573268670404",
+        // ),
+        home: SplashView(),
       ),
     );
   }

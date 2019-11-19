@@ -103,7 +103,7 @@ class _BranchViewState extends State<BranchView> {
                   )
                 ],
               ),
-              floatingActionButton: FloatingActionButton.extended(
+              floatingActionButton:  FloatingActionButton.extended(
                 icon: Icon(
                   Icons.add,
                 ),

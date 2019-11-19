@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/models.dart' as prefix1;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/splash_view.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
@@ -57,11 +58,10 @@ class RequestStatusViewState extends State<RequestStatusView> {
           future: membersInRequest,
           builder: (builderContext, snapshot) {
             if (snapshot.hasData) {
-                            
               return ListView(
                 children: <Widget>[
                   ...snapshot.data.map((member) {
-                    return getUserWidget(member, context);
+                    return getUserWidget(member, builderContext);
                   }).toList()
                 ],
               );
@@ -77,7 +77,13 @@ class RequestStatusViewState extends State<RequestStatusView> {
   Widget getUserWidget(MemberForRequest userSelected, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        
+        print("Tapped on profile ${userSelected.email}");
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => (),
+        //   ),
+        // );
       },
       child: Card(
         child: ListTile(

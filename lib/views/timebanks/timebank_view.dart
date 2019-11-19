@@ -159,8 +159,8 @@ class _TimebankViewState extends State<TimebankView> {
                 ],
               ),
               floatingActionButton: Visibility(
-                visible: FlavorConfig.appFlavor != Flavor.APP ? false : true,
-                // visible: !UserData.shared.isFromLogin,
+                // visible: FlavorConfig.appFlavor != Flavor.APP ? false : true,
+                visible: false,
                 child: FloatingActionButton.extended(
                   icon: Icon(
                     Icons.add,
@@ -376,7 +376,8 @@ class _TimebankViewState extends State<TimebankView> {
                                               new FlatButton(
                                                 child: new Text("Close"),
                                                 onPressed: () {
-                                                  Navigator.of(dialogContext).pop();
+                                                  Navigator.of(dialogContext)
+                                                      .pop();
                                                 },
                                               ),
                                             ],
