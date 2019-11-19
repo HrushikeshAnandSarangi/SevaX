@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -45,6 +46,11 @@ class _ChatListViewState extends State<ChatListView> {
         stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
         builder: (BuildContext context,
             AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
+          if (!chatListSnapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           if (chatListSnapshot.hasError) {
             return new Text('Error: ${chatListSnapshot.error}');
           }
@@ -55,21 +61,29 @@ class _ChatListViewState extends State<ChatListView> {
                 child: CircularProgressIndicator(),
               );
             default:
-              print("Chat Model list ${chatListSnapshot.data}");
+              // print("Chat Model list ${chatListSnapshot.data}");
               List<ChatModel> chatModelList = chatListSnapshot.data;
               if (chatModelList.length == 0) {
                 return Center(child: Text('No Chats'));
               }
-              return Container(
-                padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                child: ListView(
-                  children: chatModelList.map(
-                    (ChatModel chatModel) {
-                      return getMessageListView(chatModel, context);
-                    },
-                  ).toList(),
-                ),
+
+              return ListView.builder(
+                itemExtent: 80,
+                itemCount: chatModelList.length,
+                itemBuilder: (context, index) {
+                  return getMessageListView(chatModelList[index], context);
+                },
               );
+            // return Container(
+            //   padding: EdgeInsets.only(left: 15.0, right: 15.0),
+            //   child: ListView(
+            //     children: chatModelList.map(
+            //       (ChatModel chatModel) {
+            //         return getMessageListView(chatModel, context);
+            //       },
+            //     ).toList(),
+            //   ),
+            // );
           }
         },
       ),
@@ -193,7 +207,7 @@ class _ChatListViewState extends State<ChatListView> {
   }
 
   Widget getMessageListView(ChatModel chatModel, BuildContext parentContext) {
-    print("--->" + chatModel.toString());
+    // print("------------------------->" + chatModel.toString());
     String lastmessage;
     if (chatModel.lastMessage == null) {
       lastmessage = '';
@@ -201,6 +215,69 @@ class _ChatListViewState extends State<ChatListView> {
       lastmessage = chatModel.lastMessage;
 
     // if (chatModel.user1 == SevaCore.of(context).loggedInUser.email) {
+
+    return Container(
+      child: Card(
+        elevation: 0,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              parentContext,
+              MaterialPageRoute(
+                builder: (context) => ChatView(
+                  useremail:
+                      SevaCore.of(context).loggedInUser.email == chatModel.user1
+                          ? chatModel.user2
+                          : chatModel.user1,
+                  chatModel: chatModel,
+                ),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ClipOval(
+                  child: Container(
+                    height: 45,
+                    width: 45,
+                    child: FadeInImage.assetNetwork(
+                      placeholder: 'lib/assets/images/profile.png',
+                      image: chatModel.photoURL == null
+                          ? "https://firebasestorage.googleapis.com/v0/b/sevaexchange.appspot.com/o/timebanklogos%2Fseva_default.jpg?alt=media&token=e3804df4-6146-4bfb-8c8e-b24a62da312d"
+                          : chatModel.photoURL,
+                    ),
+                  ),
+                ),
+                Container(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        chatModel.messagTitleUserName == null
+                            ? 'Not added '
+                            : chatModel.messagTitleUserName,
+                        style: Theme.of(parentContext).textTheme.subhead,
+                      ),
+                      Text(
+                        lastmessage,
+                        style: TextStyle(color: Colors.grey),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
     if (chatModel.user1 == "anitha.beberg@gmail.com") {
       return StreamBuilder<Object>(
           stream: getUserForEmailStream(chatModel.user2),
@@ -250,13 +327,12 @@ class _ChatListViewState extends State<ChatListView> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        ClipOval(
-                            child: Container(
-                          width: 30,
-                          height: 30,
-                          child: Image.network(
-                              user.photoURL),
-                        )),
+                        // ClipOval(
+                        //     child: Container(
+                        //   width: 30,
+                        //   height: 30,
+                        //   child: Image.network(user.photoURL),
+                        // )),
                         // Image.asset('lib/assets/images/waiting.jpg'),
                         // ClipOval(
                         //   child: Container(

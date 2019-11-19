@@ -7,6 +7,9 @@ class ChatModel extends DataModel {
   String rootTimebank;
   int timestamp;
 
+  String messagTitleUserName;
+  String photoURL;
+
   ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
 
   ChatModel.fromMap(Map<String, dynamic> map) {
@@ -57,6 +60,6 @@ class ChatModel extends DataModel {
   @override
   String toString() {
     // TODO: implement toString
-    return "User 1 :  ${this.user1}  -- User 2 : ${this.user2} -- lastMessage ${this.lastMessage}  -- ${this.rootTimebank}";
+    return "messageTitle = ${this.messagTitleUserName} messagePhoto : ${this.photoURL} User 1 :  ${this.user1}  -- User 2 : ${this.user2} -- lastMessage ${this.lastMessage}  -- ${this.rootTimebank}";
   }
 }
