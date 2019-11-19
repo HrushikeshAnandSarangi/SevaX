@@ -431,58 +431,58 @@ class _TimebankViewState extends State<TimebankView> {
                                   );
                           },
                         ),
-                        FlatButton(
-                          child: Text(
-                            'Create feed',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NewsCreate(
-                                    timebankId: timebankModel.id,
-                                  ),
-                                ));
-                          },
-                        ),
-                        FlatButton(
-                          child: Text(
-                            'Create ${FlavorConfig.values.requestTitle}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateRequest(
-                                  timebankId: timebankModel.id,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        FlatButton(
-                          child: Text(
-                            'Create ${FlavorConfig.values.offertitle}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CreateOffer(
-                                        timebankId: timebankModel.id,
-                                      )),
-                            );
-                          },
-                        ),
+//                        FlatButton(
+//                          child: Text(
+//                            'Create feed',
+//                            style: TextStyle(
+//                                fontWeight: FontWeight.w700,
+//                                color: Theme.of(context).accentColor),
+//                          ),
+//                          onPressed: () {
+//                            Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                  builder: (context) => NewsCreate(
+//                                    timebankId: timebankModel.id,
+//                                  ),
+//                                ));
+//                          },
+//                        ),
+//                        FlatButton(
+//                          child: Text(
+//                            'Create ${FlavorConfig.values.requestTitle}',
+//                            style: TextStyle(
+//                                fontWeight: FontWeight.w700,
+//                                color: Theme.of(context).accentColor),
+//                          ),
+//                          onPressed: () {
+//                            Navigator.push(
+//                              context,
+//                              MaterialPageRoute(
+//                                builder: (context) => CreateRequest(
+//                                  timebankId: timebankModel.id,
+//                                ),
+//                              ),
+//                            );
+//                          },
+//                        ),
+//                        FlatButton(
+//                          child: Text(
+//                            'Create ${FlavorConfig.values.offertitle}',
+//                            style: TextStyle(
+//                                fontWeight: FontWeight.w700,
+//                                color: Theme.of(context).accentColor),
+//                          ),
+//                          onPressed: () {
+//                            Navigator.push(
+//                              context,
+//                              MaterialPageRoute(
+//                                  builder: (context) => CreateOffer(
+//                                        timebankId: timebankModel.id,
+//                                      )),
+//                            );
+//                          },
+//                        ),
                         !timebankModel.members.contains(loggedInUser)
                             ? Offstage()
                             : FlatButton(

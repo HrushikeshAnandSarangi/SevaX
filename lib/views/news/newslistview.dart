@@ -552,7 +552,10 @@ class NewsListState extends State<NewsList> {
                                                           .sevaUserID)) {
                                                     print('already in reports');
                                                   } else {
-                                                    news.reports.add(
+                                                    if (news.reports.isEmpty) {
+                                                      news.reports = List<String>();
+                                                  }
+                                                        news.reports.add(
                                                         SevaCore.of(context)
                                                             .loggedInUser
                                                             .sevaUserID);
