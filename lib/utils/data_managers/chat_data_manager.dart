@@ -4,6 +4,8 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 
 /// Create a [chat]
 Future<void> createChat({
@@ -53,33 +55,69 @@ Future<void> createmessage({
 Stream<List<ChatModel>> getChatsforUser({
   @required String email,
 }) async* {
+  var futures = <Future>[];
   // log.i('getChatsforUser: Email: $email');
   var data = Firestore.instance.collection('chatsnew').snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<ChatModel>>.fromHandlers(
-      handleData: (snapshot, chatSink) {
+      handleData: (snapshot, chatSink) async {
         List<ChatModel> chatlist = [];
         snapshot.documents.forEach(
-          (documentSnapshot) {
+          (documentSnapshot) async {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
-            print("executing chat size ${snapshot.documents.length}");
-            // if ((model.user1 == email || model.user2 == email) && model.lastMessage != null &&
-            if ((model.user1 == "anitha.beberg@gmail.com" ||
-                    model.user2 == "anitha.beberg@gmail.com") &&
-                model.lastMessage != null 
-                // if (model.lastMessage != null && 
-                // && model.rootTimebank == FlavorConfig.values.timebankId
-                ) {
+
+            if ((model.user1 == email || model.user2 == email) &&
+                model.lastMessage != null &&
+                model.rootTimebank == FlavorConfig.values.timebankId) {
+              if (model.user1 == email) {
+                futures.add(getUserInfo(model.user2));
+              }
+              if (model.user2 == email) {
+                futures.add(getUserInfo(model.user1));
+              }
               chatlist.add(model);
             }
-            print("Final chat size  :  ${chatlist.length}");
+
+            // email = "anitha.beberg@gmail.com";
+            // if ((model.user1 == "anitha.beberg@gmail.com" ||
+            //         model.user2 == "anitha.beberg@gmail.com") &&
+            //     model.lastMessage != null &&
+            //     model.rootTimebank == FlavorConfig.values.timebankId) {
+            //   if (model.user1 == email) {
+            //     futures.add(getUserInfo(model.user2));
+            //   }
+            //   if (model.user2 == email) {
+            //     futures.add(getUserInfo(model.user1));
+            //   }
+            //   chatlist.add(model);
+            // }
+
+
+
           },
         );
-        chatSink.add(chatlist);
+
+        await Future.wait(futures).then((onValue) {
+          for (var i = 0; i < chatlist.length; i++) {
+            chatlist[i].messagTitleUserName = onValue[i]['fullname'];
+            chatlist[i].photoURL = onValue[i]['photourl'];
+          }
+          chatSink.add(chatlist);
+        });
       },
     ),
   );
+}
+
+Future<DocumentSnapshot> getUserInfo(String userEmail) {
+  return Firestore.instance
+      .collection("users")
+      .document(userEmail)
+      .get()
+      .then((onValue) {
+    return onValue;
+  });
 }
 
 //Get Messages for a chat
