@@ -17,6 +17,7 @@ import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import '../../flavor_config.dart';
 import '../core.dart';
+import 'package:flutter/cupertino.dart';
 
 class NewsListView extends StatelessWidget {
   @override
@@ -35,6 +36,7 @@ class NewsListState extends State<NewsList> {
   String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
   bool isNearme = false;
+  int sharedValue;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -100,7 +102,9 @@ class NewsListState extends State<NewsList> {
                                   return Offstage();
                                 }
                                 TimebankModel timebankModel = snapshot.data;
-                                return Text(timebankModel.name);
+                                return Text(timebankModel.name,style: TextStyle(
+                                  fontSize: 15.0
+                                ),);
                               }),
                         );
                     }).toList(),
@@ -108,6 +112,15 @@ class NewsListState extends State<NewsList> {
                 },
               ),
             ),
+            //CupertinoSegmentedControl<int>(
+//              children: logoWidgets,
+//              padding: EdgeInsets.only(left: 5.0,right: 5.0),
+//              onValueChanged: (int val) {
+//                sharedValue = val;
+//              },
+//              groupValue: sharedValue,
+//            ),
+
             RaisedButton(
               onPressed: () {
                 setState(() {
@@ -286,6 +299,15 @@ class NewsListState extends State<NewsList> {
       ],
     );
   }
+  final Map<int, Widget> logoWidgets = const <int, Widget> {
+    0:Text('All',style: TextStyle(
+      fontSize: 10.0
+    ),),
+    1:Text('NearMe',style: TextStyle(
+        fontSize: 10.0
+    ),),
+  };
+
 
   List<NewsModel> filterBlockedContent(
       List<NewsModel> newsList, BuildContext context) {

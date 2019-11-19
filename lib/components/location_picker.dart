@@ -3,16 +3,20 @@ import 'dart:developer';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as prefix1;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:location/location.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location/location.dart' as prefix0;
 import 'dart:async';
 
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/views/core.dart';
 
 import 'get_location.dart';
 
@@ -21,10 +25,10 @@ class LocationPicker extends StatefulWidget {
   final Location location = new Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
-  final LatLng defaultLocation;
+  LatLng defaultLocation;
 
   LocationPicker({
-    this.defaultLocation = const LatLng(41.678510, -87.494080),
+    this.defaultLocation,
     this.selectedLocation,
   });
 
@@ -39,7 +43,7 @@ class _LocationPickerState extends State<LocationPicker> {
   LocationData locationData;
 
   CameraPosition get initialCameraPosition {
-    return CameraPosition(target: widget.defaultLocation, zoom: 15);
+    return CameraPosition(target: SevaCore.of(context).loggedInUser.currentPosition == null ? LatLng(41.678510, -87.494080) : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,SevaCore.of(context).loggedInUser.currentPosition.longitude), zoom: 15);
   }
 
   @override

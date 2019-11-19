@@ -70,7 +70,7 @@ class _EditProfilePicState extends State<EditProfilePic>
                 logo,
                 SizedBox(height: 16),
                 _imagePicker,
-                _profileBtn,
+                //_profileBtn,
                 SizedBox(height: 32),
                 registerButton,
               ],
@@ -92,7 +92,7 @@ class _EditProfilePicState extends State<EditProfilePic>
   }
   Widget get registerButton {
     return Padding(
-      padding: const EdgeInsets.all(40),
+      padding: const EdgeInsets.all(50),
       child: RaisedButton(
         onPressed: isLoading
             ? null
