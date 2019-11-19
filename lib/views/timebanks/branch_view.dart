@@ -234,6 +234,9 @@ class _BranchViewState extends State<BranchView> {
                                                           .accentColor),
                                                 ),
                                                 onPressed: () async {
+                                                  //For test
+                                                  Navigator.of(context).pop();
+
                                                   joinRequestModel.userId =
                                                       loggedInUser;
                                                   joinRequestModel
@@ -253,7 +256,6 @@ class _BranchViewState extends State<BranchView> {
                                                     await createJoinRequest(
                                                         model:
                                                             joinRequestModel);
-                                                    Navigator.of(context).pop();
                                                   }
                                                 },
                                               ),
