@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -30,6 +32,7 @@ class UserModel extends DataModel {
   List<String> reportedUsers = [];
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
+  LocationData currentPosition ;
 
   //String
 
@@ -53,7 +56,8 @@ class UserModel extends DataModel {
       this.reportedUsers,
       this.blockedMembers,
       this.acceptedEULA,
-      this.blockedBy});
+      this.blockedBy,
+      this.currentPosition});
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {

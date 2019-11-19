@@ -16,6 +16,7 @@ import 'dart:async';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/views/core.dart';
 
 import 'get_location.dart';
 
@@ -27,7 +28,7 @@ class LocationPicker extends StatefulWidget {
   LatLng defaultLocation;
 
   LocationPicker({
-    this.defaultLocation = const LatLng(41.678510, -87.494080),
+    this.defaultLocation,
     this.selectedLocation,
   });
 
@@ -36,39 +37,20 @@ class LocationPicker extends StatefulWidget {
 }
 
 class _LocationPickerState extends State<LocationPicker> {
-  Position _currentPosition;
   GoogleMapController _mapController;
   LatLng target;
   Set<Marker> markers = {};
   LocationData locationData;
 
   CameraPosition get initialCameraPosition {
-    return CameraPosition(target: widget.defaultLocation, zoom: 15);
+    return CameraPosition(target: SevaCore.of(context).loggedInUser.currentPosition == null ? LatLng(41.678510, -87.494080) : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,SevaCore.of(context).loggedInUser.currentPosition.longitude), zoom: 15);
   }
 
   @override
   void initState() {
     log('init state called for ${this.runtimeType.toString()}');
     super.initState();
-    if (_currentPosition == null) {
-      _getCurrentLocation();
-    }
     loadInitialLocation();
-  }
-
-  _getCurrentLocation() {
-    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-
-    geolocator
-        .getCurrentPosition(desiredAccuracy: prefix1.LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-        widget.defaultLocation = LatLng(_currentPosition.latitude,_currentPosition.longitude);
-      });
-    }).catchError((e) {
-      print(e);
-    });
   }
 
   @override

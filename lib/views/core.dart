@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as prefix0;
 import 'package:location/location.dart';
+import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -73,8 +76,23 @@ class _CoreViewState extends State<CoreView> {
   @override
   void initState() {
     super.initState();
+   // _getCurrentLocation();
     UserData.shared.isFromLogin = false;
   }
+
+//  _getCurrentLocation() {
+//    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+//
+//    geolocator
+//        .getCurrentPosition(desiredAccuracy: prefix0.LocationAccuracy.best)
+//        .then((Position position) {
+//      // setState(() {
+//      SevaCore.of(context).loggedInUser.currentPosition = position;
+//      //});
+//    }).catchError((e) {
+//      print(e);
+//    });
+//  }
 
   @override
   void didChangeDependencies() {
@@ -100,7 +118,7 @@ class _CoreViewState extends State<CoreView> {
         setState(() => this.user = user);
         print("mounting data ");
       } else {
-        print("skipping mount as data is alredy mounted");
+        print("skipping mount as data is already mounted");
       }
     });
 
@@ -188,7 +206,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
     print("STARTING LOCATION SERVICE");
     var location = Location();
     location.changeSettings(
-        accuracy: LocationAccuracy.POWERSAVE,
+        accuracy: prefix1.LocationAccuracy.POWERSAVE,
         interval: 1000,
         distanceFilter: 500);
     if (!await location.hasPermission()) {
@@ -199,6 +217,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
       await location.onLocationChanged().listen((LocationData currentLocation) {
         print(currentLocation.latitude);
         print(currentLocation.longitude);
+        //_getCurrentLocation();
+        setState(() {
+          SevaCore.of(context).loggedInUser.currentPosition = currentLocation;
+        });
       });
     } catch (error) {
       location = null;

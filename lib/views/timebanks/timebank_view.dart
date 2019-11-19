@@ -376,7 +376,7 @@ class _TimebankViewState extends State<TimebankView> {
                                               new FlatButton(
                                                 child: new Text("Close"),
                                                 onPressed: () {
-                                                  Navigator.of(context).pop();
+                                                  Navigator.of(dialogContext).pop();
                                                 },
                                               ),
                                             ],
