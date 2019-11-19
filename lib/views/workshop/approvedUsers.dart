@@ -76,7 +76,9 @@ class RequestStatusViewState extends State<RequestStatusView> {
 
   Widget getUserWidget(MemberForRequest userSelected, BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        
+      },
       child: Card(
         child: ListTile(
           leading: CircleAvatar(
