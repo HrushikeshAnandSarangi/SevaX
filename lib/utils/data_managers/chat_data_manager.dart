@@ -79,19 +79,19 @@ Stream<List<ChatModel>> getChatsforUser({
               chatlist.add(model);
             }
 
-            // email = "anitha.beberg@gmail.com";
-            // if ((model.user1 == "anitha.beberg@gmail.com" ||
-            //         model.user2 == "anitha.beberg@gmail.com") &&
-            //     model.lastMessage != null &&
-            //     model.rootTimebank == FlavorConfig.values.timebankId) {
-            //   if (model.user1 == email) {
-            //     futures.add(getUserInfo(model.user2));
-            //   }
-            //   if (model.user2 == email) {
-            //     futures.add(getUserInfo(model.user1));
-            //   }
-            //   chatlist.add(model);
-            // }
+//             email = "anitha.beberg@gmail.com";
+//             if ((model.user1 == "anitha.beberg@gmail.com" ||
+//                     model.user2 == "anitha.beberg@gmail.com") &&
+//                 model.lastMessage != null &&
+//                 model.rootTimebank == FlavorConfig.values.timebankId) {
+//               if (model.user1 == email) {
+//                 futures.add(getUserInfo(model.user2));
+//               }
+//               if (model.user2 == email) {
+//                 futures.add(getUserInfo(model.user1));
+//               }
+//               chatlist.add(model);
+//             }
 
 
 
