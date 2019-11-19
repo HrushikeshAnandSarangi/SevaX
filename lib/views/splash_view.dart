@@ -449,73 +449,74 @@ class _SplashViewState extends State<SplashView> {
     }
     UserData.shared.user = loggedInUser;
 
-    //check app version
-    bool isLatestVersion =
-        await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-      print("retrieved data");
+    if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
+      //check app version
+      bool isLatestVersion =
+          await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+        print("retrieved data");
 
-      String appName = packageInfo.appName;
-      String packageName = packageInfo.packageName;
-      String version = packageInfo.version;
+        String appName = packageInfo.appName;
+        String packageName = packageInfo.packageName;
+        String version = packageInfo.version;
 
-      String buildNumber = packageInfo.buildNumber;
+        String buildNumber = packageInfo.buildNumber;
+        return Firestore.instance
+            .collection("vitals")
+            .document(Platform.isAndroid ? "vital_android" : "vital_ios")
+            .get()
+            .then((onValue) {
+          print("retrieved vitals from firebase");
 
-      return Firestore.instance
-          .collection("vitals")
-          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
-          .get()
-          .then((onValue) {
-        print("retrieved vitals from firebase");
+          if (Platform.isAndroid) {
+            // we are on android platform
+            if (onValue.data.containsKey("latest_build_number")) {
+              var isForced = onValue.data['forced'];
+              var latestBuildNumber = onValue.data['latest_build_number'];
+              var latestVersionNumber = onValue.data['latest_version_number'];
+              int result = int.parse(version.replaceAll(".", ""));
+              int verionNumber =
+                  int.parse(latestVersionNumber.replaceAll(".", ""));
+              print(result);
+              print(verionNumber);
 
-        if (Platform.isAndroid) {
-          // we are on android platform
-          if (onValue.data.containsKey("latest_build_number")) {
-            var isForced = onValue.data['forced'];
-            var latestBuildNumber = onValue.data['latest_build_number'];
-            var latestVersionNumber = onValue.data['latest_version_number'];
-            int result = int.parse(version.replaceAll(".", ""));
-            int verionNumber =
-                int.parse(latestVersionNumber.replaceAll(".", ""));
-            print(result);
-            print(verionNumber);
-
-            if (int.parse(buildNumber) < latestBuildNumber) {
-              this.mainForced = isForced;
-              print("App is Out of date");
-              return false;
-            } else {
-              print("App is up to date");
-              return true;
+              if (int.parse(buildNumber) < latestBuildNumber) {
+                this.mainForced = isForced;
+                print("App is Out of date");
+                return false;
+              } else {
+                print("App is up to date");
+                return true;
+              }
             }
-          }
-        } else {
-          if (onValue.data.containsKey("latest_version_number")) {
-            var latestVersionNumber = onValue.data['latest_version_number'];
-            var isForced = onValue.data['forced'];
-            int result = int.parse(version.replaceAll(".", ""));
-            int verionNumber =
-                int.parse(latestVersionNumber.replaceAll(".", ""));
+          } else {
+            if (onValue.data.containsKey("latest_version_number")) {
+              var latestVersionNumber = onValue.data['latest_version_number'];
+              var isForced = onValue.data['forced'];
+              int result = int.parse(version.replaceAll(".", ""));
+              int verionNumber =
+                  int.parse(latestVersionNumber.replaceAll(".", ""));
 //            print(result);
 //            print(verionNumber);
 
-            if (result < verionNumber) {
-              print("App is Out of date");
-              this.mainForced = isForced;
-              return false;
-            } else {
-              return true;
+              if (result < verionNumber) {
+                print("App is Out of date");
+                this.mainForced = isForced;
+                return false;
+              } else {
+                return true;
+              }
             }
+
+            return true;
+            //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number");
           }
-
           return true;
-          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number");
-        }
-        return true;
+        });
       });
-    });
 
-    if (!isLatestVersion) {
-      await _navigateToUpdatePage(loggedInUser, mainForced);
+      if (!isLatestVersion) {
+        await _navigateToUpdatePage(loggedInUser, mainForced);
+      }
     }
 
     if (!loggedInUser.acceptedEULA) {
