@@ -125,7 +125,7 @@ class TimeBankList extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (BuildContext context) => WaitingView(),
                   ),
-                );
+                )
               },
             ),
           ],
