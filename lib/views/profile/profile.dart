@@ -26,6 +26,7 @@ import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 
 import 'package:sevaexchange/views/transaction_history.dart';
 import 'edit_name.dart';
+import 'edit_profile.dart';
 import 'timezone.dart';
 import 'package:tree_view/tree_view.dart';
 
@@ -182,10 +183,10 @@ class _ProfilePageState extends State<ProfilePage>
           children: <Widget>[
             SizedBox(height: 60),
             getSevaCreditsWidget(userModel: user),
-            SizedBox(
-              height: 32,
-            ),
-            skillsAndInterest,
+//            SizedBox(
+//              height: 32,
+//            ),
+           // skillsAndInterest,
             SizedBox(
               height: 32,
             ),
@@ -293,6 +294,24 @@ class _ProfilePageState extends State<ProfilePage>
       centerTitle: true,
       expandedHeight: 180,
       backgroundColor: Theme.of(context).primaryColor,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.edit,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditProfilePage(
+                  userModel: user,
+                ),
+              ),
+            );
+          },
+        ),
+      ],
       title: Transform.scale(
         scale: appbarScale,
         child: AnimatedOpacity(
@@ -346,68 +365,78 @@ class _ProfilePageState extends State<ProfilePage>
                   color: Theme.of(context).primaryColor,
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        GestureDetector(
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: ShapeDecoration(
-                              shape: CircleBorder(
-                                side: BorderSide(
-                                  color: Colors.white,
-                                  width: 2,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          //crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            GestureDetector(
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: ShapeDecoration(
+                                  shape: CircleBorder(
+                                    side: BorderSide(
+                                      color: Colors.white,
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  image: DecorationImage(
+                                    image: NetworkImage(user.photoURL),
+                                  ),
                                 ),
                               ),
-                              image: DecorationImage(
-                                image: NetworkImage(user.photoURL),
-                              ),
-                            ),
-                          ),
-                          onTap: () {
-                            print('Getsure Pressed');
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return EditProfilePic();
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          width: 16,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              user.fullname,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                              ),
-                            ),
-                            Text(
-                              user.email,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
+                              onTap: () {
+                                print('Getsure Pressed');
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfilePage(
+                                      userModel: user,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                             SizedBox(
-                              height: 8,
+                              width: 16,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 5.0),
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              //crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  user.fullname,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                Text(
+                                  user.email,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                ),
+//                                SizedBox(
+//                                  height: 8,
+//                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
