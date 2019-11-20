@@ -289,6 +289,13 @@ class _TimebankViewState extends State<TimebankView> {
                                               ),
                                             ),
                                             actions: <Widget>[
+                                              new FlatButton(
+                                                child: new Text("Cancel"),
+                                                onPressed: () {
+                                                  Navigator.of(dialogContext)
+                                                      .pop();
+                                                },
+                                              ),
                                               // usually buttons at the bottom of the dialog
                                               new FlatButton(
                                                 child: new Text(
@@ -371,13 +378,6 @@ class _TimebankViewState extends State<TimebankView> {
                                                     Navigator.of(dialogContext)
                                                         .pop();
                                                   }
-                                                },
-                                              ),
-                                              new FlatButton(
-                                                child: new Text("Close"),
-                                                onPressed: () {
-                                                  Navigator.of(dialogContext)
-                                                      .pop();
                                                 },
                                               ),
                                             ],

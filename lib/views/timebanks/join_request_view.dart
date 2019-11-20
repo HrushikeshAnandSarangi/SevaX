@@ -39,10 +39,6 @@ class JoinRequestViewState extends State<JoinRequestView>
               'Join Requests',
               style: TextStyle(color: Colors.white),
             ),
-            Text(
-              'Swipe right to add and swipe left to cancel ',
-              style: TextStyle(color: Colors.white, fontSize: 8),
-            )
           ],
         )),
         bottom: TabBar(
@@ -106,53 +102,8 @@ class TimebankRequests extends StatelessWidget {
                       TimebankModel timebankModel = snapshot.data;
                       return Slidable(
                         delegate: SlidableBehindDelegate(),
-                        actions: <Widget>[
-                          SlideAction(
-                            closeOnTap: true,
-                            onTap: () async {
-                              List<String> members = timebankModel.members;
-                              Set<String> usersSet = members.toSet();
-
-                              usersSet.add(model.userId);
-                              timebankModel.members = usersSet.toList();
-                              model.accepted = true;
-                              await createJoinRequest(model: model);
-                              await updateTimebank(
-                                  timebankModel: timebankModel);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(2),
-                              decoration: ShapeDecoration(
-                                shape: CircleBorder(),
-                                color: Colors.green,
-                              ),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                        secondaryActions: <Widget>[
-                          SlideAction(
-                            closeOnTap: true,
-                            onTap: () async {
-                              model.accepted = false;
-                              await createJoinRequest(model: model);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(2),
-                              decoration: ShapeDecoration(
-                                shape: CircleBorder(),
-                                color: Colors.red,
-                              ),
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
+                        actions: <Widget>[],
+                        secondaryActions: <Widget>[],
                         child: FutureBuilder<Object>(
                             future: getUserForId(sevaUserId: model.userId),
                             builder: (context, snapshot) {
@@ -180,68 +131,11 @@ class TimebankRequests extends StatelessWidget {
                                     maxLines: 1,
                                   ),
                                   onTap: () {
-                                    showDialog(
+                                    showDialogForApproval(
                                         context: context,
-                                        builder: (BuildContext viewContext) {
-                                          return AlertDialog(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(Radius.circular(25.0))),
-                                            content: Form(
-                                              //key: _formKey,
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: <Widget>[
-                                                  _getCloseButton(viewContext),
-                                                  Container(
-                                                    height: 70,
-                                                    width: 70,
-                                                    child: CircleAvatar(
-                                                      backgroundImage:
-                                                      NetworkImage(userModel.photoURL),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.all(8.0),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.all(8.0),
-                                                    child: Text(
-                                                      userModel.fullname,
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if (userModel.bio != null)
-                                                  Padding(
-                                                    padding: EdgeInsets.all(8.0),
-                                                    child: Text(userModel.bio),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.all(8.0),
-                                                    child: Text(userModel.email),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.all(8.0),
-                                                    child: Text(
-                                                        "Reason to join:",
-                                                      style: TextStyle(
-                                                        decoration: TextDecoration.underline,
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: EdgeInsets.all(4.0),
-                                                    child: Text(model.reason),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        });
+                                        model: model,
+                                        userModel: userModel,
+                                        timebankModel: timebankModel);
                                   },
                                 ),
                               );
@@ -252,8 +146,126 @@ class TimebankRequests extends StatelessWidget {
         });
   }
 
+  void showDialogForApproval(
+      {BuildContext context,
+      UserModel userModel,
+      JoinRequestModel model,
+      TimebankModel timebankModel}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _getCloseButton(viewContext),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(userModel.email),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "About ${userModel.fullname}",
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(userModel.bio),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Reason to join:",
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(model.reason),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          'Reject',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () async {
+                          // request declined
+                          print("Declining request");
+                          model.accepted = false;
+                          await createJoinRequest(model: model);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          'Allow',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: () async {
+                          // Once approved
+                          List<String> members = timebankModel.members;
+                          Set<String> usersSet = members.toSet();
+
+                          usersSet.add(model.userId);
+                          timebankModel.members = usersSet.toList();
+                          model.accepted = true;
+                          await createJoinRequest(model: model);
+                          await updateTimebank(timebankModel: timebankModel);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   Widget _getCloseButton(BuildContext context) {
-        return Padding(
+    return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: Container(
         alignment: FractionalOffset.topRight,
@@ -272,7 +284,6 @@ class TimebankRequests extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Navigator.pop(context);
-
               },
             ),
           ),

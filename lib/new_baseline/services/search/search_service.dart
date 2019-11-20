@@ -6,7 +6,8 @@ import 'dart:convert';
 import 'package:sevaexchange/models/models.dart';
 
 class SearchService extends BaseService {
-  static final String _baseUrl = 'http://api.sevaexchange.com:9200';
+  static final String _baseUrl =
+      'https://b23ca2bd485f4bc18fe0ae03f9da283e.us-west1.gcp.cloud.es.io:9243';
 
   /// make a get request using [url] and [headers]
   Future<http.Response> makeGetRequest({

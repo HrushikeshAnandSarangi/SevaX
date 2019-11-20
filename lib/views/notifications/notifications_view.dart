@@ -637,116 +637,239 @@ class NotificationsView extends StatelessWidget {
           return transaction.to == userId;
         });
         return Slidable(
-          delegate: SlidableBehindDelegate(),
-          actions: <Widget>[
-            SlideAction(
+            delegate: SlidableBehindDelegate(),
+            actions: <Widget>[],
+            secondaryActions: <Widget>[],
+            child: GestureDetector(
               onTap: () {
-                checkForFeedback(
-                    userId: userId,
-                    user: user,
+                showMemberClaimConfirmation(
                     context: context,
-                    model: model,
                     notificationId: notificationId,
-                    sevaCore: SevaCore.of(context));
+                    requestModel: model,
+                    userId: userId,
+                    userModel: user,
+                    credits: transactionModel.credits);
               },
               child: Container(
-                padding: notificationPadding,
-                decoration: ShapeDecoration(
-                  shape: CircleBorder(),
-                  color: Colors.green,
-                  shadows: shadowList,
-                ),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-          secondaryActions: <Widget>[
-            SlideAction(
-              closeOnTap: true,
-              onTap: () {
-                List<TransactionModel> transactions =
-                    model.transactions.map((t) => t).toList();
-                transactions.removeWhere((t) => t.to == userId);
-
-                model.transactions = transactions.map((t) {
-                  return t;
-                }).toList();
-                FirestoreManager.rejectRequestCompletion(
-                  model: model,
-                  userId: userId,
-                );
-                // creating chat
-                String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-                List users = [user.email, loggedInEmail];
-                users.sort();
-                ChatModel chatModel = ChatModel();
-                chatModel.user1 = users[0];
-                chatModel.user2 = users[1];
-
-                createChat(chat: chatModel);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChatView(
-                            useremail: user.email,
-                            chatModel: chatModel,
-                            isFromRejectCompletion: true,
-                          )),
-                );
-
-                FirestoreManager.readNotification(
-                    notificationId, SevaCore.of(context).loggedInUser.email);
-              },
-              child: Container(
-                padding: notificationPadding,
-                decoration: ShapeDecoration(
-                  shape: CircleBorder(),
-                  color: Colors.red,
-                  shadows: shadowList,
-                ),
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              title: Text(model.title),
-              subtitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '${user.fullname} completed the task in ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                margin: notificationPadding,
+                decoration: notificationDecoration,
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(user.photoURL),
+                  ),
+                  title: Text(model.title),
+                  subtitle: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${user.fullname} completed the task in ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: () {
+                            return '${transactionModel.credits} hours';
+                          }(),
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: () {
+                            return ', waiting for your approval.';
+                          }(),
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
                     ),
-                    TextSpan(
-                      text: () {
-                        return '${transactionModel.credits} hours';
-                      }(),
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        );
+            ));
       },
     );
+  }
+
+  void showMemberClaimConfirmation(
+      {BuildContext context,
+      UserModel userModel,
+      RequestModel requestModel,
+      String notificationId,
+      String userId,
+      double credits}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _getCloseButton(viewContext),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(userModel.email),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "About ${userModel.fullname}",
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(userModel.bio),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          "By approving, you accept that ${userModel.fullname} has worked for $credits hours",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          'Reject',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () async {
+                          // reject the claim
+                          rejectMemberClaimForEvent
+                          (
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          'Approve',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: () async {
+                          // Once approved take for feeddback
+                          approveMemberClaim(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId);
+
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void approveMemberClaim({
+    String userId,
+    UserModel user,
+    BuildContext context,
+    RequestModel model,
+    String notificationId,
+  }) {
+    //request for feedback;
+    checkForFeedback(
+        userId: userId,
+        user: user,
+        context: context,
+        model: model,
+        notificationId: notificationId,
+        sevaCore: SevaCore.of(context));
+  }
+
+  void rejectMemberClaimForEvent(
+      {RequestModel model,
+      String userId,
+      BuildContext context,
+      UserModel user,
+      String notificationId}) {
+    List<TransactionModel> transactions =
+        model.transactions.map((t) => t).toList();
+    transactions.removeWhere((t) => t.to == userId);
+
+    model.transactions = transactions.map((t) {
+      return t;
+    }).toList();
+    FirestoreManager.rejectRequestCompletion(
+      model: model,
+      userId: userId,
+    );
+    // creating chat
+    String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+    List users = [user.email, loggedInEmail];
+    users.sort();
+    ChatModel chatModel = ChatModel();
+    chatModel.user1 = users[0];
+    chatModel.user2 = users[1];
+
+    createChat(chat: chatModel);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ChatView(
+                useremail: user.email,
+                chatModel: chatModel,
+                isFromRejectCompletion: true,
+              )),
+    );
+
+    FirestoreManager.readNotification(
+        notificationId, SevaCore.of(context).loggedInUser.email);
   }
 
   Widget getJoinReuqestsNotificationWidget(
@@ -994,98 +1117,208 @@ class NotificationsView extends StatelessWidget {
         UserModel user = snapshot.data;
 
         return Slidable(
-          delegate: SlidableBehindDelegate(),
-          actions: <Widget>[
-            SlideAction(
-              closeOnTap: true,
-              onTap: () async {
-                List<String> approvedUsers = model.approvedUsers;
-                Set<String> usersSet = approvedUsers.toSet();
-
-                usersSet.add(user.email);
-                model.approvedUsers = usersSet.toList();
-
-                if (model.numberOfApprovals <= model.approvedUsers.length)
-                  model.accepted = true;
-                print(
-                    "${model.requestStart} -> User Approved -> ${user.tokens} ");
-                //commenting out the api post request
-                // var scheduledNotificationResponse =
-                //     await scheduleNotification(model: model, userModel: user);
-                // if (scheduledNotificationResponse.statusCode == 200) {
-                //   print("notification was scheduled successfully");
-                // } else {
-                //   print("Couldn't schedule a notificaation");
-                // }
-
-                // return;
-
-                // Approve user
-                FirestoreManager.approveAcceptRequest(
-                  requestModel: model,
-                  approvedUserId: user.sevaUserID,
-                  notificationId: notificationId,
-                );
-              },
-              child: Container(
-                padding: notificationPadding,
-                decoration: ShapeDecoration(
-                  shape: CircleBorder(),
-                  color: Colors.green,
-                  shadows: shadowList,
-                ),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-          secondaryActions: <Widget>[
-            SlideAction(
-              closeOnTap: true,
+            delegate: SlidableBehindDelegate(),
+            actions: <Widget>[],
+            secondaryActions: <Widget>[],
+            child: GestureDetector(
               onTap: () {
-                List<String> acceptedUsers = model.acceptors;
-                Set<String> usersSet = acceptedUsers.toSet();
-
-                usersSet.remove(user.email);
-                model.acceptors = usersSet.toList();
-
-                //int count = model.numberOfApprovals;
-
-                FirestoreManager.rejectAcceptRequest(
-                  requestModel: model,
-                  rejectedUserId: user.sevaUserID,
-                  notificationId: notificationId,
-                );
+                showDialogForApproval(
+                    context: context,
+                    userModel: user,
+                    notificationId: notificationId,
+                    requestModel: model);
               },
               child: Container(
-                padding: notificationPadding,
-                decoration: ShapeDecoration(
-                  shape: CircleBorder(),
-                  color: Colors.red,
-                  shadows: shadowList,
-                ),
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                ),
+                  margin: notificationPadding,
+                  decoration: notificationDecoration,
+                  child: ListTile(
+                    title: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      child: Text(model.title),
+                    ),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoURL),
+                    ),
+                    subtitle: Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      child: Text(
+                          'Request accepted by ${user.fullname}, waiting for your approval'),
+                    ),
+                  )),
+            ));
+      },
+    );
+  }
+
+  void declineRequestedMember(
+      {RequestModel model, UserModel user, String notificationId}) {
+    List<String> acceptedUsers = model.acceptors;
+    Set<String> usersSet = acceptedUsers.toSet();
+
+    usersSet.remove(user.email);
+    model.acceptors = usersSet.toList();
+
+    FirestoreManager.rejectAcceptRequest(
+      requestModel: model,
+      rejectedUserId: user.sevaUserID,
+      notificationId: notificationId,
+    );
+  }
+
+  void approveMemberForVolunteerRequest(
+      {RequestModel model, UserModel user, String notificationId}) {
+    List<String> approvedUsers = model.approvedUsers;
+    Set<String> usersSet = approvedUsers.toSet();
+
+    usersSet.add(user.email);
+    model.approvedUsers = usersSet.toList();
+
+    if (model.numberOfApprovals <= model.approvedUsers.length)
+      model.accepted = true;
+    FirestoreManager.approveAcceptRequest(
+      requestModel: model,
+      approvedUserId: user.sevaUserID,
+      notificationId: notificationId,
+    );
+  }
+
+// crate dialog for approval or rejection
+  void showDialogForApproval({
+    BuildContext context,
+    UserModel userModel,
+    RequestModel requestModel,
+    String notificationId,
+  }) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _getCloseButton(viewContext),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(userModel.email),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "About ${userModel.fullname}",
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(userModel.bio),
+                  ),
+                  Center(
+                    child: Text(
+                        "By approving, ${userModel.fullname} will be added to the event.",
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.center),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          'Decline',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () async {
+                          // request declined
+
+                          declineRequestedMember(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel);
+
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          'Approve',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: () async {
+                          // Once approved
+                          approveMemberForVolunteerRequest(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ],
+                  )
+                ],
               ),
             ),
-          ],
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text(model.title),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
+          );
+        });
+  }
+
+  Widget _getCloseButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        alignment: FractionalOffset.topRight,
+        child: Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'lib/assets/images/close.png',
               ),
-              subtitle: Text('Request accepted by ${user.fullname}'),
             ),
           ),
-        );
-      },
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 

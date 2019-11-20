@@ -109,18 +109,21 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Center(
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: TimebankAvatar(),
-                )
-              ),
+                  child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: TimebankAvatar(),
+              )),
               Padding(
                 padding: EdgeInsets.all(15.0),
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank Name",
-                  labelText: FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank Name",
+                  hintText: FlavorConfig.values.timebankName == "Yang 2020"
+                      ? "Yang Gang Chapter"
+                      : "Timebank Name",
+                  labelText: FlavorConfig.values.timebankName == "Yang 2020"
+                      ? "Yang Gang Chapter"
+                      : "Timebank Name",
                   // labelStyle: textStyle,
                   // labelStyle: textStyle,
                   // labelText: 'Description',
@@ -318,6 +321,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   ),
                 ),
               ),
+              Center(
+                child: Text(
+                  'We recommend you to add a vicinity location',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+
 //              Padding(
 //                padding: const EdgeInsets.all(8.0),
 //                child: GestureDetector(
@@ -361,10 +372,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Container(
-                  alignment: Alignment.center,
+                    alignment: Alignment.center,
                     child: FutureBuilder<Object>(
-                        future:
-                        getTimeBankForId(timebankId: widget.timebankId),
+                        future: getTimeBankForId(timebankId: widget.timebankId),
                         builder: (context, snapshot) {
                           if (snapshot.hasError) return Text('Error');
                           if (snapshot.connectionState ==
@@ -382,10 +392,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                   _writeToDB();
                                   if (parentTimebank.children == null)
                                     parentTimebank.children = [];
-                                  parentTimebank.children
-                                      .add(timebankModel.id);
-                                  updateTimebank(
-                                      timebankModel: parentTimebank);
+                                  parentTimebank.children.add(timebankModel.id);
+                                  updateTimebank(timebankModel: parentTimebank);
                                   Navigator.pop(context);
                                 }
                               } else {
@@ -396,7 +404,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             },
                             child: Text(
                               'Create ${FlavorConfig.values.timebankTitle}',
-                              style: TextStyle(fontSize: 16.0,color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.white),
                             ),
                             textColor: Colors.blue,
                           );
@@ -411,6 +420,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )),
         ));
   }
+
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,

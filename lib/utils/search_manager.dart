@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:sevaexchange/models/models.dart';
 
 class SearchManager {
+// https://b23ca2bd485f4bc18fe0ae03f9da283e.us-west1.gcp.cloud.es.io:9243
   static final String _baseUrl = 'http://api.sevaexchange.com:9200';
 
   static Future<http.Response> makeGetRequest({

@@ -78,12 +78,14 @@ class RequestStatusViewState extends State<RequestStatusView> {
     return GestureDetector(
       onTap: () {
         print("Tapped on profile ${userSelected.email}");
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => (),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => (ProfileViewer(
+              userEmail: userSelected.email,
+            )),
+          ),
+        );
       },
       child: Card(
         child: ListTile(
