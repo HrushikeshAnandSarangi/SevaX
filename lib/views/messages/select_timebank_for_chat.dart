@@ -4,6 +4,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 
+import '../../flavor_config.dart';
+
 class SelectTimeBankForNewChat extends StatefulWidget {
   @override
   SelectTimeBankForNewChatState createState() =>
@@ -16,7 +18,9 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select Timebank",
+          FlavorConfig.values.timebankName == "Yang 2020"
+              ? "Select Yang Gang Chapter"
+              : "Select Timebank",
           style: TextStyle(color: Colors.white),
         ),
       ),
