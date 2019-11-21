@@ -31,19 +31,23 @@ class SelectTimeBankForNewRequestState
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: getTimebanks(context,widget.isFrom),
+      body: getTimebanks(context, widget.isFrom),
     );
   }
 }
 
 List<String> dropdownList = [];
 
-Widget getTimebanks(BuildContext context,String isFrom) {
+Widget getTimebanks(BuildContext context, String isFrom) {
   List<TimebankModel> timebankList = [];
   return StreamBuilder<List<TimebankModel>>(
-      stream: FirestoreManager.getTimebanksForUserStream(
-        userId: SevaCore.of(context).loggedInUser.sevaUserID,
-      ),
+      stream: isFrom == "Request"
+          ? FirestoreManager.getTimebanksForAdmins(
+              userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            )
+          : FirestoreManager.getTimebanksForUserStream(
+              userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            ),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -74,7 +78,6 @@ Widget getTimebanks(BuildContext context,String isFrom) {
                         ),
                       ),
                     );
-
                   } else if (isFrom == "Request") {
                     Navigator.push(
                       context,
@@ -84,7 +87,6 @@ Widget getTimebanks(BuildContext context,String isFrom) {
                         ),
                       ),
                     );
-
                   } else if (isFrom == "Feed") {
                     Navigator.push(
                       context,
@@ -94,7 +96,6 @@ Widget getTimebanks(BuildContext context,String isFrom) {
                         ),
                       ),
                     );
-
                   } else {
                     return;
                   }

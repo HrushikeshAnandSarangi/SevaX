@@ -77,7 +77,7 @@ class _CoreViewState extends State<CoreView> {
   @override
   void initState() {
     super.initState();
-   // _getCurrentLocation();
+    // _getCurrentLocation();
     UserData.shared.isFromLogin = false;
   }
 
@@ -97,7 +97,6 @@ class _CoreViewState extends State<CoreView> {
 
   @override
   void didChangeDependencies() {
-
     // SevaCore.of(context).loggedInUser.sevaUserID = "qgc7oclcyhXP6jjnFG1rXmVZ7Bp2";
     user = UserModel(
       sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -646,13 +645,42 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       onTap: () => {
-                        Navigator.of(context).pop(),
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SelectTimeBankForNewRequest("Feed"),
-                          ),
-                        ),
+                            Navigator.of(context).pop(),
+
+                            if (SevaCore.of(context)
+                                    .loggedInUser
+                                    .associatedWithTimebanks >
+                                1)
+                              {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        SelectTimeBankForNewRequest("Offer"),
+                                  ),
+                                ),
+                              }
+                            else
+                              {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateOffer(
+                                      timebankId: SevaCore.of(context)
+                                          .loggedInUser
+                                          .currentTimebank,
+                                    ),
+                                  ),
+                                ),
+                              },
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectTimeBankForNewRequest("Feed"),
+                              ),
+                            ),
 
 //                            Navigator.of(context).pop(),
 //                            Navigator.push(
@@ -678,14 +706,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-
-                    Navigator.of(context).pop(),
+                      Navigator.of(context).pop(),
                       Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SelectTimeBankForNewRequest("Request"),
-                            ),
-                          ),
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SelectTimeBankForNewRequest("Request"),
+                        ),
+                      ),
 
 //                      FirestoreManager.getTimeBankForId(
 //                              timebankId: SevaCore.of(context)
@@ -747,24 +775,32 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     ),
                     onTap: () => {
                       Navigator.of(context).pop(),
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SelectTimeBankForNewRequest("Offer"),
-                        ),
-                      ),
-
-//                      Navigator.of(context).pop(),
-//                      Navigator.push(
-//                        context,
-//                        MaterialPageRoute(
-//                          builder: (context) => CreateOffer(
-//                            timebankId: SevaCore.of(context)
-//                                .loggedInUser
-//                                .currentTimebank,
-//                          ),
-//                        ),
-//                      )
+                      if (SevaCore.of(context)
+                              .loggedInUser
+                              .associatedWithTimebanks >
+                          1)
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SelectTimeBankForNewRequest("Offer"),
+                            ),
+                          ),
+                        }
+                      else
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateOffer(
+                                timebankId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentTimebank,
+                              ),
+                            ),
+                          ),
+                        },
                     },
                   ),
                   Divider(
