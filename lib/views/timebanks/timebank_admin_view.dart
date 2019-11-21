@@ -10,6 +10,8 @@ import 'package:sevaexchange/views/core.dart';
 
 import 'dart:ui';
 
+import 'edit_timebank_view.dart';
+
 class TimebankAdminPage extends StatefulWidget {
   final String timebankId;
 
@@ -101,7 +103,7 @@ class _TimeBankAdminView extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EditTimebankPic(
+                      builder: (context) => EditTimebankView(
                         timebankModel: timebankModel,
                       ),
                     ),

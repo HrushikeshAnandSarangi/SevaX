@@ -162,9 +162,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                           style: TextStyle(fontSize: 17.0),
                           initialValue: widget.userModel.fullname,
                           onChanged: (value) {
-                            if (value.isEmpty == false) {
-                              this.usermodel.fullname = value;
-                            }
+//                            if (value.isEmpty == false) {
+//                              this.usermodel.fullname = value;
+//                            }
                           },
                           validator: (value) {
                             if (value.isEmpty) {
@@ -184,10 +184,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                             Navigator.pop(viewContext);
                             updateName();
                             isLoading = false;
-                            setState(() {
-                              widget.userModel.fullname =
-                                  this.usermodel.fullname;
-                            });
+//                            setState(() {
+//                              widget.userModel.fullname =
+//                                  this.usermodel.fullname;
+//                            });
                           },
                         ),
                         FlatButton(
@@ -253,15 +253,15 @@ class _EditProfilePageState extends State<EditProfilePage>
                           style: TextStyle(fontSize: 17.0),
                           initialValue: widget.userModel.bio,
                           onChanged: (value) {
-                            if (value.isEmpty == false) {
-                              this.usermodel.bio = value;
-                            }
+//                            if (value.isEmpty == false) {
+//                              this.usermodel.bio = value;
+//                            }
                           },
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter bio to update';
                             }
-                            widget.userModel.fullname = value;
+                            widget.userModel.bio = value;
                           },
                         ),
                       ),
@@ -275,9 +275,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                             Navigator.pop(viewContext);
                             updateBio();
                             isLoading = false;
-                            setState(() {
-                              widget.userModel.bio = this.usermodel.bio;
-                            });
+//                            setState(() {
+//                              widget.userModel.bio = this.usermodel.bio;
+//                            });
                           },
                         ),
                         FlatButton(
@@ -431,7 +431,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     setState(() {
       this._saving = true;
     });
-    SevaCore.of(context).loggedInUser.fullname = this.usermodel.fullname;
+    SevaCore.of(context).loggedInUser.fullname = widget.userModel.fullname;
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;
@@ -442,7 +442,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     setState(() {
       this._saving = true;
     });
-    SevaCore.of(context).loggedInUser.bio = this.usermodel.bio;
+    SevaCore.of(context).loggedInUser.bio = widget.userModel.bio;
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;
