@@ -425,7 +425,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             print("No users where selected");
             //no users where selected
           }
-
           // SelectMembersInGroup
         },
       ),
