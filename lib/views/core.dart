@@ -658,7 +658,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        SelectTimeBankForNewRequest("Offer"),
+                                        SelectTimeBankForNewRequest("Feed"),
                                   ),
                                 ),
                               }
