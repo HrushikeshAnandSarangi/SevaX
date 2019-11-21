@@ -152,36 +152,42 @@ class _EditProfilePageState extends State<EditProfilePage>
                               BorderRadius.all(Radius.circular(10.0))),
                       title:
                           Text('Update name', style: TextStyle(fontSize: 15.0)),
-                      content: TextFormField(
-                        //key: _formKey,
-                        decoration: InputDecoration(hintText: 'Enter name'),
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(fontSize: 17.0),
-                        initialValue: widget.userModel.fullname,
-                        onChanged: (value) {
-                          if (value.isEmpty == false) {
-                            this.usermodel.fullname = value;
-                          }
-                        },
-//                    validator: (value) {
-//                      if (value.isEmpty) {
-//                        return 'Please enter name to update';
-//                      }
-//                      widget.userModel.fullname = value;
-//                    },
+                      content: Form(
+                        key: _formKey,
+                        child: TextFormField(
+                          //key: _formKey,
+                          decoration: InputDecoration(hintText: 'Enter name'),
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: TextStyle(fontSize: 17.0),
+                          initialValue: widget.userModel.fullname,
+                          onChanged: (value) {
+//                            if (value.isEmpty == false) {
+//                              this.usermodel.fullname = value;
+//                            }
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter name to update';
+                            }
+                            widget.userModel.fullname = value;
+                          },
+                        ),
                       ),
                       actions: <Widget>[
                         FlatButton(
                           child: Text('Update'),
                           onPressed: () {
+                            if (!_formKey.currentState.validate()) {
+                              return;
+                            }
                             Navigator.pop(viewContext);
                             updateName();
                             isLoading = false;
-                            setState(() {
-                              widget.userModel.fullname =
-                                  this.usermodel.fullname;
-                            });
+//                            setState(() {
+//                              widget.userModel.fullname =
+//                                  this.usermodel.fullname;
+//                            });
                           },
                         ),
                         FlatButton(
@@ -237,35 +243,41 @@ class _EditProfilePageState extends State<EditProfilePage>
                               BorderRadius.all(Radius.circular(10.0))),
                       title:
                           Text('Update bio', style: TextStyle(fontSize: 15.0)),
-                      content: TextFormField(
-                        //key: _formKey,
-                        decoration: InputDecoration(hintText: 'Enter bio'),
-                        keyboardType: TextInputType.text,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(fontSize: 17.0),
-                        initialValue: widget.userModel.bio,
-                        onChanged: (value) {
-                          if (value.isEmpty == false) {
-                            this.usermodel.bio = value;
-                          }
-                        },
-//                    validator: (value) {
-//                      if (value.isEmpty) {
-//                        return 'Please enter name to update';
-//                      }
-//                      widget.userModel.fullname = value;
-//                    },
+                      content: Form(
+                        key: _formKey,
+                        child: TextFormField(
+                          //key: _formKey,
+                          decoration: InputDecoration(hintText: 'Enter bio'),
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: TextStyle(fontSize: 17.0),
+                          initialValue: widget.userModel.bio,
+                          onChanged: (value) {
+//                            if (value.isEmpty == false) {
+//                              this.usermodel.bio = value;
+//                            }
+                          },
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter bio to update';
+                            }
+                            widget.userModel.bio = value;
+                          },
+                        ),
                       ),
                       actions: <Widget>[
                         FlatButton(
                           child: Text('Update'),
                           onPressed: () {
+                            if (!_formKey.currentState.validate()) {
+                              return;
+                            }
                             Navigator.pop(viewContext);
                             updateBio();
                             isLoading = false;
-                            setState(() {
-                              widget.userModel.bio = this.usermodel.bio;
-                            });
+//                            setState(() {
+//                              widget.userModel.bio = this.usermodel.bio;
+//                            });
                           },
                         ),
                         FlatButton(
@@ -413,14 +425,13 @@ class _EditProfilePageState extends State<EditProfilePage>
     setState(() {
       this._saving = false;
     });
-
   }
 
   Future updateName() async {
     setState(() {
       this._saving = true;
     });
-    SevaCore.of(context).loggedInUser.fullname = this.usermodel.fullname;
+    SevaCore.of(context).loggedInUser.fullname = widget.userModel.fullname;
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;
@@ -431,7 +442,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     setState(() {
       this._saving = true;
     });
-    SevaCore.of(context).loggedInUser.bio = this.usermodel.bio;
+    SevaCore.of(context).loggedInUser.bio = widget.userModel.bio;
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     setState(() {
       this._saving = false;

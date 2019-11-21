@@ -14,6 +14,7 @@ import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/search_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/timebank_admin_listview.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
@@ -645,17 +646,25 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       onTap: () => {
-                            Navigator.of(context).pop(),
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NewsCreate(
-                                  timebankId: SevaCore.of(context)
-                                      .loggedInUser
-                                      .currentTimebank,
-                                ),
-                              ),
-                            )
+                        Navigator.of(context).pop(),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SelectTimeBankForNewRequest("Feed"),
+                          ),
+                        ),
+
+//                            Navigator.of(context).pop(),
+//                            Navigator.push(
+//                              context,
+//                              MaterialPageRoute(
+//                                builder: (context) => NewsCreate(
+//                                  timebankId: SevaCore.of(context)
+//                                      .loggedInUser
+//                                      .currentTimebank,
+//                                ),
+//                              ),
+//                            )
                           }),
                   Divider(
                     height: 1,
@@ -669,49 +678,58 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      FirestoreManager.getTimeBankForId(
-                              timebankId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentTimebank)
-                          .then((timebank) {
-                        if (timebank.admins.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID) ||
-                            timebank.coordinators.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID)) {
-                          Navigator.of(context).pop();
-                          Navigator.push(
+
+                    Navigator.of(context).pop(),
+                      Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CreateRequest(
-                                timebankId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentTimebank,
-                              ),
+                              builder: (context) => SelectTimeBankForNewRequest("Request"),
                             ),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              // return object of type Dialog
-                              return AlertDialog(
-                                title: new Text("Permission Denied"),
-                                content: new Text(
-                                    "You need to be an Admin or Coordinator to have permission to create campaigns"),
-                                actions: <Widget>[
-                                  // usually buttons at the bottom of the dialog
-                                  new FlatButton(
-                                    child: new Text("Close"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      }),
+                          ),
+
+//                      FirestoreManager.getTimeBankForId(
+//                              timebankId: SevaCore.of(context)
+//                                  .loggedInUser
+//                                  .currentTimebank)
+//                          .then((timebank) {
+//                        if (timebank.admins.contains(
+//                                SevaCore.of(context).loggedInUser.sevaUserID) ||
+//                            timebank.coordinators.contains(
+//                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+//                          Navigator.of(context).pop();
+//                          Navigator.push(
+//                            context,
+//                            MaterialPageRoute(
+//                              builder: (context) => CreateRequest(
+//                                timebankId: SevaCore.of(context)
+//                                    .loggedInUser
+//                                    .currentTimebank,
+//                              ),
+//                            ),
+//                          );
+//                        } else {
+//                          showDialog(
+//                            context: context,
+//                            builder: (BuildContext context) {
+//                              // return object of type Dialog
+//                              return AlertDialog(
+//                                title: new Text("Permission Denied"),
+//                                content: new Text(
+//                                    "You need to be an Admin or Coordinator to have permission to create campaigns"),
+//                                actions: <Widget>[
+//                                  // usually buttons at the bottom of the dialog
+//                                  new FlatButton(
+//                                    child: new Text("Close"),
+//                                    onPressed: () {
+//                                      Navigator.of(context).pop();
+//                                    },
+//                                  ),
+//                                ],
+//                              );
+//                            },
+//                          );
+//                        }
+//                      }),
                     },
                   ),
                   Divider(
@@ -732,13 +750,21 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreateOffer(
-                            timebankId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentTimebank,
-                          ),
+                          builder: (context) => SelectTimeBankForNewRequest("Offer"),
                         ),
-                      )
+                      ),
+
+//                      Navigator.of(context).pop(),
+//                      Navigator.push(
+//                        context,
+//                        MaterialPageRoute(
+//                          builder: (context) => CreateOffer(
+//                            timebankId: SevaCore.of(context)
+//                                .loggedInUser
+//                                .currentTimebank,
+//                          ),
+//                        ),
+//                      )
                     },
                   ),
                   Divider(

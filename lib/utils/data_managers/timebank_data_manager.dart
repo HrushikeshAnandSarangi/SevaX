@@ -167,6 +167,31 @@ Stream<TimebankModel> getTimebankModelStream(
   );
 }
 
+Stream<List<TimebankModel>> getAllMyTimebanks(
+    {@required String timebankId}) async* {
+  var data = Firestore.instance
+      .collection('timebanknew')
+      .where('parent_timebank_id', isEqualTo: timebankId)
+      .orderBy('name', descending: false)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
+      handleData: (snapshot, reportsList) {
+        List<TimebankModel> modelList = [];
+        snapshot.documents.forEach(
+              (documentSnapshot) {
+            TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
+            // if (model.timebankId == FlavorConfig.values.timebankId)
+            modelList.add(model);
+          },
+        );
+        reportsList.add(modelList);
+      },
+    ),
+  );
+}
+
 Stream<List<TimebankModel>> getChildTimebanks(
     {@required String timebankId}) async* {
   var data = Firestore.instance
