@@ -25,29 +25,31 @@ class RequestModel extends DataModel {
   GeoFirePoint location;
   String root_timebank_id;
   Color color;
+  bool isNotified = false;
 
-  RequestModel(
-      {this.id,
-      this.title,
-      this.description,
-      this.durationOfRequest,
-      this.email,
-      this.fullName,
-      this.sevaUserId,
-      this.photoUrl,
-      this.accepted,
-      this.postTimestamp,
-      this.requestEnd,
-      this.requestStart,
-      this.acceptors,
-      this.color,
-      this.transactions,
-      this.rejectedReason,
-      this.timebankId,
-      this.approvedUsers = const [],
-      this.numberOfApprovals = 1,
-      this.location,
-        this.root_timebank_id,});
+  RequestModel({
+    this.id,
+    this.title,
+    this.description,
+    this.durationOfRequest,
+    this.email,
+    this.fullName,
+    this.sevaUserId,
+    this.photoUrl,
+    this.accepted,
+    this.postTimestamp,
+    this.requestEnd,
+    this.requestStart,
+    this.acceptors,
+    this.color,
+    this.transactions,
+    this.rejectedReason,
+    this.timebankId,
+    this.approvedUsers = const [],
+    this.numberOfApprovals = 1,
+    this.location,
+    this.root_timebank_id,
+  });
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -93,6 +95,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('accepted')) {
       this.accepted = map['accepted'];
     }
+
+    if (map.containsKey('isNotified')) {
+      this.isNotified = map['isNotified'];
+    }
+
     if (map.containsKey('transactions')) {
       List<TransactionModel> transactionList = [];
       List transactionDataList = List.castFrom(map['transactions']);
@@ -167,6 +174,11 @@ class RequestModel extends DataModel {
     if (this.accepted != null) {
       object['accepted'] = this.accepted;
     }
+
+    if (this.isNotified != null) {
+      object['isNotified'] = this.isNotified;
+    }
+
     if (this.transactions != null) {
       List<Map<String, dynamic>> transactionList =
           this.transactions.map<Map<String, dynamic>>((map) {
