@@ -35,7 +35,7 @@ class _CreateRequestState extends State<CreateRequest> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          "Create Campign Request",
+          "Create Campaign Request",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
@@ -109,13 +109,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(hintText: 'Campign request title'),
+                decoration: InputDecoration(hintText: 'Campaign request title'),
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
                 style: textStyle,
                 validator: (value) {
                   if (value.isEmpty) {
-                    return 'Please enter the subject of your Request';
+                    return 'Please enter the subject of your request';
                   }
                   requestModel.title = value;
                 },
@@ -236,8 +236,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: 'Your Campign Request and any #hashtags',
-                  labelText: 'Campign request description',
+                  hintText: 'Your Campaign Request and any #hashtags',
+                  labelText: 'Campaign request description',
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
@@ -368,7 +368,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         ),
                         Text(' '),
                         Text(
-                          'Pin Campign Request',
+                          'Pin Campaign Request',
                           style: TextStyle(
                             color: FlavorConfig.values.buttonTextColor,
                           ),

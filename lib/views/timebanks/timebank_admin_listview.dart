@@ -53,10 +53,23 @@ Widget getTimebanks(BuildContext context, String isFrom) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         }
+
         timebankList = snapshot.data;
         timebankList.forEach((t) {
           dropdownList.add(t.id);
         });
+
+        if (timebankList.length == 0) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                "Only admins can create ${isFrom}s, You haven't created any as of now.",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );
+        }
 
         // Navigator.pop(context);
         print("Length ${dropdownList.length}");

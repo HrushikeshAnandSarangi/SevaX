@@ -647,6 +647,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       onTap: () => {
                             Navigator.of(context).pop(),
 
+                            print("------------------- ${SevaCore.of(context).loggedInUser.associatedWithTimebanks}"),
+
                             if (SevaCore.of(context)
                                     .loggedInUser
                                     .associatedWithTimebanks >
@@ -665,7 +667,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => CreateOffer(
+                                    builder: (context) => NewsCreate(
                                       timebankId: SevaCore.of(context)
                                           .loggedInUser
                                           .currentTimebank,
@@ -674,13 +676,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                 ),
                               },
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    SelectTimeBankForNewRequest("Feed"),
-                              ),
-                            ),
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         SelectTimeBankForNewRequest("Feed"),
+                            //   ),
+                            // ),
 
 //                            Navigator.of(context).pop(),
 //                            Navigator.push(
