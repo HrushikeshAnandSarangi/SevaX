@@ -75,6 +75,13 @@ class _EditTimebankViewState extends State<EditTimebankView>
       this.selectedAddress = address;
     });
   }
+  ImageProvider _getImage(TimebankModel model) {
+    if (model.photoUrl == null) {
+      return AssetImage('lib/assets/images/profile.png');
+    } else {
+      return NetworkImage(model.photoUrl);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -807,7 +814,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
             image: DecorationImage(
               image: selectedImage != null
                   ? FileImage(selectedImage)
-                  : NetworkImage(widget.timebankModel.photoUrl),
+                  : _getImage(widget.timebankModel),
             ),
           ),
         ),
