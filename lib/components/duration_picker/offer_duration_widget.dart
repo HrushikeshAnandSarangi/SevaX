@@ -90,7 +90,8 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
 
   Widget get endWidget {
     if (endTime == null)
-      endtimestamp = DateTime.now().millisecondsSinceEpoch;
+      // endtimestamp = DateTime.now().millisecondsSinceEpoch;
+      endtimestamp = 1609412400000;
     else
       endtimestamp = endTime.millisecondsSinceEpoch;
     return getDateTimeWidget(endTime, DurationType.END);

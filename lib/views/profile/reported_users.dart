@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -127,61 +129,7 @@ class _ReportedUsersView extends StatelessWidget {
               if (!isAdmin) {
                 return Slidable(
                   delegate: SlidableDrawerDelegate(),
-                  actions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.close,
-                      color: Colors.red,
-                      caption: 'Remove',
-                      onTap: () {
-                        List<ReportModel> requests =
-                            model.map((s) => s).toList();
-                        Firestore.instance
-                            .collection('timebanknew')
-                            .document(this.timebankId)
-                            .updateData({
-                          'members': FieldValue.arrayRemove([user.sevaUserID])
-                        });
-                        Firestore.instance
-                            .collection('reported_users_list')
-                            .getDocuments()
-                            .then((snapshot) {
-                          for (DocumentSnapshot doc in snapshot.documents) {
-                            if (doc.data['reportedId'] == user.sevaUserID) {
-                              requests.remove(user.sevaUserID);
-                              doc.reference.delete();
-                              print('Removed Reported user');
-                              break;
-                            }
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.arrow_downward,
-                      color: Colors.orange,
-                      caption: 'Ignore',
-                      onTap: () {
-                        List<ReportModel> requests =
-                            model.map((s) => s).toList();
-                        Firestore.instance
-                            .collection('reported_users_list')
-                            .getDocuments()
-                            .then((snapshot) {
-                          for (DocumentSnapshot doc in snapshot.documents) {
-                            if (doc.data['reportedId'] == user.sevaUserID) {
-                              requests.remove(user.sevaUserID);
-                              doc.reference.delete();
-                              print('Removed Reported user');
-                              break;
-                            }
-                          }
-                        });
-                      },
-                    ),
-                  ],
-                  child: getUserWidget(user, context),
+                  child: getUserWidget(user, context, model),
                 );
               }
               return Offstage();
@@ -192,16 +140,30 @@ class _ReportedUsersView extends StatelessWidget {
     );
   }
 
-  Widget getUserWidget(UserModel user, BuildContext context) {
+  Widget getUserWidget(
+      UserModel user, BuildContext context, List<ReportModel> model) {
     if (user == null) return Offstage();
-    return Card(
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.photoURL),
+    return GestureDetector(
+      onTap: () {
+        print("------------------------Show dialog-----");
+      },
+      child: Card(
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(user.photoURL),
+          ),
+          title: Text(user.fullname),
+          subtitle: Text(user.email),
+          onTap: () {
+            print("tapped list item");
+
+            showDialogForRemovingMember(
+              context: context,
+              model: model,
+              userModel: user,
+            );
+          },
         ),
-        title: Text(user.fullname),
-        subtitle: Text(user.email),
-        onTap: () {},
       ),
     );
   }
@@ -244,21 +206,183 @@ class _ReportedUsersView extends StatelessWidget {
     );
   }
 
-//  Future updateTimebank(
-//      TimebankModel model, {
-//        List<String> admins,
-//        List<String> coordinators,
-//        List<String> members,
-//      }) async {
-//    if (admins != null) {
-//      model.admins = admins;
-//    }
-//    if (coordinators != null) {
-//      model.coordinators = coordinators;
-//    }
-//    if (members != null) {
-//      model.members = members;
-//    }
-//    await FirestoreManager.updateTimebank(timebankModel: model);
-//  }
+// crate dialog for approval or rejection
+  void showDialogForRemovingMember({
+    BuildContext context,
+    UserModel userModel,
+    List<ReportModel> model,
+  }) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _getCloseButton(viewContext),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(userModel.email),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "About ${userModel.fullname}",
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(userModel.bio),
+                  ),
+                  Center(
+                    child: Text(
+                        "By tapping on remove, ${userModel.fullname} will be removed from ${FlavorConfig.values.timebankName}",
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.center),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          'Ignore',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () async {
+                          // request declined
+                          ignoreMember(model: model, user: userModel);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          'Remove',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: () async {
+                          removeMemberFromYangGang(
+                            model: model,
+                            user: userModel,
+                          );
+                          // Once approved
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget _getCloseButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        alignment: FractionalOffset.topRight,
+        child: Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'lib/assets/images/close.png',
+              ),
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void removeMemberFromYangGang({
+    List<ReportModel> model,
+    UserModel user,
+  }) {
+    List<ReportModel> requests = model.map((s) => s).toList();
+    Firestore.instance
+        .collection('timebanknew')
+        .document(this.timebankId)
+        .updateData({
+      'members': FieldValue.arrayRemove([user.sevaUserID])
+    });
+    Firestore.instance
+        .collection('reported_users_list')
+        .getDocuments()
+        .then((snapshot) {
+      for (DocumentSnapshot doc in snapshot.documents) {
+        if (doc.data['reportedId'] == user.sevaUserID) {
+          requests.remove(user.sevaUserID);
+          doc.reference.delete();
+          print('Removed Reported user');
+          break;
+        }
+      }
+    });
+  }
+
+  void ignoreMember({
+    UserModel user,
+    List<ReportModel> model,
+  }) {
+    List<ReportModel> requests = model.map((s) => s).toList();
+    Firestore.instance
+        .collection('reported_users_list')
+        .getDocuments()
+        .then((snapshot) {
+      for (DocumentSnapshot doc in snapshot.documents) {
+        if (doc.data['reportedId'] == user.sevaUserID) {
+          requests.remove(user.sevaUserID);
+          doc.reference.delete();
+          print('Removed Reported user');
+          break;
+        }
+      }
+    });
+  }
 }
