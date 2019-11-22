@@ -5,6 +5,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 
@@ -41,7 +42,7 @@ List<String> dropdownList = [];
 Widget getTimebanks(BuildContext context, String isFrom) {
   List<TimebankModel> timebankList = [];
   return StreamBuilder<List<TimebankModel>>(
-      stream: isFrom == "Request"
+      stream: isFrom == "Request" || isFrom == "Invite"
           ? FirestoreManager.getTimebanksForAdmins(
               userId: SevaCore.of(context).loggedInUser.sevaUserID,
             )
@@ -109,18 +110,18 @@ Widget getTimebanks(BuildContext context, String isFrom) {
                         ),
                       ),
                     );
+                  } else if (isFrom == "Invite") {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => InviteMembers(
+                          timebank.id,
+                        ),
+                      ),
+                    );
                   } else {
                     return;
                   }
-
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => SelectMember(
-//                        timebankId: timebank.id,
-//                      ),
-//                    ),
-//                  );
                 },
                 child: Card(
                   margin: EdgeInsets.all(5),

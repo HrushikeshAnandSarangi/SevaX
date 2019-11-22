@@ -4,7 +4,6 @@ class NotificationModel {
   String targetUserId;
   String senderUserId;
   bool isRead;
-  bool isNotified = false;
   NotificationType type;
 
   NotificationModel({

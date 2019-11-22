@@ -98,8 +98,8 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                 SizedBox(height: 16),
                 FlatButton(
                   onPressed: () {
-                    isofferrequest = true;
 
+                    isofferrequest = true;
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
@@ -111,6 +111,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                         },
                       ),
                     );
+                    
                   },
                   child: Text('Create a request'),
                   textColor: Colors.blueAccent,

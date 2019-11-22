@@ -18,8 +18,14 @@ class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
+  UserModel userModel;
 
-  CreateRequest({Key key, this.isOfferRequest, this.offer, this.timebankId})
+  CreateRequest(
+      {Key key,
+      this.isOfferRequest,
+      this.offer,
+      this.timebankId,
+      this.userModel})
       : super(key: key);
 
   @override
@@ -44,6 +50,7 @@ class _CreateRequestState extends State<CreateRequest> {
         isOfferRequest: widget.isOfferRequest,
         offer: widget.offer,
         timebankId: widget.timebankId,
+        userModel: widget.userModel,
       ),
     );
   }
@@ -53,7 +60,9 @@ class RequestCreateForm extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
-  RequestCreateForm({this.isOfferRequest, this.offer, this.timebankId});
+  final UserModel userModel;
+  RequestCreateForm(
+      {this.isOfferRequest, this.offer, this.timebankId, this.userModel});
 
   @override
   RequestCreateFormState createState() {
@@ -328,25 +337,25 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                             .forEach((k, v) => arrayOfSelectedMembers.add(k));
                         requestModel.approvedUsers = arrayOfSelectedMembers;
                         //adding some members for humanity first
-
                         if (_formKey.currentState.validate()) {
                           await _writeToDB();
+                          print("Select Members");
+                          if (widget.isOfferRequest == true &&
+                              widget.userModel != null) {
+                            print("Adding from selected members-------------");
 
-                          if (widget.isOfferRequest == true) {
-                            OfferModel offer = widget.offer;
-
-                            Set<String> offerRequestList = () {
-                              if (offer.requestList == null) return [];
-                              return offer.requestList;
-                            }()
-                                .toSet();
-                            offerRequestList.add(requestModel.id);
-                            offer.requestList = offerRequestList.toList();
-                            FirestoreManager.updateOfferWithRequest(
-                                offer: offer);
-                            sendOfferRequest(
-                                offerModel: widget.offer,
-                                requestSevaID: requestModel.sevaUserId);
+                            // OfferModel offer = widget.offer;
+                            // Set<String> offerRequestList = () {
+                            //   if (offer.requestList == null) return [];
+                            //   return offer.requestList;
+                            // }()
+                            //     .toSet();
+                            // offerRequestList.add(requestModel.id);
+                            // offer.requestList = offerRequestList.toList();
+                            // FirestoreManager.updateOfferWithRequest(offer: offer);
+                            // sendOfferRequest(
+                            //     offerModel: widget.offer,
+                            //     requestSevaID: requestModel.sevaUserId);
                             Navigator.pop(context);
                             Navigator.pop(context);
                           }
@@ -395,11 +404,20 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       selectedUsers = HashMap();
     }
 
+    if (widget.userModel != null) {
+      print("object---------------------------------------------------");
+      Map<String, UserModel> map = HashMap();
+      map[widget.userModel.email] = widget.userModel;
+      selectedUsers.addAll(map);
+    }
+
     return Container(
       margin: EdgeInsets.all(10),
       width: double.infinity,
       child: RaisedButton(
-        child: Text(memberAssignment),
+        child: Text(selectedUsers != null && selectedUsers.length > 0
+            ? "${selectedUsers.length} members selected"
+            : memberAssignment),
         onPressed: () async {
           print("addVolunteersForAdmin():");
 

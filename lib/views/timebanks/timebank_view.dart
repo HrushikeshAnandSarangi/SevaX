@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix2;
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -113,6 +114,48 @@ class _TimebankViewState extends State<TimebankView> {
     return timebankStreamBuilder(buildcontext);
   }
 
+  void showDeleteConfirmation(TimebankModel model) {
+    print("${timebankModel.id} -----------------------");
+
+    showDialog(
+      context: context,
+      builder: (buildContext) {
+        return AlertDialog(
+          title: Text('Delete ${timebankModel.name}'),
+          content:
+              Text('Are you sure you want to delete ${timebankModel.name}'),
+          actions: <Widget>[
+            RaisedButton(
+              color: Colors.red,
+              child: Text(
+                '  Delete  ',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                // call firebase to delete the doc || when data is deleted the screen refreshes and shoes null pointer fix that one; 
+                Navigator.pop(context);
+                await Firestore.instance
+                    .collection("timebanknew")
+                    .document(timebankModel.id)
+                    .delete()
+                    .then((onValue) {
+                  Navigator.pop(buildContext);
+                });
+              },
+            ),
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(buildContext);
+              },
+            ),
+          ].reversed.toList(),
+        );
+      },
+      barrierDismissible: false,
+    );
+  }
+
   StreamBuilder<TimebankModel> timebankStreamBuilder(
       BuildContext buildcontext) {
     return StreamBuilder<TimebankModel>(
@@ -220,6 +263,21 @@ class _TimebankViewState extends State<TimebankView> {
                           padding: EdgeInsets.only(left: 20.0),
                           child: Divider(color: Colors.deepPurple),
                         ),
+
+                        timebankModel.admins.contains(loggedInUser)
+                            ? FlatButton(
+                                child: Text(
+                                  'Delete yang gang',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                textColor: Theme.of(context).accentColor,
+                                disabledTextColor:
+                                    Theme.of(context).accentColor,
+                                onPressed: () {
+                                  showDeleteConfirmation(timebankModel);
+                                },
+                              )
+                            : Offstage(),
                         timebankModel.admins.contains(loggedInUser)
                             ? FlatButton(
                                 child: Text(

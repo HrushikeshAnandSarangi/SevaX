@@ -647,8 +647,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       onTap: () => {
                             Navigator.of(context).pop(),
 
-                            print("------------------- ${SevaCore.of(context).loggedInUser.associatedWithTimebanks}"),
-
                             if (SevaCore.of(context)
                                     .loggedInUser
                                     .associatedWithTimebanks >
@@ -708,14 +706,32 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      Navigator.of(context).pop(),
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              SelectTimeBankForNewRequest("Request"),
-                        ),
-                      ),
+                      if (SevaCore.of(context).loggedInUser.adminOfYanagGangs >
+                          1)
+                        {
+                          Navigator.of(context).pop(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SelectTimeBankForNewRequest("Request"),
+                            ),
+                          ),
+                        }
+                      else
+                        {
+                          Navigator.of(context).pop(),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateRequest(
+                                timebankId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .timebankIdForYangGangAdmin,
+                              ),
+                            ),
+                          ),
+                        }
 
 //                      FirestoreManager.getTimeBankForId(
 //                              timebankId: SevaCore.of(context)
@@ -861,12 +877,39 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => InviteMembers(),
-                        ),
-                      ),
+                      Navigator.of(context).pop(),
+
+                      if (SevaCore.of(context).loggedInUser.adminOfYanagGangs >
+                          1)
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SelectTimeBankForNewRequest("Invite"),
+                            ),
+                          ),
+                        }
+                      else
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InviteMembers(
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .timebankIdForYangGangAdmin,
+                              ),
+                            ),
+                          ),
+                        },
+
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => InviteMembers(),
+                      //   ),
+                      // ),
 
                       // FirestoreManager.getTimebanksForAdmins(
                       //         userId:  SevaCore.of(context)
