@@ -21,7 +21,7 @@ class TimeBankList extends StatelessWidget {
           title: Text(
             FlavorConfig.values.timebankName == "Yang 2020"
                 ? "Yang Gang Chapters"
-                : "List of ${FlavorConfig.values.timebankTitle}",
+                : "${FlavorConfig.values.timebankTitle} list",
             style: TextStyle(color: Colors.white),
           ),
           actions: <Widget>[
