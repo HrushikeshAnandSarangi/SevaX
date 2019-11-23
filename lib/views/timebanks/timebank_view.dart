@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix2;
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -37,12 +38,16 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
+import 'edit_super_admins_view.dart';
+import 'edit_timebank_view.dart';
 
 class TimebankView extends StatefulWidget {
   final String timebankId;
+  TimebankModel superAdminTimebankModel;
 
   TimebankView({
     @required this.timebankId,
+    @required this.superAdminTimebankModel,
   });
 
   @override
@@ -51,6 +56,7 @@ class TimebankView extends StatefulWidget {
 
 class _TimebankViewState extends State<TimebankView> {
   TimebankModel timebankModel;
+  //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
   JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
@@ -113,6 +119,47 @@ class _TimebankViewState extends State<TimebankView> {
     return timebankStreamBuilder(buildcontext);
   }
 
+//  void showDeleteConfirmation(TimebankModel model) {
+//    print("${timebankModel.id} -----------------------");
+//    showDialog(
+//      context: context,
+//      builder: (buildContext) {
+//        return AlertDialog(
+//          title: Text('Delete ${timebankModel.name}'),
+//          content:
+//              Text('Are you sure you want to delete ${timebankModel.name}'),
+//          actions: <Widget>[
+//            RaisedButton(
+//              color: Colors.red,
+//              child: Text(
+//                '  Delete  ',
+//                style: TextStyle(color: Colors.white),
+//              ),
+//              onPressed: () async {
+//                // call firebase to delete the doc || when data is deleted the screen refreshes and shoes null pointer fix that one;
+//                Navigator.pop(context);
+//                await Firestore.instance
+//                    .collection("timebanknew")
+//                    .document(timebankModel.id)
+//                    .delete()
+//                    .then((onValue) {
+//                  Navigator.pop(buildContext);
+//                });
+//              },
+//            ),
+//            FlatButton(
+//              child: Text('Cancel'),
+//              onPressed: () {
+//                Navigator.pop(buildContext);
+//              },
+//            ),
+//          ].reversed.toList(),
+//        );
+//      },
+//      barrierDismissible: false,
+//    );
+//  }
+
   StreamBuilder<TimebankModel> timebankStreamBuilder(
       BuildContext buildcontext) {
     return StreamBuilder<TimebankModel>(
@@ -149,13 +196,31 @@ class _TimebankViewState extends State<TimebankView> {
                   style: TextStyle(color: Colors.white),
                 ),
                 actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.home),
-                    onPressed: () {
-                      Navigator.popUntil(context,
-                          ModalRoute.withName(Navigator.defaultRouteName));
-                    },
-                  )
+//                  IconButton(
+//                    icon: Icon(Icons.home),
+//                    onPressed: () {
+//                      Navigator.popUntil(context,
+//                          ModalRoute.withName(Navigator.defaultRouteName));
+//                    },
+//                  ),
+//                  timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID
+//                      ? Offstage()
+//                      : IconButton(
+//                    icon: Icon(
+//                      Icons.edit,
+//                      color: Colors.white,
+//                    ),
+//                    onPressed: () {
+//                      Navigator.push(
+//                        context,
+//                        MaterialPageRoute(
+//                          builder: (context) => EditTimebankView(
+//                            timebankModel: timebankModel,
+//                          ),
+//                        ),
+//                      );
+//                    },
+//                  ),
                 ],
               ),
               floatingActionButton: Visibility(
@@ -199,8 +264,10 @@ class _TimebankViewState extends State<TimebankView> {
                               padding: EdgeInsets.only(right: 15.0, left: 20.0),
                               child: CircleAvatar(
                                 backgroundColor: Colors.grey,
-                                backgroundImage:
-                                    _avatarImage(timebankModel.photoUrl),
+                                backgroundImage: timebankModel.photoUrl == null ||
+                                    timebankModel.photoUrl.isEmpty
+                                  ? AssetImage('lib/assets/images/noimagefound.png')
+                          : NetworkImage(timebankModel.photoUrl),
                                 minRadius: 40.0,
                               ),
                             ),
@@ -220,25 +287,23 @@ class _TimebankViewState extends State<TimebankView> {
                           padding: EdgeInsets.only(left: 20.0),
                           child: Divider(color: Colors.deepPurple),
                         ),
+
+//                        timebankModel.admins.contains(loggedInUser)
+//                            ? FlatButton(
+//                                child: Text(
+//                                  FlavorConfig.values.timebankName == "Yang 2020" ? 'Delete yang gang' : 'Delete timebank',
+//                                  style: TextStyle(fontWeight: FontWeight.bold),
+//                                ),
+//                                textColor: Theme.of(context).accentColor,
+//                                disabledTextColor:
+//                                    Theme.of(context).accentColor,
+//                                onPressed: () {
+//
+//                                },
+//                              )
+//                            : Offstage(),
                         timebankModel.admins.contains(loggedInUser)
-                            ? FlatButton(
-                                child: Text(
-                                  'View Join Requests',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                textColor: Theme.of(context).accentColor,
-                                disabledTextColor:
-                                    Theme.of(context).accentColor,
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => JoinRequestView(
-                                              timebankId: timebankModel.id,
-                                            )),
-                                  );
-                                },
-                              )
+                            ? Offstage()
                             : timebankModel.members.contains(loggedInUser)
                                 ? Offstage()
                                 : FlatButton(
@@ -397,9 +462,31 @@ class _TimebankViewState extends State<TimebankView> {
                         //   },
                         //   child: _whichButton('timebanks'),
                         // ),
-                        _showCreateCampaignButton(context),
+                        timebankModel.admins.contains(loggedInUser) || widget.superAdminTimebankModel.admins.contains(loggedInUser)
+                            ? FlatButton(
+                          child: Text(
+                            'Edit Yang Gang',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          textColor: Theme.of(context).accentColor,
+                          disabledTextColor:
+                          Theme.of(context).accentColor,
+                          onPressed: () {
+                            prefix2.Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      _whichRoute('edityanggang')),
+                            );
+                          },
+                        )
+                            : Offstage(),
+                        //_showCreateCampaignButton(context),
                         //_showJoinRequests(context),
-                        FlatButton(
+                        !timebankModel.members.contains(loggedInUser)
+                            ? Offstage()
+                        : FlatButton(
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -410,27 +497,27 @@ class _TimebankViewState extends State<TimebankView> {
                           },
                           child: _whichButton('viewcampaigns'),
                         ),
-                        FlatButton(
-                          child: Text(
-                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                                ? 'View Yang Gangs'
-                                : 'View Branches',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                                ? Navigator.pop(context)
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BranchList(
-                                              timebankid: timebankModel.id,
-                                            )),
-                                  );
-                          },
-                        ),
+//                        FlatButton(
+//                          child: Text(
+//                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+//                                ? 'View Yang Gangs'
+//                                : 'View Branches',
+//                            style: TextStyle(
+//                                fontWeight: FontWeight.w700,
+//                                color: Theme.of(context).accentColor),
+//                          ),
+//                          onPressed: () {
+//                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+//                                ? Navigator.pop(context)
+//                                : Navigator.push(
+//                                    context,
+//                                    MaterialPageRoute(
+//                                        builder: (context) => BranchList(
+//                                              timebankid: timebankModel.id,
+//                                            )),
+//                                  );
+//                          },
+//                        ),
 //                        FlatButton(
 //                          child: Text(
 //                            'Create feed',
@@ -502,25 +589,25 @@ class _TimebankViewState extends State<TimebankView> {
                                   );
                                 },
                               ),
-                        !timebankModel.members.contains(loggedInUser)
-                            ? Offstage()
-                            : FlatButton(
-                                child: Text(
-                                  'View Accepted Offers',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      color: Theme.of(context).accentColor),
-                                ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AcceptedOffers(
-                                              timebankId: timebankModel.id,
-                                            )),
-                                  );
-                                },
-                              ),
+//                        !timebankModel.members.contains(loggedInUser)
+//                            ? Offstage()
+//                            : FlatButton(
+//                                child: Text(
+//                                  'View Accepted Offers',
+//                                  style: TextStyle(
+//                                      fontWeight: FontWeight.w700,
+//                                      color: Theme.of(context).accentColor),
+//                                ),
+//                                onPressed: () {
+//                                  Navigator.push(
+//                                    context,
+//                                    MaterialPageRoute(
+//                                        builder: (context) => AcceptedOffers(
+//                                              timebankId: timebankModel.id,
+//                                            )),
+//                                  );
+//                                },
+//                              ),
 
                         timebankModel.parentTimebankId != null
                             ? FutureBuilder<Object>(
@@ -824,6 +911,13 @@ class _TimebankViewState extends State<TimebankView> {
 //             owner:ownerModel,
 //        );
         }
+        break;
+        //edityanggang
+      case 'edityanggang':
+        return EditSuperTimebankView(
+          timebankId:timebankModel.id,
+          superAdminTimebankModel: widget.superAdminTimebankModel,
+        );
         break;
       case 'campaigns':
         if (timebankModel.admins

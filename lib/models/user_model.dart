@@ -24,15 +24,20 @@ class UserModel extends DataModel {
   String requestStatus;
   String locationName;
   String lat_lng;
+
   //AvailabilityModel availability;
   String currentTimebank = FlavorConfig.values.timebankId;
+
   int associatedWithTimebanks = 1;
+  int adminOfYanagGangs = 0;
+  String timebankIdForYangGangAdmin;
+
   String tokens;
   bool acceptedEULA = false;
   List<String> reportedUsers = [];
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
-  LocationData currentPosition ;
+  LocationData currentPosition;
 
   //String
 
@@ -86,7 +91,6 @@ class UserModel extends DataModel {
       List<String> blockedBy = List.castFrom(map['blockedBy']);
       this.blockedBy = blockedBy;
       print("data updated");
-
     } else {
       this.blockedBy = List();
       print("data not found");
@@ -142,14 +146,12 @@ class UserModel extends DataModel {
     } else {
       this.timezone = 'PT';
     }
-
   }
 
-
-  UserModel setBlockedMembers(List<String> blockedMembers){
-      var tempOutput = new List<String>.from(blockedMembers);
-      this.blockedMembers = tempOutput;
-      return this;
+  UserModel setBlockedMembers(List<String> blockedMembers) {
+    var tempOutput = new List<String>.from(blockedMembers);
+    this.blockedMembers = tempOutput;
+    return this;
   }
 
   @override

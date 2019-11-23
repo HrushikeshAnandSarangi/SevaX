@@ -118,11 +118,27 @@ class RequestsState extends State<Requests> {
                     }
                     timebankList = snapshot.data;
                     List<String> dropdownList = [];
+
+                    int adminOfCount = 0;
+
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
+
+                      if (t.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID)) {
+                        adminOfCount++;
+
+                        SevaCore.of(context)
+                            .loggedInUser
+                            .timebankIdForYangGangAdmin = t.id;
+                      }
                     });
+
                     SevaCore.of(context).loggedInUser.associatedWithTimebanks =
                         dropdownList.length;
+                    SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+                        adminOfCount;
+
                     return Expanded(
                       child: DropdownButton<String>(
                         value: timebankId,
@@ -527,12 +543,27 @@ class OffersState extends State<Offers> {
                     }
                     timebankList = snapshot.data;
                     List<String> dropdownList = [];
+
+                    int adminOfCount = 0;
+
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
+                      if (t.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID)) {
+                        adminOfCount++;
+
+                        SevaCore.of(context)
+                            .loggedInUser
+                            .timebankIdForYangGangAdmin = t.id;
+                      }
                     });
 
                     SevaCore.of(context).loggedInUser.associatedWithTimebanks =
                         dropdownList.length;
+
+                    SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+                        adminOfCount;
+
                     return Expanded(
                       child: DropdownButton<String>(
                         value: timebankId,
