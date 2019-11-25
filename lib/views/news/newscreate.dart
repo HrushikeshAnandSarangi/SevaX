@@ -107,7 +107,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.postTimestamp = timestamp;
-    newsObject.location = location;
+    newsObject.location = location == null ? GeoFirePoint(40.754387,-73.984291) : location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
@@ -149,6 +149,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.initState();
 
     dataList.add(EntityModel(entityType: EntityType.general));
+    //this.location = GeoFirePoint(40.754387,-73.984291);
+   // this.location.latitude = 40.754387;
+    //this.location.longitude = ;
+    //_getLocation();
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
 //        .then((List<TimebankModel> timeBankModelList) {
 //      setState(() {
@@ -382,18 +386,18 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       return;
                     }
 
-                    if (location != null) {
+                    //if (location != null) {
                       if (formKey.currentState.validate()) {
                         // If the form is valid, we want to show a Snackbar
                         Scaffold.of(context).showSnackBar(
                             SnackBar(content: Text('Creating Post')));
                         writeToDB();
                       }
-                    } else {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Location not added'),
-                      ));
-                    }
+//                    } else {
+//                      Scaffold.of(context).showSnackBar(SnackBar(
+//                        content: Text('Location not added'),
+//                      ));
+//                    }
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
