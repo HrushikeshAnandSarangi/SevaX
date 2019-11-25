@@ -880,6 +880,7 @@ class _ProfilePageState extends State<ProfilePage>
               return TimeBankList(
                 timebankid: FlavorConfig.values.timebankId,
                 title: 'Timebanks List',
+                superAdminTimebankModel: this.timebankModel,
               );
             },
           ),

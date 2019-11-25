@@ -11,7 +11,8 @@ import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 class TimeBankList extends StatelessWidget {
   final String timebankid;
   final String title;
-  TimeBankList({@required this.timebankid, @required this.title});
+  TimebankModel superAdminTimebankModel;
+  TimeBankList({@required this.timebankid, @required this.title,@required this.superAdminTimebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -179,8 +180,9 @@ class TimeBankList extends StatelessWidget {
                     // _showDialog(context,model.name);
                     Navigator.of(context).push(
                       MaterialPageRoute(
+                        settings: RouteSettings(name: "123"),
                         builder: (routeContext) {
-                          return TimebankView(timebankId: model.id);
+                          return TimebankView(timebankId: model.id,superAdminTimebankModel: this.superAdminTimebankModel,);
                         },
                       ),
                     );

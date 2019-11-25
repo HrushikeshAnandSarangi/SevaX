@@ -92,26 +92,26 @@ class _TimeBankAdminView extends StatelessWidget {
       snap: false,
       pinned: true,
       elevation: 0,
-      actions: <Widget>[
-        timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID
-            ? Offstage()
-            : IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditTimebankView(
-                        timebankModel: timebankModel,
-                      ),
-                    ),
-                  );
-                },
-              ),
-      ],
+//      actions: <Widget>[
+//        timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID
+//            ? Offstage()
+//            : IconButton(
+//                icon: Icon(
+//                  Icons.edit,
+//                  color: Colors.white,
+//                ),
+//                onPressed: () {
+//                  Navigator.push(
+//                    context,
+//                    MaterialPageRoute(
+//                      builder: (context) => EditTimebankView(
+//                        timebankModel: timebankModel,
+//                      ),
+//                    ),
+//                  );
+//                },
+//              ),
+//      ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
