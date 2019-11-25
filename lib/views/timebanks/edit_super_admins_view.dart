@@ -126,9 +126,10 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
       context: context,
       builder: (buildContext) {
         return AlertDialog(
-          title: Text('Delete ${timebankModel.name == null ? "" : timebankModel.name}'),
-          content:
-              Text('Are you sure you want to delete ${timebankModel.name == null ? "" : timebankModel.name}'),
+          title: Text(
+              'Delete ${timebankModel.name == null ? "" : timebankModel.name}'),
+          content: Text(
+              'Are you sure you want to delete ${timebankModel.name == null ? "" : timebankModel.name}'),
           actions: <Widget>[
             RaisedButton(
               color: Colors.red,
@@ -144,8 +145,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                     .collection("timebanknew")
                     .document(timebankModel.id)
                     .delete()
-                    .then((onValue) {
-                });
+                    .then((onValue) {});
               },
             ),
             FlatButton(
@@ -239,16 +239,19 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                               padding: EdgeInsets.only(right: 15.0, left: 20.0),
                               child: CircleAvatar(
                                 backgroundColor: Colors.grey,
-                                backgroundImage: timebankModel.photoUrl == null ||
-                                    timebankModel.photoUrl.isEmpty
-                                    ? AssetImage('lib/assets/images/noimagefound.png')
+                                backgroundImage: timebankModel.photoUrl ==
+                                            null ||
+                                        timebankModel.photoUrl.isEmpty
+                                    ? AssetImage(
+                                        'lib/assets/images/noimagefound.png')
                                     : NetworkImage(timebankModel.photoUrl),
                                 minRadius: 40.0,
                               ),
                             ),
                             Flexible(
                               child: Text(
-                                '${timebankModel.name == null ? "" : timebankModel.name}' ?? '',
+                                '${timebankModel.name == null ? "" : timebankModel.name}' ??
+                                    '',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontStyle: FontStyle.normal,
@@ -262,7 +265,6 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                           padding: EdgeInsets.only(left: 20.0),
                           child: Divider(color: Colors.deepPurple),
                         ),
-
 //                        timebankModel.admins.contains(loggedInUser)
 //                            ? FlatButton(
 //                          child: Text(
@@ -271,7 +273,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 //                          ),
 //                          textColor: Theme.of(context).accentColor,
 //                          disabledTextColor:
-//                          Theme.of(context).accentColor,
+//                          Theme.of(context).accentColor,s
 //                          onPressed: () {
 //
 //                          },
@@ -496,27 +498,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             );
                           },
                         ),
-                        timebankModel.admins.contains(loggedInUser) ||
-                                widget.superAdminTimebankModel.admins.contains(
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID)
-                            ? FlatButton(
-                                child: Text(
-                                  FlavorConfig.values.timebankName ==
-                                          "Yang 2020"
-                                      ? 'Delete yang gang'
-                                      : 'Delete timebank',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                textColor: Theme.of(context).accentColor,
-                                disabledTextColor:
-                                    Theme.of(context).accentColor,
-                                onPressed: () {
-                                  showDeleteConfirmation(timebankModel);
-                                },
-                              )
-                            : Offstage(),
+
                         _showCreateCampaignButton(context),
                         //_showJoinRequests(context),
 //                        FlatButton(
@@ -530,27 +512,28 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
 //                          },
 //                          child: _whichButton('viewcampaigns'),
 //                        ),
-                        FlatButton(
-                          child: Text(
-                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                                ? 'View Yang Gangs'
-                                : 'View Branches',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                                ? Navigator.pop(context)
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BranchList(
-                                              timebankid: timebankModel.id,
-                                            )),
-                                  );
-                          },
-                        ),
+                        // FlatButton(
+                        //   child: Text(
+                        //     FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                        //         ? 'View Yang Gangs'
+                        //         : 'View Branches',
+                        //     style: TextStyle(
+                        //         fontWeight: FontWeight.w700,
+                        //         color: Theme.of(context).accentColor),
+                        //   ),
+                        //   onPressed: () {
+                        //     FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                        //         ? Navigator.pop(context)
+                        //         : Navigator.push(
+                        //             context,
+                        //             MaterialPageRoute(
+                        //                 builder: (context) => BranchList(
+                        //                       timebankid: timebankModel.id,
+                        //                     )),
+                        //           );
+                        //   },
+                        // ),
+
 //                        FlatButton(
 //                          child: Text(
 //                            'Create feed',
@@ -627,6 +610,23 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                         //      :
                         FlatButton(
                           child: Text(
+                            'View Members',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TimebankAdminPage(
+                                        timebankId: timebankModel.id,
+                                      )),
+                            );
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(
                             'View Accepted Offers',
                             style: TextStyle(
                                 fontWeight: FontWeight.w700,
@@ -642,6 +642,27 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             );
                           },
                         ),
+                        timebankModel.admins.contains(loggedInUser) ||
+                                widget.superAdminTimebankModel.admins.contains(
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID)
+                            ? FlatButton(
+                                child: Text(
+                                  FlavorConfig.values.timebankName ==
+                                          "Yang 2020"
+                                      ? 'Delete yang gang'
+                                      : 'Delete timebank',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                textColor: Theme.of(context).accentColor,
+                                disabledTextColor:
+                                    Theme.of(context).accentColor,
+                                onPressed: () {
+                                  showDeleteConfirmation(timebankModel);
+                                },
+                              )
+                            : Offstage(),
 
 //                        timebankModel.parentTimebankId != null
 //                            ? FutureBuilder<Object>(
