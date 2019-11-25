@@ -76,7 +76,6 @@ class NewsImageState extends State<NewsImage>
 
   @override
   Widget build(BuildContext context) {
-    // _getAvatarURL();
     return GestureDetector(
       onTap: () => imagePicker.showDialog(context),
       child: _isImageBeingUploaded

@@ -226,13 +226,100 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
 //              entityDropdown,
 
+                  Text(""),
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    child: Column(
+                      children: <Widget>[
+                        // Padding(
+                        //   padding: EdgeInsets.only(bottom: 20.0),
+                        //   child: TextFormField(
+                        //     decoration: InputDecoration(
+                        //       hintText: 'Your feed title',
+                        //       labelText: '+ Feed Title',
+                        //       border: OutlineInputBorder(
+                        //         borderRadius: const BorderRadius.all(
+                        //           const Radius.circular(10.0),
+                        //         ),
+                        //         borderSide: new BorderSide(
+                        //           color: Colors.black,
+                        //           width: 0.5,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     keyboardType: TextInputType.text,
+                        //     //style: textStyle,
+                        //     validator: (value) {
+                        //       if (value.isEmpty) {
+                        //         return 'Please enter the Post Title';
+                        //       }
+                        //       newsObject.title = value;
+                        //     },
+                        //   ),
+                        // ),
+                        Padding(
+                            padding: EdgeInsets.only(bottom: 0.0),
+                            child: TextFormField(
+                              textAlign: TextAlign.start,
+                              decoration: InputDecoration(
+                                hintText: '',
+                                labelText: 'What would you like to share',
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                  borderSide: new BorderSide(
+                                    color: Colors.black,
+                                    width: 0.5,
+                                  ),
+                                ),
+                              ),
+                              keyboardType: TextInputType.text,
+                              maxLines: 20,
+                              //style: textStyle,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                newsObject.subheading = value;
+                              },
+                            )),
+                        Text(""),
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //     hintText: 'Your news and any #hashtags',
+                        //     labelText: 'Photo Credits',
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: const BorderRadius.all(
+                        //         const Radius.circular(10.0),
+                        //       ),
+                        //       borderSide: new BorderSide(
+                        //         color: Colors.black,
+                        //         width: 0.5,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   keyboardType: TextInputType.multiline,
+                        //   //style: textStyle,
+                        //   maxLines: null,
+                        //   validator: (value) {
+                        //     if (value.isEmpty) {
+                        //       return 'Please enter some text';
+                        //     }
+                        //     newsObject.description = value;
+                        //   },
+                        // ),
+                      ],
+                    ),
+                  ),
+
+                  Text(""),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Center(
                       child: NewsImage(),
                     ),
                   ),
-
                   Container(
                     padding: EdgeInsets.fromLTRB(
                         MediaQuery.of(context).size.width / 4,
@@ -254,93 +341,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       },
                     ),
                   ),
-                  Text(""),
-
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 20.0),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              hintText: 'Your feed title',
-                              labelText: '+ Feed Title',
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
-                                ),
-                                borderSide: new BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
-                              ),
-                            ),
-                            keyboardType: TextInputType.text,
-                            //style: textStyle,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter the Post Title';
-                              }
-                              newsObject.title = value;
-                            },
-                          ),
-                        ),
-                        Padding(
-                            padding: EdgeInsets.only(bottom: 0.0),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: 'Your sub heading',
-                                labelText: '+ Sub Heading',
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(10.0),
-                                  ),
-                                  borderSide: new BorderSide(
-                                    color: Colors.black,
-                                    width: 0.5,
-                                  ),
-                                ),
-                              ),
-                              keyboardType: TextInputType.text,
-                              //style: textStyle,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                newsObject.subheading = value;
-                              },
-                            )),
-                        Text(""),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Your news and any #hashtags',
-                            labelText: '+ #hashtags',
-                            border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
-                              ),
-                              borderSide: new BorderSide(
-                                color: Colors.black,
-                                width: 0.5,
-                              ),
-                            ),
-                          ),
-                          keyboardType: TextInputType.multiline,
-                          //style: textStyle,
-                          maxLines: null,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            newsObject.description = value;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Text(""),
                 ],
               ),
               FlatButton.icon(
