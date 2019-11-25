@@ -198,6 +198,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   // Container(
                   //   alignment: Alignment(1.0, 0),
@@ -257,33 +258,36 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         //     },
                         //   ),
                         // ),
+
                         Padding(
-                            padding: EdgeInsets.only(bottom: 0.0),
-                            child: TextFormField(
-                              textAlign: TextAlign.start,
-                              decoration: InputDecoration(
-                                hintText: '',
-                                labelText: 'What would you like to share',
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(10.0),
-                                  ),
-                                  borderSide: new BorderSide(
-                                    color: Colors.black,
-                                    width: 0.5,
-                                  ),
+                          padding: EdgeInsets.only(bottom: 0.0),
+                          child: TextFormField(
+                            autofocus: true,
+                            textAlign: TextAlign.start,
+                            decoration: InputDecoration(
+                              alignLabelWithHint: false,
+                              hintText: '',
+                              labelText: 'What would you like to share',
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(0.0),
+                                ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
                                 ),
                               ),
-                              keyboardType: TextInputType.text,
-                              maxLines: 20,
-                              //style: textStyle,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                newsObject.subheading = value;
-                              },
-                            )),
+                            ),
+                            keyboardType: TextInputType.text,
+                            maxLines: 5,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              newsObject.subheading = value;
+                            },
+                          ),
+                        ),
                         Text(""),
                         // TextFormField(
                         //   decoration: InputDecoration(
@@ -312,14 +316,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ],
                     ),
                   ),
-
-                  Text(""),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0),
-                    child: Center(
-                      child: NewsImage(),
-                    ),
-                  ),
                   Container(
                     padding: EdgeInsets.fromLTRB(
                         MediaQuery.of(context).size.width / 4,
@@ -339,6 +335,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         // }
                         newsObject.photoCredits = value;
                       },
+                    ),
+                  ),
+                  // Text(""),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Center(
+                      child: NewsImage(),
                     ),
                   ),
                 ],

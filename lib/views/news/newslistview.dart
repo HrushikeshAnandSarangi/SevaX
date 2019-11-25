@@ -15,6 +15,8 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../flavor_config.dart';
 import '../core.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,7 +117,8 @@ class NewsListState extends State<NewsList> {
                                   timebankId: value),
                               builder: (context, snapshot) {
                                 if (snapshot.hasError)
-                                  return Text('Please make sure you have GPS turned on.');
+                                  return Text(
+                                      'Please make sure you have GPS turned on.');
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
                                   return Offstage();
@@ -210,7 +213,8 @@ class NewsListState extends State<NewsList> {
                     stream: FirestoreManager.getAllNewsStream(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError)
-                        return new Text('Please make sure you have GPS turned on.');
+                        return new Text(
+                            'Please make sure you have GPS turned on.');
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
                           return Center(child: CircularProgressIndicator());
@@ -246,7 +250,8 @@ class NewsListState extends State<NewsList> {
                               "Getting news stream for near me ${snapshot.connectionState}");
 
                           if (snapshot.hasError)
-                            return Text('Please make sure you have GPS turned on.');
+                            return Text(
+                                'Please make sure you have GPS turned on.');
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               return Center(child: CircularProgressIndicator());
@@ -283,7 +288,8 @@ class NewsListState extends State<NewsList> {
                             stream: FirestoreManager.getAllNearNewsStream(),
                             builder: (context, snapshot) {
                               if (snapshot.hasError)
-                                return Text('Please make sure you have GPS turned on.');
+                                return Text(
+                                    'Please make sure you have GPS turned on.');
                               switch (snapshot.connectionState) {
                                 case ConnectionState.waiting:
                                   return Center(
@@ -378,14 +384,51 @@ class NewsListState extends State<NewsList> {
         child: Stack(
           children: <Widget>[
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(5),
+                      height: 40,
+                      width: 40,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            'https://secure.gravatar.com/avatar/b10f7ddbf9b8be9e3c46c302bb20101d?s=400&d=mm&r=g'),
+                        minRadius: 40.0,
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(left: 5),
+                          child: Text(
+                            news.fullName,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 5),
+                          child: Text(
+                            "New York",
+                            overflow: TextOverflow.ellipsis,
+                            // style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 Container(
                   height: 250,
                   child: SizedBox.expand(
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10),
+                        topLeft: Radius.circular(0),
+                        topRight: Radius.circular(0),
                       ),
                       child: Hero(
                         tag: news.id,
@@ -410,14 +453,30 @@ class NewsListState extends State<NewsList> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(news.title,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    )),
+                                // Text(news.title,
+                                //     overflow: TextOverflow.ellipsis,
+                                //     maxLines: 1,
+                                //     style: TextStyle(
+                                //       fontSize: 16,
+                                //       color: Colors.black,
+                                //       fontWeight: FontWeight.w600,
+                                //     )),
+                                Linkify(
+                                  text:
+                                      'http://www.espncricinfo.com/story/_/id/25950138/daryl-mitchell-lbw-brings-drs-back-spotlight',
+                                  onOpen: (url) async {
+                                    if (await canLaunch(url)) {
+                                      await launch(url);
+                                    } else {
+                                      throw 'Could not launch $url';
+                                    }
+                                  },
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+
                                 Text(
                                   news.subheading,
                                   overflow: TextOverflow.ellipsis,
@@ -451,56 +510,56 @@ class NewsListState extends State<NewsList> {
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Expanded(
-                                  child: getOptionButtons(
-                                    Row(
-                                      // mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        SizedBox(width: 16),
-                                        FlavorConfig.appFlavor ==
-                                                    Flavor.HUMANITY_FIRST ||
-                                                FlavorConfig.appFlavor ==
-                                                    Flavor.APP
-                                            ? Icon(
-                                                Icons.perm_contact_calendar,
-                                                color: Theme.of(context)
-                                                    .accentColor,
-                                                size: 20,
-                                              )
-                                            : SvgPicture.asset(
-                                                'lib/assets/tulsi_icons/tulsi2020_icons_author-profile-icon.svg',
-                                                height: 16,
-                                                width: 16,
-                                              ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 5),
-                                          child: Text(
-                                            news.fullName,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    () {
-                                      String emailId = news.email;
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ProfileViewer(
-                                            userEmail: emailId,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
+                                // Expanded(
+                                //   child: getOptionButtons(
+                                //     Row(
+                                //       // mainAxisSize: MainAxisSize.min,
+                                //       mainAxisAlignment:
+                                //           MainAxisAlignment.start,
+                                //       children: <Widget>[
+                                //         // SizedBox(width: 16),
+                                //         // FlavorConfig.appFlavor ==
+                                //         //             Flavor.HUMANITY_FIRST ||
+                                //         //         FlavorConfig.appFlavor ==
+                                //         //             Flavor.APP
+                                //         //     ? Icon(
+                                //         //         Icons.perm_contact_calendar,
+                                //         //         color: Theme.of(context)
+                                //         //             .accentColor,
+                                //         //         size: 20,
+                                //         //       )
+                                //         //     : SvgPicture.asset(
+                                //         //         'lib/assets/tulsi_icons/tulsi2020_icons_author-profile-icon.svg',
+                                //         //         height: 16,
+                                //         //         width: 16,
+                                //         //       ),
+                                //         // Padding(
+                                //         //   padding:
+                                //         //       const EdgeInsets.only(left: 5),
+                                //         //   child: Text(
+                                //         //     news.fullName,
+                                //         //     overflow: TextOverflow.ellipsis,
+                                //         //     maxLines: 1,
+                                //         //     style: TextStyle(
+                                //         //       fontSize: 14,
+                                //         //     ),
+                                //         //   ),
+                                //         // ),
+                                //       ],
+                                //     ),
+                                //     () {
+                                //       String emailId = news.email;
+                                //       Navigator.push(
+                                //         context,
+                                //         MaterialPageRoute(
+                                //           builder: (context) => ProfileViewer(
+                                //             userEmail: emailId,
+                                //           ),
+                                //         ),
+                                //       );
+                                //     },
+                                //   ),
+                                // ),
                                 news.sevaUserId !=
                                         SevaCore.of(context)
                                             .loggedInUser

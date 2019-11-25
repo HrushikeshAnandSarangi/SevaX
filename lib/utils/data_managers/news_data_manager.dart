@@ -42,6 +42,11 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
     querySnapshot.documents.forEach((document) {
       modelList.add(NewsModel.fromMap(document.data));
     });
+
+
+    //await process goes here
+
+
     newsSink.add(modelList);
   }));
 }

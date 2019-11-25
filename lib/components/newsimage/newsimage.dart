@@ -93,35 +93,45 @@ class NewsImageState extends State<NewsImage>
           : Container(
               child: globals.newsImageURL == null
                   ? Container(
+                      alignment: Alignment.center,
                       margin: EdgeInsets.only(top: 20),
                       child: Container(
-                        height: 150,
-                        width: 150,
+                        // height: 60,
+                        // width: 100,
                         color: Colors.grey[100],
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text(
-                              'Add',
-                              style: Theme.of(context).textTheme.title,
+                            FlatButton.icon(
+                              icon: Icon(Icons.image),
+                              label: Text(
+                                "Add Image",
+                              ),
+                              onPressed: () {
+                                imagePicker.showDialog(context);
+                              },
                             ),
-                            Text(
-                              'Image',
-                              style: Theme.of(context).textTheme.title,
-                            ),
-                            Text(
-                              '+',
-                              style: Theme.of(context).textTheme.title,
-                            )
+
+                            // Text(
+                            //   'Add',
+                            //   style: Theme.of(context).textTheme.title,
+                            // ),
+                            // Text(
+                            //   'Image',
+                            //   style: Theme.of(context).textTheme.title,
+                            // ),
+                            // Text(
+                            //   '+',
+                            //   style: Theme.of(context).textTheme.title,
+                            // )
                           ],
                         ),
                       ))
                   : Container(
-                      // height: 200,
-                      // width: 200,
-                      //width: 300,
+                      height: 200,
+                      width: 200,
                       child: FadeInImage(
                         image: NetworkImage(globals.newsImageURL),
                         placeholder: AssetImage(
