@@ -867,7 +867,7 @@ class _ProfilePageState extends State<ProfilePage>
       //title: 'List of ${FlavorConfig.values.timebankTitle}',
       title: FlavorConfig.values.timebankName == "Yang 2020"
           ? "List of Yang Gang Chapters"
-          : "List of ${FlavorConfig.values.timebankTitle}",
+          : "${FlavorConfig.values.timebankTitle} list",
       trailingIcon: Icons.navigate_next,
       borderRadius: BorderRadius.only(
         topRight: Radius.circular(12),
