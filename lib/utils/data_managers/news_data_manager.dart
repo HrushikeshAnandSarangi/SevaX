@@ -57,12 +57,12 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
     await Future.wait(futures).then((onValue) async {
       for (var i = 0; i < modelList.length; i++) {
         modelList[i].userPhotoURL = onValue[i]['photourl'];
-        var data = await _getLocation(
-          modelList[i].location.geoPoint.latitude,
-          modelList[i].location.geoPoint.longitude,
-        );
+        // var data = await _getLocation(
+        //   modelList[i].location.geoPoint.latitude,
+        //   modelList[i].location.geoPoint.longitude,
+        // );
 
-        print("location--> ${data}");
+        // print("location--> ${data}");
       }
 
       newsSink.add(modelList);
@@ -177,10 +177,10 @@ Future deleteNews(NewsModel newsModel) async {
   await Firestore.instance.collection('news').document(newsModel.id).delete();
 }
 
-Future _getLocation(double latitude, double longitude) async {
-  String address = await LocationUtility().getFormattedAddress(
-    latitude,
-    longitude,
-  );
-  return address;
-}
+// Future _getLocation(double latitude, double longitude) async {
+//   String address = await LocationUtility().getFormattedAddress(
+//     latitude,
+//     longitude,
+//   );
+//   return address;
+// }
