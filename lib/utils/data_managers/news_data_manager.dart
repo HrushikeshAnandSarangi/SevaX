@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
@@ -6,6 +7,9 @@ import 'package:meta/meta.dart';
 import 'dart:async';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:timezone/browser.dart' as prefix0;
+
+import '../location_utility.dart';
 
 Location locations = new Location();
 Geoflutterfire geos = Geoflutterfire();
@@ -25,6 +29,8 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
+  var futures = <Future>[];
+
   var data = Firestore.instance
       .collection('news')
       .where('entity', isEqualTo: {
@@ -37,18 +43,41 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
 
   yield* data.transform(
       StreamTransformer<QuerySnapshot, List<NewsModel>>.fromHandlers(
-          handleData: (querySnapshot, newsSink) {
+          handleData: (querySnapshot, newsSink) async {
     List<NewsModel> modelList = [];
-    querySnapshot.documents.forEach((document) {
-      modelList.add(NewsModel.fromMap(document.data));
-    });
 
+    querySnapshot.documents.forEach((document) {
+      var newsModel = NewsModel.fromMap(document.data);
+      futures.add(getUserInfo(newsModel.email));
+      modelList.add(newsModel);
+    });
 
     //await process goes here
 
+    await Future.wait(futures).then((onValue) async {
+      for (var i = 0; i < modelList.length; i++) {
+        modelList[i].userPhotoURL = onValue[i]['photourl'];
+        var data = await _getLocation(
+          modelList[i].location.geoPoint.latitude,
+          modelList[i].location.geoPoint.longitude,
+        );
 
-    newsSink.add(modelList);
+        print("location--> ${data}");
+      }
+
+      newsSink.add(modelList);
+    });
   }));
+}
+
+Future<DocumentSnapshot> getUserInfo(String userEmail) {
+  return Firestore.instance
+      .collection("users")
+      .document(userEmail)
+      .get()
+      .then((onValue) {
+    return onValue;
+  });
 }
 
 Stream<List<NewsModel>> getNearNewsStream(
@@ -146,4 +175,12 @@ Future<NewsModel> getNewsForId(String newsId) async {
 
 Future deleteNews(NewsModel newsModel) async {
   await Firestore.instance.collection('news').document(newsModel.id).delete();
+}
+
+Future _getLocation(double latitude, double longitude) async {
+  String address = await LocationUtility().getFormattedAddress(
+    latitude,
+    longitude,
+  );
+  return address;
 }

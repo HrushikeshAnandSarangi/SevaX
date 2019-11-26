@@ -237,7 +237,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         ),
       ),
     );
-  }
+  }   
 
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(

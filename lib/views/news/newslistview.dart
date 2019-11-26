@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
@@ -15,7 +16,7 @@ import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:flutter_linkify/flutter_linkify.dart';
+// import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -395,7 +396,10 @@ class NewsListState extends State<NewsList> {
                       width: 40,
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
-                            'https://secure.gravatar.com/avatar/b10f7ddbf9b8be9e3c46c302bb20101d?s=400&d=mm&r=g'),
+                          news.userPhotoURL == null
+                              ? 'https://secure.gravatar.com/avatar/b10f7ddbf9b8be9e3c46c302bb20101d?s=400&d=mm&r=g'
+                              : news.userPhotoURL,
+                        ),
                         minRadius: 40.0,
                       ),
                     ),
@@ -461,22 +465,21 @@ class NewsListState extends State<NewsList> {
                                 //       color: Colors.black,
                                 //       fontWeight: FontWeight.w600,
                                 //     )),
-                                Linkify(
-                                  text:
-                                      'http://www.espncricinfo.com/story/_/id/25950138/daryl-mitchell-lbw-brings-drs-back-spotlight',
-                                  onOpen: (url) async {
-                                    if (await canLaunch(url)) {
-                                      await launch(url);
-                                    } else {
-                                      throw 'Could not launch $url';
-                                    }
-                                  },
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-
+                                // Linkify(
+                                //   text:
+                                //       'http://www.espncricinfo.com/story/_/id/25950138/daryl-mitchell-lbw-brings-drs-back-spotlight',
+                                //   onOpen: (url) async {
+                                //     if (await canLaunch(url)) {
+                                //       await launch(url);
+                                //     } else {
+                                //       throw 'Could not launch $url';
+                                //     }
+                                //   },
+                                //   style: TextStyle(
+                                //     fontWeight: FontWeight.bold,
+                                //     fontSize: 16.0,
+                                //   ),
+                                // ),
                                 Text(
                                   news.subheading,
                                   overflow: TextOverflow.ellipsis,
@@ -876,4 +879,16 @@ class NewsListState extends State<NewsList> {
       ),
     );
   }
+}
+
+Future _getLocation(
+  double latitude,
+  double longitude,
+) async {
+  String address = await LocationUtility().getFormattedAddress(
+    latitude,
+    longitude,
+  );
+
+  return address;
 }

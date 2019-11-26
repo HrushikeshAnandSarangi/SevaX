@@ -19,6 +19,9 @@ class NewsModel extends DataModel {
   List<String> reports;
   String root_timebank_id;
 
+
+  String userPhotoURL;
+  
   NewsModel({
     this.id,
     this.title,
