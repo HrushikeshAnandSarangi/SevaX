@@ -116,7 +116,8 @@ class NewsListState extends State<NewsList> {
                                   timebankId: value),
                               builder: (context, snapshot) {
                                 if (snapshot.hasError)
-                                  return Text('Please make sure you have GPS turned on.');
+                                  return Text(
+                                      'Please make sure you have GPS turned on.');
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
                                   return Offstage();
@@ -231,7 +232,8 @@ class NewsListState extends State<NewsList> {
                     stream: FirestoreManager.getAllNewsStream(),
                     builder: (context, snapshot) {
                       if (snapshot.hasError)
-                        return new Text('Please make sure you have GPS turned on.');
+                        return new Text(
+                            'Please make sure you have GPS turned on.');
                       switch (snapshot.connectionState) {
                         case ConnectionState.waiting:
                           return Center(child: CircularProgressIndicator());
@@ -267,7 +269,8 @@ class NewsListState extends State<NewsList> {
                               "Getting news stream for near me ${snapshot.connectionState}");
 
                           if (snapshot.hasError)
-                            return Text('Please make sure you have GPS turned on.');
+                            return Text(
+                                'Please make sure you have GPS turned on.');
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
                               return Center(child: CircularProgressIndicator());
@@ -304,7 +307,8 @@ class NewsListState extends State<NewsList> {
                             stream: FirestoreManager.getAllNearNewsStream(),
                             builder: (context, snapshot) {
                               if (snapshot.hasError)
-                                return Text('Please make sure you have GPS turned on.');
+                                return Text(
+                                    'Please make sure you have GPS turned on.');
                               switch (snapshot.connectionState) {
                                 case ConnectionState.waiting:
                                   return Center(

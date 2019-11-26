@@ -34,22 +34,24 @@ class NewsCardView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () => _shareNews(context),
-          ) ,
-          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ?
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewsEdit(
-                    newsModel: newsModel,
-                    timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-                  ),
-                ),
-              );
-            },
-          ) : Offstage()
+          ),
+          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+              ? IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewsEdit(
+                          newsModel: newsModel,
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Offstage()
         ],
       ),
       body: SafeArea(
