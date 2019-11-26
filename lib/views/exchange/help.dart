@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
@@ -75,6 +76,7 @@ class Requests extends StatefulWidget {
   final BuildContext parentContext;
 
   Requests(this.parentContext);
+
   @override
   RequestsState createState() => RequestsState();
 }
@@ -87,6 +89,20 @@ class RequestsState extends State<Requests> {
   String timebankId = FlavorConfig.values.timebankId;
   bool isNearme = false;
   List<TimebankModel> timebankList = [];
+  bool isNearMe = false;
+  int sharedValue = 0;
+
+  final Map<int, Widget> logoWidgets = const <int, Widget>{
+    0: Text(
+      'All',
+      style: TextStyle(fontSize: 10.0),
+    ),
+    1: Text(
+      'NearMe',
+      style: TextStyle(fontSize: 10.0),
+    ),
+  };
+
   @override
   Widget build(BuildContext context) {
     _setORValue();
@@ -171,26 +187,53 @@ class RequestsState extends State<Requests> {
                                       return Offstage();
                                     }
                                     TimebankModel timebankModel = snapshot.data;
-                                    return Text(timebankModel.name);
+                                    return Text(
+                                      timebankModel.name,
+                                      style: TextStyle(fontSize: 15.0),
+                                    );
                                   }),
                             );
                         }).toList(),
                       ),
                     );
                   }),
-              RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    if (isNearme == true)
-                      isNearme = false;
-                    else
-                      isNearme = true;
-                  });
-                },
-                child: isNearme == false ? Text('Near Me') : Text('All'),
-                color: Theme.of(context).accentColor,
-                textColor: Colors.white,
+              Container(
+                width: 120,
+                child: CupertinoSegmentedControl<int>(
+                  children: logoWidgets,
+                  padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                  //selectedColor: Colors.deepOrange,
+                  groupValue: sharedValue,
+                  onValueChanged: (int val) {
+                    print(val);
+                    if (val != sharedValue) {
+                      setState(() {
+                        if (isNearme == true)
+                          isNearme = false;
+                        else
+                          isNearme = true;
+                      });
+                      setState(() {
+                        sharedValue = val;
+                      });
+                    }
+                  },
+                  //groupValue: sharedValue,
+                ),
               ),
+//              RaisedButton(
+//                onPressed: () {
+//                  setState(() {
+//                    if (isNearme == true)
+//                      isNearme = false;
+//                    else
+//                      isNearme = true;
+//                  });
+//                },
+//                child: isNearme == false ? Text('Near Me') : Text('All'),
+//                color: Theme.of(context).accentColor,
+//                textColor: Colors.white,
+//              ),
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
@@ -217,6 +260,7 @@ class RequestsState extends State<Requests> {
 
 class RequestCardView extends StatefulWidget {
   final RequestModel requestItem;
+
   RequestCardView({
     Key key,
     @required this.requestItem,
@@ -499,6 +543,7 @@ class Offers extends StatefulWidget {
   final BuildContext parentContext;
 
   Offers(this.parentContext);
+
   @override
   OffersState createState() => OffersState();
 }
@@ -511,6 +556,7 @@ class OffersState extends State<Offers> {
   String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
   bool isNearme = false;
+  int sharedValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -596,26 +642,50 @@ class OffersState extends State<Offers> {
                                       return Offstage();
                                     }
                                     TimebankModel timebankModel = snapshot.data;
-                                    return Text(timebankModel.name);
+                                    return Text(timebankModel.name,style: TextStyle(fontSize: 15.0),);
                                   }),
                             );
                         }).toList(),
                       ),
                     );
                   }),
-              RaisedButton(
-                onPressed: () {
-                  setState(() {
-                    if (isNearme == true)
-                      isNearme = false;
-                    else
-                      isNearme = true;
-                  });
-                },
-                child: isNearme == false ? Text('Near Me') : Text('All'),
-                color: Theme.of(context).accentColor,
-                textColor: Colors.white,
+              Container(
+                width: 120,
+                child: CupertinoSegmentedControl<int>(
+                  children: logoWidgets,
+                  padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                  //selectedColor: Colors.deepOrange,
+                  groupValue: sharedValue,
+                  onValueChanged: (int val) {
+                    print(val);
+                    if (val != sharedValue) {
+                      setState(() {
+                        if (isNearme == true)
+                          isNearme = false;
+                        else
+                          isNearme = true;
+                      });
+                      setState(() {
+                        sharedValue = val;
+                      });
+                    }
+                  },
+                  //groupValue: sharedValue,
+                ),
               ),
+//              RaisedButton(
+//                onPressed: () {
+//                  setState(() {
+//                    if (isNearme == true)
+//                      isNearme = false;
+//                    else
+//                      isNearme = true;
+//                  });
+//                },
+//                child: isNearme == false ? Text('Near Me') : Text('All'),
+//                color: Theme.of(context).accentColor,
+//                textColor: Colors.white,
+//              ),
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
@@ -638,6 +708,16 @@ class OffersState extends State<Offers> {
       ],
     );
   }
+  final Map<int, Widget> logoWidgets = const <int, Widget>{
+    0: Text(
+      'All',
+      style: TextStyle(fontSize: 10.0),
+    ),
+    1: Text(
+      'NearMe',
+      style: TextStyle(fontSize: 10.0),
+    ),
+  };
 }
 
 class OfferCardView extends StatefulWidget {
@@ -897,6 +977,7 @@ class OfferCardViewState extends State<OfferCardView> {
   }
 
   String offerStatusLabel;
+
   _makePostRequest(OfferModel offerModel) async {
     // set up POST request arguments
     String url =
@@ -949,6 +1030,7 @@ class OfferCardViewState extends State<OfferCardView> {
 class NearRequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const NearRequestListItems({Key key, this.timebankId, this.parentContext})
       : super(key: key);
 
@@ -1183,6 +1265,7 @@ class NearRequestListItems extends StatelessWidget {
 class RequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const RequestListItems({Key key, this.timebankId, this.parentContext})
       : super(key: key);
 
@@ -1670,6 +1753,7 @@ class OfferListItems extends StatelessWidget {
 class NearOfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+
   const NearOfferListItems({Key key, this.parentContext, this.timebankId})
       : super(key: key);
 

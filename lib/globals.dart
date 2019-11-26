@@ -90,5 +90,7 @@ List<dynamic> currentCampaignMembers = [];
 int currentCampaignCreatedTimeStamp;
 
 dynamic currentCampaign;
-bool nearme = false;
+bool isNearme = false;
 String content = 'All';
+
+int sharedValue = 0;

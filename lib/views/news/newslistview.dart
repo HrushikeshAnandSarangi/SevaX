@@ -35,8 +35,8 @@ class NewsListState extends State<NewsList> {
   String timebankName;
   String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
-  bool isNearme = false;
-  int sharedValue;
+  bool isNearMe = false;
+  int sharedValue = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -68,6 +68,7 @@ class NewsListState extends State<NewsList> {
                   List<String> dropdownList = [];
 
                   int adminOfCount = 0;
+                 // dropdownList.add("")
 
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
@@ -132,31 +133,51 @@ class NewsListState extends State<NewsList> {
                 },
               ),
             ),
-            //CupertinoSegmentedControl<int>(
-//              children: logoWidgets,
-//              padding: EdgeInsets.only(left: 5.0,right: 5.0),
-//              onValueChanged: (int val) {
-//                sharedValue = val;
-//              },
-//              groupValue: sharedValue,
-//            ),
+            Container(
+              width: 120,
+              child: CupertinoSegmentedControl<int>(
+                children: logoWidgets,
+                padding: EdgeInsets.only(left: 5.0,right: 5.0),
+                //selectedColor: Colors.deepOrange,
+                groupValue: sharedValue,
+                onValueChanged: (int val) {
+                  print(val);
+                  if (val != sharedValue) {
+                    if (val == 0) {
+                      setState(() {
+                        isNearMe = false;
+                      });
+                    } else {
+                      setState(() {
+                        isNearMe = true;
+                      });
+                    }
 
-            RaisedButton(
-              onPressed: () {
-                setState(() {
-                  if (isNearme == true) {
-                    isNearme = false;
-                    //globals.nearme = isNearme;
-                  } else {
-                    isNearme = true;
-                    //globals.nearme = isNearme;
+                    setState(() {
+                      sharedValue = val;
+                    });
                   }
-                });
-              },
-              child: isNearme == false ? Text('Near Me') : Text('All'),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
+                },
+                //groupValue: sharedValue,
+              ),
             ),
+
+//            RaisedButton(
+//              onPressed: () {
+//                setState(() {
+//                  if (isNearMe == true) {
+//                    isNearMe = false;
+//                    //globals.nearme = isNearMe;
+//                  } else {
+//                    isNearMe = true;
+//                    //globals.nearme = isNearMe;
+//                  }
+//                });
+//              },
+//              child: isNearMe == false ? Text('Near Me') : Text('All'),
+//              color: Theme.of(context).accentColor,
+//              textColor: Colors.white,
+//            ),
             Padding(
               padding: EdgeInsets.only(right: 5),
             ),
@@ -166,7 +187,7 @@ class NewsListState extends State<NewsList> {
           color: Colors.grey,
           height: 0,
         ),
-        timebankId != 'All' && isNearme == false
+        timebankId != 'All' && isNearMe == false
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(timebankID: timebankId),
                 builder: (context, snapshot) {
@@ -205,7 +226,7 @@ class NewsListState extends State<NewsList> {
                   }
                 },
               )
-            : timebankId == 'All' && isNearme == false
+            : timebankId == 'All' && isNearMe == false
                 ? StreamBuilder<List<NewsModel>>(
                     stream: FirestoreManager.getAllNewsStream(),
                     builder: (context, snapshot) {
@@ -237,7 +258,7 @@ class NewsListState extends State<NewsList> {
                       }
                     },
                   )
-                : timebankId != 'All' && isNearme == true
+                : timebankId != 'All' && isNearMe == true
                     ? StreamBuilder<List<NewsModel>>(
                         stream: FirestoreManager.getNearNewsStream(
                             timebankID: timebankId),
@@ -278,7 +299,7 @@ class NewsListState extends State<NewsList> {
                           }
                         },
                       )
-                    : timebankId == 'All' && isNearme == true
+                    : timebankId == 'All' && isNearMe == true
                         ? StreamBuilder<List<NewsModel>>(
                             stream: FirestoreManager.getAllNearNewsStream(),
                             builder: (context, snapshot) {

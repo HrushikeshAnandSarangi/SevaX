@@ -1,22 +1,10 @@
 import 'dart:convert';
-import 'dart:ui' as prefix0;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/models.dart' as prefix1;
-import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/splash_view.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/profile/profile.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:sevaexchange/views/core.dart';
-
 import 'dart:ui';
 
 import '../../flavor_config.dart';
@@ -34,6 +22,7 @@ class RequestStatusView extends StatefulWidget {
 
 class RequestStatusViewState extends State<RequestStatusView> {
   Future<List<MemberForRequest>> membersInRequest;
+  bool isSent = false;
 
   @override
   void initState() {
@@ -53,6 +42,32 @@ class RequestStatusViewState extends State<RequestStatusView> {
           elevation: 0,
           actions: <Widget>[],
         ),
+        floatingActionButton: FloatingActionButton.extended(
+            label: Text('Send CSV File'),
+            foregroundColor: FlavorConfig.values.buttonTextColor,
+            onPressed: () async {
+              await sendMail();
+              showDialog(
+                context: context,
+                builder: (BuildContext viewcontext) {
+                  // return object of type Dialog
+                  return AlertDialog(
+                    title: new Text(this.isSent == true ? "Success" : "Failure"),
+                    content:
+                        new Text(this.isSent == true ? "CSV file sent successfully to ${SevaCore.of(context).loggedInUser.email}." : "Something went wrong please try again later"),
+                    actions: <Widget>[
+                      // usually buttons at the bottom of the dialog
+                      new FlatButton(
+                        child: new Text("OK"),
+                        onPressed: () {
+                          Navigator.of(viewcontext).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            }),
         body: Center(
             child: FutureBuilder<List<MemberForRequest>>(
           future: membersInRequest,
@@ -103,6 +118,60 @@ class RequestStatusViewState extends State<RequestStatusView> {
         ),
       ),
     );
+  }
+
+  final imgUrl = "https://unsplash.com/photos/iEJVyyevw-U/download?force=true";
+  bool downloading = false;
+  var progressString = "";
+
+//  Future<void> downloadFile() async {
+//    Dio dio = Dio();
+//
+//    try {
+//      Directory dir = await getex();
+//      //await dio.download(imgUrl, "${widget.requestId}.csv",);
+//
+//      await dio.download(imgUrl, "${dir.path}/myimage.jpg",
+//          onReceiveProgress: (rec, total) {
+//            print("Rec: $rec , Total: $total");
+//
+//            setState(() {
+//              downloading = true;
+//              progressString = ((rec / total) * 100).toStringAsFixed(0) + "%";
+//            });
+//          });
+//    } catch (e) {
+//      print(e);
+//    }
+//
+//    setState(() {
+//      downloading = false;
+//      progressString = "Completed";
+//    });
+//    print("Download completed");
+//  }
+
+//  void downloadFile() {
+//    new HttpClient().getUrl(Uri.parse('https://us-central1-sevaexchange.cloudfunctions.net/requests_members?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}'))
+//        .then((HttpClientRequest request) => request.close())
+//        .then((HttpClientResponse response)  {
+//          print(response);
+//      response.pipe(new File('${widget.requestId}.csv').openWrite());
+//    });
+//        //print(response);
+//  }
+
+  Future sendMail() async {
+    final response1 = await http.get(
+        'https://us-central1-sevaexchange.cloudfunctions.net/requests_members?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
+
+    if (response1.statusCode == 200) {
+      print(response1);
+      this.isSent = true;
+    } else {
+      this.isSent = false;
+      throw Exception('Failed to load post');
+    }
   }
 
   Future<List<MemberForRequest>> fetchPost() async {
