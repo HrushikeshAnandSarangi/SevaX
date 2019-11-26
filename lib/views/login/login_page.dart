@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -38,13 +39,12 @@ class _LoginPageState extends State<LoginPage> {
             end: Alignment.bottomCenter,
             colors: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? [
-
 //                    Color.fromARGB(255, 23, 54, 134),
 //                    Color.fromARGB(255, 115, 132, 176),
 //                    Color.fromARGB(255, 214, 222, 234),
-                      Theme.of(context).primaryColor,
-                     // Colors.white,
-                      Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColor,
+                    // Colors.white,
+                    Theme.of(context).primaryColor,
                   ]
                 : FlavorConfig.appFlavor == Flavor.TULSI
                     ? [
@@ -168,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                 onSaved: _saveEmail,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                    borderSide: BorderSide(color: Colors.white),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -188,8 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                 onSaved: _savePassword,
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white)
-                  ),
+                      borderSide: BorderSide(color: Colors.white)),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
@@ -271,7 +270,9 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: Text(
                 'Create an Account',
-                style: TextStyle(color: Theme.of(context).accentColor,fontWeight: FontWeight.w700),
+                style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w700),
               ),
             )
           ],
