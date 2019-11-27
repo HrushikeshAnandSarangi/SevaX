@@ -180,7 +180,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
       newsPageProperty,
       exchangePageProperty,
       tasksPageProperty,
-      createPageProperty,
+      //createPageProperty,
       searchPageProperty,
     ];
   }
@@ -735,12 +735,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
       page: HelpView(controller),
       title: 'Volunteer',
       bottom: TabBar(
+        isScrollable: false,
         labelColor: Colors.white,
         tabs: [
           Tab(child: Text('${FlavorConfig.values.requestTitle}s')),
           Tab(child: Text('${FlavorConfig.values.offertitle}s')),
         ],
         controller: controller,
+        //dragStartBehavior: Dr,
         onTap: (value) {
           setState(() {
             this.tabValue = value;

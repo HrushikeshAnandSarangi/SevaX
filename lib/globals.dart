@@ -35,7 +35,7 @@ List<dynamic> currentCampaignMembersFullname = [];
 List<dynamic> currentCampaignMembersPhotoURL = [];
 
 //FLOW CONTROL PROPERTIES (tasks)
-int orCreateSelector;
+int orCreateSelector = 0;
 int orTaskSelector;
 
 var onLoadResult;

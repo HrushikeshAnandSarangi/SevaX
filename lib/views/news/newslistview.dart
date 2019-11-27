@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -68,8 +69,9 @@ class NewsListState extends State<NewsList> {
                   List<String> dropdownList = [];
 
                   int adminOfCount = 0;
-                 // dropdownList.add("")
-
+                  if (FlavorConfig.values.timebankName == "Yang 2020") {
+                    dropdownList.add("Create Yang Gang");
+                  }
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
 
@@ -91,44 +93,58 @@ class NewsListState extends State<NewsList> {
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
-                      setState(() {
-                        timebankId = newValue;
-                        SevaCore.of(context).loggedInUser.currentTimebank =
-                            newValue;
-                        SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                            adminOfCount;
+                      if(newValue == "Create Yang Gang") {
+                        createSubTimebank(context);
+                      } else {
+                        setState(() {
+                          timebankId = newValue;
+                          SevaCore.of(context).loggedInUser.currentTimebank =
+                              newValue;
+                          SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+                              adminOfCount;
 
-                        didChangeDependencies();
-                      });
+                          didChangeDependencies();
+                        });
+                      }
                     },
                     items: dropdownList
                         .map<DropdownMenuItem<String>>((String value) {
-                      if (value == 'All') {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      } else
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: FutureBuilder<Object>(
-                              future: FirestoreManager.getTimeBankForId(
-                                  timebankId: value),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError)
-                                  return Text(
-                                      'Please make sure you have GPS turned on.');
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Offstage();
-                                }
-                                TimebankModel timebankModel = snapshot.data;
-                                return Text(
-                                  timebankModel.name,
-                                  style: TextStyle(fontSize: 15.0),
-                                );
-                              }),
-                        );
+
+                          if(value == "Create Yang Gang") {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          } else {
+                            if (value == 'All') {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            } else {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: FutureBuilder<Object>(
+                                    future: FirestoreManager.getTimeBankForId(
+                                        timebankId: value),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasError)
+                                        return Text(
+                                            'Please make sure you have GPS turned on.');
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Offstage();
+                                      }
+                                      TimebankModel timebankModel = snapshot
+                                          .data;
+                                      return Text(
+                                        timebankModel.name,
+                                        style: TextStyle(fontSize: 15.0),
+                                      );
+                                    }),
+                              );
+                            }
+                          }
                     }).toList(),
                   );
                 },
@@ -340,6 +356,17 @@ class NewsListState extends State<NewsList> {
                           )
                         : Offstage(),
       ],
+    );
+  }
+  void createSubTimebank(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            TimebankCreate(
+              timebankId: FlavorConfig.values.timebankId,
+            ),
+      ),
     );
   }
 

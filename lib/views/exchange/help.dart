@@ -22,6 +22,7 @@ import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/register_location.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
 import '../core.dart';
@@ -64,6 +65,7 @@ class HelpViewState extends State<HelpView> {
   Widget build(BuildContext context) {
     return TabBarView(
       controller: widget.controller,
+      physics: NeverScrollableScrollPhysics(),
       children: [
         Requests(context),
         Offers(context),
@@ -136,7 +138,9 @@ class RequestsState extends State<Requests> {
                     List<String> dropdownList = [];
 
                     int adminOfCount = 0;
-
+                    if (FlavorConfig.values.timebankName == "Yang 2020") {
+                      dropdownList.add("Create Yang Gang");
+                    }
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
 
@@ -159,40 +163,56 @@ class RequestsState extends State<Requests> {
                       child: DropdownButton<String>(
                         value: timebankId,
                         onChanged: (String newValue) {
-                          setState(() {
-                            SevaCore.of(context).loggedInUser.currentTimebank =
-                                newValue;
-                            timebankId = newValue;
-                          });
+                          if (newValue == "Create Yang Gang") {
+                            {
+                              this.createSubTimebank(context);
+                            }
+                          } else {
+                            setState(() {
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentTimebank = newValue;
+                              timebankId = newValue;
+                            });
+                          }
                         },
                         items: dropdownList
                             .map<DropdownMenuItem<String>>((String value) {
-                          if (value == 'All') {
+                          if (value == "Create Yang Gang") {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
                             );
-                          } else
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: FutureBuilder<Object>(
-                                  future: FirestoreManager.getTimeBankForId(
-                                      timebankId: value),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasError)
-                                      return new Text(
-                                          'Error: ${snapshot.error}');
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Offstage();
-                                    }
-                                    TimebankModel timebankModel = snapshot.data;
-                                    return Text(
-                                      timebankModel.name,
-                                      style: TextStyle(fontSize: 15.0),
-                                    );
-                                  }),
-                            );
+                          } else {
+                            if (value == 'All') {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            } else {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: FutureBuilder<Object>(
+                                    future: FirestoreManager.getTimeBankForId(
+                                        timebankId: value),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasError)
+                                        return new Text(
+                                            'Error: ${snapshot.error}');
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Offstage();
+                                      }
+                                      TimebankModel timebankModel =
+                                          snapshot.data;
+                                      return Text(
+                                        timebankModel.name,
+                                        style: TextStyle(fontSize: 15.0),
+                                      );
+                                    }),
+                              );
+                            }
+                          }
                         }).toList(),
                       ),
                     );
@@ -254,6 +274,17 @@ class RequestsState extends State<Requests> {
                 timebankId: timebankId,
               )
       ],
+    );
+  }
+
+  void createSubTimebank(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimebankCreate(
+          timebankId: FlavorConfig.values.timebankId,
+        ),
+      ),
     );
   }
 }
@@ -591,6 +622,9 @@ class OffersState extends State<Offers> {
                     List<String> dropdownList = [];
 
                     int adminOfCount = 0;
+                    if (FlavorConfig.values.timebankName == "Yang 2020") {
+                      dropdownList.add("Create Yang Gang");
+                    }
 
                     timebankList.forEach((t) {
                       dropdownList.add(t.id);
@@ -614,37 +648,54 @@ class OffersState extends State<Offers> {
                       child: DropdownButton<String>(
                         value: timebankId,
                         onChanged: (String newValue) {
-                          setState(() {
-                            timebankId = newValue;
-                            SevaCore.of(context).loggedInUser.currentTimebank =
-                                newValue;
-                          });
+                          if (newValue == "Create Yang Gang") {
+                            createSubTimebank(context);
+                          } else {
+                            setState(() {
+                              timebankId = newValue;
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentTimebank = newValue;
+                            });
+                          }
                         },
                         items: dropdownList
                             .map<DropdownMenuItem<String>>((String value) {
-                          if (value == 'All') {
+                          if (value == "Create Yang Gang") {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value),
                             );
-                          } else
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: FutureBuilder<Object>(
-                                  future: FirestoreManager.getTimeBankForId(
-                                      timebankId: value),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasError)
-                                      return new Text(
-                                          'Error: ${snapshot.error}');
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Offstage();
-                                    }
-                                    TimebankModel timebankModel = snapshot.data;
-                                    return Text(timebankModel.name,style: TextStyle(fontSize: 15.0),);
-                                  }),
-                            );
+                          } else {
+                            if (value == 'All') {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            } else {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: FutureBuilder<Object>(
+                                    future: FirestoreManager.getTimeBankForId(
+                                        timebankId: value),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasError)
+                                        return new Text(
+                                            'Error: ${snapshot.error}');
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Offstage();
+                                      }
+                                      TimebankModel timebankModel =
+                                          snapshot.data;
+                                      return Text(
+                                        timebankModel.name,
+                                        style: TextStyle(fontSize: 15.0),
+                                      );
+                                    }),
+                              );
+                            }
+                          }
                         }).toList(),
                       ),
                     );
@@ -708,6 +759,18 @@ class OffersState extends State<Offers> {
       ],
     );
   }
+
+  void createSubTimebank(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimebankCreate(
+          timebankId: FlavorConfig.values.timebankId,
+        ),
+      ),
+    );
+  }
+
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
       'All',
