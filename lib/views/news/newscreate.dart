@@ -1,24 +1,23 @@
-import 'dart:developer';
+import 'dart:convert';
+import 'dart:ffi';
+
+import 'package:flutter/material.dart' as prefix0;
+import 'package:html/parser.dart' show urlscraper;
+import 'package:html/dom.dart' show domHtml;
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geolocator/geolocator.dart' as prefix2;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
-import 'package:location/location.dart' as prefix1;
+import 'package:html/parser.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import '../../main.dart';
 
 class NewsCreate extends StatelessWidget {
   final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
@@ -182,8 +181,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.didChangeDependencies();
   }
 
+prefix0.TextEditingController subheadingController =
+        TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    
     textStyle = Theme.of(context).textTheme.title;
     // Build a Form widget using the formKey we created above
     return Form(
@@ -262,6 +265,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
+                            controller: subheadingController,
                             autofocus: true,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
@@ -365,7 +369,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ).then((point) {
                     if (point != null) location = point;
                     _getLocation();
-                    log('ReceivedLocation: $selectedAddress');
                   });
                 },
               ),
@@ -376,13 +379,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 child: RaisedButton(
                   shape: StadiumBorder(),
                   color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    // Validate will return true if the form is valid, or false if
-                    // the form is invalid.
-                    if (globals.newsImageURL == null) {
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Select an image to post')));
-                      return;
+                  onPressed: () async {
+                    scrapeURLFromSubheading(subheadingController.text);
+
+                    scrapeHashTagsFromSubHeadings(subheadingController.text);
+
+                    if (newsObject.urlsFromPost.length > 0) {
+                      await scrapeURLDetails(subheadingController.text);
                     }
 
                     if (location != null) {
@@ -393,9 +396,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         writeToDB();
                       }
                     } else {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Location not added'),
-                      ));
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Location not added'),
+                        ),
+                      );
                     }
                   },
                   child: Row(
@@ -421,6 +426,42 @@ class NewsCreateFormState extends State<NewsCreateForm> {
             ],
           )),
         ));
+  }
+
+  void scrapeURLFromSubheading(String subHeadings) {
+    List<String> scappedURLs = List();
+    RegExp regExp = RegExp(
+      r'(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])',
+      caseSensitive: false,
+      multiLine: false,
+    );
+
+    regExp.allMatches(subHeadings).forEach((match) {
+      scappedURLs.add(subHeadings.substring(match.start, match.end));
+    });
+
+    newsObject.urlsFromPost = scappedURLs;
+    // print("${newsObject.urlsFromPost}");
+  }
+
+  void scrapeHashTagsFromSubHeadings(String subHeadings) {
+    // HashTag Extraction
+    List<String> hashTags = List();
+
+    RegExp exp = new RegExp(r"([#,@][^\s#\@]*)");
+    Iterable<RegExpMatch> matches = exp.allMatches(subHeadings);
+    matches.map((x) => x[0]).forEach((m) => hashTags.add(m));
+
+    newsObject.hashTags = hashTags;
+    // print("${newsObject.hashTags}");
+  }
+
+  Future scrapeURLDetails(String subHeadings) async {
+    await fetchPosts(newsObject.urlsFromPost[0]);
+
+    //now write to db
+
+    print("Final Project $newsObject");
   }
 
   Widget get entityDropdown {
@@ -489,5 +530,37 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     setState(() {
       this.selectedAddress = address;
     });
+  }
+
+  Future<Void> fetchPosts(String url) async {
+    final response = await http.get(
+      url,
+    );
+    var document = parse(response.body);
+
+    var images = document.querySelectorAll("div > img");
+
+    for (var i = 0; i < images.length; i++) {
+      if (images[0] != null) {
+        newsObject.imageScraped = images[i].attributes['src'];
+        break;
+      }
+    }
+
+    var links = document.querySelectorAll('title');
+    for (var link in links) {
+      if (link.text != null) {
+        newsObject.title = link.text;
+        break;
+      }
+    }
+
+    var para = document.querySelectorAll('p');
+    for (var link in para) {
+      if (link.text != null) {
+        newsObject.description = link.text;
+        break;
+      }
+    }
   }
 }

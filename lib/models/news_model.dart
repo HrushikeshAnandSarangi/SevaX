@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
 
@@ -18,10 +19,14 @@ class NewsModel extends DataModel {
   List<String> likes;
   List<String> reports;
   String root_timebank_id;
+  String placeAddress;
 
+  List<String> urlsFromPost = List();
+  List<String> hashTags = List();
 
   String userPhotoURL;
-  
+  String imageScraped = "NoData";
+
   NewsModel({
     this.id,
     this.title,
@@ -42,20 +47,36 @@ class NewsModel extends DataModel {
 
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
+
+    if (this.title != null && this.title.isNotEmpty) {
+      map['title'] = this.title;
+    }
+
+    if (this.description != null && this.description.isNotEmpty) {
+      map['description'] = this.description;
+    }
+
+    if (this.subheading != null && this.subheading.isNotEmpty) {
+      map['subheading'] = this.subheading;
+    }
+
+    if (this.urlsFromPost != null) {
+      map['urlsFromPost'] = this.urlsFromPost;
+    }
+
+    if (this.hashTags != null) {
+      map['hashTags'] = this.hashTags;
+    }
+
+    if (this.imageScraped != null) {
+      map['imageScraped'] = this.imageScraped;
+    }
+
     if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
       map['root_timebank_id'] = this.root_timebank_id;
     }
     if (this.id != null && this.id.isNotEmpty) {
       map['id'] = this.id;
-    }
-    if (this.title != null && this.title.isNotEmpty) {
-      map['title'] = this.title;
-    }
-    if (this.subheading != null && this.subheading.isNotEmpty) {
-      map['subheading'] = this.subheading;
-    }
-    if (this.description != null && this.description.isNotEmpty) {
-      map['description'] = this.description;
     }
     if (this.email != null && this.email.isNotEmpty) {
       map['email'] = this.email;
@@ -146,7 +167,10 @@ class NewsModel extends DataModel {
       this.reports = likesList;
     } else
       this.reports = [];
-
+  }
+  @override
+  String toString() {
+    return "title -> $title subheading-> $subheading description-> $description urlsFromPost-> $urlsFromPost userPhotoURL-> $userPhotoURL hashTags-> $hashTags imagesScraped->$imageScraped";
   }
 }
 

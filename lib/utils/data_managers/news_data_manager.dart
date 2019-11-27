@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'dart:async';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/news_model.dart';
-import 'package:timezone/browser.dart' as prefix0;
 
 import '../location_utility.dart';
 
@@ -57,12 +54,15 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
     await Future.wait(futures).then((onValue) async {
       for (var i = 0; i < modelList.length; i++) {
         modelList[i].userPhotoURL = onValue[i]['photourl'];
-        // var data = await _getLocation(
-        //   modelList[i].location.geoPoint.latitude,
-        //   modelList[i].location.geoPoint.longitude,
-        // );
 
-        // print("location--> ${data}");
+        var data = await _getLocation(
+          modelList[i].location.geoPoint.latitude,
+          modelList[i].location.geoPoint.longitude,
+        );
+
+        modelList[i].placeAddress = data;
+
+        // print("location-----------------> ${data}");
       }
 
       newsSink.add(modelList);
@@ -177,10 +177,10 @@ Future deleteNews(NewsModel newsModel) async {
   await Firestore.instance.collection('news').document(newsModel.id).delete();
 }
 
-// Future _getLocation(double latitude, double longitude) async {
-//   String address = await LocationUtility().getFormattedAddress(
-//     latitude,
-//     longitude,
-//   );
-//   return address;
-// }
+Future _getLocation(double latitude, double longitude) async {
+  String address = await LocationUtility().getFormattedAddress(
+    latitude,
+    longitude,
+  );
+  return address;
+}

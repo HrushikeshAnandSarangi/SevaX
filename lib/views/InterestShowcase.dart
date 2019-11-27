@@ -73,17 +73,20 @@ Color _getChipColor() {
 
 Widget getChipWidgets(List<dynamic> strings) {
   return Wrap(
-      spacing: 5.0,
-      alignment: WrapAlignment.start,
-      children: strings
-          .map((item) => ActionChip(
-                padding: EdgeInsets.all(3.0),
-                onPressed: () {},
-                backgroundColor: _getChipColor(),
-                label: Text(
-                  item,
-                  style: TextStyle(color: Colors.white),
-                ),
-              ))
-          .toList());
+    spacing: 5.0,
+    alignment: WrapAlignment.start,
+    children: strings
+        .map(
+          (item) => ActionChip(
+            padding: EdgeInsets.all(3.0),
+            onPressed: () {},
+            backgroundColor: _getChipColor(),
+            label: Text(
+              item,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        )
+        .toList(),
+  );
 }

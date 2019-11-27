@@ -92,9 +92,6 @@ Stream<List<ChatModel>> getChatsforUser({
 //               }
 //               chatlist.add(model);
 //             }
-
-
-
           },
         );
 
@@ -103,6 +100,8 @@ Stream<List<ChatModel>> getChatsforUser({
             chatlist[i].messagTitleUserName = onValue[i]['fullname'];
             chatlist[i].photoURL = onValue[i]['photourl'];
           }
+
+ 
           chatSink.add(chatlist);
         });
       },

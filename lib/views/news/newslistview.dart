@@ -174,7 +174,7 @@ class NewsListState extends State<NewsList> {
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(timebankID: timebankId),
                 builder: (context, snapshot) {
-                  print("getting news stream ${snapshot.data}");
+                  // print("getting news stream ${snapshot.data}");
 
                   if (snapshot.hasError)
                     return Text('Please make sure you have GPS turned on.');
@@ -371,10 +371,10 @@ class NewsListState extends State<NewsList> {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(8.0),
+        margin: EdgeInsets.all(4.0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(6.0),
+            borderRadius: BorderRadius.circular(0.0),
             boxShadow: [
               BoxShadow(
                   color: Colors.black.withAlpha(25),
@@ -417,7 +417,9 @@ class NewsListState extends State<NewsList> {
                         Container(
                           margin: EdgeInsets.only(left: 5),
                           child: Text(
-                            "New York",
+                            news.placeAddress == null
+                                ? "Midtown Station New York, NY"
+                                : news.placeAddress,
                             overflow: TextOverflow.ellipsis,
                             // style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -427,22 +429,26 @@ class NewsListState extends State<NewsList> {
                   ],
                 ),
                 Container(
-                  height: 250,
+                  height: news.newsImageUrl == null ? 0 : 250,
                   child: SizedBox.expand(
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(0),
                         topRight: Radius.circular(0),
                       ),
-                      child: Hero(
-                        tag: news.id,
-                        child: FadeInImage(
-                          fit: BoxFit.fitWidth,
-                          placeholder:
-                              AssetImage('lib/assets/images/noimagefound.png'),
-                          image: NetworkImage(news.newsImageUrl),
-                        ),
-                      ),
+                      child: news.newsImageUrl == null
+                          ? Offstage
+                          : Hero(
+                              tag: news.id,
+                              child: FadeInImage(
+                                fit: BoxFit.fitWidth,
+                                placeholder: AssetImage(
+                                    'lib/assets/images/noimagefound.png'),
+                                image: NetworkImage(news.newsImageUrl == null
+                                    ? ""
+                                    : news.newsImageUrl),
+                              ),
+                            ),
                     ),
                   ),
                 ),
