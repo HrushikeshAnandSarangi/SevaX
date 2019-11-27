@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -35,8 +36,8 @@ class NewsListState extends State<NewsList> {
   String timebankName;
   String timebankId = FlavorConfig.values.timebankId;
   List<TimebankModel> timebankList = [];
-  bool isNearme = false;
-  int sharedValue;
+  bool isNearMe = false;
+  int sharedValue = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -68,7 +69,9 @@ class NewsListState extends State<NewsList> {
                   List<String> dropdownList = [];
 
                   int adminOfCount = 0;
-
+                  if (FlavorConfig.values.timebankName == "Yang 2020") {
+                    dropdownList.add("Create Yang Gang");
+                  }
                   timebankList.forEach((t) {
                     dropdownList.add(t.id);
 
@@ -90,74 +93,108 @@ class NewsListState extends State<NewsList> {
                   return DropdownButton<String>(
                     value: timebankId,
                     onChanged: (String newValue) {
-                      setState(() {
-                        timebankId = newValue;
-                        SevaCore.of(context).loggedInUser.currentTimebank =
-                            newValue;
-                        SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                            adminOfCount;
+                      if(newValue == "Create Yang Gang") {
+                        createSubTimebank(context);
+                      } else {
+                        setState(() {
+                          timebankId = newValue;
+                          SevaCore.of(context).loggedInUser.currentTimebank =
+                              newValue;
+                          SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+                              adminOfCount;
 
-                        didChangeDependencies();
-                      });
+                          didChangeDependencies();
+                        });
+                      }
                     },
                     items: dropdownList
                         .map<DropdownMenuItem<String>>((String value) {
-                      if (value == 'All') {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      } else
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: FutureBuilder<Object>(
-                              future: FirestoreManager.getTimeBankForId(
-                                  timebankId: value),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError)
-                                  return Text(
-                                      'Please make sure you have GPS turned on.');
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Offstage();
-                                }
-                                TimebankModel timebankModel = snapshot.data;
-                                return Text(
-                                  timebankModel.name,
-                                  style: TextStyle(fontSize: 15.0),
-                                );
-                              }),
-                        );
+
+                          if(value == "Create Yang Gang") {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value,style: TextStyle(color: Colors.red),),
+                            );
+                          } else {
+                            if (value == 'All') {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            } else {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: FutureBuilder<Object>(
+                                    future: FirestoreManager.getTimeBankForId(
+                                        timebankId: value),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasError)
+                                        return Text(
+                                            'Please make sure you have GPS turned on.');
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return Offstage();
+                                      }
+                                      TimebankModel timebankModel = snapshot
+                                          .data;
+                                      return Text(
+                                        timebankModel.name,
+                                        style: TextStyle(fontSize: 15.0),
+                                      );
+                                    }),
+                              );
+                            }
+                          }
                     }).toList(),
                   );
                 },
               ),
             ),
-            //CupertinoSegmentedControl<int>(
-//              children: logoWidgets,
-//              padding: EdgeInsets.only(left: 5.0,right: 5.0),
-//              onValueChanged: (int val) {
-//                sharedValue = val;
-//              },
-//              groupValue: sharedValue,
-//            ),
+            Container(
+              width: 120,
+              child: CupertinoSegmentedControl<int>(
+                children: logoWidgets,
+                padding: EdgeInsets.only(left: 5.0,right: 5.0),
+                //selectedColor: Colors.deepOrange,
+                groupValue: sharedValue,
+                onValueChanged: (int val) {
+                  print(val);
+                  if (val != sharedValue) {
+                    if (val == 0) {
+                      setState(() {
+                        isNearMe = false;
+                      });
+                    } else {
+                      setState(() {
+                        isNearMe = true;
+                      });
+                    }
 
-            RaisedButton(
-              onPressed: () {
-                setState(() {
-                  if (isNearme == true) {
-                    isNearme = false;
-                    //globals.nearme = isNearme;
-                  } else {
-                    isNearme = true;
-                    //globals.nearme = isNearme;
+                    setState(() {
+                      sharedValue = val;
+                    });
                   }
-                });
-              },
-              child: isNearme == false ? Text('Near Me') : Text('All'),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
+                },
+                //groupValue: sharedValue,
+              ),
             ),
+
+//            RaisedButton(
+//              onPressed: () {
+//                setState(() {
+//                  if (isNearMe == true) {
+//                    isNearMe = false;
+//                    //globals.nearme = isNearMe;
+//                  } else {
+//                    isNearMe = true;
+//                    //globals.nearme = isNearMe;
+//                  }
+//                });
+//              },
+//              child: isNearMe == false ? Text('Near Me') : Text('All'),
+//              color: Theme.of(context).accentColor,
+//              textColor: Colors.white,
+//            ),
             Padding(
               padding: EdgeInsets.only(right: 5),
             ),
@@ -167,7 +204,7 @@ class NewsListState extends State<NewsList> {
           color: Colors.grey,
           height: 0,
         ),
-        timebankId != 'All' && isNearme == false
+        timebankId != 'All' && isNearMe == false
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(timebankID: timebankId),
                 builder: (context, snapshot) {
@@ -206,7 +243,7 @@ class NewsListState extends State<NewsList> {
                   }
                 },
               )
-            : timebankId == 'All' && isNearme == false
+            : timebankId == 'All' && isNearMe == false
                 ? StreamBuilder<List<NewsModel>>(
                     stream: FirestoreManager.getAllNewsStream(),
                     builder: (context, snapshot) {
@@ -239,7 +276,7 @@ class NewsListState extends State<NewsList> {
                       }
                     },
                   )
-                : timebankId != 'All' && isNearme == true
+                : timebankId != 'All' && isNearMe == true
                     ? StreamBuilder<List<NewsModel>>(
                         stream: FirestoreManager.getNearNewsStream(
                             timebankID: timebankId),
@@ -281,7 +318,7 @@ class NewsListState extends State<NewsList> {
                           }
                         },
                       )
-                    : timebankId == 'All' && isNearme == true
+                    : timebankId == 'All' && isNearMe == true
                         ? StreamBuilder<List<NewsModel>>(
                             stream: FirestoreManager.getAllNearNewsStream(),
                             builder: (context, snapshot) {
@@ -319,6 +356,17 @@ class NewsListState extends State<NewsList> {
                           )
                         : Offstage(),
       ],
+    );
+  }
+  void createSubTimebank(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            TimebankCreate(
+              timebankId: FlavorConfig.values.timebankId,
+            ),
+      ),
     );
   }
 

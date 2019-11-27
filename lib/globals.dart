@@ -35,7 +35,7 @@ List<dynamic> currentCampaignMembersFullname = [];
 List<dynamic> currentCampaignMembersPhotoURL = [];
 
 //FLOW CONTROL PROPERTIES (tasks)
-int orCreateSelector;
+int orCreateSelector = 0;
 int orTaskSelector;
 
 var onLoadResult;
@@ -90,5 +90,7 @@ List<dynamic> currentCampaignMembers = [];
 int currentCampaignCreatedTimeStamp;
 
 dynamic currentCampaign;
-bool nearme = false;
+bool isNearme = false;
 String content = 'All';
+
+int sharedValue = 0;

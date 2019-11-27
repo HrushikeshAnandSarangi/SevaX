@@ -414,6 +414,7 @@ class _TimeBankAdminView extends StatelessWidget {
       UserModel user, BuildContext context, TimebankModel model) {
     if (user == null) return Offstage();
     return Card(
+      elevation: 0.0,
       child: ListTile(
         leading: CircleAvatar(
           backgroundImage: NetworkImage(user.photoURL),

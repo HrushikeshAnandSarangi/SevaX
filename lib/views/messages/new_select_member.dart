@@ -199,7 +199,7 @@ class _SelectMembersView extends StatelessWidget {
             backgroundImage: NetworkImage(user.photoURL),
           ),
           title: Text(user.fullname),
-          subtitle: Text(user.email),
+          //subtitle: Text(user.email),
         ),
       ),
     );
