@@ -286,15 +286,20 @@ class _SevaCoreViewState extends State<SevaCoreView>
     }
 
     return Scaffold(
-      appBar: _selectedIndex == 4
+      appBar: _selectedIndex == 3
           ? null
           : AppBar(
         backgroundColor: Theme
             .of(context)
             .primaryColor,
         centerTitle: true,
-        title: Text(
-          'Feeds',
+        title:
+//        Text(
+//          'Feeds',
+//          style: TextStyle(color: Colors.white),
+//        ),
+        Text(
+          pages.elementAt(_selectedIndex).title,
           style: TextStyle(color: Colors.white),
         ),
 //              Container(
@@ -324,10 +329,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
 //                  },
 //                ),
 //              ),
-//              Text(
-//                pages.elementAt(_selectedIndex).title,
-//                style: TextStyle(color: Colors.white),
-//              ),
+
         leading: IconButton(
           icon: Hero(
             tag: 'profilehero',
@@ -475,10 +477,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
             .primaryColor,
         onTap: (index) =>
             setState(() {
-              if (index == 3) {
-                _settingModalBottomSheet(context);
-              } else
-                _selectedIndex = index;
+              _selectedIndex = index;
             }),
       ),
       // floatingActionButton: GestureDetector(

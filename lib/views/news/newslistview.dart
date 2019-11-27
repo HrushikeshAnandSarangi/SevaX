@@ -113,7 +113,7 @@ class NewsListState extends State<NewsList> {
                           if(value == "Create Yang Gang") {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(value,style: TextStyle(color: Colors.red),),
                             );
                           } else {
                             if (value == 'All') {

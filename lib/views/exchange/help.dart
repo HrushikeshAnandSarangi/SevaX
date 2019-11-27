@@ -181,7 +181,7 @@ class RequestsState extends State<Requests> {
                           if (value == "Create Yang Gang") {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(value,style: TextStyle(color: Colors.red),),
                             );
                           } else {
                             if (value == 'All') {
@@ -664,7 +664,7 @@ class OffersState extends State<Offers> {
                           if (value == "Create Yang Gang") {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value),
+                              child: Text(value,style: TextStyle(color: Colors.red),),
                             );
                           } else {
                             if (value == 'All') {
