@@ -82,7 +82,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         schedule: schedule,
         timebankId: widget.timebankId,
         timestamp: timestamp,
-        location: location);
+        location: location == null ? GeoFirePoint(40.754387,-73.984291) : location);
     await FirestoreManager.createOffer(offerModel: model);
   }
 
@@ -197,7 +197,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () {
-                      if (location != null) {
+                      //if (location != null) {
                         if (_formKey.currentState.validate()) {
                           Scaffold.of(context).showSnackBar(
                             SnackBar(content: Text('Creating Offer')),
@@ -205,11 +205,11 @@ class MyCustomFormState extends State<MyCustomForm> {
                           _writeToDB();
                           Navigator.pop(context);
                         }
-                      } else {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('Location not added'),
-                        ));
-                      }
+//                      } else {
+//                        Scaffold.of(context).showSnackBar(SnackBar(
+//                          content: Text('Location not added'),
+//                        ));
+//                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

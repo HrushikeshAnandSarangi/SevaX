@@ -90,7 +90,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.protected = protectedVal;
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
-    timebankModel.location = location;
+    timebankModel.location = location == null ? GeoFirePoint(40.754387,-73.984291) : location;
 
     createTimebank(timebankModel: timebankModel);
 
@@ -386,7 +386,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             onPressed: () {
                               // Validate will return true if the form is valid, or false if
                               // the form is invalid.
-                              if (location != null) {
+                              //if (location != null) {
                                 if (_formKey.currentState.validate()) {
                                   // If the form is valid, we want to show a Snackbar
                                   _writeToDB();
@@ -396,11 +396,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                   updateTimebank(timebankModel: parentTimebank);
                                   Navigator.pop(context);
                                 }
-                              } else {
-                                Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text('Location not added'),
-                                ));
-                              }
+//                              } else {
+//                                Scaffold.of(context).showSnackBar(SnackBar(
+//                                  content: Text('Location not added'),
+//                                ));
+//                              }
                             },
                             child: Text(
                               'Create ${FlavorConfig.values.timebankTitle}',

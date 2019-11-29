@@ -35,6 +35,9 @@ class _RegisterPageState extends State<RegisterPage>
   String isImageSelected = 'Add Photo';
 
   ImagePickerHandler imagePicker;
+  bool isEmailVerified = false;
+  bool sentOTP = false;
+  var codeArray = ['mango', 'orange', 'apple', 'plum', 'banana', 'custard', 'papaya', 'grapes', 'pear', 'avacado'];
 
   @override
   void initState() {
@@ -63,23 +66,28 @@ class _RegisterPageState extends State<RegisterPage>
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+//        child: SingleChildScrollView(
+//          child: Center(
+            child: ListView(
+              //crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 16),
-                logo,
-                SizedBox(height: 16),
-                _imagePicker,
-                _profileBtn,
-                _formFields,
-                SizedBox(height: 32),
-                registerButton,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 16),
+                    logo,
+                    SizedBox(height: 16),
+                    _imagePicker,
+                    _profileBtn,
+                    _formFields,
+                    SizedBox(height: 32),
+                    registerButton,
+                  ],
+                ),
               ],
             ),
-          ),
-        ),
+//          ),
+//        ),
       ),
     );
   }
@@ -156,12 +164,6 @@ class _RegisterPageState extends State<RegisterPage>
       child: Column(
         children: <Widget>[
           getFormField(
-            hint: 'Full Name',
-            validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
-            capitalization: TextCapitalization.words,
-            onSave: (value) => this.fullName = value,
-          ),
-          getFormField(
             hint: 'Email Address',
             validator: (value) {
               if (!isValidEmail(value)) {
@@ -171,6 +173,12 @@ class _RegisterPageState extends State<RegisterPage>
             },
             capitalization: TextCapitalization.none,
             onSave: (value) => this.email = value,
+          ),
+          getFormField(
+            hint: 'Full Name',
+            validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
+            capitalization: TextCapitalization.words,
+            onSave: (value) => this.fullName = value,
           ),
           getFormField(
             hint: 'Password',

@@ -98,22 +98,25 @@ class NewsImageState extends State<NewsImage>
                       child: Container(
                         // height: 60,
                         // width: 100,
-                        color: Colors.grey[100],
+                        // color: Colors.grey[100],
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            FlatButton.icon(
-                              icon: Icon(Icons.image),
-                              label: Text(
-                                "Add Image",
+                            Container(
+                              margin: EdgeInsets.all(0),
+                              width: double.infinity,
+                              child: FlatButton.icon(
+                                icon: Icon(Icons.image),
+                                label: Text(
+                                  "Add Image",
+                                ),
+                                onPressed: () {
+                                  imagePicker.showDialog(context);
+                                },
                               ),
-                              onPressed: () {
-                                imagePicker.showDialog(context);
-                              },
                             ),
-
                             // Text(
                             //   'Add',
                             //   style: Theme.of(context).textTheme.title,

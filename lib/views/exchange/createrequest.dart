@@ -325,7 +325,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () async {
-                      if (location != null) {
+                     // if (location != null) {
                         requestModel.requestStart =
                             OfferDurationWidgetState.starttimestamp;
                         requestModel.requestEnd =
@@ -361,11 +361,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           }
                           Navigator.pop(context);
                         }
-                      } else {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('Location not added'),
-                        ));
-                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -456,7 +451,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.postTimestamp = timestamp;
     requestModel.accepted = false;
     requestModel.acceptors = [];
-    requestModel.location = location;
+    requestModel.location = location == null ? GeoFirePoint(40.754387,-73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
     //requestModel.r
 

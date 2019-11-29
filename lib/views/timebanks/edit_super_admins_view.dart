@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as prefix1;
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
@@ -642,6 +643,24 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             );
                           },
                         ),
+                        FlatButton(
+                          child: Text(
+                            'Invite memebers via code',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InviteMembers(
+                                  widget.timebankId,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                         timebankModel.admins.contains(loggedInUser) ||
                                 widget.superAdminTimebankModel.admins.contains(
                                     SevaCore.of(context)
@@ -970,14 +989,9 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
         }
         break;
       case 'campaigns':
-        if (timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-          return CampaignCreate(
-            timebankModel: timebankModel,
-          );
-        } else {
-          return CampaignJoin();
-        }
+        return CampaignCreate(
+          timebankModel: timebankModel,
+        );
         break;
       case 'viewcampaigns':
         return CampaignsView(

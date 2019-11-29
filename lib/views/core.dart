@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,7 +39,8 @@ class SevaCore extends InheritedWidget {
     @required this.loggedInUser,
     @required Widget child,
     Key key,
-  })  : assert(loggedInUser != null),
+  })
+      : assert(loggedInUser != null),
         assert(child != null),
         super(key: key, child: child);
 
@@ -99,13 +101,25 @@ class _CoreViewState extends State<CoreView> {
   void didChangeDependencies() {
     // SevaCore.of(context).loggedInUser.sevaUserID = "qgc7oclcyhXP6jjnFG1rXmVZ7Bp2";
     user = UserModel(
-      sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-      email: SevaCore.of(context).loggedInUser.email,
-      photoURL: SevaCore.of(context).loggedInUser.photoURL,
+      sevaUserID: SevaCore
+          .of(context)
+          .loggedInUser
+          .sevaUserID,
+      email: SevaCore
+          .of(context)
+          .loggedInUser
+          .email,
+      photoURL: SevaCore
+          .of(context)
+          .loggedInUser
+          .photoURL,
     );
 
     if (user.blockedMembers != null) {
-      SevaCore.of(context).loggedInUser.blockedMembers = user.blockedMembers;
+      SevaCore
+          .of(context)
+          .loggedInUser
+          .blockedMembers = user.blockedMembers;
       print("Updated blocked");
     } else {
       print("blocked users not init");
@@ -128,19 +142,19 @@ class _CoreViewState extends State<CoreView> {
   @override
   Widget build(BuildContext context) {
     return
-        //AnnotatedRegion<SystemUiOverlayStyle>(
-        //child:
-        MaterialApp(
-      theme: FlavorConfig.values.theme,
-      home: SevaCoreView(user: user),
-      // ),
-      // value: SystemUiOverlayStyle(
-      //   statusBarBrightness: Brightness.dark,
-      //   //statusBarColor: Theme.of(context).primaryColor,
-      //   systemNavigationBarIconBrightness: Brightness.dark,
-      //   statusBarIconBrightness: Brightness.dark
-      // ),
-    );
+      //AnnotatedRegion<SystemUiOverlayStyle>(
+      //child:
+      MaterialApp(
+        theme: FlavorConfig.values.theme,
+        home: SevaCoreView(user: user),
+        // ),
+        // value: SystemUiOverlayStyle(
+        //   statusBarBrightness: Brightness.dark,
+        //   //statusBarColor: Theme.of(context).primaryColor,
+        //   systemNavigationBarIconBrightness: Brightness.dark,
+        //   statusBarIconBrightness: Brightness.dark
+        // ),
+      );
   }
 }
 
@@ -166,8 +180,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
       newsPageProperty,
       exchangePageProperty,
       tasksPageProperty,
-      createPageProperty,
-      searchPageProperty,
+      //createPageProperty,
+      // searchPageProperty,
     ];
   }
 
@@ -179,12 +193,21 @@ class _SevaCoreViewState extends State<SevaCoreView>
     print("didChangeDependencies called");
     // TODO: implement didChangeDependencies
     FirestoreManager.getTimeBankForId(
-            timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
+        timebankId: SevaCore
+            .of(context)
+            .loggedInUser
+            .currentTimebank)
         .then((timebank) {
       if (timebank.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+          .contains(SevaCore
+          .of(context)
+          .loggedInUser
+          .sevaUserID) ||
           timebank.coordinators
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              .contains(SevaCore
+              .of(context)
+              .loggedInUser
+              .sevaUserID)) {
         setState(() {
           print("Admin access granted");
           isAdminOrCoordinator = true;
@@ -194,7 +217,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
         // isAdminOrCoordinator = false;
       }
       FirestoreManager.isUnreadNotification(
-              SevaCore.of(context).loggedInUser.email)
+          SevaCore
+              .of(context)
+              .loggedInUser
+              .email)
           .then((onValue) {
         isNotification = onValue;
       });
@@ -219,7 +245,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
         print(currentLocation.longitude);
         //_getCurrentLocation();
         setState(() {
-          SevaCore.of(context).loggedInUser.currentPosition = currentLocation;
+          SevaCore
+              .of(context)
+              .loggedInUser
+              .currentPosition = currentLocation;
         });
       });
     } catch (error) {
@@ -227,13 +256,28 @@ class _SevaCoreViewState extends State<SevaCoreView>
     }
   }
 
+  int sharedValue = 0;
+  final Map<int, Widget> logoWidgets = const <int, Widget>{
+    0: Text(
+      'All Feeds',
+      style: TextStyle(fontSize: 10.0),
+    ),
+    1: Text(
+      'Near Me Feeds',
+      style: TextStyle(fontSize: 10.0),
+    ),
+  };
+
   @override
   Widget build(BuildContext context) {
-    String email = SevaCore.of(context).loggedInUser.email;
+    String email = SevaCore
+        .of(context)
+        .loggedInUser
+        .email;
 
     if (email != null) {
       FirebaseMessaging().getToken().then(
-        (token) {
+            (token) {
           Firestore.instance.collection('users').document(email).updateData({
             'tokens': token,
           });
@@ -242,123 +286,171 @@ class _SevaCoreViewState extends State<SevaCoreView>
     }
 
     return Scaffold(
-      appBar: _selectedIndex == 4
+      appBar: _selectedIndex == 3
           ? null
           : AppBar(
-              backgroundColor: Theme.of(context).primaryColor,
-              centerTitle: true,
-              title: Text(
-                pages.elementAt(_selectedIndex).title,
-                style: TextStyle(color: Colors.white),
-              ),
-              leading: IconButton(
-                icon: Hero(
-                  tag: 'profilehero',
-                  child: Container(
-                    height: 36,
-                    width: 36,
-                    decoration: ShapeDecoration(
-                      shape: CircleBorder(
-                        side: BorderSide(
-                          color: Colors.white,
-                          width: 1,
-                        ),
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            SevaCore.of(context).loggedInUser.photoURL),
-                      ),
-                    ),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileView(),
-                    ),
-                  );
-                },
-              ),
-              actions: [
-                StreamBuilder<Object>(
-                    stream: FirestoreManager.getNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
+        backgroundColor: Theme
+            .of(context)
+            .primaryColor,
+        centerTitle: true,
+        title:
+//        Text(
+//          'Feeds',
+//          style: TextStyle(color: Colors.white),
+//        ),
+        Text(
+          pages.elementAt(_selectedIndex).title,
+          style: TextStyle(color: Colors.white),
+        ),
+//              Container(
+//                width: 200,
+//                child: CupertinoSegmentedControl<int>(
+//                  children: logoWidgets,
+//                  selectedColor: Colors.deepOrange,
+//                  //pressedColor: Colors.white,
+//                  //unselectedColor: Colors.white,
+//                  padding: EdgeInsets.only(left: 5.0,right: 5.0),
+//                  groupValue: globals.sharedValue,
+//                  onValueChanged: (int val) {
+//                    print(val);
+//                    if(val == 0) {
+//                      setState(() {
+//                        globals.isNearme = false;
+//                      });
+//                    } else {
+//                      setState(() {
+//                        globals.isNearme = true;
+//                      });
+//                    }
+//
+//                    setState(() {
+//                      globals.sharedValue = val;
+//                    });
+//                  },
+//                ),
+//              ),
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.notifications,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotificationsPage(),
-                              ),
-                            );
-                          },
-                        );
-                      }
-
-                      List<NotificationsModel> notifications = snapshot.data;
-                      if (notifications.length > 0) {
-                        return IconButton(
-                          icon: Icon(Icons.notifications_active),
-                          color: Colors.red,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotificationsPage(),
-                              ),
-                            );
-                          },
-                        );
-                      } else {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.notifications,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotificationsPage(),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    }),
-                IconButton(
-                  icon: Icon(
-                    Icons.chat,
+        leading: IconButton(
+          icon: Hero(
+            tag: 'profilehero',
+            child: Container(
+              height: 36,
+              width: 36,
+              decoration: ShapeDecoration(
+                shape: CircleBorder(
+                  side: BorderSide(
                     color: Colors.white,
+                    width: 1,
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatListView(),
-                      ),
-                    );
-                  },
                 ),
-
-                //...pages.elementAt(_selectedIndex).appBarActions,
-              ],
-              bottom: pages.elementAt(_selectedIndex).bottom,
+                image: DecorationImage(
+                  image: NetworkImage(
+                      SevaCore
+                          .of(context)
+                          .loggedInUser
+                          .photoURL),
+                ),
+              ),
             ),
-      body: pages.elementAt(_selectedIndex).page,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileView(),
+              ),
+            );
+          },
+        ),
+        actions: [
+          StreamBuilder<Object>(
+              stream: FirestoreManager.getNotifications(
+                  userEmail: SevaCore
+                      .of(context)
+                      .loggedInUser
+                      .email),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationsPage(),
+                        ),
+                      );
+                    },
+                  );
+                }
+
+                List<NotificationsModel> notifications = snapshot.data;
+                if (notifications.length > 0) {
+                  return IconButton(
+                    icon: Icon(Icons.notifications_active),
+                    color: Colors.red,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationsPage(),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationsPage(),
+                        ),
+                      );
+                    },
+                  );
+                }
+              }),
+          IconButton(
+            icon: Icon(
+              Icons.chat,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatListView(),
+                ),
+              );
+            },
+          ),
+
+          //...pages.elementAt(_selectedIndex).appBarActions,
+        ],
+        bottom: pages
+            .elementAt(_selectedIndex)
+            .bottom,
+      ),
+      floatingActionButton: getFloatingBtn(),
+      body: pages
+          .elementAt(_selectedIndex)
+          .page,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Theme.of(context).bottomAppBarColor,
+        backgroundColor: Theme
+            .of(context)
+            .bottomAppBarColor,
         type: BottomNavigationBarType.fixed,
         elevation: 26,
         unselectedItemColor: Colors.grey[500],
@@ -380,13 +472,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
         currentIndex: _selectedIndex,
         selectedItemColor: FlavorConfig.appFlavor == Flavor.TOM
             ? Colors.white
-            : Theme.of(context).primaryColor,
-        onTap: (index) => setState(() {
-          if (index == 3) {
-            _settingModalBottomSheet(context);
-          } else
-            _selectedIndex = index;
-        }),
+            : Theme
+            .of(context)
+            .primaryColor,
+        onTap: (index) =>
+            setState(() {
+              _selectedIndex = index;
+            }),
       ),
       // floatingActionButton: GestureDetector(
       //   onTap: () {
@@ -426,22 +518,138 @@ class _SevaCoreViewState extends State<SevaCoreView>
     );
   }
 
+  FloatingActionButton getFloatingBtn() {
+    if (pages
+        .elementAt(_selectedIndex)
+        .title == "Feeds") {
+      return FloatingActionButton.extended(
+          label: Text(
+            "Create Feed",
+            style: TextStyle(fontSize: 11.0),
+          ),
+          foregroundColor: FlavorConfig.values.buttonTextColor,
+          onPressed: () {
+            if (SevaCore
+                .of(context)
+                .loggedInUser
+                .associatedWithTimebanks > 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SelectTimeBankForNewRequest("Feed"),
+                ),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      NewsCreate(
+                        timebankId:
+                        SevaCore
+                            .of(context)
+                            .loggedInUser
+                            .currentTimebank,
+                      ),
+                ),
+              );
+            }
+          });
+    } else if (pages
+        .elementAt(_selectedIndex)
+        .title == "Volunteer") {
+      if (this.tabValue == 0) {
+        return FloatingActionButton.extended(
+            label: Text(
+              "Create Volunteer Request",
+              style: TextStyle(fontSize: 11.0),
+            ),
+            foregroundColor: FlavorConfig.values.buttonTextColor,
+            onPressed: () {
+              if (SevaCore
+                  .of(context)
+                  .loggedInUser
+                  .adminOfYanagGangs > 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        SelectTimeBankForNewRequest("Request"),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CreateRequest(
+                          timebankId: SevaCore
+                              .of(context)
+                              .loggedInUser
+                              .timebankIdForYangGangAdmin,
+                        ),
+                  ),
+                );
+              }
+            });
+      } else {
+        return FloatingActionButton.extended(
+            label: Text(
+              "Create Volunteer Offer",
+              style: TextStyle(fontSize: 11.0),
+            ),
+            foregroundColor: FlavorConfig.values.buttonTextColor,
+            onPressed: () {
+              if (SevaCore
+                  .of(context)
+                  .loggedInUser
+                  .associatedWithTimebanks >
+                  1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        SelectTimeBankForNewRequest("Offer"),
+                  ),
+                );
+              }
+              else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CreateOffer(
+                          timebankId: SevaCore
+                              .of(context)
+                              .loggedInUser
+                              .currentTimebank,
+                        ),
+                  ),
+                );
+              }
+            });
+      }
+    } else {
+      return null;
+    }
+  }
+
   PageProperty get newsPageProperty {
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+          FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.description)
           : FlavorConfig.appFlavor == Flavor.TOM
-              ? Icon(
-                  Icons.description,
-                  color: Colors.white,
-                )
-              : SvgPicture.asset(
-                  'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
-                  height: 22,
-                  width: 22,
-                  color: Colors.white,
-                ),
+          ? Icon(
+        Icons.description,
+        color: Colors.white,
+      )
+          : SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_feed-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: NewsListView(),
       title: 'Feeds',
       appBarActions: [
@@ -475,19 +683,19 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 4, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+          FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.search)
           : FlavorConfig.appFlavor == Flavor.TOM
-              ? Icon(
-                  Icons.search,
-                  color: Colors.white,
-                )
-              : SvgPicture.asset(
-                  'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
-                  height: 22,
-                  width: 22,
-                  color: Colors.white,
-                ),
+          ? Icon(
+        Icons.search,
+        color: Colors.white,
+      )
+          : SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_search-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: SearchView(controller),
       title: 'Search',
       // bottom: TabBar(
@@ -504,32 +712,42 @@ class _SevaCoreViewState extends State<SevaCoreView>
     );
   }
 
+  int tabValue = 0;
+
   PageProperty get exchangePageProperty {
     TabController controller = TabController(length: 2, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+          FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.swap_horizontal_circle)
           : FlavorConfig.appFlavor == Flavor.TOM
-              ? Icon(
-                  Icons.swap_horizontal_circle,
-                  color: Colors.white,
-                )
-              : SvgPicture.asset(
-                  'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
-                  height: 22,
-                  width: 22,
-                  color: Colors.white,
-                ),
+          ? Icon(
+        Icons.swap_horizontal_circle,
+        color: Colors.white,
+      )
+          : SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: HelpView(controller),
       title: 'Volunteer',
       bottom: TabBar(
+        isScrollable: false,
         labelColor: Colors.white,
         tabs: [
           Tab(child: Text('${FlavorConfig.values.requestTitle}s')),
           Tab(child: Text('${FlavorConfig.values.offertitle}s')),
         ],
         controller: controller,
+        //dragStartBehavior: Dr,
+        onTap: (value) {
+          setState(() {
+            this.tabValue = value;
+          });
+          print("tab value $value");
+        },
       ),
       appBarActions: [],
     );
@@ -539,19 +757,19 @@ class _SevaCoreViewState extends State<SevaCoreView>
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-              FlavorConfig.appFlavor == Flavor.APP
+          FlavorConfig.appFlavor == Flavor.APP
           ? Icon(Icons.playlist_add_check)
           : FlavorConfig.appFlavor == Flavor.TOM
-              ? Icon(
-                  Icons.playlist_add_check,
-                  color: Colors.white,
-                )
-              : SvgPicture.asset(
-                  'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
-                  height: 22,
-                  width: 22,
-                  color: Colors.white,
-                ),
+          ? Icon(
+        Icons.playlist_add_check,
+        color: Colors.white,
+      )
+          : SvgPicture.asset(
+        'lib/assets/tulsi_icons/tulsi2020_icons_mytasks-icon.svg',
+        height: 22,
+        width: 22,
+        color: Colors.white,
+      ),
       page: MyTaskPage(controller),
       title: 'My Tasks',
       appBarActions: [],
@@ -562,12 +780,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
           Tab(child: Text('Pending ')),
           Tab(
               child: Text(
-            'Not Accepted ',
-          )),
+                'Not Accepted ',
+              )),
           Tab(
               child: Text(
-            'Completed ',
-          )),
+                'Completed ',
+              )),
         ],
         controller: controller,
         isScrollable: true,
@@ -578,28 +796,33 @@ class _SevaCoreViewState extends State<SevaCoreView>
   PageProperty get createPageProperty {
     return PageProperty(
         tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-                FlavorConfig.appFlavor == Flavor.APP
+            FlavorConfig.appFlavor == Flavor.APP
             ? Icon(Icons.add_circle)
             : FlavorConfig.appFlavor == Flavor.TOM
-                ? Icon(
-                    Icons.add_circle,
-                    color: Colors.white,
-                  )
-                : SvgPicture.asset(
-                    'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
-                    height: 22,
-                    width: 22,
-                    color: Colors.white,
-                  ),
+            ? Icon(
+          Icons.add_circle,
+          color: Colors.white,
+        )
+            : SvgPicture.asset(
+          'lib/assets/tulsi_icons/tulsi2020_icons_add-icon.svg',
+          height: 22,
+          width: 22,
+          color: Colors.white,
+        ),
         page: SevaCoreView(),
         title: 'Create',
         appBarActions: []);
   }
 
   Future<void> _signOut(BuildContext context) async {
-    var auth = AuthProvider.of(context).auth;
+    var auth = AuthProvider
+        .of(context)
+        .auth;
     await auth.signOut();
-    SevaCore.of(context).loggedInUser.bio = '';
+    SevaCore
+        .of(context)
+        .loggedInUser
+        .bio = '';
     globals.interests = [];
     globals.skills = [];
     await _onSignOutClearLocalData();
@@ -639,48 +862,54 @@ class _SevaCoreViewState extends State<SevaCoreView>
                 children: <Widget>[
                   new ListTile(
                       leading: new Icon(Icons.description,
-                          color: Theme.of(context).primaryColor),
+                          color: Theme
+                              .of(context)
+                              .primaryColor),
                       title: new Text(
                         'Create Feed',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      onTap: () => {
-                            Navigator.of(context).pop(),
+                      onTap: () =>
+                      {
+                        Navigator.of(context).pop(),
 
-                            if (SevaCore.of(context)
-                                    .loggedInUser
-                                    .associatedWithTimebanks >
-                                1)
-                              {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        SelectTimeBankForNewRequest("Feed"),
-                                  ),
-                                ),
-                              }
-                            else
-                              {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => NewsCreate(
-                                      timebankId: SevaCore.of(context)
+                        if (SevaCore
+                            .of(context)
+                            .loggedInUser
+                            .associatedWithTimebanks >
+                            1)
+                          {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SelectTimeBankForNewRequest("Feed"),
+                              ),
+                            ),
+                          }
+                        else
+                          {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NewsCreate(
+                                      timebankId: SevaCore
+                                          .of(context)
                                           .loggedInUser
                                           .currentTimebank,
                                     ),
-                                  ),
-                                ),
-                              },
+                              ),
+                            ),
+                          },
 
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) =>
-                            //         SelectTimeBankForNewRequest("Feed"),
-                            //   ),
-                            // ),
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) =>
+                        //         SelectTimeBankForNewRequest("Feed"),
+                        //   ),
+                        // ),
 
 //                            Navigator.of(context).pop(),
 //                            Navigator.push(
@@ -693,20 +922,26 @@ class _SevaCoreViewState extends State<SevaCoreView>
 //                                ),
 //                              ),
 //                            )
-                          }),
+                      }),
                   Divider(
                     height: 1,
                     color: Colors.grey,
                   ),
                   new ListTile(
                     leading: new Icon(Icons.swap_horizontal_circle,
-                        color: Theme.of(context).primaryColor),
+                        color: Theme
+                            .of(context)
+                            .primaryColor),
                     title: new Text(
                       'Create ${FlavorConfig.values.requestTitle}',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
-                    onTap: () => {
-                      if (SevaCore.of(context).loggedInUser.adminOfYanagGangs >
+                    onTap: () =>
+                    {
+                      if (SevaCore
+                          .of(context)
+                          .loggedInUser
+                          .adminOfYanagGangs >
                           1)
                         {
                           Navigator.of(context).pop(),
@@ -724,11 +959,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CreateRequest(
-                                timebankId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .timebankIdForYangGangAdmin,
-                              ),
+                              builder: (context) =>
+                                  CreateRequest(
+                                    timebankId: SevaCore
+                                        .of(context)
+                                        .loggedInUser
+                                        .timebankIdForYangGangAdmin,
+                                  ),
                             ),
                           ),
                         }
@@ -785,17 +1022,21 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   new ListTile(
                     leading: new Icon(
                       Icons.local_offer,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     title: new Text(
                       'Create ${FlavorConfig.values.offertitle}',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
-                    onTap: () => {
+                    onTap: () =>
+                    {
                       Navigator.of(context).pop(),
-                      if (SevaCore.of(context)
-                              .loggedInUser
-                              .associatedWithTimebanks >
+                      if (SevaCore
+                          .of(context)
+                          .loggedInUser
+                          .associatedWithTimebanks >
                           1)
                         {
                           Navigator.push(
@@ -811,11 +1052,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CreateOffer(
-                                timebankId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentTimebank,
-                              ),
+                              builder: (context) =>
+                                  CreateOffer(
+                                    timebankId: SevaCore
+                                        .of(context)
+                                        .loggedInUser
+                                        .currentTimebank,
+                                  ),
                             ),
                           ),
                         },
@@ -827,12 +1070,15 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   ),
                   new ListTile(
                     leading: new Icon(Icons.timeline,
-                        color: Theme.of(context).primaryColor),
+                        color: Theme
+                            .of(context)
+                            .primaryColor),
                     title: new Text(
                       'Create a ${FlavorConfig.values.timebankTitle}',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
-                    onTap: () => {
+                    onTap: () =>
+                    {
                       if (FlavorConfig.appFlavor != Flavor.APP)
                         {createSubTimebank(context)}
                       else
@@ -871,15 +1117,21 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   ),
                   new ListTile(
                     leading: new Icon(Icons.link,
-                        color: Theme.of(context).primaryColor),
+                        color: Theme
+                            .of(context)
+                            .primaryColor),
                     title: new Text(
                       'Invite members via code',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
-                    onTap: () => {
+                    onTap: () =>
+                    {
                       Navigator.of(context).pop(),
 
-                      if (SevaCore.of(context).loggedInUser.adminOfYanagGangs >
+                      if (SevaCore
+                          .of(context)
+                          .loggedInUser
+                          .adminOfYanagGangs >
                           1)
                         {
                           Navigator.push(
@@ -895,11 +1147,13 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => InviteMembers(
-                                SevaCore.of(context)
-                                    .loggedInUser
-                                    .timebankIdForYangGangAdmin,
-                              ),
+                              builder: (context) =>
+                                  InviteMembers(
+                                    SevaCore
+                                        .of(context)
+                                        .loggedInUser
+                                        .timebankIdForYangGangAdmin,
+                                  ),
                             ),
                           ),
                         },
@@ -962,9 +1216,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TimebankCreate(
-          timebankId: FlavorConfig.values.timebankId,
-        ),
+        builder: (context) =>
+            TimebankCreate(
+              timebankId: FlavorConfig.values.timebankId,
+            ),
       ),
     );
   }

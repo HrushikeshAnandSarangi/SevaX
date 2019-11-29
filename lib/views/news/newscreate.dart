@@ -23,6 +23,7 @@ class NewsCreate extends StatelessWidget {
   final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
   final String timebankId;
   NewsCreate({this.timebankId});
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -91,10 +92,13 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   String imageUrl;
   NewsModel newsObject = NewsModel();
   TextStyle textStyle;
+  NewsCreateFormState() {
+    _getLocation();
+  }
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
-  GeoFirePoint location;
+  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
   String selectedAddress;
 
   Future<void> writeToDB() async {
@@ -106,7 +110,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.postTimestamp = timestamp;
-    newsObject.location = location;
+    newsObject.location =
+        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
@@ -120,6 +125,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     await FirestoreManager.createNews(newsObject: newsObject);
     globals.newsImageURL = null;
+    if (dialogContext != null) {
+      Navigator.pop(dialogContext);
+    }
     Navigator.pop(context);
   }
 
@@ -182,6 +190,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   }
 
   prefix0.TextEditingController subheadingController = TextEditingController();
+
+  BuildContext dialogContext;
 
   @override
   Widget build(BuildContext context) {
@@ -287,6 +297,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                                 return 'Please enter some text';
                               }
                               newsObject.subheading = value;
+                              // print("object");
                             },
                           ),
                         ),
@@ -348,27 +359,33 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   ),
                 ],
               ),
-              FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Text(
-                  selectedAddress == null || selectedAddress.isEmpty
-                      ? 'Add Location'
-                      : selectedAddress,
-                ),
-                color: Colors.grey[200],
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<GeoFirePoint>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
+
+              Container(
+                margin: prefix0.EdgeInsets.all(10),
+                child: FlatButton.icon(
+                  icon: Icon(Icons.add_location),
+                  label: Text(
+                    selectedAddress == null || selectedAddress.isEmpty
+                        // adasdasd
+                        ? 'Add Location'
+                        : selectedAddress,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  color: Colors.grey[200],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<GeoFirePoint>(
+                        builder: (context) => LocationPicker(
+                          selectedLocation: location,
+                        ),
                       ),
-                    ),
-                  ).then((point) {
-                    if (point != null) location = point;
-                    _getLocation();
-                  });
-                },
+                    ).then((point) {
+                      if (point != null) location = point;
+                      _getLocation();
+                    });
+                  },
+                ),
               ),
               Container(
                 margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -379,23 +396,28 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
                     // return;
-
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            'Please wait while we are creating you\'re post')));
-
-                    scrapeURLFromSubheading(subheadingController.text);
-                    scrapeHashTagsFromSubHeadings(subheadingController.text);
-
-                    if (newsObject.urlsFromPost.length > 0) {
-                      await scrapeURLDetails(subheadingController.text);
-                    }
-
                     if (location != null) {
                       if (formKey.currentState.validate()) {
                         // If the form is valid, we want to show a Snackbar
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Creating Post')));
+
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (createDialogContext) {
+                              dialogContext = createDialogContext;
+                              return AlertDialog(
+                                title: Text('Creating feed'),
+                                content: LinearProgressIndicator(),
+                              );
+                            });
+                        scrapeURLFromSubheading(subheadingController.text);
+                        scrapeHashTagsFromSubHeadings(
+                            subheadingController.text);
+
+                        if (newsObject.urlsFromPost.length > 0) {
+                          await scrapeURLDetails(subheadingController.text);
+                        }
+
                         writeToDB();
                       }
                     } else {
@@ -440,7 +462,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     );
 
     regExp.allMatches(subHeadings).forEach((match) {
-      scappedURLs.add(subHeadings.substring(match.start, match.end));
+      var scapedUrl = subHeadings.substring(match.start, match.end);
+      scappedURLs
+          .add(scapedUrl.contains("http") ? scapedUrl : "http://" + scapedUrl);
     });
 
     newsObject.urlsFromPost = scappedURLs;
@@ -575,14 +599,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     //   }
     // }
 
-    // print("Fromimage selector $images ");
+    // print("Fromimage selector $imagfes ");
 
     var links = document.querySelectorAll('title');
     for (var link in links) {
       if (link.text != null) {
-        if (!link.text.contains("http")) {
-          newsObject.title = "http://" + link.text;
-        }
+        newsObject.title = link.text;
         break;
       }
     }
