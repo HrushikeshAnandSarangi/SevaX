@@ -181,12 +181,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.didChangeDependencies();
   }
 
-prefix0.TextEditingController subheadingController =
-        TextEditingController();
+  prefix0.TextEditingController subheadingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    
     textStyle = Theme.of(context).textTheme.title;
     // Build a Form widget using the formKey we created above
     return Form(
@@ -380,8 +378,13 @@ prefix0.TextEditingController subheadingController =
                   shape: StadiumBorder(),
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
-                    scrapeURLFromSubheading(subheadingController.text);
+                    // return;
 
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            'Please wait while we are creating you\'re post')));
+
+                    scrapeURLFromSubheading(subheadingController.text);
                     scrapeHashTagsFromSubHeadings(subheadingController.text);
 
                     if (newsObject.urlsFromPost.length > 0) {
@@ -458,10 +461,7 @@ prefix0.TextEditingController subheadingController =
 
   Future scrapeURLDetails(String subHeadings) async {
     await fetchPosts(newsObject.urlsFromPost[0]);
-
-    //now write to db
-
-    print("Final Project $newsObject");
+    // print("Final Project $newsObject");
   }
 
   Widget get entityDropdown {
@@ -533,33 +533,71 @@ prefix0.TextEditingController subheadingController =
   }
 
   Future<Void> fetchPosts(String url) async {
+    print("started fetch");
+    // url = "https://en.wikipedia.org/wiki/The_War_on_Normal_People";
     final response = await http.get(
       url,
     );
     var document = parse(response.body);
 
-    var images = document.querySelectorAll("div > img");
+    var images = document.getElementsByTagName("img");
 
-    for (var i = 0; i < images.length; i++) {
-      if (images[0] != null) {
-        newsObject.imageScraped = images[i].attributes['src'];
-        break;
-      }
+    var imagesList = [];
+
+    images
+        .map((element) => {
+              if (element.attributes['src'] != null &&
+                  element.attributes['src'].contains("http"))
+                {
+                  imagesList.add(element.attributes['src']),
+                  print("Added ${element.attributes['src']}"),
+                }
+            })
+        .toList();
+
+    print(imagesList);
+
+    if (imagesList.length > 1) {
+      print(" Final output ->  ${imagesList[imagesList.length ~/ 2]}");
+      newsObject.imageScraped = imagesList[imagesList.length ~/ 2];
+    } else if (imagesList.length > 0) {
+      print("Final output ${imagesList[0]}");
+      newsObject.imageScraped = imagesList[0];
+    } else {
+      print("No image scraped");
+      newsObject.imageScraped = "NoData";
     }
+
+    // for (var i = 0; i < images.length; i++) {
+    //   if (images[i].attributes['src'] != null) {
+    //     // newsObject.imageScraped = images[i].attributes['img'];
+    //     print("Got the src :-> " + images[i].attributes['img']);
+    //   }
+    // }
+
+    // print("Fromimage selector $images ");
 
     var links = document.querySelectorAll('title');
     for (var link in links) {
       if (link.text != null) {
-        newsObject.title = link.text;
+        if (!link.text.contains("http")) {
+          newsObject.title = "http://" + link.text;
+        }
         break;
       }
     }
 
     var para = document.querySelectorAll('p');
+
     for (var link in para) {
       if (link.text != null) {
-        newsObject.description = link.text;
-        break;
+        if (newsObject.description == null) {
+          newsObject.description = link.text;
+        } else if (newsObject.description.length < link.text.length)
+          newsObject.description = link.text;
+        else {
+          newsObject.description = newsObject.description + "\n" + link.text;
+        }
       }
     }
   }

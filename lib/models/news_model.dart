@@ -115,6 +115,22 @@ class NewsModel extends DataModel {
   }
 
   NewsModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('imageScraped')) {
+      this.imageScraped = map['imageScraped'];
+    }
+
+    if (map.containsKey('urlsFromPost')) {
+      List<String> urlsFromPost = List.castFrom(map['urlsFromPost']);
+      this.urlsFromPost = urlsFromPost;
+    } else
+      this.urlsFromPost = [];
+
+    if (map.containsKey('hashTags')) {
+      List<String> hashTags = List.castFrom(map['hashTags']);
+      this.hashTags = hashTags;
+    } else
+      this.hashTags = [];
+
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
@@ -124,9 +140,11 @@ class NewsModel extends DataModel {
     if (map.containsKey('root_timebank_id')) {
       this.root_timebank_id = map['root_timebank_id'];
     }
+
     if (map.containsKey('subheading')) {
       this.subheading = map['subheading'];
     }
+
     if (map.containsKey('description')) {
       this.description = map['description'];
     }
@@ -153,15 +171,18 @@ class NewsModel extends DataModel {
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
+
     if (map.containsKey('entity')) {
       Map<String, dynamic> dataMap = Map.castFrom(map['entity']);
       this.entity = EntityModel.fromMap(dataMap);
     }
+
     if (map.containsKey('likes')) {
       List<String> likesList = List.castFrom(map['likes']);
       this.likes = likesList;
     } else
       this.likes = [];
+
     if (map.containsKey('reports')) {
       List<String> likesList = List.castFrom(map['reports']);
       this.reports = likesList;

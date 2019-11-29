@@ -68,6 +68,7 @@ dependencies:
   flutter_linkify: 1.0.3
   html: ^0.14.0+3  
   json_annotation: ^2.0.0
+  meet_network_image: ^0.1.1
 
 
 dev_dependencies:

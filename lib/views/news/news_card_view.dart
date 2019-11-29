@@ -9,14 +9,15 @@ import 'package:sevaexchange/views/news/edit_news.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/views/messages/new_chat.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsCardView extends StatelessWidget {
   final NewsModel newsModel;
 
   NewsCardView({Key key, @required this.newsModel}) : super(key: key) {
-    assert(newsModel.title != null, 'News title cannot be null');
-    assert(newsModel.description != null, 'News description cannot be null');
-    assert(newsModel.fullName != null, 'Full name cannot be null');
+    // assert(newsModel.title != null, 'News title cannot be null');
+    // assert(newsModel.description != null, 'News description cannot be null');
+    // assert(newsModel.fullName != null, 'Full name cannot be null');
   }
 
   @override
@@ -26,15 +27,16 @@ class NewsCardView extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          newsModel.title,
+          newsModel.title == null ? newsModel.fullName : newsModel.title,
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
           _getDeleteButton(context),
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () => _shareNews(context),
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.share),
+          //   onPressed: () => _shareNews(context),
+          // ),
+
           newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
               ? IconButton(
                   icon: Icon(Icons.edit),
@@ -60,11 +62,16 @@ class NewsCardView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              newsTitle,
               newsAuthorAndDate,
+              newsModel.title == null || newsModel.title == "NoData"
+                  ? Offstage()
+                  : newsTitle,
               newsImage,
               photoCredits,
+              subHeadings,
               tags,
+              listOfHashTags,
+              listOfLinks
             ],
           ),
         ),
@@ -94,51 +101,250 @@ class NewsCardView extends StatelessWidget {
 
   Widget get newsTitle {
     return Container(
-      padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 20.0),
-      child: Text(
-        newsModel.title,
-        style: TextStyle(
-            fontSize: 28.0,
-            fontStyle: FontStyle.normal,
-            fontWeight: FontWeight.bold),
+      padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 20.0),
+      child: newsModel.title == null || newsModel.title == "NoData"
+          ? Offstage()
+          : Text(
+              newsModel.title.trim(),
+              style: TextStyle(
+                  fontSize: 28.0,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.bold),
+            ),
+    );
+  }
+
+  Widget get listOfHashTags {
+    if (newsModel.hashTags.length > 0) {
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: newsModel.hashTags.map((hash) {
+              // final _random = new Random();
+              // var element = colorList[_random.nextInt(colorList.length)];
+              return chip(hash, false);
+            }).toList(),
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+    );
+  }
+
+  Widget chip(
+    String value,
+    bool selected,
+  ) {
+    return Container(
+      margin: EdgeInsets.all(4),
+      decoration: ShapeDecoration(
+        shape: StadiumBorder(
+          side: BorderSide(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Material(
+        color: Colors.white.withAlpha(0),
+        child: InkWell(
+          customBorder: StadiumBorder(),
+          onTap: () {},
+          child: Material(
+            elevation: selected ? 3 : 0,
+            shape: StadiumBorder(),
+            child: AnimatedContainer(
+              curve: Curves.easeIn,
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              duration: Duration(milliseconds: 250),
+              decoration: ShapeDecoration(
+                shape: StadiumBorder(),
+                color: selected ? Colors.black : null,
+              ),
+              child: AnimatedCrossFade(
+                duration: Duration(milliseconds: 250),
+                crossFadeState: selected
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                firstChild: Text(
+                  value,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                secondChild: Text(
+                  value,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get listOfLinks {
+    if (newsModel.urlsFromPost.length > 0) {
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: newsModel.urlsFromPost.map((link) {
+              // final _random = new Random();
+              // var element = colorList[_random.nextInt(colorList.length)];
+              return chipForLinks(link, false);
+            }).toList(),
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(5.0),
+    );
+  }
+
+  Widget chipForLinks(
+    String value,
+    bool selected,
+  ) {
+    return Container(
+      margin: EdgeInsets.all(4),
+      decoration: ShapeDecoration(
+        shape: StadiumBorder(
+          side: BorderSide(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Material(
+        color: Colors.white.withAlpha(0),
+        child: InkWell(
+          customBorder: StadiumBorder(),
+          onTap: () async {
+            // print("Here is the value : $value");
+            if (await canLaunch(value)) {
+              await launch(value);
+            } else {
+              throw 'Could not launch $value';
+            }
+          },
+          child: Material(
+            elevation: selected ? 3 : 0,
+            shape: StadiumBorder(),
+            child: AnimatedContainer(
+              curve: Curves.easeIn,
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              duration: Duration(milliseconds: 250),
+              decoration: ShapeDecoration(
+                shape: StadiumBorder(),
+                color: selected ? Colors.blue : null,
+              ),
+              child: AnimatedCrossFade(
+                duration: Duration(milliseconds: 250),
+                crossFadeState: selected
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                firstChild: Text(value,
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                    overflow: TextOverflow.ellipsis),
+                secondChild: Text(value,
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                    overflow: TextOverflow.ellipsis),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
 
   Widget get newsAuthorAndDate {
     return Padding(
-      padding: const EdgeInsets.all(12),
-      child: Column(
+      padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            child: Text(
-              newsModel.fullName,
-              style: TextStyle(
-                fontSize: 18.0,
+            margin: EdgeInsets.fromLTRB(0, 5, 5, 15),
+            height: 40,
+            width: 40,
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(
+                newsModel.userPhotoURL == null
+                    ? 'https://secure.gravatar.com/avatar/b10f7ddbf9b8be9e3c46c302bb20101d?s=400&d=mm&r=g'
+                    : newsModel.userPhotoURL,
               ),
+              minRadius: 40.0,
             ),
           ),
-          Text(
-            _getFormattedTime(newsModel.postTimestamp),
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-              color: Colors.black54,
-            ),
-          )
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 5, left: 5),
+                child: Text(
+                  newsModel.fullName,
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 5),
+                child: Text(
+                  _getFormattedTime(newsModel.postTimestamp),
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
+                  ),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );
   }
 
   Widget get newsImage {
+
+    return newsModel.newsImageUrl == null
+        ? newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
+            ? Offstage()
+            : getImageView(url: newsModel.imageScraped, imageId: newsModel.id)
+        : getImageView(url: newsModel.newsImageUrl, imageId: newsModel.id);
+  }
+
+  Widget getImageView({
+    String url,
+    String imageId,
+  }) {
+    print("______________________________>" + url);
+
     return Container(
-      child: newsModel.newsImageUrl != null
+      margin: EdgeInsets.all(5),
+      child: url != null
           ? Hero(
-              tag: newsModel.id,
+              tag: imageId,
               child: Image.network(
-                newsModel.newsImageUrl,
+                url,
                 fit: BoxFit.cover,
               ),
             )
@@ -160,18 +366,37 @@ class NewsCardView extends StatelessWidget {
   }
 
   Widget get tags {
-    return Container(
-      padding: EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            newsModel.description,
-            style: TextStyle(fontSize: 18.0, height: 1.4),
-          )
-        ],
-      ),
-    );
+    return newsModel.description == null
+        ? Offstage()
+        : Container(
+            padding: EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  newsModel.description.trim(),
+                  style: TextStyle(fontSize: 18.0, height: 1.4),
+                )
+              ],
+            ),
+          );
+  }
+
+  Widget get subHeadings {
+    return newsModel.subheading == null
+        ? Offstage()
+        : Container(
+            padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  newsModel.subheading.trim(),
+                  style: TextStyle(fontSize: 18.0, height: 1.4),
+                )
+              ],
+            ),
+          );
   }
 
   void _showDeleteConfirmationDialog(BuildContext context) {

@@ -6,6 +6,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
+import 'package:meet_network_image/meet_network_image.dart';
 
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -428,30 +429,11 @@ class NewsListState extends State<NewsList> {
                     ),
                   ],
                 ),
-                Container(
-                  height: news.newsImageUrl == null ? 0 : 250,
-                  child: SizedBox.expand(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(0),
-                        topRight: Radius.circular(0),
-                      ),
-                      child: news.newsImageUrl == null
-                          ? Offstage
-                          : Hero(
-                              tag: news.id,
-                              child: FadeInImage(
-                                fit: BoxFit.fitWidth,
-                                placeholder: AssetImage(
-                                    'lib/assets/images/noimagefound.png'),
-                                image: NetworkImage(news.newsImageUrl == null
-                                    ? ""
-                                    : news.newsImageUrl),
-                              ),
-                            ),
-                    ),
-                  ),
-                ),
+                news.newsImageUrl == null
+                    ? news.imageScraped == null || news.imageScraped == "NoData"
+                        ? Offstage()
+                        : getImageView(news.id, news.imageScraped)
+                    : getImageView(news.id, news.newsImageUrl),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -486,9 +468,14 @@ class NewsListState extends State<NewsList> {
                                 //     fontSize: 16.0,
                                 //   ),
                                 // ),
-                                Text(
-                                  news.subheading,
-                                  overflow: TextOverflow.ellipsis,
+                                Container(
+                                  margin: EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    news.title != null && news.title != "NoData"
+                                        ? news.title.trim()
+                                        : news.subheading.trim(),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ],
                             ),
@@ -771,6 +758,29 @@ class NewsListState extends State<NewsList> {
             //       )
             // : Center(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget getImageView(String newsId, String urlToLoad) {
+    print("Load here ->  $urlToLoad");
+    return Container(
+      height: 250,
+      child: SizedBox.expand(
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(0),
+            topRight: Radius.circular(0),
+          ),
+          child: Hero(
+            tag: newsId,
+            child: FadeInImage(
+              fit: BoxFit.fitWidth,
+              placeholder: AssetImage('lib/assets/images/noimagefound.png'),
+              image: NetworkImage(urlToLoad),
+            ),
+          ),
         ),
       ),
     );
