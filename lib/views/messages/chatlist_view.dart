@@ -28,8 +28,12 @@ class ChatListView extends StatefulWidget {
 class _ChatListViewState extends State<ChatListView> {
   // final BuildContext parentContext;
   // _ChatListViewState(this.parentContext);
+
+//  var updateUser = SevaCore.of(context).loggedInUser;
   @override
   Widget build(BuildContext context) {
+    var blockedMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
+    var blockedByMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
@@ -43,7 +47,11 @@ class _ChatListViewState extends State<ChatListView> {
         // ],
       ),
       body: StreamBuilder<List<ChatModel>>(
-        stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
+        stream: getChatsforUser(
+          email: SevaCore.of(context).loggedInUser.email,
+          blockedBy: blockedByMembers,
+          blockedMembers: blockedMembers,
+        ),
         builder: (BuildContext context,
             AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
           if (!chatListSnapshot.hasData) {
@@ -62,28 +70,20 @@ class _ChatListViewState extends State<ChatListView> {
               );
             default:
               // print("Chat Model list ${chatListSnapshot.data}");
-              List<ChatModel> chatModelList = chatListSnapshot.data;
+              List<ChatModel> allChalModelList = chatListSnapshot.data;
+
+
+              List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
                 return Center(child: Text('No Chats'));
               }
 
               return ListView.builder(
-                itemExtent: 80,
                 itemCount: chatModelList.length,
                 itemBuilder: (context, index) {
-                  return getMessageListView(chatModelList[index], context);
+                  return chatModelList[index].isBlocked ? Offstage() : getMessageListView(chatModelList[index], context);
                 },
               );
-            // return Container(
-            //   padding: EdgeInsets.only(left: 15.0, right: 15.0),
-            //   child: ListView(
-            //     children: chatModelList.map(
-            //       (ChatModel chatModel) {
-            //         return getMessageListView(chatModel, context);
-            //       },
-            //     ).toList(),
-            //   ),
-            // );
           }
         },
       ),

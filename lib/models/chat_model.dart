@@ -10,6 +10,8 @@ class ChatModel extends DataModel {
   String messagTitleUserName;
   String photoURL;
 
+  bool isBlocked = false;
+
   ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
 
   ChatModel.fromMap(Map<String, dynamic> map) {

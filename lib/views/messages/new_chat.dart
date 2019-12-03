@@ -107,10 +107,15 @@ class _ResultViewState extends State<ResultView> {
 
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-
+    var blockedMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
+    var blockedByMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     if (widget.controller.text.trim().isEmpty) {
       return StreamBuilder<List<ChatModel>>(
-        stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
+        stream: getChatsforUser(
+          email: SevaCore.of(context).loggedInUser.email,
+          blockedBy: blockedByMembers,
+          blockedMembers: blockedMembers
+        ),
         builder:
             (BuildContext context, AsyncSnapshot<List<ChatModel>> snapshot) {
           if (snapshot.hasError) {

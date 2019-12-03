@@ -117,10 +117,12 @@ class _SelectMembersView extends StatelessWidget {
     List<String> filteredMembers = [];
 
     timebank.members.forEach((member) {
-      SevaCore.of(context).loggedInUser.blockedMembers.contains(member) ||
-              SevaCore.of(context).loggedInUser.blockedBy.contains(member)
-          ? print("Removed blocked content")
-          : filteredMembers.add(member);
+      if(SevaCore.of(context).loggedInUser.blockedMembers.contains(member) ||
+          SevaCore.of(context).loggedInUser.blockedBy.contains(member)) {
+        print("Blocked item:${member}");
+      }else{
+        filteredMembers.add(member);
+      }
     });
     timebank.members = filteredMembers;
     return timebank;

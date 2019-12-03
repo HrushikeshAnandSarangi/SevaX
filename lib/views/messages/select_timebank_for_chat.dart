@@ -56,6 +56,7 @@ Widget getTimebanks(BuildContext context) {
               TimebankModel timebank = timebankList.elementAt(index);
               return GestureDetector(
                 onTap: () {
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(

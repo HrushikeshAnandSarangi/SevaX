@@ -54,6 +54,9 @@ Future<void> createmessage({
 //Get chats for a user
 Stream<List<ChatModel>> getChatsforUser({
   @required String email,
+  @required List<String> blockedBy,
+  @required List<String> blockedMembers,
+
 }) async* {
   var futures = <Future>[];
   // log.i('getChatsforUser: Email: $email');
@@ -94,14 +97,28 @@ Stream<List<ChatModel>> getChatsforUser({
 //             }
           },
         );
-
         await Future.wait(futures).then((onValue) {
-          for (var i = 0; i < chatlist.length; i++) {
+          var i = 0;
+          while(i<chatlist.length) {
+            var sevaUserId = onValue[i]['sevauserid'];
+
+            print("--> Seva user id for othwe user $sevaUserId");
+            print("--> Blocked by others-> $blockedBy  ----  Blocked by me ->$blockedMembers");
+            print( "${(blockedBy.contains(sevaUserId) || blockedMembers.contains(sevaUserId))}  is the status " );
+
+
+
             chatlist[i].messagTitleUserName = onValue[i]['fullname'];
             chatlist[i].photoURL = onValue[i]['photourl'];
+
+            chatlist[i].isBlocked = (blockedBy.contains(sevaUserId) || blockedMembers.contains(sevaUserId));
+//            if(chatlist[i].isBlocked) {
+//              chatlist.removeAt(i);
+//            }else{
+              i++;
+//            }
           }
 
- 
           chatSink.add(chatlist);
         });
       },
