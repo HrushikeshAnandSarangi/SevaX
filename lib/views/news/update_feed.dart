@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart' as prefix0;
@@ -19,11 +18,13 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
-class NewsCreate extends StatelessWidget {
+class UpdateNewsFeed extends StatelessWidget {
   final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
   final String timebankId;
+  final NewsModel newsMmodel;
   String photoCredits;
-  NewsCreate({this.timebankId});
+
+  UpdateNewsFeed({this.timebankId, this.newsMmodel});
 
   @override
   Widget build(BuildContext context) {
@@ -38,34 +39,15 @@ class NewsCreate extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            "Create feed",
+            "Update feed",
             style: TextStyle(color: Colors.white),
           ),
           centerTitle: false,
-          actions: <Widget>[
-            //  OutlineButton(
-            //         //color: Colors.indigo,
-            //         onPressed: () {
-            //           // Validate will return true if the form is valid, or false if
-            //           // the form is invalid.
-
-            //           if (_formState.currentState.formKey.currentState.validate()) {
-            //             // If the form is valid, we want to show a Snackbar
-            //             Scaffold.of(context).showSnackBar(
-            //                 SnackBar(content: Text('Creating Post')));
-            //             _formState.currentState.writeToDB();
-            //           }
-            //         },
-            //         highlightColor: Colors.white,
-            //         child: Text(
-            //           'Save',
-            //           style: TextStyle(color: Colors.white),
-            //         ),
-            //       ),
-          ],
+          actions: <Widget>[],
         ),
         body: NewsCreateForm(
           timebankId: timebankId,
+          newsModel: newsMmodel,
         ),
       ),
     );
@@ -75,10 +57,12 @@ class NewsCreate extends StatelessWidget {
 // Create a Form Widget
 class NewsCreateForm extends StatefulWidget {
   final String timebankId;
-  NewsCreateForm({Key key, this.timebankId}) : super(key: key);
+  NewsModel newsModel;
+
+  NewsCreateForm({Key key, this.timebankId, this.newsModel}) : super(key: key);
   @override
   NewsCreateFormState createState() {
-    return NewsCreateFormState();
+    return NewsCreateFormState(newsObject: newsModel);
   }
 }
 
@@ -92,34 +76,31 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   final formKey = GlobalKey<FormState>();
   String imageUrl;
   String photoCredits;
-  NewsModel newsObject = NewsModel();
+
+  NewsModel newsObject;
   TextStyle textStyle;
-  NewsCreateFormState() {
+  NewsCreateFormState({this.newsObject}) {
+    print("Getting news Feed -> $newsObject");
+    location = newsObject.location;
+    globals.newsImageURL = newsObject.newsImageUrl;
     _getLocation();
   }
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
-  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
+  GeoFirePoint location;
   String selectedAddress;
 
   Future<void> writeToDB() async {
-    // print("Credit goes to ${}");
-
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-
-    newsObject.id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
-    newsObject.postTimestamp = timestamp;
     newsObject.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
-    newsObject.photoCredits = photoCredits == null ? "" : photoCredits;
-
-//    EntityModel entityModel = _getSelectedEntityModel;
+    newsObject.photoCredits = photoCredits != null ? photoCredits : '';
+    //EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
       entityId: widget.timebankId,
       //entityName: FlavorConfig.timebankName,
@@ -128,8 +109,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     newsObject.entity = entityModel;
 
-    print("Model goes like this : $entityModel");
-    await FirestoreManager.createNews(newsObject: newsObject);
+    // await FirestoreManager.createNews(newsObject: newsObject);
+    await FirestoreManager.updateNews(newsObject: newsObject);
     globals.newsImageURL = null;
     if (dialogContext != null) {
       Navigator.pop(dialogContext);
@@ -246,7 +227,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
                   Text(""),
                   Container(
-                    margin: EdgeInsets.all(20),
+                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
                     child: Column(
                       children: <Widget>[
                         // Padding(
@@ -279,7 +260,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
-                            controller: subheadingController,
+                            // controller: subheadingController,
+                            initialValue: newsObject.subheading,
                             autofocus: true,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
@@ -298,7 +280,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             ),
                             keyboardType: TextInputType.text,
                             maxLines: 5,
+                            onChanged: (value) {
+                              print("omChanged $value");
+                              widget.newsModel.subheading = value;
+                            },
                             validator: (value) {
+                              print("validator");
                               if (value.isEmpty) {
                                 return 'Please enter some text';
                               }
@@ -335,20 +322,44 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ],
                     ),
                   ),
-
+                  // Container(
+                  //   padding: EdgeInsets.fromLTRB(
+                  //       MediaQuery.of(context).size.width / 4,
+                  //       0,
+                  //       MediaQuery.of(context).size.width / 4,
+                  //       0),
+                  //   child: TextFormField(
+                  //     initialValue: newsObject.photoCredits,
+                  //     onChanged: (value) {
+                  //       newsObject.photoCredits = value;
+                  //     },
+                  //     decoration: InputDecoration(
+                  //       hintText: '+ Photo Credits',
+                  //     ),
+                  //     keyboardType: TextInputType.text,
+                  //     textAlign: TextAlign.center,
+                  //     //style: textStyle,
+                  //     validator: (value) {
+                  //       // if (value.isEmpty) {
+                  //       //   return 'Please enter some text';
+                  //       // }
+                  //       newsObject.photoCredits = value;
+                  //     },
+                  //   ),
+                  // ),
                   // Text(""),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Center(
                       child: NewsImage(
-                        photoCredits: "",
+                        photoCredits: newsObject.photoCredits,
                         geoFirePointLocation: location,
                         geoFirePointLocationCallback:
                             (geoLocationPointSelected) {
                           location = geoLocationPointSelected;
                         },
                         onCreditsEntered: (photoCreditsFromNews) {
-                          print("" + photoCredits);
+                          // print("" + photoCredits);
                           photoCredits = photoCreditsFromNews;
                         },
                       ),
@@ -357,59 +368,33 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 ],
               ),
 
-              // Row(
-              //   children: <Widget>[
-              //     Container(
-              //       margin: EdgeInsets.only(left: 20),
-              //       child: FlatButton.icon(
-              //         icon: Icon(Icons.add_location),
-              //         label: Text(''),
-              //         // label: Text(
-              //         //   selectedAddress == null || selectedAddress.isEmpty
-              //         //       // adasdasd
-              //         //       ? 'Add Location'
-              //         //       : selectedAddress,
-              //         //   overflow: TextOverflow.ellipsis,
-              //         // ),
-              //         color: Colors.grey[200],
-              //         onPressed: () {
-              //           Navigator.push(
-              //             context,
-              //             MaterialPageRoute<GeoFirePoint>(
-              //               builder: (context) => LocationPicker(
-              //                 selectedLocation: location,
-              //               ),
-              //             ),
-              //           ).then((point) {
-              //             if (point != null) location = point;
-              //             _getLocation();
-              //           });
-              //         },
-              //       ),
+              // Container(
+              //   margin: prefix0.EdgeInsets.all(10),
+              //   child: FlatButton.icon(
+              //     icon: Icon(Icons.add_location),
+              //     label: Text(
+              //       selectedAddress == null || selectedAddress.isEmpty
+              //           // adasdasd
+              //           ? 'Add Location'
+              //           : selectedAddress,
+              //       overflow: TextOverflow.ellipsis,
               //     ),
-              //     Container(
-              //       margin: EdgeInsets.only(left: 20),
-              //       child: FlatButton.icon(
-              //         icon: Icon(Icons.image),
-              //         label: Text(''),
-              //         // label: Text(
-              //         //   selectedAddress == null || selectedAddress.isEmpty
-              //         //       // adasdasd
-              //         //       ? 'Add Location'
-              //         //       : selectedAddress,
-              //         //   overflow: TextOverflow.ellipsis,
-              //         // ),
-              //         color: Colors.grey[200],
-              //         onPressed: () {
-              //           //call gallery
-
-              //           // newsImageInstance.imagePicker.showDialog(context);
-              //         },
-              //       ),
-              //     ),
-              //   ],
+              //     color: Colors.grey[200],
+              //     onPressed: () {
+              //       Navigator.push(
+              //         context,
+              //         MaterialPageRoute<GeoFirePoint>(
+              //           builder: (context) => LocationPicker(
+              //             selectedLocation: location,
+              //           ),
+              //         ),
+              //       ).then((point) {
+              //         if (point != null) location = point;
+              //         _getLocation();
+              //       });
+              //     },
+              //   ),
               // ),
-
               Container(
                 margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 alignment: Alignment(0, 1),
@@ -418,25 +403,26 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   shape: StadiumBorder(),
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
+                    // return;
                     if (location != null) {
                       if (formKey.currentState.validate()) {
                         // If the form is valid, we want to show a Snackbar
+
                         showDialog(
                             barrierDismissible: false,
                             context: context,
                             builder: (createDialogContext) {
                               dialogContext = createDialogContext;
                               return AlertDialog(
-                                title: Text('Creating feed'),
+                                title: Text('Updating Feed'),
                                 content: LinearProgressIndicator(),
                               );
                             });
-                        scrapeURLFromSubheading(subheadingController.text);
-                        scrapeHashTagsFromSubHeadings(
-                            subheadingController.text);
+                        scrapeURLFromSubheading(newsObject.subheading);
+                        scrapeHashTagsFromSubHeadings(newsObject.subheading);
 
                         if (newsObject.urlsFromPost.length > 0) {
-                          await scrapeURLDetails(subheadingController.text);
+                          await scrapeURLDetails(newsObject.subheading);
                         }
 
                         writeToDB();
@@ -459,7 +445,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ),
                       Text(' '),
                       Text(
-                        'Create feed',
+                        'Update feed',
                         style: TextStyle(
                           color: FlavorConfig.values.buttonTextColor,
                         ),

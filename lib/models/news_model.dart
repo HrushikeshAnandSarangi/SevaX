@@ -106,6 +106,7 @@ class NewsModel extends DataModel {
       map['likes'] = this.likes;
     } else
       map['likes'] = [];
+      
     if (this.reports != null) {
       map['reports'] = this.reports;
     } else

@@ -21,15 +21,20 @@ Future<void> createChat({
 }
 
 /// Update a [chat]
-Future<void> updateChat({
-  @required ChatModel chat,
-}) async {
+Future<void> updateChat({@required ChatModel chat, String email}) async {
   // log.i('updateChat: MessageModel: ${chat.toMap()}');
   return await Firestore.instance
       .collection('chatsnew')
       .document(
           chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
-      .updateData(chat.toMap());
+      .updateData({
+    'softDeletedBy': FieldValue.arrayRemove([email]),
+    'user1': chat.user1,
+    'user2': chat.user2,
+    'lastMessage': chat.lastMessage,
+    'rootTimebank': chat.rootTimebank,
+    'timestamp': DateTime.now().millisecondsSinceEpoch
+  });
 }
 
 //Create a message
@@ -56,8 +61,10 @@ Stream<List<ChatModel>> getChatsforUser({
   @required String email,
 }) async* {
   var futures = <Future>[];
-  // log.i('getChatsforUser: Email: $email');
-  var data = Firestore.instance.collection('chatsnew').snapshots();
+  var data = Firestore.instance
+      .collection('chatsnew')
+      .orderBy('timestamp', descending: true)
+      .snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<ChatModel>>.fromHandlers(
@@ -67,9 +74,32 @@ Stream<List<ChatModel>> getChatsforUser({
           (documentSnapshot) async {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
 
+            // var list = [];
+            // list.add(model.user1);
+            // list.add(model.user2);
+
+            // list.sort();
+
+            // var messageId =
+            //     "${list[0]}*${list[1]}*ab7c6033-8b82-42df-9f41-3c09bae6c3a2";
+
+            // print("--> $messageId");
+
+            // await Firestore.instance
+            //     .collection("chatsnew")
+            //     .document(messageId)
+            //     .updateData({
+            //   'timestamp': DateTime.now().millisecondsSinceEpoch,
+            // }).then((onValue){
+            //   print("updated");
+            // });
+
             if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
-                model.rootTimebank == FlavorConfig.values.timebankId) {
+                model.rootTimebank == FlavorConfig.values.timebankId &&
+                !model.softDeletedBy.contains(
+                  email,
+                )) {
               if (model.user1 == email) {
                 futures.add(getUserInfo(model.user2));
               }
@@ -77,21 +107,23 @@ Stream<List<ChatModel>> getChatsforUser({
                 futures.add(getUserInfo(model.user1));
               }
               chatlist.add(model);
+
+              print("Chat list size ${chatlist.length}");
             }
 
-//             email = "anitha.beberg@gmail.com";
-//             if ((model.user1 == "anitha.beberg@gmail.com" ||
-//                     model.user2 == "anitha.beberg@gmail.com") &&
-//                 model.lastMessage != null &&
-//                 model.rootTimebank == FlavorConfig.values.timebankId) {
-//               if (model.user1 == email) {
-//                 futures.add(getUserInfo(model.user2));
-//               }
-//               if (model.user2 == email) {
-//                 futures.add(getUserInfo(model.user1));
-//               }
-//               chatlist.add(model);
-//             }
+            // email = "anitha.beberg@gmail.com";
+            // if ((model.user1 == "anitha.beberg@gmail.com" ||
+            //         model.user2 == "anitha.beberg@gmail.com") &&
+            //     model.lastMessage != null &&
+            //     model.rootTimebank == FlavorConfig.values.timebankId) {
+            //   if (model.user1 == email) {
+            //     futures.add(getUserInfo(model.user2));
+            //   }
+            //   if (model.user2 == email) {
+            //     futures.add(getUserInfo(model.user1));
+            //   }
+            //   chatlist.add(model);
+            // }
           },
         );
 
@@ -101,7 +133,6 @@ Stream<List<ChatModel>> getChatsforUser({
             chatlist[i].photoURL = onValue[i]['photourl'];
           }
 
- 
           chatSink.add(chatlist);
         });
       },
@@ -120,10 +151,9 @@ Future<DocumentSnapshot> getUserInfo(String userEmail) {
 }
 
 //Get Messages for a chat
-Stream<List<MessageModel>> getMessagesforChat({
-  @required ChatModel chatModel,
-}) async* {
-  // log.i('getMessagesforChat: chatModel: $chatModel');
+Stream<List<MessageModel>> getMessagesforChat(
+    {@required ChatModel chatModel, String email}) async* {
+  print('getMessagesforChat: chatModel: $chatModel');
   var data = Firestore.instance
       .collection('chatsnew')
       .document(chatModel.user1 +
@@ -148,7 +178,27 @@ Stream<List<MessageModel>> getMessagesforChat({
             });
           },
         );
-        messageSink.add(messagelist);
+
+        //take out
+
+        if (chatModel.deletedBy != null &&
+            chatModel.deletedBy.containsKey(email)) {
+          print(
+              "inside timestamp --> --------------------------------------------");
+          var timestamp = chatModel.deletedBy[email];
+          print("inside timestamp --> $timestamp");
+          List<MessageModel> filteredList = [];
+          for (var i = 0; i < messagelist.length; i++) {
+            messagelist[i].timestamp > timestamp
+                ? filteredList.add(messagelist[i])
+                : print("valid message");
+            print("exec");
+          }
+          messageSink.add(filteredList);
+        } else {
+          print("Inside else for data manager ${chatModel}");
+          messageSink.add(messagelist);
+        }
       },
     ),
   );

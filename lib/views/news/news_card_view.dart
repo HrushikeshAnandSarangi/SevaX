@@ -6,6 +6,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/news/edit_news.dart';
+import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/views/messages/new_chat.dart';
@@ -37,23 +38,23 @@ class NewsCardView extends StatelessWidget {
           //   onPressed: () => _shareNews(context),
           // ),
           //shadowing for now as edit feed is not yet completed
-          // newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-          //     ? IconButton(
-          //         icon: Icon(Icons.edit),
-          //         onPressed: () {
-          //           Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //               builder: (context) => NewsEdit(
-          //                 newsModel: newsModel,
-          //                 timebankId:
-          //                     SevaCore.of(context).loggedInUser.currentTimebank,
-          //               ),
-          //             ),
-          //           );
-          //         },
-          //       )
-          //     : Offstage()
+          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+              ? IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UpdateNewsFeed(
+                          newsMmodel: newsModel,
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Offstage()
         ],
       ),
       body: SafeArea(
@@ -324,7 +325,6 @@ class NewsCardView extends StatelessWidget {
   }
 
   Widget get newsImage {
-
     return newsModel.newsImageUrl == null
         ? newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
             ? Offstage()

@@ -13,7 +13,6 @@ import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
-
 class ChatView extends StatefulWidget {
   final String useremail;
   final ChatModel chatModel;
@@ -142,12 +141,16 @@ class _ChatViewState extends State<ChatView> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<List<MessageModel>>(
-              stream: getMessagesforChat(chatModel: widget.chatModel),
+              stream: getMessagesforChat(
+                chatModel: widget.chatModel,
+                email: SevaCore.of(context).loggedInUser.email,
+              ),
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
                 if (chatListSnapshot.hasError) {
                   return new Text('Error: ${chatListSnapshot.error}');
                 }
+
                 switch (chatListSnapshot.connectionState) {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
@@ -156,6 +159,7 @@ class _ChatViewState extends State<ChatView> {
                     if (chatModelList.length == 0) {
                       return Center(child: Text('No Messages'));
                     }
+
                     return Container(
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       child: ListView(
@@ -185,7 +189,7 @@ class _ChatViewState extends State<ChatView> {
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
-                      validator: (value) {                        
+                      validator: (value) {
                         if (value.isEmpty) {
                           return 'Please type message';
                         }
@@ -217,7 +221,10 @@ class _ChatViewState extends State<ChatView> {
                           messagemodel: messageModel,
                           chatmodel: widget.chatModel);
                       widget.chatModel.lastMessage = messageModel.message;
-                      updateChat(chat: widget.chatModel);
+                      updateChat(
+                        chat: widget.chatModel,
+                        email: loggedInEmailId,
+                      );
                       textcontroller.clear();
                       SchedulerBinding.instance.addPostFrameCallback((_) {
                         Timer(Duration(milliseconds: 100), () {

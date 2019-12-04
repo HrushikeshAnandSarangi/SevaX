@@ -1,3 +1,6 @@
+import 'dart:collection';
+import 'dart:ffi';
+
 import 'package:sevaexchange/models/data_model.dart';
 
 class ChatModel extends DataModel {
@@ -10,9 +13,34 @@ class ChatModel extends DataModel {
   String messagTitleUserName;
   String photoURL;
 
+  Map<dynamic, dynamic> deletedBy;
+  List<String> softDeletedBy;
+
   ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
 
   ChatModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('softDeletedBy')) {
+      List<String> softDeletedBy = List.castFrom(map['softDeletedBy']);
+      this.softDeletedBy = softDeletedBy;
+    } else {
+      softDeletedBy = [];
+    }
+
+    if (map.containsKey('deletedBy') && map['deletedBy'] != null) {
+      try {
+        Map<dynamic, dynamic> deletedByMap = map['deletedBy'];
+        this.deletedBy = deletedByMap;
+        print("deletedBy set to $deletedBy");
+      } catch (e) {
+        print("Crashed on deletedBy $e");
+        this.deletedBy = HashMap();
+      }
+    } else {
+      print("Chat has not been deleted yet");
+
+      deletedBy = HashMap();
+    }
+
     if (map.containsKey('user1')) {
       this.user1 = map['user1'];
     }
@@ -52,7 +80,11 @@ class ChatModel extends DataModel {
       map['rootTimebank'] = this.rootTimebank;
     }
 
-    timestamp = DateTime.now().millisecondsSinceEpoch;
+    if (this.deletedBy != null) {
+      map['deletedBy'] = this.deletedBy;
+    }
+
+    map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
 
     return map;
   }
@@ -60,6 +92,6 @@ class ChatModel extends DataModel {
   @override
   String toString() {
     // TODO: implement toString
-    return "messageTitle = ${this.messagTitleUserName} messagePhoto : ${this.photoURL} User 1 :  ${this.user1}  -- User 2 : ${this.user2} -- lastMessage ${this.lastMessage}  -- ${this.rootTimebank}";
+    return "messageTitle = ${this.messagTitleUserName} messagePhoto : ${this.photoURL} User 1 :  ${this.user1}  -- User 2 : ${this.user2} -- lastMessage ${this.lastMessage}  -- ${this.rootTimebank} deletedBy -> $deletedBy";
   }
 }

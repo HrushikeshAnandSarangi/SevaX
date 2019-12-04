@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -32,16 +33,12 @@ class _ChatListViewState extends State<ChatListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          'Chats',
-          style: TextStyle(color: Colors.white),
-        ),
-        // actions: <Widget>[
-
-        // ],
-      ),
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text(
+            'Chats',
+            style: TextStyle(color: Colors.white),
+          )),
       body: StreamBuilder<List<ChatModel>>(
         stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
         builder: (BuildContext context,
@@ -68,7 +65,6 @@ class _ChatListViewState extends State<ChatListView> {
               }
 
               return ListView.builder(
-                itemExtent: 80,
                 itemCount: chatModelList.length,
                 itemBuilder: (context, index) {
                   return getMessageListView(chatModelList[index], context);
@@ -271,6 +267,25 @@ class _ChatListViewState extends State<ChatListView> {
                     ],
                   ),
                 ),
+                ClipOval(
+                  child: Container(
+                    height: 35,
+                    width: 35,
+                    child: GestureDetector(
+                      child: IconButton(
+                        icon: Image.asset('lib/assets/images/close.png'),
+                        iconSize: 30,
+                        onPressed: () {
+                          _ackAlert(
+                            SevaCore.of(context).loggedInUser.email,
+                            chatModel,
+                            context,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -298,8 +313,6 @@ class _ChatListViewState extends State<ChatListView> {
                     .loggedInUser
                     .blockedBy
                     .contains(user.sevaUserID)) {
-              print("USER BLOCKED");
-
               return Offstage();
             } else {
               print(
@@ -453,5 +466,65 @@ class _ChatListViewState extends State<ChatListView> {
             );
           });
     }
+  }
+
+  Future<void> _ackAlert(
+      String email, ChatModel chatModel, BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete chat'),
+          content: const Text('Are you sure you want to delete this chat'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Delete'),
+              onPressed: () {
+                var participants = [];
+                participants.add(chatModel.user1);
+                participants.add(chatModel.user2);
+
+                participants.sort();
+
+                var messageId =
+                    "${participants[0]}*${participants[1]}*${FlavorConfig.values.timebankId}";
+
+                Firestore.instance
+                    .collection("chatsnew")
+                    .document(messageId)
+                    .updateData({
+                  'softDeletedBy': FieldValue.arrayUnion(
+                    [email],
+                  )
+                }).then((onValue) {
+                  chatModel.deletedBy[email] =
+                      DateTime.now().millisecondsSinceEpoch;
+
+                  Firestore.instance
+                      .collection("chatsnew")
+                      .document(messageId)
+                      .updateData({
+                    'deletedBy': chatModel.deletedBy,
+                  }).then((onValue) {});
+                });
+
+                setState(() {
+                  print("Update and remove the object from list");
+                  // chatModel = chatModel;
+                });
+
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
