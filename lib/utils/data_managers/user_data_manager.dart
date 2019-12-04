@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'dart:convert';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:http/http.dart' as http;
 
 /// Create a [user]
 Future<void> createUser({
@@ -137,6 +139,23 @@ Future<UserModel> getUserForEmail({
   // userModel.currentBalance = currentBalance;
 
   return userModel;
+}
+
+Future<List<UserModel>> getUsersForTimebankId(String timebankId, int index) async {
+  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=${timebankId}&page=${index}';
+  print('''
+    urlLink:
+    ${urlLink}
+  ''');
+  var res = await http.get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+
+  Future<List<UserModel>> list;
+  if (res.statusCode == 200) {
+    var data = json.decode(res.body);
+    var rest = data["result"] as List;
+    return rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+  }
+  return list;
 }
 
 Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {

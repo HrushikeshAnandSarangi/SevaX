@@ -43,10 +43,6 @@
 	<string>This is to make sure your posts are tagged with your current location</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to camera roll to select pictures to upload to the News Feed</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>location</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

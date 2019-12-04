@@ -216,4 +216,31 @@ class UserModel extends DataModel {
 
     return object;
   }
+
+  @override
+  String toString(){
+    return '''
+      ${this.bio.toString()},
+      ${this.email.toString()},
+      ${this.fullname.toString()},
+      ${this.photoURL.toString()},
+      ${this.interests.toString()},
+      ${this.membershipCampaigns.toString()},
+      ${this.membershipTimebanks.toString()},
+      ${this.sevaUserID.toString()},
+      ${this.skills.toString()},
+      ${this.currentBalance.toString()},
+      ${this.calendar.toString()},
+      ${this.otp.toString()},
+      ${this.requestStatus.toString()},
+      ${this.timezone.toString()},
+      ${this.tokens.toString()},
+      ${this.reportedUsers.toString()},
+      ${this.blockedMembers.toString()},
+      ${this.blockedBy.toString()},
+      ${this.currentPosition.toString()},
+      ${this.acceptedEULA.toString()},
+    ''';
+
+  }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' as prefix0;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/timebanks/timebank_congratsView.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -30,13 +31,56 @@ class SelectMembersInGroup extends StatefulWidget {
 }
 
 class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
+  String _timebankId;
+  ScrollController _controller;
+  var _indexSoFar = 0;
+  var _pageIndex = 1;
+  var _hasMoreItems = true;
+  var _showMoreItems = true;
+  var currSelectedState = false;
+  var selectedUserModelIndex = -1;
+  List<Widget> _avtars = [];
+  List<UserModel> userModels = [];
+  HashMap<String, int> emailIndexMap = HashMap();
+
+  _SelectMembersInGroupState(){
+    _timebankId = FlavorConfig.values.timebankName == "Yang 2020" ? FlavorConfig.values.timebankId : widget.timebankId;
+  }
+
+  @override
+  void initState(){
+//    loadNextBatchItems();
+    _showMoreItems = true;
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_scrollListener);
+    super.dispose();
+  }
+
+
+  _scrollListener() {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange && _hasMoreItems) {
+      setState(() {
+        _showMoreItems = true;
+//        loadNextBatchItems();
+      });
+    } else {
+      _showMoreItems = false;
+
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context);
-
     print("Color ${color.primaryColor}");
-
-    return Scaffold(
+    var finalWidget =  Scaffold(
       appBar: AppBar(
         title: Text(
           "Select volunteers",
@@ -50,7 +94,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                   .pop({'membersSelected': widget.userSelected});
             },
             child: Container(
-              margin: EdgeInsets.all(10),
+              margin: EdgeInsets.all(0),
               alignment: Alignment.center,
               height: double.infinity,
               child: Text(
@@ -65,16 +109,22 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         timebankId: FlavorConfig.values.timebankName == "Yang 2020" ? FlavorConfig.values.timebankId : widget.timebankId,
       ),
     );
+
+    if(_showMoreItems) {
+      loadNextBatchItems().then((onValue){
+        return finalWidget;
+      });
+    }
+    return finalWidget;
   }
 
   TimebankModel timebankModel;
   Widget getList({String timebankId}) {
+
     if (timebankModel != null) {
-      return Container(
-        child: getDataScrollView(
-          context,
-          timebankModel,
-        ),
+      return getContent(
+        context,
+        timebankModel,
       );
     }
 
@@ -87,58 +137,94 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           return Text(snapshot.error.toString());
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return circularBar;
         }
         timebankModel = snapshot.data;
-        return Container(
-          child: getDataScrollView(
-            context,
-            timebankModel,
-          ),
+        return getContent(
+          context,
+          timebankModel,
         );
       },
     );
   }
 
-  Widget getDataScrollView(
-    BuildContext context,
-    TimebankModel timebankModel,
-  ) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverList(
-          delegate: SliverChildListDelegate(
-            getContent(context, timebankModel),
-          ),
-        ),
-      ],
+  Widget getContent(BuildContext context,TimebankModel model) {
+    if(_avtars.length == 0 && _hasMoreItems && _showMoreItems) {
+      return circularBar;
+    }else{
+      if(selectedUserModelIndex!=-1){
+        updateModelIndex(selectedUserModelIndex);
+        selectedUserModelIndex = -1;
+      }
+      return ListView.builder(
+        controller: _controller,
+        itemCount: fetchItemsCount(),
+        itemBuilder: (BuildContext ctxt, int index) =>
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: index < _avtars.length ?
+                _avtars[index]
+                : Container(
+                width: double.infinity,
+                height: 80,
+                child: circularBar,
+              ),
+            ),
+      );
+    }
+  }
+
+  Widget get circularBar {
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 
-  List<Widget> getContent(BuildContext context, TimebankModel model) {
-    return [
-      getMembersList(context, model),
-      SizedBox(height: 48),
-    ];
+  int fetchItemsCount() {
+    if(_hasMoreItems && _showMoreItems) {
+      return _avtars.length + 1;
+    }
+    return _avtars.length;
   }
 
-  Widget getMembersList(BuildContext context, TimebankModel model) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        ...model.members.map((member) {
+  Future updateModelIndex(int index) async {
+    var member = userModels[index].sevaUserID;
+    if (widget.listOfMembers != null &&
+        widget.listOfMembers.containsKey(member)) {
+      userModels.add(widget.listOfMembers[member]);
+      _avtars[index] = getUserWidget(widget.listOfMembers[member], context);
+    }else{
+      _avtars[index] = FutureBuilder<UserModel>(
+        future: FirestoreManager.getUserForId(sevaUserId: member),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) return Text(snapshot.error.toString());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return shimmerWidget;
+          }
+          UserModel user = snapshot.data;
+          userModels.add(user);
+          widget.listOfMembers[user.sevaUserID] = user;
+          return getUserWidget(user, context);
+        },
+      );
+    }
+  }
+
+
+  Future loadNextBatchItems() async {
+    if(_hasMoreItems) {
+      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue){
+        int index = _indexSoFar;
+        var addItems = onValue.map((memberObject) {
+          var member = memberObject.sevaUserID;
+          index++;
           if (widget.listOfMembers != null &&
               widget.listOfMembers.containsKey(member)) {
-            print("From cache");
+            userModels.add(widget.listOfMembers[member]);
+            emailIndexMap[widget.listOfMembers[member].email] = index;
             return getUserWidget(widget.listOfMembers[member], context);
           }
-
-          print("from database");
-
-          return FutureBuilder<UserModel>(
+          var items = FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: member),
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text(snapshot.error.toString());
@@ -146,57 +232,90 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
+              userModels.add(user);
+              emailIndexMap[user.email] = index;
               widget.listOfMembers[user.sevaUserID] = user;
               return getUserWidget(user, context);
             },
           );
-        }).toList(),
-      ],
-    );
+          return items;
+        }
+        ).toList();
+        if(addItems.length>0) {
+          setState(() {
+//            var prevIndex = _indexSoFar;
+            _avtars.addAll(addItems);
+            _indexSoFar = _indexSoFar + addItems.length;
+//            for(var i=prevIndex;i<_indexSoFar;i++){
+//              emailIndexMap[userModels[i].email] = i;
+//            }
+            _pageIndex = _pageIndex + 1;
+          });
+        }else{
+          _hasMoreItems = addItems.length == 20;
+        }
+      });
+    }
   }
 
   Widget getUserWidget(UserModel user, BuildContext context) {
+    var card = getUserModelCard(user);
     return GestureDetector(
       onTap: () async {
         print(user.email +
             " User selected" +
             SevaCore.of(context).loggedInUser.email);
 
-        if (!widget.userSelected.containsKey(user.email))
+
+        if (!widget.userSelected.containsKey(user.email)){
           widget.userSelected[user.email] = user;
-        else
+          currSelectedState = true;
+        }
+        else{
           widget.userSelected.remove(user.email);
+          currSelectedState = false;
+        }
 
         print(
             "${widget.userSelected.length} Users selected ${widget.userSelected.containsKey(user.email)} ");
 
-        setState(() {});
+        setState(() {
+        });
       },
-      child: Card(
-        color: widget.userSelected.containsKey(user.email)
-            ? Colors.green
-            : Colors.white,
-        child: ListTile(
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL),
+      child: card,
+    );
+  }
+
+  Card getUserModelCard(UserModel user) {
+    return Card(
+      color: widget.userSelected.containsKey(user.email)
+          ? Colors.green
+          : Colors.white,
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundImage: NetworkImage(user.photoURL),
+        ),
+        title: Text(
+          user.fullname,
+          style: TextStyle(
+            color: getTextColorForSelectedItem(user.email),
           ),
-          title: Text(
-            user.fullname,
-            style: TextStyle(
-                color: widget.userSelected.containsKey(user.email)
-                    ? Colors.white
-                    : Colors.black),
-          ),
-          subtitle: Text(
-            user.email,
-            style: TextStyle(
-                color: widget.userSelected.containsKey(user.email)
-                    ? Colors.white
-                    : Colors.black),
+        ),
+        subtitle: Text(
+          user.email,
+          style: TextStyle(
+            color: getTextColorForSelectedItem(user.email),
           ),
         ),
       ),
     );
+  }
+
+  Color getTextColorForSelectedItem(String email) {
+    if(widget.userSelected.containsKey(email)) {
+      return Colors.white;
+    }
+    return Colors.black;
   }
 
   Widget getSectionTitle(BuildContext context, String title) {
