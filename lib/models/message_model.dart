@@ -59,6 +59,8 @@ class MessageModel extends DataModel {
     if (this.isRead != null) {
       map['isRead'] = this.isRead;
     }
+
+
     return map;
   }
 }

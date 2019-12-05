@@ -266,7 +266,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               alignLabelWithHint: false,
-                              hintText: 'text, url\'s and hashtags ',
+                              hintText: 'Text, URL and Hashtags ',
                               labelText: 'What would you like to share',
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(

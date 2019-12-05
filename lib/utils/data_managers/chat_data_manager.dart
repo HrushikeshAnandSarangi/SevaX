@@ -28,7 +28,7 @@ Future<void> updateChat({@required ChatModel chat, String email}) async {
       .document(
           chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
       .updateData({
-    'softDeletedBy': FieldValue.arrayRemove([email]),
+    'softDeletedBy': chat.softDeletedBy,
     'user1': chat.user1,
     'user2': chat.user2,
     'lastMessage': chat.lastMessage,

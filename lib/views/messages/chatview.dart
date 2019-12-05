@@ -143,10 +143,9 @@ class _ChatViewState extends State<ChatView> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       ),
-                      Text(
-                        '${partnerUser.fullname}',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      Text('${partnerUser.fullname.split(" ")[0]}',
+                          style: TextStyle(color: Colors.white),
+                          overflow: TextOverflow.ellipsis),
                     ],
                   );
                 }),
@@ -250,6 +249,9 @@ class _ChatViewState extends State<ChatView> {
                   backgroundColor: Theme.of(context).accentColor,
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
+                      // This statment clears the soft delete parameter and message becomes visible to both the parties
+                      widget.chatModel.softDeletedBy = [];
+
                       String loggedInEmailId =
                           SevaCore.of(context).loggedInUser.email;
 
@@ -262,9 +264,6 @@ class _ChatViewState extends State<ChatView> {
                         chatmodel: widget.chatModel,
                       );
                       widget.chatModel.lastMessage = messageModel.message;
-
-                      // This statment clears the soft delete parameter and message becomes visible to both the parties
-                      widget.chatModel.softDeletedBy = [];
 
                       updateChat(
                         chat: widget.chatModel,
@@ -373,7 +372,9 @@ class _ChatViewState extends State<ChatView> {
                   : myBoxDecorationreceive(),
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: messageModel.fromId != loggedinEmail
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(
                     messageModel.message,
