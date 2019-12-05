@@ -34,9 +34,6 @@ class SelectMember extends StatefulWidget {
 class _SelectMemberState extends State<SelectMember> {
   @override
   Widget build(BuildContext context) {
-    var color = Theme.of(context);
-
-    print("Color ${color.primaryColor}");
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -113,19 +110,22 @@ class _SelectMembersView extends StatelessWidget {
   }
 
   TimebankModel filterBlockedContent(
-      TimebankModel timebank, BuildContext context) {
+    TimebankModel timebank,
+    BuildContext context,
+  ) {
     List<String> filteredMembers = [];
 
     timebank.members.forEach((member) {
-      SevaCore.of(context).loggedInUser.blockedMembers.contains(member) ||
-              SevaCore.of(context).loggedInUser.blockedBy.contains(member)
-          ? print("Removed blocked content")
-          : filteredMembers.add(member);
+      if (SevaCore.of(context).loggedInUser.blockedMembers.contains(member) ||
+          SevaCore.of(context).loggedInUser.blockedBy.contains(member)) {
+      } else {
+        filteredMembers.add(member);
+      }
     });
     timebank.members = filteredMembers;
     return timebank;
   }
-  
+
   Widget getMembersList(BuildContext context, TimebankModel model) {
     model = filterBlockedContent(model, context);
 
@@ -176,6 +176,8 @@ class _SelectMembersView extends StatelessWidget {
 
           await createChat(chat: model).then(
             (_) {
+              Navigator.of(context).pop();
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -184,6 +186,7 @@ class _SelectMembersView extends StatelessWidget {
                           chatModel: model,
                           isFromShare: isFromShare,
                           news: isFromShare ? newsModel : NewsModel(),
+                          isFromNewChat: fromNewChat,
                         )),
               );
             },
@@ -199,11 +202,12 @@ class _SelectMembersView extends StatelessWidget {
             backgroundImage: NetworkImage(user.photoURL),
           ),
           title: Text(user.fullname),
-          //subtitle: Text(user.email),
         ),
       ),
     );
   }
+
+  var fromNewChat = IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch);
 
   /// Create a [chat]
   Future<void> createChat({

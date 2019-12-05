@@ -160,7 +160,7 @@ class NewsListState extends State<NewsList> {
               child: CupertinoSegmentedControl<int>(
                 children: logoWidgets,
                 padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                //selectedColor: Colors.deepOrange,
+                selectedColor: Color.fromARGB(255, 4, 47, 110),
                 groupValue: sharedValue,
                 onValueChanged: (int val) {
                   print(val);

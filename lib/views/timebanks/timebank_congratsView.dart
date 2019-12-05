@@ -24,7 +24,6 @@ class _CongratsState extends State<Congrats> {
   String _timeBankStr = 'Newzeland';
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Center(

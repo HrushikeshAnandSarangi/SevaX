@@ -86,7 +86,7 @@ class GroupRequestCommons {
         return "My Requests";
 
       case "Others":
-        return "Timebank Requests";
+        return "Yang Gang Requests";
 
       default:
         return "Others";

@@ -6,11 +6,13 @@ import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import '../core.dart';
@@ -29,8 +31,14 @@ class ChatListView extends StatefulWidget {
 class _ChatListViewState extends State<ChatListView> {
   // final BuildContext parentContext;
   // _ChatListViewState(this.parentContext);
+
+//  var updateUser = SevaCore.of(context).loggedInUser;
   @override
   Widget build(BuildContext context) {
+    var blockedMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
+    var blockedByMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     return Scaffold(
       appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
@@ -40,7 +48,11 @@ class _ChatListViewState extends State<ChatListView> {
             style: TextStyle(color: Colors.white),
           )),
       body: StreamBuilder<List<ChatModel>>(
-        stream: getChatsforUser(email: SevaCore.of(context).loggedInUser.email),
+        stream: getChatsforUser(
+          email: SevaCore.of(context).loggedInUser.email,
+          blockedBy: blockedByMembers,
+          blockedMembers: blockedMembers,
+        ),
         builder: (BuildContext context,
             AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
           if (!chatListSnapshot.hasData) {
@@ -52,6 +64,11 @@ class _ChatListViewState extends State<ChatListView> {
             return new Text('Error: ${chatListSnapshot.error}');
           }
 
+          print("data Updated <><><><><><><><<><><<><><><");
+          // setState(() {
+
+          // });
+
           switch (chatListSnapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -59,7 +76,9 @@ class _ChatListViewState extends State<ChatListView> {
               );
             default:
               // print("Chat Model list ${chatListSnapshot.data}");
-              List<ChatModel> chatModelList = chatListSnapshot.data;
+              List<ChatModel> allChalModelList = chatListSnapshot.data;
+
+              List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
                 return Center(child: Text('No Chats'));
               }
@@ -67,19 +86,11 @@ class _ChatListViewState extends State<ChatListView> {
               return ListView.builder(
                 itemCount: chatModelList.length,
                 itemBuilder: (context, index) {
-                  return getMessageListView(chatModelList[index], context);
+                  return chatModelList[index].isBlocked
+                      ? Offstage()
+                      : getMessageListView(chatModelList[index], context);
                 },
               );
-            // return Container(
-            //   padding: EdgeInsets.only(left: 15.0, right: 15.0),
-            //   child: ListView(
-            //     children: chatModelList.map(
-            //       (ChatModel chatModel) {
-            //         return getMessageListView(chatModel, context);
-            //       },
-            //     ).toList(),
-            //   ),
-            // );
           }
         },
       ),
@@ -267,24 +278,38 @@ class _ChatListViewState extends State<ChatListView> {
                     ],
                   ),
                 ),
-                ClipOval(
-                  child: Container(
-                    height: 35,
-                    width: 35,
-                    child: GestureDetector(
-                      child: IconButton(
-                        icon: Image.asset('lib/assets/images/close.png'),
-                        iconSize: 30,
-                        onPressed: () {
-                          _ackAlert(
-                            SevaCore.of(context).loggedInUser.email,
-                            chatModel,
-                            context,
-                          );
-                        },
+                Column(
+                  children: <Widget>[
+                    Text(
+                      DateFormat('mm/dd').format(
+                        getDateTimeAccToUserTimezone(
+                            dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                chatModel.timestamp),
+                            timezoneAbb:
+                                SevaCore.of(context).loggedInUser.timezone),
                       ),
                     ),
-                  ),
+                    ClipOval(
+                      child: Container(
+                        height: 35,
+                        width: 35,
+                        child: GestureDetector(
+                          child: IconButton(
+                            icon: Image.asset(
+                                'lib/assets/images/recycle-bin.png'),
+                            iconSize: 30,
+                            onPressed: () {
+                              _ackAlert(
+                                SevaCore.of(context).loggedInUser.email,
+                                chatModel,
+                                context,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

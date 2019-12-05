@@ -309,7 +309,9 @@ class IntroSliderState extends State<IntroSlider>
           // Skip button
           Container(
             child: FlatButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               child: Text(
                 nameSkipBtn ?? "",
                 style: styleNameSkipBtn ?? TextStyle(color: Colors.white),
@@ -341,7 +343,7 @@ class IntroSliderState extends State<IntroSlider>
             child: FlatButton(
               onPressed: onDonePress,
               child: Text(
-                nameDoneBtn ?? "JOIN",
+                nameDoneBtn ?? "",
                 style: styleNameDoneBtn ?? TextStyle(color: Colors.white),
               ),
               color: colorDoneBtn != null ? colorDoneBtn : Colors.transparent,
@@ -461,6 +463,23 @@ class IntroSliderState extends State<IntroSlider>
             ),
       child: ListView(
         children: <Widget>[
+          // Image or Center widget
+          GestureDetector(
+            child: pathImage != null
+                ? Container(
+                    margin: EdgeInsets.only(top: 70),
+                    child: Image.asset(
+                      pathImage,
+                      width: widthImage ?? 200.0,
+                      height: heightImage ?? 200.0,
+                      fit: BoxFit.contain,
+                    ),
+                  )
+                : Center(child: centerWidget ?? Container()),
+            onTap: onCenterItemPress,
+          ),
+
+          // Description
           Container(
             // Title
             child: Text(
@@ -476,23 +495,8 @@ class IntroSliderState extends State<IntroSlider>
               overflow: TextOverflow.ellipsis,
             ),
             margin: marginTitle ??
-                EdgeInsets.only(top: 70.0, bottom: 50.0, left: 20, right: 20),
+                EdgeInsets.only(top: 150.0, bottom: 5.0, left: 20, right: 20),
           ),
-
-          // Image or Center widget
-          GestureDetector(
-            child: pathImage != null
-                ? Image.asset(
-                    pathImage,
-                    width: widthImage ?? 200.0,
-                    height: heightImage ?? 200.0,
-                    fit: BoxFit.contain,
-                  )
-                : Center(child: centerWidget ?? Container()),
-            onTap: onCenterItemPress,
-          ),
-
-          // Description
 
           Container(
             child: Text(
@@ -505,7 +509,7 @@ class IntroSliderState extends State<IntroSlider>
               overflow: TextOverflow.ellipsis,
             ),
             margin: marginDescription ??
-                EdgeInsets.fromLTRB(20.0, 50.0, 20.0, 50.0),
+                EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
           ),
         ],
       ),

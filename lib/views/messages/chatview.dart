@@ -3,15 +3,23 @@ import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'dart:async';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
+
+class IsFromNewChat {
+  bool isFromNewChat = false;
+  int newChatTimeStamp;
+  IsFromNewChat(this.isFromNewChat, this.newChatTimeStamp);
+}
 
 class ChatView extends StatefulWidget {
   final String useremail;
@@ -19,15 +27,17 @@ class ChatView extends StatefulWidget {
   bool isFromRejectCompletion;
   bool isFromShare;
   NewsModel news;
+  IsFromNewChat isFromNewChat;
 
-  ChatView(
-      {Key key,
-      this.useremail,
-      this.chatModel,
-      this.isFromRejectCompletion,
-      this.isFromShare,
-      this.news})
-      : super(key: key);
+  ChatView({
+    Key key,
+    this.useremail,
+    this.chatModel,
+    this.isFromRejectCompletion,
+    this.isFromShare,
+    this.news,
+    this.isFromNewChat,
+  }) : super(key: key);
 
   @override
   _ChatViewState createState() => _ChatViewState();
@@ -36,6 +46,7 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   //UserModel user;
   UserModel loggedInUser;
+  UserModel partnerUser;
   MessageModel messageModel = MessageModel();
   String loggedInEmail;
   final TextEditingController textcontroller = new TextEditingController();
@@ -97,56 +108,84 @@ class _ChatViewState extends State<ChatView> {
         ),
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
-        title: FutureBuilder<Object>(
-            future: FirestoreManager.getUserForEmail(
-                emailAddress: widget.useremail),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return new Text('Error: ${snapshot.error}');
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center();
-              }
-              UserModel user = snapshot.data;
-
-              return Row(
-                children: <Widget>[
-                  Container(
-                    height: 36,
-                    width: 36,
-                    decoration: ShapeDecoration(
-                      shape: CircleBorder(
-                        side: BorderSide(
-                          color: Colors.white,
-                          width: 1,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FutureBuilder<Object>(
+                future: FirestoreManager.getUserForEmail(
+                    emailAddress: widget.useremail),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center();
+                  }
+                  partnerUser = snapshot.data;
+                  print("Blah blah blah Blocked:${partnerUser.sevaUserID}");
+                  return Row(
+                    children: <Widget>[
+                      Container(
+                        height: 36,
+                        width: 36,
+                        decoration: ShapeDecoration(
+                          shape: CircleBorder(
+                            side: BorderSide(
+                              color: Colors.white,
+                              width: 1,
+                            ),
+                          ),
+                          image: DecorationImage(
+                            image: NetworkImage(partnerUser.photoURL),
+                          ),
                         ),
                       ),
-                      image: DecorationImage(
-                        image: NetworkImage(user.photoURL),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                  ),
-                  Text(
-                    '${user.fullname}',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              );
-            }),
+                      Text(
+                        '${partnerUser.fullname}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  );
+                }),
+            Divider(),
+            RaisedButton(
+              color: Color(0xffb71c1c),
+              child: Container(
+                child: Text(
+                  'Block',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              onPressed: () {
+                blockMemberDialogView(
+                  context,
+                ).then((result) {
+                  print("result " + result);
+                  blockMember();
+                  Navigator.pop(context);
+                });
+              },
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: StreamBuilder<List<MessageModel>>(
               stream: getMessagesforChat(
-                chatModel: widget.chatModel,
-                email: SevaCore.of(context).loggedInUser.email,
-              ),
+                  chatModel: widget.chatModel,
+                  email: SevaCore.of(context).loggedInUser.email,
+                  isFromNewChat: widget.isFromNewChat == null
+                      ? IsFromNewChat(
+                          false, DateTime.now().millisecondsSinceEpoch)
+                      : widget.isFromNewChat),
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
+                print("Data refreshed");
                 if (chatListSnapshot.hasError) {
                   return new Text('Error: ${chatListSnapshot.error}');
                 }
@@ -203,10 +242,11 @@ class _ChatViewState extends State<ChatView> {
                 ),
                 FloatingActionButton(
                   child: Center(
-                      child: Icon(
-                    Icons.send,
-                    color: FlavorConfig.values.buttonTextColor,
-                  )),
+                    child: Icon(
+                      Icons.send,
+                      color: FlavorConfig.values.buttonTextColor,
+                    ),
+                  ),
                   backgroundColor: Theme.of(context).accentColor,
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
@@ -218,9 +258,14 @@ class _ChatViewState extends State<ChatView> {
                       messageModel.timestamp =
                           DateTime.now().millisecondsSinceEpoch;
                       createmessage(
-                          messagemodel: messageModel,
-                          chatmodel: widget.chatModel);
+                        messagemodel: messageModel,
+                        chatmodel: widget.chatModel,
+                      );
                       widget.chatModel.lastMessage = messageModel.message;
+
+                      // This statment clears the soft delete parameter and message becomes visible to both the parties
+                      widget.chatModel.softDeletedBy = [];
+
                       updateChat(
                         chat: widget.chatModel,
                         email: loggedInEmailId,
@@ -335,7 +380,7 @@ class _ChatViewState extends State<ChatView> {
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    DateFormat('h:mm a').format(
+                    DateFormat('hh:mm a MMMM dd').format(
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                               messageModel.timestamp),
@@ -349,6 +394,56 @@ class _ChatViewState extends State<ChatView> {
           ],
         ),
       );
+  }
+
+  Future<String> blockMemberDialogView(BuildContext viewContext) async {
+    return showDialog(
+      context: viewContext,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text('Block' + " ${partnerUser.fullname.split(' ')[0]}."),
+          content: new Text(
+              "${partnerUser.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("CANCEL"),
+              onPressed: () {
+                Navigator.of(context).pop("CANCEL");
+              },
+            ),
+            new FlatButton(
+              child: new Text('BLOCK'),
+              onPressed: () {
+                Navigator.of(context).pop("BLOCK");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void blockMember() {
+    Firestore.instance
+        .collection("users")
+        .document(SevaCore.of(context).loggedInUser.email)
+        .updateData({
+      'blockedMembers': FieldValue.arrayUnion([partnerUser.sevaUserID])
+    });
+    Firestore.instance
+        .collection("users")
+        .document(partnerUser.email)
+        .updateData({
+      'blockedBy':
+          FieldValue.arrayUnion([SevaCore.of(context).loggedInUser.sevaUserID])
+    });
+    setState(() {
+      var updateUser = SevaCore.of(context).loggedInUser;
+      var blockedMembers = List<String>.from(updateUser.blockedMembers);
+      blockedMembers.add(partnerUser.sevaUserID);
+      SevaCore.of(context).loggedInUser =
+          updateUser.setBlockedMembers(blockedMembers);
+    });
   }
 
   Widget get sendmessageShimmer {

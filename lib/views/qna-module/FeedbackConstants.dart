@@ -56,7 +56,7 @@ class FeedbackConstants {
     },
     {
       FEEDBACK_TITLE:
-          "Would you like recommend working with this volunteer again?",
+          "Would you like to recommend working with this volunteer again?",
       "answers": [
         {ANSWER_TEXT: "Yes, I would", SCORE: 5},
         {ANSWER_TEXT: "No, i would not", SCORE: 2},

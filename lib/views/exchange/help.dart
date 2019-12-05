@@ -181,7 +181,10 @@ class RequestsState extends State<Requests> {
                           if (value == "Create Yang Gang") {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value,style: TextStyle(color: Colors.red),),
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.red),
+                              ),
                             );
                           } else {
                             if (value == 'All') {
@@ -220,7 +223,9 @@ class RequestsState extends State<Requests> {
               Container(
                 width: 120,
                 child: CupertinoSegmentedControl<int>(
+                  selectedColor: Color.fromARGB(255, 4, 47, 110),
                   children: logoWidgets,
+
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
                   //selectedColor: Colors.deepOrange,
                   groupValue: sharedValue,
@@ -664,7 +669,10 @@ class OffersState extends State<Offers> {
                           if (value == "Create Yang Gang") {
                             return DropdownMenuItem<String>(
                               value: value,
-                              child: Text(value,style: TextStyle(color: Colors.red),),
+                              child: Text(
+                                value,
+                                style: TextStyle(color: Colors.red),
+                              ),
                             );
                           } else {
                             if (value == 'All') {
@@ -703,6 +711,7 @@ class OffersState extends State<Offers> {
               Container(
                 width: 120,
                 child: CupertinoSegmentedControl<int>(
+                  selectedColor: Color.fromARGB(255, 4, 47, 110),
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
                   //selectedColor: Colors.deepOrange,

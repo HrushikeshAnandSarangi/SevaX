@@ -16,6 +16,8 @@ class ChatModel extends DataModel {
   Map<dynamic, dynamic> deletedBy;
   List<String> softDeletedBy;
 
+  bool isBlocked = false;
+
   ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
 
   ChatModel.fromMap(Map<String, dynamic> map) {

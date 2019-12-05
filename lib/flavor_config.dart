@@ -65,7 +65,7 @@ class FlavorConfig {
           timebankId: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2',
           timebankName: 'Yang 2020',
           offertitle: 'Volunteer Offer',
-          requestTitle: 'Campaign Request',
+          requestTitle: 'Yang Gang Request',
           theme: ThemeData(
             appBarTheme: AppBarTheme(
                 brightness: Brightness.light,
