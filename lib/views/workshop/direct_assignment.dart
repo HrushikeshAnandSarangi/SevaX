@@ -39,9 +39,11 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   var _showMoreItems = true;
   var currSelectedState = false;
   var selectedUserModelIndex = -1;
+
   List<Widget> _avtars = [];
-  List<UserModel> userModels = [];
+//  List<UserModel> userModels = [];
   HashMap<String, int> emailIndexMap = HashMap();
+  HashMap<int, UserModel> indexToModelMap = HashMap();
 
   _SelectMembersInGroupState(){
     _timebankId = FlavorConfig.values.timebankName == "Yang 2020" ? FlavorConfig.values.timebankId : widget.timebankId;
@@ -72,7 +74,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       });
     } else {
       _showMoreItems = false;
-
     }
   }
 
@@ -152,26 +153,32 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     if(_avtars.length == 0 && _hasMoreItems && _showMoreItems) {
       return circularBar;
     }else{
-      if(selectedUserModelIndex!=-1){
-        updateModelIndex(selectedUserModelIndex);
-        selectedUserModelIndex = -1;
-      }
-      return ListView.builder(
-        controller: _controller,
-        itemCount: fetchItemsCount(),
-        itemBuilder: (BuildContext ctxt, int index) =>
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: index < _avtars.length ?
-                _avtars[index]
-                : Container(
-                width: double.infinity,
-                height: 80,
-                child: circularBar,
-              ),
-            ),
-      );
+//      if(selectedUserModelIndex!=-1){
+//        updateModelIndex(selectedUserModelIndex).then((onValue){
+//          selectedUserModelIndex = -1;
+//          return listViewWidget;
+//        });
+//      }
+      return listViewWidget;
     }
+  }
+
+  Widget get listViewWidget{
+    return ListView.builder(
+      controller: _controller,
+      itemCount: fetchItemsCount(),
+      itemBuilder: (BuildContext ctxt, int index) =>
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: index < _avtars.length ?
+            _avtars[index]
+                : Container(
+              width: double.infinity,
+              height: 80,
+              child: circularBar,
+            ),
+          ),
+    );
   }
 
   Widget get circularBar {
@@ -188,43 +195,97 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   Future updateModelIndex(int index) async {
-    var member = userModels[index].sevaUserID;
-    if (widget.listOfMembers != null &&
-        widget.listOfMembers.containsKey(member)) {
-      userModels.add(widget.listOfMembers[member]);
-      _avtars[index] = getUserWidget(widget.listOfMembers[member], context);
-    }else{
+
+//      UserModel user = indexToModelMap[index];
+//      var member = user.sevaUserID;
+//      if (widget.listOfMembers != null &&
+//        widget.listOfMembers.containsKey(user)) {
+////      userModels.add(widget.listOfMembers[member]);
+//      _avtars[index] = getUserWidget(widget.listOfMembers[member], context);
+//    }else{
       _avtars[index] = FutureBuilder<UserModel>(
-        future: FirestoreManager.getUserForId(sevaUserId: member),
+        future: FirestoreManager.getUserForId(sevaUserId: indexToModelMap[index].sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
             return shimmerWidget;
           }
           UserModel user = snapshot.data;
-          userModels.add(user);
+//          userModels.add(user);
           widget.listOfMembers[user.sevaUserID] = user;
-          return getUserWidget(user, context);
+          return getUserWidget(user, context, -1);
         },
       );
-    }
+//    }
   }
 
 
   Future loadNextBatchItems() async {
     if(_hasMoreItems) {
-      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue){
-        int index = _indexSoFar;
+      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue)
+      {
+//        var addItems = List();
+//        var index = _avtars.length;
+//        var targetLength = onValue.length+index;
+//        for(var i=index;i<targetLength;i++) {
+//          var memberObject = onValue[i];
+//          var member = memberObject.sevaUserID;
+//          if (widget.listOfMembers != null &&
+//              widget.listOfMembers.containsKey(member)) {
+//            addItems.add(getUserWidget(widget.listOfMembers[member], context, i));
+//          }else{
+//            var item = FutureBuilder<UserModel>(
+//              future: FirestoreManager.getUserForId(sevaUserId: member),
+//              builder: (context, snapshot) {
+//                if (snapshot.hasError) return Text(snapshot.error.toString());
+//                if (snapshot.connectionState == ConnectionState.waiting) {
+//                  return shimmerWidget;
+//                }
+//                UserModel user = snapshot.data;
+//                widget.listOfMembers[user.sevaUserID] = user;
+//                return getUserWidget(user, context, i);
+//              },
+//            );
+//            addItems.add(item);
+//          }
+//
+//        }
+//
+//        if(addItems.length>0) {
+//          setState(() {
+//            for(int i=0;i<addItems.length;i++){
+//              _avtars.add(addItems[i]);
+//            }
+//            _indexSoFar = _indexSoFar + addItems.length;
+//            _pageIndex = _pageIndex + 1;
+//          });
+//        }else{
+//          _hasMoreItems = addItems.length == 20;
+//        }
+
+//        var addItems = List();
+        var index = _avtars.length-1;
+//        var targetLength = onValue.length+index;
         var addItems = onValue.map((memberObject) {
+          if(indexToModelMap[memberObject.email] == null){
+            index++;
+          }
           var member = memberObject.sevaUserID;
-          index++;
           if (widget.listOfMembers != null &&
               widget.listOfMembers.containsKey(member)) {
-            userModels.add(widget.listOfMembers[member]);
-            emailIndexMap[widget.listOfMembers[member].email] = index;
-            return getUserWidget(widget.listOfMembers[member], context);
+//            userModels.add(widget.listOfMembers[member]);
+//            index++;
+//            UserModel userModel = widget.listOfMembers[member];
+//            if(emailIndexMap[userModel.email] == null){
+//              emailIndexMap[userModel.email] = index;
+//            }
+//            index = emailIndexMap[userModel.email];
+//            if(indexToModelMap[index] == null) {
+//              indexToModelMap[index] = userModel;
+//            }
+            return getUserWidget(widget.listOfMembers[member], context, index);
           }
-          var items = FutureBuilder<UserModel>(
+          return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: member),
             builder: (context, snapshot) {
               if (snapshot.hasError) return Text(snapshot.error.toString());
@@ -232,34 +293,44 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
-              userModels.add(user);
-              emailIndexMap[user.email] = index;
+//              index++;
+//              userModels.add(user);
+//              if(emailIndexMap[user.email]==null){
+//                emailIndexMap[user.email] = index;
+//              }
+//              index = emailIndexMap[user.email];
+//              if(indexToModelMap[index] == null) {
+//                indexToModelMap[index] = user;
+//              }
               widget.listOfMembers[user.sevaUserID] = user;
-              return getUserWidget(user, context);
+              return getUserWidget(user, context, index);
             },
           );
-          return items;
         }
         ).toList();
+
         if(addItems.length>0) {
           setState(() {
-//            var prevIndex = _indexSoFar;
-            _avtars.addAll(addItems);
+            for(int i=0;i<addItems.length;i++){
+              _avtars.add(addItems[i]);
+            }
             _indexSoFar = _indexSoFar + addItems.length;
-//            for(var i=prevIndex;i<_indexSoFar;i++){
-//              emailIndexMap[userModels[i].email] = i;
-//            }
             _pageIndex = _pageIndex + 1;
           });
         }else{
           _hasMoreItems = addItems.length == 20;
         }
-      });
+      }
+
+      );
     }
   }
 
-  Widget getUserWidget(UserModel user, BuildContext context) {
-    var card = getUserModelCard(user);
+  Widget getUserWidget(UserModel user, BuildContext context,var index) {
+    if(emailIndexMap[user.email]==null && user != null){
+      emailIndexMap[user.email] = index;
+    }
+    print("Putting values ${user.email}:$index");
     return GestureDetector(
       onTap: () async {
         print(user.email +
@@ -275,46 +346,51 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           widget.userSelected.remove(user.email);
           currSelectedState = false;
         }
-
-        print(
-            "${widget.userSelected.length} Users selected ${widget.userSelected.containsKey(user.email)} ");
+        selectedUserModelIndex = emailIndexMap[user.email];
+        print("${user.email} selected index\t $selectedUserModelIndex");
+        print("${widget.userSelected.length} Users selected ${widget.userSelected.containsKey(user.email)}");
 
         setState(() {
+
         });
       },
-      child: card,
-    );
-  }
-
-  Card getUserModelCard(UserModel user) {
-    return Card(
-      color: widget.userSelected.containsKey(user.email)
-          ? Colors.green
-          : Colors.white,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.photoURL),
-        ),
-        title: Text(
-          user.fullname,
-          style: TextStyle(
-            color: getTextColorForSelectedItem(user.email),
+      child: Card(
+        color: isSelected(user.email)
+            ? Colors.green
+            : Colors.white,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(user.photoURL),
           ),
-        ),
-        subtitle: Text(
-          user.email,
-          style: TextStyle(
-            color: getTextColorForSelectedItem(user.email),
+          title: Text(
+            user.fullname,
+            style: TextStyle(
+              color: getTextColorForSelectedItem(user.email),
+            ),
+          ),
+          subtitle: Text(
+            user.email,
+            style: TextStyle(
+              color: getTextColorForSelectedItem(user.email),
+            ),
           ),
         ),
       ),
     );
   }
 
+  bool isSelected(String email){
+    return widget.userSelected.containsKey(email);
+//        || (currSelectedState && selectedUserModelIndex == emailIndexMap[email]);
+  }
+
   Color getTextColorForSelectedItem(String email) {
-    if(widget.userSelected.containsKey(email)) {
+    if(isSelected(email)) {
       return Colors.white;
     }
+//    else if(selectedUserModelIndex == emailIndexMap[email] && selectedUserModelIndex!=-1 ) {
+//      return Colors.white;
+//    }
     return Colors.black;
   }
 
