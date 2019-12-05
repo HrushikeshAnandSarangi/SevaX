@@ -5,7 +5,6 @@ import 'package:flutter/material.dart' as prefix0;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/timebanks/timebank_congratsView.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
 
