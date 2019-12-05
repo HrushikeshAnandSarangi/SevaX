@@ -70,7 +70,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         !_controller.position.outOfRange && _hasMoreItems) {
       setState(() {
         _showMoreItems = true;
-//        loadNextBatchItems();
       });
     } else {
       _showMoreItems = false;
@@ -153,12 +152,15 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     if(_avtars.length == 0 && _hasMoreItems && _showMoreItems) {
       return circularBar;
     }else{
-//      if(selectedUserModelIndex!=-1){
-//        updateModelIndex(selectedUserModelIndex).then((onValue){
-//          selectedUserModelIndex = -1;
-//          return listViewWidget;
-//        });
-//      }
+      if(selectedUserModelIndex!=-1){
+        setState(() {
+          updateModelIndex(selectedUserModelIndex).then((onValue){
+            _avtars[selectedUserModelIndex] = onValue;
+            selectedUserModelIndex = -1;
+            return listViewWidget;
+          });
+        });
+      }
       return listViewWidget;
     }
   }
@@ -171,7 +173,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           Padding(
             padding: const EdgeInsets.all(0.0),
             child: index < _avtars.length ?
-            _avtars[index]
+                _avtars[index]
                 : Container(
               width: double.infinity,
               height: 80,
@@ -194,96 +196,41 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     return _avtars.length;
   }
 
-  Future updateModelIndex(int index) async {
+  Future<Widget> updateModelIndex(int index) async {
+    UserModel user = indexToModelMap[index];
 
-//      UserModel user = indexToModelMap[index];
-//      var member = user.sevaUserID;
-//      if (widget.listOfMembers != null &&
-//        widget.listOfMembers.containsKey(user)) {
-////      userModels.add(widget.listOfMembers[member]);
-//      _avtars[index] = getUserWidget(widget.listOfMembers[member], context);
-//    }else{
-      _avtars[index] = FutureBuilder<UserModel>(
-        future: FirestoreManager.getUserForId(sevaUserId: indexToModelMap[index].sevaUserID),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text(snapshot.error.toString());
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return shimmerWidget;
-          }
-          UserModel user = snapshot.data;
-//          userModels.add(user);
-          widget.listOfMembers[user.sevaUserID] = user;
-          return getUserWidget(user, context, -1);
-        },
-      );
-//    }
+    return getUserWidget(user, context);
+    /*
+    var member = user.sevaUserID;
+    if (widget.listOfMembers != null &&
+        widget.listOfMembers.containsKey(member)) {
+      return getUserWidget(widget.listOfMembers[member], context);
+    }
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForId(sevaUserId: member),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return shimmerWidget;
+        }
+        UserModel user = snapshot.data;
+        widget.listOfMembers[user.sevaUserID] = user;
+        return getUserWidget(user, context);
+      },
+    );
+    */
   }
 
 
   Future loadNextBatchItems() async {
     if(_hasMoreItems) {
-      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue)
-      {
-//        var addItems = List();
-//        var index = _avtars.length;
-//        var targetLength = onValue.length+index;
-//        for(var i=index;i<targetLength;i++) {
-//          var memberObject = onValue[i];
-//          var member = memberObject.sevaUserID;
-//          if (widget.listOfMembers != null &&
-//              widget.listOfMembers.containsKey(member)) {
-//            addItems.add(getUserWidget(widget.listOfMembers[member], context, i));
-//          }else{
-//            var item = FutureBuilder<UserModel>(
-//              future: FirestoreManager.getUserForId(sevaUserId: member),
-//              builder: (context, snapshot) {
-//                if (snapshot.hasError) return Text(snapshot.error.toString());
-//                if (snapshot.connectionState == ConnectionState.waiting) {
-//                  return shimmerWidget;
-//                }
-//                UserModel user = snapshot.data;
-//                widget.listOfMembers[user.sevaUserID] = user;
-//                return getUserWidget(user, context, i);
-//              },
-//            );
-//            addItems.add(item);
-//          }
-//
-//        }
-//
-//        if(addItems.length>0) {
-//          setState(() {
-//            for(int i=0;i<addItems.length;i++){
-//              _avtars.add(addItems[i]);
-//            }
-//            _indexSoFar = _indexSoFar + addItems.length;
-//            _pageIndex = _pageIndex + 1;
-//          });
-//        }else{
-//          _hasMoreItems = addItems.length == 20;
-//        }
-
-//        var addItems = List();
-        var index = _avtars.length-1;
-//        var targetLength = onValue.length+index;
+      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue) {
+        var lastIndex = _avtars.length;
         var addItems = onValue.map((memberObject) {
-          if(indexToModelMap[memberObject.email] == null){
-            index++;
-          }
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&
               widget.listOfMembers.containsKey(member)) {
-//            userModels.add(widget.listOfMembers[member]);
-//            index++;
-//            UserModel userModel = widget.listOfMembers[member];
-//            if(emailIndexMap[userModel.email] == null){
-//              emailIndexMap[userModel.email] = index;
-//            }
-//            index = emailIndexMap[userModel.email];
-//            if(indexToModelMap[index] == null) {
-//              indexToModelMap[index] = userModel;
-//            }
-            return getUserWidget(widget.listOfMembers[member], context, index);
+            return getUserWidget(widget.listOfMembers[member], context);
           }
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: member),
@@ -293,17 +240,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
-//              index++;
-//              userModels.add(user);
-//              if(emailIndexMap[user.email]==null){
-//                emailIndexMap[user.email] = index;
-//              }
-//              index = emailIndexMap[user.email];
-//              if(indexToModelMap[index] == null) {
-//                indexToModelMap[index] = user;
-//              }
               widget.listOfMembers[user.sevaUserID] = user;
-              return getUserWidget(user, context, index);
+              return getUserWidget(user, context);
             },
           );
         }
@@ -313,6 +251,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           setState(() {
             for(int i=0;i<addItems.length;i++){
               _avtars.add(addItems[i]);
+              indexToModelMap[lastIndex] = onValue[i];
+              emailIndexMap[onValue[i].email] = lastIndex++;
+
             }
             _indexSoFar = _indexSoFar + addItems.length;
             _pageIndex = _pageIndex + 1;
@@ -326,11 +267,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     }
   }
 
-  Widget getUserWidget(UserModel user, BuildContext context,var index) {
-    if(emailIndexMap[user.email]==null && user != null){
-      emailIndexMap[user.email] = index;
-    }
-    print("Putting values ${user.email}:$index");
+  Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
       onTap: () async {
         print(user.email +
@@ -380,8 +317,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   bool isSelected(String email){
-    return widget.userSelected.containsKey(email);
-//        || (currSelectedState && selectedUserModelIndex == emailIndexMap[email]);
+    return widget.userSelected.containsKey(email) || (currSelectedState && selectedUserModelIndex == emailIndexMap[email]);
   }
 
   Color getTextColorForSelectedItem(String email) {
