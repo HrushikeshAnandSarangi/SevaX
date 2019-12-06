@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
@@ -279,16 +280,11 @@ class _ChatListViewState extends State<ChatListView> {
                   ),
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(
-                      DateFormat('mm/dd').format(
-                        getDateTimeAccToUserTimezone(
-                            dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                chatModel.timestamp),
-                            timezoneAbb:
-                                SevaCore.of(context).loggedInUser.timezone),
-                      ),
-                    ),
+                    Text(timeAgo.format(
+                      DateTime.fromMillisecondsSinceEpoch(chatModel.timestamp),
+                    )),
                     ClipOval(
                       child: Container(
                         height: 35,

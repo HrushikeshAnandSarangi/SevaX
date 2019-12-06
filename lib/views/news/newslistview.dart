@@ -465,12 +465,13 @@ class NewsListState extends State<NewsList> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 5),
+                          margin: EdgeInsets.only(left: 5, right: 40),
                           child: Text(
                             news.placeAddress == null
                                 ? "Midtown Station New York, NY"
                                 : news.placeAddress,
-                            overflow: TextOverflow.fade,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             // style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),

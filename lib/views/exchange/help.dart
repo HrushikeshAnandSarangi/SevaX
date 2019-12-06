@@ -1786,7 +1786,7 @@ class OfferListItems extends StatelessWidget {
                       style: Theme.of(parentContext).textTheme.subhead,
                     ),
                     Text(
-                      model.description,
+                      model.description.trim(),
                       style: Theme.of(parentContext).textTheme.subtitle,
                     ),
                   ],

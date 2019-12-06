@@ -635,11 +635,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     for (var link in para) {
       if (link.text != null) {
         if (newsObject.description == null) {
-          newsObject.description = link.text;
+          newsObject.description = link.text.trim();
         } else if (newsObject.description.length < link.text.length)
-          newsObject.description = link.text;
+          newsObject.description = link.text.trim();
         else {
-          newsObject.description = newsObject.description + "\n" + link.text;
+          newsObject.description =
+              newsObject.description + "\n" + link.text.trim();
         }
       }
     }

@@ -28,7 +28,7 @@ class NewsCardView extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          newsModel.title == null ? newsModel.fullName : newsModel.title,
+          newsModel.title == null ? newsModel.fullName : newsModel.title.trim(),
           style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
