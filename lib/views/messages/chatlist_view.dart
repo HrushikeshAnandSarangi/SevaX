@@ -282,9 +282,15 @@ class _ChatListViewState extends State<ChatListView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    Text(timeAgo.format(
-                      DateTime.fromMillisecondsSinceEpoch(chatModel.timestamp),
-                    )),
+                    Text(
+                      timeAgo.format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            chatModel.timestamp),
+                      ),
+                      style: TextStyle(
+                        fontSize: 10
+                      ),
+                    ),
                     ClipOval(
                       child: Container(
                         height: 35,
