@@ -181,7 +181,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
       exchangePageProperty,
       tasksPageProperty,
       //createPageProperty,
-      // searchPageProperty,
+       searchPageProperty,
     ];
   }
 

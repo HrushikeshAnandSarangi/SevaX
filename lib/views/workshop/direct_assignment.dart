@@ -77,6 +77,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     var color = Theme.of(context);
     print("Color ${color.primaryColor}");
     var finalWidget =  Scaffold(
@@ -119,7 +122,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   TimebankModel timebankModel;
   Widget getList({String timebankId}) {
-
     if (timebankModel != null) {
       return getContent(
         context,
@@ -151,15 +153,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     if(_avtars.length == 0 && _hasMoreItems && _showMoreItems) {
       return circularBar;
     }else{
-      if(selectedUserModelIndex!=-1){
-        setState(() {
-          updateModelIndex(selectedUserModelIndex).then((onValue){
-            _avtars[selectedUserModelIndex] = onValue;
-            selectedUserModelIndex = -1;
-            return listViewWidget;
-          });
-        });
-      }
       return listViewWidget;
     }
   }
@@ -199,32 +192,12 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     UserModel user = indexToModelMap[index];
 
     return getUserWidget(user, context);
-    /*
-    var member = user.sevaUserID;
-    if (widget.listOfMembers != null &&
-        widget.listOfMembers.containsKey(member)) {
-      return getUserWidget(widget.listOfMembers[member], context);
-    }
-    return FutureBuilder<UserModel>(
-      future: FirestoreManager.getUserForId(sevaUserId: member),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return shimmerWidget;
-        }
-        UserModel user = snapshot.data;
-        widget.listOfMembers[user.sevaUserID] = user;
-        return getUserWidget(user, context);
-      },
-    );
-    */
   }
 
 
   Future loadNextBatchItems() async {
     if(_hasMoreItems) {
       FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue) {
-        var lastIndex = _avtars.length;
         var addItems = onValue.map((memberObject) {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&
@@ -247,12 +220,12 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         ).toList();
 
         if(addItems.length>0) {
+          var lastIndex = _avtars.length;
           setState(() {
             for(int i=0;i<addItems.length;i++){
               _avtars.add(addItems[i]);
               indexToModelMap[lastIndex] = onValue[i];
               emailIndexMap[onValue[i].email] = lastIndex++;
-
             }
             _indexSoFar = _indexSoFar + addItems.length;
             _pageIndex = _pageIndex + 1;
@@ -287,7 +260,12 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         print("${widget.userSelected.length} Users selected ${widget.userSelected.containsKey(user.email)}");
 
         setState(() {
-
+          if(selectedUserModelIndex!=-1) {
+            updateModelIndex(selectedUserModelIndex).then((onValue) {
+              _avtars[selectedUserModelIndex] = onValue;
+              selectedUserModelIndex = -1;
+            });
+          }
         });
       },
       child: Card(
@@ -320,13 +298,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   Color getTextColorForSelectedItem(String email) {
-    if(isSelected(email)) {
-      return Colors.white;
-    }
-//    else if(selectedUserModelIndex == emailIndexMap[email] && selectedUserModelIndex!=-1 ) {
-//      return Colors.white;
-//    }
-    return Colors.black;
+    return isSelected(email) ? Colors.white : Colors.black;
   }
 
   Widget getSectionTitle(BuildContext context, String title) {
