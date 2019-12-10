@@ -49,9 +49,17 @@ class SearchManager {
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {
-    String url = '$_baseUrl/everything_news/_search?q=$queryString*';
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchRequest(url);
-
+    String url = 'http://35.243.165.111//elasticsearch/newsfeed/news/_search';
+    dynamic body = json.encode({
+      "query": {
+        "multi_match": {
+          "query": queryString,
+          "type": "phrase_prefix",
+          "fields": ["description", "fullname", "email", "subheading", "title"]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
     List<NewsModel> newsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -97,8 +105,17 @@ class SearchManager {
   static Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
-    String url = '$_baseUrl/everything_offers/_search?q=$queryString*';
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchRequest(url);
+    String url = 'http://35.243.165.111//elasticsearch/offers/offer/_search';
+    dynamic body = json.encode({
+      "query": {
+        "multi_match": {
+          "query": queryString,
+          "type": "phrase_prefix",
+          "fields": ["description", "title", "fullname", "email"]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
 
     List<OfferModel> offerList = [];
     hitList.forEach((map) {
@@ -113,9 +130,17 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url = '$_baseUrl/everything_requests/_search?q=$queryString*';
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchRequest(url);
-
+    String url = 'http://35.243.165.111//elasticsearch/requests/request/_search';
+    dynamic body = json.encode({
+      "query": {
+        "multi_match": {
+          "query": queryString,
+          "type": "phrase_prefix",
+          "fields": ["description", "title", "fullname", "email"]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
     List<RequestModel> offerList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
