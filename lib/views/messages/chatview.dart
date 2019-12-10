@@ -10,10 +10,16 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'dart:async';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
+class IsFromNewChat {
+  bool isFromNewChat = false;
+  int newChatTimeStamp;
+  IsFromNewChat(this.isFromNewChat, this.newChatTimeStamp);
+}
 
 class ChatView extends StatefulWidget {
   final String useremail;
@@ -21,15 +27,17 @@ class ChatView extends StatefulWidget {
   bool isFromRejectCompletion;
   bool isFromShare;
   NewsModel news;
+  IsFromNewChat isFromNewChat;
 
-  ChatView(
-      {Key key,
-      this.useremail,
-      this.chatModel,
-      this.isFromRejectCompletion,
-      this.isFromShare,
-      this.news})
-      : super(key: key);
+  ChatView({
+    Key key,
+    this.useremail,
+    this.chatModel,
+    this.isFromRejectCompletion,
+    this.isFromShare,
+    this.news,
+    this.isFromNewChat,
+  }) : super(key: key);
 
   @override
   _ChatViewState createState() => _ChatViewState();
@@ -104,8 +112,7 @@ class _ChatViewState extends State<ChatView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FutureBuilder<Object>(
-                future:
-                      FirestoreManager.getUserForEmail(
+                future: FirestoreManager.getUserForEmail(
                     emailAddress: widget.useremail),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
@@ -136,35 +143,31 @@ class _ChatViewState extends State<ChatView> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       ),
-                      Text(
-                        '${partnerUser.fullname}',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                      Text('${partnerUser.fullname.split(" ")[0]}',
+                          style: TextStyle(color: Colors.white),
+                          overflow: TextOverflow.ellipsis),
                     ],
                   );
                 }),
             Divider(),
             RaisedButton(
-                color: Color(0xffb71c1c),
-                child: Container(
-
-                  child: Text(
-                    'Block',
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
-                  ),
+              color: Color(0xffb71c1c),
+              child: Container(
+                child: Text(
+                  'Block',
+                  style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () {
-                  blockMemberDialogView(
-                    context,
-                  ).then((result) {
-                    print("result " + result);
-                    blockMember();
-                    Navigator.pop(context);
-                  });
-                },
               ),
+              onPressed: () {
+                blockMemberDialogView(
+                  context,
+                ).then((result) {
+                  print("result " + result);
+                  blockMember();
+                  Navigator.pop(context);
+                });
+              },
+            ),
           ],
         ),
       ),
@@ -172,12 +175,20 @@ class _ChatViewState extends State<ChatView> {
         children: <Widget>[
           Expanded(
             child: StreamBuilder<List<MessageModel>>(
-              stream: getMessagesforChat(chatModel: widget.chatModel),
+              stream: getMessagesforChat(
+                  chatModel: widget.chatModel,
+                  email: SevaCore.of(context).loggedInUser.email,
+                  isFromNewChat: widget.isFromNewChat == null
+                      ? IsFromNewChat(
+                          false, DateTime.now().millisecondsSinceEpoch)
+                      : widget.isFromNewChat),
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
+                print("Data refreshed");
                 if (chatListSnapshot.hasError) {
                   return new Text('Error: ${chatListSnapshot.error}');
                 }
+
                 switch (chatListSnapshot.connectionState) {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
@@ -186,6 +197,7 @@ class _ChatViewState extends State<ChatView> {
                     if (chatModelList.length == 0) {
                       return Center(child: Text('No Messages'));
                     }
+
                     return Container(
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       child: ListView(
@@ -193,8 +205,7 @@ class _ChatViewState extends State<ChatView> {
                         children: chatModelList.map(
                           (MessageModel chatModel) {
                             return getChatListView(
-                                chatModel, loggedInEmail, widget.useremail
-                            );
+                                chatModel, loggedInEmail, widget.useremail);
                           },
                         ).toList(),
                       ),
@@ -216,7 +227,7 @@ class _ChatViewState extends State<ChatView> {
                       maxLines: null,
                       keyboardType: TextInputType.text,
                       textCapitalization: TextCapitalization.sentences,
-                      validator: (value) {                        
+                      validator: (value) {
                         if (value.isEmpty) {
                           return 'Please type message';
                         }
@@ -230,13 +241,17 @@ class _ChatViewState extends State<ChatView> {
                 ),
                 FloatingActionButton(
                   child: Center(
-                      child: Icon(
-                    Icons.send,
-                    color: FlavorConfig.values.buttonTextColor,
-                  )),
+                    child: Icon(
+                      Icons.send,
+                      color: FlavorConfig.values.buttonTextColor,
+                    ),
+                  ),
                   backgroundColor: Theme.of(context).accentColor,
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
+                      // This statment clears the soft delete parameter and message becomes visible to both the parties
+                      widget.chatModel.softDeletedBy = [];
+
                       String loggedInEmailId =
                           SevaCore.of(context).loggedInUser.email;
 
@@ -245,10 +260,15 @@ class _ChatViewState extends State<ChatView> {
                       messageModel.timestamp =
                           DateTime.now().millisecondsSinceEpoch;
                       createmessage(
-                          messagemodel: messageModel,
-                          chatmodel: widget.chatModel);
+                        messagemodel: messageModel,
+                        chatmodel: widget.chatModel,
+                      );
                       widget.chatModel.lastMessage = messageModel.message;
-                      updateChat(chat: widget.chatModel);
+
+                      updateChat(
+                        chat: widget.chatModel,
+                        email: loggedInEmailId,
+                      );
                       textcontroller.clear();
                       SchedulerBinding.instance.addPostFrameCallback((_) {
                         Timer(Duration(milliseconds: 100), () {
@@ -352,14 +372,16 @@ class _ChatViewState extends State<ChatView> {
                   : myBoxDecorationreceive(),
               padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: messageModel.fromId != loggedinEmail
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(
                     messageModel.message,
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    DateFormat('h:mm a').format(
+                    DateFormat('hh:mm a MMMM dd').format(
                       getDateTimeAccToUserTimezone(
                           dateTime: DateTime.fromMillisecondsSinceEpoch(
                               messageModel.timestamp),
@@ -374,6 +396,7 @@ class _ChatViewState extends State<ChatView> {
         ),
       );
   }
+
   Future<String> blockMemberDialogView(BuildContext viewContext) async {
     return showDialog(
       context: viewContext,
@@ -391,7 +414,8 @@ class _ChatViewState extends State<ChatView> {
             ),
             new FlatButton(
               child: new Text('BLOCK'),
-              onPressed: () { Navigator.of(context).pop("BLOCK");
+              onPressed: () {
+                Navigator.of(context).pop("BLOCK");
               },
             ),
           ],
@@ -399,7 +423,6 @@ class _ChatViewState extends State<ChatView> {
       },
     );
   }
-
 
   void blockMember() {
     Firestore.instance
@@ -412,8 +435,8 @@ class _ChatViewState extends State<ChatView> {
         .collection("users")
         .document(partnerUser.email)
         .updateData({
-      'blockedBy': FieldValue.arrayUnion(
-          [SevaCore.of(context).loggedInUser.sevaUserID])
+      'blockedBy':
+          FieldValue.arrayUnion([SevaCore.of(context).loggedInUser.sevaUserID])
     });
     setState(() {
       var updateUser = SevaCore.of(context).loggedInUser;
@@ -421,7 +444,6 @@ class _ChatViewState extends State<ChatView> {
       blockedMembers.add(partnerUser.sevaUserID);
       SevaCore.of(context).loggedInUser =
           updateUser.setBlockedMembers(blockedMembers);
-
     });
   }
 

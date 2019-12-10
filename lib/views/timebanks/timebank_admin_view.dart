@@ -465,11 +465,12 @@ class _TimeBankAdminView extends StatelessWidget {
   }
 
 // crate dialog for approval or rejection
-  void showDialogForAdminAccess(
-      {TimebankModel model,
-      BuildContext context,
-      UserModel userModel,
-      bool isAdmin}) {
+  void showDialogForAdminAccess({
+    TimebankModel model,
+    BuildContext context,
+    UserModel userModel,
+    bool isAdmin,
+  }) {
     showDialog(
         context: context,
         barrierDismissible: false,

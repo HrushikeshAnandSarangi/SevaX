@@ -113,8 +113,9 @@ class CampaignJoinRequestViewState extends State<CampaignJoinRequestView> {
                                   .collection('users')
                                   .document(item['requestor_email'])
                                   .updateData({
-                                'membership_campaigns':
-                                    FieldValue.arrayUnion([docID])
+                                'membership_campaigns': FieldValue.arrayUnion(
+                                  [docID],
+                                )
                               });
 
                               Firestore.instance

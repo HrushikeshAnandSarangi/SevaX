@@ -6,7 +6,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
-import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 
 import '../../flavor_config.dart';

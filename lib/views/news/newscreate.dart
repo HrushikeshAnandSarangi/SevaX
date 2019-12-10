@@ -22,6 +22,7 @@ import 'package:sevaexchange/views/core.dart';
 class NewsCreate extends StatelessWidget {
   final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
   final String timebankId;
+  String photoCredits;
   NewsCreate({this.timebankId});
 
   @override
@@ -90,6 +91,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final formKey = GlobalKey<FormState>();
   String imageUrl;
+  String photoCredits;
   NewsModel newsObject = NewsModel();
   TextStyle textStyle;
   NewsCreateFormState() {
@@ -102,6 +104,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   String selectedAddress;
 
   Future<void> writeToDB() async {
+    // print("Credit goes to ${}");
+
     int timestamp = DateTime.now().millisecondsSinceEpoch;
 
     newsObject.id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
@@ -113,6 +117,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
+    newsObject.photoCredits = photoCredits == null ? "" : photoCredits;
 
 //    EntityModel entityModel = _getSelectedEntityModel;
     EntityModel entityModel = EntityModel(
@@ -123,6 +128,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
     newsObject.entity = entityModel;
 
+    print("Model goes like this : $entityModel");
     await FirestoreManager.createNews(newsObject: newsObject);
     globals.newsImageURL = null;
     if (dialogContext != null) {
@@ -278,7 +284,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               alignLabelWithHint: false,
-                              hintText: '',
+                              hintText: 'Text, URL and Hashtags ',
                               labelText: 'What would you like to share',
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
@@ -329,64 +335,81 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width / 4,
-                        0,
-                        MediaQuery.of(context).size.width / 4,
-                        0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: '+ Photo Credits',
-                      ),
-                      keyboardType: TextInputType.text,
-                      textAlign: TextAlign.center,
-                      //style: textStyle,
-                      validator: (value) {
-                        // if (value.isEmpty) {
-                        //   return 'Please enter some text';
-                        // }
-                        newsObject.photoCredits = value;
-                      },
-                    ),
-                  ),
+
                   // Text(""),
                   Padding(
                     padding: const EdgeInsets.only(top: 0),
                     child: Center(
-                      child: NewsImage(),
+                      child: NewsImage(
+                        photoCredits: "",
+                        geoFirePointLocation: location,
+                        geoFirePointLocationCallback:
+                            (geoLocationPointSelected) {
+                          location = geoLocationPointSelected;
+                        },
+                        onCreditsEntered: (photoCreditsFromNews) {
+                          print("" + photoCredits);
+                          photoCredits = photoCreditsFromNews;
+                        },
+                      ),
                     ),
                   ),
                 ],
               ),
 
-              Container(
-                margin: prefix0.EdgeInsets.all(10),
-                child: FlatButton.icon(
-                  icon: Icon(Icons.add_location),
-                  label: Text(
-                    selectedAddress == null || selectedAddress.isEmpty
-                        // adasdasd
-                        ? 'Add Location'
-                        : selectedAddress,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  color: Colors.grey[200],
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<GeoFirePoint>(
-                        builder: (context) => LocationPicker(
-                          selectedLocation: location,
-                        ),
-                      ),
-                    ).then((point) {
-                      if (point != null) location = point;
-                      _getLocation();
-                    });
-                  },
-                ),
-              ),
+              // Row(
+              //   children: <Widget>[
+              //     Container(
+              //       margin: EdgeInsets.only(left: 20),
+              //       child: FlatButton.icon(
+              //         icon: Icon(Icons.add_location),
+              //         label: Text(''),
+              //         // label: Text(
+              //         //   selectedAddress == null || selectedAddress.isEmpty
+              //         //       // adasdasd
+              //         //       ? 'Add Location'
+              //         //       : selectedAddress,
+              //         //   overflow: TextOverflow.ellipsis,
+              //         // ),
+              //         color: Colors.grey[200],
+              //         onPressed: () {
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute<GeoFirePoint>(
+              //               builder: (context) => LocationPicker(
+              //                 selectedLocation: location,
+              //               ),
+              //             ),
+              //           ).then((point) {
+              //             if (point != null) location = point;
+              //             _getLocation();
+              //           });
+              //         },
+              //       ),
+              //     ),
+              //     Container(
+              //       margin: EdgeInsets.only(left: 20),
+              //       child: FlatButton.icon(
+              //         icon: Icon(Icons.image),
+              //         label: Text(''),
+              //         // label: Text(
+              //         //   selectedAddress == null || selectedAddress.isEmpty
+              //         //       // adasdasd
+              //         //       ? 'Add Location'
+              //         //       : selectedAddress,
+              //         //   overflow: TextOverflow.ellipsis,
+              //         // ),
+              //         color: Colors.grey[200],
+              //         onPressed: () {
+              //           //call gallery
+
+              //           // newsImageInstance.imagePicker.showDialog(context);
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
+
               Container(
                 margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                 alignment: Alignment(0, 1),
@@ -395,11 +418,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   shape: StadiumBorder(),
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
-                    // return;
                     if (location != null) {
                       if (formKey.currentState.validate()) {
                         // If the form is valid, we want to show a Snackbar
-
                         showDialog(
                             barrierDismissible: false,
                             context: context,
@@ -614,11 +635,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     for (var link in para) {
       if (link.text != null) {
         if (newsObject.description == null) {
-          newsObject.description = link.text;
+          newsObject.description = link.text.trim();
         } else if (newsObject.description.length < link.text.length)
-          newsObject.description = link.text;
+          newsObject.description = link.text.trim();
         else {
-          newsObject.description = newsObject.description + "\n" + link.text;
+          newsObject.description =
+              newsObject.description + "\n" + link.text.trim();
         }
       }
     }

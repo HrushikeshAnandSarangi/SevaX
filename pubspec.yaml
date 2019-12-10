@@ -19,7 +19,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  intro_slider: 1.1.9
+  intro_slider: ^2.2.8
   firebase_core: ^0.4.0+1
   firebase_auth: ^0.11.1
   cloud_firestore: ^0.12.9+4
@@ -72,7 +72,6 @@ dependencies:
   dio: ^3.0.7
 
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -121,6 +120,10 @@ flutter:
     - lib/assets/ts2020-logo-w.svg
     - lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg
     - lib/assets/images/new_yang.png
+    - lib/assets/images/yang_banner.jpg
+    - lib/assets/images/andrew_two.jpg
+    - lib/assets/images/recycle-bin.png
+    - lib/assets/images/search.png
   fonts:
     - family: Montserrat
       fonts:

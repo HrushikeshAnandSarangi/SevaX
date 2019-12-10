@@ -5,6 +5,7 @@ import 'package:sevaexchange/flavor_config.dart';
 
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
 /// Create a [chat]
@@ -21,15 +22,19 @@ Future<void> createChat({
 }
 
 /// Update a [chat]
-Future<void> updateChat({
-  @required ChatModel chat,
-}) async {
-  // log.i('updateChat: MessageModel: ${chat.toMap()}');
+Future<void> updateChat({@required ChatModel chat, String email}) async {
   return await Firestore.instance
       .collection('chatsnew')
       .document(
           chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
-      .updateData(chat.toMap());
+      .updateData({
+    'softDeletedBy': chat.softDeletedBy,
+    'user1': chat.user1,
+    'user2': chat.user2,
+    'lastMessage': chat.lastMessage,
+    'rootTimebank': chat.rootTimebank,
+    'timestamp': DateTime.now().millisecondsSinceEpoch,
+  });
 }
 
 //Create a message
@@ -56,23 +61,28 @@ Stream<List<ChatModel>> getChatsforUser({
   @required String email,
   @required List<String> blockedBy,
   @required List<String> blockedMembers,
-
 }) async* {
-  var futures = <Future>[];
-  // log.i('getChatsforUser: Email: $email');
-  var data = Firestore.instance.collection('chatsnew').snapshots();
+  var data = Firestore.instance
+      .collection('chatsnew')
+      .orderBy('timestamp', descending: true)
+      .snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<ChatModel>>.fromHandlers(
       handleData: (snapshot, chatSink) async {
+        var futures = <Future>[];
         List<ChatModel> chatlist = [];
+        chatlist.clear();
         snapshot.documents.forEach(
           (documentSnapshot) async {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
 
             if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
-                model.rootTimebank == FlavorConfig.values.timebankId) {
+                model.rootTimebank == FlavorConfig.values.timebankId &&
+                !model.softDeletedBy.contains(
+                  email,
+                )) {
               if (model.user1 == email) {
                 futures.add(getUserInfo(model.user2));
               }
@@ -80,43 +90,37 @@ Stream<List<ChatModel>> getChatsforUser({
                 futures.add(getUserInfo(model.user1));
               }
               chatlist.add(model);
+
+              print("Chat list size ${chatlist.length}");
             }
 
-//             email = "anitha.beberg@gmail.com";
-//             if ((model.user1 == "anitha.beberg@gmail.com" ||
-//                     model.user2 == "anitha.beberg@gmail.com") &&
-//                 model.lastMessage != null &&
-//                 model.rootTimebank == FlavorConfig.values.timebankId) {
-//               if (model.user1 == email) {
-//                 futures.add(getUserInfo(model.user2));
-//               }
-//               if (model.user2 == email) {
-//                 futures.add(getUserInfo(model.user1));
-//               }
-//               chatlist.add(model);
-//             }
+            // email = "anitha.beberg@gmail.com";
+            // if ((model.user1 == "anitha.beberg@gmail.com" ||
+            //         model.user2 == "anitha.beberg@gmail.com") &&
+            //     model.lastMessage != null &&
+            //     model.rootTimebank == FlavorConfig.values.timebankId) {
+            //   if (model.user1 == email) {
+            //     futures.add(getUserInfo(model.user2));
+            //   }
+            //   if (model.user2 == email) {
+            //     futures.add(getUserInfo(model.user1));
+            //   }
+            //   chatlist.add(model);
+            // }
           },
         );
         await Future.wait(futures).then((onValue) {
           var i = 0;
-          while(i<chatlist.length) {
+          while (i < chatlist.length) {
             var sevaUserId = onValue[i]['sevauserid'];
-
-            print("--> Seva user id for othwe user $sevaUserId");
-            print("--> Blocked by others-> $blockedBy  ----  Blocked by me ->$blockedMembers");
-            print( "${(blockedBy.contains(sevaUserId) || blockedMembers.contains(sevaUserId))}  is the status " );
-
-
 
             chatlist[i].messagTitleUserName = onValue[i]['fullname'];
             chatlist[i].photoURL = onValue[i]['photourl'];
 
-            chatlist[i].isBlocked = (blockedBy.contains(sevaUserId) || blockedMembers.contains(sevaUserId));
-//            if(chatlist[i].isBlocked) {
-//              chatlist.removeAt(i);
-//            }else{
-              i++;
-//            }
+            chatlist[i].isBlocked = (blockedBy.contains(sevaUserId) ||
+                blockedMembers.contains(sevaUserId));
+
+            i++;
           }
 
           chatSink.add(chatlist);
@@ -139,8 +143,10 @@ Future<DocumentSnapshot> getUserInfo(String userEmail) {
 //Get Messages for a chat
 Stream<List<MessageModel>> getMessagesforChat({
   @required ChatModel chatModel,
+  String email,
+  IsFromNewChat isFromNewChat,
 }) async* {
-  // log.i('getMessagesforChat: chatModel: $chatModel');
+  print('getMessagesforChat: chatModel: $chatModel');
   var data = Firestore.instance
       .collection('chatsnew')
       .document(chatModel.user1 +
@@ -165,7 +171,35 @@ Stream<List<MessageModel>> getMessagesforChat({
             });
           },
         );
-        messageSink.add(messagelist);
+
+        if (chatModel.deletedBy != null &&
+            chatModel.deletedBy.containsKey(email)) {
+          var timestamp = chatModel.deletedBy[email];
+
+          List<MessageModel> filteredList = [];
+          for (var i = 0; i < messagelist.length; i++) {
+            messagelist[i].timestamp > timestamp
+                ? filteredList.add(messagelist[i])
+                : print("valid message");
+          }
+          messageSink.add(filteredList);
+        } else if (isFromNewChat.isFromNewChat) {
+          print(
+              "<><><><><><><><><><><><><><><><<><><><>Here we do the filter ${isFromNewChat.newChatTimeStamp}");
+
+          var timestamp = isFromNewChat.newChatTimeStamp;
+
+          List<MessageModel> filteredList = [];
+          for (var i = 0; i < messagelist.length; i++) {
+            messagelist[i].timestamp > timestamp
+                ? filteredList.add(messagelist[i])
+                : print("valid message");
+          }
+          messageSink.add(filteredList);
+        } else {
+          print("Inside else for data manager ${chatModel}");
+          messageSink.add(messagelist);
+        }
       },
     ),
   );

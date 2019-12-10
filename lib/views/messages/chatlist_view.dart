@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -5,11 +6,14 @@ import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import '../core.dart';
@@ -32,20 +36,18 @@ class _ChatListViewState extends State<ChatListView> {
 //  var updateUser = SevaCore.of(context).loggedInUser;
   @override
   Widget build(BuildContext context) {
-    var blockedMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
-    var blockedByMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
+    var blockedMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
+    var blockedByMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          'Chats',
-          style: TextStyle(color: Colors.white),
-        ),
-        // actions: <Widget>[
-
-        // ],
-      ),
+          iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text(
+            'Chats',
+            style: TextStyle(color: Colors.white),
+          )),
       body: StreamBuilder<List<ChatModel>>(
         stream: getChatsforUser(
           email: SevaCore.of(context).loggedInUser.email,
@@ -63,6 +65,11 @@ class _ChatListViewState extends State<ChatListView> {
             return new Text('Error: ${chatListSnapshot.error}');
           }
 
+          print("data Updated <><><><><><><><<><><<><><><");
+          // setState(() {
+
+          // });
+
           switch (chatListSnapshot.connectionState) {
             case ConnectionState.waiting:
               return Center(
@@ -72,7 +79,6 @@ class _ChatListViewState extends State<ChatListView> {
               // print("Chat Model list ${chatListSnapshot.data}");
               List<ChatModel> allChalModelList = chatListSnapshot.data;
 
-
               List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
                 return Center(child: Text('No Chats'));
@@ -81,7 +87,9 @@ class _ChatListViewState extends State<ChatListView> {
               return ListView.builder(
                 itemCount: chatModelList.length,
                 itemBuilder: (context, index) {
-                  return chatModelList[index].isBlocked ? Offstage() : getMessageListView(chatModelList[index], context);
+                  return chatModelList[index].isBlocked
+                      ? Offstage()
+                      : getMessageListView(chatModelList[index], context);
                 },
               );
           }
@@ -271,6 +279,40 @@ class _ChatListViewState extends State<ChatListView> {
                     ],
                   ),
                 ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      timeAgo.format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            chatModel.timestamp),
+                      ),
+                      style: TextStyle(
+                        fontSize: 10
+                      ),
+                    ),
+                    ClipOval(
+                      child: Container(
+                        height: 35,
+                        width: 35,
+                        child: GestureDetector(
+                          child: IconButton(
+                            icon: Image.asset(
+                                'lib/assets/images/recycle-bin.png'),
+                            iconSize: 30,
+                            onPressed: () {
+                              _ackAlert(
+                                SevaCore.of(context).loggedInUser.email,
+                                chatModel,
+                                context,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -298,8 +340,6 @@ class _ChatListViewState extends State<ChatListView> {
                     .loggedInUser
                     .blockedBy
                     .contains(user.sevaUserID)) {
-              print("USER BLOCKED");
-
               return Offstage();
             } else {
               print(
@@ -453,5 +493,65 @@ class _ChatListViewState extends State<ChatListView> {
             );
           });
     }
+  }
+
+  Future<void> _ackAlert(
+      String email, ChatModel chatModel, BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete chat'),
+          content: const Text('Are you sure you want to delete this chat'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Delete'),
+              onPressed: () {
+                var participants = [];
+                participants.add(chatModel.user1);
+                participants.add(chatModel.user2);
+
+                participants.sort();
+
+                var messageId =
+                    "${participants[0]}*${participants[1]}*${FlavorConfig.values.timebankId}";
+
+                Firestore.instance
+                    .collection("chatsnew")
+                    .document(messageId)
+                    .updateData({
+                  'softDeletedBy': FieldValue.arrayUnion(
+                    [email],
+                  )
+                }).then((onValue) {
+                  chatModel.deletedBy[email] =
+                      DateTime.now().millisecondsSinceEpoch;
+
+                  Firestore.instance
+                      .collection("chatsnew")
+                      .document(messageId)
+                      .updateData({
+                    'deletedBy': chatModel.deletedBy,
+                  }).then((onValue) {});
+                });
+
+                setState(() {
+                  print("Update and remove the object from list");
+                  // chatModel = chatModel;
+                });
+
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

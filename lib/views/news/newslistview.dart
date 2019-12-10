@@ -160,7 +160,7 @@ class NewsListState extends State<NewsList> {
               child: CupertinoSegmentedControl<int>(
                 children: logoWidgets,
                 padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                //selectedColor: Colors.deepOrange,
+                selectedColor: Color.fromARGB(255, 4, 47, 110),
                 groupValue: sharedValue,
                 onValueChanged: (int val) {
                   print(val);
@@ -465,12 +465,13 @@ class NewsListState extends State<NewsList> {
                           ),
                         ),
                         Container(
-                          margin: EdgeInsets.only(left: 5),
+                          margin: EdgeInsets.only(left: 5, right: 40),
                           child: Text(
                             news.placeAddress == null
                                 ? "Midtown Station New York, NY"
                                 : news.placeAddress,
-                            overflow: TextOverflow.fade,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             // style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),
