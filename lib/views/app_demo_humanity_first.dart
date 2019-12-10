@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 
-class IntroScreenHukanityFirst extends StatefulWidget {
+class AppDemoHumanityFirst extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return IntroScreenState();
   }
 }
 
-class IntroScreenState extends State<IntroScreenHukanityFirst> {
+class IntroScreenState extends State<AppDemoHumanityFirst> {
   List<Slide> slides = new List();
 
   Function goToTab;
@@ -20,12 +20,9 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
 
     slides.add(
       new Slide(
-        backgroundBlendMode: BlendMode.colorBurn,
-        backgroundImage: 'lib/assets/images/washingtondc.jpg',
-        title: "Welcome",
-        pathImage: 'lib/',
-        description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+        backgroundImage: 'lib/assets/images/Info_1.png',
+        title: "",
+        description: "",
         backgroundColor: Color(0xff203152),
       ),
     );
@@ -33,11 +30,10 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
     slides.add(
       new Slide(
         backgroundBlendMode: BlendMode.colorBurn,
-        backgroundImage: 'lib/assets/images/andrew_yang_five.jpg',
-        title: "Welcome",
-        pathImage: 'lib/',
-        description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+        backgroundImage: 'lib/assets/images/Info_2.png',
+        title: "",
+        pathImage: '',
+        description: "",
         backgroundColor: Color(0xff203152),
       ),
     );
@@ -45,11 +41,10 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
     slides.add(
       new Slide(
         backgroundBlendMode: BlendMode.colorBurn,
-        backgroundImage: 'lib/assets/images/yang_banner.jpg',
-        title: "Welcome",
-        pathImage: 'lib/',
-        description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+        backgroundImage: 'lib/assets/images/Info_3.png',
+        title: "",
+        pathImage: '',
+        description: "",
         backgroundColor: Color(0xff203152),
       ),
     );
@@ -57,11 +52,11 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
     slides.add(
       new Slide(
         backgroundBlendMode: BlendMode.colorBurn,
-        backgroundImage: 'lib/assets/images/andrew_two.jpg',
-        title: "Welcome",
+        backgroundImage: 'lib/assets/images/Info_4.png',
+        title: "",
         pathImage: 'lib/',
         description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+            "",
         backgroundColor: Color(0xff203152),
       ),
     );

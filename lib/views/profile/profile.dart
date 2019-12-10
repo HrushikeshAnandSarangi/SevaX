@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/views/news/overflow_constants.dart';
 import 'package:sevaexchange/views/profile/edit_bio.dart';
 import 'package:sevaexchange/views/profile/edit_interests.dart';
 import 'package:sevaexchange/views/profile/edit_profilepic.dart';
 import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/profile/reported_users.dart';
+import 'package:sevaexchange/views/timebanks/edit_super_admins_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -25,6 +28,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 
 import 'package:sevaexchange/views/transaction_history.dart';
+import '../app_demo_humanity_first.dart';
 import 'edit_name.dart';
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -186,7 +190,7 @@ class _ProfilePageState extends State<ProfilePage>
 //            SizedBox(
 //              height: 32,
 //            ),
-           // skillsAndInterest,
+            // skillsAndInterest,
             SizedBox(
               height: 32,
             ),
@@ -295,22 +299,33 @@ class _ProfilePageState extends State<ProfilePage>
       expandedHeight: 180,
       backgroundColor: Theme.of(context).primaryColor,
       actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            Icons.edit,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditProfilePage(
-                  userModel: user,
-                ),
-              ),
-            );
+        PopupMenuButton<String>(
+          onSelected: choiceAction,
+          itemBuilder: (BuildContext context) {
+            return ProfileConstants.choices.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
           },
         ),
+        // IconButton(
+        //   icon: Icon(
+        //     Icons.edit,
+        //     color: Colors.white,
+        //   ),
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => EditProfilePage(
+        //           userModel: user,
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // ),
       ],
       title: Transform.scale(
         scale: appbarScale,
@@ -444,6 +459,44 @@ class _ProfilePageState extends State<ProfilePage>
             ),
           );
         },
+      ),
+    );
+  }
+
+  void navigateToAppDemo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AppDemoHumanityFirst(),
+      ),
+    );
+  }
+
+  void choiceAction(String choice) {
+    if (choice == ProfileConstants.Help) {
+      // App demo
+      navigateToAppDemo();
+    } else if (choice == ProfileConstants.CreateYangGang) {
+      createSubTimebankOverflow(context);
+    } else if (choice == ProfileConstants.EditProfile) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditProfilePage(
+            userModel: user,
+          ),
+        ),
+      );
+    }
+  }
+
+  void createSubTimebankOverflow(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimebankCreate(
+          timebankId: FlavorConfig.values.timebankId,
+        ),
       ),
     );
   }
@@ -639,6 +692,7 @@ class _ProfilePageState extends State<ProfilePage>
       child: Column(
         children: <Widget>[
           administerTimebanks,
+          // editAdministerTimebanks,
           timebankslist,
           joinViaCode,
           tasksWidget,
@@ -829,9 +883,10 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget get administerTimebanks {
-    
-    print("${timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)}    <---");
-    return !timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)
+    print(
+        "${timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)}    <---");
+    return !timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)
         ? Offstage()
         : getActionCards(
             title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -858,6 +913,51 @@ class _ProfilePageState extends State<ProfilePage>
                   },
                 ),
               );
+            },
+          );
+  }
+
+  Widget get editAdministerTimebanks {
+    print(
+        "${timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)}    <---");
+    return !timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+        ? Offstage()
+        : getActionCards(
+            title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? 'Edit Humanity First'
+                : 'Edit Root Timebank',
+            subtitle: timebankModel == null
+                ? "loading"
+                : FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                    ? null
+                    : timebankModel.name,
+            trailingIcon: Icons.navigate_next,
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(12),
+              topLeft: Radius.circular(12),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditSuperTimebankView(
+                    timebankId: timebankModel.id,
+                    superAdminTimebankModel: timebankModel,
+                  ),
+                ),
+              );
+
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return TimebankAdminPage(
+              //         timebankId: FlavorConfig.values.timebankId,
+              //       );
+              //     },
+              //   ),
+              // );
             },
           );
   }
@@ -900,7 +1000,6 @@ class _ProfilePageState extends State<ProfilePage>
     Color splashColor,
   }) {
     Color _splashColor = splashColor ?? Theme.of(context).primaryColor;
-
     return Material(
       color: backgroundColor,
       borderRadius: borderRadius,

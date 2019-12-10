@@ -33,7 +33,10 @@ class UserModel extends DataModel {
   String timebankIdForYangGangAdmin;
 
   String tokens;
+
   bool acceptedEULA = false;
+  bool completedIntro = false;
+
   List<String> reportedUsers = [];
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
@@ -61,6 +64,7 @@ class UserModel extends DataModel {
       this.reportedUsers,
       this.blockedMembers,
       this.acceptedEULA,
+      this.completedIntro,
       this.blockedBy,
       this.currentPosition});
 
@@ -77,6 +81,10 @@ class UserModel extends DataModel {
       this.acceptedEULA = map['acceptedEULA'];
     }
 
+    if (map.containsKey('completedIntro')) {
+      this.completedIntro = map['completedIntro'];
+    }
+
     if (map.containsKey('blockedMembers')) {
       //print("Blocked Data present");
       List<String> blockedMembers = List.castFrom(map['blockedMembers']);
@@ -84,7 +92,7 @@ class UserModel extends DataModel {
       // SevaCore.of(context).loggedInUser.blockedMembers = blockedMembers;
     } else {
       this.blockedMembers = List();
-     // print("Blocked Data not present");
+      // print("Blocked Data not present");
     }
 
     if (map.containsKey('blockedBy')) {
@@ -199,6 +207,7 @@ class UserModel extends DataModel {
     if (this.skills != null && this.skills.isNotEmpty) {
       object['skills'] = this.skills;
     }
+
     if (this.currentBalance != null) {
       object['currentBalance'] = this.currentBalance;
     } else {
@@ -209,10 +218,10 @@ class UserModel extends DataModel {
     } else {
       object['timezone'] = 'PT';
     }
-//     if (this.availability.weekArray.length != 0) {
-//       object["availability"] = this.availability.toMap();
-//       print(object["availability"]);
-//     }
+
+    if (this.completedIntro != null) {
+      this.completedIntro = object['completedIntro'];
+    }
 
     return object;
   }

@@ -11,6 +11,7 @@ import 'package:sevaexchange/views/core.dart';
 
 import 'dart:ui';
 
+import 'edit_super_admins_view.dart';
 import 'edit_timebank_view.dart';
 
 class TimebankAdminPage extends StatefulWidget {
@@ -92,26 +93,26 @@ class _TimeBankAdminView extends StatelessWidget {
       snap: false,
       pinned: true,
       elevation: 0,
-//      actions: <Widget>[
-//        timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID
-//            ? Offstage()
-//            : IconButton(
-//                icon: Icon(
-//                  Icons.edit,
-//                  color: Colors.white,
-//                ),
-//                onPressed: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => EditTimebankView(
-//                        timebankModel: timebankModel,
-//                      ),
-//                    ),
-//                  );
-//                },
-//              ),
-//      ],
+      actions: <Widget>[
+        timebankModel.id != FlavorConfig.values.timebankId
+            ? Offstage()
+            : IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditSuperTimebankView(
+                              timebankId: timebankModel.id,
+                              superAdminTimebankModel: timebankModel,
+                            )),
+                  );
+                },
+              ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(

@@ -264,10 +264,12 @@ class _TimebankViewState extends State<TimebankView> {
                               padding: EdgeInsets.only(right: 15.0, left: 20.0),
                               child: CircleAvatar(
                                 backgroundColor: Colors.grey,
-                                backgroundImage: timebankModel.photoUrl == null ||
-                                    timebankModel.photoUrl.isEmpty
-                                  ? AssetImage('lib/assets/images/noimagefound.png')
-                          : NetworkImage(timebankModel.photoUrl),
+                                backgroundImage: timebankModel.photoUrl ==
+                                            null ||
+                                        timebankModel.photoUrl.isEmpty
+                                    ? AssetImage(
+                                        'lib/assets/images/noimagefound.png')
+                                    : NetworkImage(timebankModel.photoUrl),
                                 minRadius: 40.0,
                               ),
                             ),
@@ -462,41 +464,43 @@ class _TimebankViewState extends State<TimebankView> {
                         //   },
                         //   child: _whichButton('timebanks'),
                         // ),
-                        timebankModel.admins.contains(loggedInUser) || widget.superAdminTimebankModel.admins.contains(loggedInUser)
+                        timebankModel.admins.contains(loggedInUser) ||
+                                widget.superAdminTimebankModel.admins
+                                    .contains(loggedInUser)
                             ? FlatButton(
-                          child: Text(
-                            'Edit Yang Gang',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          textColor: Theme.of(context).accentColor,
-                          disabledTextColor:
-                          Theme.of(context).accentColor,
-                          onPressed: () {
-                            prefix2.Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      _whichRoute('edityanggang')),
-                            );
-                          },
-                        )
+                                child: Text(
+                                  'Edit Yang Gang',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                textColor: Theme.of(context).accentColor,
+                                disabledTextColor:
+                                    Theme.of(context).accentColor,
+                                onPressed: () {
+                                  prefix2.Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            _whichRoute('edityanggang')),
+                                  );
+                                },
+                              )
                             : Offstage(),
                         //_showCreateCampaignButton(context),
                         //_showJoinRequests(context),
                         !timebankModel.members.contains(loggedInUser)
                             ? Offstage()
-                        : FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      _whichRoute('viewcampaigns')),
-                            );
-                          },
-                          child: _whichButton('viewcampaigns'),
-                        ),
+                            : FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            _whichRoute('viewcampaigns')),
+                                  );
+                                },
+                                child: _whichButton('viewcampaigns'),
+                              ),
 //                        FlatButton(
 //                          child: Text(
 //                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -912,10 +916,10 @@ class _TimebankViewState extends State<TimebankView> {
 //        );
         }
         break;
-        //edityanggang
+      //edityanggang
       case 'edityanggang':
         return EditSuperTimebankView(
-          timebankId:timebankModel.id,
+          timebankId: timebankModel.id,
           superAdminTimebankModel: widget.superAdminTimebankModel,
         );
         break;

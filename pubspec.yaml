@@ -122,6 +122,17 @@ flutter:
     - lib/assets/images/new_yang.png
     - lib/assets/images/yang_banner.jpg
     - lib/assets/images/andrew_two.jpg
+    - lib/assets/images/andrew_yang_three.jpg
+    - lib/assets/images/andrew_yang_five.jpg
+    - lib/assets/images/andrew_yang_six.jpg
+    - lib/assets/images/washingtondc.jpg
+    - lib/assets/images/Info_1.png
+    - lib/assets/images/Info_2.png
+    - lib/assets/images/Info_3.png
+    - lib/assets/images/Info_4.png
+    
+    # - lib/assets/images/andrew_yang_three.jpg
+    
     - lib/assets/images/recycle-bin.png
   fonts:
     - family: Montserrat

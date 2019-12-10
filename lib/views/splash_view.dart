@@ -7,6 +7,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
+import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -523,6 +524,10 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToEULA(loggedInUser);
     }
 
+    if (!loggedInUser.completedIntro) {
+      await _navogateToIntro(loggedInUser);
+    }
+
     if (loggedInUser.skills == null) {
       await _navigateToSkillsView(loggedInUser);
     }
@@ -594,9 +599,32 @@ class _SplashViewState extends State<SplashView> {
           .collection('users')
           .document(loggedInUser.email)
           .updateData({'acceptedEULA': true}).then((onValue) {
-        print("Updating EULA Agreemet confirmation");
+        print("Updating completed");
       }).catchError((onError) {
-        print("Error Updating EULA");
+        print("Error Updating introduction");
+      });
+    }
+  }
+
+  Future _navogateToIntro(UserModel loggedInUser) async {
+    print("Intro -> ${loggedInUser.toString()}");
+
+    Map results = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => IntroScreenHukanityFirst(),
+      ),
+    );
+
+    if (results != null &&
+        (results['response'] == "ACCEPTED" ||
+            results['response'] == "SKIPPED")) {
+      await Firestore.instance
+          .collection('users')
+          .document(loggedInUser.email)
+          .updateData({'completedIntro': true}).then((onValue) {
+        print("Updating Introcuction part");
+      }).catchError((onError) {
+        print("Error in introdution part");
       });
     }
   }

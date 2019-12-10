@@ -661,27 +661,31 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             );
                           },
                         ),
-                        timebankModel.admins.contains(loggedInUser) ||
-                                widget.superAdminTimebankModel.admins.contains(
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID)
-                            ? FlatButton(
-                                child: Text(
-                                  FlavorConfig.values.timebankName ==
-                                          "Yang 2020"
-                                      ? 'Delete yang gang'
-                                      : 'Delete timebank',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                textColor: Theme.of(context).accentColor,
-                                disabledTextColor:
-                                    Theme.of(context).accentColor,
-                                onPressed: () {
-                                  showDeleteConfirmation(timebankModel);
-                                },
-                              )
-                            : Offstage(),
+
+                        timebankModel.id == FlavorConfig.values.timebankId
+                            ? Offstage()
+                            : timebankModel.admins.contains(loggedInUser) ||
+                                    widget.superAdminTimebankModel.admins
+                                        .contains(SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID)
+                                ? FlatButton(
+                                    child: Text(
+                                      FlavorConfig.values.timebankName ==
+                                              "Yang 2020"
+                                          ? 'Delete yang gang'
+                                          : 'Delete timebank',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    textColor: Theme.of(context).accentColor,
+                                    disabledTextColor:
+                                        Theme.of(context).accentColor,
+                                    onPressed: () {
+                                      showDeleteConfirmation(timebankModel);
+                                    },
+                                  )
+                                : Offstage(),
 
 //                        timebankModel.parentTimebankId != null
 //                            ? FutureBuilder<Object>(
