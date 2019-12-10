@@ -38,9 +38,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   var _showMoreItems = true;
   var currSelectedState = false;
   var selectedUserModelIndex = -1;
+  var isLoading = false;
 
   List<Widget> _avtars = [];
-//  List<UserModel> userModels = [];
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
 
@@ -112,7 +112,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       ),
     );
 
-    if(_showMoreItems) {
+//    if(_showMoreItems) {
+      if(_showMoreItems && !isLoading) {
       loadNextBatchItems().then((onValue){
         return finalWidget;
       });
@@ -195,6 +196,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   Future loadNextBatchItems() async {
     if(_hasMoreItems) {
+      isLoading = true;
       FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue) {
         var addItems = onValue.map((memberObject) {
           var member = memberObject.sevaUserID;
@@ -235,6 +237,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         }else{
           _hasMoreItems = addItems.length == 20;
         }
+
+        isLoading = false;
       }
 
       );
