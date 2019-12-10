@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -25,17 +26,26 @@ class SearchView extends StatefulWidget {
 class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   TabController controller;
   final TextEditingController searchTextController = TextEditingController();
-
+  final searchOnChange = new BehaviorSubject<String>();
   @override
   void initState() {
     super.initState();
     controller = widget.controller;
-    controller.addListener(() {
+    searchOnChange.debounceTime(Duration(milliseconds: 500)).listen((queryString) {
+      if(queryString.length>2) {
+
+      }
+    });
+      controller.addListener(() {
       setState(() {});
     });
     searchTextController.addListener(() {
       setState(() {});
     });
+  }
+
+  void _search(String queryString) {
+    searchOnChange.add(queryString);
   }
 
   @override
@@ -83,6 +93,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
           title: Container(
             padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
             child: TextField(
+              onChanged: _search,
               style: TextStyle(color: Colors.white),
               controller: searchTextController,
               decoration: InputDecoration(
