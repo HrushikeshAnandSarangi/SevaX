@@ -121,9 +121,6 @@ flutter:
     - lib/assets/ts2020-logo-w.svg
     - lib/assets/tulsi_icons/tulsi2020_icons_volunteer-icon.svg
     - lib/assets/images/new_yang.png
-    - lib/assets/images/yang_banner.jpg
-    - lib/assets/images/andrew_two.jpg
-    - lib/assets/images/recycle-bin.png
   fonts:
     - family: Montserrat
       fonts:

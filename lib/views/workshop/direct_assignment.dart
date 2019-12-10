@@ -164,9 +164,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       itemBuilder: (BuildContext ctxt, int index) =>
           Padding(
             padding: const EdgeInsets.all(0.0),
-            child: index < _avtars.length ?
-                _avtars[index]
-                : Container(
+            child: index < _avtars.length ? _avtars[index] : Container(
               width: double.infinity,
               height: 80,
               child: circularBar,
@@ -222,12 +220,16 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         if(addItems.length>0) {
           var lastIndex = _avtars.length;
           setState(() {
-            for(int i=0;i<addItems.length;i++){
-              _avtars.add(addItems[i]);
-              indexToModelMap[lastIndex] = onValue[i];
-              emailIndexMap[onValue[i].email] = lastIndex++;
+            var iterationCount = 0;
+            for(int i=0;i<addItems.length;i++) {
+              if(emailIndexMap[onValue[i].email]==null) { // Filtering duplicates
+                _avtars.add(addItems[i]);
+                indexToModelMap[lastIndex] = onValue[i];
+                emailIndexMap[onValue[i].email] = lastIndex++;
+                iterationCount++;
+              }
             }
-            _indexSoFar = _indexSoFar + addItems.length;
+            _indexSoFar = _indexSoFar + iterationCount;
             _pageIndex = _pageIndex + 1;
           });
         }else{
