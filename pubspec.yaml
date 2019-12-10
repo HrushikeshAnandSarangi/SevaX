@@ -123,6 +123,7 @@ flutter:
     - lib/assets/images/yang_banner.jpg
     - lib/assets/images/andrew_two.jpg
     - lib/assets/images/recycle-bin.png
+    - lib/assets/images/search.png
   fonts:
     - family: Montserrat
       fonts:
