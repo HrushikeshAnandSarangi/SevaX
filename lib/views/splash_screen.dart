@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/components/slide_object.dart';
 
 import '../components/intro_slider.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -101,6 +102,9 @@ class SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return new IntroSlider(
       slides: this.slides,
+      // isShowSkipBtn: true,
+      isShowPrevBtn: true,
+      nameSkipBtn: "Skip",
       onDonePress: this.onDonePress,
       onSkipPress: this.onSkipPress,
     );

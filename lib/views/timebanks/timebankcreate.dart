@@ -90,7 +90,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.protected = protectedVal;
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
-    timebankModel.location = location == null ? GeoFirePoint(40.754387,-73.984291) : location;
+    timebankModel.location =
+        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
 
     createTimebank(timebankModel: timebankModel);
 
@@ -278,10 +279,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   padding: EdgeInsets.only(top: 8.0),
                   child: FlatButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddMembers()),
-                      );
+                      
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => AddMembers()),
+                      // );
                     },
                     child: Text(
                       '+ Add Members',
@@ -387,15 +389,15 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                               // Validate will return true if the form is valid, or false if
                               // the form is invalid.
                               //if (location != null) {
-                                if (_formKey.currentState.validate()) {
-                                  // If the form is valid, we want to show a Snackbar
-                                  _writeToDB();
-                                  if (parentTimebank.children == null)
-                                    parentTimebank.children = [];
-                                  parentTimebank.children.add(timebankModel.id);
-                                  updateTimebank(timebankModel: parentTimebank);
-                                  Navigator.pop(context);
-                                }
+                              if (_formKey.currentState.validate()) {
+                                // If the form is valid, we want to show a Snackbar
+                                _writeToDB();
+                                if (parentTimebank.children == null)
+                                  parentTimebank.children = [];
+                                parentTimebank.children.add(timebankModel.id);
+                                updateTimebank(timebankModel: parentTimebank);
+                                Navigator.pop(context);
+                              }
 //                              } else {
 //                                Scaffold.of(context).showSnackBar(SnackBar(
 //                                  content: Text('Location not added'),

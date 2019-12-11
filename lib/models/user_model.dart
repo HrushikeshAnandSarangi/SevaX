@@ -34,6 +34,8 @@ class UserModel extends DataModel {
 
   String tokens;
   bool acceptedEULA = false;
+  bool completedIntro = false;
+
   List<String> reportedUsers = [];
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
@@ -61,6 +63,7 @@ class UserModel extends DataModel {
       this.reportedUsers,
       this.blockedMembers,
       this.acceptedEULA,
+      this.completedIntro,
       this.blockedBy,
       this.currentPosition});
 
@@ -75,6 +78,10 @@ class UserModel extends DataModel {
 
     if (map.containsKey('acceptedEULA')) {
       this.acceptedEULA = map['acceptedEULA'];
+    }
+
+    if (map.containsKey('completedIntro')) {
+      this.completedIntro = map['completedIntro'];
     }
 
     if (map.containsKey('blockedMembers')) {
@@ -209,10 +216,10 @@ class UserModel extends DataModel {
     } else {
       object['timezone'] = 'PT';
     }
-//     if (this.availability.weekArray.length != 0) {
-//       object["availability"] = this.availability.toMap();
-//       print(object["availability"]);
-//     }
+
+    if (this.completedIntro != null) {
+      this.completedIntro = object['completedIntro'];
+    }
 
     return object;
   }

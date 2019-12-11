@@ -5,22 +5,13 @@ import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
-import 'package:sevaexchange/new_baseline/models/notifications_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as prefix1;
-import 'package:sevaexchange/views/exchange/createoffer.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
-import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/branch_list.dart';
-import 'package:sevaexchange/views/timebanks/join_request_view.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
-import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -30,9 +21,7 @@ import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
 import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_requests_view.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-import 'package:sevaexchange/views/membersmanage.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 
 import 'package:sevaexchange/views/core.dart';
@@ -264,10 +253,12 @@ class _TimebankViewState extends State<TimebankView> {
                               padding: EdgeInsets.only(right: 15.0, left: 20.0),
                               child: CircleAvatar(
                                 backgroundColor: Colors.grey,
-                                backgroundImage: timebankModel.photoUrl == null ||
-                                    timebankModel.photoUrl.isEmpty
-                                  ? AssetImage('lib/assets/images/noimagefound.png')
-                          : NetworkImage(timebankModel.photoUrl),
+                                backgroundImage: timebankModel.photoUrl ==
+                                            null ||
+                                        timebankModel.photoUrl.isEmpty
+                                    ? AssetImage(
+                                        'lib/assets/images/noimagefound.png')
+                                    : NetworkImage(timebankModel.photoUrl),
                                 minRadius: 40.0,
                               ),
                             ),
@@ -462,41 +453,43 @@ class _TimebankViewState extends State<TimebankView> {
                         //   },
                         //   child: _whichButton('timebanks'),
                         // ),
-                        timebankModel.admins.contains(loggedInUser) || widget.superAdminTimebankModel.admins.contains(loggedInUser)
+                        timebankModel.admins.contains(loggedInUser) ||
+                                widget.superAdminTimebankModel.admins
+                                    .contains(loggedInUser)
                             ? FlatButton(
-                          child: Text(
-                            'Edit Yang Gang',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          textColor: Theme.of(context).accentColor,
-                          disabledTextColor:
-                          Theme.of(context).accentColor,
-                          onPressed: () {
-                            prefix2.Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      _whichRoute('edityanggang')),
-                            );
-                          },
-                        )
+                                child: Text(
+                                  'Edit Yang Gang',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                textColor: Theme.of(context).accentColor,
+                                disabledTextColor:
+                                    Theme.of(context).accentColor,
+                                onPressed: () {
+                                  prefix2.Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            _whichRoute('edityanggang')),
+                                  );
+                                },
+                              )
                             : Offstage(),
                         //_showCreateCampaignButton(context),
                         //_showJoinRequests(context),
                         !timebankModel.members.contains(loggedInUser)
                             ? Offstage()
-                        : FlatButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      _whichRoute('viewcampaigns')),
-                            );
-                          },
-                          child: _whichButton('viewcampaigns'),
-                        ),
+                            : FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            _whichRoute('viewcampaigns')),
+                                  );
+                                },
+                                child: _whichButton('viewcampaigns'),
+                              ),
 //                        FlatButton(
 //                          child: Text(
 //                            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -912,10 +905,10 @@ class _TimebankViewState extends State<TimebankView> {
 //        );
         }
         break;
-        //edityanggang
+      //edityanggang
       case 'edityanggang':
         return EditSuperTimebankView(
-          timebankId:timebankModel.id,
+          timebankId: timebankModel.id,
           superAdminTimebankModel: widget.superAdminTimebankModel,
         );
         break;

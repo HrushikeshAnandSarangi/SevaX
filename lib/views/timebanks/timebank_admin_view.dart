@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -11,6 +12,7 @@ import 'package:sevaexchange/views/core.dart';
 
 import 'dart:ui';
 
+import 'edit_super_admins_view.dart';
 import 'edit_timebank_view.dart';
 
 class TimebankAdminPage extends StatefulWidget {
@@ -92,26 +94,26 @@ class _TimeBankAdminView extends StatelessWidget {
       snap: false,
       pinned: true,
       elevation: 0,
-//      actions: <Widget>[
-//        timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID
-//            ? Offstage()
-//            : IconButton(
-//                icon: Icon(
-//                  Icons.edit,
-//                  color: Colors.white,
-//                ),
-//                onPressed: () {
-//                  Navigator.push(
-//                    context,
-//                    MaterialPageRoute(
-//                      builder: (context) => EditTimebankView(
-//                        timebankModel: timebankModel,
-//                      ),
-//                    ),
-//                  );
-//                },
-//              ),
-//      ],
+      actions: <Widget>[
+        timebankModel.id != FlavorConfig.values.timebankId
+            ? Offstage()
+            : IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditSuperTimebankView(
+                              timebankId: timebankModel.id,
+                              superAdminTimebankModel: timebankModel,
+                            )),
+                  );
+                },
+              ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
         title: Text(
@@ -186,11 +188,20 @@ class _TimeBankAdminView extends StatelessWidget {
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: admin),
             builder: (context, snapshot) {
+              if (!snapshot.hasData) return Offstage();
               if (snapshot.hasError) return Text(snapshot.error.toString());
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
+              if (!snapshot.hasData) {
+                return Offstage();
+              }
+
+              if (user != null && user.photoURL == null) {
+                user.photoURL = defaultUserImageURL;
+              }
+
               if (isAdmin) {
                 return Slidable(
                   delegate: SlidableDrawerDelegate(),
@@ -230,7 +241,9 @@ class _TimeBankAdminView extends StatelessWidget {
                   child: getUserWidget(user, context, model),
                 );
               }
-              return getUserWidget(user, context, model);
+              return user != null && user.fullname != null
+                  ? getUserWidget(user, context, model)
+                  : Offstage();
             },
           );
         }).toList(),
@@ -254,6 +267,7 @@ class _TimeBankAdminView extends StatelessWidget {
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: coordinator),
             builder: (context, snapshot) {
+              if (snapshot == null || !snapshot.hasData) return Offstage();
               if (snapshot.hasError) return Text(snapshot.error.toString());
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return shimmerWidget;
@@ -315,11 +329,21 @@ class _TimeBankAdminView extends StatelessWidget {
           return FutureBuilder<UserModel>(
             future: FirestoreManager.getUserForId(sevaUserId: member),
             builder: (context, snapshot) {
+              if (!snapshot.hasData) return Offstage();
               if (snapshot.hasError) return Text(snapshot.error.toString());
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return shimmerWidget;
               }
+
+              if (!snapshot.hasData) {
+                return Offstage();
+              }
               UserModel user = snapshot.data;
+
+              if (user != null && user.photoURL == null) {
+                user.photoURL = defaultUserImageURL;
+              }
+
               if (isAdmin) {
                 // return Slidable(
                 //   delegate: SlidableDrawerDelegate(),
@@ -412,7 +436,8 @@ class _TimeBankAdminView extends StatelessWidget {
 
   Widget getUserWidget(
       UserModel user, BuildContext context, TimebankModel model) {
-    if (user == null) return Offstage();
+    user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
+    user.fullname = user.fullname == null ? defaultUsername : user.fullname;
     return Card(
       elevation: 0.0,
       child: ListTile(

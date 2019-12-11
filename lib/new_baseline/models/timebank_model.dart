@@ -39,7 +39,8 @@ class TimebankModel {
       this.rootTimebankId,
       this.children,
       this.balance,
-      this.location,});
+      this.location,
+      });
 
   factory TimebankModel.fromMap(Map<String, dynamic> json) {
     TimebankModel timebankModel = new TimebankModel(

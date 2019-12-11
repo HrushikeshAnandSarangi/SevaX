@@ -9,6 +9,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/app_demo_humanity_first.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
@@ -29,6 +30,7 @@ import '../globals.dart' as globals;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'invitation/InviteMembers.dart';
+import 'news/overflow_constants.dart';
 import 'notifications/notifications_page.dart';
 //import 'package:connectivity/connectivity.dart';
 
@@ -397,7 +399,17 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     );
                   },
                 ),
-
+                PopupMenuButton<String>(
+                  onSelected: choiceAction,
+                  itemBuilder: (BuildContext context) {
+                    return Constants.choices.map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice),
+                      );
+                    }).toList();
+                  },
+                ),
                 //...pages.elementAt(_selectedIndex).appBarActions,
               ],
               bottom: pages.elementAt(_selectedIndex).bottom,
@@ -416,7 +428,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
             //if (i != 2)
             bottomPages.add(pages.elementAt(i));
           }
-
           return bottomPages.map((page) {
             return BottomNavigationBarItem(
               icon: page.tabIcon,
@@ -470,6 +481,15 @@ class _SevaCoreViewState extends State<SevaCoreView>
     );
   }
 
+  void choiceAction(String choice) {
+    if (choice == Constants.Help) {
+      // App demo
+      navigateToAppDemo();
+    } else if (choice == Constants.CreateYangGang) {
+      createSubTimebankOverflow(context);
+    }
+  }
+
   FloatingActionButton getFloatingBtn() {
     if (pages.elementAt(_selectedIndex).title == "Feeds") {
       return FloatingActionButton.extended(
@@ -507,7 +527,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
             ),
             foregroundColor: FlavorConfig.values.buttonTextColor,
             onPressed: () {
-              if (SevaCore.of(context).loggedInUser.adminOfYanagGangs > 1) {
+              var adminOfyangGangsNumber =
+                  SevaCore.of(context).loggedInUser.adminOfYanagGangs;
+
+
+                  print("Admin of Yang gangs -> $adminOfyangGangsNumber");
+              if (adminOfyangGangsNumber == 0 || adminOfyangGangsNumber > 1) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -515,7 +540,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         SelectTimeBankForNewRequest("Request"),
                   ),
                 );
-              } else {
+              } else if (adminOfyangGangsNumber == 1) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -524,6 +549,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           .loggedInUser
                           .timebankIdForYangGangAdmin,
                     ),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        SelectTimeBankForNewRequest("Request"),
                   ),
                 );
               }
@@ -1111,6 +1144,26 @@ class _SevaCoreViewState extends State<SevaCoreView>
         builder: (context) => TimebankCreate(
           timebankId: FlavorConfig.values.timebankId,
         ),
+      ),
+    );
+  }
+
+  void createSubTimebankOverflow(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimebankCreate(
+          timebankId: FlavorConfig.values.timebankId,
+        ),
+      ),
+    );
+  }
+
+  void navigateToAppDemo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AppDemoHumanityFirst(),
       ),
     );
   }

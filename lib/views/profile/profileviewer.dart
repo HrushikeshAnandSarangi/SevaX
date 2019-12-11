@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'dart:math';
@@ -54,6 +55,21 @@ class ProfileViewerState extends State<ProfileViewer> {
                   return Center(child: CircularProgressIndicator());
                 default:
                   widget.userModel = UserModel.fromMap(snapshot.data.data);
+
+                  if (widget.userModel == null) {
+                    print("User details not fouund");
+                    Navigator.pop(context);
+                    return Offstage();
+                  }
+
+                  if (widget.userModel.fullname == null) {
+                    widget.userModel.fullname = defaultUsername;
+                  }
+
+                  if (widget.userModel.photoURL == null) {
+                    widget.userModel.photoURL = defaultUserImageURL;
+                  }
+
                   widget.isBlocked =
                       widget.userModel.blockedBy.contains(userData.sevaUserID);
                   return SingleChildScrollView(
@@ -115,7 +131,8 @@ class ProfileViewerState extends State<ProfileViewer> {
                                     Text(' Chat'),
                                   ],
                                 ),
-                                onPressed: widget.userEmail == loggedInEmail || widget.isBlocked
+                                onPressed: widget.userEmail == loggedInEmail ||
+                                        widget.isBlocked
                                     ? null
                                     : () {
                                         List users = [
@@ -465,9 +482,9 @@ class ProfileViewerState extends State<ProfileViewer> {
           title: new Text(widget.isBlocked
               ? 'Unblock'
               : 'Block' + " ${widget.userModel.fullname.split(' ')[0]}."),
-          content: new Text( 
-              widget.isBlocked ? '${widget.userModel.fullname.split(' ')[0]}  would be unblocked' : 
-              "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
+          content: new Text(widget.isBlocked
+              ? '${widget.userModel.fullname.split(' ')[0]}  would be unblocked'
+              : "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
           actions: <Widget>[
             new FlatButton(
               child: new Text("CANCEL"),
