@@ -202,45 +202,6 @@ class _TimeBankAdminView extends StatelessWidget {
                 user.photoURL = defaultUserImageURL;
               }
 
-              if (isAdmin) {
-                return Slidable(
-                  delegate: SlidableDrawerDelegate(),
-                  actions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.close,
-                      color: Colors.red,
-                      caption: 'Remove',
-                      onTap: () {
-                        List<String> admins =
-                            model.admins.map((s) => s).toList();
-                        admins.remove(user.sevaUserID);
-                        updateTimebank(model, admins: admins);
-                      },
-                    ),
-                  ],
-                  secondaryActions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.arrow_downward,
-                      color: Colors.orange,
-                      caption: 'Coordinator',
-                      onTap: () {
-                        List<String> admins =
-                            model.admins.map((s) => s).toList();
-                        List<String> coordinators =
-                            model.coordinators.map((s) => s).toList();
-                        coordinators.add(user.sevaUserID);
-                        admins.remove(user.sevaUserID);
-                        updateTimebank(
-                          model,
-                          coordinators: coordinators,
-                          admins: admins,
-                        );
-                      },
-                    ),
-                  ],
-                  child: getUserWidget(user, context, model),
-                );
-              }
               return user != null && user.fullname != null
                   ? getUserWidget(user, context, model)
                   : Offstage();

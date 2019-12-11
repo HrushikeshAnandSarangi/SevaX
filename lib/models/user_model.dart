@@ -33,6 +33,7 @@ class UserModel extends DataModel {
   String timebankIdForYangGangAdmin;
 
   String tokens;
+
   bool acceptedEULA = false;
   bool completedIntro = false;
 
@@ -91,7 +92,7 @@ class UserModel extends DataModel {
       // SevaCore.of(context).loggedInUser.blockedMembers = blockedMembers;
     } else {
       this.blockedMembers = List();
-     // print("Blocked Data not present");
+      // print("Blocked Data not present");
     }
 
     if (map.containsKey('blockedBy')) {
@@ -206,6 +207,7 @@ class UserModel extends DataModel {
     if (this.skills != null && this.skills.isNotEmpty) {
       object['skills'] = this.skills;
     }
+
     if (this.currentBalance != null) {
       object['currentBalance'] = this.currentBalance;
     } else {

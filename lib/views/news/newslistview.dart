@@ -219,7 +219,13 @@ class NewsListState extends State<NewsList> {
                     return Text('Please make sure you have GPS turned on.');
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return Center(child: CircularProgressIndicator());
+                      return Container(
+                        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/3),
+                        child: Center(
+                            child: CircularProgressIndicator()
+                        ),
+                      );
+
                       break;
                     default:
                       List<NewsModel> newsList = snapshot.data;

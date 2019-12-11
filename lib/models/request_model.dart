@@ -123,19 +123,25 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
+
     }
+
     if (map.containsKey('location')) {
-      GeoPoint geoPoint;
+      GeoPoint geoPoint = map['location']['geopoint'];
 
-      try{
-        geoPoint = GeoPoint(map['location']['geopoint']['_latitude'], map['location']['geopoint']['_longitude']);
+      // = GeoPoint(38.8951, -77.0364);
+      // try {
+      //   geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
+      //       map['location']['geopoint']['_longitude']);
+      // } catch (e) {
+      //   print("Lat long not found");
+      //   geoPoint = GeoPoint(38.8951, -77.0364);
+      // }
 
-      }catch(e){
-        print("Lat long not found");
-        geoPoint = GeoPoint(38.8951, -77.0364);
-      }
+      // print(
+      //     "GeoFire HotFix -------> ${map['location']['geopoint']['_longitude']}");
 
-      print("GeoFire HotFix -------> ${map['location']['geopoint']['_longitude']}");
+//      print("GeoFire HotFix -------> ${map['location']['geopoint']['_longitude']}");
 
 
       this.location = Geoflutterfire()
