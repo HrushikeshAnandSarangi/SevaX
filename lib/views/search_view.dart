@@ -3,14 +3,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
-import 'package:sevaexchange/views/news/newslistview.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
-import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 
 import 'core.dart';
 
@@ -27,25 +23,29 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   TabController controller;
   final TextEditingController searchTextController = TextEditingController();
   final searchOnChange = new BehaviorSubject<String>();
+
   @override
   void initState() {
     super.initState();
     controller = widget.controller;
     searchOnChange.debounceTime(Duration(milliseconds: 500)).listen((queryString) {
-      if(queryString.length>2) {
-
-      }
-    });
       controller.addListener(() {
-      setState(() {});
-    });
-    searchTextController.addListener(() {
-      setState(() {});
+        setState(() {});
+      });
+      searchTextController.addListener(() {
+        setState(() {});
+      });
     });
   }
 
   void _search(String queryString) {
-    searchOnChange.add(queryString);
+    if(queryString.length==1){
+      setState(() {
+        searchOnChange.add(queryString);
+      });
+    }else{
+      searchOnChange.add(queryString);
+    }
   }
 
   @override
@@ -160,6 +160,39 @@ class ResultView extends StatefulWidget {
 }
 
 class _ResultViewState extends State<ResultView> {
+
+  bool checkValidSting(String str) {
+    return str != null && str.trim().length != 0;
+  }
+
+  Widget getTitleForCard(String str) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          str.trim(),
+          overflow: TextOverflow.ellipsis,
+          style: sectionHeadingStyle,
+          textAlign: TextAlign.left
+        ),
+        Text(''),
+      ],
+    );
+  }
+
+  Widget fetchHeadingFromNewsModel(NewsModel newsModel) {
+    if(checkValidSting(newsModel.title)) {
+      return getTitleForCard(newsModel.title);
+    }
+    if(checkValidSting(newsModel.subheading)) {
+      return getTitleForCard(newsModel.subheading);
+    }
+    if(checkValidSting(newsModel.description)) {
+      return getTitleForCard(newsModel.description);
+    }
+    return getTitleForCard('No content');
+  }
+
   Widget build(BuildContext context) {
     if (widget.controller.text.trim().isEmpty) {
       return Center(child: ClipOval(
@@ -168,15 +201,21 @@ class _ResultViewState extends State<ResultView> {
             image: 'lib/assets/images/search.png'
         ),
       ));
+    }else if(widget.controller.text.trim().length < 3) {
+      print('Search requires minimum 3 characters');
+      return getEmptyWidget('Users','Search requires minimum 3 characters');
     }
     switch (widget.type) {
       case SearchType.USER:
+
+        print('Blahblahblah :${widget.controller.text}');
         return StreamBuilder<List<UserModel>>(
           stream:
               SearchManager.searchForUser(queryString: widget.controller.text),
           builder: (context, snapshot) {
+            print('$snapshot');
             if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
+                Text(snapshot.error.toString());
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -188,7 +227,9 @@ class _ResultViewState extends State<ResultView> {
               );
             }
             List<UserModel> userList = snapshot.data;
-
+            if(userList.length == 0) {
+              return getEmptyWidget('Users','No user found');
+            }
             return ListView.builder(
               itemBuilder: (context, index) {
                 if (index == 0) {
@@ -252,6 +293,9 @@ class _ResultViewState extends State<ResultView> {
               );
             }
             List<NewsModel> newsList = snapshot.data;
+            if(newsList.length == 0) {
+              return getEmptyWidget('News','No news feed found');
+            }
             return ListView.builder(
               itemBuilder: (context, index) {
                 if (index == 0) {
@@ -261,7 +305,52 @@ class _ResultViewState extends State<ResultView> {
                   );
                 }
                 NewsModel news = newsList.elementAt(index - 1);
-                return Card(
+                return GestureDetector(
+                  onTap: () async {
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('Loading'),
+                            content: LinearProgressIndicator(),
+                          );
+                        }
+                    );
+                    NewsModel newsModel = await FirestoreManager.getNewsForId(
+                      news.id,
+                    );
+                    Navigator.of(context, rootNavigator: true).pop();
+                    if (newsModel == null) return;
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return NewsCardView(
+                            newsModel: newsModel,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    title: fetchHeadingFromNewsModel(news),
+                    leading:  Hero(
+                      tag: news.id,
+                      child: CircleAvatar(
+                        child: ClipOval(
+                          child: FadeInImage.assetNetwork(
+                            height: 140,
+                            width: 140,
+                            placeholder: 'lib/assets/images/noimagefound.png',
+                            image: news.newsImageUrl,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+
+                  Card(
                   child: ListTile(
                     onTap: () async {
                       showDialog(
@@ -331,6 +420,9 @@ class _ResultViewState extends State<ResultView> {
             }
             List<OfferModel> offerList = snapshot.data;
 
+            if(offerList.length == 0) {
+              return getEmptyWidget('Offers','No offer found');
+            }
             return ListView.builder(
               itemCount: offerList.length + 1,
               itemBuilder: (context, index) {
@@ -381,6 +473,9 @@ class _ResultViewState extends State<ResultView> {
             }
             List<RequestModel> requestList = snapshot.data;
 
+            if(requestList.length == 0) {
+              return getEmptyWidget('Requests','No request found');
+            }
             return ListView.builder(
               itemCount: requestList.length + 1,
               itemBuilder: (context, index) {
@@ -424,6 +519,9 @@ class _ResultViewState extends State<ResultView> {
             }
             List<UserModel> userList = snapshot.data;
 
+            if(userList.length == 0) {
+              return getEmptyWidget('Users','No user found');
+            }
             return ListView.builder(
               itemBuilder: (context, index) {
                 if (index == 0) {
@@ -468,6 +566,42 @@ class _ResultViewState extends State<ResultView> {
           },
         );
     }
+  }
+  Widget getEmptyWidget(String title,String notFoundValue) {
+    return Center(
+      child: Text(
+        notFoundValue,
+        overflow: TextOverflow.ellipsis,
+        style: sectionHeadingStyle,
+      ),
+    );
+//    return Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+//        Container(
+//          padding: EdgeInsets.only(left: 8, top: 16),
+//          child: Text(title, style: sectionTextStyle),
+//        ),
+//        Container(
+//          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/3),
+//          child: Center(
+//            child: Text(
+//              notFoundValue,
+//              overflow: TextOverflow.ellipsis,
+//              style: sectionHeadingStyle,
+//            ),
+//          ),
+//        ),
+//      ],
+//    );
+  }
+
+  TextStyle get sectionHeadingStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 12.5,
+      color: Colors.black,
+    );
   }
 
   TextStyle get sectionTextStyle {
