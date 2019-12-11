@@ -37,7 +37,6 @@ class _RegisterPageState extends State<RegisterPage>
   ImagePickerHandler imagePicker;
   bool isEmailVerified = false;
   bool sentOTP = false;
-  var codeArray = ['mango', 'orange', 'apple', 'plum', 'banana', 'custard', 'papaya', 'grapes', 'pear', 'avacado'];
 
   @override
   void initState() {
@@ -57,10 +56,14 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(
-          'Register',
-          style: TextStyle(color: Colors.white),
+        centerTitle: true,
+        elevation: 0.5,
+        backgroundColor: Color(0xFFFFFFFF),
+        leading: BackButton(
+          color: Colors.black54
         ),
+        title: new Text('Your details',
+          style: TextStyle(color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w500))
       ),
       body: GestureDetector(
         onTap: () {

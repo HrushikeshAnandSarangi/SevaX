@@ -8,6 +8,10 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:flutter/gestures.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage();
@@ -19,7 +23,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
+  Alignment childAlignment = Alignment.center;
   bool _isLoading = false;
 
   String emailId;
@@ -27,73 +31,175 @@ class _LoginPageState extends State<LoginPage> {
   bool _shouldObscurePassword = true;
   Color enabled = Colors.white.withAlpha(120);
 
+  Widget horizontalLine() => Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Container(
+          width: ScreenUtil.getInstance().setWidth(120),
+          height: 1.0,
+          color: Colors.black26.withOpacity(.2),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     UserData.shared.isFromLogin = true;
-    return Scaffold(
+    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
+    ScreenUtil.instance =
+        ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
+    return new Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomPadding: true,
       key: _scaffoldKey,
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? [
-//                    Color.fromARGB(255, 23, 54, 134),
-//                    Color.fromARGB(255, 115, 132, 176),
-//                    Color.fromARGB(255, 214, 222, 234),
-                    Theme.of(context).primaryColor,
-                    // Colors.white,
-                    Theme.of(context).primaryColor,
-                  ]
-                : FlavorConfig.appFlavor == Flavor.TULSI
-                    ? [
-                        Theme.of(context).primaryColor,
-                        Theme.of(context).primaryColor,
-                      ]
-                    : FlavorConfig.appFlavor == Flavor.TOM
-                        ? [
-                            Theme.of(context).primaryColor,
-                            Theme.of(context).primaryColor,
-                          ]
-                        : [
-                            Theme.of(context).primaryColor,
-                            //Theme.of(context).primaryColorLight,
-                            Theme.of(context).primaryColor,
-                          ],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          FadeAnimation(
+              0.4,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  FlavorConfig.appFlavor == Flavor.APP
-                      ? SizedBox(height: 5)
-                      : SizedBox(height: 48),
-                  logo,
-                  SizedBox(height: 32),
-                  content,
-                  SizedBox(height: 16),
-                  signInWithGoogle,
-                  SizedBox(height: 16),
-                  SizedBox(height: 16),
-                  FlavorConfig.appFlavor == Flavor.APP
-                      ? Offstage()
-                      : poweredBySevaLogo,
-                  SizedBox(height: 16),
+                  Padding(
+                    padding: EdgeInsets.only(top: 60.0),
+                  ),
+                  Expanded(
+                    child: Container(),
+                  ),
+                  Image.asset("lib/assets/images/image_02.png")
                 ],
+              )),
+          SingleChildScrollView(
+            child: FadeAnimation(
+              1.4,
+              Padding(
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 80.0),
+                child: Column(
+                  children: <Widget>[
+                    logo,
+                    SizedBox(
+                      height: ScreenUtil.getInstance().setHeight(60),
+                    ),
+                    content,
+                    RichText
+                      (
+                      text: TextSpan
+                        (
+                        style: TextStyle( color: Colors.black45, fontSize: 12 ),
+                        text: 'By continuing, you agree to SevaX',
+                        children: <TextSpan>
+                        [
+                          TextSpan
+                            (
+                              text: ' Terms of Service', style: TextStyle(color: Theme.of(context).accentColor),
+                              recognizer: TapGestureRecognizer() ..onTap = showTermsPage
+                          ),
+
+                          TextSpan( text: ' We will manage information as described in our' ),
+                          TextSpan
+                            (
+                              text: ' Privacy Policy ', style: TextStyle(color: Theme.of(context).accentColor),
+                              recognizer: TapGestureRecognizer() ..onTap = showPrivacyPolicyPage
+                          ),
+                          TextSpan( text: ' and' ),
+                          TextSpan
+                            (
+                              text: ' Cookie Policy', style: TextStyle(color: Theme.of(context).accentColor),
+                              recognizer: TapGestureRecognizer() ..onTap = showCookiePolicyPage
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: ScreenUtil.getInstance().setHeight(50)),
+                    SizedBox(
+                      height: ScreenUtil.getInstance().setHeight(15),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Text("New User? "),
+                            InkWell(
+                                onTap: () async {
+                                  isLoading = true;
+                                  UserModel user =
+                                      await Navigator.of(context).push(
+                                    MaterialPageRoute<UserModel>(
+                                      builder: (context) => RegisterPage(),
+                                    ),
+                                  );
+                                  isLoading = false;
+                                  if (user != null) _processLogin(user);
+                                },
+                                child: Text(
+                                  "SignUp",
+                                  style: TextStyle(
+                                      color: Theme.of(context).accentColor),
+                                ))
+                          ],
+                        ),
+                        InkWell(
+                          child: Container(
+                            width: ScreenUtil.getInstance().setWidth(250),
+                            height: ScreenUtil.getInstance().setHeight(70),
+                            decoration: BoxDecoration(
+                                gradient: LinearGradient(colors: [
+                                  Theme.of(context).accentColor,
+                                  Theme.of(context).accentColor
+                                ]),
+                                borderRadius: BorderRadius.circular(50.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Theme.of(context)
+                                          .accentColor
+                                          .withOpacity(.3),
+                                      offset: Offset(0.0, 8.0),
+                                      blurRadius: 8.0)
+                                ]),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: isLoading
+                                    ? null
+                                    : () {
+                                        signInWithEmailAndPassword();
+                                      },
+                                child: Center(
+                                  child: Text("SIGNIN",
+                                      style: TextStyle(
+                                          color: FlavorConfig
+                                              .values.buttonTextColor,
+                                          fontSize: 18,
+                                          letterSpacing: 1.0)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: ScreenUtil.getInstance().setHeight(40),
+                    ),
+                    signInWithGoogle,
+                    SizedBox(
+                      height: ScreenUtil.getInstance().setHeight(30),
+                    ),
+                    FlavorConfig.appFlavor == Flavor.APP
+                        ? Offstage()
+                        : poweredBySevaLogo,
+                    SizedBox(height: 16),
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          )
+        ],
       ),
     );
   }
 
   bool get isLoading => this._isLoading;
+
   set isLoading(bool isLoading) {
     setState(() => this._isLoading = isLoading);
   }
@@ -107,10 +213,11 @@ class _LoginPageState extends State<LoginPage> {
                   'Humanity\nFirst'.toUpperCase(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
+                    height: 1,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black45,
+                    fontSize: ScreenUtil.getInstance().setSp(45),
                     letterSpacing: 5,
-                    fontSize: 24,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
                   ),
                 )
               : Offstage(),
@@ -151,134 +258,84 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget get content {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                style: textStyle,
-                cursorColor: Colors.white,
-                validator: _validateEmailId,
-                onSaved: _saveEmail,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  labelText: 'EMAIL',
-                  labelStyle: textStyle,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                obscureText: _shouldObscurePassword,
-                style: textStyle,
-                cursorColor: Colors.white,
-                validator: _validatePassword,
-                onSaved: _savePassword,
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white)),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  labelText: 'PASSWORD',
-                  labelStyle: textStyle,
-                  suffix: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _shouldObscurePassword = !_shouldObscurePassword;
-                      });
-                    },
-                    child: Text(
-                      'Show',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: _shouldObscurePassword
-                            ? Colors.white
-                            : Colors.black,
+    return FadeAnimation(
+        1.5,
+        new Container(
+          width: double.infinity,
+          height: ScreenUtil.getInstance().setHeight(250),
+          decoration: BoxDecoration(
+              color: Colors.white),
+          child: Padding(
+            padding:
+                EdgeInsets.only( top: 8.0, bottom: 0.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: TextFormField(
+                      style: textStyle,
+                      cursorColor: Colors.black54,
+                      validator: _validateEmailId,
+                      onSaved: _saveEmail,
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        labelText: 'EMAIL',
+                        labelStyle: textStyle,
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
-            SizedBox(height: 32),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(16),
-                    onPressed: isLoading
-                        ? null
-                        : () {
-                            signInWithEmailAndPassword();
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: TextFormField(
+                      obscureText: _shouldObscurePassword,
+                      style: textStyle,
+                      cursorColor: Colors.black54,
+                      validator: _validatePassword,
+                      onSaved: _savePassword,
+                      decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54)),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        labelText: 'PASSWORD',
+                        labelStyle: textStyle,
+                        suffix: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _shouldObscurePassword = !_shouldObscurePassword;
+                            });
                           },
-                    color: Theme.of(context).accentColor,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        if (isLoading)
-                          SizedBox(
-                            height: 18,
-                            width: 18,
-                            child: Theme(
-                              data: ThemeData(accentColor: Colors.white),
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
+                          child: Text(
+                            'Show',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _shouldObscurePassword
+                                  ? Colors.black54
+                                  : Colors.black,
                             ),
                           ),
-                        SizedBox(width: 16),
-                        Text(
-                          'SIGN IN',
-                          style: TextStyle(
-                            color: FlavorConfig.values.buttonTextColor,
-                          ),
                         ),
-                      ],
+                      ),
                     ),
-                    shape: StadiumBorder(),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
-              padding: EdgeInsets.all(0),
-              onPressed: () async {
-                isLoading = true;
-                UserModel user = await Navigator.of(context).push(
-                  MaterialPageRoute<UserModel>(
-                    builder: (context) => RegisterPage(),
+                  SizedBox(
+                    height: ScreenUtil.getInstance().setHeight(15),
                   ),
-                );
-                isLoading = false;
-                if (user != null) _processLogin(user);
-              },
-              child: Text(
-                'Create an Account',
-                style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.w700),
+                ],
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+          ),
+        ));
   }
 
   Widget get signInWithGoogle {
@@ -288,18 +345,14 @@ class _LoginPageState extends State<LoginPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(width: 20, child: Divider(height: 3, color: enabled)),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Sign in with',
-                style: TextStyle(color: enabled),
-              ),
-            ),
-            SizedBox(width: 20, child: Divider(height: 3, color: enabled)),
+            horizontalLine(),
+            Text("Sign in with"),
+            horizontalLine()
           ],
         ),
-        SizedBox(height: 16),
+        SizedBox(
+          height: ScreenUtil.getInstance().setHeight(20),
+        ),
         Material(
           color: Colors.white,
           shape: CircleBorder(),
@@ -323,8 +376,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget get poweredBySevaLogo {
     return Column(
       children: <Widget>[
+        Text("Powered by",
+            style: TextStyle(
+                color: Colors.black38, fontSize: 12, letterSpacing: 1.0)),
         SizedBox(
-          height: 45,
+          height: 35,
           child: Image.asset(
             'lib/assets/images/sticker.webp',
           ),
@@ -335,7 +391,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextStyle get textStyle {
     return TextStyle(
-      color: Colors.white,
+      color: Colors.black54,
     );
   }
 
@@ -370,7 +426,7 @@ class _LoginPageState extends State<LoginPage> {
     if (user == null) {
       return;
     }
-
+    print(user);
     _processLogin(user);
   }
 
@@ -443,5 +499,15 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ));
     });
+  }
+
+  void showTermsPage() {
+
+  }
+  void showPrivacyPolicyPage() {
+
+  }
+  void showCookiePolicyPage() {
+
   }
 }

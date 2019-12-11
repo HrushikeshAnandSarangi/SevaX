@@ -80,7 +80,7 @@ class FlavorConfig {
             indicatorColor: Colors.red[900],
             primaryColorBrightness: Brightness.light,
             accentColorBrightness: Brightness.light,
-            fontFamily: 'Montserrat',
+            fontFamily: 'Europa',
             splashColor: Colors.grey,
             bottomAppBarColor: Colors.white,
           ),
