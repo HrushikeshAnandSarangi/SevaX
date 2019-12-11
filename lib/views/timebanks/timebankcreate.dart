@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,12 +8,14 @@ import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views//membersadd.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 
 class TimebankCreate extends StatelessWidget {
   final String timebankId;
@@ -66,7 +69,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
+    selectedUsers = HashMap();
   }
+
+  HashMap<String, UserModel> selectedUsers = HashMap();
+  String memberAssignment = "+ Add Members";
 
   void _writeToDB() {
     // _checkTimebankName();
@@ -77,6 +84,13 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersId.forEach((m) {
       members.add(m);
     });
+
+    selectedUsers.forEach((key, user) {
+      print("Selected member with key $key");
+      members.add(user.sevaUserID);
+    });
+
+    print("Final arrray $members");
 
     timebankModel.id = Utils.getUuid();
     timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -98,6 +112,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
   }
+
+  Map onActivityResult;
 
   @override
   Widget build(BuildContext context) {
@@ -278,15 +294,37 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: FlatButton(
-                    onPressed: () {
-                      
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => AddMembers()),
-                      // );
+                    onPressed: () async {
+                      print(" Selected users before ${selectedUsers.length}");
+
+                      onActivityResult = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SelectMembersInGroup(
+                            SevaCore.of(context).loggedInUser.currentTimebank,
+                            selectedUsers,
+                          ),
+                        ),
+                      );
+
+                      if (onActivityResult != null &&
+                          onActivityResult.containsKey("membersSelected")) {
+                        selectedUsers = onActivityResult['membersSelected'];
+                        setState(() {
+                          if (selectedUsers.length == 0)
+                            memberAssignment = "Assign to volunteers";
+                          else
+                            memberAssignment =
+                                "${selectedUsers.length} volunteers selected";
+                        });
+                        print(
+                            "Data is present Selected users ${selectedUsers.length}");
+                      } else {
+                        print("No users where selected");
+                        //no users where selected
+                      }
                     },
                     child: Text(
-                      '+ Add Members',
+                      memberAssignment,
                       style: TextStyle(fontSize: 16.0, color: Colors.blue),
                     ),
                   )),
@@ -392,6 +430,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                               if (_formKey.currentState.validate()) {
                                 // If the form is valid, we want to show a Snackbar
                                 _writeToDB();
+                                // return;
+
                                 if (parentTimebank.children == null)
                                   parentTimebank.children = [];
                                 parentTimebank.children.add(timebankModel.id);

@@ -325,42 +325,42 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     onPressed: () async {
-                     // if (location != null) {
-                        requestModel.requestStart =
-                            OfferDurationWidgetState.starttimestamp;
-                        requestModel.requestEnd =
-                            OfferDurationWidgetState.endtimestamp;
+                      // if (location != null) {
+                      requestModel.requestStart =
+                          OfferDurationWidgetState.starttimestamp;
+                      requestModel.requestEnd =
+                          OfferDurationWidgetState.endtimestamp;
 
-                        //adding some members for humanity first
-                        List<String> arrayOfSelectedMembers = List();
-                        selectedUsers
-                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
-                        requestModel.approvedUsers = arrayOfSelectedMembers;
-                        //adding some members for humanity first
-                        if (_formKey.currentState.validate()) {
-                          await _writeToDB();
-                          print("Select Members");
-                          if (widget.isOfferRequest == true &&
-                              widget.userModel != null) {
-                            print("Adding from selected members-------------");
+                      //adding some members for humanity first
+                      List<String> arrayOfSelectedMembers = List();
+                      selectedUsers
+                          .forEach((k, v) => arrayOfSelectedMembers.add(k));
+                      requestModel.approvedUsers = arrayOfSelectedMembers;
+                      //adding some members for humanity first
+                      if (_formKey.currentState.validate()) {
+                        await _writeToDB();
+                        print("Select Members");
+                        if (widget.isOfferRequest == true &&
+                            widget.userModel != null) {
+                          print("Adding from selected members-------------");
 
-                            // OfferModel offer = widget.offer;
-                            // Set<String> offerRequestList = () {
-                            //   if (offer.requestList == null) return [];
-                            //   return offer.requestList;
-                            // }()
-                            //     .toSet();
-                            // offerRequestList.add(requestModel.id);
-                            // offer.requestList = offerRequestList.toList();
-                            // FirestoreManager.updateOfferWithRequest(offer: offer);
-                            // sendOfferRequest(
-                            //     offerModel: widget.offer,
-                            //     requestSevaID: requestModel.sevaUserId);
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                          }
+                          // OfferModel offer = widget.offer;
+                          // Set<String> offerRequestList = () {
+                          //   if (offer.requestList == null) return [];
+                          //   return offer.requestList;
+                          // }()
+                          //     .toSet();
+                          // offerRequestList.add(requestModel.id);
+                          // offer.requestList = offerRequestList.toList();
+                          // FirestoreManager.updateOfferWithRequest(offer: offer);
+                          // sendOfferRequest(
+                          //     offerModel: widget.offer,
+                          //     requestSevaID: requestModel.sevaUserId);
+                          Navigator.pop(context);
                           Navigator.pop(context);
                         }
+                        Navigator.pop(context);
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -418,10 +418,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
           print(" Selected users before ${selectedUsers.length}");
 
-          onActivityResult = await Navigator.of(context).push(MaterialPageRoute(
+          onActivityResult = await Navigator.of(context).push(
+            MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
                   SevaCore.of(context).loggedInUser.currentTimebank,
-                  selectedUsers)));
+                  selectedUsers),
+            ),
+          );
 
           if (onActivityResult != null &&
               onActivityResult.containsKey("membersSelected")) {
@@ -451,7 +454,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.postTimestamp = timestamp;
     requestModel.accepted = false;
     requestModel.acceptors = [];
-    requestModel.location = location == null ? GeoFirePoint(40.754387,-73.984291) : location;
+    requestModel.location =
+        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
     //requestModel.r
 
