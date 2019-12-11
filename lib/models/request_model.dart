@@ -135,7 +135,7 @@ class RequestModel extends DataModel {
         geoPoint = GeoPoint(38.8951, -77.0364);
       }
 
-      print("GeoFire HotFix -------> ${map['location']['geopoint']['_longitude']}");
+//      print("GeoFire HotFix -------> ${map['location']['geopoint']['_longitude']}");
 
 
       this.location = Geoflutterfire()
