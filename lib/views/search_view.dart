@@ -120,7 +120,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
             controller: controller,
             tabs: [
               Tab(child: Text('Users')),
-              Tab(child: Text('News')),
+              Tab(child: Text('Feeds')),
               Tab(child: Text('Requests')),
               Tab(child: Text('Offers')),
             ],
