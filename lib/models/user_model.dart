@@ -225,4 +225,10 @@ class UserModel extends DataModel {
 
     return object;
   }
+
+  // @override
+  // String toString() {
+  //   // TODO: implement toString
+  //   return " Username -> " + this.fullname + "  Photo URL -> " + this.photoURL;
+  // }
 }

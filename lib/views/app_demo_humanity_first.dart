@@ -55,8 +55,7 @@ class IntroScreenState extends State<AppDemoHumanityFirst> {
         backgroundImage: 'lib/assets/images/Info_4.png',
         title: "",
         pathImage: 'lib/',
-        description:
-            "",
+        description: "",
         backgroundColor: Color(0xff203152),
       ),
     );

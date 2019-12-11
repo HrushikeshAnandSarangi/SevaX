@@ -527,7 +527,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
             ),
             foregroundColor: FlavorConfig.values.buttonTextColor,
             onPressed: () {
-              if (SevaCore.of(context).loggedInUser.adminOfYanagGangs > 1) {
+              var adminOfyangGangsNumber =
+                  SevaCore.of(context).loggedInUser.adminOfYanagGangs;
+
+
+                  print("Admin of Yang gangs -> $adminOfyangGangsNumber");
+              if (adminOfyangGangsNumber == 0 || adminOfyangGangsNumber > 1) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -535,7 +540,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         SelectTimeBankForNewRequest("Request"),
                   ),
                 );
-              } else {
+              } else if (adminOfyangGangsNumber == 1) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -544,6 +549,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           .loggedInUser
                           .timebankIdForYangGangAdmin,
                     ),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        SelectTimeBankForNewRequest("Request"),
                   ),
                 );
               }

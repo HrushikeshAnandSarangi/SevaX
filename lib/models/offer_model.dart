@@ -125,6 +125,9 @@ class OfferModel extends DataModel {
     if (this.timebankId != null) {
       map['timebankId'] = this.timebankId;
     }
+    if (this.location != null) {
+      map['location'] = this.location.data;
+    }
 
     return map;
   }

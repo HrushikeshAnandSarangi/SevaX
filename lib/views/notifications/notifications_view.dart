@@ -105,10 +105,11 @@ class NotificationsView extends StatelessWidget {
                         return notificationShimmer;
                       }
                       UserModel user = snapshot.data;
-                      return getJoinReuqestsNotificationWidget(
-                          user, notification.id, model, context);
+                      return user != null && user.fullname != null
+                          ? getJoinReuqestsNotificationWidget(
+                              user, notification.id, model, context)
+                          : Offstage();
                     });
-
                 break;
 
               case NotificationType.RequestCompleted:
@@ -775,8 +776,7 @@ class NotificationsView extends StatelessWidget {
                         ),
                         onPressed: () async {
                           // reject the claim
-                          rejectMemberClaimForEvent
-                          (
+                          rejectMemberClaimForEvent(
                               context: context,
                               model: requestModel,
                               notificationId: notificationId,
@@ -877,6 +877,8 @@ class NotificationsView extends StatelessWidget {
       String notificationId,
       JoinRequestNotificationModel model,
       BuildContext context) {
+    // assert(user != null);
+
     return Dismissible(
         background: dismissibleBackground,
         key: Key(Utils.getUuid()),
@@ -890,9 +892,11 @@ class NotificationsView extends StatelessWidget {
             decoration: notificationDecoration,
             child: ListTile(
               title: Text("Join request"),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
+              leading: user.photoURL != null
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoURL),
+                    )
+                  : Offstage(),
               subtitle: Text(
                   '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}, Tap to view all join requests'),
             ),

@@ -15,7 +15,7 @@ import 'package:sevaexchange/views/core.dart';
 class UpdateOffer extends StatelessWidget {
   final String timebankId;
   OfferModel offerModel;
-  UpdateOffer({this.timebankId,this.offerModel});
+  UpdateOffer({this.timebankId, this.offerModel});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +41,7 @@ class UpdateOffer extends StatelessWidget {
 class MyCustomOfferForm extends StatefulWidget {
   final String timebankId;
   OfferModel offerModel;
-  MyCustomOfferForm({this.timebankId,this.offerModel});
+  MyCustomOfferForm({this.timebankId, this.offerModel});
   @override
   MyCustomOfferFormState createState() {
     return MyCustomOfferFormState();
@@ -269,11 +269,16 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
   }
 
   Future _getLocation() async {
+    
+    print("-------->>>>.  $location ");
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,
       location.longitude,
     );
     log('_getLocation: $address');
+
+    print("Geo Location is $address");
+
     setState(() {
       this.selectedAddress = address;
     });

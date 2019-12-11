@@ -56,7 +56,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String title = '';
   String schedule = '';
   String description = '';
-  GeoFirePoint location;
+  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
   String selectedAddress;
   String timebankId;
 
@@ -73,16 +73,18 @@ class MyCustomFormState extends State<MyCustomForm> {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
     OfferModel model = OfferModel(
-        email: SevaCore.of(context).loggedInUser.email,
-        fullName: SevaCore.of(context).loggedInUser.fullname,
-        title: title,
-        id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
-        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        description: description,
-        schedule: schedule,
-        timebankId: widget.timebankId,
-        timestamp: timestamp,
-        location: location == null ? GeoFirePoint(40.754387,-73.984291) : location);
+      email: SevaCore.of(context).loggedInUser.email,
+      fullName: SevaCore.of(context).loggedInUser.fullname,
+      title: title,
+      id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
+      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      description: description,
+      schedule: schedule,
+      timebankId: widget.timebankId,
+      timestamp: timestamp,
+      location:
+          location == null ? GeoFirePoint(40.754387, -73.984291) : location,
+    );
     await FirestoreManager.createOffer(offerModel: model);
   }
 
@@ -198,13 +200,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                     color: Theme.of(context).accentColor,
                     onPressed: () {
                       //if (location != null) {
-                        if (_formKey.currentState.validate()) {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Creating Offer')),
-                          );
-                          _writeToDB();
-                          Navigator.pop(context);
-                        }
+                      if (_formKey.currentState.validate()) {
+                        Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text('Creating Offer')),
+                        );
+                        _writeToDB();
+                        Navigator.pop(context);
+                      }
 //                      } else {
 //                        Scaffold.of(context).showSnackBar(SnackBar(
 //                          content: Text('Location not added'),

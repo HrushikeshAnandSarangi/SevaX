@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -343,7 +344,7 @@ class _RegisterPageState extends State<RegisterPage>
         String imageUrl = await uploadImage(user.email);
         user.photoURL = imageUrl;
       } else {
-          user.photoURL = "https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg";
+          user.photoURL = defaultUserImageURL;
       }
       await FirestoreManager.updateUser(user: user);
       Navigator.pop(context, user);
