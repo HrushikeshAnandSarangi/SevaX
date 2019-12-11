@@ -15,6 +15,7 @@ class SearchManager {
   }) async {
     return await http.get(url, headers: headers);
   }
+
   static Future<http.Response> makePostRequest({
     @required String url,
     Map<String, String> headers,
@@ -36,7 +37,8 @@ class SearchManager {
         }
       }
     });
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -59,11 +61,12 @@ class SearchManager {
         }
       }
     });
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
     List<NewsModel> newsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      NewsModel news = NewsModel.fromMap(sourceMap);
+      NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
       news.id = map['_id'];
       newsList.add(news);
     });
@@ -115,12 +118,13 @@ class SearchManager {
         }
       }
     });
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
 
     List<OfferModel> offerList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      OfferModel model = OfferModel.fromMap(sourceMap);
+      OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
       if (model.associatedRequest == null || model.associatedRequest.isEmpty)
         offerList.add(model);
     });
@@ -130,7 +134,8 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url = 'http://35.243.165.111//elasticsearch/requests/request/_search';
+    String url =
+        'http://35.243.165.111//elasticsearch/requests/request/_search';
     dynamic body = json.encode({
       "query": {
         "multi_match": {
@@ -140,11 +145,12 @@ class SearchManager {
         }
       }
     });
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
     List<RequestModel> offerList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      RequestModel model = RequestModel.fromMap(sourceMap);
+      RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
       if (model.accepted == false) offerList.add(model);
     });
     yield offerList;
@@ -158,13 +164,21 @@ class SearchManager {
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
     return hitList;
   }
+
   static Future<List<Map<String, dynamic>>> _makeElasticSearchPostRequest(
       String url, dynamic body) async {
     String username = 'user';
     String password = 'CiN36UNixjyq';
-    log(json.encode({'authorization': 'basic ' + base64Encode(utf8.encode('$username:$password'))}));
-    http.Response response = await makePostRequest(url: url,body: body, headers: {'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=', "Accept": "application/json",
-      "Content-Type": "application/json"});
+    log(json.encode({
+      'authorization':
+          'basic ' + base64Encode(utf8.encode('$username:$password'))
+    }));
+    http.Response response =
+        await makePostRequest(url: url, body: body, headers: {
+      'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=',
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    });
     log(response.body);
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];

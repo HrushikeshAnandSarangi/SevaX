@@ -123,26 +123,91 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
-
     }
-
     if (map.containsKey('location')) {
       GeoPoint geoPoint = map['location']['geopoint'];
 
-      // = GeoPoint(38.8951, -77.0364);
-      // try {
-      //   geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
-      //       map['location']['geopoint']['_longitude']);
-      // } catch (e) {
-      //   print("Lat long not found");
-      //   geoPoint = GeoPoint(38.8951, -77.0364);
-      // }
+      this.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    }
+  }
 
-      // print(
-      //     "GeoFire HotFix -------> ${map['location']['geopoint']['_longitude']}");
+  RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
+    if (map.containsKey('id')) {
+      this.id = map['id'];
+    }
+    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
+      map['root_timebank_id'] = this.root_timebank_id;
+    }
+    if (map.containsKey('title')) {
+      this.title = map['title'];
+    }
+    if (map.containsKey('description')) {
+      this.description = map['description'];
+    }
+    if (map.containsKey('email')) {
+      this.email = map['email'];
+    }
+    if (map.containsKey('fullname')) {
+      this.fullName = map['fullname'];
+    }
+    if (map.containsKey('sevauserid')) {
+      this.sevaUserId = map['sevauserid'];
+    }
+    if (map.containsKey('requestorphotourl')) {
+      this.photoUrl = map['requestorphotourl'];
+    }
+    if (map.containsKey('acceptors')) {
+      List<String> acceptorList = List.castFrom(map['acceptors']);
+      this.acceptors = acceptorList;
+    }
+    if (map.containsKey('durationofrequest')) {
+      this.durationOfRequest = map['durationofrequest'];
+    }
+    if (map.containsKey('posttimestamp')) {
+      this.postTimestamp = map['posttimestamp'];
+    }
+    if (map.containsKey('request_end')) {
+      this.requestEnd = map['request_end'];
+    }
+    if (map.containsKey('request_start')) {
+      this.requestStart = map['request_start'];
+    }
+    if (map.containsKey('accepted')) {
+      this.accepted = map['accepted'];
+    }
 
-//      print("GeoFire HotFix -------> ${map['location']['geopoint']['_longitude']}");
+    if (map.containsKey('isNotified')) {
+      this.isNotified = map['isNotified'];
+    }
 
+    if (map.containsKey('transactions')) {
+      List<TransactionModel> transactionList = [];
+      List transactionDataList = List.castFrom(map['transactions']);
+
+      transactionList = transactionDataList.map<TransactionModel>((data) {
+        Map<String, dynamic> transactionmap = Map.castFrom(data);
+        return TransactionModel.fromMap(transactionmap);
+      }).toList();
+
+      this.transactions = transactionList;
+    }
+    if (map.containsKey('rejectedReason')) {
+      this.rejectedReason = map['rejectedReason'];
+    }
+    if (map.containsKey('timebankId')) {
+      this.timebankId = map['timebankId'];
+    }
+    if (map.containsKey('approvedUsers')) {
+      List<String> approvedUserList = List.castFrom(map['approvedUsers']);
+      this.approvedUsers = approvedUserList;
+    }
+    if (map.containsKey('numberOfApprovals')) {
+      this.numberOfApprovals = map['numberOfApprovals'];
+    }
+    if (map.containsKey('location')) {
+      GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
+          map['location']['geopoint']['_longitude']);
 
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);

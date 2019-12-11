@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -288,7 +289,7 @@ class NewsCardView extends StatelessWidget {
             child: CircleAvatar(
               backgroundImage: NetworkImage(
                 newsModel.userPhotoURL == null
-                    ? 'https://secure.gravatar.com/avatar/b10f7ddbf9b8be9e3c46c302bb20101d?s=400&d=mm&r=g'
+                    ? defaultUserImageURL
                     : newsModel.userPhotoURL,
               ),
               minRadius: 40.0,

@@ -27,16 +27,16 @@ class IntroScreenState extends State<AppDemoHumanityFirst> {
       ),
     );
 
-    slides.add(
-      new Slide(
-        backgroundBlendMode: BlendMode.colorBurn,
-        backgroundImage: 'lib/assets/images/Info_2.png',
-        title: "",
-        pathImage: '',
-        description: "",
-        backgroundColor: Color(0xff203152),
-      ),
-    );
+    // slides.add(
+    //   new Slide(
+    //     backgroundBlendMode: BlendMode.colorBurn,
+    //     backgroundImage: 'lib/assets/images/Info_2.png',
+    //     title: "",
+    //     pathImage: '',
+    //     description: "",
+    //     backgroundColor: Color(0xff203152),
+    //   ),
+    // );
 
     slides.add(
       new Slide(

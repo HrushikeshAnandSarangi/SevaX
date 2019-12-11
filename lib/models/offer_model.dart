@@ -36,6 +36,57 @@ class OfferModel extends DataModel {
       this.timebankId,
       this.location});
 
+  OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
+    if (map.containsKey('id')) {
+      this.id = map['id'];
+    }
+
+    if (map.containsKey("offerAccepted")) {
+      this.acceptedOffer = map['offerAccepted'];
+    }
+
+    if (map.containsKey('title')) {
+      this.title = map['title'];
+    }
+
+    if (map.containsKey('description')) {
+      this.description = map['description'];
+    }
+    if (map.containsKey('email')) {
+      this.email = map['email'];
+    }
+    if (map.containsKey('fullName')) {
+      this.fullName = map['fullName'];
+    }
+    if (map.containsKey('sevaUserId')) {
+      this.sevaUserId = map['sevaUserId'];
+    }
+    if (map.containsKey('associatedRequest')) {
+      this.associatedRequest = map['associatedRequest'];
+    }
+    if (map.containsKey('schedule')) {
+      this.schedule = map['schedule'];
+    }
+    if (map.containsKey('timestamp')) {
+      this.timestamp = map['timestamp'];
+    }
+    if (map.containsKey('requestList')) {
+      List<String> requests = List.castFrom(map['requestList']);
+      this.requestList = requests;
+    } else {
+      this.requestList = [];
+    }
+    if (map.containsKey('timebankId')) {
+      this.timebankId = map['timebankId'];
+    }
+    if (map.containsKey('location')) {
+      GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
+          map['location']['geopoint']['_longitude']);
+      this.location = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    }
+  }
+
   OfferModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
       this.id = map['id'];

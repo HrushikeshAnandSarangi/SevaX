@@ -22,10 +22,15 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
       new Slide(
         backgroundBlendMode: BlendMode.colorBurn,
         backgroundImage: 'lib/assets/images/washingtondc.jpg',
-        title: "Welcome",
+        title: "Create a local Yang Gang Chapter",
+        styleTitle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20.0,
+        ),
         pathImage: 'lib/',
         description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+            "WelcomeOrganize Yang Gang events and invite volunteers.\nInvite new Yang Gang members",
         backgroundColor: Color(0xff203152),
       ),
     );
@@ -33,11 +38,16 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
     slides.add(
       new Slide(
         backgroundBlendMode: BlendMode.colorBurn,
-        backgroundImage: 'lib/assets/images/andrew_yang_five.jpg',
-        title: "Welcome",
+        backgroundImage: 'lib/assets/images/yang_standing.jpg',
+        title: "Create a Campaign Request",
+        styleTitle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20.0,
+        ),
         pathImage: 'lib/',
         description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+            "Request volunteer skills, tasks, items, or time for Yang Bucks.\nVolunteers can discover local Yang Gangs and discover volunteer opportunities ",
         backgroundColor: Color(0xff203152),
       ),
     );
@@ -46,10 +56,15 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
       new Slide(
         backgroundBlendMode: BlendMode.colorBurn,
         backgroundImage: 'lib/assets/images/yang_banner.jpg',
-        title: "Welcome",
+        title: "Create a Project",
         pathImage: 'lib/',
+        styleTitle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20.0,
+        ),
         description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+            "Use projects to manage multiple campaign requests.\nTime-tracking tools for volunteers to be rewarded with Yangbucks",
         backgroundColor: Color(0xff203152),
       ),
     );
@@ -57,11 +72,16 @@ class IntroScreenState extends State<IntroScreenHukanityFirst> {
     slides.add(
       new Slide(
         backgroundBlendMode: BlendMode.colorBurn,
-        backgroundImage: 'lib/assets/images/andrew_two.jpg',
-        title: "Welcome",
+        backgroundImage: 'lib/assets/images/yang_fourth_.jpg',
+        title: "Create a Volunteer Offer",
         pathImage: 'lib/',
+        styleTitle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 20.0,
+        ),
         description:
-            "Welcome to Humanty first application, where you can create yang gangs,  invite people to join campaigns ",
+            "Contribute a particular skill, item, or offer your time to a Yang Gang.\nShare photos and news to the Yang Gang Feed and chat with other Yang Gang members nationally",
         backgroundColor: Color(0xff203152),
       ),
     );

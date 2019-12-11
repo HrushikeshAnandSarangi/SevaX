@@ -994,7 +994,7 @@ class IntroSliderState extends State<IntroSlider>
                         TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 30.0,
+                          fontSize: 5.0,
                         ),
                     maxLines: maxLineTitle != null ? maxLineTitle : 1,
                     textAlign: TextAlign.center,
