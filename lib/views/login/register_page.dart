@@ -38,7 +38,18 @@ class _RegisterPageState extends State<RegisterPage>
   ImagePickerHandler imagePicker;
   bool isEmailVerified = false;
   bool sentOTP = false;
-  var codeArray = ['mango', 'orange', 'apple', 'plum', 'banana', 'custard', 'papaya', 'grapes', 'pear', 'avacado'];
+  var codeArray = [
+    'mango',
+    'orange',
+    'apple',
+    'plum',
+    'banana',
+    'custard',
+    'papaya',
+    'grapes',
+    'pear',
+    'avacado'
+  ];
 
   @override
   void initState() {
@@ -69,24 +80,24 @@ class _RegisterPageState extends State<RegisterPage>
         },
 //        child: SingleChildScrollView(
 //          child: Center(
-            child: ListView(
-              //crossAxisAlignment: CrossAxisAlignment.center,
+        child: ListView(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 16),
-                    logo,
-                    SizedBox(height: 16),
-                    _imagePicker,
-                    _profileBtn,
-                    _formFields,
-                    SizedBox(height: 32),
-                    registerButton,
-                  ],
-                ),
+                SizedBox(height: 16),
+                logo,
+                SizedBox(height: 16),
+                _imagePicker,
+                _profileBtn,
+                _formFields,
+                SizedBox(height: 32),
+                registerButton,
               ],
             ),
+          ],
+        ),
 //          ),
 //        ),
       ),
@@ -256,39 +267,43 @@ class _RegisterPageState extends State<RegisterPage>
             : () async {
                 isLoading = true;
                 if (selectedImage == null) {
-                   showDialog(
+                  showDialog(
+                    barrierDismissible: false,
                     context: context,
-                       builder: (BuildContext viewContext) {
-                     // return object of type Dialog
-                     return AlertDialog(
-                       title: Text('Add Photo?'),
-                       content: Text('Do you want to add profile pic?'),
-                       actions: <Widget>[
-                         FlatButton(
-                           child: Text('Skip'),
-                           onPressed: () async {
-                             Navigator.pop(viewContext);
-                             if (!_formKey.currentState.validate()) {
-                               isLoading = false;
-                               return;
-                             }
-                             _formKey.currentState.save();
-                             await createUser();
-                             isLoading = false;
-                           },
-                         ),
-                         FlatButton(
-                           child: Text('Add Photo'),
-                           onPressed: () {
-                             Navigator.pop(viewContext);
-                             imagePicker.showDialog(context);
-                               isLoading = false;
-                               return;
-                           },
-                         ),
-                       ],
-                     );
-                   },
+                    builder: (BuildContext viewContext) {
+                      // return object of type Dialog
+                      return WillPopScope(
+                        onWillPop: () {},
+                        child: AlertDialog(
+                          title: Text('Add Photo?'),
+                          content: Text('Do you want to add profile pic?'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Skip'),
+                              onPressed: () async {
+                                Navigator.pop(viewContext);
+                                if (!_formKey.currentState.validate()) {
+                                  isLoading = false;
+                                  return;
+                                }
+                                _formKey.currentState.save();
+                                await createUser();
+                                isLoading = false;
+                              },
+                            ),
+                            FlatButton(
+                              child: Text('Add Photo'),
+                              onPressed: () {
+                                Navigator.pop(viewContext);
+                                imagePicker.showDialog(context);
+                                isLoading = false;
+                                return;
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   );
                 } else {
                   if (!_formKey.currentState.validate()) {
@@ -344,7 +359,7 @@ class _RegisterPageState extends State<RegisterPage>
         String imageUrl = await uploadImage(user.email);
         user.photoURL = imageUrl;
       } else {
-          user.photoURL = defaultUserImageURL;
+        user.photoURL = defaultUserImageURL;
       }
       await FirestoreManager.updateUser(user: user);
       Navigator.pop(context, user);
@@ -371,7 +386,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
-     // File some = File.fromRawPath();
+      // File some = File.fromRawPath();
       isImageSelected = 'Update Photo';
     });
   }
@@ -388,7 +403,7 @@ class _RegisterPageState extends State<RegisterPage>
         customMetadata: <String, String>{'activity': 'News Image'},
       ),
     );
-   // StorageUploadTask uploadTask = ref.putFile(File.)
+    // StorageUploadTask uploadTask = ref.putFile(File.)
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
     return imageURL;
   }
