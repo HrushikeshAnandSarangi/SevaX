@@ -134,6 +134,7 @@ flutter:
     # - lib/assets/images/andrew_yang_three.jpg
     
     - lib/assets/images/recycle-bin.png
+    - lib/assets/images/search.png
   fonts:
     - family: Montserrat
       fonts:

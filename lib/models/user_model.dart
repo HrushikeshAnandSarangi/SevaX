@@ -33,7 +33,6 @@ class UserModel extends DataModel {
   String timebankIdForYangGangAdmin;
 
   String tokens;
-
   bool acceptedEULA = false;
   bool completedIntro = false;
 
@@ -92,7 +91,7 @@ class UserModel extends DataModel {
       // SevaCore.of(context).loggedInUser.blockedMembers = blockedMembers;
     } else {
       this.blockedMembers = List();
-      // print("Blocked Data not present");
+     // print("Blocked Data not present");
     }
 
     if (map.containsKey('blockedBy')) {
@@ -207,7 +206,6 @@ class UserModel extends DataModel {
     if (this.skills != null && this.skills.isNotEmpty) {
       object['skills'] = this.skills;
     }
-
     if (this.currentBalance != null) {
       object['currentBalance'] = this.currentBalance;
     } else {
@@ -226,9 +224,30 @@ class UserModel extends DataModel {
     return object;
   }
 
-  // @override
-  // String toString() {
-  //   // TODO: implement toString
-  //   return " Username -> " + this.fullname + "  Photo URL -> " + this.photoURL;
-  // }
+  @override
+  String toString(){
+    return '''
+      ${this.bio.toString()},
+      ${this.email.toString()},
+      ${this.fullname.toString()},
+      ${this.photoURL.toString()},
+      ${this.interests.toString()},
+      ${this.membershipCampaigns.toString()},
+      ${this.membershipTimebanks.toString()},
+      ${this.sevaUserID.toString()},
+      ${this.skills.toString()},
+      ${this.currentBalance.toString()},
+      ${this.calendar.toString()},
+      ${this.otp.toString()},
+      ${this.requestStatus.toString()},
+      ${this.timezone.toString()},
+      ${this.tokens.toString()},
+      ${this.reportedUsers.toString()},
+      ${this.blockedMembers.toString()},
+      ${this.blockedBy.toString()},
+      ${this.currentPosition.toString()},
+      ${this.acceptedEULA.toString()},
+    ''';
+
+  }
 }

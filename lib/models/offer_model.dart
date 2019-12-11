@@ -80,6 +80,7 @@ class OfferModel extends DataModel {
       this.timebankId = map['timebankId'];
     }
     if (map.containsKey('location')) {
+      // GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'], map['location']['geopoint']['_longitude']);
       GeoPoint geoPoint = map['location']['geopoint'];
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
