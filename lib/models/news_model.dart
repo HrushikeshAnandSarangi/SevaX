@@ -168,7 +168,7 @@ class NewsModel extends DataModel {
       this.postTimestamp = map['posttimestamp'];
     }
     if (map.containsKey('location')) {
-      GeoPoint geoPoint = map['location']['geopoint'];
+      GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'], map['location']['geopoint']['_longitude']);
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }

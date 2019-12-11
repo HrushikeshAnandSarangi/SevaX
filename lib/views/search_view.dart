@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -25,17 +26,26 @@ class SearchView extends StatefulWidget {
 class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   TabController controller;
   final TextEditingController searchTextController = TextEditingController();
-
+  final searchOnChange = new BehaviorSubject<String>();
   @override
   void initState() {
     super.initState();
     controller = widget.controller;
-    controller.addListener(() {
+    searchOnChange.debounceTime(Duration(milliseconds: 500)).listen((queryString) {
+      if(queryString.length>2) {
+
+      }
+    });
+      controller.addListener(() {
       setState(() {});
     });
     searchTextController.addListener(() {
       setState(() {});
     });
+  }
+
+  void _search(String queryString) {
+    searchOnChange.add(queryString);
   }
 
   @override
@@ -83,6 +93,7 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
           title: Container(
             padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
             child: TextField(
+              onChanged: _search,
               style: TextStyle(color: Colors.white),
               controller: searchTextController,
               decoration: InputDecoration(
@@ -151,7 +162,12 @@ class ResultView extends StatefulWidget {
 class _ResultViewState extends State<ResultView> {
   Widget build(BuildContext context) {
     if (widget.controller.text.trim().isEmpty) {
-      return Center(child: Text('Enter a Search String'));
+      return Center(child: ClipOval(
+        child: FadeInImage.assetNetwork(
+            placeholder: 'lib/assets/images/search.png',
+            image: 'lib/assets/images/search.png'
+        ),
+      ));
     }
     switch (widget.type) {
       case SearchType.USER:
