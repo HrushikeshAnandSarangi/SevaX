@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'EULAgreement.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 class EulaAgreement extends StatefulWidget {
   @override
@@ -15,15 +16,15 @@ class EulaAgreementState extends State<EulaAgreement> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Center(
-            child: Text(
-              'EULA Agreement',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20.0, color: Colors.white),
-            ),
-          ),
-        ),
+            centerTitle: true,
+            elevation: 0.5,
+            backgroundColor: Color(0xFFFFFFFF),
+            leading: BackButton(color: Colors.black54),
+            title: new Text('EULA Agreement',
+                style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500))),
         body: ListView(
           children: <Widget>[
             Container(
@@ -69,32 +70,33 @@ class EulaAgreementState extends State<EulaAgreement> {
                         )
                       ],
                     ),
-                    Container(
-                      margin: EdgeInsets.all(20),
-                      width: double.infinity,
-                      child: RaisedButton(
-                        child: Text(
-                          'PROCEED',
-                        ),
-                        color: Colors.green,
-                        onPressed: userAcceptanceStatus
-                            ? () {
-                                print("Accepted EULA");
-                                // Firestore.instance
-                                //     .collection('users')
-                                //     .document(
-                                //         SevaCore.of(context).loggedInUser.email)
-                                //     .updateData({'acceptedEULA': false}).then(
-                                //         (onValue) {
-                                //   print("Param added to db");
-                                // }).catchError((onError) {
-                                //   print("Error crerating value");
-                                // });
-                                Navigator.pop(context, {'response' : 'ACCEPTED'});
-                              }
-                            : null,
-                      ),
-                    ),
+                    SizedBox(
+                        height: 70,
+                        width: 220,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: RaisedButton(
+                            onPressed: userAcceptanceStatus
+                                ? () {
+                                    print("Accepted EULA");
+                                    Navigator.pop(
+                                        context, {'response': 'ACCEPTED'});
+                                  }
+                                : null,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text('Proceed'),
+                                ),
+                              ],
+                            ),
+                            color: Theme.of(context).accentColor,
+                            textColor: FlavorConfig.values.buttonTextColor,
+                            shape: StadiumBorder(),
+                          ),
+                        )),
                     Padding(
                       padding: EdgeInsets.all(20.0),
                     ),

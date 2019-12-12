@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:sevaexchange/models/availability.dart';
-import 'package:sevaexchange/views/bioview.dart';
+import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/popup.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';

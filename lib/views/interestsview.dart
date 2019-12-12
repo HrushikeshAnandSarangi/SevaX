@@ -1,3 +1,4 @@
+// Lecagy code Not getting used
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/views/register_location.dart';
@@ -5,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../globals.dart' as globals;
 import '../views/core.dart';
-import '../views/bioview.dart';
+import '../views/onboarding/bioview.dart';
 
 class InterestsView extends StatelessWidget {
   @override

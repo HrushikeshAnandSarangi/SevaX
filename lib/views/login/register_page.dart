@@ -12,6 +12,8 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -56,39 +58,42 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        centerTitle: true,
-        elevation: 0.5,
-        backgroundColor: Color(0xFFFFFFFF),
-        leading: BackButton(
-          color: Colors.black54
-        ),
-        title: new Text('Your details',
-          style: TextStyle(color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w500))
-      ),
+          centerTitle: true,
+          elevation: 0.5,
+          backgroundColor: Color(0xFFFFFFFF),
+          leading: BackButton(color: Colors.black54),
+          title: new Text('Your details',
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500))),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
         },
 //        child: SingleChildScrollView(
 //          child: Center(
-            child: ListView(
-              //crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 16),
-                    logo,
-                    SizedBox(height: 16),
-                    _imagePicker,
-                    _profileBtn,
-                    _formFields,
-                    SizedBox(height: 32),
-                    registerButton,
-                  ],
-                ),
-              ],
-            ),
+        child: ListView(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SingleChildScrollView(
+                child: FadeAnimation(
+                    1.4,
+                    Padding(
+                        padding:
+                            EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 16),
+                            _imagePicker,
+                            _formFields,
+                            SizedBox(height: 16),
+                            registerButton,
+                          ],
+                        ))))
+          ],
+        ),
 //          ),
 //        ),
       ),
@@ -96,11 +101,13 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   bool get shouldObscure => this._shouldObscure;
+
   set shouldObscure(bool shouldObscure) {
     setState(() => this._shouldObscure = shouldObscure);
   }
 
   bool get isLoading => this._isLoading;
+
   set isLoading(bool isLoading) {
     setState(() => this._isLoading = isLoading);
   }
@@ -131,32 +138,48 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Widget get _imagePicker {
-    return SizedBox(
-      height: 80,
-      width: 120,
-      child: Container(
-//        onTap: isLoading
-//            ? null
-//            : () {
-//                imagePicker.showDialog(context);
-//              },
-        child: selectedImage == null
-            ? Container(
-                decoration: BoxDecoration(
-                  //shape: CircleBorder(),
-                  //shape: ShapeBorder.,
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.grey[300],
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  image: DecorationImage(
-                    image: FileImage(selectedImage),
-                  ),
-                ),
-              ),
+    return GestureDetector(
+      onTap: () {
+        imagePicker.showDialog(context);
+      },
+      child: SizedBox(
+        height: 150,
+        width: 150,
+        child: Container(
+          child: selectedImage == null
+              ? Container(
+                  width: 150.0,
+                  height: 150.0,
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      image: DecorationImage(
+                          image: NetworkImage(
+                              'https://cdn.dribbble.com/users/2060373/screenshots/5676655/2_2x.jpg'),
+                          fit: BoxFit.cover),
+                      borderRadius: BorderRadius.all(Radius.circular(75.0)),
+                      boxShadow: [
+                        BoxShadow(blurRadius: 7.0, color: Colors.black12)
+                      ]))
+              : Container(
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      image: DecorationImage(
+                          image: FileImage(selectedImage), fit: BoxFit.cover),
+                      borderRadius: BorderRadius.all(Radius.circular(75.0)),
+                      boxShadow: [
+                        BoxShadow(blurRadius: 7.0, color: Colors.black12)
+                      ]),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(50.0))),
+                      child: IconButton(icon: Icon(Icons.add_a_photo)),
+                    ),
+                  )),
+        ),
       ),
     );
   }
@@ -167,6 +190,12 @@ class _RegisterPageState extends State<RegisterPage>
       child: Column(
         children: <Widget>[
           getFormField(
+            hint: 'Full Name',
+            validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
+            capitalization: TextCapitalization.words,
+            onSave: (value) => this.fullName = value,
+          ),
+          getFormField(
             hint: 'Email Address',
             validator: (value) {
               if (!isValidEmail(value)) {
@@ -176,12 +205,6 @@ class _RegisterPageState extends State<RegisterPage>
             },
             capitalization: TextCapitalization.none,
             onSave: (value) => this.email = value,
-          ),
-          getFormField(
-            hint: 'Full Name',
-            validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
-            capitalization: TextCapitalization.words,
-            onSave: (value) => this.fullName = value,
           ),
           getFormField(
             hint: 'Password',
@@ -250,81 +273,86 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Widget get registerButton {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: RaisedButton(
-        onPressed: isLoading
-            ? null
-            : () async {
-                isLoading = true;
-                if (selectedImage == null) {
-                   showDialog(
-                    context: context,
-                       builder: (BuildContext viewContext) {
-                     // return object of type Dialog
-                     return AlertDialog(
-                       title: Text('Add Photo?'),
-                       content: Text('Do you want to add profile pic?'),
-                       actions: <Widget>[
-                         FlatButton(
-                           child: Text('Skip'),
-                           onPressed: () async {
-                             Navigator.pop(viewContext);
-                             if (!_formKey.currentState.validate()) {
-                               isLoading = false;
-                               return;
-                             }
-                             _formKey.currentState.save();
-                             await createUser();
-                             isLoading = false;
-                           },
-                         ),
-                         FlatButton(
-                           child: Text('Add Photo'),
-                           onPressed: () {
-                             Navigator.pop(viewContext);
-                             imagePicker.showDialog(context);
-                               isLoading = false;
-                               return;
-                           },
-                         ),
-                       ],
-                     );
-                   },
-                  );
-                } else {
-                  if (!_formKey.currentState.validate()) {
-                    isLoading = false;
-                    return;
-                  }
-                  _formKey.currentState.save();
-                  await createUser();
+    return SizedBox(
+        height: 70,
+        width: 220,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: RaisedButton(
+            onPressed: isLoading
+                ? null
+                : () async {
+              isLoading = true;
+              if (selectedImage == null) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext viewContext) {
+                    // return object of type Dialog
+                    return AlertDialog(
+                      title: Text('Add Photo?'),
+                      content: Text('Do you want to add profile pic?'),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('Skip'),
+                          onPressed: () async {
+                            Navigator.pop(viewContext);
+                            if (!_formKey.currentState.validate()) {
+                              isLoading = false;
+                              return;
+                            }
+                            _formKey.currentState.save();
+                            await createUser();
+                            isLoading = false;
+                          },
+                        ),
+                        FlatButton(
+                          child: Text('Add Photo'),
+                          onPressed: () {
+                            Navigator.pop(viewContext);
+                            imagePicker.showDialog(context);
+                            isLoading = false;
+                            return;
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                if (!_formKey.currentState.validate()) {
                   isLoading = false;
+                  return;
                 }
-              },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (isLoading)
-              SizedBox(
-                height: 18,
-                width: 18,
-                child: Theme(
-                  data: ThemeData(accentColor: Colors.white),
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                _formKey.currentState.save();
+                await createUser();
+                isLoading = false;
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                if (isLoading)
+                  SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: Theme(
+                      data: ThemeData(accentColor: Colors.white),
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Get Started'),
                 ),
-              ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Register'),
+              ],
             ),
-          ],
-        ),
-        color: Theme.of(context).accentColor,
-        textColor: FlavorConfig.values.buttonTextColor,
-        shape: StadiumBorder(),
-      ),
-    );
+            color: Theme
+                .of(context)
+                .accentColor,
+            textColor: FlavorConfig.values.buttonTextColor,
+            shape: StadiumBorder(),
+          ),
+        ));
   }
 
   bool isValidEmail(String email) {
@@ -346,7 +374,8 @@ class _RegisterPageState extends State<RegisterPage>
         String imageUrl = await uploadImage(user.email);
         user.photoURL = imageUrl;
       } else {
-          user.photoURL = "https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg";
+        user.photoURL =
+            "https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg";
       }
       await FirestoreManager.updateUser(user: user);
       Navigator.pop(context, user);
@@ -373,7 +402,7 @@ class _RegisterPageState extends State<RegisterPage>
     if (_image == null) return;
     setState(() {
       this.selectedImage = _image;
-     // File some = File.fromRawPath();
+      // File some = File.fromRawPath();
       isImageSelected = 'Update Photo';
     });
   }
@@ -390,7 +419,7 @@ class _RegisterPageState extends State<RegisterPage>
         customMetadata: <String, String>{'activity': 'News Image'},
       ),
     );
-   // StorageUploadTask uploadTask = ref.putFile(File.)
+    // StorageUploadTask uploadTask = ref.putFile(File.)
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
     return imageURL;
   }
