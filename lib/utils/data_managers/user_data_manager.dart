@@ -153,14 +153,13 @@ Future<List<UserModel>> getUsersForTimebankId(String timebankId, int index, Stri
   ''');
   var res = await http.get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
 
-  Future<List<UserModel>> list;
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
     var rest = data["result"] as List;
     return rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
 
   }
-  return list;
+  return List<UserModel>();
 }
 
 Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {

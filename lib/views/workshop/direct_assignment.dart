@@ -36,6 +36,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   ScrollController _controller;
   var _indexSoFar = 0;
   var _pageIndex = 1;
+  var _stopLoading = false;
+  var _lastIndex = 999;
   var _hasMoreItems = true;
   var _showMoreItems = true;
   var currSelectedState = false;
@@ -68,8 +70,10 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange && _hasMoreItems) {
-      setState(() {
-        _showMoreItems = true;
+      loadNextBatchItems().then((onValue){
+        setState(() {
+          _showMoreItems = true;
+        });
       });
     } else {
       _showMoreItems = false;
@@ -78,6 +82,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   @override
   Widget build(BuildContext context) {
+    if(_avtars.length==0) {
+      loadNextBatchItems();
+    }
     var color = Theme.of(context);
     print("Color ${color.primaryColor}");
     var finalWidget =  Scaffold(
@@ -110,11 +117,11 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       ),
     );
 
-      if(_showMoreItems && !isLoading) {
-      loadNextBatchItems().then((onValue){
-        return finalWidget;
-      });
-    }
+//      if(_showMoreItems && !isLoading) {
+//      loadNextBatchItems().then((onValue){
+//        return finalWidget;
+//      });
+//    }
     return finalWidget;
   }
 
@@ -192,10 +199,16 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
 
   Future loadNextBatchItems() async {
-    if(_hasMoreItems && !isLoading) {
+    if(_hasMoreItems && _pageIndex < _lastIndex && !isLoading) {
       isLoading = true;
       FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex,widget.userEmail).then((onValue) {
-        _hasMoreItems = onValue.length>0;
+
+
+
+        if(onValue.length == 0){
+          _lastIndex = _pageIndex;
+
+        }
         var addItems = onValue.map((memberObject) {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&

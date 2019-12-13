@@ -80,10 +80,10 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange &&
-        _hasMoreItems) {
+        !_controller.position.outOfRange) {
       setState(() {
         _showMoreItems = true;
+        loadNextBatchItems();
       });
     } else {
       _showMoreItems = false;
@@ -109,11 +109,11 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     );
 
 //    if(_showMoreItems) {
-    if (_showMoreItems && !isLoading) {
-      loadNextBatchItems().then((onValue) {
-        return finalWidget;
-      });
-    }
+//    if (_showMoreItems && !isLoading) {
+//      loadNextBatchItems().then((onValue) {
+//        return finalWidget;
+//      });
+//    }
     return finalWidget;
   }
 
@@ -168,6 +168,15 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                 child: circularBar,
               ),
       ),
+    );
+  }
+
+  Widget loadItems() {
+
+    return Container(
+      width: double.infinity,
+      height: 80,
+      child: circularBar,
     );
   }
 
@@ -233,7 +242,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
             _pageIndex = _pageIndex + 1;
           });
         } else {
-          _hasMoreItems = addItems.length == 20;
+          _hasMoreItems = !(addItems.length < 20);
         }
 
         isLoading = false;
