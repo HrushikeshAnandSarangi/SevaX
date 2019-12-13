@@ -14,13 +14,15 @@ import '../../flavor_config.dart';
 
 class SelectMembersInGroup extends StatefulWidget {
   String timebankId;
+  String userEmail;
   HashMap<String, UserModel> userSelected;
   HashMap<String, UserModel> listOfMembers = HashMap();
 
   SelectMembersInGroup(
-      String timebankId, HashMap<String, UserModel> userSelected) {
+      String timebankId, HashMap<String, UserModel> userSelected,String userEmail) {
     this.timebankId = timebankId;
     this.userSelected = userSelected;
+    this.userEmail = userEmail;
   }
 
   @override
@@ -50,7 +52,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   @override
   void initState(){
-//    loadNextBatchItems();
     _showMoreItems = true;
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
@@ -77,9 +78,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     var color = Theme.of(context);
     print("Color ${color.primaryColor}");
     var finalWidget =  Scaffold(
@@ -104,7 +102,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                 style: prefix0.TextStyle(color: Colors.white),
               ),
             ),
-          )
+          ),
         ],
       ),
       body: getList(
@@ -112,7 +110,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       ),
     );
 
-//    if(_showMoreItems) {
       if(_showMoreItems && !isLoading) {
       loadNextBatchItems().then((onValue){
         return finalWidget;
@@ -195,9 +192,10 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
 
   Future loadNextBatchItems() async {
-    if(_hasMoreItems) {
+    if(_hasMoreItems && !isLoading) {
       isLoading = true;
-      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex).then((onValue) {
+      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex,widget.userEmail).then((onValue) {
+        _hasMoreItems = onValue.length>0;
         var addItems = onValue.map((memberObject) {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&
@@ -234,9 +232,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
             _indexSoFar = _indexSoFar + iterationCount;
             _pageIndex = _pageIndex + 1;
           });
-        }else{
-          _hasMoreItems = addItems.length == 20;
         }
+
 
         isLoading = false;
       }

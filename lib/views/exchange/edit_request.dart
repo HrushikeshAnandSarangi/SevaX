@@ -441,7 +441,9 @@ class RequestEditFormState extends State<RequestEditForm> {
           onActivityResult = await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
                   SevaCore.of(context).loggedInUser.currentTimebank,
-                  selectedUsers)));
+                  selectedUsers,
+                SevaCore.of(context).loggedInUser.email,
+              )));
 
           if (onActivityResult != null &&
               onActivityResult.containsKey("membersSelected")) {

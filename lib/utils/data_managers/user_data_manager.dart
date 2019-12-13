@@ -141,9 +141,13 @@ Future<UserModel> getUserForEmail({
   return userModel;
 }
 
-Future<List<UserModel>> getUsersForTimebankId(String timebankId, int index) async {
-  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=${timebankId}&page=${index}';
+Future<List<UserModel>> getUsersForTimebankId(String timebankId, int index, String email) async {
+//  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=${timebankId}&page=${index}';
+  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembersNew?timebankId=${timebankId}&page=${index}&userId=${email}';
+
   print('''
+    Hit email blah:
+    ${email}
     urlLink:
     ${urlLink}
   ''');
@@ -154,6 +158,7 @@ Future<List<UserModel>> getUsersForTimebankId(String timebankId, int index) asyn
     var data = json.decode(res.body);
     var rest = data["result"] as List;
     return rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+
   }
   return list;
 }

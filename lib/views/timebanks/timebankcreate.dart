@@ -302,6 +302,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           builder: (context) => SelectMembersInGroup(
                             SevaCore.of(context).loggedInUser.currentTimebank,
                             selectedUsers,
+                            SevaCore.of(context).loggedInUser.email,
                           ),
                         ),
                       );
