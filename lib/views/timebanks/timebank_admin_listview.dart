@@ -81,7 +81,6 @@ Widget getTimebanks(BuildContext context, String isFrom) {
               return GestureDetector(
                 onTap: () {
                   prefix0.Navigator.pop(context);
-
                   if (isFrom == "Offer") {
                     Navigator.push(
                       context,

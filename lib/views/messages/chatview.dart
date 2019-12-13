@@ -95,15 +95,17 @@ class _ChatViewState extends State<ChatView> {
           icon: Icon(Icons.arrow_back),
           onPressed: widget.isFromShare == null
               ? () {
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
+                  print("Inside pop widget.isFromShare == null");
                 }
               : widget.isFromShare
                   ? () {
-                      Navigator.pop(context);
+                      print("Inside pop widget.isFromShare true");
                       Navigator.pop(context);
                     }
                   : () {
-                      Navigator.pop(context);
+                      print("Inside pop widget.isFromShare false");
+                      // Navigator.pop(context);
                     },
         ),
         iconTheme: IconThemeData(color: Colors.white),
@@ -568,6 +570,11 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Widget getNewsCard(NewsModel news) {
+    var imageBanner = news.newsImageUrl == null
+        ? (news.imageScraped == null ? "NoData" : news.imageScraped)
+        : news.newsImageUrl;
+    print("FNAL IMAGE --> " + imageBanner);
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -596,20 +603,21 @@ class _ChatViewState extends State<ChatView> {
         child: Column(
           children: <Widget>[
             Container(
-              height: 250,
+              height: imageBanner != "NoData" ? 250 : 0,
               child: SizedBox.expand(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                  child: FadeInImage(
-                    fit: BoxFit.fitWidth,
-                    placeholder:
-                        AssetImage('lib/assets/images/noimagefound.png'),
-                    image: NetworkImage(news.newsImageUrl),
-                  ),
-                ),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                    ),
+                    child: imageBanner != "NoData"
+                        ? FadeInImage(
+                            fit: BoxFit.fitWidth,
+                            placeholder:
+                                AssetImage('lib/assets/images/waiting.jpg'),
+                            image: NetworkImage(imageBanner),
+                          )
+                        : Offstage()),
               ),
             ),
             Column(
@@ -623,18 +631,25 @@ class _ChatViewState extends State<ChatView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(news.title,
+                            Container(
+                              margin: EdgeInsets.only(top: 5),
+                              child: Text(
+                                news.title == null
+                                    ? news.subheading
+                                    : news.title,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
-                                )),
-                            Text(
-                              news.subheading,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                                ),
+                              ),
+                            )
+                            // Text(
+                            //   news.title == null ? "" : ,
+                            //   overflow: TextOverflow.ellipsis,
+                            // ),
                           ],
                         ),
                       ),

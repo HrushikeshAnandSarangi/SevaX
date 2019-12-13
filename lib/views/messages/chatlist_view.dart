@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -9,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
@@ -45,7 +48,7 @@ class _ChatListViewState extends State<ChatListView> {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            'Chats',
+            'Messages',
             style: TextStyle(color: Colors.white),
           )),
       body: StreamBuilder<List<ChatModel>>(
@@ -112,13 +115,16 @@ class _ChatListViewState extends State<ChatListView> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SelectMember(
+                builder: (context) => SelectMembersFromTimebank(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                  newsModel: NewsModel(),
+                  isFromShare: false,
+                  selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
+                  userSelected: HashMap(),
                 ),
               ),
             );
           }
-
           // NewsModel news;
           // Navigator.push(
           //   context,
@@ -287,9 +293,7 @@ class _ChatListViewState extends State<ChatListView> {
                         DateTime.fromMillisecondsSinceEpoch(
                             chatModel.timestamp),
                       ),
-                      style: TextStyle(
-                        fontSize: 10
-                      ),
+                      style: TextStyle(fontSize: 10),
                     ),
                     ClipOval(
                       child: Container(

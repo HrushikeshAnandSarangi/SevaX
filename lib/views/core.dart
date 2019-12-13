@@ -170,7 +170,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
       exchangePageProperty,
       tasksPageProperty,
       //createPageProperty,
-       searchPageProperty,
+      searchPageProperty,
     ];
   }
 
@@ -400,6 +400,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   },
                 ),
                 PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert),
                   onSelected: choiceAction,
                   itemBuilder: (BuildContext context) {
                     return Constants.choices.map((String choice) {
@@ -530,8 +531,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
               var adminOfyangGangsNumber =
                   SevaCore.of(context).loggedInUser.adminOfYanagGangs;
 
-
-                  print("Admin of Yang gangs -> $adminOfyangGangsNumber");
+              print("Admin of Yang gangs -> $adminOfyangGangsNumber");
               if (adminOfyangGangsNumber == 0 || adminOfyangGangsNumber > 1) {
                 Navigator.push(
                   context,
