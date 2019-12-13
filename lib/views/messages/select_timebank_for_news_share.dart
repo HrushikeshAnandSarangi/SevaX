@@ -9,13 +9,21 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 import '../../flavor_config.dart';
 
-class SelectTimeBankForNewChat extends StatefulWidget {
+class SelectTimeBankNewsShare extends StatefulWidget {
+  final NewsModel newsModel;
+  SelectTimeBankNewsShare(this.newsModel);
+
   @override
-  SelectTimeBankForNewChatState createState() =>
-      SelectTimeBankForNewChatState();
+  SelectTimeBankForNewsShareState createState() =>
+      SelectTimeBankForNewsShareState(newsModel);
 }
 
-class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
+class SelectTimeBankForNewsShareState extends State<SelectTimeBankNewsShare> {
+  NewsModel newsModel;
+  SelectTimeBankForNewsShareState(NewsModel newsModel) {
+    this.newsModel = newsModel;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,14 +35,17 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: getTimebanks(context),
+      body: getTimebanks(context, newsModel),
     );
   }
 }
 
 List<String> dropdownList = [];
 
-Widget getTimebanks(BuildContext context) {
+Widget getTimebanks(
+  BuildContext context,
+  NewsModel newsModel,
+) {
   List<TimebankModel> timebankList = [];
   return StreamBuilder<List<TimebankModel>>(
       stream: FirestoreManager.getTimebanksForUserStream(
@@ -68,9 +79,9 @@ Widget getTimebanks(BuildContext context) {
                     MaterialPageRoute(
                       builder: (context) => SelectMembersFromTimebank(
                         timebankId: timebank.id,
-                        newsModel: NewsModel(),
-                        isFromShare: false,
-                        selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
+                        newsModel: newsModel,
+                        isFromShare: true,
+                        selectionMode: MEMBER_SELECTION_MODE.SHARE_FEED,
                         userSelected: HashMap(),
                       ),
                     ),

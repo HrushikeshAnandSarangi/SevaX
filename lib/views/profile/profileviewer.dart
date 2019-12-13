@@ -128,7 +128,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                                       Icons.forum,
                                       color: Theme.of(context).accentColor,
                                     ),
-                                    Text(' Chat'),
+                                    Text(' Messages'),
                                   ],
                                 ),
                                 onPressed: widget.userEmail == loggedInEmail ||
