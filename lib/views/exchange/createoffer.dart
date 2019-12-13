@@ -22,8 +22,10 @@ class CreateOffer extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          "Create volunteer offer",
-          style: TextStyle(color: Colors.white),
+          'Create volunteer offer',
+          style: TextStyle(
+              color: Colors.white
+          ),
         ),
         centerTitle: false,
       ),
@@ -89,6 +91,11 @@ class MyCustomFormState extends State<MyCustomForm> {
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
+    TextStyle finalStyle = TextStyle(
+        fontSize: 18,
+        color: textStyle.color,
+        decoration: textStyle.decoration,
+    );
     // Build a Form widget using the _formKey we created above
     return Form(
       key: _formKey,
@@ -102,7 +109,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               TextFormField(
                 decoration: InputDecoration(hintText: 'Volunteer offer title'),
                 keyboardType: TextInputType.text,
-                style: textStyle,
+                style: finalStyle,
                 validator: (value) {
                   if (value.isEmpty) {
                     return 'Please enter the subject of your Offer';

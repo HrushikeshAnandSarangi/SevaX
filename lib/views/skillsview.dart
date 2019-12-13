@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/interestsview.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
+//import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/data.dart';
 

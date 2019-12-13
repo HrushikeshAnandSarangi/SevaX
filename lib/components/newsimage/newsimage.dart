@@ -9,13 +9,17 @@ import 'dart:io';
 import './image_picker_handler.dart';
 
 class NewsImage extends StatefulWidget {
-  NewsImageState createState() => NewsImageState();
+  final Function addCreditTextFieldHandler;
+  NewsImage(this.addCreditTextFieldHandler);
+  NewsImageState createState() => NewsImageState(addCreditTextFieldHandler);
 }
 
 @override
 class NewsImageState extends State<NewsImage>
     with TickerProviderStateMixin, ImagePickerListener {
   bool _isImageBeingUploaded = false;
+  final Function addCreditTextFieldHandler;
+  NewsImageState(this.addCreditTextFieldHandler);
 
   File _image;
   AnimationController _controller;
@@ -53,6 +57,7 @@ class NewsImageState extends State<NewsImage>
     });
     uploadImage().then((_) {
       setState(() => this._isImageBeingUploaded = false);
+      this.addCreditTextFieldHandler();
     });
   }
 
@@ -77,69 +82,66 @@ class NewsImageState extends State<NewsImage>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => imagePicker.showDialog(context),
+      onTap: () {
+        imagePicker.showDialog(context);
+      },
       child: _isImageBeingUploaded
           ? Container(
-              margin: EdgeInsets.only(top: 20),
-              child: Container(
-                  color: Colors.grey[100],
-                  height: 150,
-                  width: 150,
-                  child: Center(
-                      child: Container(
-                          height: 50,
-                          width: 50,
-                          child: CircularProgressIndicator()))))
-          : Container(
-              child: globals.newsImageURL == null
-                  ? Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(top: 20),
-                      child: Container(
-                        // height: 60,
-                        // width: 100,
-                        color: Colors.grey[100],
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            FlatButton.icon(
-                              icon: Icon(Icons.image),
-                              label: Text(
-                                "Add Image",
-                              ),
-                              onPressed: () {
-                                imagePicker.showDialog(context);
-                              },
-                            ),
+          margin: EdgeInsets.only(top: 20),
+          child: Container(
+              color: Colors.grey[100],
+              height: 150,
+              width: 150,
+              child: Center(
+                  child: Container(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator()))))
 
-                            // Text(
-                            //   'Add',
-                            //   style: Theme.of(context).textTheme.title,
-                            // ),
-                            // Text(
-                            //   'Image',
-                            //   style: Theme.of(context).textTheme.title,
-                            // ),
-                            // Text(
-                            //   '+',
-                            //   style: Theme.of(context).textTheme.title,
-                            // )
-                          ],
-                        ),
-                      ))
-                  : Container(
-                      height: 200,
-                      width: 200,
-                      child: FadeInImage(
-                        image: NetworkImage(globals.newsImageURL),
-                        placeholder: AssetImage(
-                          'lib/assets/images/noimagefound.png',
-                        ),
-                      ),
-                    ),
-            ),
+          : Container(
+          child: globals.newsImageURL == null
+              ?
+          Container(
+              margin: EdgeInsets.only(top: 0,left: 0,right: 0,bottom: 0),
+              child: Container(
+                color: Colors.white,
+                child: Center(
+                  child: feedbackImage(),
+                ),
+              )
+          )
+              : _buildBody()
+      ),
     );
   }
-}
+  Widget feedbackImage() {
+    AssetImage assetImage1 = AssetImage('lib/assets/images/add-feed-image.png');
+    return Container(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(0.0),
+        child: Image(
+          image: assetImage1,
+          width: 150.0,
+          height: 150.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    return new Container(
+        constraints: new BoxConstraints.expand(
+            height: 400.0,
+        ),
+        alignment: Alignment.bottomCenter,
+        decoration: new BoxDecoration(
+          image: new DecorationImage(
+            image: NetworkImage(globals.newsImageURL),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Text('')
+    );
+  }
+
+  }

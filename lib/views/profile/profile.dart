@@ -1,18 +1,22 @@
+import 'dart:core' as prefix0;
+import 'dart:core';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/profile/edit_bio.dart';
 import 'package:sevaexchange/views/profile/edit_interests.dart';
-import 'package:sevaexchange/views/profile/edit_profilepic.dart';
 import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/profile/reported_users.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
-import 'package:shimmer/shimmer.dart';
+//import 'package:sevaexchange/views/profile/edit_profilepic.dart';
+//import 'package:shimmer/shimmer.dart';
+//import 'package:sevaexchange/globals.dart';
+//import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/globals.dart';
-import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
@@ -48,6 +52,7 @@ class _ProfilePageState extends State<ProfilePage>
   double titleOpacity = 0.0;
   ScrollController scrollController;
   TimebankModel timebankModel;
+  FirebaseUser firebaseUser;
 
   double appbarScale = 0.9;
   double flexibleScale = 1.0;
@@ -55,10 +60,13 @@ class _ProfilePageState extends State<ProfilePage>
   AnimationController appbarAnimationController;
   AnimationController flexibleAnimationController;
   bool isAdminOrCoordinator = false;
+  bool isVerifyAccountPressed = false;
 
   @override
   void initState() {
     super.initState();
+
+    checkEmailVerified();
     FirestoreManager.getTimeBankForId(
             timebankId: FlavorConfig.values.timebankId)
         .then((model) {
@@ -345,6 +353,14 @@ class _ProfilePageState extends State<ProfilePage>
                 user.fullname,
                 style: TextStyle(color: Colors.white),
               ),
+//              TextSpan(
+//                text: 'but this is',
+//                style: new TextStyle(color: Colors.blue),
+//                recognizer: new TapGestureRecognizer()
+//                 = () {
+//                  launch('https://docs.flutter.io/flutter/services/UrlLauncher-class.html');
+//                  },
+//              ),
             ],
           ),
         ),
@@ -370,7 +386,6 @@ class _ProfilePageState extends State<ProfilePage>
                       child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          //crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             GestureDetector(
@@ -429,11 +444,9 @@ class _ProfilePageState extends State<ProfilePage>
                                     fontSize: 12,
                                   ),
                                 ),
-//                                SizedBox(
-//                                  height: 8,
-//                                ),
                               ],
                             ),
+
                           ],
                         ),
                       ),
@@ -445,6 +458,40 @@ class _ProfilePageState extends State<ProfilePage>
           );
         },
       ),
+    );
+  }
+
+  void _showVerificationAndLogoutDialogue() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text("Signing out"),
+          content: Text("Acknowledge the verification mail and login back"),
+          actions: <Widget> [
+            FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              child: Text("No, I'll do it later"),
+              onPressed: () => Navigator.of(context).pop()
+            ),
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              elevation: 5,
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text("Ok, Sign out"),
+              onPressed: () {
+                firebaseUser.sendEmailVerification().then((value){
+                  _signOut(context);
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -521,10 +568,13 @@ class _ProfilePageState extends State<ProfilePage>
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       padding: EdgeInsets.only(bottom: 8.0, left: 8.0, right: 8.0),
       decoration: getContainerDecoration(),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Container(
-            alignment: Alignment.centerRight,
+            margin: EdgeInsets.all(0),
+            padding: EdgeInsets.all(0),
+            alignment: Alignment.centerLeft,
             child: FlatButton(
               onPressed: () {
                 Navigator.of(context).push(
@@ -544,91 +594,33 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  userModel.currentBalance.toString() ?? '0.0',
-                  style: TextStyle(
-                      color: userModel.currentBalance >= 0
-                          ? userModel.currentBalance > 0
-                              ? Colors.indigo
-                              : Colors.black
-                          : Colors.red,
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.w600),
-                ),
-                FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-                        FlavorConfig.appFlavor == Flavor.APP ||
-                        FlavorConfig.appFlavor == Flavor.TOM
-                    ? Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 2.0),
-                            child: sevaCoinIcon,
-                          ),
-                          SizedBox(height: 1),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
-                            child: sevaCoinIcon,
-                          ),
-                          SizedBox(height: 1),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: sevaCoinIcon,
-                          ),
-                        ],
-                      )
-                    : Padding(
-                        padding: EdgeInsets.all(4),
-                        child: SvgPicture.asset(
-                          'lib/assets/tulsi_icons/tulsi2020_icons_tulsi-token.svg',
-                          height: 16,
-                          width: 16,
-                        ),
-                      ),
-              ],
-            ),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 8.0),
-            child: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-                ? Text(
-                    'Yang Bucks',
-                    style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12),
-                  )
-                : FlavorConfig.appFlavor == Flavor.APP
-                    ? Text(
-                        'Seva Coins',
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12),
-                      )
-                    : FlavorConfig.appFlavor == Flavor.TOM
-                        ? Text(
-                            'Tom Tokens',
-                            style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12),
-                          )
-                        : Text(
-                            'Tulsi Tokens',
-                            style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12),
-                          ),
+          Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              coinCount(userModel),
+              Container(
+                  alignment: Alignment.centerRight,
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: coinType
+              ),
+            ],
           ),
         ],
       ),
     );
+  }
+
+  void checkEmailVerified() {
+    FirebaseAuth.instance.currentUser().then((FirebaseUser firebaseUser) {
+      if(this.firebaseUser != null && this.firebaseUser == firebaseUser) {
+        return;
+      }
+      setState(() {
+        print('Is email verified:${firebaseUser.isEmailVerified}');
+        this.firebaseUser = firebaseUser;
+      });
+    });
   }
 
   Widget get dataWidgets {
@@ -639,6 +631,8 @@ class _ProfilePageState extends State<ProfilePage>
       child: Column(
         children: <Widget>[
           administerTimebanks,
+          if(!firebaseUser.isEmailVerified)
+            verifyBtn,
           timebankslist,
           joinViaCode,
           tasksWidget,
@@ -889,6 +883,20 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget get verifyBtn{
+    return getActionCards(
+      title: 'Verify account',
+      borderRadius: BorderRadius.only(
+        topRight: Radius.circular(12),
+        topLeft: Radius.circular(12),
+      ),
+      isColorRed: true,
+      onTap: () {
+        _showVerificationAndLogoutDialogue();
+      },
+    );
+  }
+
   Widget getActionCards({
     @required String title,
     String subtitle,
@@ -898,6 +906,7 @@ class _ProfilePageState extends State<ProfilePage>
     Color backgroundColor = Colors.white,
     EdgeInsets padding = const EdgeInsets.all(8.0),
     Color splashColor,
+    bool isColorRed = false,
   }) {
     Color _splashColor = splashColor ?? Theme.of(context).primaryColor;
 
@@ -915,6 +924,7 @@ class _ProfilePageState extends State<ProfilePage>
               title,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
+                color: isColorRed ? Colors.red : Colors.black,
               ),
             ),
             subtitle: subtitle != null ? Text(subtitle) : null,
@@ -963,6 +973,88 @@ class _ProfilePageState extends State<ProfilePage>
       height: 5,
     );
   }
+
+  Widget coinCount(UserModel userModel) {
+    return Row(
+      children: <Widget>[
+        Text(
+          userModel.currentBalance.toString() ?? '0.0',
+          style: TextStyle(
+              color: userModel.currentBalance >= 0
+                  ? userModel.currentBalance > 0
+                  ? Colors.indigo
+                  : Colors.black
+                  : Colors.red,
+              fontSize: 36.0,
+              fontWeight: FontWeight.w600),
+        ),
+        FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
+            FlavorConfig.appFlavor == Flavor.APP ||
+            FlavorConfig.appFlavor == Flavor.TOM
+            ? Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 2.0),
+              child: sevaCoinIcon,
+            ),
+            SizedBox(height: 1),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: sevaCoinIcon,
+            ),
+            SizedBox(height: 1),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: sevaCoinIcon,
+            ),
+          ],
+        )
+            : Padding(
+          padding: EdgeInsets.all(4),
+          child: SvgPicture.asset(
+            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi-token.svg',
+            height: 18,
+            width: 18,
+          ),
+        ),
+      ],
+    );
+  }
+  Widget get coinType {
+    return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+        ? Text(
+      'Yang Bucks',
+      style: TextStyle(
+          color: Theme.of(context).accentColor,
+          fontWeight: FontWeight.w400,
+          fontSize: 12),
+    )
+        : FlavorConfig.appFlavor == Flavor.APP
+        ? Text(
+      'Seva Coins',
+      style: TextStyle(
+          color: Theme.of(context).accentColor,
+          fontWeight: FontWeight.w400,
+          fontSize: 12),
+    )
+        : FlavorConfig.appFlavor == Flavor.TOM
+        ? Text(
+      'Tom Tokens',
+      style: TextStyle(
+          color: Theme.of(context).accentColor,
+          fontWeight: FontWeight.w400,
+          fontSize: 12),
+    )
+        : Text(
+      'Tulsi Tokens',
+      style: TextStyle(
+          color: Theme.of(context).accentColor,
+          fontWeight: FontWeight.w400,
+          fontSize: 12),
+    );
+  }
+
+
 
   Future<void> _signOut(BuildContext context) async {
     Navigator.pop(context);

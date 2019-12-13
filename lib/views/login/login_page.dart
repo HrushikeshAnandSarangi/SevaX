@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -359,7 +360,7 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
-        email: emailId,
+        email: emailId.split(" ").join(""),
         password: password,
       );
     } on PlatformException catch (erorr) {
@@ -378,11 +379,19 @@ class _LoginPageState extends State<LoginPage> {
       SnackBar(
         content: Text(error.message),
         action: SnackBarAction(
-          label: 'Dismiss',
-          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          label: 'Change password',
+          onPressed: () {
+            resetPassword(emailId);
+            _scaffoldKey.currentState.hideCurrentSnackBar();
+
+          },
         ),
       ),
     );
+  }
+
+  Future<void> resetPassword(String email) async {
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 
   String _validateEmailId(String value) {

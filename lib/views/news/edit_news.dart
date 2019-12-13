@@ -196,6 +196,7 @@ class NewsEditFormState extends State<NewsEditForm> {
     super.didChangeDependencies();
   }
 
+  void status(){}
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +245,7 @@ class NewsEditFormState extends State<NewsEditForm> {
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: Center(
-                          child: NewsImage(),
+                          child: NewsImage(status),
                         ),
                       ),
 

@@ -17,6 +17,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 import '../../main.dart';
 
@@ -95,8 +96,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
-  GeoFirePoint location;
+  GeoFirePoint location = ;
   String selectedAddress;
+  bool isImageAvailable = false;
+
 
   Future<void> writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -182,6 +185,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.didChangeDependencies();
   }
 
+  void addCreditTextField() {
+    setState(() {
+      this.isImageAvailable = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     textStyle = Theme.of(context).textTheme.title;
@@ -200,65 +209,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // Container(
-                  //   alignment: Alignment(1.0, 0),
-                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
-                  //   child:
-                  //   RaisedButton(
-                  //     shape: StadiumBorder(),
-                  //     color: Colors.indigoAccent,
-                  //     onPressed: () {
-                  //       // Validate will return true if the form is valid, or false if
-                  //       // the form is invalid.
-
-                  //       if (formKey.currentState.validate()) {
-                  //         // If the form is valid, we want to show a Snackbar
-                  //         Scaffold.of(context).showSnackBar(
-                  //             SnackBar(content: Text('Creating Post')));
-                  //         writeToDB();
-                  //       }
-                  //     },
-                  //     child: Text(
-                  //       'Save News Post',
-                  //       style: TextStyle(color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
-
-//              entityDropdown,
-
                   Text(""),
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
-                        // Padding(
-                        //   padding: EdgeInsets.only(bottom: 20.0),
-                        //   child: TextFormField(
-                        //     decoration: InputDecoration(
-                        //       hintText: 'Your feed title',
-                        //       labelText: '+ Feed Title',
-                        //       border: OutlineInputBorder(
-                        //         borderRadius: const BorderRadius.all(
-                        //           const Radius.circular(10.0),
-                        //         ),
-                        //         borderSide: new BorderSide(
-                        //           color: Colors.black,
-                        //           width: 0.5,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     keyboardType: TextInputType.text,
-                        //     //style: textStyle,
-                        //     validator: (value) {
-                        //       if (value.isEmpty) {
-                        //         return 'Please enter the Post Title';
-                        //       }
-                        //       newsObject.title = value;
-                        //     },
-                        //   ),
-                        // ),
-
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
@@ -289,61 +244,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           ),
                         ),
                         Text(""),
-                        // TextFormField(
-                        //   decoration: InputDecoration(
-                        //     hintText: 'Your news and any #hashtags',
-                        //     labelText: 'Photo Credits',
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: const BorderRadius.all(
-                        //         const Radius.circular(10.0),
-                        //       ),
-                        //       borderSide: new BorderSide(
-                        //         color: Colors.black,
-                        //         width: 0.5,
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   keyboardType: TextInputType.multiline,
-                        //   //style: textStyle,
-                        //   maxLines: null,
-                        //   validator: (value) {
-                        //     if (value.isEmpty) {
-                        //       return 'Please enter some text';
-                        //     }
-                        //     newsObject.description = value;
-                        //   },
-                        // ),
                       ],
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width / 4,
-                        0,
-                        MediaQuery.of(context).size.width / 4,
-                        0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: '+ Photo Credits',
-                      ),
-                      keyboardType: TextInputType.text,
-                      textAlign: TextAlign.center,
-                      //style: textStyle,
-                      validator: (value) {
-                        // if (value.isEmpty) {
-                        //   return 'Please enter some text';
-                        // }
-                        newsObject.photoCredits = value;
-                      },
-                    ),
-                  ),
-                  // Text(""),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0),
-                    child: Center(
-                      child: NewsImage(),
-                    ),
-                  ),
+                  imageAndCredits,
                 ],
               ),
               FlatButton.icon(
@@ -422,8 +326,82 @@ class NewsCreateFormState extends State<NewsCreateForm> {
           )),
         ));
   }
+   Widget get imageAndCredits {
 
-  Widget get entityDropdown {
+       return Container(
+         margin: EdgeInsets.only(left: 20, right: 20,top: 0),
+         width: double.infinity,
+         child: Column(
+           children: <Widget>[
+             DottedBorder(
+               color: Colors.grey,
+               padding: EdgeInsets.all(0),
+               child:
+               Container(
+                 width: double.infinity,
+                 padding: EdgeInsets.all(0),
+                 child: Center(
+                   child: isImageAvailable ?
+                   NewsImage(addCreditTextField)
+                     : Column(
+                     children: <Widget>[
+                       NewsImage(addCreditTextField),
+                       Container(
+                         margin: EdgeInsets.only(bottom: 5),
+                         child: Text(
+                           'Click here to add photos',
+                            style: TextStyle(
+                              color: FlavorConfig.values.buttonTextColor,
+                              fontSize: 12,
+                            ),
+                          ),
+                       ),
+                    ],
+                   ),
+                 ),
+               ),
+             ),
+             if(isImageAvailable)
+               photoCreditTextField,
+             ],
+           ),
+         );
+     }
+
+  Widget get photoCreditTextField {
+    return DottedBorder(
+      color: Colors.grey,
+      padding: EdgeInsets.all(0),
+      child: Container(
+          height: 25,
+          child: Center(
+            child: TextFormField(
+//              onTap: (){
+//                selectedTextField = SelectedTextField.none;
+//              },
+              style: TextStyle(
+                fontSize: 13.5,
+              ),
+              decoration: InputDecoration.collapsed(
+                hintText: 'Photo Credits',
+              ),
+              keyboardType: TextInputType.text,
+              textAlign: TextAlign.center,
+              //style: textStyle,
+              validator: (value) {
+                // if (value.isEmpty) {
+                //   return 'Please enter some text';
+                // }
+                newsObject.photoCredits = value;
+              },
+            ),
+          )
+      ),
+    );
+  }
+
+
+     Widget get entityDropdown {
     return Container(
       padding: EdgeInsets.only(bottom: 20.0),
       child: DropdownButtonFormField<DataModel>(
@@ -480,6 +458,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       ),
     );
   }
+
 
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(
