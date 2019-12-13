@@ -193,7 +193,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   Future loadNextBatchItems() async {
     if (_hasMoreItems) {
       isLoading = true;
-      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex)
+      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex,      SevaCore.of(context).loggedInUser.email,
+      )
           .then((onValue) {
         var addItems = onValue.map((memberObject) {
           var member = memberObject.sevaUserID;
