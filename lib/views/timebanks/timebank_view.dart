@@ -60,6 +60,10 @@ class _TimebankViewState extends State<TimebankView> {
     //this.getRequestData = new JoinRequestModel();
   }
 
+
+
+
+
   Future getJoinRequestData() async {
     this.getRequestData = new JoinRequestModel();
     this.getRequestData = await getRequestStatusForId(
