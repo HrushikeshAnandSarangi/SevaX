@@ -7,6 +7,7 @@ import 'package:sevaexchange/views/core.dart';
 
 import '../flavor_config.dart';
 
+
 class UserModel extends DataModel {
   String bio;
   String email;
