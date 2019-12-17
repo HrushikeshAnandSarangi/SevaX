@@ -909,6 +909,7 @@ class _ProfilePageState extends State<ProfilePage>
                   builder: (context) {
                     return TimebankAdminPage(
                       timebankId: FlavorConfig.values.timebankId,
+                      userEmail: SevaCore.of(context).loggedInUser.email,
                     );
                   },
                 ),

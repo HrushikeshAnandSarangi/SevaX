@@ -622,6 +622,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                               MaterialPageRoute(
                                   builder: (context) => TimebankAdminPage(
                                         timebankId: timebankModel.id,
+                                        userEmail: SevaCore.of(context).loggedInUser.email,
                                       )),
                             );
                           },
@@ -1075,6 +1076,7 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
               builder: (context) {
                 return TimebankAdminPage(
                   timebankId: timebankModel.id,
+                  userEmail: SevaCore.of(context).loggedInUser.email,
                 );
               },
             ),

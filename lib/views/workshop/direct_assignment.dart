@@ -36,13 +36,10 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   ScrollController _controller;
   var _indexSoFar = 0;
   var _pageIndex = 1;
-  var _stopLoading = false;
-  var _lastIndex = 999;
-  var _hasMoreItems = true;
-  var _showMoreItems = true;
   var currSelectedState = false;
   var selectedUserModelIndex = -1;
-  var isLoading = false;
+  var _isLoading = false;
+  var _lastReached = false;
 
   List<Widget> _avtars = [];
   HashMap<String, int> emailIndexMap = HashMap();
@@ -54,7 +51,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   @override
   void initState(){
-    _showMoreItems = true;
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
     super.initState();
@@ -69,14 +65,12 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange && _hasMoreItems) {
+        !_controller.position.outOfRange && !_isLoading) {
+
       loadNextBatchItems().then((onValue){
         setState(() {
-          _showMoreItems = true;
         });
       });
-    } else {
-      _showMoreItems = false;
     }
   }
 
@@ -117,11 +111,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       ),
     );
 
-//      if(_showMoreItems && !isLoading) {
-//      loadNextBatchItems().then((onValue){
-//        return finalWidget;
-//      });
-//    }
     return finalWidget;
   }
 
@@ -155,7 +144,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   Widget getContent(BuildContext context,TimebankModel model) {
-    if(_avtars.length == 0 && _hasMoreItems && _showMoreItems) {
+    if(_avtars.length == 0) {
       return circularBar;
     }else{
       return listViewWidget;
@@ -185,7 +174,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   int fetchItemsCount() {
-    if(_hasMoreItems && _showMoreItems) {
+    if(!_lastReached) {
       return _avtars.length + 1;
     }
     return _avtars.length;
@@ -199,59 +188,57 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
 
   Future loadNextBatchItems() async {
-    if(_hasMoreItems && _pageIndex < _lastIndex && !isLoading) {
-      isLoading = true;
+    if(!_isLoading && !_lastReached) {
+      _isLoading = true;
       FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex,widget.userEmail).then((onValue) {
-
-
-
-        if(onValue.length == 0){
-          _lastIndex = _pageIndex;
-
+        var userModelList = onValue.userModelList;
+        if(userModelList==null||userModelList.length == 0){
+          _isLoading = false;
+          _pageIndex = _pageIndex + 1;
+          loadNextBatchItems();
         }
-        var addItems = onValue.map((memberObject) {
-          var member = memberObject.sevaUserID;
-          if (widget.listOfMembers != null &&
-              widget.listOfMembers.containsKey(member)) {
-            return getUserWidget(widget.listOfMembers[member], context);
-          }
-          return FutureBuilder<UserModel>(
-            future: FirestoreManager.getUserForId(sevaUserId: member),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) return Text(snapshot.error.toString());
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return shimmerWidget;
-              }
-              UserModel user = snapshot.data;
-              widget.listOfMembers[user.sevaUserID] = user;
-              return getUserWidget(user, context);
-            },
-          );
-        }
-        ).toList();
-
-        if(addItems.length>0) {
-          var lastIndex = _avtars.length;
-          setState(() {
-            var iterationCount = 0;
-            for(int i=0;i<addItems.length;i++) {
-              if(emailIndexMap[onValue[i].email]==null) { // Filtering duplicates
-                _avtars.add(addItems[i]);
-                indexToModelMap[lastIndex] = onValue[i];
-                emailIndexMap[onValue[i].email] = lastIndex++;
-                iterationCount++;
-              }
+        else{
+          var addItems = userModelList.map((memberObject) {
+            var member = memberObject.sevaUserID;
+            if (widget.listOfMembers != null &&
+                widget.listOfMembers.containsKey(member)) {
+              return getUserWidget(widget.listOfMembers[member], context);
             }
-            _indexSoFar = _indexSoFar + iterationCount;
-            _pageIndex = _pageIndex + 1;
-          });
+            return FutureBuilder<UserModel>(
+              future: FirestoreManager.getUserForId(sevaUserId: member),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) return Text(snapshot.error.toString());
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return shimmerWidget;
+                }
+                UserModel user = snapshot.data;
+                widget.listOfMembers[user.sevaUserID] = user;
+                return getUserWidget(user, context);
+              },
+            );
+          }).toList();
+          if(addItems.length>0) {
+            var lastIndex = _avtars.length;
+            setState(() {
+              var iterationCount = 0;
+              for(int i=0;i<addItems.length;i++) {
+                if(emailIndexMap[userModelList[i].email]==null) { // Filtering duplicates
+                  _avtars.add(addItems[i]);
+                  indexToModelMap[lastIndex] = userModelList[i];
+                  emailIndexMap[userModelList[i].email] = lastIndex++;
+                  iterationCount++;
+                }
+              }
+              _indexSoFar = _indexSoFar + iterationCount;
+              _pageIndex = _pageIndex + 1;
+            });
+          }
+          _isLoading = false;
         }
-
-
-        isLoading = false;
-      }
-
-      );
+        setState(() {
+          _lastReached = onValue.lastPage;
+        });
+      });
     }
   }
 

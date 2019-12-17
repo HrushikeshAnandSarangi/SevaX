@@ -577,7 +577,8 @@ class _TimebankViewState extends State<TimebankView> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => TimebankAdminPage(
-                                              timebankId: timebankModel.id,
+                                          timebankId: timebankModel.id,
+                                          userEmail: SevaCore.of(context).loggedInUser.email,
                                             )),
                                   );
                                 },
@@ -998,6 +999,7 @@ class _TimebankViewState extends State<TimebankView> {
               builder: (context) {
                 return TimebankAdminPage(
                   timebankId: timebankModel.id,
+                  userEmail: SevaCore.of(context).loggedInUser.email,
                 );
               },
             ),

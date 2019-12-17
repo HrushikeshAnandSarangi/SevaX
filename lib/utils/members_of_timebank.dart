@@ -51,11 +51,12 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   ScrollController _controller;
   var _indexSoFar = 0;
   var _pageIndex = 1;
-  var _hasMoreItems = true;
   var _showMoreItems = true;
   var currSelectedState = false;
   var selectedUserModelIndex = -1;
-  var isLoading = false;
+  var _isLoading = false;
+
+  var _lastReached = false;
 
   var fromNewChat = IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch);
 
@@ -65,7 +66,6 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   @override
   void initState() {
-//    loadNextBatchItems();
     _showMoreItems = true;
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
@@ -80,18 +80,20 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange) {
-      setState(() {
-        _showMoreItems = true;
-        loadNextBatchItems();
+        !_controller.position.outOfRange && !_isLoading) {
+
+      loadNextBatchItems().then((onValue){
+        setState(() {
+        });
       });
-    } else {
-      _showMoreItems = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if(_avtars.length==0) {
+      loadNextBatchItems();
+    }
     var color = Theme.of(context);
     print("Color ${color.primaryColor}");
     var finalWidget = Scaffold(
@@ -107,13 +109,6 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
         timebankId: widget.timebankId,
       ),
     );
-
-//    if(_showMoreItems) {
-//    if (_showMoreItems && !isLoading) {
-//      loadNextBatchItems().then((onValue) {
-//        return finalWidget;
-//      });
-//    }
     return finalWidget;
   }
 
@@ -147,7 +142,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget getContent(BuildContext context, TimebankModel model) {
-    if (_avtars.length == 0 && _hasMoreItems && _showMoreItems) {
+    if (_avtars.length == 0 && _showMoreItems) {
       return circularBar;
     } else {
       return listViewWidget;
@@ -187,7 +182,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   int fetchItemsCount() {
-    if (_hasMoreItems && _showMoreItems) {
+    if (!_lastReached) {
       return _avtars.length + 1;
     }
     return _avtars.length;
@@ -200,12 +195,11 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Future loadNextBatchItems() async {
-    if (_hasMoreItems) {
-      isLoading = true;
-      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex,      SevaCore.of(context).loggedInUser.email,
-      )
-          .then((onValue) {
-        var addItems = onValue.map((memberObject) {
+    if (!_isLoading && !_lastReached) {
+      _isLoading = true;
+      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex, SevaCore.of(context).loggedInUser.email).then((onValue) {
+        var userModelList = onValue.userModelList;
+        var addItems = userModelList.map((memberObject) {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&
               widget.listOfMembers.containsKey(member)) {
@@ -230,22 +224,23 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
           setState(() {
             var iterationCount = 0;
             for (int i = 0; i < addItems.length; i++) {
-              if (emailIndexMap[onValue[i].email] == null) {
+              if (emailIndexMap[userModelList[i].email] == null) {
                 // Filtering duplicates
                 _avtars.add(addItems[i]);
-                indexToModelMap[lastIndex] = onValue[i];
-                emailIndexMap[onValue[i].email] = lastIndex++;
+                indexToModelMap[lastIndex] = userModelList[i];
+                emailIndexMap[userModelList[i].email] = lastIndex++;
                 iterationCount++;
               }
             }
             _indexSoFar = _indexSoFar + iterationCount;
             _pageIndex = _pageIndex + 1;
           });
-        } else {
-          _hasMoreItems = !(addItems.length < 20);
         }
 
-        isLoading = false;
+        _isLoading = false;
+        setState(() {
+          _lastReached = onValue.lastPage;
+        });
       });
     }
   }
