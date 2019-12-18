@@ -117,10 +117,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   TimebankModel timebankModel;
   Widget getList({String timebankId}) {
     if (timebankModel != null) {
-      return getContent(
-        context,
-        timebankModel,
-      );
+      return listViewWidget;
     }
 
     return StreamBuilder<TimebankModel>(
@@ -135,20 +132,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           return circularBar;
         }
         timebankModel = snapshot.data;
-        return getContent(
-          context,
-          timebankModel,
-        );
+        return listViewWidget;
       },
     );
-  }
-
-  Widget getContent(BuildContext context,TimebankModel model) {
-    if(_avtars.length == 0) {
-      return circularBar;
-    }else{
-      return listViewWidget;
-    }
   }
 
   Widget get listViewWidget{
@@ -174,10 +160,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   int fetchItemsCount() {
-    if(!_lastReached) {
-      return _avtars.length + 1;
-    }
-    return _avtars.length;
+    return _lastReached ? _avtars.length : _avtars.length + 1;
   }
 
   Future<Widget> updateModelIndex(int index) async {
