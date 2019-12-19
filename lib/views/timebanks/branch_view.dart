@@ -742,6 +742,7 @@ class _BranchViewState extends State<BranchView> {
             builder: (context) {
               return TimebankAdminPage(
                 timebankId: timebankModel.id,
+                userEmail: SevaCore.of(context).loggedInUser.email,
               );
             },
           ),

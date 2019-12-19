@@ -428,7 +428,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
                   SevaCore.of(context).loggedInUser.currentTimebank,
-                  selectedUsers),
+                  selectedUsers,
+                SevaCore.of(context).loggedInUser.email,
+              ),
             ),
           );
 

@@ -208,7 +208,6 @@ class _ResultViewState extends State<ResultView> {
     if (widget == null ||
         widget.controller == null ||
         widget.controller.text == null) {
-      print("");
 
       return Container();
     }
@@ -226,7 +225,6 @@ class _ResultViewState extends State<ResultView> {
     }
     switch (widget.type) {
       case SearchType.USER:
-        print('Blahblahblah :${widget.controller.text}');
         return StreamBuilder<List<UserModel>>(
           stream:
               SearchManager.searchForUser(queryString: widget.controller.text),

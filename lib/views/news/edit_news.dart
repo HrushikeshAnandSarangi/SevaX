@@ -17,11 +17,13 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
+import '../../main.dart';
+
 class NewsEdit extends StatelessWidget {
   final GlobalKey<NewsEditFormState> _formState = GlobalKey();
   final String timebankId;
   NewsModel newsModel;
-  NewsEdit({this.timebankId, this.newsModel});
+  NewsEdit({this.timebankId,this.newsModel});
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -74,7 +76,7 @@ class NewsEdit extends StatelessWidget {
 class NewsEditForm extends StatefulWidget {
   final String timebankId;
   NewsModel newsModel;
-  NewsEditForm({Key key, this.timebankId, this.newsModel}) : super(key: key);
+  NewsEditForm({Key key, this.timebankId,this.newsModel}) : super(key: key);
   @override
   NewsEditFormState createState() {
     return NewsEditFormState();
@@ -146,6 +148,7 @@ class NewsEditFormState extends State<NewsEditForm> {
   Future<void> updateNews({
     @required NewsModel newsModel,
   }) async {
+
     return await Firestore.instance
         .collection('news')
         .document(newsModel.id)
@@ -184,7 +187,7 @@ class NewsEditFormState extends State<NewsEditForm> {
     FirestoreManager.FirestoreManager.getEntityDataListStream(
       userEmail: SevaCore.of(context).loggedInUser.email,
     ).listen(
-      (dataList) {
+          (dataList) {
         setState(() {
           dataList.forEach((data) => this.dataList.add(data));
         });
@@ -192,6 +195,8 @@ class NewsEditFormState extends State<NewsEditForm> {
     );
     super.didChangeDependencies();
   }
+
+  void status(){}
 
   @override
   Widget build(BuildContext context) {
@@ -204,116 +209,145 @@ class NewsEditFormState extends State<NewsEditForm> {
           // padding: EdgeInsets.all(10.0),
           child: SingleChildScrollView(
               child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  // Container(
-                  //   alignment: Alignment(1.0, 0),
-                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
-                  //   child:
-                  //   RaisedButton(
-                  //     shape: StadiumBorder(),
-                  //     color: Colors.indigoAccent,
-                  //     onPressed: () {
-                  //       // Validate will return true if the form is valid, or false if
-                  //       // the form is invalid.
+                  Column(
+                    children: <Widget>[
+                      // Container(
+                      //   alignment: Alignment(1.0, 0),
+                      //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
+                      //   child:
+                      //   RaisedButton(
+                      //     shape: StadiumBorder(),
+                      //     color: Colors.indigoAccent,
+                      //     onPressed: () {
+                      //       // Validate will return true if the form is valid, or false if
+                      //       // the form is invalid.
 
-                  //       if (formKey.currentState.validate()) {
-                  //         // If the form is valid, we want to show a Snackbar
-                  //         Scaffold.of(context).showSnackBar(
-                  //             SnackBar(content: Text('Creating Post')));
-                  //         writeToDB();
-                  //       }
-                  //     },
-                  //     child: Text(
-                  //       'Save News Post',
-                  //       style: TextStyle(color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
+                      //       if (formKey.currentState.validate()) {
+                      //         // If the form is valid, we want to show a Snackbar
+                      //         Scaffold.of(context).showSnackBar(
+                      //             SnackBar(content: Text('Creating Post')));
+                      //         writeToDB();
+                      //       }
+                      //     },
+                      //     child: Text(
+                      //       'Save News Post',
+                      //       style: TextStyle(color: Colors.white),
+                      //     ),
+                      //   ),
+                      // ),
 
 //              entityDropdown,
 
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0),
-                    child: Center(
-                      child: NewsImage(),
-                    ),
-                  ),
-
-                  Container(
-                    padding: EdgeInsets.fromLTRB(
-                        MediaQuery.of(context).size.width / 4,
-                        0,
-                        MediaQuery.of(context).size.width / 4,
-                        0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: '+ Photo Credits',
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Center(
+                          child: NewsImage(),
+                        ),
                       ),
-                      initialValue: widget.newsModel.photoCredits,
-                      keyboardType: TextInputType.text,
-                      textAlign: TextAlign.center,
-                      onChanged: (value) {
-                        widget.newsModel.photoCredits = value;
-                      },
-                      //style: textStyle,
-                      validator: (value) {
-                        // if (value.isEmpty) {
-                        //   return 'Please enter some text';
-                        // }
-                        newsObject.photoCredits = value;
-                      },
-                    ),
-                  ),
-                  Text(""),
-                  Container(
-                    margin: EdgeInsets.all(20),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 20.0),
-                          child: TextFormField(
-                            initialValue: widget.newsModel.title,
-                            onChanged: (value) {
-                              widget.newsModel.title = value;
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Your feed title',
-                              labelText: '+ Feed Title',
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(10.0),
+
+                      Container(
+                        padding: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width / 4,
+                            0,
+                            MediaQuery.of(context).size.width / 4,
+                            0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: '+ Photo Credits',
+                          ),
+                          initialValue: widget.newsModel.photoCredits,
+                          keyboardType: TextInputType.text,
+                          textAlign: TextAlign.center,
+                          onChanged: (value) {
+                            widget.newsModel.photoCredits = value;
+                          },
+                          //style: textStyle,
+                          validator: (value) {
+                            // if (value.isEmpty) {
+                            //   return 'Please enter some text';
+                            // }
+                            newsObject.photoCredits = value;
+                          },
+                        ),
+                      ),
+                      Text(""),
+
+                      Container(
+                        margin: EdgeInsets.all(20),
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 20.0),
+                              child: TextFormField(
+                                initialValue: widget.newsModel.title,
+                                onChanged: (value) {
+                                  widget.newsModel.title = value;
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'Your feed title',
+                                  labelText: '+ Feed Title',
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(10.0),
+                                    ),
+                                    borderSide: new BorderSide(
+                                      color: Colors.black,
+                                      width: 0.5,
+                                    ),
+                                  ),
                                 ),
-                                borderSide: new BorderSide(
-                                  color: Colors.black,
-                                  width: 0.5,
-                                ),
+                                keyboardType: TextInputType.text,
+                                //style: textStyle,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter the Post Title';
+                                  }
+                                  newsObject.title = value;
+                                },
                               ),
                             ),
-                            keyboardType: TextInputType.text,
-                            //style: textStyle,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter the Post Title';
-                              }
-                              newsObject.title = value;
-                            },
-                          ),
-                        ),
-                        Padding(
-                            padding: EdgeInsets.only(bottom: 0.0),
-                            child: TextFormField(
-                              initialValue: widget.newsModel.subheading,
+                            Padding(
+                                padding: EdgeInsets.only(bottom: 0.0),
+                                child: TextFormField(
+                                  initialValue: widget.newsModel.subheading,
+                                  onChanged: (value) {
+                                    widget.newsModel.subheading = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: 'Your sub heading',
+                                    labelText: '+ Sub Heading',
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(10.0),
+                                      ),
+                                      borderSide: new BorderSide(
+                                        color: Colors.black,
+                                        width: 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                  keyboardType: TextInputType.text,
+                                  //style: textStyle,
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter some text';
+                                    }
+                                    newsObject.subheading = value;
+                                  },
+                                )),
+                            Text(""),
+                            TextFormField(
+                              initialValue: widget.newsModel.description,
                               onChanged: (value) {
-                                widget.newsModel.subheading = value;
+                                widget.newsModel.description = value;
                               },
                               decoration: InputDecoration(
-                                hintText: 'Your sub heading',
-                                labelText: '+ Sub Heading',
+                                hintText: 'Your news and any #hashtags',
+                                labelText: '+ #hashtags',
                                 border: OutlineInputBorder(
                                   borderRadius: const BorderRadius.all(
                                     const Radius.circular(10.0),
@@ -324,124 +358,96 @@ class NewsEditFormState extends State<NewsEditForm> {
                                   ),
                                 ),
                               ),
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.multiline,
                               //style: textStyle,
+                              maxLines: null,
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Please enter some text';
                                 }
-                                newsObject.subheading = value;
+                                newsObject.description = value;
                               },
-                            )),
-                        Text(""),
-                        TextFormField(
-                          initialValue: widget.newsModel.description,
-                          onChanged: (value) {
-                            widget.newsModel.description = value;
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Your news and any #hashtags',
-                            labelText: '+ #hashtags',
-                            border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
-                                const Radius.circular(10.0),
-                              ),
-                              borderSide: new BorderSide(
-                                color: Colors.black,
-                                width: 0.5,
-                              ),
                             ),
-                          ),
-                          keyboardType: TextInputType.multiline,
-                          //style: textStyle,
-                          maxLines: null,
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some text';
-                            }
-                            newsObject.description = value;
-                          },
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
 
-                  Text(""),
-                ],
-              ),
-              FlatButton.icon(
-                icon: Icon(Icons.add_location),
-                label: Text(
-                  selectedAddress == null || selectedAddress.isEmpty
-                      ? '${this._getLocation()}'
-                      : selectedAddress,
-                ),
-                color: Colors.grey[200],
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<GeoFirePoint>(
-                      builder: (context) => LocationPicker(
-                        selectedLocation: location,
-                      ),
-                    ),
-                  ).then((point) {
-                    if (point != null) location = point;
-                    _getLocation();
-                    log('ReceivedLocation: $selectedAddress');
-                  });
-                },
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                alignment: Alignment(0, 1),
-                padding: const EdgeInsets.only(top: 10.0),
-                child: RaisedButton(
-                  shape: StadiumBorder(),
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    // Validate will return true if the form is valid, or false if
-                    // the form is invalid.
-                    if (location != null) {
-                      if (formKey.currentState.validate()) {
-                        // If the form is valid, we want to show a Snackbar
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Updating Post')));
-                        widget.newsModel.location = location;
-                        widget.newsModel.newsImageUrl = globals.newsImageURL;
-                        updateNews(newsModel: widget.newsModel);
-                        globals.newsImageURL = null;
-                        Navigator.pop(context);
-                        //writeToDB();
-                      }
-                    } else {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text('Location not added'),
-                      ));
-                    }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.attachment,
-                        size: 24.0,
-                        color: FlavorConfig.values.buttonTextColor,
-                      ),
-                      Text(' '),
-                      Text(
-                        'Update feed',
-                        style: TextStyle(
-                          color: FlavorConfig.values.buttonTextColor,
-                        ),
-                      ),
+                      Text(""),
                     ],
                   ),
-                ),
-              ),
-              // Text(sevaUserID),
-            ],
-          )),
+                  FlatButton.icon(
+                    icon: Icon(Icons.add_location),
+                    label: Text(
+                      selectedAddress == null || selectedAddress.isEmpty
+                          ? '${this._getLocation()}'
+                          : selectedAddress,
+                    ),
+                    color: Colors.grey[200],
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<GeoFirePoint>(
+                          builder: (context) => LocationPicker(
+                            selectedLocation: location,
+                          ),
+                        ),
+                      ).then((point) {
+                        if (point != null) location = point;
+                        _getLocation();
+                        log('ReceivedLocation: $selectedAddress');
+                      });
+                    },
+                  ),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    alignment: Alignment(0, 1),
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: RaisedButton(
+                      shape: StadiumBorder(),
+                      color: Theme.of(context).accentColor,
+                      onPressed: () {
+                        // Validate will return true if the form is valid, or false if
+                        // the form is invalid.
+                        if (location != null) {
+                          if (formKey.currentState.validate()) {
+                            // If the form is valid, we want to show a Snackbar
+                            Scaffold.of(context).showSnackBar(
+                                SnackBar(content: Text('Updating Post')));
+                            widget.newsModel.location = location;
+                            widget.newsModel.newsImageUrl = globals.newsImageURL;
+                            updateNews(newsModel: widget.newsModel);
+                            globals.newsImageURL = null;
+                            Navigator.pop(context);
+                            //writeToDB();
+                          }
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('Location not added'),
+                          ));
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.attachment,
+                            size: 24.0,
+                            color: FlavorConfig.values.buttonTextColor,
+                          ),
+                          Text(' '),
+                          Text(
+                            'Update feed',
+                            style: TextStyle(
+                              color: FlavorConfig.values.buttonTextColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Text(sevaUserID),
+                ],
+              )),
         ));
   }
 
@@ -452,8 +458,8 @@ class NewsEditFormState extends State<NewsEditForm> {
         decoration: InputDecoration.collapsed(
           hintText: '+ Category',
           hintStyle: Theme.of(context).textTheme.title.copyWith(
-                color: Theme.of(context).hintColor,
-              ),
+            color: Theme.of(context).hintColor,
+          ),
         ),
         validator: (value) {
           if (value == null) {
