@@ -14,6 +14,7 @@ class ChatModel extends DataModel {
   String photoURL;
 
   Map<dynamic, dynamic> deletedBy;
+  Map<dynamic, dynamic> unreadStatus;
   List<String> softDeletedBy;
 
   bool isBlocked = false;
@@ -32,15 +33,34 @@ class ChatModel extends DataModel {
       try {
         Map<dynamic, dynamic> deletedByMap = map['deletedBy'];
         this.deletedBy = deletedByMap;
-        print("deletedBy set to $deletedBy");
       } catch (e) {
-        print("Crashed on deletedBy $e");
         this.deletedBy = HashMap();
       }
     } else {
-      print("Chat has not been deleted yet");
+      // print("Chat has not been deleted yet");
 
       deletedBy = HashMap();
+    }
+
+    if (map.containsKey('softDeletedBy')) {
+      List<String> softDeletedBy = List.castFrom(map['softDeletedBy']);
+      this.softDeletedBy = softDeletedBy;
+    } else {
+      softDeletedBy = [];
+    }
+
+    if (map.containsKey('unread_status') && map['unread_status'] != null) {
+      try {
+        Map<dynamic, dynamic> unreadStatus = map['unread_status'];
+        this.unreadStatus = unreadStatus;
+        // print("unread_seen set to $deletedBy");
+      } catch (e) {
+        // print("Exception caught while parding unseen notifications $e");
+        this.unreadStatus = HashMap();
+      }
+    } else {
+      // print("Unread property not defined");
+      unreadStatus = HashMap();
     }
 
     if (map.containsKey('user1')) {
@@ -87,6 +107,8 @@ class ChatModel extends DataModel {
     }
 
     map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
+
+    map['unread_status'] = this.unreadStatus;
 
     return map;
   }

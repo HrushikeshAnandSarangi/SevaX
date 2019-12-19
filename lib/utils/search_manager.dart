@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -27,16 +28,30 @@ class SearchManager {
   static Stream<List<UserModel>> searchForUser({
     @required queryString,
   }) async* {
+    print("searchForUser :: ---------------");
     String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
-    dynamic body = json.encode({
-      "query": {
-        "multi_match": {
-          "query": queryString,
-          "type": "phrase_prefix",
-          "fields": ["email", "fullname"]
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
+                }
+              },
+              {
+                "multi_match": {
+                  "query": "$queryString",
+                  "fields": ["email", "fullname"],
+                  "type": "phrase_prefix"
+                }
+              }
+            ]
+          }
         }
-      }
-    });
+      },
+    );
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<UserModel> userList = [];
@@ -52,15 +67,34 @@ class SearchManager {
     @required queryString,
   }) async* {
     String url = 'http://35.243.165.111//elasticsearch/newsfeed/news/_search';
-    dynamic body = json.encode({
-      "query": {
-        "multi_match": {
-          "query": queryString,
-          "type": "phrase_prefix",
-          "fields": ["description", "fullname", "email", "subheading", "title"]
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
+                }
+              },
+              {
+                "multi_match": {
+                  "query": "$queryString",
+                  "fields": [
+                    "description",
+                    "fullname",
+                    "email",
+                    "subheading",
+                    "title"
+                  ],
+                  "type": "phrase_prefix"
+                }
+              }
+            ]
+          }
         }
-      }
-    });
+      },
+    );
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<NewsModel> newsList = [];
@@ -109,15 +143,28 @@ class SearchManager {
     @required queryString,
   }) async* {
     String url = 'http://35.243.165.111//elasticsearch/offers/offer/_search';
-    dynamic body = json.encode({
-      "query": {
-        "multi_match": {
-          "query": queryString,
-          "type": "phrase_prefix",
-          "fields": ["description", "title", "fullname", "email"]
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
+                }
+              },
+              {
+                "multi_match": {
+                  "query": "$queryString",
+                  "fields": ["description", "title", "fullname", "email"],
+                  "type": "phrase_prefix"
+                }
+              }
+            ]
+          }
         }
-      }
-    });
+      },
+    );
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
 
@@ -134,17 +181,29 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url =
-        'http://35.243.165.111//elasticsearch/requests/request/_search';
-    dynamic body = json.encode({
-      "query": {
-        "multi_match": {
-          "query": queryString,
-          "type": "phrase_prefix",
-          "fields": ["description", "title", "fullname", "email"]
+    String url = 'http://35.243.165.111/elasticsearch/requests/request/_search';
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
+                }
+              },
+              {
+                "multi_match": {
+                  "query": "$queryString",
+                  "fields": ["description", "email", "fullname", "title"],
+                  "type": "phrase_prefix"
+                }
+              }
+            ]
+          }
         }
-      }
-    });
+      },
+    );
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<RequestModel> offerList = [];
@@ -167,12 +226,18 @@ class SearchManager {
 
   static Future<List<Map<String, dynamic>>> _makeElasticSearchPostRequest(
       String url, dynamic body) async {
+    print("Hitting - " + url);
+
     String username = 'user';
     String password = 'CiN36UNixjyq';
-    log(json.encode({
-      'authorization':
-          'basic ' + base64Encode(utf8.encode('$username:$password'))
-    }));
+    log(
+      json.encode(
+        {
+          'authorization':
+              'basic ' + base64Encode(utf8.encode('$username:$password'))
+        },
+      ),
+    );
     http.Response response =
         await makePostRequest(url: url, body: body, headers: {
       'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=',
@@ -180,6 +245,8 @@ class SearchManager {
       "Content-Type": "application/json"
     });
     log(response.body);
+    print("Reuqest Response --> ${response.body}");
+
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);

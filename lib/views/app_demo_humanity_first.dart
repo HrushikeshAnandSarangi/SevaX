@@ -23,39 +23,40 @@ class IntroScreenState extends State<AppDemoHumanityFirst> {
         backgroundImage: 'lib/assets/images/Info_1.png',
         title: "",
         description: "",
+        backgroundImageFit: BoxFit.fill,
         backgroundColor: Color(0xff203152),
       ),
     );
 
-    // slides.add(
-    //   new Slide(
-    //     backgroundBlendMode: BlendMode.colorBurn,
-    //     backgroundImage: 'lib/assets/images/Info_2.png',
-    //     title: "",
-    //     pathImage: '',
-    //     description: "",
-    //     backgroundColor: Color(0xff203152),
-    //   ),
-    // );
+    slides.add(
+      new Slide(
+        backgroundImage: 'lib/assets/images/Info_2.png',
+        title: "",
+        pathImage: '',
+        backgroundImageFit: BoxFit.fill,
+        description: "",
+        backgroundColor: Color(0xff203152),
+      ),
+    );
 
     slides.add(
       new Slide(
-        backgroundBlendMode: BlendMode.colorBurn,
         backgroundImage: 'lib/assets/images/Info_3.png',
         title: "",
         pathImage: '',
         description: "",
+        backgroundImageFit: BoxFit.fill,
         backgroundColor: Color(0xff203152),
       ),
     );
 
     slides.add(
       new Slide(
-        backgroundBlendMode: BlendMode.colorBurn,
         backgroundImage: 'lib/assets/images/Info_4.png',
         title: "",
         pathImage: 'lib/',
         description: "",
+        backgroundImageFit: BoxFit.fill,
         backgroundColor: Color(0xff203152),
       ),
     );

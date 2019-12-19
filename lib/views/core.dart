@@ -8,6 +8,7 @@ import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/app_demo_humanity_first.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
@@ -109,19 +110,19 @@ class _CoreViewState extends State<CoreView> {
 
     if (user.blockedMembers != null) {
       SevaCore.of(context).loggedInUser.blockedMembers = user.blockedMembers;
-      print("Updated blocked");
+      // print("Updated blocked");
     } else {
-      print("blocked users not init");
+      // print("blocked users not init");
     }
 
-    print("Seva Core User -> ${user.toString()}");
+    // print("Seva Core User -> ${user.toString()}");
 
     FirestoreManager.getUserForId(sevaUserId: widget.sevaUserID).then((user) {
       if (mounted) {
         setState(() => this.user = user);
-        print("mounting data ");
+        // print("mounting data ");
       } else {
-        print("skipping mount as data is already mounted");
+        // print("skipping mount as data is already mounted");
       }
     });
 
@@ -255,6 +256,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
         },
       );
     }
+    var blockedMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
+    var blockedByMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
 
     return Scaffold(
       appBar: _selectedIndex == 3
@@ -298,7 +303,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
 //                  },
 //                ),
 //              ),
-
               leading: IconButton(
                 icon: Hero(
                   tag: 'profilehero',
@@ -330,75 +334,219 @@ class _SevaCoreViewState extends State<SevaCoreView>
               ),
               actions: [
                 StreamBuilder<Object>(
-                    stream: FirestoreManager.getNotifications(
-                        userEmail: SevaCore.of(context).loggedInUser.email),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
+                  stream: FirestoreManager.getNotifications(
+                      userEmail: SevaCore.of(context).loggedInUser.email),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text(snapshot.error.toString());
+                    }
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.notifications,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotificationsPage(),
-                              ),
-                            );
-                          },
-                        );
-                      }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return IconButton(
+                        icon: Icon(
+                          Icons.notifications,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NotificationsPage(),
+                            ),
+                          );
+                        },
+                      );
+                    }
 
-                      List<NotificationsModel> notifications = snapshot.data;
-                      if (notifications.length > 0) {
-                        return IconButton(
-                          icon: Icon(Icons.notifications_active),
-                          color: Colors.red,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotificationsPage(),
+                    List<NotificationsModel> notifications = snapshot.data;
+
+                    var unreadNotifications = 0;
+
+                    notifications.forEach((notification) {
+                      print(
+                          "unread notification -->  ${notification.id} ${notification.isRead}");
+
+                      !notification.isRead
+                          ? unreadNotifications += 1
+                          : print("Read");
+                    });
+
+                    print("Unread notifications $unreadNotifications");
+
+                    if (notifications.length > 0) {
+                      return Container(
+                        width: 50.0,
+                        height: 50.0,
+                        child: new Stack(
+                          children: <Widget>[
+                            Center(
+                              child: IconButton(
+                                icon: Icon(Icons.notifications_active,
+                                    color: Colors.red),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => NotificationsPage(),
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        );
-                      } else {
-                        return IconButton(
-                          icon: Icon(
-                            Icons.notifications,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => NotificationsPage(),
+                            ),
+                            new Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                margin: EdgeInsets.all(7),
+                                child: Text(
+                                  "$unreadNotifications",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10),
+                                ),
                               ),
-                            );
-                          },
-                        );
-                      }
-                    }),
-                IconButton(
-                  icon: Icon(
-                    Icons.chat,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatListView(),
-                      ),
-                    );
+                            )
+                          ],
+                        ),
+                      );
+                    } else {
+                      return IconButton(
+                        icon: Icon(
+                          Icons.notifications,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NotificationsPage(),
+                            ),
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
+                StreamBuilder<List<ChatModel>>(
+                  stream: getChatsforUser(
+                    email: SevaCore.of(context).loggedInUser.email,
+                    blockedBy: blockedByMembers,
+                    blockedMembers: blockedMembers,
+                  ),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
+                    if (!chatListSnapshot.hasData) {
+                      return Center(
+                        child: Center(
+                          child: IconButton(
+                            icon: Icon(Icons.chat, color: Colors.grey),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatListView(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                    if (chatListSnapshot.hasError) {
+                      return new Text('Error: ${chatListSnapshot.error}');
+                    }
+
+                    switch (chatListSnapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Center(
+                          child: Center(
+                            child: IconButton(
+                              icon: Icon(Icons.chat, color: Colors.grey),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatListView(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      default:
+                        // print(
+                        // "Refreshed Chat Model list ${chatListSnapshot.data}");
+                        List<ChatModel> allChalModelList =
+                            chatListSnapshot.data;
+
+                        List<ChatModel> chatModelList = allChalModelList;
+
+                        var userEmail = SevaCore.of(context).loggedInUser.email;
+                        var unreadCount = 0;
+
+                        chatModelList.forEach((element) {
+                          if (element.unreadStatus.containsKey(userEmail)) {
+                            unreadCount += element.unreadStatus[userEmail];
+                          }
+                        });
+
+                        if (chatModelList.length == 0 || unreadCount == 0) {
+                          return Center(
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.chat,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatListView(),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }
+
+                        return Container(
+                          width: 50.0,
+                          height: 50.0,
+                          child: new Stack(
+                            children: <Widget>[
+                              Center(
+                                child: IconButton(
+                                  icon: Icon(Icons.chat, color: Colors.red),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatListView(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              new Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  margin: EdgeInsets.all(7),
+                                  child: Text(
+                                    "$unreadCount",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 10),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                    }
+                  },
+                ),
+
                 PopupMenuButton<String>(
                   icon: Icon(Icons.more_vert),
                   onSelected: choiceAction,

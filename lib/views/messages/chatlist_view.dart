@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -228,6 +229,8 @@ class _ChatListViewState extends State<ChatListView> {
     } else
       lastmessage = chatModel.lastMessage;
 
+    var userEmail = SevaCore.of(context).loggedInUser.email;
+
     // if (chatModel.user1 == SevaCore.of(context).loggedInUser.email) {
 
     return Container(
@@ -235,6 +238,7 @@ class _ChatListViewState extends State<ChatListView> {
         elevation: 0,
         child: InkWell(
           onTap: () {
+            print("Getting intp existing chat");
             Navigator.push(
               parentContext,
               MaterialPageRoute(
@@ -295,26 +299,38 @@ class _ChatListViewState extends State<ChatListView> {
                       ),
                       style: TextStyle(fontSize: 10),
                     ),
-                    ClipOval(
-                      child: Container(
-                        height: 35,
-                        width: 35,
-                        child: GestureDetector(
-                          child: IconButton(
-                            icon: Image.asset(
-                                'lib/assets/images/recycle-bin.png'),
-                            iconSize: 30,
-                            onPressed: () {
-                              _ackAlert(
-                                SevaCore.of(context).loggedInUser.email,
-                                chatModel,
-                                context,
-                              );
-                            },
+                    Row(
+                      children: <Widget>[
+                        Text(
+                          chatModel.unreadStatus != null &&
+                                  chatModel.unreadStatus.containsKey(
+                                    userEmail,
+                                  )
+                              ? "${chatModel.unreadStatus[userEmail] == 0 ? '' : chatModel.unreadStatus[userEmail]}"
+                              : '',
+                        ),
+                        ClipOval(
+                          child: Container(
+                            height: 35,
+                            width: 35,
+                            child: GestureDetector(
+                              child: IconButton(
+                                icon: Image.asset(
+                                    'lib/assets/images/recycle-bin.png'),
+                                iconSize: 30,
+                                onPressed: () {
+                                  _ackAlert(
+                                    SevaCore.of(context).loggedInUser.email,
+                                    chatModel,
+                                    context,
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      ],
+                    )
                   ],
                 ),
               ],
@@ -526,10 +542,15 @@ class _ChatListViewState extends State<ChatListView> {
                 var messageId =
                     "${participants[0]}*${participants[1]}*${FlavorConfig.values.timebankId}";
 
+                Map<dynamic, dynamic> unreadCount = HashMap();
+                unreadCount = chatModel.unreadStatus;
+                unreadCount[email] = 0;
+
                 Firestore.instance
                     .collection("chatsnew")
                     .document(messageId)
                     .updateData({
+                  'unread_status': unreadCount,
                   'softDeletedBy': FieldValue.arrayUnion(
                     [email],
                   )

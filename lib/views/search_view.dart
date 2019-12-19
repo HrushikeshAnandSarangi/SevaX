@@ -180,11 +180,13 @@ class _ResultViewState extends State<ResultView> {
                   fontSize: 12,
                 ),
               ),
-        Text(str.trim(),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            // style: sectionHeadingStyle,
-            textAlign: TextAlign.left),
+        Text(
+          str.trim(),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          // style: sectionHeadingStyle,
+          textAlign: TextAlign.left,
+        ),
       ],
     );
   }
@@ -332,20 +334,30 @@ class _ResultViewState extends State<ResultView> {
                             content: LinearProgressIndicator(),
                           );
                         });
-                    NewsModel newsModel =
-                        await FirestoreManager.getNewsForId(news.id);
 
                     Navigator.of(context, rootNavigator: true).pop();
-                    if (newsModel == null) return;
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) {
                           return NewsCardView(
-                            newsModel: newsModel,
+                            newsModel: news,
                           );
                         },
                       ),
                     );
+
+                    return;
+                    // NewsModel newsModel;
+                    // FirestoreManager.getNewsForId(news.id)
+                    //     .catchError((onError) {
+                    //   print("Exception-------------------");
+                    // }).then((onValue) {
+                    //   newsModel = onValue;
+                    //   if (newsModel == null) {
+                    //     print("Model is not defined");
+                    //     return;
+                    //   }
+                    // });
                   },
                   child: ListTile(
                     title: fetchHeadingFromNewsModel(news),

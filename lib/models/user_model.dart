@@ -25,6 +25,8 @@ class UserModel extends DataModel {
   String locationName;
   String lat_lng;
 
+  String root_timebank_id;
+
   //AvailabilityModel availability;
   String currentTimebank = FlavorConfig.values.timebankId;
 
@@ -66,7 +68,9 @@ class UserModel extends DataModel {
       this.acceptedEULA,
       this.completedIntro,
       this.blockedBy,
-      this.currentPosition});
+      this.currentPosition}) {
+    this.root_timebank_id = FlavorConfig.values.timebankId;
+  }
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -227,7 +231,7 @@ class UserModel extends DataModel {
   }
 
   @override
-  String toString(){
+  String toString() {
     return '''
       ${this.bio.toString()},
       ${this.email.toString()},
@@ -250,6 +254,5 @@ class UserModel extends DataModel {
       ${this.currentPosition.toString()},
       ${this.acceptedEULA.toString()},
     ''';
-
   }
 }

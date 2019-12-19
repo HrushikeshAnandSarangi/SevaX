@@ -436,10 +436,11 @@ class NewsListState extends State<NewsList> {
             borderRadius: BorderRadius.circular(0.0),
             boxShadow: [
               BoxShadow(
-                  color: Colors.black.withAlpha(25),
-                  offset: Offset(0, 0),
-                  spreadRadius: 8,
-                  blurRadius: 10),
+                color: Colors.black.withAlpha(25),
+                offset: Offset(0, 0),
+                spreadRadius: 8,
+                blurRadius: 10,
+              ),
             ]),
         child: Stack(
           children: <Widget>[
@@ -480,7 +481,7 @@ class NewsListState extends State<NewsList> {
                                 ? "Midtown Station New York, NY"
                                 : news.placeAddress,
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                            // maxLines: 1,
                             // style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ),

@@ -1,3 +1,7 @@
+import 'dart:collection';
+import 'dart:core' as prefix0;
+import 'dart:core';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:meta/meta.dart';
@@ -34,6 +38,90 @@ Future<void> updateChat({@required ChatModel chat, String email}) async {
     'lastMessage': chat.lastMessage,
     'rootTimebank': chat.rootTimebank,
     'timestamp': DateTime.now().millisecondsSinceEpoch,
+  });
+}
+
+Future<void> updateReadStatus(ChatModel chat, String email) async {
+  return await Firestore.instance
+      .collection("chatsnew")
+      .document(
+        chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId,
+      )
+      .get()
+      .then((messageModel) {
+    ChatModel chatModel = ChatModel.fromMap(messageModel.data);
+    Map<dynamic, dynamic> unreadCount = HashMap();
+    unreadCount = chatModel.unreadStatus;
+    chat.unreadStatus[email] = 0;
+  });
+}
+
+/// Update a [chat]
+Future<void> updateMessagingReadStatus({
+  @required ChatModel chat,
+  @required String email,
+  @required String userEmail,
+}) async {
+  await Firestore.instance
+      .collection("chatsnew")
+      .document(
+        chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId,
+      )
+      .get()
+      .then((messageModel) {
+    ChatModel chatModel = ChatModel.fromMap(messageModel.data);
+    //Data retrieved from firebase of chat model
+
+    //Frame the updated data count
+    var lastUnreadCount = chatModel.unreadStatus[userEmail] == null
+        ? 0
+        : chatModel.unreadStatus[userEmail];
+
+    prefix0.Map<String, int> unreadStatus = HashMap();
+    unreadStatus[email] = 0;
+    unreadStatus[userEmail] = lastUnreadCount + 1;
+
+    //
+    return Firestore.instance
+        .collection('chatsnew')
+        .document(chat.user1 +
+            '*' +
+            chat.user2 +
+            '*' +
+            FlavorConfig.values.timebankId)
+        .updateData({'unread_status': unreadStatus});
+  });
+}
+
+/// Update a [chat]
+Future<void> updateMessagingReadStatusForMe({
+  @required ChatModel chat,
+  @required String email,
+  @required String userEmail,
+}) async {
+  await Firestore.instance
+      .collection("chatsnew")
+      .document(
+        chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId,
+      )
+      .get()
+      .then((messageModel) {
+    ChatModel chatModel = ChatModel.fromMap(messageModel.data);
+    //Data retrieved from firebase of chat model
+
+    prefix0.Map<dynamic, dynamic> unreadStatus = HashMap();
+    unreadStatus = chatModel.unreadStatus;
+    unreadStatus[email] = 0;
+    //
+
+    return Firestore.instance
+        .collection('chatsnew')
+        .document(chat.user1 +
+            '*' +
+            chat.user2 +
+            '*' +
+            FlavorConfig.values.timebankId)
+        .updateData({'unread_status': unreadStatus});
   });
 }
 
@@ -90,8 +178,7 @@ Stream<List<ChatModel>> getChatsforUser({
                 futures.add(getUserInfo(model.user1));
               }
               chatlist.add(model);
-
-              print("Chat list size ${chatlist.length}");
+              // print("Chat list size ${chatlist.length}");
             }
 
             // email = "anitha.beberg@gmail.com";
@@ -184,9 +271,7 @@ Stream<List<MessageModel>> getMessagesforChat({
           }
           messageSink.add(filteredList);
         } else if (isFromNewChat.isFromNewChat) {
-          print(
-              "<><><><><><><><><><><><><><><><<><><><>Here we do the filter ${isFromNewChat.newChatTimeStamp}");
-
+          
           var timestamp = isFromNewChat.newChatTimeStamp;
 
           List<MessageModel> filteredList = [];
@@ -197,7 +282,6 @@ Stream<List<MessageModel>> getMessagesforChat({
           }
           messageSink.add(filteredList);
         } else {
-          print("Inside else for data manager ${chatModel}");
           messageSink.add(messagelist);
         }
       },

@@ -141,13 +141,21 @@ Future<UserModel> getUserForEmail({
   return userModel;
 }
 
-Future<List<UserModel>> getUsersForTimebankId(String timebankId, int index) async {
-  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=${timebankId}&page=${index}';
+Future<List<UserModel>> getUsersForTimebankId({
+  String timebankId,
+  int index,
+  String userEmail,
+}) async {
+
+  
+  var urlLink =
+      'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=${timebankId}&page=${index}&userId=${userEmail}';
   print('''
     urlLink:
     ${urlLink}
   ''');
-  var res = await http.get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
 
   Future<List<UserModel>> list;
   if (res.statusCode == 200) {

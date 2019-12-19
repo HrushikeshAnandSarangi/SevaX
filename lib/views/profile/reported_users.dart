@@ -259,7 +259,13 @@ class _ReportedUsersView extends StatelessWidget {
                     ),
                   Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text(userModel.bio),
+                    child: Text(
+                      userModel.bio == null
+                          ? "Bio not yet updated"
+                          : userModel.bio,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   Center(
                     child: Text(

@@ -55,9 +55,7 @@ class RequestModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
-    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
-      map['root_timebank_id'] = this.root_timebank_id;
-    }
+
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -135,9 +133,6 @@ class RequestModel extends DataModel {
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
       this.id = map['id'];
-    }
-    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
-      map['root_timebank_id'] = this.root_timebank_id;
     }
     if (map.containsKey('title')) {
       this.title = map['title'];

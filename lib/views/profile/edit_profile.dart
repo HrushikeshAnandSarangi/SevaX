@@ -219,9 +219,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                      child: Text(widget.userModel.bio == null
-                          ? 'Add your bio'
-                          : widget.userModel.bio),
+                      child: Text(
+                        widget.userModel.bio == null
+                            ? 'Add your bio'
+                            : widget.userModel.bio,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 30.0, top: 5.0),

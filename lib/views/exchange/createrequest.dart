@@ -41,7 +41,9 @@ class _CreateRequestState extends State<CreateRequest> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          "Create Campaign Request",
+          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+              ? "Create Yang Gang Request"
+              : "Create Campaign Request",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
@@ -246,7 +248,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               TextFormField(
                 decoration: InputDecoration(
                   hintText: 'Your Campaign Request and any #hashtags',
-                  labelText: 'Campaign request description',
+                  labelText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                      ? "Yang Gang Request description"
+                      : "Campaign request description",
                   border: OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(20.0),
@@ -372,7 +376,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         ),
                         Text(' '),
                         Text(
-                          'Pin Campaign Request',
+                          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                              ? "Pin Yang Gang Request"
+                              : "Pin Campaign Request",
                           style: TextStyle(
                             color: FlavorConfig.values.buttonTextColor,
                           ),

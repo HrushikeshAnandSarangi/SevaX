@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -95,7 +97,7 @@ class _ChatViewState extends State<ChatView> {
           icon: Icon(Icons.arrow_back),
           onPressed: widget.isFromShare == null
               ? () {
-                  // Navigator.pop(context);
+                  Navigator.pop(context);
                   print("Inside pop widget.isFromShare == null");
                 }
               : widget.isFromShare
@@ -105,7 +107,7 @@ class _ChatViewState extends State<ChatView> {
                     }
                   : () {
                       print("Inside pop widget.isFromShare false");
-                      // Navigator.pop(context);
+                      Navigator.pop(context);
                     },
         ),
         iconTheme: IconThemeData(color: Colors.white),
@@ -186,7 +188,6 @@ class _ChatViewState extends State<ChatView> {
                       : widget.isFromNewChat),
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {
-                print("Data refreshed");
                 if (chatListSnapshot.hasError) {
                   return new Text('Error: ${chatListSnapshot.error}');
                 }
@@ -195,10 +196,19 @@ class _ChatViewState extends State<ChatView> {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
+                    print("Inside chat view");
                     List<MessageModel> chatModelList = chatListSnapshot.data;
                     if (chatModelList.length == 0) {
                       return Center(child: Text('No Messages'));
                     }
+
+                    var email = SevaCore.of(context).loggedInUser.email;
+
+                    updateMessagingReadStatusForMe(
+                      chat: widget.chatModel,
+                      email: email,
+                      userEmail: widget.useremail,
+                    );
 
                     return Container(
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -249,7 +259,7 @@ class _ChatViewState extends State<ChatView> {
                     ),
                   ),
                   backgroundColor: Theme.of(context).accentColor,
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       // This statment clears the soft delete parameter and message becomes visible to both the parties
                       widget.chatModel.softDeletedBy = [];
@@ -261,16 +271,24 @@ class _ChatViewState extends State<ChatView> {
                       messageModel.toId = widget.useremail;
                       messageModel.timestamp =
                           DateTime.now().millisecondsSinceEpoch;
+                      widget.chatModel.lastMessage = messageModel.message;
+
                       createmessage(
                         messagemodel: messageModel,
                         chatmodel: widget.chatModel,
                       );
-                      widget.chatModel.lastMessage = messageModel.message;
 
                       updateChat(
                         chat: widget.chatModel,
                         email: loggedInEmailId,
-                      );
+                      ).then((onVlaue) {
+                        //
+                        updateMessagingReadStatus(
+                            chat: widget.chatModel,
+                            email: loggedInEmailId,
+                            userEmail: widget.useremail);
+                      });
+
                       textcontroller.clear();
                       SchedulerBinding.instance.addPostFrameCallback((_) {
                         Timer(Duration(milliseconds: 100), () {

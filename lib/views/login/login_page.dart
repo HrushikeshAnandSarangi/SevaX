@@ -18,6 +18,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final GlobalKey<FormState> _formKeyDialog = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   bool _isLoading = false;
@@ -254,6 +255,100 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ],
             ),
+            SizedBox(height: 32),
+            Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(12),
+                  child: FlatButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Enter email'),
+                              content: Form(
+                                key: _formKeyDialog,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please enter email to update';
+                                    } else if (!validateEmail(value.trim())) {
+                                      return 'Please enter a valid email';
+                                    }
+                                    _textFieldControllerResetEmail = value;
+                                  },
+                                  // validator: validateEmail,
+                                  onChanged: (value) {
+                                    print("$value");
+                                  },
+                                  initialValue: "",
+                                  keyboardType: TextInputType.emailAddress,
+                                  controller: null,
+                                  decoration: InputDecoration(
+                                    hintText: "Your email address",
+                                    // errorText: isEmailValidForReset
+                                    //     ? null
+                                    //     : validateEmail(
+                                    //         _textFieldControllerResetEmail.text,
+                                    //       ),
+                                  ),
+                                ),
+                              ),
+                              actions: <Widget>[
+                                new FlatButton(
+                                  child: new Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(
+                                      {
+                                        "sendResetLink": false,
+                                        "userEmail": null
+                                      },
+                                    );
+                                  },
+                                ),
+                                new FlatButton(
+                                  child: new Text('Reset Password'),
+                                  onPressed: () {
+                                    if (!_formKeyDialog.currentState
+                                        .validate()) {
+                                      return;
+                                    }
+                                    Navigator.of(context).pop({
+                                      "sendResetLink": true,
+                                      "userEmail":
+                                          _textFieldControllerResetEmail.trim()
+                                    });
+                                  },
+                                )
+                              ],
+                            );
+                          }).then((onActivityResult) {
+                        if (onActivityResult != null &&
+                            onActivityResult['sendResetLink'] != null &&
+                            onActivityResult['sendResetLink'] &&
+                            onActivityResult['userEmail'] != null &&
+                            onActivityResult['userEmail']
+                                .toString()
+                                .isNotEmpty) {
+                          print("send reset link");
+                          resetPassword(onActivityResult['userEmail']);
+                          _scaffoldKey.currentState.hideCurrentSnackBar();
+                        } else {
+                          print("Cancelled forgot passowrd");
+                        }
+                      });
+                    },
+                    child: Text(
+                      "Forgot password",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: 8),
             FlatButton(
               materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -279,6 +374,24 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  String _textFieldControllerResetEmail = "";
+  // TextEditingController _textFieldControllerResetEmail =
+  //     TextEditingController();
+
+  bool isEmailValidForReset = false;
+  bool validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return false;
+    } else if (!regExp.hasMatch(value)) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   Widget get signInWithGoogle {
@@ -360,7 +473,7 @@ class _LoginPageState extends State<LoginPage> {
     isLoading = true;
     try {
       user = await auth.signInWithEmailAndPassword(
-        email: emailId,
+        email: emailId.trim(),
         password: password,
       );
     } on PlatformException catch (erorr) {

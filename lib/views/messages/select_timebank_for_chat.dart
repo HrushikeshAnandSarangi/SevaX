@@ -60,9 +60,7 @@ Widget getTimebanks(BuildContext context) {
               return GestureDetector(
                 onTap: () {
                   Navigator.pop(context);
-
                   // home: SelectMembersInGroup(FlavorConfig.values.timebankId, HashMap())),
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(

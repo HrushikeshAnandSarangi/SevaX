@@ -108,9 +108,10 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
       ),
     );
 
-//    if(_showMoreItems) {
     if (_showMoreItems && !isLoading) {
-      loadNextBatchItems().then((onValue) {
+      loadNextBatchItems(
+        SevaCore.of(context).loggedInUser.email,
+      ).then((onValue) {
         return finalWidget;
       });
     }
@@ -190,11 +191,14 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     return getUserWidget(user, context);
   }
 
-  Future loadNextBatchItems() async {
+  Future loadNextBatchItems(String userEmail) async {
     if (_hasMoreItems) {
       isLoading = true;
-      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex)
-          .then((onValue) {
+      FirestoreManager.getUsersForTimebankId(
+        userEmail: userEmail,
+        index: _pageIndex,
+        timebankId: widget.timebankId,
+      ).then((onValue) {
         var addItems = onValue.map((memberObject) {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&

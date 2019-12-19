@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/flavor_config.dart';
 
 import 'models.dart';
 import 'package:flutter/material.dart';
@@ -18,23 +19,27 @@ class OfferModel extends DataModel {
   String timebankId;
   GeoFirePoint location;
   bool acceptedOffer = false;
+  String root_timebank_id;
 
   Color color;
 
-  OfferModel(
-      {this.id,
-      this.title,
-      this.description,
-      this.email,
-      this.fullName,
-      this.sevaUserId,
-      this.schedule,
-      this.associatedRequest,
-      this.color,
-      this.requestList,
-      this.timestamp,
-      this.timebankId,
-      this.location});
+  OfferModel({
+    this.id,
+    this.title,
+    this.description,
+    this.email,
+    this.fullName,
+    this.sevaUserId,
+    this.schedule,
+    this.associatedRequest,
+    this.color,
+    this.requestList,
+    this.timestamp,
+    this.timebankId,
+    this.location,
+  }) {
+    this.root_timebank_id = FlavorConfig.values.timebankId;
+  }
 
   OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -91,15 +96,12 @@ class OfferModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
-
     if (map.containsKey("offerAccepted")) {
       this.acceptedOffer = map['offerAccepted'];
     }
-
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
-
     if (map.containsKey('description')) {
       this.description = map['description'];
     }
@@ -145,6 +147,11 @@ class OfferModel extends DataModel {
     if (this.id != null && this.id.isNotEmpty) {
       map['id'] = this.id;
     }
+
+    if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
+      map['root_timebank_id'] = this.root_timebank_id;
+    }
+
     if (this.title != null && this.title.isNotEmpty) {
       map['title'] = this.title;
     }

@@ -259,12 +259,22 @@ class _ViewAcceptedOffers extends StatelessWidget {
                       child: Text(
                         "About ${userModel.fullname}",
                         style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text(userModel.bio),
+                    child: Text(
+                      userModel.bio == null
+                          ? "Bio not yet updated"
+                          : userModel.bio,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   Center(
                     child: Text(
@@ -296,10 +306,11 @@ class _ViewAcceptedOffers extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => CreateRequest(
-                                  isOfferRequest: true,
-                                  offer: model,
-                                  timebankId: timebankId,
-                                  userModel: userModel,),
+                                isOfferRequest: true,
+                                offer: model,
+                                timebankId: timebankId,
+                                userModel: userModel,
+                              ),
                             ),
                           );
 
