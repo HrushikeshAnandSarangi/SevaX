@@ -485,7 +485,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         var unreadCount = 0;
 
                         chatModelList.forEach((element) {
-                          if (element.unreadStatus.containsKey(userEmail)) {
+                          if (element.unreadStatus.containsKey(userEmail) &&
+                              !element.isBlocked) {
                             unreadCount += element.unreadStatus[userEmail];
                           }
                         });

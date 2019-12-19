@@ -120,7 +120,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(hintText: 'Campaign request title'),
+                decoration: InputDecoration(
+                  hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                      ? "Yang gang request title"
+                      : "Campaign request title",
+                ),
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
                 style: textStyle,
@@ -427,8 +431,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           onActivityResult = await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
-                  SevaCore.of(context).loggedInUser.currentTimebank,
-                  selectedUsers,
+                SevaCore.of(context).loggedInUser.currentTimebank,
+                selectedUsers,
                 SevaCore.of(context).loggedInUser.email,
               ),
             ),

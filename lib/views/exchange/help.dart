@@ -1625,6 +1625,7 @@ class OfferListItems extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             default:
+
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(
                   context: context, requestModelList: offersList);
@@ -1647,6 +1648,8 @@ class OfferListItems extends StatelessWidget {
         },
       );
     } else {
+      print("set stream for offers");
+
       return StreamBuilder<List<OfferModel>>(
         stream: FirestoreManager.getAllOffersStream(),
         builder:
@@ -1675,6 +1678,7 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+              // return Text('sample');
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
