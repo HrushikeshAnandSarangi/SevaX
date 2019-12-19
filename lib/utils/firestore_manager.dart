@@ -11,7 +11,6 @@ export 'package:sevaexchange/utils/data_managers/news_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/campaigns_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/transaction_data_manager.dart';
-export 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
 export 'package:sevaexchange/utils/data_managers/skills_interest_data_manager.dart';
 

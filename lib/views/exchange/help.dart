@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:intl/intl.dart';
@@ -14,8 +15,10 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
@@ -1615,7 +1618,7 @@ class OfferListItems extends StatelessWidget {
   Widget build(BuildContext context) {
     if (timebankId != 'All') {
       return StreamBuilder<List<OfferModel>>(
-        stream: FirestoreManager.getOffersStream(timebankId: timebankId),
+        stream: getOffersStream(timebankId: timebankId),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -1625,7 +1628,6 @@ class OfferListItems extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             default:
-
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(
                   context: context, requestModelList: offersList);
@@ -1651,7 +1653,7 @@ class OfferListItems extends StatelessWidget {
       print("set stream for offers");
 
       return StreamBuilder<List<OfferModel>>(
-        stream: FirestoreManager.getAllOffersStream(),
+        stream: getAllOffersStream(),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -1757,29 +1759,43 @@ class OfferListItems extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              StreamBuilder<UserModel>(
-                stream: FirestoreManager.getUserForIdStream(
-                  sevaUserId: model.sevaUserId,
+              ClipOval(
+                child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: FadeInImage.assetNetwork(
+                      placeholder: 'lib/assets/images/profile.png',
+                      // image: user.photoURL,
+                      image: model.photoUrlImage),
                 ),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return CircleAvatar(foregroundColor: Colors.red);
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircleAvatar();
-                  }
-                  UserModel user = snapshot.data;
-                  return ClipOval(
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: FadeInImage.assetNetwork(
-                          placeholder: 'lib/assets/images/profile.png',
-                          image: user.photoURL),
-                    ),
-                  );
-                },
-              ),
+              )
+
+              // StreamBuilder<UserModel>(
+              //   stream: FirestoreManager.getUserForIdStream(
+              //     sevaUserId: model.sevaUserId,
+              //   ),
+              //   builder: (context, snapshot) {
+              //     if (snapshot.hasError) {
+              //       return CircleAvatar(foregroundColor: Colors.red);
+              //     }
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       return CircleAvatar();
+              //     }
+              //     UserModel user = snapshot.data;
+              //     return ClipOval(
+              //       child: SizedBox(
+              //         height: 40,
+              //         width: 40,
+              //         child: FadeInImage.assetNetwork(
+              //             placeholder: 'lib/assets/images/profile.png',
+              //             // image: user.photoURL,
+              //             image:
+              //                 "https://media.wired.com/photos/5c1ae77ae91b067f6d57dec0/master/pass/Comparison-City-MAIN-ART.jpg"),
+              //       ),
+              //     );
+              //   },
+              // ),
+              ,
               SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -1837,7 +1853,7 @@ class NearOfferListItems extends StatelessWidget {
   Widget build(BuildContext context) {
     if (timebankId != 'All') {
       return StreamBuilder<List<OfferModel>>(
-        stream: FirestoreManager.getNearOffersStream(timebankId: timebankId),
+        stream: getNearOffersStream(timebankId: timebankId),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -1876,7 +1892,7 @@ class NearOfferListItems extends StatelessWidget {
       );
     } else {
       return StreamBuilder<List<OfferModel>>(
-        stream: FirestoreManager.getNearOffersStream(),
+        stream: getNearOffersStream(),
         builder:
             (BuildContext context, AsyncSnapshot<List<OfferModel>> snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');

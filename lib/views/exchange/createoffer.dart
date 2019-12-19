@@ -6,10 +6,13 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+
 
 class CreateOffer extends StatelessWidget {
   final String timebankId;
@@ -87,7 +90,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       location:
           location == null ? GeoFirePoint(40.754387, -73.984291) : location,
     );
-    await FirestoreManager.createOffer(offerModel: model);
+    await createOffer(offerModel: model);
   }
 
   @override

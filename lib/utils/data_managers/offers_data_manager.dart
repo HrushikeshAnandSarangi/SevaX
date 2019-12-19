@@ -26,17 +26,42 @@ Stream<List<OfferModel>> getOffersStream({String timebankId}) async* {
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<OfferModel>>.fromHandlers(
-      handleData: (snapshot, offerSink) {
+      handleData: (snapshot, offerSink) async {
+        var futures = <Future>[];
+
         List<OfferModel> offerList = [];
+
         snapshot.documents.forEach((snapshot) {
           OfferModel model = OfferModel.fromMap(snapshot.data);
+
+          futures.add(getUserInfo(model.email));
+
           model.id = snapshot.documentID;
           offerList.add(model);
         });
+
+        await Future.wait(futures).then((onValue) {
+          var i = 0;
+          while (i < offerList.length) {
+            offerList[i].photoUrlImage = onValue[i]['photourl'];
+            i++;
+          }
+        });
+
         offerSink.add(offerList);
       },
     ),
   );
+}
+
+Future<DocumentSnapshot> getUserInfo(String userEmail) {
+  return Firestore.instance
+      .collection("users")
+      .document(userEmail)
+      .get()
+      .then((onValue) {
+    return onValue;
+  });
 }
 
 Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {

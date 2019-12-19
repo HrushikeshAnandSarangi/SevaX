@@ -20,6 +20,9 @@ class OfferModel extends DataModel {
   GeoFirePoint location;
   bool acceptedOffer = false;
   String root_timebank_id;
+  
+  String photoUrlImage = "";
+
 
   Color color;
 
