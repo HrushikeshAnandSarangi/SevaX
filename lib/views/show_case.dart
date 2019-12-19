@@ -38,23 +38,25 @@ class _ShowcaseState extends State<Showcase> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: <Widget>[
-          TabBar(
-            controller: _controller,
-            tabs: _tabs,
-            indicatorColor: Colors.white,
-          ),
-          SizedBox.fromSize(
-            size: const Size.fromHeight(300.0),
-            child: TabBarView(
+    return Material(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            TabBar(
               controller: _controller,
-              children: _pages,
+              tabs: _tabs,
+              indicatorColor: Colors.white,
             ),
-          ),
-        ],
+            SizedBox.fromSize(
+              size: const Size.fromHeight(300.0),
+              child: TabBarView(
+                controller: _controller,
+                children: _pages,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

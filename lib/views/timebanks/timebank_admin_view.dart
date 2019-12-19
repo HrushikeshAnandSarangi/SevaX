@@ -59,6 +59,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
   var fullnameToWidgetMap = Map<String, dynamic>();
+  var nullCount = 0;
 
 
   @override
@@ -79,7 +80,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   _scrollListener() {
     if (_listController.position.viewportDimension >= _listController.position.maxScrollExtent &&
         !_listController.position.outOfRange && !_isLoading && !_lastReached) {
-      loadNextMembers();
+      if(nullCount<3){
+        loadNextMembers();
+      }
     }
   }
 
@@ -387,14 +390,19 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   Future loadNextMembers() async {
     if(!_isLoading && !_lastReached) {
       _isLoading = true;
+      print("Email tends to ${SevaCore.of(context).loggedInUser.email}");
       FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex,widget.userEmail).then((onValue) {
         var userModelList = onValue.userModelList;
         if(userModelList==null||userModelList.length == 0){
+          if(userModelList==null){
+            nullCount++;
+          }
           _isLoading = false;
           _pageIndex = _pageIndex + 1;
           loadNextMembers();
         }
         else{
+          nullCount = 0;
           var addItems = userModelList.map((memberObject) {
             var member = memberObject.sevaUserID;
             if (widget.listOfMembers != null &&

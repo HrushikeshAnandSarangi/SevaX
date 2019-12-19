@@ -12,6 +12,7 @@ import 'package:html/parser.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
+import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/globals.dart' as globals;
@@ -195,7 +196,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.didChangeDependencies();
   }
 
-  prefix0.TextEditingController subheadingController = TextEditingController();
+  TextEditingController subheadingController = TextEditingController();
 
   BuildContext dialogContext;
 
