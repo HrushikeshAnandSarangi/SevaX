@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:logger/logger.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/main.dart' as prefix0;
@@ -1526,8 +1527,11 @@ class RequestListItems extends StatelessWidget {
                     height: 45,
                     width: 45,
                     child: FadeInImage.assetNetwork(
-                        placeholder: 'lib/assets/images/profile.png',
-                        image: model.photoUrl),
+                      placeholder: 'lib/assets/images/profile.png',
+                      image: model.photoUrl == null
+                          ? defaultUserImageURL
+                          : model.photoUrl,
+                    ),
                   ),
                 ),
                 SizedBox(width: 16),
@@ -1764,9 +1768,12 @@ class OfferListItems extends StatelessWidget {
                   height: 40,
                   width: 40,
                   child: FadeInImage.assetNetwork(
-                      placeholder: 'lib/assets/images/profile.png',
-                      // image: user.photoURL,
-                      image: model.photoUrlImage),
+                    placeholder: 'lib/assets/images/profile.png',
+                    // image: user.photoURL,
+                    image: model.photoUrlImage == null
+                        ? defaultUserImageURL
+                        : model.photoUrlImage,
+                  ),
                 ),
               )
 

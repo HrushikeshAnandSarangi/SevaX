@@ -271,7 +271,6 @@ Stream<List<MessageModel>> getMessagesforChat({
           }
           messageSink.add(filteredList);
         } else if (isFromNewChat.isFromNewChat) {
-          
           var timestamp = isFromNewChat.newChatTimeStamp;
 
           List<MessageModel> filteredList = [];

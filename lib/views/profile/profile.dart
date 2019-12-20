@@ -196,10 +196,12 @@ class _ProfilePageState extends State<ProfilePage>
           children: <Widget>[
             SizedBox(height: 60),
             getSevaCreditsWidget(userModel: user),
-//            SizedBox(
-//              height: 32,
-//            ),
-           // skillsAndInterest,
+            // if (!firebaseUser.isEmailVerified)
+            //   verifyBtn,
+            //SizedBox(
+            //height: 32,
+            //),
+            // skillsAndInterest,
             SizedBox(
               height: 32,
             ),
@@ -443,7 +445,6 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                               ],
                             ),
-
                           ],
                         ),
                       ),
@@ -467,12 +468,11 @@ class _ProfilePageState extends State<ProfilePage>
         return AlertDialog(
           title: Text("Signing out"),
           content: Text("Acknowledge the verification mail and login back"),
-          actions: <Widget> [
+          actions: <Widget>[
             FlatButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              child: Text("No, I'll do it later"),
-              onPressed: () => Navigator.of(context).pop()
-            ),
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: Text("No, I'll do it later"),
+                onPressed: () => Navigator.of(context).pop()),
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               elevation: 5,
@@ -480,7 +480,7 @@ class _ProfilePageState extends State<ProfilePage>
               textColor: FlavorConfig.values.buttonTextColor,
               child: Text("Ok, Sign out"),
               onPressed: () {
-                firebaseUser.sendEmailVerification().then((value){
+                firebaseUser.sendEmailVerification().then((value) {
                   _signOut(context);
                   Navigator.of(context).pop();
                 });
@@ -599,8 +599,7 @@ class _ProfilePageState extends State<ProfilePage>
               Container(
                   alignment: Alignment.centerRight,
                   padding: EdgeInsets.only(left: 8.0),
-                  child: coinType
-              ),
+                  child: coinType),
             ],
           ),
         ],
@@ -610,7 +609,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   void checkEmailVerified() {
     FirebaseAuth.instance.currentUser().then((FirebaseUser firebaseUser) {
-      if(this.firebaseUser != null && this.firebaseUser == firebaseUser) {
+      if (this.firebaseUser != null && this.firebaseUser == firebaseUser) {
         return;
       }
       setState(() {
@@ -627,9 +626,8 @@ class _ProfilePageState extends State<ProfilePage>
       decoration: getContainerDecoration(),
       child: Column(
         children: <Widget>[
+          if (!firebaseUser.isEmailVerified) verifyBtn,
           administerTimebanks,
-          if(!firebaseUser.isEmailVerified)
-            verifyBtn,
           timebankslist,
           joinViaCode,
           tasksWidget,
@@ -820,9 +818,10 @@ class _ProfilePageState extends State<ProfilePage>
   }
 
   Widget get administerTimebanks {
-    
-    print("${timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)}    <---");
-    return !timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)
+    print(
+        "${timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)}    <---");
+    return !timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)
         ? Offstage()
         : getActionCards(
             title: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -881,7 +880,7 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
-  Widget get verifyBtn{
+  Widget get verifyBtn {
     return getActionCards(
       title: 'Verify account',
       borderRadius: BorderRadius.only(
@@ -979,80 +978,77 @@ class _ProfilePageState extends State<ProfilePage>
           userModel.currentBalance.toString() ?? '0.0',
           style: TextStyle(
               color: userModel.currentBalance >= 0
-                  ? userModel.currentBalance > 0
-                  ? Colors.indigo
-                  : Colors.black
+                  ? userModel.currentBalance > 0 ? Colors.indigo : Colors.black
                   : Colors.red,
               fontSize: 36.0,
               fontWeight: FontWeight.w600),
         ),
         FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||
-            FlavorConfig.appFlavor == Flavor.APP ||
-            FlavorConfig.appFlavor == Flavor.TOM
+                FlavorConfig.appFlavor == Flavor.APP ||
+                FlavorConfig.appFlavor == Flavor.TOM
             ? Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 2.0),
-              child: sevaCoinIcon,
-            ),
-            SizedBox(height: 1),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: sevaCoinIcon,
-            ),
-            SizedBox(height: 1),
-            Padding(
-              padding: const EdgeInsets.only(left: 6.0),
-              child: sevaCoinIcon,
-            ),
-          ],
-        )
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 2.0),
+                    child: sevaCoinIcon,
+                  ),
+                  SizedBox(height: 1),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: sevaCoinIcon,
+                  ),
+                  SizedBox(height: 1),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: sevaCoinIcon,
+                  ),
+                ],
+              )
             : Padding(
-          padding: EdgeInsets.all(4),
-          child: SvgPicture.asset(
-            'lib/assets/tulsi_icons/tulsi2020_icons_tulsi-token.svg',
-            height: 18,
-            width: 18,
-          ),
-        ),
+                padding: EdgeInsets.all(4),
+                child: SvgPicture.asset(
+                  'lib/assets/tulsi_icons/tulsi2020_icons_tulsi-token.svg',
+                  height: 18,
+                  width: 18,
+                ),
+              ),
       ],
     );
   }
+
   Widget get coinType {
     return FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
         ? Text(
-      'Yang Bucks',
-      style: TextStyle(
-          color: Theme.of(context).accentColor,
-          fontWeight: FontWeight.w400,
-          fontSize: 12),
-    )
+            'Yang Bucks',
+            style: TextStyle(
+                color: Theme.of(context).accentColor,
+                fontWeight: FontWeight.w400,
+                fontSize: 12),
+          )
         : FlavorConfig.appFlavor == Flavor.APP
-        ? Text(
-      'Seva Coins',
-      style: TextStyle(
-          color: Theme.of(context).accentColor,
-          fontWeight: FontWeight.w400,
-          fontSize: 12),
-    )
-        : FlavorConfig.appFlavor == Flavor.TOM
-        ? Text(
-      'Tom Tokens',
-      style: TextStyle(
-          color: Theme.of(context).accentColor,
-          fontWeight: FontWeight.w400,
-          fontSize: 12),
-    )
-        : Text(
-      'Tulsi Tokens',
-      style: TextStyle(
-          color: Theme.of(context).accentColor,
-          fontWeight: FontWeight.w400,
-          fontSize: 12),
-    );
+            ? Text(
+                'Seva Coins',
+                style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12),
+              )
+            : FlavorConfig.appFlavor == Flavor.TOM
+                ? Text(
+                    'Tom Tokens',
+                    style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12),
+                  )
+                : Text(
+                    'Tulsi Tokens',
+                    style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12),
+                  );
   }
-
-
 
   Future<void> _signOut(BuildContext context) async {
     Navigator.pop(context);

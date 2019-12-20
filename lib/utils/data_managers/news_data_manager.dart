@@ -55,14 +55,13 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
       for (var i = 0; i < modelList.length; i++) {
         modelList[i].userPhotoURL = onValue[i]['photourl'];
 
-        var data = await _getLocation(
-          modelList[i].location.geoPoint.latitude,
-          modelList[i].location.geoPoint.longitude,
-        );
-
-        modelList[i].placeAddress = data;
-
-        // print("location-----------------> ${data}");
+        if (modelList[i].placeAddress == null) {
+          var data = await _getLocation(
+            modelList[i].location.geoPoint.latitude,
+            modelList[i].location.geoPoint.longitude,
+          );
+          modelList[i].placeAddress = data;
+        }
       }
 
       newsSink.add(modelList);
@@ -84,6 +83,7 @@ Stream<List<NewsModel>> getNearNewsStream(
     {@required String timebankID}) async* {
   Geolocator geolocator = Geolocator();
   Position userLocation;
+  var futures = <Future>[];
 
   userLocation = await geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
@@ -102,15 +102,32 @@ Stream<List<NewsModel>> getNearNewsStream(
 
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
-          handleData: (querySnapshot, newsSink) {
+          handleData: (querySnapshot, newsSink) async {
     List<NewsModel> modelList = [];
+
     querySnapshot.forEach((document) {
-      modelList.add(NewsModel.fromMap(document.data));
+      var news = NewsModel.fromMap(document.data);
+      futures.add(getUserInfo(news.email));
+      modelList.add(news);
     });
     modelList.sort((n1, n2) {
       return n2.postTimestamp.compareTo(n1.postTimestamp);
     });
-    newsSink.add(modelList);
+
+    //await process goes here
+    await Future.wait(futures).then((onValue) async {
+      for (var i = 0; i < modelList.length; i++) {
+        modelList[i].userPhotoURL = onValue[i]['photourl'];
+
+        // var data = await _getLocation(
+        //   modelList[i].location.geoPoint.latitude,
+        //   modelList[i].location.geoPoint.longitude,
+        // );
+        // modelList[i].placeAddress = data;
+      }
+
+      newsSink.add(modelList);
+    });
   }));
 }
 

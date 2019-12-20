@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
@@ -217,8 +218,6 @@ class NewsListState extends State<NewsList> {
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(timebankID: timebankId),
                 builder: (context, snapshot) {
-                  // print("getting news stream ${snapshot.data}");
-
                   if (snapshot.hasError)
                     return Text('Please make sure you have GPS turned on.');
                   switch (snapshot.connectionState) {
@@ -416,6 +415,8 @@ class NewsListState extends State<NewsList> {
 
   Widget getNewsCard(NewsModel news, bool isFromMessage) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
+    print("----------------> ${news.placeAddress}  ${news.subheading}");
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -457,7 +458,7 @@ class NewsListState extends State<NewsList> {
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(
                           news.userPhotoURL == null
-                              ? 'https://secure.gravatar.com/avatar/b10f7ddbf9b8be9e3c46c302bb20101d?s=400&d=mm&r=g'
+                              ? defaultUserImageURL
                               : news.userPhotoURL,
                         ),
                         minRadius: 40.0,

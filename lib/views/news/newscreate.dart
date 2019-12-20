@@ -102,13 +102,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   List<DataModel> dataList = [];
   DataModel selectedEntity;
   GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
-  String selectedAddress;
+  String selectedAddress = "Ave of the Americas 41 St, New York";
 
   Future<void> writeToDB() async {
     // print("Credit goes to ${}");
 
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
+    if (location == null) {}
 
+    newsObject.placeAddress = this.selectedAddress;
+
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
     newsObject.id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
