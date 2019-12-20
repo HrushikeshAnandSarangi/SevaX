@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:meta/meta.dart';
@@ -77,9 +78,18 @@ Future<void> updateUser({
 //  //     .setData({"Availability":user.availability.toMap()});
 //}
 
+Future<Map<String,UserModel>> getUserAdminForUserModels({@required List<String> admins}) async {
+  var map = Map<String,UserModel>();
+  for(int i=0;i<admins.length;i++){
+    UserModel  user = await getUserForId(sevaUserId: admins[i]);
+    map[user.fullname.toLowerCase()] = user;
+  }
+  return map;
+}
+
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
-      "Seva UserId cannot be null or empty");
+  "Seva UserId cannot be null or empty");
 
   UserModel userModel;
   await Firestore.instance
@@ -132,15 +142,8 @@ class UserModelListMoreStatus{
   bool lastPage = false;
 }
 
-Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(String timebankId, int index, String email,String memberType) async {
-  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankACM?page=$index&fetchRole=$memberType&timebankId=$timebankId&userId=$email';
-
-  print('''
-    Hit email blah:
-    ${email}
-    urlLink:
-    ${urlLink}
-  ''');
+Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(String timebankId, int index, String email) async {
+  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankACM?page=$index&fetchRole=admin&timebankId=$timebankId&userId=$email';
   var res = await http.get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
