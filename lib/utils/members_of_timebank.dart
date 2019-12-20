@@ -91,7 +91,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   @override
   Widget build(BuildContext context) {
-    if(_avtars.length==0) {
+    if(_avtars.length==0 && !_isLoading) {
       loadNextBatchItems();
     }
     var color = Theme.of(context);
@@ -142,7 +142,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget getContent(BuildContext context, TimebankModel model) {
-    if (_avtars.length == 0 && _showMoreItems) {
+    if (_avtars.length == 0 && _showMoreItems && !_isLoading) {
       return circularBar;
     } else {
       return listViewWidget;

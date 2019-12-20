@@ -132,15 +132,8 @@ class UserModelListMoreStatus{
   bool lastPage = false;
 }
 
-Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(String timebankId, int index, String email,String memberType) async {
-  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankACM?page=$index&fetchRole=$memberType&timebankId=$timebankId&userId=$email';
-
-  print('''
-    Hit email blah:
-    ${email}
-    urlLink:
-    ${urlLink}
-  ''');
+Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(String timebankId, int index, String email) async {
+  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankACM?page=$index&fetchRole=admin&timebankId=$timebankId&userId=$email';
   var res = await http.get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
