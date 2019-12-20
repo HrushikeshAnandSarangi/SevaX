@@ -78,10 +78,11 @@ Future<void> updateUser({
 //  //     .setData({"Availability":user.availability.toMap()});
 //}
 
-Future<Map<String,UserModel>> getUserAdminForUserModels({@required List<String> admins}) async {
-  var map = Map<String,UserModel>();
-  for(int i=0;i<admins.length;i++){
-    UserModel  user = await getUserForId(sevaUserId: admins[i]);
+Future<Map<String, UserModel>> getUserAdminForUserModels(
+    {@required List<String> admins}) async {
+  var map = Map<String, UserModel>();
+  for (int i = 0; i < admins.length; i++) {
+    UserModel user = await getUserForId(sevaUserId: admins[i]);
     map[user.fullname.toLowerCase()] = user;
   }
   return map;
@@ -89,7 +90,7 @@ Future<Map<String,UserModel>> getUserAdminForUserModels({@required List<String> 
 
 Future<UserModel> getUserForId({@required String sevaUserId}) async {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
-  "Seva UserId cannot be null or empty");
+      "Seva UserId cannot be null or empty");
 
   UserModel userModel;
   await Firestore.instance
@@ -137,33 +138,46 @@ Future<UserModel> getUserForEmail({
 
   return userModel;
 }
-class UserModelListMoreStatus{
+
+class UserModelListMoreStatus {
   var userModelList = List<UserModel>();
   bool lastPage = false;
 }
 
-Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(String timebankId, int index, String email) async {
-  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankACM?page=$index&fetchRole=admin&timebankId=$timebankId&userId=$email';
-  var res = await http.get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
+    String timebankId, int index, String email) async {
+  var urlLink =
+      'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
+
+  print("==============$urlLink==============");
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList = rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList =
+        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }
   return UserModelListMoreStatus();
 }
 
-Future<UserModelListMoreStatus> getUsersForTimebankId(String timebankId, int index, String email) async {
-  var urlLink = 'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=$timebankId&page=$index&userId=$email';
-  var res = await http.get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+Future<UserModelListMoreStatus> getUsersForTimebankId(
+    String timebankId, int index, String email) async {
+  print("===============================================");
+
+  var urlLink =
+      'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=$timebankId&page=$index&userId=$email';
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
-    useModelStatus.userModelList = rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.userModelList =
+        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
     useModelStatus.lastPage = (data["lastPage"] as bool);
     return useModelStatus;
   }

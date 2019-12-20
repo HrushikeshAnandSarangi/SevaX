@@ -22,7 +22,9 @@ Future<void> updateNews({@required NewsModel newsObject}) async {
   await Firestore.instance
       .collection('news')
       .document(newsObject.id)
-      .updateData(newsObject.toMap());
+      .updateData(
+        newsObject.toMap(),
+      );
 }
 
 Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {

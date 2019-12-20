@@ -29,7 +29,6 @@ class TimebankAdminPage extends StatefulWidget {
   _TimebankAdminPageState createState() => _TimebankAdminPageState();
 }
 
-
 class _TimebankAdminPageState extends State<TimebankAdminPage> {
   ScrollController _listController;
   ScrollController _pageScrollController;
@@ -216,23 +215,22 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     );
   }
 
-  void loadItems(){
-
-    if(adminsNotLoaded) {
-      loadNextAdmins().then((onValue){
+  void loadItems() {
+    if (adminsNotLoaded) {
+      loadNextAdmins().then((onValue) {
         adminsNotLoaded = false;
       });
     }
-    if(_coordinators.length == 0 && FlavorConfig.appFlavor == Flavor.APP) {
+    if (_coordinators.length == 0 && FlavorConfig.appFlavor == Flavor.APP) {
       loadNextAdmins();
     }
-    if(_members.length == 0){
+    if (_members.length == 0) {
       loadNextMembers();
     }
   }
 
-  void resetAndLoad(){
-    adminsNotLoaded= true;
+  void resetAndLoad() {
+    adminsNotLoaded = true;
     _membersTitleDone = false;
     _admins = [];
     _coordinators = [];
@@ -251,7 +249,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
     _avtars.addAll(_admins);
-    if(FlavorConfig.appFlavor == Flavor.APP) {
+    if (FlavorConfig.appFlavor == Flavor.APP) {
       _avtars.addAll(_coordinators);
     }
     _avtars.addAll(_members);
@@ -265,31 +263,29 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       controller: _listController,
       shrinkWrap: true,
       itemCount: fetchItemsCount(),
-      itemBuilder: (BuildContext ctxt, int index) =>
-        Padding(
-          padding: const EdgeInsets.all(0.0),
-          child:
-          index < _avtars.length ?
-          _avtars[index] :
-          Container(
-            width: double.infinity,
-            height: 80,
-            child: circularBar,
-          ),
-        ),
+      itemBuilder: (BuildContext ctxt, int index) => Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: index < _avtars.length
+            ? _avtars[index]
+            : Container(
+                width: double.infinity,
+                height: 80,
+                child: circularBar,
+              ),
+      ),
     );
   }
 
   int fetchItemsCount() {
     var _avtars = getAllMembers();
-    if(!_lastReached) {
+    if (!_lastReached) {
       return _avtars.length + 1;
     }
     return _avtars.length;
   }
 
   Future loadNextAdmins() async {
-    if(timebankModel.admins==null){
+    if (timebankModel.admins == null) {
       timebankModel.admins = List<String>();
     }
     if (timebankModel.admins.length != 0) {
@@ -297,10 +293,12 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
         SevaCore.of(context).loggedInUser.sevaUserID,
       );
 
-      FirestoreManager.getUserAdminForUserModels(admins: timebankModel.admins).then((onValue){
+      FirestoreManager.getUserAdminForUserModels(admins: timebankModel.admins)
+          .then((onValue) {
         _admins = [];
         _admins.add(getSectionTitle(context, 'Admins'));
-        SplayTreeMap<String,dynamic>.from(onValue, (a, b) => a.compareTo(b)).forEach((key,user){
+        SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
+            .forEach((key, user) {
           if (isAdmin) {
             var widget = Slidable(
               delegate: SlidableDrawerDelegate(),
@@ -311,7 +309,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                   caption: 'Remove',
                   onTap: () {
                     List<String> admins =
-                    timebankModel.admins.map((s) => s).toList();
+                        timebankModel.admins.map((s) => s).toList();
                     admins.remove(user.sevaUserID);
                     updateTimebank(timebankModel, admins: admins);
                   },
@@ -324,9 +322,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                   caption: 'Coordinator',
                   onTap: () {
                     List<String> admins =
-                    timebankModel.admins.map((s) => s).toList();
+                        timebankModel.admins.map((s) => s).toList();
                     List<String> coordinators =
-                    timebankModel.coordinators.map((s) => s).toList();
+                        timebankModel.coordinators.map((s) => s).toList();
                     coordinators.add(user.sevaUserID);
                     admins.remove(user.sevaUserID);
                     updateTimebank(
@@ -342,34 +340,34 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
             _admins.add(widget);
           }
         });
-        setState(() {
-
-        });
+        setState(() {});
       });
     }
   }
 
   Future loadNextMembers() async {
-    if(!_isLoading && !_lastReached) {
+    if (!_isLoading && !_lastReached) {
       _isLoading = true;
       print("Email tends to ${SevaCore.of(context).loggedInUser.email}");
-      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex,widget.userEmail).then((onValue) {
+      FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
+              widget.timebankId, _pageIndex, widget.userEmail)
+          .then((onValue) {
         var userModelList = onValue.userModelList;
-        if(userModelList==null||userModelList.length == 0){
-          if(userModelList==null){
+        if (userModelList == null || userModelList.length == 0) {
+          if (userModelList == null) {
             nullCount++;
           }
           _isLoading = false;
           _pageIndex = _pageIndex + 1;
           loadNextMembers();
-        }
-        else{
+        } else {
           nullCount = 0;
           var addItems = userModelList.map((memberObject) {
             var member = memberObject.sevaUserID;
             if (widget.listOfMembers != null &&
                 widget.listOfMembers.containsKey(member)) {
-              return getUserWidget(widget.listOfMembers[member], context,timebankModel);
+              return getUserWidget(
+                  widget.listOfMembers[member], context, timebankModel);
             }
             return FutureBuilder<UserModel>(
               future: FirestoreManager.getUserForId(sevaUserId: member),
@@ -380,21 +378,22 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                 }
                 UserModel user = snapshot.data;
                 widget.listOfMembers[user.sevaUserID] = user;
-                return getUserWidget(user, context,timebankModel);
+                return getUserWidget(user, context, timebankModel);
               },
             );
           }).toList();
-          if(!_membersTitleDone){
+          if (!_membersTitleDone) {
             var memberTitle = getSectionTitle(context, 'Members');
             _members.add(memberTitle);
             _membersTitleDone = true;
           }
-          if(addItems.length>0) {
+          if (addItems.length > 0) {
             var lastIndex = _members.length;
             setState(() {
               var iterationCount = 0;
-              for(int i=0;i<addItems.length;i++) {
-                if(emailIndexMap[userModelList[i].email]==null) { // Filtering duplicates
+              for (int i = 0; i < addItems.length; i++) {
+                if (emailIndexMap[userModelList[i].email] == null) {
+                  // Filtering duplicates
                   _members.add(addItems[i]);
                   indexToModelMap[lastIndex] = userModelList[i];
                   emailIndexMap[userModelList[i].email] = lastIndex++;
@@ -407,7 +406,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
           }
           _isLoading = false;
         }
-        if(onValue.lastPage==true) {
+        if (onValue.lastPage == true) {
           setState(() {
             _lastReached = onValue.lastPage;
           });
@@ -448,7 +447,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                       caption: 'Remove',
                       onTap: () {
                         List<String> coordinators =
-                        model.coordinators.map((s) => s).toList();
+                            model.coordinators.map((s) => s).toList();
                         coordinators.remove(user.sevaUserID);
                         updateTimebank(model, coordinators: coordinators);
                       },
@@ -478,9 +477,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   void removeFromTimebank(
-      TimebankModel model,
-      UserModel user,
-      ) {
+    TimebankModel model,
+    UserModel user,
+  ) {
     List<String> admins = model.admins.map((s) => s).toList();
     List<String> coordinators = model.coordinators.map((s) => s).toList();
     List<String> members = model.members.map((s) => s).toList();
@@ -553,9 +552,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
 // crate dialog for approval or rejection
   void showDialogForAdminAccess(
       {TimebankModel model,
-        BuildContext context,
-        UserModel userModel,
-        bool isAdmin}) {
+      BuildContext context,
+      UserModel userModel,
+      bool isAdmin}) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -577,49 +576,49 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                         width: double.infinity,
                         child: isAdmin && model.admins.length > 1
                             ? FlatButton(
-                          child: Text(
-                            'Remove as admin',
-                          ),
-                          onPressed: () async {
-                            // request declined
-                            if (isAdmin) {
-                              removeAsAdmin(
-                                model,
-                                userModel,
-                              );
-                            } else {
-                              print("Add as admin");
-                              addToAdmin(
-                                model,
-                                userModel,
-                              );
-                            }
-                            Navigator.pop(viewContext);
-                          },
-                        )
+                                child: Text(
+                                  'Remove as admin',
+                                ),
+                                onPressed: () async {
+                                  // request declined
+                                  if (isAdmin) {
+                                    removeAsAdmin(
+                                      model,
+                                      userModel,
+                                    );
+                                  } else {
+                                    print("Add as admin");
+                                    addToAdmin(
+                                      model,
+                                      userModel,
+                                    );
+                                  }
+                                  Navigator.pop(viewContext);
+                                },
+                              )
                             : isAdmin
-                            ? Offstage()
-                            : FlatButton(
-                          child: Text(
-                            'Add as Admin',
-                          ),
-                          onPressed: () async {
-                            // request declined
-                            if (isAdmin) {
-                              removeAsAdmin(
-                                model,
-                                userModel,
-                              );
-                            } else {
-                              print("Add as admin");
-                              addToAdmin(
-                                model,
-                                userModel,
-                              );
-                            }
-                            Navigator.pop(viewContext);
-                          },
-                        ),
+                                ? Offstage()
+                                : FlatButton(
+                                    child: Text(
+                                      'Add as Admin',
+                                    ),
+                                    onPressed: () async {
+                                      // request declined
+                                      if (isAdmin) {
+                                        removeAsAdmin(
+                                          model,
+                                          userModel,
+                                        );
+                                      } else {
+                                        print("Add as admin");
+                                        addToAdmin(
+                                          model,
+                                          userModel,
+                                        );
+                                      }
+                                      Navigator.pop(viewContext);
+                                    },
+                                  ),
                       ),
                       Container(
                         width: double.infinity,
@@ -647,16 +646,16 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                         child: isAdmin
                             ? Offstage()
                             : FlatButton(
-                          child: Text(
-                            'Remove member',
-                          ),
-                          onPressed: () async {
-                            //Remove a member
-                            removeFromTimebank(model, userModel);
+                                child: Text(
+                                  'Remove member',
+                                ),
+                                onPressed: () async {
+                                  //Remove a member
+                                  removeFromTimebank(model, userModel);
 
-                            Navigator.pop(viewContext);
-                          },
-                        ),
+                                  Navigator.pop(viewContext);
+                                },
+                              ),
                       ),
                       Container(
                         width: double.infinity,
@@ -768,11 +767,11 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   Future updateTimebank(
-      TimebankModel model, {
-        List<String> admins,
-        List<String> coordinators,
-        List<String> members,
-      }) async {
+    TimebankModel model, {
+    List<String> admins,
+    List<String> coordinators,
+    List<String> members,
+  }) async {
     if (admins != null) {
       model.admins = admins;
     }
@@ -782,7 +781,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     if (members != null) {
       model.members = members;
     }
-    await FirestoreManager.updateTimebank(timebankModel: model).then((onValue){
+    await FirestoreManager.updateTimebank(timebankModel: model).then((onValue) {
       setState(() {
         timebankModel.id = null;
         resetAndLoad();

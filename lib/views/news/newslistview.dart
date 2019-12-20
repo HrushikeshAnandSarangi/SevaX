@@ -415,8 +415,6 @@ class NewsListState extends State<NewsList> {
 
   Widget getNewsCard(NewsModel news, bool isFromMessage) {
     String loggedinemail = SevaCore.of(context).loggedInUser.email;
-    print("----------------> ${news.placeAddress}  ${news.subheading}");
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
