@@ -23,21 +23,12 @@ class TimebankAdminPage extends StatefulWidget {
   final String userEmail;
   HashMap<String, UserModel> listOfMembers = HashMap();
 
-  TimebankAdminPage({@required this.timebankId,@required this.userEmail});
-
+  TimebankAdminPage({@required this.timebankId, @required this.userEmail});
 
   @override
   _TimebankAdminPageState createState() => _TimebankAdminPageState();
 }
 
-class KeyWidget{
-  Widget widget;
-  String name;
-  KeyWidget(String name,Widget widget){
-    this.name = name;
-    this.widget = widget;
-  }
-}
 
 class _TimebankAdminPageState extends State<TimebankAdminPage> {
   ScrollController _listController;
@@ -50,7 +41,6 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   var _lastReached = false;
   var timebankModel = TimebankModel();
   var _allAvtars = List<Widget>();
-  var _adminsKeyValue = List<KeyWidget>();
   var _admins = List<Widget>();
   var _coordinators = List<Widget>();
   var _members = List<Widget>();
@@ -61,9 +51,8 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   HashMap<String, bool> adminToModelMap = HashMap();
   var nullCount = 0;
 
-
   @override
-  void initState(){
+  void initState() {
     _listController = ScrollController();
     _pageScrollController = ScrollController();
     _pageScrollController.addListener(_scrollListener);
@@ -76,21 +65,20 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     super.dispose();
   }
 
-
   _scrollListener() {
-    if (_listController.position.viewportDimension >= _listController.position.maxScrollExtent &&
-        !_listController.position.outOfRange && !_isLoading && !_lastReached) {
-      if(nullCount<3){
+    if (_listController.position.viewportDimension >=
+            _listController.position.maxScrollExtent &&
+        !_listController.position.outOfRange &&
+        !_isLoading &&
+        !_lastReached) {
+      if (nullCount < 3) {
         loadNextMembers();
       }
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: getTimebackList(context, widget.timebankId),
     );
@@ -102,8 +90,8 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     );
   }
 
-  Widget getTimebackList(BuildContext context,String timebankId ) {
-    if(timebankModel.id != null) {
+  Widget getTimebackList(BuildContext context, String timebankId) {
+    if (timebankModel.id != null) {
       return getDataScrollView(
         context,
         timebankModel,
@@ -124,17 +112,17 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
         }
         TimebankModel timebankModel = snapshot.data;
         return getDataScrollView(
-            context,
-            timebankModel,
+          context,
+          timebankModel,
         );
       },
     );
   }
 
   Widget getDataScrollView(
-      BuildContext context,
-      TimebankModel timebankModel,
-      ) {
+    BuildContext context,
+    TimebankModel timebankModel,
+  ) {
     return CustomScrollView(
       controller: _pageScrollController,
       slivers: <Widget>[
@@ -159,24 +147,27 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       pinned: true,
       elevation: 0,
       actions: <Widget>[
-        timebankModel.creatorId != SevaCore.of(context).loggedInUser.sevaUserID
+        !(timebankModel.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID))
             ? Offstage()
             : IconButton(
-          icon: Icon(
-            Icons.edit,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EditTimebankView(
-                  timebankModel: timebankModel,
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
                 ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditSuperTimebankView(
+                        timebankId: timebankModel.id,
+                        superAdminTimebankModel: timebankModel,
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ],
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
@@ -250,16 +241,14 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   List<Widget> getContent(BuildContext context, TimebankModel model) {
-    if(timebankModel.id == null){
+    if (timebankModel.id == null) {
       timebankModel = model;
     }
     loadItems();
-    return [
-      listViewWidget
-    ];
+    return [listViewWidget];
   }
 
-  List<Widget> getAllMembers(){
+  List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
     _avtars.addAll(_admins);
     if(FlavorConfig.appFlavor == Flavor.APP) {
@@ -269,7 +258,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     return _avtars;
   }
 
-  Widget get listViewWidget{
+  Widget get listViewWidget {
     var _avtars = getAllMembers();
     return ListView.builder(
       scrollDirection: Axis.vertical,

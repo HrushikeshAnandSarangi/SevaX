@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
@@ -222,7 +223,7 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                     .toSet();
                 offerRequestList.add(selectedRequestModel.id);
                 offer.requestList = offerRequestList.toList();
-                FirestoreManager.updateOfferWithRequest(offer: offer);
+                updateOfferWithRequest(offer: offer);
                 sendOfferRequest(
                     offerModel: offer,
                     requestSevaID: selectedRequestModel.sevaUserId);

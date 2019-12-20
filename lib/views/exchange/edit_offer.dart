@@ -7,6 +7,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -87,7 +88,7 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
         timebankId: widget.timebankId,
         timestamp: timestamp,
         location: location);
-    await FirestoreManager.createOffer(offerModel: model);
+    await createOffer(offerModel: model);
   }
 
   @override
