@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:sevaexchange/components/location_picker.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ import 'package:sevaexchange/views/profile/edit_skills.dart';
 import '../core.dart';
 
 class EditTimebankView extends StatefulWidget {
-   TimebankModel timebankModel;
+  TimebankModel timebankModel;
 
   EditTimebankView({this.timebankModel});
 
@@ -65,6 +66,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
     imagePicker = ImagePickerHandler(this, _controller);
     imagePicker.init();
   }
+
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,
@@ -75,6 +77,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
       this.selectedAddress = address;
     });
   }
+
   ImageProvider _getImage(TimebankModel model) {
     if (model.photoUrl == null) {
       return AssetImage('lib/assets/images/profile.png');
@@ -172,18 +175,20 @@ class _EditTimebankViewState extends State<EditTimebankView>
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(10.0))),
-                      title:
-                      Text('Update ${FlavorConfig.values.timebankName == "Yang 2020"
-                          ? "Yang Gang Chapter"
-                          : "Timebank name"}', style: TextStyle(fontSize: 15.0)),
+                              BorderRadius.all(Radius.circular(10.0))),
+                      title: Text(
+                          'Update ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank name"}',
+                          style: TextStyle(fontSize: 15.0)),
                       content: Form(
                         key: _formKey,
                         child: TextFormField(
                           //key: _formKey,
-                          decoration: InputDecoration(hintText: FlavorConfig.values.timebankName == "Yang 2020"
-                              ? "Enter Yang Gang Chapter"
-                              : "Enter Timebank name",),
+                          decoration: InputDecoration(
+                            hintText:
+                                FlavorConfig.values.timebankName == "Yang 2020"
+                                    ? "Enter Yang Gang Chapter"
+                                    : "Enter Timebank name",
+                          ),
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(fontSize: 17.0),
@@ -195,9 +200,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           },
                           validator: (value) {
                             if (value.isEmpty) {
-                              return 'Please enter ${FlavorConfig.values.timebankName == "Yang 2020"
-                                  ? "Enter Yang Gnag Chapter"
-                                  : "Enter Timebank name"} to update';
+                              return 'Please enter ${FlavorConfig.values.timebankName == "Yang 2020" ? "Enter Yang Gnag Chapter" : "Enter Timebank name"} to update';
                             }
                             widget.timebankModel.name = value;
                           },
@@ -205,7 +208,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('Update'),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
                               return;
@@ -220,7 +228,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           },
                         ),
                         FlatButton(
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(viewContext);
                           },
@@ -267,14 +280,15 @@ class _EditTimebankViewState extends State<EditTimebankView>
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(10.0))),
-                      title:
-                      Text('Update Mission Statement', style: TextStyle(fontSize: 15.0)),
+                              BorderRadius.all(Radius.circular(10.0))),
+                      title: Text('Update Mission Statement',
+                          style: TextStyle(fontSize: 15.0)),
                       content: Form(
                         key: _formKey,
                         child: TextFormField(
                           //key: _formKey,
-                          decoration: InputDecoration(hintText: 'Enter Mission Statement'),
+                          decoration: InputDecoration(
+                              hintText: 'Enter Mission Statement'),
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(fontSize: 17.0),
@@ -294,7 +308,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('Update'),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
                               return;
@@ -308,7 +327,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           },
                         ),
                         FlatButton(
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(viewContext);
                           },
@@ -355,9 +379,9 @@ class _EditTimebankViewState extends State<EditTimebankView>
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(10.0))),
-                      title:
-                      Text('Update Email', style: TextStyle(fontSize: 15.0)),
+                              BorderRadius.all(Radius.circular(10.0))),
+                      title: Text('Update Email',
+                          style: TextStyle(fontSize: 15.0)),
                       content: Form(
                         key: _formKey,
                         child: TextFormField(
@@ -382,7 +406,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('Update'),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
                               return;
@@ -396,7 +425,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           },
                         ),
                         FlatButton(
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(viewContext);
                           },
@@ -423,8 +457,8 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text(widget.timebankModel.phoneNumber),
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text(widget.timebankModel.phoneNumber),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 30.0, top: 5.0),
@@ -443,14 +477,15 @@ class _EditTimebankViewState extends State<EditTimebankView>
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(10.0))),
-                      title:
-                      Text('Update Phone Number', style: TextStyle(fontSize: 15.0)),
+                              BorderRadius.all(Radius.circular(10.0))),
+                      title: Text('Update Phone Number',
+                          style: TextStyle(fontSize: 15.0)),
                       content: Form(
                         key: _formKey,
                         child: TextFormField(
                           //key: _formKey,
-                          decoration: InputDecoration(hintText: 'Enter Phone Number'),
+                          decoration:
+                              InputDecoration(hintText: 'Enter Phone Number'),
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(fontSize: 17.0),
@@ -470,7 +505,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('Update'),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
                               return;
@@ -484,7 +524,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           },
                         ),
                         FlatButton(
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(viewContext);
                           },
@@ -511,8 +556,8 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text(widget.timebankModel.address),
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text(widget.timebankModel.address),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 30.0, top: 5.0),
@@ -531,14 +576,15 @@ class _EditTimebankViewState extends State<EditTimebankView>
                     return AlertDialog(
                       shape: RoundedRectangleBorder(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(10.0))),
-                      title:
-                      Text('Update Address', style: TextStyle(fontSize: 15.0)),
+                              BorderRadius.all(Radius.circular(10.0))),
+                      title: Text('Update Address',
+                          style: TextStyle(fontSize: 15.0)),
                       content: Form(
                         key: _formKey,
                         child: TextFormField(
                           //key: _formKey,
-                          decoration: InputDecoration(hintText: 'Enter Address'),
+                          decoration:
+                              InputDecoration(hintText: 'Enter Address'),
                           keyboardType: TextInputType.text,
                           textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(fontSize: 17.0),
@@ -558,7 +604,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('Update'),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
                               return;
@@ -572,7 +623,12 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           },
                         ),
                         FlatButton(
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(viewContext);
                           },
@@ -600,9 +656,11 @@ class _EditTimebankViewState extends State<EditTimebankView>
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                      child: Text(selectedAddress == null || selectedAddress.isEmpty
-                          ? 'Add Location'
-                          : selectedAddress,),
+                      child: Text(
+                        selectedAddress == null || selectedAddress.isEmpty
+                            ? 'Add Location'
+                            : selectedAddress,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 30.0, top: 5.0),
@@ -630,7 +688,6 @@ class _EditTimebankViewState extends State<EditTimebankView>
                 });
               },
             ),
-
 
 //            GestureDetector(
 //              child: Card(
@@ -671,9 +728,10 @@ class _EditTimebankViewState extends State<EditTimebankView>
           ]),
         ));
   }
+
   bool isValidEmail(String email) {
     RegExp regex =
-    RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
+        RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
     return regex.hasMatch(email);
   }
 
@@ -682,8 +740,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
       setState(() {
         this._saving = true;
       });
-      String imageUrl =
-      await uploadImage();
+      String imageUrl = await uploadImage();
       setState(() {
         //SevaCore.of(context).loggedInUser.photoURL = imageUrl;
         widget.timebankModel.photoUrl = imageUrl;
@@ -841,7 +898,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
         .ref()
         .child('timebanklogos')
         .child(
-        SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
+            SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
     StorageUploadTask uploadTask = ref.putFile(
       selectedImage,
       StorageMetadata(

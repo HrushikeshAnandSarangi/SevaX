@@ -63,6 +63,7 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
             modelList[i].location.geoPoint.longitude,
           );
           modelList[i].placeAddress = data;
+          
         }
       }
 

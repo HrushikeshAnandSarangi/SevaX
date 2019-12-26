@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
     as prefix0;
@@ -175,7 +176,9 @@ class InviteMembersState extends State<InviteMembers> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Theme.of(context).primaryColor),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontSize: dialogButtonSize),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -184,7 +187,10 @@ class InviteMembersState extends State<InviteMembers> {
             FlatButton(
               child: Text(
                 'Publish code',
-                style: TextStyle(color: Colors.green),
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: dialogButtonSize,
+                ),
               ),
               onPressed: () {
                 var today = new DateTime.now();

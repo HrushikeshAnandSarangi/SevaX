@@ -238,14 +238,26 @@ class ProfileViewerState extends State<ProfileViewer> {
                                                   'Do you want to report this member to admin?'),
                                               actions: <Widget>[
                                                 FlatButton(
-                                                  child: Text('Cancel'),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      fontSize:
+                                                          dialogButtonSize,
+                                                    ),
+                                                  ),
                                                   onPressed: () {
                                                     Navigator.of(viewContext)
                                                         .pop();
                                                   },
                                                 ),
                                                 FlatButton(
-                                                  child: Text('Report'),
+                                                  child: Text(
+                                                    'Report',
+                                                    style: TextStyle(
+                                                      fontSize:
+                                                          dialogButtonSize,
+                                                    ),
+                                                  ),
                                                   onPressed: () {
                                                     print(snapshot
                                                         .data['sevauserid']);
@@ -487,13 +499,23 @@ class ProfileViewerState extends State<ProfileViewer> {
               : "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("CANCEL"),
+              child: new Text(
+                "CANCEL",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop("CANCEL");
               },
             ),
             new FlatButton(
-              child: new Text(widget.isBlocked ? 'UNBLOCK' : 'BLOCK'),
+              child: new Text(
+                widget.isBlocked ? 'UNBLOCK' : 'BLOCK',
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 widget.isBlocked
                     ? Navigator.of(context).pop("UNBLOCK")

@@ -12,7 +12,7 @@ class NotificationsPage extends StatelessWidget {
             'Notifications',
             style: TextStyle(color: Colors.white),
           )),
-      body: NotificationsView(),
+      body: NotificationViewHolder(),
     );
   }
 }

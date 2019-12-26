@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix2;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -136,7 +137,10 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
               color: Colors.red,
               child: Text(
                 '  Delete  ',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: dialogButtonSize,
+                ),
               ),
               onPressed: () async {
                 // call firebase to delete the doc || when data is deleted the screen refreshes and shoes null pointer fix that one;
@@ -150,7 +154,12 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
               },
             ),
             FlatButton(
-              child: Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 Navigator.pop(buildContext);
                 //Navigator.pop(context, ModalRoute.withName('123'));
@@ -622,7 +631,9 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                               MaterialPageRoute(
                                   builder: (context) => TimebankAdminPage(
                                         timebankId: timebankModel.id,
-                                        userEmail: SevaCore.of(context).loggedInUser.email,
+                                        userEmail: SevaCore.of(context)
+                                            .loggedInUser
+                                            .email,
                                       )),
                             );
                           },

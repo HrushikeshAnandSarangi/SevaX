@@ -18,7 +18,7 @@ class _ActivityViewState extends State<ActivityView> {
       body: TabBarView(
         controller: widget.controller,
         children: [
-          NotificationsView(),
+          NotificationViewHolder(),
           MyTasksList(),
         ],
       ),

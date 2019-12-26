@@ -4,6 +4,7 @@ import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/news/overflow_constants.dart';
@@ -471,14 +472,24 @@ class _ProfilePageState extends State<ProfilePage>
           actions: <Widget>[
             FlatButton(
                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Text("No, I'll do it later"),
+                child: Text(
+                  "No, I'll do it later",
+                  style: TextStyle(
+                    fontSize: dialogButtonSize,
+                  ),
+                ),
                 onPressed: () => Navigator.of(context).pop()),
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               elevation: 5,
               color: Theme.of(context).accentColor,
               textColor: FlavorConfig.values.buttonTextColor,
-              child: Text("Ok, Sign out"),
+              child: Text(
+                "Ok, Sign out",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 firebaseUser.sendEmailVerification().then((value) {
                   _signOut(context);

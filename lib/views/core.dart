@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -371,9 +372,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
                           : print("Read");
                     });
 
+                    unreadNotifications = unreadNotifications -
+                        SevaCore.of(context).loggedInUser.notificationsRead;
+
                     print("Unread notifications $unreadNotifications");
 
-                    if (notifications.length > 0) {
+                    if (unreadNotifications > 0) {
                       return Container(
                         width: 50.0,
                         height: 50.0,
@@ -400,9 +404,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                 child: Text(
                                   "$unreadNotifications",
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 10),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                  ),
                                 ),
                               ),
                             )
@@ -547,7 +552,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     }
                   },
                 ),
-
                 PopupMenuButton<String>(
                   icon: Icon(Icons.more_vert),
                   onSelected: choiceAction,
@@ -1180,7 +1184,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                     actions: <Widget>[
                                       // usually buttons at the bottom of the dialog
                                       new FlatButton(
-                                        child: new Text("Close"),
+                                        child: new Text(
+                                          "Close",
+                                          style: TextStyle(
+                                            fontSize: dialogButtonSize,
+                                          ),
+                                        ),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },

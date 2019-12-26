@@ -11,6 +11,7 @@ import 'package:location/location.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:location/location.dart' as prefix0;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'dart:async';
 
 import 'package:sevaexchange/flavor_config.dart';
@@ -43,7 +44,12 @@ class _LocationPickerState extends State<LocationPicker> {
   LocationData locationData;
 
   CameraPosition get initialCameraPosition {
-    return CameraPosition(target: SevaCore.of(context).loggedInUser.currentPosition == null ? LatLng(41.678510, -87.494080) : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,SevaCore.of(context).loggedInUser.currentPosition.longitude), zoom: 15);
+    return CameraPosition(
+        target: SevaCore.of(context).loggedInUser.currentPosition == null
+            ? LatLng(41.678510, -87.494080)
+            : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,
+                SevaCore.of(context).loggedInUser.currentPosition.longitude),
+        zoom: 15);
   }
 
   @override
@@ -82,18 +88,15 @@ class _LocationPickerState extends State<LocationPicker> {
               color: Colors.white,
             ),
             onPressed: () async {
-              LocationDataModel dataModel = LocationDataModel("",null,null);
+              LocationDataModel dataModel = LocationDataModel("", null, null);
               dataModel = await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) =>
-                    new CustomSearchScaffold1(),
+                        new CustomSearchScaffold1(),
                     fullscreenDialog: true),
               );
-              this.target = LatLng(
-                  dataModel.lat,
-                  dataModel.lng
-              );
+              this.target = LatLng(dataModel.lat, dataModel.lng);
               _mapController.animateCamera(
                 CameraUpdate.newCameraPosition(CameraPosition(
                   target: target,
@@ -158,14 +161,22 @@ class _LocationPickerState extends State<LocationPicker> {
             RaisedButton(
               child: Text(
                 'Open Settings',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: dialogButtonSize,
+                ),
               ),
               onPressed: () {
                 AppSettings.openAppSettings();
               },
             ),
             FlatButton(
-              child: Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -208,7 +219,7 @@ class _LocationPickerState extends State<LocationPicker> {
           ),
           color: Color(0xff007722),
           onPressed:
-          _mapController != null && target != null ? _addMarker : null,
+              _mapController != null && target != null ? _addMarker : null,
         ),
       ),
     );
@@ -297,10 +308,10 @@ class _LocationPickerState extends State<LocationPicker> {
 
   /// Animate to location corresponding to [locationData.latitude] and [locationData.longitude]
   Future animateToLocation(
-      GoogleMapController mapController, {
-        LocationData locationData,
-        LatLng location,
-      }) async {
+    GoogleMapController mapController, {
+    LocationData locationData,
+    LatLng location,
+  }) async {
     if (mapController == null) {
       log('map contriller is null');
       return;
