@@ -257,16 +257,17 @@ class _ReportedUsersView extends StatelessWidget {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      userModel.bio == null
-                          ? "Bio not yet updated"
-                          : userModel.bio,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                  getBio(userModel),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                    child: Text(
+//                      userModel.bio == null
+//                          ? "Bio not yet updated"
+//                          : userModel.bio,
+//                      maxLines: 5,
+//                      overflow: TextOverflow.ellipsis,
+//                    ),
+//                  ),
                   Center(
                     child: Text(
                         "By tapping on remove, ${userModel.fullname} will be removed from ${FlavorConfig.values.timebankName}",
@@ -316,6 +317,36 @@ class _ReportedUsersView extends StatelessWidget {
             ),
           );
         });
+  }
+
+  Widget getBio(UserModel userModel){
+    if(userModel.bio != null) {
+      if(userModel.bio.length <100){
+        return Center(
+          child: Text(
+              userModel.bio
+          ),
+        );
+      }
+      return Container(
+        height: 200,
+        child:  SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(
+            userModel.bio,
+            maxLines: null,
+            overflow: null,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text(
+          "Bio not yet updated"
+      ),
+    );
   }
 
   Widget _getCloseButton(BuildContext context) {

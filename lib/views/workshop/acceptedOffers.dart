@@ -266,16 +266,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      userModel.bio == null
-                          ? "Bio not yet updated"
-                          : userModel.bio,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                    getBio(userModel),
                   Center(
                     child: Text(
                         "${userModel.fullname} will be automatically added to the campaign request.",
@@ -342,6 +333,36 @@ class _ViewAcceptedOffers extends StatelessWidget {
             ),
           );
         });
+  }
+
+  Widget getBio(UserModel userModel){
+    if(userModel.bio != null) {
+      if(userModel.bio.length <100){
+        return Center(
+          child: Text(
+              userModel.bio
+          ),
+        );
+      }
+      return Container(
+        height: 100,
+        child:  SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(
+            userModel.bio,
+            maxLines: null,
+            overflow: null,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text(
+          "Bio not yet updated"
+      ),
+    );
   }
 
   Widget _getCloseButton(BuildContext context) {

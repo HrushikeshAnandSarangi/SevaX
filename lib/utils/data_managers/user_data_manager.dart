@@ -78,7 +78,7 @@ Future<void> updateUser({
 //  //     .setData({"Availability":user.availability.toMap()});
 //}
 
-Future<Map<String, UserModel>> getUserAdminForUserModels(
+Future<Map<String, UserModel>> getUserForUserModels(
     {@required List<String> admins}) async {
   var map = Map<String, UserModel>();
   for (int i = 0; i < admins.length; i++) {
