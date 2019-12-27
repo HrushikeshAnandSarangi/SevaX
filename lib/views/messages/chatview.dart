@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
@@ -427,13 +428,23 @@ class _ChatViewState extends State<ChatView> {
               "${partnerUser.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("CANCEL"),
+              child: new Text(
+                "CANCEL",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop("CANCEL");
               },
             ),
             new FlatButton(
-              child: new Text('BLOCK'),
+              child: new Text(
+                'BLOCK',
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop("BLOCK");
               },

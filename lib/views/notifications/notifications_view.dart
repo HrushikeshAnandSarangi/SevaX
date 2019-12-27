@@ -21,14 +21,21 @@ import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 
 import 'package:shimmer/shimmer.dart';
 
-class NotificationsView extends StatelessWidget {
+class NotificationViewHolder extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return NotificationsView();
+  }
+}
+
+class NotificationsView extends State<NotificationViewHolder> {
   @override
   Widget build(BuildContext context) {
     String email = SevaCore.of(context).loggedInUser.email;
 
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(userEmail: email),
-      builder: (context, snapshot) {
+      builder: (context_firestore, snapshot) {
         if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -38,6 +45,13 @@ class NotificationsView extends StatelessWidget {
         }
 
         List<NotificationsModel> notifications = snapshot.data;
+
+        SevaCore.of(context).loggedInUser.notificationsRead =
+            notifications.length;
+
+        print(
+            "Unread notifications ${SevaCore.of(context).loggedInUser.notificationsRead}");
+
         if (notifications.length == 0) {
           return Center(
             child: Text('No Notifications'),

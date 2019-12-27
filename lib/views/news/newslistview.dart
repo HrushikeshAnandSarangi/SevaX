@@ -242,13 +242,24 @@ class NewsListState extends State<NewsList> {
                       }
                       return Expanded(
                         child: ListView.builder(
-                          itemCount: newsList.length,
+                          itemCount: newsList.length + 1,
                           itemBuilder: (context, index) {
+                            if (index >= newsList.length) {
+                              return Container(
+                                width: double.infinity,
+                                height: 20,
+                              );
+                            }
+
                             if (newsList.elementAt(index).reports.length > 2) {
                               return Offstage();
                             } else {
+                              print(
+                                  "newsListSize = ${newsList.length} --index  $index");
                               return getNewsCard(
-                                  newsList.elementAt(index), false);
+                                newsList.elementAt(index),
+                                false,
+                              );
                             }
                           },
                         ),
@@ -477,9 +488,9 @@ class NewsListState extends State<NewsList> {
                           margin: EdgeInsets.only(left: 5, right: 40),
                           child: Text(
                             news.placeAddress == null
-                                ? "Midtown Station New York, NY"
+                                ? "Av of the Americas/W 41 St, New York"
                                 : news.placeAddress,
-                            overflow: TextOverflow.ellipsis,
+                            // overflow: TextOverflow.ellipsis,
                             // maxLines: 1,
                             // style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -656,7 +667,13 @@ class NewsListState extends State<NewsList> {
                                                       'You already reported this feed'),
                                                   actions: <Widget>[
                                                     FlatButton(
-                                                      child: Text('OK'),
+                                                      child: Text(
+                                                        'OK',
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              dialogButtonSize,
+                                                        ),
+                                                      ),
                                                       onPressed: () {
                                                         Navigator.of(
                                                                 viewContextS)
@@ -687,8 +704,13 @@ class NewsListState extends State<NewsList> {
                                                       },
                                                     ),
                                                     FlatButton(
-                                                      child:
-                                                          Text('Report Feed'),
+                                                      child: Text(
+                                                        'Report Feed',
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              dialogButtonSize,
+                                                        ),
+                                                      ),
                                                       onPressed: () {
                                                         if (news.reports
                                                             .contains(SevaCore

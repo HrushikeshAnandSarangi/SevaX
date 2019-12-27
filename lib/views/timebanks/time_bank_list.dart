@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
@@ -12,7 +13,10 @@ class TimeBankList extends StatelessWidget {
   final String timebankid;
   final String title;
   TimebankModel superAdminTimebankModel;
-  TimeBankList({@required this.timebankid, @required this.title,@required this.superAdminTimebankModel});
+  TimeBankList(
+      {@required this.timebankid,
+      @required this.title,
+      @required this.superAdminTimebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class TimeBankList extends StatelessWidget {
             )
           ],
         ),
-        floatingActionButton: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST 
+        floatingActionButton: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
             ? Visibility(
                 visible: !UserData.shared.isFromLogin,
                 child: FloatingActionButton.extended(
@@ -113,13 +117,23 @@ class TimeBankList extends StatelessWidget {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(
+                "Close",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             new FlatButton(
-              child: new Text("Join"),
+              child: new Text(
+                "Join",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -182,7 +196,11 @@ class TimeBankList extends StatelessWidget {
                       MaterialPageRoute(
                         settings: RouteSettings(name: "123"),
                         builder: (routeContext) {
-                          return TimebankView(timebankId: model.id,superAdminTimebankModel: this.superAdminTimebankModel,);
+                          return TimebankView(
+                            timebankId: model.id,
+                            superAdminTimebankModel:
+                                this.superAdminTimebankModel,
+                          );
                         },
                       ),
                     );

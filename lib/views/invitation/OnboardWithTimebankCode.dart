@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/views/core.dart';
 import '../../flavor_config.dart';
 import '../splash_view.dart';
@@ -249,7 +250,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(
+                "Close",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () {
                 switch (mode) {
                   case TimeBankResponseModes.CODE_EXPIRED:

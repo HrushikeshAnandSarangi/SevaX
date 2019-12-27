@@ -178,13 +178,13 @@ class _RegisterPageState extends State<RegisterPage>
           getFormField(
             hint: 'Email Address',
             validator: (value) {
-              if (!isValidEmail(value)) {
+              if (!isValidEmail(value.trim())) {
                 return 'Enter a valid email address';
               }
               return null;
             },
             capitalization: TextCapitalization.none,
-            onSave: (value) => this.email = value,
+            onSave: (value) => this.email = value.trim(),
           ),
           getFormField(
             hint: 'Full Name',
@@ -208,7 +208,9 @@ class _RegisterPageState extends State<RegisterPage>
             },
             suffix: GestureDetector(
               onTap: () => shouldObscure = !shouldObscure,
-              child: Icon(Icons.remove_red_eye),
+              child: shouldObscure
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
             ),
           ),
           getFormField(
@@ -225,7 +227,9 @@ class _RegisterPageState extends State<RegisterPage>
             },
             suffix: GestureDetector(
               onTap: () => shouldObscure = !shouldObscure,
-              child: Icon(Icons.remove_red_eye),
+              child: shouldObscure
+                  ? Icon(Icons.visibility)
+                  : Icon(Icons.visibility_off),
             ),
           ),
         ],
@@ -249,10 +253,17 @@ class _RegisterPageState extends State<RegisterPage>
         decoration: InputDecoration(
           labelText: hint,
           suffix: suffix,
+          counterStyle: TextStyle(
+            height: double.minPositive,
+          ),
+          counterText: "",
         ),
         textCapitalization: capitalization,
         validator: validator,
         onSaved: onSave,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(20),
+        ],
         obscureText: shouldObscure,
       ),
     );
@@ -267,6 +278,14 @@ class _RegisterPageState extends State<RegisterPage>
             : () async {
                 isLoading = true;
                 if (selectedImage == null) {
+                  // show dialog view
+
+                  if (!_formKey.currentState.validate()) {
+                    isLoading = false;
+                    return;
+                  }
+
+                  print("Tapped register button");
                   showDialog(
                     barrierDismissible: false,
                     context: context,
@@ -279,7 +298,12 @@ class _RegisterPageState extends State<RegisterPage>
                           content: Text('Do you want to add profile pic?'),
                           actions: <Widget>[
                             FlatButton(
-                              child: Text('Skip'),
+                              child: Text(
+                                'Skip and register',
+                                style: TextStyle(
+                                  fontSize: dialogButtonSize,
+                                ),
+                              ),
                               onPressed: () async {
                                 Navigator.pop(viewContext);
                                 if (!_formKey.currentState.validate()) {
@@ -292,7 +316,12 @@ class _RegisterPageState extends State<RegisterPage>
                               },
                             ),
                             FlatButton(
-                              child: Text('Add Photo'),
+                              child: Text(
+                                'Add Photo',
+                                style: TextStyle(
+                                  fontSize: dialogButtonSize,
+                                ),
+                              ),
                               onPressed: () {
                                 Navigator.pop(viewContext);
                                 imagePicker.showDialog(context);

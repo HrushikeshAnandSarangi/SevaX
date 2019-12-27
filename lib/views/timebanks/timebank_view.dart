@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix2;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -346,7 +347,12 @@ class _TimebankViewState extends State<TimebankView> {
                                             ),
                                             actions: <Widget>[
                                               new FlatButton(
-                                                child: new Text("Cancel"),
+                                                child: new Text(
+                                                  "Cancel",
+                                                  style: TextStyle(
+                                                    fontSize: dialogButtonSize,
+                                                  ),
+                                                ),
                                                 onPressed: () {
                                                   Navigator.of(dialogContext)
                                                       .pop();
@@ -357,8 +363,10 @@ class _TimebankViewState extends State<TimebankView> {
                                                 child: new Text(
                                                   "Send Join Request",
                                                   style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .accentColor),
+                                                    color: Theme.of(context)
+                                                        .accentColor,
+                                                    fontSize: dialogButtonSize,
+                                                  ),
                                                 ),
                                                 onPressed: () async {
                                                   joinRequestModel.userId =
@@ -577,8 +585,10 @@ class _TimebankViewState extends State<TimebankView> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => TimebankAdminPage(
-                                          timebankId: timebankModel.id,
-                                          userEmail: SevaCore.of(context).loggedInUser.email,
+                                              timebankId: timebankModel.id,
+                                              userEmail: SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .email,
                                             )),
                                   );
                                 },

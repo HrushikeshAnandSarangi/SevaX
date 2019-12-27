@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
@@ -103,7 +104,7 @@ class _BranchViewState extends State<BranchView> {
                   )
                 ],
               ),
-              floatingActionButton:  FloatingActionButton.extended(
+              floatingActionButton: FloatingActionButton.extended(
                 icon: Icon(
                   Icons.add,
                 ),
@@ -230,8 +231,10 @@ class _BranchViewState extends State<BranchView> {
                                                 child: new Text(
                                                   "Send Join Request",
                                                   style: TextStyle(
-                                                      color: Theme.of(context)
-                                                          .accentColor),
+                                                    color: Theme.of(context)
+                                                        .accentColor,
+                                                    fontSize: dialogButtonSize,
+                                                  ),
                                                 ),
                                                 onPressed: () async {
                                                   //For test
@@ -260,7 +263,12 @@ class _BranchViewState extends State<BranchView> {
                                                 },
                                               ),
                                               new FlatButton(
-                                                child: new Text("Close"),
+                                                child: new Text(
+                                                  "Close",
+                                                  style: TextStyle(
+                                                    fontSize: dialogButtonSize,
+                                                  ),
+                                                ),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },

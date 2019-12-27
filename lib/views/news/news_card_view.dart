@@ -39,7 +39,7 @@ class NewsCardView extends StatelessWidget {
           //   onPressed: () => _shareNews(context),
           // ),
           //shadowing for now as edit feed is not yet completed
-          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+          newsModel.sevaUserId != SevaCore.of(context).loggedInUser.sevaUserID
               ? IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
@@ -410,13 +410,21 @@ class NewsCardView extends StatelessWidget {
           content: Text('Are you sure you want to delete this news feed?'),
           actions: <Widget>[
             FlatButton(
-              child: Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                ),
+              ),
               onPressed: () => Navigator.pop(context),
             ),
             RaisedButton(
               child: Text(
                 'Delete',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: dialogButtonSize,
+                ),
               ),
               onPressed: () {
                 _deleteNews(context);

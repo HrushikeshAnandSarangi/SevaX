@@ -7,7 +7,6 @@ import 'package:sevaexchange/views/core.dart';
 
 import '../flavor_config.dart';
 
-
 class UserModel extends DataModel {
   String bio;
   String email;
@@ -25,6 +24,8 @@ class UserModel extends DataModel {
   String requestStatus;
   String locationName;
   String lat_lng;
+
+  int notificationsRead = 0;
 
   String root_timebank_id;
 
@@ -45,31 +46,30 @@ class UserModel extends DataModel {
   List<String> blockedMembers = [];
   LocationData currentPosition;
 
-  //String
-
-  UserModel(
-      {this.bio,
-      this.email,
-      this.fullname,
-      this.photoURL,
-      this.interests,
-      this.membershipCampaigns,
-      this.membershipTimebanks,
-      this.sevaUserID,
-      this.skills,
-      this.currentBalance,
-      this.calendar,
-      this.otp,
-      this.requestStatus,
-      //this.availability,
-      this.timezone,
-      this.tokens,
-      this.reportedUsers,
-      this.blockedMembers,
-      this.acceptedEULA,
-      this.completedIntro,
-      this.blockedBy,
-      this.currentPosition}) {
+  UserModel({
+    this.bio,
+    this.email,
+    this.fullname,
+    this.photoURL,
+    this.interests,
+    this.membershipCampaigns,
+    this.membershipTimebanks,
+    this.sevaUserID,
+    this.skills,
+    this.currentBalance,
+    this.calendar,
+    this.otp,
+    this.requestStatus,
+    //this.availability,
+    this.timezone,
+    this.tokens,
+    this.reportedUsers,
+    this.blockedMembers,
+    this.acceptedEULA,
+    this.completedIntro,
+    this.blockedBy,
+    this.currentPosition,
+  }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
@@ -112,6 +112,11 @@ class UserModel extends DataModel {
     if (map.containsKey('bio')) {
       this.bio = map['bio'];
     }
+
+    if (map.containsKey('notificationsRead')) {
+      this.bio = map['notificationsRead'];
+    }
+
     if (map.containsKey('email')) {
       this.email = map['email'];
     }
@@ -226,6 +231,10 @@ class UserModel extends DataModel {
 
     if (this.completedIntro != null) {
       this.completedIntro = object['completedIntro'];
+    }
+
+    if (this.notificationsRead != null) {
+      object['notificationsRead'] = this.notificationsRead;
     }
 
     return object;

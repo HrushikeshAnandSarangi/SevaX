@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -161,6 +162,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                           textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(fontSize: 17.0),
                           initialValue: widget.userModel.fullname,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(20),
+                          ],
                           onChanged: (value) {
 //                            if (value.isEmpty == false) {
 //                              this.usermodel.fullname = value;
@@ -176,7 +180,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('Update'),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
                               return;
@@ -191,7 +200,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                           },
                         ),
                         FlatButton(
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(viewContext);
                           },
@@ -269,7 +283,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                       ),
                       actions: <Widget>[
                         FlatButton(
-                          child: Text('Update'),
+                          child: Text(
+                            'Update',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
                               return;
@@ -283,7 +302,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                           },
                         ),
                         FlatButton(
-                          child: Text('Cancel'),
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: dialogButtonSize,
+                            ),
+                          ),
                           onPressed: () {
                             Navigator.pop(viewContext);
                           },

@@ -52,9 +52,11 @@ class RequestStatusViewState extends State<RequestStatusView> {
                 builder: (BuildContext viewcontext) {
                   // return object of type Dialog
                   return AlertDialog(
-                    title: new Text(this.isSent == true ? "Success" : "Failure"),
-                    content:
-                        new Text(this.isSent == true ? "CSV file sent successfully to ${SevaCore.of(context).loggedInUser.email}." : "Something went wrong please try again later"),
+                    title:
+                        new Text(this.isSent == true ? "Success" : "Failure"),
+                    content: new Text(this.isSent == true
+                        ? "CSV file sent successfully to ${SevaCore.of(context).loggedInUser.email}."
+                        : "Something went wrong please try again later"),
                     actions: <Widget>[
                       // usually buttons at the bottom of the dialog
                       new FlatButton(

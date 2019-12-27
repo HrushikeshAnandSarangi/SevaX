@@ -372,13 +372,23 @@ class _RequestCardViewState extends State<RequestCardView> {
                                 'Are you sure you want to delete this request?'),
                             actions: <Widget>[
                               FlatButton(
-                                child: Text('No'),
+                                child: Text(
+                                  'No',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
                                 onPressed: () {
                                   Navigator.pop(viewcontext);
                                 },
                               ),
                               FlatButton(
-                                child: Text('Yes'),
+                                child: Text(
+                                  'Yes',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
                                 onPressed: () {
                                   deleteRequest(
                                       requestModel: widget.requestItem);
@@ -877,13 +887,23 @@ class OfferCardViewState extends State<OfferCardView> {
                                 'Are you sure you want to delete this offer?'),
                             actions: <Widget>[
                               FlatButton(
-                                child: Text('No'),
+                                child: Text(
+                                  'No',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
                                 onPressed: () {
                                   Navigator.pop(viewcontext);
                                 },
                               ),
                               FlatButton(
-                                child: Text('Yes'),
+                                child: Text(
+                                  'Yes',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
                                 onPressed: () {
                                   deleteOffer(offerModel: widget.offerModel);
                                   Navigator.pop(viewcontext);
@@ -1151,19 +1171,38 @@ class NearRequestListItems extends StatelessWidget {
                         child: Center(child: Text('No Requests')),
                       );
                     }
+
                     return Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: ListView(
-                          children: requestModelList.map(
-                            (RequestModel requestModel) {
-                              return getRequestView(
-                                  requestModel, loggedintimezone);
-                            },
-                          ).toList(),
-                        ),
+                      child: ListView.builder(
+                        itemCount: requestModelList.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index >= requestModelList.length) {
+                            return Container(
+                              width: double.infinity,
+                              height: 65,
+                            );
+                          }
+                          return getRequestView(
+                            requestModelList[index],
+                            loggedintimezone,
+                          );
+                        },
                       ),
                     );
+
+                  // Expanded(
+                  //   child: Container(
+                  //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                  //     child: ListView(
+                  //       children: requestModelList.map(
+                  //         (RequestModel requestModel) {
+                  //           return getRequestView(
+                  //               requestModel, loggedintimezone);
+                  //         },
+                  //       ).toList(),
+                  //     ),
+                  //   ),
+                  // );
                 }
               },
             );
@@ -1469,12 +1508,25 @@ class RequestListItems extends StatelessWidget {
       {List<RequestModelList> consolidatedList, String loggedintimezone}) {
     return Expanded(
       child: Container(
-        child: ListView(
-          children: consolidatedList.map((RequestModelList requestModel) {
-            return getRequestView(requestModel, loggedintimezone);
-          }).toList(),
-        ),
-      ),
+          child: ListView.builder(
+        itemCount: consolidatedList.length + 1,
+        itemBuilder: (context, index) {
+          if (index >= consolidatedList.length) {
+            return Container(
+              width: double.infinity,
+              height: 65,
+            );
+          }
+
+          return getRequestView(consolidatedList[index], loggedintimezone);
+        },
+      )
+          // child: ListView(
+          //   children: consolidatedList.map((RequestModelList requestModel) {
+          //     return getRequestView(requestModel, loggedintimezone);
+          //   }).toList(),
+          // ),
+          ),
     );
   }
 
@@ -1615,8 +1667,11 @@ class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
 
-  const OfferListItems({Key key, this.parentContext, this.timebankId})
-      : super(key: key);
+  const OfferListItems({
+    Key key,
+    this.parentContext,
+    this.timebankId,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1713,11 +1768,21 @@ class OfferListItems extends StatelessWidget {
   Widget formatListOffer({List<OfferModelList> consolidatedList}) {
     return Expanded(
       child: Container(
-        child: ListView(
-          children: consolidatedList.map((OfferModelList offerModel) {
-            return getOfferWidget(offerModel);
-          }).toList(),
-        ),
+        child: ListView.builder(
+            itemCount: consolidatedList.length + 1,
+            itemBuilder: (context, index) {
+              if (index >= consolidatedList.length) {
+                return Container(
+                  width: double.infinity,
+                  height: 65,
+                );
+              }
+              return getOfferWidget(consolidatedList[index]);
+            }
+            // children: consolidatedList.map((OfferModelList offerModel) {
+            //   return getOfferWidget(offerModel);
+            // }).toList(),
+            ),
       ),
     );
   }
@@ -2006,11 +2071,11 @@ class NearOfferListItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        model.title,
+                        model.title.trim(),
                         style: Theme.of(parentContext).textTheme.subhead,
                       ),
                       Text(
-                        model.description,
+                        model.description.trim(),
                         style: Theme.of(parentContext).textTheme.subtitle,
                       ),
                     ],
