@@ -206,10 +206,8 @@ Stream<List<ChatModel>> getChatsforUser({
 
             chatlist[i].isBlocked = (blockedBy.contains(sevaUserId) ||
                 blockedMembers.contains(sevaUserId));
-
             i++;
           }
-
           chatSink.add(chatlist);
         });
       },
