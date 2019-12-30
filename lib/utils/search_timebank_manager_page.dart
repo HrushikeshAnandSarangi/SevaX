@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -8,20 +9,32 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/search_view.dart';
+import 'package:sevaexchange/views/core.dart';
 
 import 'dart:ui';
-
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/search_view.dart';
 
 import 'data_managers/chat_data_manager.dart';
 
 
+
 class SearchTimebankMemberElastic extends StatefulWidget {
-  final String timebankId;
-  SearchTimebankMemberElastic({this.timebankId});
+  String timebankId;
+  MEMBER_SELECTION_MODE selectionMode;
+  NewsModel newsModel;
+  bool isFromShare = false;
+
+  SearchTimebankMemberElastic(String timebankId,
+      bool isFromShare,
+      NewsModel newsModel,
+      MEMBER_SELECTION_MODE selectionMode){
+    this.timebankId = timebankId;
+    this.isFromShare = isFromShare;
+    this.newsModel = newsModel;
+    this.selectionMode = selectionMode;
+  }
 
   createState()=>_SearchTimebankMemberElastic();
 }
@@ -30,13 +43,16 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
   final TextEditingController searchTextController = TextEditingController();
   var fromNewChat = IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch);
   final searchOnChange = new BehaviorSubject<String>();
+  var validItems = List<String>();
 
   @override
   void initState() {
     super.initState();
-    searchOnChange.debounceTime(Duration(milliseconds: 500)).listen((queryString) {
-      searchTextController.addListener(() {
-        setState(() {});
+    FirestoreManager.getAllTimebankIdStream(
+      timebankId: widget.timebankId,
+    ).then((onValue){
+      setState(() {
+        validItems = onValue;
       });
     });
   }
@@ -77,13 +93,14 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
           ),
         ),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ResultViewElastic(SearchType.USER, searchTextController, widget.timebankId),
-          ),
-        ],
-      ),
+      body:
+      Column(
+          children: <Widget>[
+            Expanded(
+              child: ResultViewElastic(SearchType.USER, searchTextController, widget.timebankId,validItems,widget.selectionMode,widget.newsModel,widget.isFromShare),
+            ),
+          ],
+        ),
     );
   }
 }
@@ -93,11 +110,17 @@ class ResultViewElastic extends StatefulWidget {
   final SearchType type;
   final TextEditingController controller;
   final String timebankId;
+  final List<String> validItems;
+  final MEMBER_SELECTION_MODE selectionMode;
+  final NewsModel newsModel;
+  final bool isFromShare;
 
-  ResultViewElastic(this.type, this.controller, this.timebankId);
+  ResultViewElastic(this.type, this.controller, this.timebankId,this.validItems,this.selectionMode,this.newsModel,this.isFromShare);
 
   @override
-  _ResultViewElasticState createState() => _ResultViewElasticState();
+  _ResultViewElasticState createState(){
+    return _ResultViewElasticState();
+  }
 }
 
 class _ResultViewElasticState extends State<ResultViewElastic> {
@@ -148,42 +171,127 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
     return GestureDetector(
       onTap: () async {
 
-        if (user.email != SevaCore.of(context).loggedInUser.email) {
+        switch (widget.selectionMode) {
+          case MEMBER_SELECTION_MODE.NEW_CHAT:
+            if (user.email == SevaCore.of(context).loggedInUser.email) {
+              return null;
+            } else {
+              List users = [
+                user.email,
+                SevaCore.of(context).loggedInUser.email
+              ];
+              print("Listing users");
+              users.sort();
+              ChatModel model = ChatModel();
+              model.user1 = users[0];
+              model.user2 = users[1];
+              print("Model1" + model.user1);
+              print("Model2" + model.user2);
 
-          List users = [
-            user.email,
-            SevaCore.of(context).loggedInUser.email
-          ];
-          print("Listing users");
-          users.sort();
-          ChatModel model = ChatModel();
-          model.user1 = users[0];
-          model.user2 = users[1];
-          print("Model1" + model.user1);
-          print("Model2" + model.user2);
+              await createChat(chat: model).then(
+                    (_) {
+                  Navigator.of(context).pop();
 
-          await createChat(chat: model).then(
-                (_) {
-
-              Navigator.of(context).pop();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChatView(
-                    useremail: user.email,
-                    chatModel: model,
-                    isFromShare: false,
-                    news: NewsModel(),
-                    isFromNewChat: IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
-                ),
-                ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatView(
+                        useremail: user.email,
+                        chatModel: model,
+                        isFromShare: false,
+                        news: NewsModel(),
+                        isFromNewChat: IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
+                      ),
+                    ),
+                  );
+                },
               );
-            },
-          );
+            }
+            return user.email == SevaCore.of(context).loggedInUser.email
+                ? null
+                : () {};
+
+            break;
+
+          case MEMBER_SELECTION_MODE.SHARE_FEED:
+            if (user.email == SevaCore.of(context).loggedInUser.email) {
+              return null;
+            } else {
+              List users = [
+                user.email,
+                SevaCore.of(context).loggedInUser.email
+              ];
+              print("Listing users");
+              users.sort();
+              ChatModel model = ChatModel();
+              model.user1 = users[0];
+              model.user2 = users[1];
+              print("Model1" + model.user1);
+              print("Model2" + model.user2);
+
+              await createChat(chat: model).then(
+                    (_) {
+                  Navigator.of(context).pop();
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatView(
+                        useremail: user.email,
+                        chatModel: model,
+                        isFromShare: true,
+                        news: widget.newsModel,
+                        isFromNewChat: IsFromNewChat(
+                            false, DateTime.now().millisecondsSinceEpoch),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+            return user.email == SevaCore.of(context).loggedInUser.email
+                ? null
+                : () {};
+
+            break;
         }
-        return user.email == SevaCore.of(context).loggedInUser.email
-            ? null
-            : () {};
+
+//        if (user.email != SevaCore.of(context).loggedInUser.email) {
+//
+//          List users = [
+//            user.email,
+//            SevaCore.of(context).loggedInUser.email
+//          ];
+//          print("Listing users");
+//          users.sort();
+//          ChatModel model = ChatModel();
+//          model.user1 = users[0];
+//          model.user2 = users[1];
+//          print("Model1" + model.user1);
+//          print("Model2" + model.user2);
+//
+//          await createChat(chat: model).then(
+//                (_) {
+//
+//              Navigator.of(context).pop();
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                  builder: (context) => ChatView(
+//                    useremail: user.email,
+//                    chatModel: model,
+//                    isFromShare: false,
+//                    news: NewsModel(),
+//                    isFromNewChat: IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
+//                ),
+//                ),
+//              );
+//            },
+//          );
+//        }
+//        return user.email == SevaCore.of(context).loggedInUser.email
+//            ? null
+//            : () {};
 
       },
       child: Card(
@@ -228,8 +336,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
       return getEmptyWidget('Users', 'Search requires minimum 3 characters');
     }
     return StreamBuilder<List<UserModel>>(
-      stream: SearchManager.searchForUserWithTimebankId(queryString: widget.controller.text, timebankId: widget.timebankId),
-//      stream: SearchManager.searchForUser(queryString: widget.controller.text),
+      stream: SearchManager.searchForUserWithTimebankId(queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
         print('$snapshot');
         if (snapshot.hasError) {

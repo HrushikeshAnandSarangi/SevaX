@@ -46,9 +46,17 @@ class SearchManager {
                   "fields": ["email", "fullname"],
                   "type": "phrase_prefix"
                 }
+              },
+              {
+                "bool":{
+                  "must_not":[]
+                }
               }
             ]
           }
+        },
+        "sort":{
+          "_id":{"order": "asc"}
         }
       },
     );
@@ -65,8 +73,9 @@ class SearchManager {
 
   static Stream<List<UserModel>> searchForUserWithTimebankId({
     @required queryString,
-    @required timebankId,
+    @required List<String> validItems,
   }) async* {
+
     print("searchForUser :: ---------------");
     String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
     dynamic body = json.encode(
@@ -85,7 +94,8 @@ class SearchManager {
                   "fields": ["email", "fullname"],
                   "type": "phrase_prefix"
                 }
-              }
+              },
+
             ]
           }
         }
@@ -97,7 +107,9 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       UserModel user = UserModel.fromMap(sourceMap);
-      userList.add(user);
+      if(validItems.contains(user.sevaUserID)){
+        userList.add(user);
+      }
     });
     yield userList;
   }

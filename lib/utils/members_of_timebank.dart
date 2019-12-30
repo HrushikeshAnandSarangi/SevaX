@@ -118,7 +118,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SearchTimebankMemberElastic(timebankId: widget.timebankId,),
+                  builder: (context) =>
+                    SearchTimebankMemberElastic(widget.timebankId, widget.isFromShare,widget.newsModel, widget.selectionMode),
                 ),
               );
             },

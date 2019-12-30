@@ -315,7 +315,6 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       bool isAdmin = timebankModel.admins.contains(
         SevaCore.of(context).loggedInUser.sevaUserID,
       );
-
       FirestoreManager.getUserForUserModels(admins: timebankModel.admins)
           .then((onValue) {
         _admins = [];

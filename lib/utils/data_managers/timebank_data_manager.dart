@@ -8,6 +8,8 @@ import 'package:sevaexchange/new_baseline/models/offer_model.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
+import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
+import 'package:sevaexchange/views/timebanks/timebank_admin_listview.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
   return await Firestore.instance
@@ -167,6 +169,26 @@ Stream<TimebankModel> getTimebankModelStream(
   );
 }
 
+Future<List<String>> getAllTimebankIdStream(
+    {@required String timebankId})  async{
+  return Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .get()
+      .then((onValue) {
+    prefix0.TimebankModel model = prefix0.TimebankModel.fromMap(onValue.data);
+
+    var admins =  model.admins;
+    var coordinators =  model.coordinators;
+    var members =  model.members;
+    var allItems = List<String>();
+    allItems.addAll(admins);
+    allItems.addAll(coordinators);
+    allItems.addAll(members);
+    return allItems;
+  });
+}
+
 Stream<List<TimebankModel>> getAllMyTimebanks(
     {@required String timebankId}) async* {
   var data = Firestore.instance
@@ -182,7 +204,6 @@ Stream<List<TimebankModel>> getAllMyTimebanks(
         snapshot.documents.forEach(
               (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
-            // if (model.timebankId == FlavorConfig.values.timebankId)
             modelList.add(model);
           },
         );

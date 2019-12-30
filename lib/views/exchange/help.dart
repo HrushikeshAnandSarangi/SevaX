@@ -59,8 +59,7 @@ class HelpViewState extends State<HelpView> {
           isAdminOrCoordinator = true;
         });
       } else {
-//        print(SevaCore.of(context).loggedInUser.sevaUserID);
-//        print(timebank.admins);
+
       }
     });
   }
