@@ -9,6 +9,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/app_demo_humanity_first.dart';
@@ -244,10 +245,11 @@ class _SevaCoreViewState extends State<SevaCoreView>
     ),
   };
 
+  BuildContext builderContext;
   @override
   Widget build(BuildContext context) {
     String email = SevaCore.of(context).loggedInUser.email;
-
+    builderContext = context;
     if (email != null) {
       FirebaseMessaging().getToken().then(
         (token) {
@@ -359,23 +361,31 @@ class _SevaCoreViewState extends State<SevaCoreView>
                       );
                     }
 
+                    var notificationsRead = SevaCore.of(context)
+                                .loggedInUser
+                                .notificationsRead !=
+                            null
+                        ? SevaCore.of(context).loggedInUser.notificationsRead
+                        : 0;
+
                     List<NotificationsModel> notifications = snapshot.data;
 
                     var unreadNotifications = 0;
 
                     notifications.forEach((notification) {
-                      print(
-                          "unread notification -->  ${notification.id} ${notification.isRead}");
-
                       !notification.isRead
                           ? unreadNotifications += 1
                           : print("Read");
                     });
 
-                    unreadNotifications = unreadNotifications -
-                        SevaCore.of(context).loggedInUser.notificationsRead;
+                    print(
+                        "unRead Notifications from server----------------------------------------- $unreadNotifications -- notificationsRead = $notificationsRead");
 
-                    print("Unread notifications $unreadNotifications");
+                    unreadNotifications =
+                        unreadNotifications - notificationsRead;
+
+                    print(
+                        "unRead Notifications after subtraction ----------------------------------------- $unreadNotifications");
 
                     if (unreadNotifications > 0) {
                       return Container(
@@ -387,13 +397,29 @@ class _SevaCoreViewState extends State<SevaCoreView>
                               child: IconButton(
                                 icon: Icon(Icons.notifications_active,
                                     color: Colors.red),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => NotificationsPage(),
-                                    ),
-                                  );
+                                onPressed: () async {
+                                  var loggedUser =
+                                      SevaCore.of(context).loggedInUser;
+                                  await Firestore.instance
+                                      .collection("users")
+                                      .document(loggedUser.email)
+                                      .updateData({
+                                    "notificationsRead": unreadNotifications + notificationsRead 
+                                  }).then((onValue) {
+                                    setState(() {
+                                      SevaCore.of(context)
+                                              .loggedInUser
+                                              .notificationsRead =
+                                          unreadNotifications;
+                                    });
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            NotificationsPage(),
+                                      ),
+                                    );
+                                  });
                                 },
                               ),
                             ),

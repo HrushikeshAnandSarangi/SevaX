@@ -25,7 +25,7 @@ class UserModel extends DataModel {
   String locationName;
   String lat_lng;
 
-  int notificationsRead = 0;
+  int notificationsRead;
 
   String root_timebank_id;
 
@@ -114,7 +114,7 @@ class UserModel extends DataModel {
     }
 
     if (map.containsKey('notificationsRead')) {
-      this.bio = map['notificationsRead'];
+      this.notificationsRead = map['notificationsRead'];
     }
 
     if (map.containsKey('email')) {
@@ -243,6 +243,8 @@ class UserModel extends DataModel {
 
     if (this.notificationsRead != null) {
       object['notificationsRead'] = this.notificationsRead;
+    } else {
+      this.notificationsRead = 0;
     }
 
     return object;

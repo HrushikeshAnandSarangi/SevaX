@@ -479,7 +479,7 @@ class NewsListState extends State<NewsList> {
                         Container(
                           margin: EdgeInsets.only(left: 5),
                           child: Text(
-                            news.fullName,
+                            news.fullName.trim(),
                             style: TextStyle(fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -489,7 +489,7 @@ class NewsListState extends State<NewsList> {
                           child: Text(
                             news.placeAddress == null
                                 ? "Av of the Americas/W 41 St, New York"
-                                : news.placeAddress,
+                                : news.placeAddress.trim(),
                             // overflow: TextOverflow.ellipsis,
                             // maxLines: 1,
                             // style: TextStyle(fontWeight: FontWeight.bold),
