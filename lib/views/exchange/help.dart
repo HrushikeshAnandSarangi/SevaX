@@ -1430,8 +1430,9 @@ class RequestListItems extends StatelessWidget {
                             SevaCore.of(context).loggedInUser.sevaUserID);
 
                     return formatListFrom(
-                        consolidatedList: consolidatedList,
-                        loggedintimezone: loggedintimezone);
+                      consolidatedList: consolidatedList,
+                      loggedintimezone: loggedintimezone,
+                    );
                 }
               },
             );
@@ -1485,8 +1486,10 @@ class RequestListItems extends StatelessWidget {
     }
   }
 
-  List<RequestModel> filterBlockedRequestsContent(
-      {List<RequestModel> requestModelList, BuildContext context}) {
+  List<RequestModel> filterBlockedRequestsContent({
+    List<RequestModel> requestModelList,
+    BuildContext context,
+  }) {
     List<RequestModel> filteredList = [];
 
     requestModelList.forEach((request) => SevaCore.of(context)
@@ -1638,10 +1641,11 @@ class RequestListItems extends StatelessWidget {
       borderRadius: BorderRadius.all(Radius.circular(2.0)),
       boxShadow: [
         BoxShadow(
-            color: Colors.black.withAlpha(2),
-            spreadRadius: 6,
-            offset: Offset(0, 3),
-            blurRadius: 6)
+          color: Colors.black.withAlpha(2),
+          spreadRadius: 6,
+          offset: Offset(0, 3),
+          blurRadius: 6,
+        )
       ],
       color: Colors.white,
     );
@@ -1698,7 +1702,6 @@ class OfferListItems extends StatelessWidget {
                   ),
                 );
               }
-
               //Here we apply grouping startegy
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(

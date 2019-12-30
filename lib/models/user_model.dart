@@ -166,6 +166,14 @@ class UserModel extends DataModel {
     }
   }
 
+  UserModel.fromDynamic(dynamic user) {
+    this.fullname = user['fullname'];
+    this.photoURL = user['photourl'];
+    this.sevaUserID = user['sevauserid'];
+    this.bio = user['bio'];
+    this.email = user['email'];
+  }
+
   UserModel setBlockedMembers(List<String> blockedMembers) {
     var tempOutput = new List<String>.from(blockedMembers);
     this.blockedMembers = tempOutput;

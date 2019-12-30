@@ -520,6 +520,7 @@ class _SplashViewState extends State<SplashView> {
       }
     }
 
+
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
     }
