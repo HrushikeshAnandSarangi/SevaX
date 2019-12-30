@@ -9,6 +9,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/notifications_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as prefix1;
+import 'package:sevaexchange/views/admin_viewe_requests.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
@@ -273,7 +274,9 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 20.0),
-                          child: Divider(color: Colors.deepPurple),
+                          child: Divider(
+                            color: Colors.deepPurple,
+                          ),
                         ),
 //                        timebankModel.admins.contains(loggedInUser)
 //                            ? FlatButton(
@@ -634,6 +637,23 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                                         userEmail: SevaCore.of(context)
                                             .loggedInUser
                                             .email,
+                                      )),
+                            );
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'View Requests',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                color: Theme.of(context).accentColor),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ViewRequestsForAdmin(
+                                        timebankModel.id,
                                       )),
                             );
                           },

@@ -284,4 +284,10 @@ class RequestModel extends DataModel {
     }
     return object;
   }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "$approvedUsers $acceptors ";
+  }
 }

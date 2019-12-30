@@ -8,6 +8,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
+import 'package:sevaexchange/views/admin_viewe_requests.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
@@ -56,6 +57,7 @@ class MainApplication extends StatelessWidget {
     return AuthProvider(
       auth: Auth(),
       child: MaterialApp(theme: FlavorConfig.values.theme, home: SplashView()),
+      // child: MaterialApp(theme: FlavorConfig.values.theme, home: ViewRequestsForAdmin()),
       // home: SelectMembersFromTimebank(FlavorConfig.values.timebankId, HashMap())),
       // home: SelectMembersInGroup(FlavorConfig.values.timebankId, HashMap())),
     );

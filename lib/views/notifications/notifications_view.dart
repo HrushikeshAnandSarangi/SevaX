@@ -1175,8 +1175,11 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 
-  void declineRequestedMember(
-      {RequestModel model, UserModel user, String notificationId}) {
+  void declineRequestedMember({
+    RequestModel model,
+    UserModel user,
+    String notificationId,
+  }) {
     List<String> acceptedUsers = model.acceptors;
     Set<String> usersSet = acceptedUsers.toSet();
 
@@ -1190,8 +1193,11 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 
-  void approveMemberForVolunteerRequest(
-      {RequestModel model, UserModel user, String notificationId}) {
+  void approveMemberForVolunteerRequest({
+    RequestModel model,
+    UserModel user,
+    String notificationId,
+  }) {
     List<String> approvedUsers = model.approvedUsers;
     Set<String> usersSet = approvedUsers.toSet();
 
