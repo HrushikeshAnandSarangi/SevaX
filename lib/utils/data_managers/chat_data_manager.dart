@@ -178,7 +178,6 @@ Stream<List<ChatModel>> getChatsforUser({
                 futures.add(getUserInfo(model.user1));
               }
               chatlist.add(model);
-              // print("Chat list size ${chatlist.length}");
             }
 
             // email = "anitha.beberg@gmail.com";

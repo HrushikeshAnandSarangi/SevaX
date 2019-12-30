@@ -435,7 +435,6 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   Future loadNextMembers() async {
     if (!_isLoading && !_lastReached) {
       _isLoading = true;
-      print("Email tends to ${SevaCore.of(context).loggedInUser.email}");
       FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
               widget.timebankId, _pageIndex, widget.userEmail)
           .then((onValue) {

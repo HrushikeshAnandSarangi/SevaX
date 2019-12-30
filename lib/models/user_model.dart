@@ -164,6 +164,8 @@ class UserModel extends DataModel {
     } else {
       this.timezone = 'PT';
     }
+
+
   }
 
   UserModel.fromDynamic(dynamic user) {
