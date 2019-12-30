@@ -652,9 +652,10 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ViewRequestsForAdmin(
-                                        timebankModel.id,
-                                      )),
+                                builder: (context) => ViewRequestsForAdmin(
+                                  timebankModel.id,
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -669,9 +670,10 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AcceptedOffers(
-                                        timebankId: timebankModel.id,
-                                      )),
+                                builder: (context) => AcceptedOffers(
+                                  timebankId: timebankModel.id,
+                                ),
+                              ),
                             );
                           },
                         ),

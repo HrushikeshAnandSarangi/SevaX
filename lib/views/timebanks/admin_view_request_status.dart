@@ -66,10 +66,17 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
   }
 }
 
-class TimebankRequests extends StatelessWidget {
+class TimebankRequests extends StatefulWidget {
   final RequestModel requestModel;
   TimebankRequests({this.requestModel});
 
+  @override
+  State<StatefulWidget> createState() {
+    return TimebankRequestsState();
+  }
+}
+
+class TimebankRequestsState extends State<TimebankRequests> {
   Future<dynamic> getUserDetails({String memberEmail}) async {
     var user = await Firestore.instance
         .collection("users")
@@ -83,11 +90,13 @@ class TimebankRequests extends StatelessWidget {
   Widget build(BuildContext context) {
     var futures = <Future>[];
     futures.clear();
-    requestModel.acceptors.forEach((memberEmail) {
-      futures.add(getUserDetails(memberEmail: memberEmail));
+    widget.requestModel.acceptors.forEach((memberEmail) {
+      if (!widget.requestModel.approvedUsers.contains(memberEmail)) {
+        futures.add(getUserDetails(memberEmail: memberEmail));
+      } else {
+        print("Member approved alredy");
+      }
     });
-
-    print("Future length ${futures.length}");
 
     return FutureBuilder(
         future: Future.wait(futures),
@@ -127,16 +136,22 @@ class TimebankRequests extends StatelessWidget {
                       backgroundImage: NetworkImage(userModel.photoURL),
                     ),
                     subtitle: Text(
-                      'Pending request',
+                      'Pending approval',
+                      style: TextStyle(color: Colors.red),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
                     onTap: () {
                       showDialogForApprovalOfRequest(
-                          context: context,
-                          userModel: userModel,
-                          requestModel: requestModel,
-                          notificationId: "sampleID");
+                              context: context,
+                              userModel: userModel,
+                              requestModel: widget.requestModel,
+                              notificationId: "sampleID")
+                          .then((onValue) {
+                        setState(() {});
+                        print("Action completed");
+                      });
+                      //set the state
                     },
                   ),
                 );
@@ -147,13 +162,13 @@ class TimebankRequests extends StatelessWidget {
   }
 
 // crate dialog for approval or rejection
-  void showDialogForApprovalOfRequest({
+  Future showDialogForApprovalOfRequest({
     BuildContext context,
     UserModel userModel,
     RequestModel requestModel,
     String notificationId,
   }) {
-    showDialog(
+    return showDialog(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(

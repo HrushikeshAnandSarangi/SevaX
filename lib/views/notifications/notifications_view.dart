@@ -4,7 +4,9 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -17,6 +19,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 
 import 'package:shimmer/shimmer.dart';
@@ -835,18 +838,17 @@ class NotificationsView extends State<NotificationViewHolder> {
           );
         });
   }
-  Widget getBio(UserModel userModel){
-    if(userModel.bio != null) {
-      if(userModel.bio.length <100){
+
+  Widget getBio(UserModel userModel) {
+    if (userModel.bio != null) {
+      if (userModel.bio.length < 100) {
         return Center(
-          child: Text(
-              userModel.bio
-          ),
+          child: Text(userModel.bio),
         );
       }
       return Container(
         height: 200,
-        child:  SingleChildScrollView(
+        child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
             userModel.bio,
@@ -859,9 +861,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text(
-          "Bio not yet updated"
-      ),
+      child: Text("Bio not yet updated"),
     );
   }
 
@@ -1177,11 +1177,41 @@ class NotificationsView extends State<NotificationViewHolder> {
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () {
-                showDialogForApproval(
+                // showDialogForApproval(
+                //     context: context,
+                //     userModel: user,
+                //     notificationId: notificationId,
+                //     requestModel: model);
+
+                BuildContext dialogContext;
+
+                showDialog(
+                    barrierDismissible: false,
                     context: context,
-                    userModel: user,
-                    notificationId: notificationId,
-                    requestModel: model);
+                    builder: (createDialogContext) {
+                      dialogContext = createDialogContext;
+                      return AlertDialog(
+                        title: Text('Please wait'),
+                        content: LinearProgressIndicator(),
+                      );
+                    });
+
+                Firestore.instance
+                    .collection("requests")
+                    .document(model.id)
+                    .get()
+                    .then((onValue) {
+                  var requestModel = RequestModel.fromMap(onValue.data);
+                  prefix0.Navigator.pop(dialogContext);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ViewRequestStatus(
+                        requestModel: requestModel,
+                      ),
+                    ),
+                  );
+                });
               },
               child: Container(
                   margin: notificationPadding,
@@ -1295,7 +1325,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    getBio(userModel),
+                  getBio(userModel),
 //                  Padding(
 //                    padding: EdgeInsets.all(8.0),
 //                    child: Text(
@@ -1361,7 +1391,6 @@ class NotificationsView extends State<NotificationViewHolder> {
           );
         });
   }
-
 
   Widget _getCloseButton(BuildContext context) {
     return Padding(
