@@ -248,7 +248,7 @@ class UserModel extends DataModel {
     } else {
       this.notificationsRead = 0;
     }
-
+    
     return object;
   }
 
