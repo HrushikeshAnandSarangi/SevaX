@@ -812,16 +812,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
                 ),
       page: SearchView(controller),
       title: 'Search',
-      // bottom: TabBar(
-      //   tabs: [
-      //     Tab(child: Text('Users')),
-      //     Tab(child: Text('News')),
-      //     Tab(child: Text('Requests')),
-      //     Tab(child: Text('Offers')),
-      //   ],
-      //   controller: controller,
-      //   isScrollable: true,
-      // ),
       appBarActions: [],
     );
   }
