@@ -69,10 +69,10 @@ class NotificationsView extends State<NotificationViewHolder> {
             switch (notification.type) {
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
-
                 return FutureBuilder<RequestModel>(
                     future: FirestoreManager.getRequestFutureById(
-                        requestId: model.id),
+                      requestId: model.id,
+                    ),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
@@ -108,8 +108,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                 break;
 
               case NotificationType.JoinRequest:
-                print("inside join request ${notification.data}");
-
                 JoinRequestNotificationModel model =
                     JoinRequestNotificationModel.fromMap(notification.data);
                 return FutureBuilder<UserModel>(
@@ -1037,41 +1035,54 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(snapshot.error.toString()),
-          );
-        }
+    print(" ----------------${model.toString()}  $userId $notificationId");
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
+    return Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          title: Text("Request Rejected"),
+          leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  "https://www.csbsju.edu/images/CHP/Alcohol%20Webpage/BAC%20Men.png")),
+          subtitle: Text('Request rejected by admin'),
+        ));
 
-        UserModel user = snapshot.data;
-        return Dismissible(
-          background: dismissibleBackground,
-          key: Key(Utils.getUuid()),
-          onDismissed: (direction) {
-            String userEmail = SevaCore.of(context).loggedInUser.email;
-            FirestoreManager.readNotification(notificationId, userEmail);
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text(model.title),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              subtitle: Text('Request rejected by ${user.fullname}'),
-            ),
-          ),
-        );
-      },
-    );
+    // return StreamBuilder<UserModel>(
+    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       return Center(
+    //         child: Text(snapshot.error.toString()),
+    //       );
+    //     }
+
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return notificationShimmer;
+    //     }
+
+    //     UserModel user = snapshot.data;
+    //     return Dismissible(
+    //       background: dismissibleBackground,
+    //       key: Key(Utils.getUuid()),
+    //       onDismissed: (direction) {
+    //         String userEmail = SevaCore.of(context).loggedInUser.email;
+    //         FirestoreManager.readNotification(notificationId, userEmail);
+    //       },
+    //       child: Container(
+    //         margin: notificationPadding,
+    //         decoration: notificationDecoration,
+    //         child: ListTile(
+    //           title: Text(model.title),
+    //           leading: CircleAvatar(
+    //               backgroundImage: NetworkImage(
+    //                   "https://www.csbsju.edu/images/CHP/Alcohol%20Webpage/BAC%20Men.png")),
+    //           subtitle: Text('Request rejected by '),
+    //         ),
+    //       ),
+    //     );
+    //   },
+    // );
   }
 
   Widget getNotificationTaskCompletedRejectWidget(
