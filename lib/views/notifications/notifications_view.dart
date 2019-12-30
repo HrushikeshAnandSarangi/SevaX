@@ -761,16 +761,17 @@ class NotificationsView extends State<NotificationViewHolder> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      userModel.bio == null
-                          ? "Bio not yet updated"
-                          : userModel.bio,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                    child: Text(
+//                      userModel.bio == null
+//                          ? "Bio not yet updated"
+//                          : userModel.bio,
+//                      maxLines: 5,
+//                      overflow: TextOverflow.ellipsis,
+//                    ),
+//                  ),
+                  getBio(userModel),
                   Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Center(
@@ -833,6 +834,35 @@ class NotificationsView extends State<NotificationViewHolder> {
             ),
           );
         });
+  }
+  Widget getBio(UserModel userModel){
+    if(userModel.bio != null) {
+      if(userModel.bio.length <100){
+        return Center(
+          child: Text(
+              userModel.bio
+          ),
+        );
+      }
+      return Container(
+        height: 200,
+        child:  SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(
+            userModel.bio,
+            maxLines: null,
+            overflow: null,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text(
+          "Bio not yet updated"
+      ),
+    );
   }
 
   void approveMemberClaim({
@@ -1265,16 +1295,17 @@ class NotificationsView extends State<NotificationViewHolder> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text(
-                      userModel.bio == null
-                          ? "Bio not yet updated"
-                          : userModel.bio,
-                      maxLines: 5,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
+                    getBio(userModel),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                    child: Text(
+//                      userModel.bio == null
+//                          ? "Bio not yet updated"
+//                          : userModel.bio,
+//                      maxLines: 5,
+//                      overflow: TextOverflow.ellipsis,
+//                    ),
+//                  ),
                   Center(
                     child: Text(
                         "By approving, ${userModel.fullname} will be added to the event.",
@@ -1330,6 +1361,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           );
         });
   }
+
 
   Widget _getCloseButton(BuildContext context) {
     return Padding(

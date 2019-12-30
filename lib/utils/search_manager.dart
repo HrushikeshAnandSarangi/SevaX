@@ -53,7 +53,46 @@ class SearchManager {
       },
     );
     List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
+    await _makeElasticSearchPostRequest(url, body);
+    List<UserModel> userList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      UserModel user = UserModel.fromMap(sourceMap);
+      userList.add(user);
+    });
+    yield userList;
+  }
+
+  static Stream<List<UserModel>> searchForUserWithTimebankId({
+    @required queryString,
+    @required timebankId,
+  }) async* {
+    print("searchForUser :: ---------------");
+    String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
+    dynamic body = json.encode(
+      {
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "match": {
+                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
+                }
+              },
+              {
+                "multi_match": {
+                  "query": "$queryString",
+                  "fields": ["email", "fullname"],
+                  "type": "phrase_prefix"
+                }
+              }
+            ]
+          }
+        }
+      },
+    );
+    List<Map<String, dynamic>> hitList =
+    await _makeElasticSearchPostRequest(url, body);
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
