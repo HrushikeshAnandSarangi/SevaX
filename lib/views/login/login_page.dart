@@ -333,138 +333,136 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: ScreenUtil.getInstance().setHeight(15),
                   ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 32),
-            Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.all(12),
-                  child: FlatButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(
-                                'Enter email',
-                              ),
-                              content: Form(
-                                key: _formKeyDialog,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Please enter email to update';
-                                    } else if (!validateEmail(value.trim())) {
-                                      return 'Please enter a valid email';
-                                    }
-                                    _textFieldControllerResetEmail = value;
-                                  },
-                                  // validator: validateEmail,
-                                  onChanged: (value) {
-                                    print("$value");
-                                  },
-                                  initialValue: "",
-                                  keyboardType: TextInputType.emailAddress,
-                                  controller: null,
-                                  decoration: InputDecoration(
-                                    hintText: "Your email address",
-                                    // errorText: isEmailValidForReset
-                                    //     ? null
-                                    //     : validateEmail(
-                                    //         _textFieldControllerResetEmail.text,
-                                    //       ),
-                                  ),
-                                ),
-                              ),
-                              actions: <Widget>[
-                                new FlatButton(
-                                  child: new Text(
-                                    'Cancel',
-                                    style: TextStyle(
-                                      fontSize: dialogButtonSize,
+                  SizedBox(height: 32),
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(12),
+                        child: FlatButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Enter email',
                                     ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(
-                                      {
-                                        "sendResetLink": false,
-                                        "userEmail": null
-                                      },
-                                    );
-                                  },
-                                ),
-                                new FlatButton(
-                                  child: new Text(
-                                    'Reset Password',
-                                    style: TextStyle(
-                                      fontSize: dialogButtonSize,
+                                    content: Form(
+                                      key: _formKeyDialog,
+                                      child: TextFormField(
+                                        validator: (value) {
+                                          if (value.isEmpty) {
+                                            return 'Please enter email to update';
+                                          } else if (!validateEmail(value.trim())) {
+                                            return 'Please enter a valid email';
+                                          }
+                                          _textFieldControllerResetEmail = value;
+                                        },
+                                        // validator: validateEmail,
+                                        onChanged: (value) {
+                                          print("$value");
+                                        },
+                                        initialValue: "",
+                                        keyboardType: TextInputType.emailAddress,
+                                        controller: null,
+                                        decoration: InputDecoration(
+                                          hintText: "Your email address",
+                                          // errorText: isEmailValidForReset
+                                          //     ? null
+                                          //     : validateEmail(
+                                          //         _textFieldControllerResetEmail.text,
+                                          //       ),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  onPressed: () {
-                                    if (!_formKeyDialog.currentState
-                                        .validate()) {
-                                      return;
-                                    }
-                                    Navigator.of(context).pop({
-                                      "sendResetLink": true,
-                                      "userEmail":
-                                          _textFieldControllerResetEmail.trim()
-                                    });
-                                  },
-                                )
-                              ],
-                            );
-                          }).then((onActivityResult) {
-                        if (onActivityResult != null &&
-                            onActivityResult['sendResetLink'] != null &&
-                            onActivityResult['sendResetLink'] &&
-                            onActivityResult['userEmail'] != null &&
-                            onActivityResult['userEmail']
-                                .toString()
-                                .isNotEmpty) {
-                          print("send reset link");
-                          resetPassword(onActivityResult['userEmail']);
-                          _scaffoldKey.currentState.hideCurrentSnackBar();
-                        } else {
-                          print("Cancelled forgot passowrd");
-                        }
-                      });
+                                    actions: <Widget>[
+                                      new FlatButton(
+                                        child: new Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                            fontSize: dialogButtonSize,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(
+                                            {
+                                              "sendResetLink": false,
+                                              "userEmail": null
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      new FlatButton(
+                                        child: new Text(
+                                          'Reset Password',
+                                          style: TextStyle(
+                                            fontSize: dialogButtonSize,
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          if (!_formKeyDialog.currentState
+                                              .validate()) {
+                                            return;
+                                          }
+                                          Navigator.of(context).pop({
+                                            "sendResetLink": true,
+                                            "userEmail":
+                                            _textFieldControllerResetEmail.trim()
+                                          });
+                                        },
+                                      )
+                                    ],
+                                  );
+                                }).then((onActivityResult) {
+                              if (onActivityResult != null &&
+                                  onActivityResult['sendResetLink'] != null &&
+                                  onActivityResult['sendResetLink'] &&
+                                  onActivityResult['userEmail'] != null &&
+                                  onActivityResult['userEmail']
+                                      .toString()
+                                      .isNotEmpty) {
+                                print("send reset link");
+                                resetPassword(onActivityResult['userEmail']);
+                                _scaffoldKey.currentState.hideCurrentSnackBar();
+                              } else {
+                                print("Cancelled forgot passowrd");
+                              }
+                            });
+                          },
+                          child: Text(
+                            "Forgot password",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  FlatButton(
+                    materialTapTargetSize: MaterialTapTargetSize.padded,
+                    padding: EdgeInsets.all(0),
+                    onPressed: () async {
+                      isLoading = true;
+                      UserModel user = await Navigator.of(context).push(
+                        MaterialPageRoute<UserModel>(
+                          builder: (context) => RegisterPage(),
+                        ),
+                      );
+                      isLoading = false;
+                      if (user != null) _processLogin(user);
                     },
                     child: Text(
-                      "Forgot password",
+                      'Create an Account',
                       style: TextStyle(
-                        color: Colors.white,
-                      ),
+                          color: Theme.of(context).accentColor,
+                          fontWeight: FontWeight.w700),
                     ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8),
-            FlatButton(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
-              padding: EdgeInsets.all(0),
-              onPressed: () async {
-                isLoading = true;
-                UserModel user = await Navigator.of(context).push(
-                  MaterialPageRoute<UserModel>(
-                    builder: (context) => RegisterPage(),
-                  ),
-                );
-                isLoading = false;
-                if (user != null) _processLogin(user);
-              },
-              child: Text(
-                'Create an Account',
-                style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.w700),
+                  )
+                ],
               ),
             )
-          ],
         ),
       ),
     );

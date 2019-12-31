@@ -18,14 +18,15 @@ class EulaAgreementState extends State<EulaAgreement> {
         onWillPop: () async => false,
     child: Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Center(
-            child: TextStyle(
-                color: Colors.black54,
-                fontSize: 20,
-                fontWeight: FontWeight.w500),
-          ),
-        ),
+            centerTitle: true,
+            elevation: 0.5,
+            backgroundColor: Color(0xFFFFFFFF),
+            leading: BackButton(color: Colors.black54),
+            title: new Text('EULA Agreement',
+                style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500))),
         body: ListView(
           children: <Widget>[
             Container(
@@ -104,8 +105,8 @@ class EulaAgreementState extends State<EulaAgreement> {
                   ],
                 )),
           ],
-        ));
-    );
+        )
+    ));
   }
 
   bool userAcceptanceStatus = false;

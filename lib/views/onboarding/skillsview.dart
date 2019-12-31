@@ -99,6 +99,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           automaticallyImplyLeading: false,
           elevation: 0.5,
           backgroundColor: Color(0xFFFFFFFF),
+          leading: BackButton(color: Colors.black54),
           title: Text(
             'Interests',
             style: TextStyle(
@@ -175,7 +176,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: interests.map((interest) {
-            return chip(interest, interests.contains(interest));
+            return chip(interest, selectedInterests.contains(interest));
           }).toList(),
         ),
       );
@@ -315,6 +316,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           automaticallyImplyLeading: false,
           elevation: 0.5,
           backgroundColor: Color(0xFFFFFFFF),
+          leading: BackButton(color: Colors.black54),
           title: Text(
             'Skills',
             style: TextStyle(

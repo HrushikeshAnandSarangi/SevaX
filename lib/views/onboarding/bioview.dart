@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../flavor_config.dart';
+
 typedef StringCallback = void Function(String bio);
 
 class BioView extends StatefulWidget {
@@ -34,6 +36,7 @@ class _BioViewState extends State<BioView> {
             automaticallyImplyLeading: false,
             elevation: 0.5,
             backgroundColor: Color(0xFFFFFFFF),
+            leading: BackButton(color: Colors.black54),
             title: Text(
               'Bio',
               style: TextStyle(
@@ -85,16 +88,23 @@ class _BioViewState extends State<BioView> {
                 child: Text('Skip'),
               ),
               RaisedButton(
-                color: Theme.of(context).primaryColor,
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     widget.onSave(bio);
                   }
                 },
-                child: Text(
-                  'Done',
-                  style: TextStyle(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Text('Next'),
+                    ),
+                  ],
                 ),
+                color: Theme.of(context).accentColor,
+                textColor: FlavorConfig.values.buttonTextColor,
+                shape: StadiumBorder(),
               ),
             ],
           ),
