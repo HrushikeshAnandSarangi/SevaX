@@ -91,6 +91,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 break;
               case NotificationType.RequestApprove:
                 RequestModel model = RequestModel.fromMap(notification.data);
+
                 return getNotificationRequestApprovalWidget(
                   model,
                   notification.senderUserId,
@@ -993,57 +994,26 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(snapshot.error.toString()),
-          );
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-
-        UserModel user = snapshot.data;
-        return Dismissible(
-          background: dismissibleBackground,
-          key: Key(Utils.getUuid()),
-          onDismissed: (direction) {
-            String userEmail = SevaCore.of(context).loggedInUser.email;
-            FirestoreManager.readNotification(notificationId, userEmail);
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text(model.title),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              subtitle: Text('Request approved by ${user.fullname}'),
-            ),
-          ),
-        );
+    return Dismissible(
+      background: dismissibleBackground,
+      key: Key(Utils.getUuid()),
+      onDismissed: (direction) {
+        String userEmail = SevaCore.of(context).loggedInUser.email;
+        FirestoreManager.readNotification(notificationId, userEmail);
       },
-    );
-  }
-
-  Widget getNotificationRequestRejectWidget(
-    RequestModel model,
-    String userId,
-    String notificationId,
-  ) {
-    print(" ----------------${model.toString()}  $userId $notificationId");
-
-    return ListTile(
-          title: Text("Request Rejected"),
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          title: Text(model.title),
           leading: CircleAvatar(
-              backgroundImage: NetworkImage(
-                  "https://www.csbsju.edu/images/CHP/Alcohol%20Webpage/BAC%20Men.png")),
-          subtitle: Text('Request rejected by admin'),
-        );
+              backgroundImage: model.photoUrl != null
+                  ? NetworkImage(model.photoUrl)
+                  : AssetImage("lib/assets/images/approved.png")),
+          subtitle: Text('Request approved by ${model.fullName.toLowerCase()}'),
+        ),
+      ),
+    );
 
     // return StreamBuilder<UserModel>(
     //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
@@ -1059,25 +1029,49 @@ class NotificationsView extends State<NotificationViewHolder> {
     //     }
 
     //     UserModel user = snapshot.data;
-    //     return Dismissible(
-    //       background: dismissibleBackground,
-    //       key: Key(Utils.getUuid()),
-    //       onDismissed: (direction) {
-    //         String userEmail = SevaCore.of(context).loggedInUser.email;
-    //         FirestoreManager.readNotification(notificationId, userEmail);
-    //       },
-    //       child: Container(
-    //         margin: notificationPadding,
-    //         decoration: notificationDecoration,
-    //         child: ListTile(
-    //           title: Text(model.title),
-    //           leading: CircleAvatar(
-    //               backgroundImage: NetworkImage(
-    //                   "https://www.csbsju.edu/images/CHP/Alcohol%20Webpage/BAC%20Men.png")),
-    //           subtitle: Text('Request rejected by '),
-    //         ),
-    //       ),
-    //     );
+    //   },
+    // );
+  }
+
+  Widget getNotificationRequestRejectWidget(
+    RequestModel model,
+    String userId,
+    String notificationId,
+  ) {
+    return Dismissible(
+      background: dismissibleBackground,
+      key: Key(Utils.getUuid()),
+      onDismissed: (direction) {
+        String userEmail = SevaCore.of(context).loggedInUser.email;
+        FirestoreManager.readNotification(notificationId, userEmail);
+      },
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          title: Text(model.title),
+          leading: CircleAvatar(
+              backgroundImage: model.photoUrl != null
+                  ? NetworkImage(model.photoUrl)
+                  : AssetImage("lib/assets/images/profile.png")),
+          subtitle: Text('Request rejected by ${model.fullName.toLowerCase()}'),
+        ),
+      ),
+    );
+
+    // return StreamBuilder<UserModel>(
+    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       return Center(
+    //         child: Text(snapshot.error.toString()),
+    //       );
+    //     }
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return notificationShimmer;
+    //     }
+
+    //     UserModel user = snapshot.data;
     //   },
     // );
   }
@@ -1440,11 +1434,11 @@ class NotificationsView extends State<NotificationViewHolder> {
         child: ListTile(),
       );
 
-  EdgeInsets get notificationPadding => EdgeInsets.all(8);
+  EdgeInsets get notificationPadding => EdgeInsets.fromLTRB(5, 5, 5, 0);
 
   Decoration get notificationDecoration => ShapeDecoration(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(5),
         ),
         color: Colors.white,
         shadows: shadowList,

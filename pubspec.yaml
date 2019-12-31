@@ -94,6 +94,7 @@ flutter:
     - lib/assets/sevaX.png
     - lib/assets/images/sticker.webp
     - lib/assets/images/g.png
+    - lib/assets/images/approved.png
     - lib/assets/images/sevaBack.jpg
     - lib/assets/images/genericlogo.png
     - lib/assets/images/newsimage.png
