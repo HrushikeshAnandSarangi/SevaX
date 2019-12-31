@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:sevaexchange/views/bioview.dart';
+import 'package:sevaexchange/views/onboarding/bioview.dart';
 import '../../splash_view.dart';
 import '../splash_view.dart';
 import 'timebank_congratsView.dart';
