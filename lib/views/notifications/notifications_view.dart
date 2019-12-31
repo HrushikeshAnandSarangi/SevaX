@@ -99,7 +99,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                 break;
 
               case NotificationType.RequestReject:
-                return Container();
                 RequestModel model = RequestModel.fromMap(notification.data);
                 return getNotificationRequestRejectWidget(
                   model,
@@ -1036,11 +1035,16 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    // print("----------------${model.toString()}  $userId $notificationId");
-    return Container(
-      decoration: notificationDecoration,
-      child: Text("data"),
-    );
+    print(" ----------------${model.toString()}  $userId $notificationId");
+
+    return ListTile(
+          title: Text("Request Rejected"),
+          leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  "https://www.csbsju.edu/images/CHP/Alcohol%20Webpage/BAC%20Men.png")),
+          subtitle: Text('Request rejected by admin'),
+        );
+
     // return StreamBuilder<UserModel>(
     //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
     //   builder: (context, snapshot) {

@@ -39,7 +39,7 @@ class NewsCardView extends StatelessWidget {
           //   onPressed: () => _shareNews(context),
           // ),
           //shadowing for now as edit feed is not yet completed
-          newsModel.sevaUserId != SevaCore.of(context).loggedInUser.sevaUserID
+          newsModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
               ? IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {

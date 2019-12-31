@@ -79,8 +79,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     if(_avtars.length==0) {
       loadNextBatchItems();
     }
-    var color = Theme.of(context);
-    print("Color ${color.primaryColor}");
     var finalWidget =  Scaffold(
       appBar: AppBar(
         title: Text(
@@ -242,9 +240,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           currSelectedState = false;
         }
         selectedUserModelIndex = emailIndexMap[user.email];
-        print("${user.email} selected index\t $selectedUserModelIndex");
-        print("${widget.userSelected.length} Users selected ${widget.userSelected.containsKey(user.email)}");
-
         setState(() {
           if(selectedUserModelIndex!=-1) {
             updateModelIndex(selectedUserModelIndex).then((onValue) {
