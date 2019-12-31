@@ -1037,16 +1037,13 @@ class NotificationsView extends State<NotificationViewHolder> {
   ) {
     print(" ----------------${model.toString()}  $userId $notificationId");
 
-    return Container(
-        margin: notificationPadding,
-        decoration: notificationDecoration,
-        child: ListTile(
+    return ListTile(
           title: Text("Request Rejected"),
           leading: CircleAvatar(
               backgroundImage: NetworkImage(
                   "https://www.csbsju.edu/images/CHP/Alcohol%20Webpage/BAC%20Men.png")),
           subtitle: Text('Request rejected by admin'),
-        ));
+        );
 
     // return StreamBuilder<UserModel>(
     //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
