@@ -459,7 +459,8 @@ Stream<List<RequestModel>> getCompletedRequestStream({
       // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
       //.where('transactions', arrayContains: true)
       .where('approvedUsers', arrayContains: userEmail)
-      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
   yield* data.transform(
@@ -489,7 +490,8 @@ Stream<List<RequestModel>> getNotAcceptedRequestStream({
   var data = Firestore.instance
       .collection('requests')
       .where('acceptors', arrayContains: userEmail)
-      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
   yield* data.transform(

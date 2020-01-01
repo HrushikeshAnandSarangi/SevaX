@@ -301,7 +301,7 @@ class NewsCardView extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(top: 5, left: 5),
                 child: Text(
-                  newsModel.fullName,
+                  newsModel.fullName.trim(),
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
