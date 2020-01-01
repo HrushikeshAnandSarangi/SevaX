@@ -58,9 +58,7 @@ class HelpViewState extends State<HelpView> {
         setState(() {
           isAdminOrCoordinator = true;
         });
-      } else {
-
-      }
+      } else {}
     });
   }
 
