@@ -88,7 +88,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.title;
+    var timebankName = FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang gang";
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -147,7 +147,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       Padding(
                         padding: EdgeInsets.only(left: 30.0, top: 10.0),
                         child: Text(
-                          'Yang Gang Chapter',
+                          '$timebankName Chapter',
                           style: TextStyle(
                               fontSize: 15.0, fontWeight: FontWeight.w600),
                         ),

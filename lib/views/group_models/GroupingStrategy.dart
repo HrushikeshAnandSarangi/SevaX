@@ -81,12 +81,13 @@ class GroupRequestCommons {
   }
 
   static String getGroupTitle({String groupKey}) {
+
     switch (groupKey) {
       case "MyPost":
         return "My Requests";
 
       case "Others":
-        return "Yang Gang Requests";
+        return FlavorConfig.appFlavor == Flavor.APP ? "Timebank Requests" : "Yang Gang Requests";
 
       default:
         return "Others";

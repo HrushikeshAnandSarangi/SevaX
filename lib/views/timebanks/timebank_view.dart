@@ -152,6 +152,7 @@ class _TimebankViewState extends State<TimebankView> {
 
   StreamBuilder<TimebankModel> timebankStreamBuilder(
       BuildContext buildcontext) {
+    var timebankName = FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang Gang";
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
           timebankId: widget.timebankId),
@@ -466,7 +467,7 @@ class _TimebankViewState extends State<TimebankView> {
                                     .contains(loggedInUser)
                             ? FlatButton(
                                 child: Text(
-                                  'Edit Yang Gang',
+                                  'Edit $timebankName',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 textColor: Theme.of(context).accentColor,

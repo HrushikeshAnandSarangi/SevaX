@@ -582,7 +582,11 @@ class _SevaCoreViewState extends State<SevaCoreView>
                   icon: Icon(Icons.more_vert),
                   onSelected: choiceAction,
                   itemBuilder: (BuildContext context) {
-                    return Constants.choices.map((String choice) {
+                    var choices = <String>[
+                      timebankString,
+                      'Help',
+                    ];
+                    return choices.map((String choice) {
                       return PopupMenuItem<String>(
                         value: choice,
                         child: Text(choice),
@@ -590,7 +594,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     }).toList();
                   },
                 ),
-                //...pages.elementAt(_selectedIndex).appBarActions,
               ],
               bottom: pages.elementAt(_selectedIndex).bottom,
             ),
@@ -665,7 +668,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
     if (choice == Constants.Help) {
       // App demo
       navigateToAppDemo();
-    } else if (choice == Constants.CreateYangGang) {
+    } else if (choice == timebankString) {
       createSubTimebankOverflow(context);
     }
   }
@@ -700,9 +703,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
           });
     } else if (pages.elementAt(_selectedIndex).title == "Volunteer") {
       if (this.tabValue == 0) {
+        var floatButtonTitle = FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Create Yang Gang Request";
         return FloatingActionButton.extended(
             label: Text(
-              "Create Yang Gang Request",
+              "Create $floatButtonTitle Request",
               style: TextStyle(fontSize: 11.0),
             ),
             foregroundColor: FlavorConfig.values.buttonTextColor,
@@ -1308,7 +1312,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
         });
   }
 
-  // Future<String>
+  String get timebankString {
+    var type = Flavor.APP == FlavorConfig.appFlavor ? "Timebank" : "Yang gang";
+    return 'Create a $type';
+  }
 
   void createSubTimebank(BuildContext context) {
     Navigator.of(context).pop();
