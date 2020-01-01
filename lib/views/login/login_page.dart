@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                                   if (user != null) _processLogin(user);
                                 },
                                 child: Text(
-                                  "SignUp",
+                                  "Sign Up",
                                   style: TextStyle(
                                       color: Theme.of(context).accentColor),
                                 ))
@@ -166,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                                         signInWithEmailAndPassword();
                                       },
                                 child: Center(
-                                  child: Text("SIGNIN",
+                                  child: Text("Sign in",
                                       style: TextStyle(
                                           color: FlavorConfig
                                               .values.buttonTextColor,
@@ -494,7 +494,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text("Sign in with"),
+            Text("or Sign in with"),
             horizontalLine()
           ],
         ),

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,6 +13,7 @@ import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sevaexchange/splash_view.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -91,6 +93,7 @@ class _RegisterPageState extends State<RegisterPage>
                             _formFields,
                             SizedBox(height: 16),
                             registerButton,
+                            signUpWithGoogle
                           ],
                         ))))
           ],
@@ -512,5 +515,117 @@ class _RegisterPageState extends State<RegisterPage>
         ],
       ),
     );
+  }
+
+
+  // signup with google flow
+  Widget get signUpWithGoogle {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            horizontalLine(),
+            Text("or Signup in with"),
+            horizontalLine()
+          ],
+        ),
+        SizedBox(
+          height: ScreenUtil.getInstance().setHeight(20),
+        ),
+        Material(
+          color: Colors.white,
+          shape: CircleBorder(),
+          child: InkWell(
+            customBorder: CircleBorder(),
+            onTap: useGoogleSignIn,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 24,
+                width: 24,
+                child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget horizontalLine() => Padding(
+    padding: EdgeInsets.symmetric(horizontal: 16.0),
+    child: Container(
+      width: ScreenUtil.getInstance().setWidth(120),
+      height: 1.0,
+      color: Colors.black26.withOpacity(.2),
+    ),
+  );
+
+  void useGoogleSignIn() async {
+    isLoading = true;
+    Auth auth = AuthProvider.of(context).auth;
+    UserModel user;
+    try {
+      user = await auth.handleGoogleSignIn();
+    } on PlatformException catch (erorr) {
+      print(erorr);
+      handlePlatformException(erorr);
+    } on Exception catch (error) {
+      print(error);
+    }
+    isLoading = false;
+    _processLogin(user);
+  }
+  void _processLogin(UserModel userModel) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => SplashView(),
+      ),
+    );
+  }
+  void handlePlatformException(PlatformException error) {
+    print(error.message);
+    if (error.message.contains("no user record")) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.message),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () {
+              _scaffoldKey.currentState.hideCurrentSnackBar();
+            },
+          ),
+        ),
+      );
+    } else if (error.message.contains("password")) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.message),
+          action: SnackBarAction(
+            label: 'Change password',
+            onPressed: () {
+              resetPassword(email);
+              _scaffoldKey.currentState.hideCurrentSnackBar();
+            },
+          ),
+        ),
+      );
+    }
+  }
+  Future<void> resetPassword(String email) async {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email)
+        .then((onValue) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("We\'ve sent the reset link to your email address"),
+        action: SnackBarAction(
+          label: 'Dismiss',
+          onPressed: () {
+            _scaffoldKey.currentState.hideCurrentSnackBar();
+          },
+        ),
+      ));
+    });
   }
 }
