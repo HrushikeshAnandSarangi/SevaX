@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'EULAgreement.dart';
 
 class EulaAgreement extends StatefulWidget {
@@ -36,7 +37,9 @@ class EulaAgreementState extends State<EulaAgreement> {
                         padding: EdgeInsets.all(10.0),
                       ),
                       Text(
-                        EULAgreementScript.EULA_AGREEMENT,
+                        FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                            ? EULAgreementScript.EULA_AGREEMENT
+                            : EULAgreementScript.SEVA_EULA_AGREEMENT,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 17.0,

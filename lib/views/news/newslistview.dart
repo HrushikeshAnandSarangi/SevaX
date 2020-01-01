@@ -233,7 +233,7 @@ class NewsListState extends State<NewsList> {
                       List<NewsModel> newsList = snapshot.data;
 
                       newsList = filterBlockedContent(newsList, context);
-
+                      print("Size of incloming docs ${newsList.length}");
                       if (newsList.length == 0) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
