@@ -59,6 +59,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   var currSelectedState = false;
   var selectedUserModelIndex = -1;
   var _isLoading = false;
+  var nullcount = 0;
 
   var _lastReached = false;
 
@@ -85,11 +86,12 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange && !_isLoading) {
-
-      loadNextBatchItems().then((onValue){
-        setState(() {
+      if(!_lastReached){
+        loadNextBatchItems().then((onValue){
+          setState(() {
+          });
         });
-      });
+      }
     }
   }
 
@@ -163,7 +165,13 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget getContent(BuildContext context, TimebankModel model) {
-    if (_avtars.length == 0 && _showMoreItems && !_isLoading) {
+    if(_avtars.length == 0 && _lastReached) {
+      return Center(
+        child: Text(
+          'No volunteers present'
+        ),
+      );
+    } else if (_avtars.length == 0 && _showMoreItems && !_isLoading) {
       return circularBar;
     } else {
       return listViewWidget;
@@ -215,11 +223,33 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     return getUserWidget(user, context);
   }
 
+  void checkAndStopLoading() {
+    nullcount++;
+    _isLoading = false;
+    _pageIndex = _pageIndex + 1;
+    if(nullcount>=3){
+      setState(() {
+        _lastReached = true;
+      });
+      return;
+    }
+    loadNextBatchItems();
+  }
+
   Future loadNextBatchItems() async {
     if (!_isLoading && !_lastReached) {
       _isLoading = true;
       FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex, SevaCore.of(context).loggedInUser.email).then((onValue) {
+        if(onValue==null){
+          checkAndStopLoading();
+          return;
+        }
         var userModelList = onValue.userModelList;
+        if(userModelList==null || userModelList.length == 0){
+          checkAndStopLoading();
+          return;
+        }
+        nullcount = 0;
         var addItems = userModelList.map((memberObject) {
           var member = memberObject.sevaUserID;
           if (widget.listOfMembers != null &&
@@ -239,7 +269,6 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
             },
           );
         }).toList();
-
         if (addItems.length > 0) {
           var lastIndex = _avtars.length;
           setState(() {
@@ -256,8 +285,10 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
             _indexSoFar = _indexSoFar + iterationCount;
             _pageIndex = _pageIndex + 1;
           });
+        }else{
+          checkAndStopLoading();
+          return;
         }
-
         _isLoading = false;
         setState(() {
           _lastReached = onValue.lastPage;
