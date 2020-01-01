@@ -440,12 +440,18 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
           .then((onValue) {
         var userModelList = onValue.userModelList;
         if (userModelList == null || userModelList.length == 0) {
-          if (userModelList == null) {
+//          if (userModelList == null) {
             nullCount++;
-          }
+//          }
           _isLoading = false;
           _pageIndex = _pageIndex + 1;
-          loadNextMembers();
+          if(nullCount<3){
+            loadNextMembers();
+          }else{
+            setState(() {
+              _lastReached = true;
+            });
+          }
         } else {
           nullCount = 0;
           var addItems = userModelList.map((memberObject) {
