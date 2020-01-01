@@ -341,8 +341,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
                       //adding some members for humanity first
                       List<String> arrayOfSelectedMembers = List();
-                      selectedUsers
-                          .forEach((k, v) => arrayOfSelectedMembers.add(k));
+
+                      if (selectedUsers != null) {
+                        selectedUsers
+                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
+                      }
                       requestModel.approvedUsers = arrayOfSelectedMembers;
                       //adding some members for humanity first
                       if (_formKey.currentState.validate()) {
@@ -431,9 +434,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           onActivityResult = await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
-                SevaCore.of(context).loggedInUser.currentTimebank,
-                selectedUsers,
-                SevaCore.of(context).loggedInUser.email,
+                timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                userEmail: SevaCore.of(context).loggedInUser.email,
+                userSelected: selectedUsers,
               ),
             ),
           );

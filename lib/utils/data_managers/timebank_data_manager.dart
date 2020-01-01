@@ -225,6 +225,8 @@ Stream<List<TimebankModel>> getChildTimebanks(
     StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
       handleData: (snapshot, reportsList) {
         List<TimebankModel> modelList = [];
+
+        
         snapshot.documents.forEach(
           (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);

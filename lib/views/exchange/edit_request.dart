@@ -21,7 +21,12 @@ class EditRequest extends StatefulWidget {
   final String timebankId;
   RequestModel requestModel;
 
-  EditRequest({Key key, this.isOfferRequest, this.offer, this.timebankId,this.requestModel})
+  EditRequest(
+      {Key key,
+      this.isOfferRequest,
+      this.offer,
+      this.timebankId,
+      this.requestModel})
       : super(key: key);
 
   @override
@@ -57,7 +62,8 @@ class RequestEditForm extends StatefulWidget {
   final OfferModel offer;
   final String timebankId;
   RequestModel requestModel;
-  RequestEditForm({this.isOfferRequest, this.offer, this.timebankId,this.requestModel});
+  RequestEditForm(
+      {this.isOfferRequest, this.offer, this.timebankId, this.requestModel});
 
   @override
   RequestEditFormState createState() {
@@ -86,17 +92,16 @@ class RequestEditFormState extends State<RequestEditForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
-   this.location = widget.requestModel.location;
-   //this.selectedUsers = widget.requestModel.approvedUsers;
+    this.location = widget.requestModel.location;
+    //this.selectedUsers = widget.requestModel.approvedUsers;
   }
 
   @override
   void didChangeDependencies() {
-
-      this.requestModel.email = widget.requestModel.email;
-      this.requestModel.fullName = widget.requestModel.fullName;
-      this.requestModel.photoUrl = widget.requestModel.photoUrl;
-      this.requestModel.sevaUserId = widget.requestModel.sevaUserId;
+    this.requestModel.email = widget.requestModel.email;
+    this.requestModel.fullName = widget.requestModel.fullName;
+    this.requestModel.photoUrl = widget.requestModel.photoUrl;
+    this.requestModel.sevaUserId = widget.requestModel.sevaUserId;
 
 //    FirestoreManager.getUserForIdStream(
 //        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID)
@@ -114,10 +119,12 @@ class RequestEditFormState extends State<RequestEditForm> {
     TextStyle textStyle = Theme.of(context).textTheme.title;
     var startDate = getUpdatedDateTimeAccToUserTimezone(
         timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-        dateTime:DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestStart));
+        dateTime: DateTime.fromMillisecondsSinceEpoch(
+            widget.requestModel.requestStart));
     var endDate = getUpdatedDateTimeAccToUserTimezone(
         timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
-        dateTime:DateTime.fromMillisecondsSinceEpoch(widget.requestModel.requestEnd));
+        dateTime: DateTime.fromMillisecondsSinceEpoch(
+            widget.requestModel.requestEnd));
     return Form(
       key: _formKey,
       child: Container(
@@ -144,10 +151,9 @@ class RequestEditFormState extends State<RequestEditForm> {
               ),
               Text(' '),
               OfferDurationWidget(
-                title: ' Request Duration*',
-                startTime: startDate,
-                endTime: endDate
-              ),
+                  title: ' Request Duration*',
+                  startTime: startDate,
+                  endTime: endDate),
               SizedBox(height: 8),
 
               // FlatButton(
@@ -353,7 +359,6 @@ class RequestEditFormState extends State<RequestEditForm> {
                             OfferDurationWidgetState.endtimestamp;
                         widget.requestModel.location = location;
 
-
                         //adding some members for humanity first
 //                        List<String> arrayOfSelectedMembers = List();
 //                        selectedUsers
@@ -363,7 +368,8 @@ class RequestEditFormState extends State<RequestEditForm> {
                         //adding some members for humanity first
 
                         if (_formKey.currentState.validate()) {
-                          await this.updateRequest(requestModel: widget.requestModel);
+                          await this
+                              .updateRequest(requestModel: widget.requestModel);
 
 //                          if (widget.isOfferRequest == true) {
 //                            OfferModel offer = widget.offer;
@@ -440,10 +446,11 @@ class RequestEditFormState extends State<RequestEditForm> {
 
           onActivityResult = await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
-                  SevaCore.of(context).loggedInUser.currentTimebank,
-                  selectedUsers,
-                SevaCore.of(context).loggedInUser.email,
-              )));
+                    timebankId:
+                        SevaCore.of(context).loggedInUser.currentTimebank,
+                    userSelected: selectedUsers,
+                    userEmail: SevaCore.of(context).loggedInUser.email,
+                  )));
 
           if (onActivityResult != null &&
               onActivityResult.containsKey("membersSelected")) {
@@ -453,7 +460,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 memberAssignment = "Assign to volunteers";
               else
                 memberAssignment =
-                "${selectedUsers.length} volunteers selected";
+                    "${selectedUsers.length} volunteers selected";
             });
             print("Data is present Selected users ${selectedUsers.length}");
           } else {
@@ -480,7 +487,7 @@ class RequestEditFormState extends State<RequestEditForm> {
         .document(requestModel.id)
         .updateData(requestModel.toMap());
   }
-  
+
   Future _getLocation() async {
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,

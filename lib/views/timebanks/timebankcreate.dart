@@ -295,14 +295,19 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   padding: EdgeInsets.only(top: 8.0),
                   child: FlatButton(
                     onPressed: () async {
-                      print(" Selected users before ${selectedUsers.length}");
+                      print(
+                          " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
 
                       onActivityResult = await Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => SelectMembersInGroup(
-                            SevaCore.of(context).loggedInUser.currentTimebank,
-                            selectedUsers,
-                            SevaCore.of(context).loggedInUser.email,
+                            timebankId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentTimebank,
+                            userSelected: selectedUsers == null
+                                ? selectedUsers = HashMap()
+                                : selectedUsers,
+                            userEmail: SevaCore.of(context).loggedInUser.email,
                           ),
                         ),
                       );

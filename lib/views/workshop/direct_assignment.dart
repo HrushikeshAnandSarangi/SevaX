@@ -19,7 +19,9 @@ class SelectMembersInGroup extends StatefulWidget {
   HashMap<String, UserModel> listOfMembers = HashMap();
 
   SelectMembersInGroup(
-      String timebankId, HashMap<String, UserModel> userSelected,String userEmail) {
+      {String timebankId,
+      HashMap<String, UserModel> userSelected,
+      String userEmail}) {
     this.timebankId = timebankId;
     this.userSelected = userSelected;
     this.userEmail = userEmail;
@@ -45,12 +47,14 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
 
-  _SelectMembersInGroupState(){
-    _timebankId = FlavorConfig.values.timebankName == "Yang 2020" ? FlavorConfig.values.timebankId : widget.timebankId;
+  _SelectMembersInGroupState() {
+    _timebankId = FlavorConfig.values.timebankName == "Yang 2020"
+        ? FlavorConfig.values.timebankId
+        : widget.timebankId;
   }
 
   @override
-  void initState(){
+  void initState() {
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
     super.initState();
@@ -62,24 +66,22 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     super.dispose();
   }
 
-
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange && !_isLoading) {
-
-      loadNextBatchItems().then((onValue){
-        setState(() {
-        });
+        !_controller.position.outOfRange &&
+        !_isLoading) {
+      loadNextBatchItems().then((onValue) {
+        setState(() {});
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if(_avtars.length==0) {
+    if (_avtars.length == 0) {
       loadNextBatchItems();
     }
-    var finalWidget =  Scaffold(
+    var finalWidget = Scaffold(
       appBar: AppBar(
         title: Text(
           "Select volunteers",
@@ -105,7 +107,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         ],
       ),
       body: getList(
-        timebankId: FlavorConfig.values.timebankName == "Yang 2020" ? FlavorConfig.values.timebankId : widget.timebankId,
+        timebankId: FlavorConfig.values.timebankName == "Yang 2020"
+            ? FlavorConfig.values.timebankId
+            : widget.timebankId,
       ),
     );
 
@@ -135,19 +139,20 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     );
   }
 
-  Widget get listViewWidget{
+  Widget get listViewWidget {
     return ListView.builder(
       controller: _controller,
       itemCount: fetchItemsCount(),
-      itemBuilder: (BuildContext ctxt, int index) =>
-          Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: index < _avtars.length ? _avtars[index] : Container(
-              width: double.infinity,
-              height: 80,
-              child: circularBar,
-            ),
-          ),
+      itemBuilder: (BuildContext ctxt, int index) => Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: index < _avtars.length
+            ? _avtars[index]
+            : Container(
+                width: double.infinity,
+                height: 80,
+                child: circularBar,
+              ),
+      ),
     );
   }
 
@@ -167,18 +172,18 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     return getUserWidget(user, context);
   }
 
-
   Future loadNextBatchItems() async {
-    if(!_isLoading && !_lastReached) {
+    if (!_isLoading && !_lastReached) {
       _isLoading = true;
-      FirestoreManager.getUsersForTimebankId(_timebankId, _pageIndex,widget.userEmail).then((onValue) {
+      FirestoreManager.getUsersForTimebankId(
+              _timebankId, _pageIndex, widget.userEmail)
+          .then((onValue) {
         var userModelList = onValue.userModelList;
-        if(userModelList==null||userModelList.length == 0){
+        if (userModelList == null || userModelList.length == 0) {
           _isLoading = false;
           _pageIndex = _pageIndex + 1;
           loadNextBatchItems();
-        }
-        else{
+        } else {
           var addItems = userModelList.map((memberObject) {
             var member = memberObject.sevaUserID;
             if (widget.listOfMembers != null &&
@@ -198,12 +203,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               },
             );
           }).toList();
-          if(addItems.length>0) {
+          if (addItems.length > 0) {
             var lastIndex = _avtars.length;
             setState(() {
               var iterationCount = 0;
-              for(int i=0;i<addItems.length;i++) {
-                if(emailIndexMap[userModelList[i].email]==null) { // Filtering duplicates
+              for (int i = 0; i < addItems.length; i++) {
+                if (emailIndexMap[userModelList[i].email] == null) {
+                  // Filtering duplicates
                   _avtars.add(addItems[i]);
                   indexToModelMap[lastIndex] = userModelList[i];
                   emailIndexMap[userModelList[i].email] = lastIndex++;
@@ -230,18 +236,16 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
             " User selected" +
             SevaCore.of(context).loggedInUser.email);
 
-
-        if (!widget.userSelected.containsKey(user.email)){
+        if (!widget.userSelected.containsKey(user.email)) {
           widget.userSelected[user.email] = user;
           currSelectedState = true;
-        }
-        else{
+        } else {
           widget.userSelected.remove(user.email);
           currSelectedState = false;
         }
         selectedUserModelIndex = emailIndexMap[user.email];
         setState(() {
-          if(selectedUserModelIndex!=-1) {
+          if (selectedUserModelIndex != -1) {
             updateModelIndex(selectedUserModelIndex).then((onValue) {
               _avtars[selectedUserModelIndex] = onValue;
               selectedUserModelIndex = -1;
@@ -250,9 +254,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         });
       },
       child: Card(
-        color: isSelected(user.email)
-            ? Colors.green
-            : Colors.white,
+        color: isSelected(user.email) ? Colors.green : Colors.white,
         child: ListTile(
           leading: CircleAvatar(
             backgroundImage: NetworkImage(user.photoURL),
@@ -274,8 +276,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     );
   }
 
-  bool isSelected(String email){
-    return widget.userSelected.containsKey(email) || (currSelectedState && selectedUserModelIndex == emailIndexMap[email]);
+  bool isSelected(String email) {
+    return widget.userSelected.containsKey(email) ||
+        (currSelectedState && selectedUserModelIndex == emailIndexMap[email]);
   }
 
   Color getTextColorForSelectedItem(String email) {
