@@ -29,7 +29,7 @@ class SelectMembersInGroup extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _SelectMembersInGroupState();
+    return _SelectMembersInGroupState(timebankId);
   }
 }
 
@@ -47,10 +47,10 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
 
-  _SelectMembersInGroupState() {
+  _SelectMembersInGroupState(String timebankId) {
     _timebankId = FlavorConfig.values.timebankName == "Yang 2020"
         ? FlavorConfig.values.timebankId
-        : widget.timebankId;
+        : timebankId;
   }
 
   @override
