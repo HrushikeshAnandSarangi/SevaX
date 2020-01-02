@@ -164,8 +164,9 @@ class RequestStatusViewState extends State<RequestStatusView> {
 //  }
 
   Future sendMail() async {
+
     final response1 = await http.get(
-        'https://us-central1-sevaexchange.cloudfunctions.net/requests_members?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
+        'https://us-central1-sevaxproject4sevax.cloudfunctions.net/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
 
     if (response1.statusCode == 200) {
       print(response1);
