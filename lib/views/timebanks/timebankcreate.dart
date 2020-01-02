@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
@@ -22,14 +23,18 @@ class TimebankCreate extends StatelessWidget {
   TimebankCreate({@required this.timebankId});
   @override
   Widget build(BuildContext context) {
-    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your ${FlavorConfig.values.timebankTitle}' : 'Create a ${FlavorConfig.values.timebankTitle}';
+    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your Community' : 'Create a ${FlavorConfig.values.timebankTitle}';
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        elevation: 0.5,
+        backgroundColor: Color(0xFFFFFFFF),
+        leading: BackButton(color: Colors.black54),
         title: Text(
           title,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black54),
         ),
-        centerTitle: false,
+//        centerTitle: false,
       ),
       body: TimebankCreateForm(
         timebankId: timebankId,
@@ -37,7 +42,6 @@ class TimebankCreate extends StatelessWidget {
     );
   }
 }
-//FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Codes" : "Timebank codes"
 
 // Create a Form Widget
 class TimebankCreateForm extends StatefulWidget {
@@ -71,6 +75,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
+    fetchCurrentlocation();
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -106,7 +111,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.location =
-    location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    location == null ? null : location;
 
     createTimebank(timebankModel: timebankModel);
 
@@ -215,40 +220,31 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           headingText('Is this pin at a right place?'),
 
-          Container(
-//            margin: EdgeInsets.only(left: 20),
-            child: Row(
-              children: <Widget>[
-
-                FlatButton.icon(
-                  icon: Icon(Icons.add_location),
-                  label: Text(
-                    "",
+          Center(
+            child: FlatButton.icon(
+              icon: Icon(Icons.add_location),
+              label: Text(
+                selectedAddress == null || selectedAddress.isEmpty
+                    ? 'Add Location'
+                    : selectedAddress,
+              ),
+              color: Colors.grey[200],
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<GeoFirePoint>(
+                    builder: (context) => LocationPicker(
+                      selectedLocation: location,
+                    ),
                   ),
-                  color: Colors.grey[200],
-//              onPressed: () {
-//                Navigator.push(
-//                  context,
-//                  MaterialPageRoute<GeoFirePoint>(
-//                    builder: (context) => LocationPicker(
-//                      selectedLocation: widget.geoFirePointLocation,
-//                    ),
-//                  ),
-//                ).then((point) {
-//                  if (point != null) {
-//                    widget.geoFirePointLocation = point;
-//                    print("Setting data ");
-//                    geoFirePointLocationCallback(point);
-//                  }
-//                  // _getLocation();
-//                });
-//                // imagePicker.showDialog(context);
-//              },
-                ),
-              ],
+                ).then((point) {
+                  if (point != null) location = point;
+                  _getLocation();
+                  log('ReceivedLocation: $selectedAddress');
+                });
+              },
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Container(
@@ -284,7 +280,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             side: BorderSide(color: Colors.red)
                         ),
                         child: Text(
-                          'Create ${FlavorConfig.values.timebankTitle}',
+                          'Create Community',
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),
                         ),
@@ -692,5 +688,28 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     } else {
       Text(globals.addedMembersId.toString());
     }
+  }
+
+  void fetchCurrentlocation(){
+    Location().getLocation().then((onValue){
+      print("Location1:$onValue");
+//      setState(() {
+        location = GeoFirePoint(onValue.latitude,onValue.longitude);
+      LocationUtility().getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      ).then((address){
+        print("Hello");
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+//      log('_getLocation: $address');
+//      setState(() {
+//        this.selectedAddress = address;
+//      });
+//        _getLocation();
+//      });
+    });
   }
 }
