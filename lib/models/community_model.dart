@@ -109,12 +109,13 @@ class PaymentRecord extends DataModel {
 class CommunityModel extends DataModel {
   String id;
   String name;
-  String primaryEmail;
+  String primary_email;
   BillingAddress billing_address;
   List<PaymentRecord> payment_records;
   String logo_url;
   String cover_url;
-  String creatorEmail;
+  String creator_email;
+  String created_by;
   String created_at;
   List<String> timebanks;
   List<String> admins;
@@ -124,12 +125,13 @@ class CommunityModel extends DataModel {
   CommunityModel({
     this.id,
     this.name,
-    this.primaryEmail,
+    this.primary_email,
     this.billing_address,
     this.payment_records,
     this.logo_url,
     this.cover_url,
-    this.creatorEmail,
+    this.creator_email,
+    this.created_by,
     this.created_at,
     this.timebanks = const <String>[],
     this.admins = const <String>[],
@@ -145,7 +147,7 @@ class CommunityModel extends DataModel {
       this.name = map['name'];
     }
     if (map.containsKey('primaryEmail')) {
-      this.primaryEmail = map['primaryEmail'];
+      this.primary_email = map['primary_email'];
     }
     if (map.containsKey('billing_address')) {
       this.billing_address = new BillingAddress.fromMap(map['billing_address'].cast<String, dynamic>());
@@ -159,8 +161,11 @@ class CommunityModel extends DataModel {
     if (map.containsKey('cover_url')) {
       this.cover_url = map['cover_url'];
     }
-    if (map.containsKey('creatorEmail')) {
-      this.creatorEmail = map['creatorEmail'];
+    if (map.containsKey('creator_email')) {
+      this.creator_email = map['creator_email'];
+    }
+    if(map.containsKey('created_by')) {
+      this.created_by = map['created_by'];
     }
     if (map.containsKey('created_at')) {
       this.created_at = map['created_at'];
@@ -194,8 +199,8 @@ class CommunityModel extends DataModel {
     if (this.name != null && this.name.isNotEmpty) {
       object['name'] = this.name;
     }
-    if (this.primaryEmail != null && this.primaryEmail.isNotEmpty) {
-      object['primaryEmail'] = this.primaryEmail;
+    if (this.primary_email != null && this.primary_email.isNotEmpty) {
+      object['primary_email'] = this.primary_email;
     }
     if (this.billing_address != null) {
       object['billing_address'] = this.billing_address.toMap();
@@ -207,11 +212,14 @@ class CommunityModel extends DataModel {
     if (this.cover_url != null && this.cover_url.isNotEmpty) {
       object['cover_url'] = this.cover_url;
     }
-    if (this.creatorEmail != null && this.creatorEmail.isNotEmpty) {
-      object['creatorEmail'] = this.creatorEmail;
+    if (this.creator_email != null && this.creator_email.isNotEmpty) {
+      object['creator_email'] = this.creator_email;
     }
     if (this.created_at != null) {
       object['created_at'] = this.created_at;
+    }
+    if (this.created_by != null) {
+      object['created_by'] = this.created_by;
     }
     if (this.timebanks != null) {
       object['timebanks '] = this.timebanks;
@@ -232,10 +240,14 @@ class CommunityModel extends DataModel {
 
 class CommunityListModel {
   List<CommunityModel> communities = [];
+  bool loading  = false;
   CommunityListModel();
 
   add(community) {
     this.communities.add(community);
+  }
+  removeall() {
+    this.communities = [];
   }
   List<CommunityModel> get getCommunities => communities;
 }

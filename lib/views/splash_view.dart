@@ -542,9 +542,9 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToBioView(loggedInUser);
     }
     print(loggedInUser.communities);
-//    if (loggedInUser.communities == null) {
-//      await _navigateToFindCommunitiesView(loggedInUser);
-//    }
+    if (loggedInUser.communities == null) {
+      await _navigateToFindCommunitiesView(loggedInUser);
+    }
 
 
     // if ()
