@@ -222,9 +222,11 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           }
           _isLoading = false;
         }
-        setState(() {
-          _lastReached = onValue.lastPage;
-        });
+        if(onValue.lastPage){
+          setState(() {
+            _lastReached = onValue.lastPage;
+          });
+        }
       });
     }
   }
