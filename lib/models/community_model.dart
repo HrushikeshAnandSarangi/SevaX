@@ -240,10 +240,14 @@ class CommunityModel extends DataModel {
 
 class CommunityListModel {
   List<CommunityModel> communities = [];
+  bool loading  = false;
   CommunityListModel();
 
   add(community) {
     this.communities.add(community);
+  }
+  removeall() {
+    this.communities = [];
   }
   List<CommunityModel> get getCommunities => communities;
 }
