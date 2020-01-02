@@ -157,21 +157,45 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 ))));
   }
   Widget buildList(data) {
-    return GridView.builder(
+    return Padding(
+        padding:
+        EdgeInsets.only(left: 0, right: 0, top: 12.0),
+        child: ListView.builder(
         itemCount: data.communities.length,
-        gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         itemBuilder: (BuildContext context, int index) {
-          print(data.communities[index]);
           return ListTile(
-              onTap: goToNext(data),
-            title: Text(data.communities[index].name),
-            subtitle: Text(data.communities[index].primaryEmail),
-            trailing: Text("Hai"),
+            onTap: goToNext(data),
+            title: Text(data.communities[index].name,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w700
+                )),
+            subtitle: Text("Created by " + data.communities[index].created_by),
+            trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  RaisedButton(
+                    onPressed: () {
+                      print('clicked');
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Text('Join'),
+                        ),
+                      ],
+                    ),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    shape: StadiumBorder(),
+                  )
+                ]),
           );
-        });
+        })
+    );
   }
-
   goToNext(data) {
     print(data);
   }
