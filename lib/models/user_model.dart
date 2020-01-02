@@ -12,12 +12,15 @@ class UserModel extends DataModel {
   String email;
   String fullname;
   List<String> interests;
+  List<String> skills;
+  List<String> communities;
+  String currentCommunity;
   String calendar;
   List<String> membershipTimebanks;
   List<String> membershipCampaigns;
   String photoURL;
   String sevaUserID;
-  List<String> skills;
+
   num currentBalance;
   String timezone;
   String otp;
@@ -69,6 +72,8 @@ class UserModel extends DataModel {
     this.completedIntro,
     this.blockedBy,
     this.currentPosition,
+    this.currentCommunity,
+    this.communities
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -98,6 +103,11 @@ class UserModel extends DataModel {
     } else {
       this.blockedMembers = List();
       // print("Blocked Data not present");
+    }
+    if (map.containsKey('communities')) {
+      //print("Blocked Data present");
+      List<String> communities = List.castFrom(map['communities']);
+      this.communities = communities;
     }
 
     if (map.containsKey('blockedBy')) {
@@ -226,6 +236,12 @@ class UserModel extends DataModel {
     }
     if (this.skills != null && this.skills.isNotEmpty) {
       object['skills'] = this.skills;
+    }
+    if (this.communities != null && this.communities.isNotEmpty) {
+      object['communities'] = this.communities;
+    }
+    if (this.currentCommunity != null) {
+      object['currentCommunity'] = this.currentCommunity;
     }
 
     if (this.currentBalance != null) {

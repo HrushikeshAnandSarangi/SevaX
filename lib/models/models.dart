@@ -9,3 +9,4 @@ export 'offer_model.dart';
 export 'notifications_model.dart';
 export 'chat_model.dart';
 export 'message_model.dart';
+export 'community_model.dart';

@@ -12,6 +12,7 @@ import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
+import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/onboarding/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -540,6 +541,10 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+    print(loggedInUser.communities);
+//    if (loggedInUser.communities == null) {
+//      await _navigateToFindCommunitiesView(loggedInUser);
+//    }
 
 
     // if ()
@@ -740,6 +745,13 @@ class _SplashViewState extends State<SplashView> {
             loadingMessage = 'Skipping bio';
           },
         ),
+      ),
+    );
+  }
+  Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FindCommunitiesView()
       ),
     );
   }
