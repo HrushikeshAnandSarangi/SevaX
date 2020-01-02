@@ -22,18 +22,20 @@ class CommunityApiProvider {
 //  }
 
 
-  Future<CommunityListModel> searchCommunityByName(String name) async {
-    var communities = CommunityListModel();
-    await Firestore.instance
-        .collection('communities')
-        .where('name', isEqualTo: name)
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-        var community = CommunityModel.fromMap(documentSnapshot.data);
-        communities.add(community);
+  Future<CommunityListModel> searchCommunityByName(String name,CommunityListModel communities) async {
+    communities.removeall();
+    if (name.isNotEmpty && name.length > 4) {
+      await Firestore.instance
+          .collection('communities')
+          .where('name', isEqualTo: name)
+          .getDocuments()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+          var community = CommunityModel.fromMap(documentSnapshot.data);
+          communities.add(community);
+        });
       });
-    });
+    }
     return communities;
   }
 }
