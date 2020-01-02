@@ -699,7 +699,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         location.latitude,
         location.longitude,
       ).then((address){
-        print("Hello");
         setState(() {
           this.selectedAddress = address;
         });
