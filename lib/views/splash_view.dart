@@ -7,8 +7,10 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
+import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/bioview.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -560,7 +562,8 @@ class _SplashViewState extends State<SplashView> {
 //     }
 
     loadingMessage = 'We met before';
-    _navigateToCoreView(loggedInUser);
+    //_navigateToCoreView(loggedInUser);
+    _navigateToHome();
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {
@@ -575,7 +578,11 @@ class _SplashViewState extends State<SplashView> {
       builder: (context) => LoginPage(),
     ));
   }
-
+  Future _navigateToHome() async {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => Home_DashBoard(),
+    ));
+  }
   Future _navigateToUpdatePage(UserModel loggedInUser, bool forced) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => UpdateView(

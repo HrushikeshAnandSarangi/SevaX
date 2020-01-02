@@ -1,12 +1,53 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/views/core.dart';
 import '../../flavor_config.dart';
 import '../splash_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix2;
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/join_req_model.dart';
+import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/utils.dart' as prefix1;
+import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/timebanks/timebankedit.dart';
+import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
+import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
+import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
+import 'package:sevaexchange/views/timebanks/timebank_join_requests_view.dart';
+import 'package:sevaexchange/views/campaigns/campaignsview.dart';
+import 'package:sevaexchange/globals.dart' as globals;
+
+import 'package:sevaexchange/views/core.dart';
+
+import '../../flavor_config.dart';
+/*import 'edit_super_admins_view.dart';
+import 'edit_timebank_view.dart';*/
 
 class OnBoardWithTimebank extends StatefulWidget {
+  final String timebankId;
+
+  TimebankModel superAdminTimebankModel;
+
+  OnBoardWithTimebank({
+  @required this.timebankId,
+  @required this.superAdminTimebankModel,
+  });
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
 }
@@ -14,21 +55,66 @@ class OnBoardWithTimebank extends StatefulWidget {
 class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   // TRUE: register page, FALSE: login page
   TextEditingController controller = TextEditingController();
+  TimebankModel timebankModel;
+  //TimebankModel superAdminModel;
+  JoinRequestModel joinRequestModel = new JoinRequestModel();
+  JoinRequestModel getRequestData = new JoinRequestModel();
+  UserModel ownerModel;
+  String title = 'Loading';
+  String loggedInUser;
+  final formkey = GlobalKey<FormState>();
 
   bool hasError = false;
   String errorMessage1 = '';
 
-  @override
+
+  Future getJoinRequestData() async {
+    this.getRequestData = new JoinRequestModel();
+    this.getRequestData = await getRequestStatusForId(
+        timebankId: SevaCore.of(context).loggedInUser.currentTimebank);
+  }
+  Future<JoinRequestModel> getRequestStatusForId(
+      {@required String timebankId}) async {
+    assert(timebankId != null && timebankId.isNotEmpty,
+    "Seva UserId cannot be null or empty");
+
+    JoinRequestModel joinRequest;
+    await Firestore.instance
+        .collection('join_requests')
+        .where('entity_type', isEqualTo: 'Timebank')
+        .where('entity_id', isEqualTo: timebankId)
+        .where('user_id',
+        isEqualTo: SevaCore.of(context).loggedInUser.sevaUserID)
+        .getDocuments()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+        joinRequest = JoinRequestModel.fromMap(documentSnapshot.data);
+        print("joining data $joinRequest");
+      });
+    });
+    return joinRequest;
+  }
+
+    @override
   Widget build(BuildContext context) {
-    return Scaffold(
+      loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
+
+      return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            "Enter ${FlavorConfig.values.timebankTitle} code",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white),
-          ),
+        backgroundColor: Color(0xFFFFFFFF),
+        leading: BackButton(color: Colors.black54),
+        centerTitle: true,
+        title: Text(
+          'Join'+' My '+ 'team',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.black54,
+              fontSize: 20,
+              fontWeight: FontWeight.w500),
+
         ),
+
+
       ),
       body: Container(
         child: Column(
@@ -42,80 +128,300 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      left: 20.0, right: 20.0, top: 10.0, bottom: 25.0),
+                      left: 50.0, right: 50.0, top: 10.0, bottom: 25.0),
                   child: Text(
                     //'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
-                    'Enter the code you received from your local ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Chapter" : "Timebank"} Admin to see the volunteer opportunities.',
+                    'Enter the code you received from'+' team Name ' + 'loc Admin to see the volunteer opportunities.',
                     textDirection: TextDirection.ltr,
+                    textAlign: TextAlign.center,
+
                     style: TextStyle(
-                      fontSize: 17.0,
-                      color: Colors.black87,
+                      color: Colors.black54,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                Padding(
+                /* Padding(
                   padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
                   child: Text(
                     'Enter ${FlavorConfig.values.timebankTitle} code',
                     textDirection: TextDirection.ltr,
                     textAlign: TextAlign.left,
                   ),
-                ),
-                PinCodeTextField(
-                  autofocus: false,
-                  controller: controller,
-                  hideCharacter: false,
-                  highlight: true,
-                  keyboardType: TextInputType.text,
-                  highlightColor: Colors.blue,
-                  defaultBorderColor: Colors.black,
-                  hasTextBorderColor: Colors.green,
-                  maxLength: 5,
-                  hasError: hasError,
-                  maskCharacter: "•",
-                  onTextChanged: (text) {
-                    setState(() {
-                      hasError = false;
-                    });
-                  },
-                  onDone: (text) {
-                    // print("############################ DONE $text");
-                    //widget.onSelectedOtp(controller.text);
-                  },
-                  pinCodeTextFieldLayoutType:
+                ),*/
+                Column(
+
+                  children: <Widget>[
+                    PinCodeTextField(
+                      pinBoxWidth: 50,
+                      autofocus: false,
+                      controller: controller,
+                      hideCharacter: false,
+                      highlight: true,
+                      keyboardType: TextInputType.text,
+                      highlightColor: Colors.blue,
+                      defaultBorderColor: Colors.grey,
+                      hasTextBorderColor: Colors.green,
+                      maxLength: 6,
+                      hasError: hasError,
+                      maskCharacter: "•",
+                      onTextChanged: (text) {
+                        setState(() {
+                          hasError = false;
+                        });
+                      },
+                      onDone: (text) {
+                        // print("############################ DONE $text");
+                        //widget.onSelectedOtp(controller.text);
+                      },
+                      pinCodeTextFieldLayoutType:
                       PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
-                  wrapAlignment: WrapAlignment.start,
-                  pinBoxDecoration:
-                      ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-                  pinTextStyle: TextStyle(fontSize: 30.0),
-                  pinTextAnimatedSwitcherTransition:
+                      wrapAlignment: WrapAlignment.start,
+                      pinBoxDecoration:
+                      ProvidedPinBoxDecoration.underlinedPinBoxDecoration,
+                      pinTextStyle: TextStyle(fontSize: 20.0),
+                      pinTextAnimatedSwitcherTransition:
                       ProvidedPinBoxTextAnimation.scalingTransition,
-                  pinTextAnimatedSwitcherDuration: Duration(milliseconds: 100),
+                      pinTextAnimatedSwitcherDuration: Duration(milliseconds: 100),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10.0)),
+                    Visibility(
+                      child: Text(
+                        this.errorMessage1,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      visible: hasError,
+                    ),
+
+
+                  ],
                 ),
-                Visibility(
+                Text(
+                  'If you dont have a code, Click',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,),
+
+                ),
+                timebankModel.admins.contains(loggedInUser)
+                    ? Offstage()
+                    : timebankModel.members.contains(loggedInUser)
+                    ? Offstage()
+                :FlatButton(
                   child: Text(
-                    this.errorMessage1,
-                    style: TextStyle(color: Colors.red),
+                    'Request Join Link',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                      decoration: TextDecoration.underline,
+                      fontSize: 17,
+                    ),
                   ),
-                  visible: hasError,
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+                        // return object of type Dialog
+                        return AlertDialog(
+                          title: new Text(
+                              "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
+                          content: Form(
+                            key: formkey,
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                hintText: 'Reason',
+                                labelText: 'Reason',
+                                // labelStyle: textStyle,
+                                // labelStyle: textStyle,
+                                // labelText: 'Description',
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                  const BorderRadius.all(
+                                    const Radius.circular(
+                                        20.0),
+                                  ),
+                                  borderSide: new BorderSide(
+                                    color: Colors.black,
+                                    width: 1.0,
+                                  ),
+                                ),
+                              ),
+                              keyboardType:
+                              TextInputType.multiline,
+                              maxLines: 1,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter some text';
+                                }
+                                joinRequestModel.reason =
+                                    value;
+                              },
+                            ),
+                          ),
+                          actions: <Widget>[
+                            new FlatButton(
+                              child: new Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  fontSize: dialogButtonSize,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(dialogContext)
+                                    .pop();
+                              },
+                            ),
+                            // usually buttons at the bottom of the dialog
+                            new FlatButton(
+                              child: new Text(
+                                "Send Join Request",
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .accentColor,
+                                  fontSize: dialogButtonSize,
+                                ),
+                              ),
+                              onPressed: () async {
+                                joinRequestModel.userId =
+                                    loggedInUser;
+                                joinRequestModel
+                                    .timestamp = DateTime
+                                    .now()
+                                    .millisecondsSinceEpoch;
+
+                                joinRequestModel.entityId =
+                                    timebankModel.id;
+                                joinRequestModel.entityType =
+                                    EntityType.Timebank;
+                                joinRequestModel.accepted =
+                                null;
+
+                                if (formkey.currentState
+                                    .validate()) {
+                                  await createJoinRequest(
+                                      model:
+                                      joinRequestModel);
+
+                                  JoinRequestNotificationModel
+                                  joinReqModel =
+                                  JoinRequestNotificationModel(
+                                      timebankId:
+                                      timebankModel
+                                          .id,
+                                      timebankTitle:
+                                      timebankModel
+                                          .name);
+
+                                  NotificationsModel
+                                  notification =
+                                  NotificationsModel(
+                                    id: utils.Utils.getUuid(),
+                                    targetUserId:
+                                    timebankModel
+                                        .creatorId,
+                                    senderUserId:
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID,
+                                    type: prefix0
+                                        .NotificationType
+                                        .JoinRequest,
+                                    data:
+                                    joinReqModel.toMap(),
+                                  );
+                                  notification.timebankId =
+                                      FlavorConfig
+                                          .values.timebankId;
+
+                                  UserModel timebankCreator =
+                                  await FirestoreManager
+                                      .getUserForId(
+                                      sevaUserId:
+                                      timebankModel
+                                          .creatorId);
+
+                                  await Firestore.instance
+                                      .collection('users')
+                                      .document(
+                                      timebankCreator
+                                          .email)
+                                      .collection(
+                                      "notifications")
+                                      .document(
+                                      notification.id)
+                                      .setData(notification
+                                      .toMap());
+                                  // return;
+                                  Navigator.of(dialogContext)
+                                      .pop();
+                                }
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                 ),
               ],
             ),
+
+
             Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+
+                SizedBox(
+                  height: 70,
+                  width: 150,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: RaisedButton(
+                      onPressed: () {
+                        print('pressed Next');
+
+                        this._checkFields();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Join'),
+                          ),
+                        ],
+                      ),
+                      color: Theme.of(context).accentColor,
+                      textColor: FlavorConfig.values.buttonTextColor,
+                      shape: StadiumBorder(),
+                    ),
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(bottom: 40.0)),
+              ],
+            ),
+
+            /* Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(30.0),
                     ),
                     Padding(
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(30.0),
                     ),
                     Expanded(
                       child: RaisedButton(
+
                           child: Text(
-                            'NEXT',
+                            'Join',
                           ),
                           textColor: Colors.white,
                           color: Theme.of(context).primaryColor,
@@ -136,7 +442,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   padding: EdgeInsets.all(10.0),
                 )
               ],
-            )
+            )*/
           ],
         ),
       ),
@@ -144,10 +450,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   }
 
   void _checkFields() {
-    if (controller.text.length == 5) {
+    if (controller.text.length == 6) {
       verifyTimebankCode(timebankCode: controller.text);
     } else {
-      if (controller.text.length == 0) {
+      if (controller.text.length != 6) {
         setError(errorMessage: "Please enter PIN to verify");
       }
     }
@@ -176,7 +482,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 mode: TimeBankResponseModes.CODE_EXPIRED,
                 dialogTitle: "Code Expired!",
                 dialogSubTitle:
-                    "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!");
+                "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!");
           } else {
             //code matche and is alive
 
@@ -206,7 +512,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   mode: TimeBankResponseModes.ONBOARDED,
                   dialogTitle: "Awesome!",
                   dialogSubTitle:
-                      "You have been onboaded to ${timeBank.data['name'].toString()} successfully.\nYou can switch to this ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"}.");
+                  "You have been onboaded to ${timeBank.data['name'].toString()} successfully.\nYou can switch to this ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"}.");
               response.then((onValue) {
                 print("onboadrd");
                 Navigator.popUntil(
@@ -221,7 +527,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           mode: TimeBankResponseModes.NO_CODE,
           dialogTitle: "Not found!",
           dialogSubTitle:
-              "We were unable to find the ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code, please check and try again.",
+          "We were unable to find the ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code, please check and try again.",
         );
 
         selected.then((TimeBankResponseModes data) {
@@ -234,9 +540,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 // user defined function
   Future<TimeBankResponseModes> _showDialog(
       {TimeBankResponseModes mode,
-      String dialogTitle,
-      String dialogSubTitle,
-      BuildContext activityContext}) async {
+        String dialogTitle,
+        String dialogSubTitle,
+        BuildContext activityContext}) async {
     // flutter defined function
     return await showDialog<TimeBankResponseModes>(
       context: context,

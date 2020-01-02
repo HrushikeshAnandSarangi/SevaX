@@ -17,7 +17,7 @@ import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.HUMANITY_FIRST;
-
+  WidgetsFlutterBinding.ensureInitialized();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(
