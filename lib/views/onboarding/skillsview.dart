@@ -85,7 +85,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
         }
       });
       this.selectedInterests = <String>[].toSet();
-      //this.selectedInterests = SevaCore.of(context).loggedInUser.interests.toSet();
     });
   }
 
@@ -98,13 +97,38 @@ class _InterestViewNewState extends State<InterestViewNew> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          elevation: 0.5,
+          backgroundColor: Color(0xFFFFFFFF),
+          leading: BackButton(color: Colors.black54),
           title: Text(
             'Interests',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+                color: Colors.black54,
+                fontSize: 20,
+                fontWeight: FontWeight.w500),
           ),
         ),
         body: ListView(
-          children: <Widget>[ScrollExample(context), list()],
+          children: <Widget>[
+            Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 20.0),
+                child: Text(
+                  'We would like to personalize the experiance based on your interests',
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                )),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  child: list(),
+                ),
+              ),
+            ),
+          ],
         ),
         bottomNavigationBar: ButtonBar(
           children: <Widget>[
@@ -114,34 +138,45 @@ class _InterestViewNewState extends State<InterestViewNew> {
               },
               child: Text('Skip'),
             ),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                widget.onSelectedInterests(selectedInterests.toList());
-              },
-              child: Text(
-                'Next',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            SizedBox(
+                height: 35,
+                width: 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: RaisedButton(
+                    onPressed: () {
+                      widget.onSelectedInterests(interests.toList());
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Text('Next'),
+                        ),
+                      ],
+                    ),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    shape: StadiumBorder(),
+                  ),
+                ))
           ],
         ),
       ),
     );
   }
-
   Widget list() {
-    if (selectedInterests.length > 0) {
+    if (interests.length > 0) {
       return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Wrap(
+          spacing: 3.0,
+          runSpacing: 0.0,
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
-          children: selectedInterests.map((interest) {
-            //int index = interests.indexOf(interest);
-            final _random = new Random();
-            var element = colorList[_random.nextInt(colorList.length)];
-            return chip(interest, false, element);
+          children: interests.map((interest) {
+            return chip(interest, selectedInterests.contains(interest));
           }).toList(),
         ),
       );
@@ -151,108 +186,30 @@ class _InterestViewNewState extends State<InterestViewNew> {
     );
   }
 
-  Widget ScrollExample(BuildContext context) {
-    //final List<String> items = List.generate(5, (index) => "Item $index");
-//
-//  List<String> some = items.where((item) {
-//    item.isSelected = false;
-//  }).cast<String>().toList();
-
-    return Container(
-      child:
-          //Column(children: [
-          Padding(
-        padding: EdgeInsets.all(10.0),
-        child: TypeAheadField<String>(
-          getImmediateSuggestions: true,
-          textFieldConfiguration: TextFieldConfiguration(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(), hintText: 'Search for interests'),
-          ),
-          suggestionsCallback: (String pattern) async {
-            return interests
-                .where((item) =>
-                    item.toLowerCase().startsWith(pattern.toLowerCase()))
-                .toList();
-          },
-          itemBuilder: (context, String suggestion) {
-            return ListTile(
-              title: Text(suggestion),
-            );
-          },
-          onSuggestionSelected: (String suggestion) {
-            if (interests.contains(suggestion)) {
-              selectedInterests.add(suggestion);
-              //interests.remove(suggestion);
+  Widget chip(String value, bool selected) {
+    return FilterChip(
+        label: Text(value),
+        labelStyle: TextStyle(
+            color: FlavorConfig.values.buttonTextColor,
+            fontSize: 12.0,
+            fontWeight: FontWeight.bold),
+        selected: selected,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        backgroundColor: FlavorConfig.values.theme.splashColor,
+        onSelected: (isSelected) {
+          setState(() {
+            if (selectedInterests.contains(value)) {
+              selectedInterests.remove(value);
+            } else {
+              selectedInterests.add(value);
             }
-          },
-        ),
-      ),
-      //child: SizedBox(height: 500),
-      //]),
-    );
+          });
+        },
+        avatar: selected ? Icon(Icons.check) : null,
+        selectedColor: Color.fromRGBO(62, 80, 181, 1));
   }
-
-  Widget chip(String value, bool selected, Color color) {
-    return Container(
-      margin: EdgeInsets.all(4),
-      decoration: ShapeDecoration(
-        shape: StadiumBorder(
-          side: BorderSide(
-            color: color,
-            width: 1,
-          ),
-        ),
-      ),
-      child: Material(
-        color: Colors.white.withAlpha(0),
-        child: InkWell(
-          customBorder: StadiumBorder(),
-          onTap: () {
-            setState(() {
-              if (selectedInterests.contains(value)) {
-                selectedInterests.remove(value);
-              } else {
-                //selectedInterests.add(value);
-              }
-            });
-          },
-          child: Material(
-            elevation: selected ? 3 : 0,
-            shape: StadiumBorder(),
-            child: AnimatedContainer(
-              curve: Curves.easeIn,
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              duration: Duration(milliseconds: 250),
-              decoration: ShapeDecoration(
-                shape: StadiumBorder(),
-                color: selected ? color : null,
-              ),
-              child: AnimatedCrossFade(
-                duration: Duration(milliseconds: 250),
-                crossFadeState: selected
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-                firstChild: Text(
-                  value,
-                  style: TextStyle(
-                    color: getTextColor(color),
-                  ),
-                ),
-                secondChild: Text(
-                  value,
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Color getTextColor(Color materialColor) {
     List<MaterialColor> lights = [
       Colors.blue,
@@ -309,18 +266,6 @@ class Skill {
 }
 
 class _SkillViewNewState extends State<SkillViewNew> {
-//  List<String> skills = const [
-//    'Curators',
-//    'Developers',
-//    'Writer',
-//    'Advertisers',
-//    'Customer',
-//    'Sports',
-//    'Adventure',
-//    'Culture',
-//    'Baseball',
-//  ];
-
   List<String> skills = FlavorConfig.values.timebankName == "Yang 2020"
       ? const [
           "Data entry",
@@ -342,27 +287,6 @@ class _SkillViewNewState extends State<SkillViewNew> {
           'Culture',
           'Baseball',
         ];
-
-  // FlavorConfig.values.timebankName == "Yang 2020" ?
-
-//  -data entry
-//  -research
-//  -graphic design
-//  -coding/development
-//  -photography
-//  -videography
-//  -multilingual/translations
-  // List<Skill> skillsList = [
-  //   Skill('Curators', false),
-  //   Skill('Developers', false),
-  //   Skill('Writer', false),
-  //   Skill('Advertisers', false),
-  //   Skill('Customer', false),
-  //   Skill('Sports', false),
-  //   Skill('Adventure', false),
-  //   Skill('Culture', false),
-  //   Skill('Baseball', false)
-  // ];
   List<MaterialColor> colorList;
   Set<String> selectedSkills = <String>[].toSet();
 
@@ -373,56 +297,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
       return color;
     }).toList();
     colorList.shuffle();
-    //skillsList.add();
-//    skillsList.add(Skill('Curators',false));
     getSkillsForTimebank(timebankId: FlavorConfig.values.timebankId)
         .then((onValue) {
       setState(() {
         if (onValue != null && onValue.isNotEmpty) skills = onValue;
       });
     });
-  }
-
-  Widget ScrollExample(BuildContext context) {
-    //final List<String> items = List.generate(5, (index) => "Item $index");
-//
-//  List<String> some = items.where((item) {
-//    item.isSelected = false;
-//  }).cast<String>().toList();
-
-    return Container(
-      child:
-          //Column(children: [
-          Padding(
-        padding: EdgeInsets.all(10.0),
-        child: TypeAheadField<String>(
-          getImmediateSuggestions: true,
-          textFieldConfiguration: TextFieldConfiguration(
-            decoration: InputDecoration(
-                border: OutlineInputBorder(), hintText: 'Search for skills'),
-          ),
-          suggestionsCallback: (String pattern) async {
-            return skills
-                .where((item) =>
-                    item.toLowerCase().startsWith(pattern.toLowerCase()))
-                .toList();
-          },
-          itemBuilder: (context, String suggestion) {
-            return ListTile(
-              title: Text(suggestion),
-            );
-          },
-          onSuggestionSelected: (String suggestion) {
-            if (skills.contains(suggestion)) {
-              selectedSkills.add(suggestion);
-              //skills.remove(suggestion);
-            }
-          },
-        ),
-      ),
-      //child: SizedBox(height: 500),
-      //]),
-    );
   }
 
   @override
@@ -434,15 +314,37 @@ class _SkillViewNewState extends State<SkillViewNew> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
+          elevation: 0.5,
+          backgroundColor: Color(0xFFFFFFFF),
+          leading: BackButton(color: Colors.black54),
           title: Text(
             'Skills',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+                color: Colors.black54,
+                fontSize: 20,
+                fontWeight: FontWeight.w500),
           ),
         ),
         body: ListView(
           children: <Widget>[
-            ScrollExample(context),
-            list(),
+            Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 20.0),
+                child: Text(
+                  'Lets get to know more, Which skills do you know more',
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                )),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  child: list(),
+                ),
+              ),
+            ),
           ],
         ),
         bottomNavigationBar: ButtonBar(
@@ -453,16 +355,29 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
               child: Text('Skip'),
             ),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                widget.onSelectedSkills(selectedSkills.toList());
-              },
-              child: Text(
-                'Next',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            SizedBox(
+                height: 35,
+                width: 100,
+                child: Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: RaisedButton(
+                    onPressed: () {
+                      widget.onSelectedSkills(selectedSkills.toList());
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(0.0),
+                          child: Text('Next'),
+                        ),
+                      ],
+                    ),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    shape: StadiumBorder(),
+                  ),
+                ))
           ],
         ),
       ),
@@ -470,18 +385,16 @@ class _SkillViewNewState extends State<SkillViewNew> {
   }
 
   Widget list() {
-    if (selectedSkills.length > 0) {
+    if (skills.length > 0) {
       return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Wrap(
+          spacing: 3.0,
+          runSpacing: 0.0,
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
-          children: selectedSkills.map((skill) {
-            int index = skills.indexOf(skill);
-            //if (selectedSkills.contains(skill)) {
-            return chip(skill, false, colorList[index]);
-            // }
-            //return chip(skill, false, colorList[index]);
+          children: skills.map((skill) {
+            return chip(skill, selectedSkills.contains(skill));
           }).toList(),
         ),
       );
@@ -491,67 +404,31 @@ class _SkillViewNewState extends State<SkillViewNew> {
     );
   }
 
-  Widget chip(String value, bool selected, Color color) {
-    return Container(
-      margin: EdgeInsets.all(4),
-      decoration: ShapeDecoration(
-        shape: StadiumBorder(
-          side: BorderSide(
-            color: color,
-            width: 1,
-          ),
+  Widget chip(String value, bool selected) {
+    return FilterChip(
+        label: Text(value),
+        labelStyle: TextStyle(
+            color: FlavorConfig.values.buttonTextColor,
+            fontSize: 12.0,
+            fontWeight: FontWeight.bold),
+        selected: selected,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
         ),
-      ),
-      child: Material(
-        color: Colors.white.withAlpha(0),
-        child: InkWell(
-          customBorder: StadiumBorder(),
-          onTap: () {
-            setState(() {
-              if (selectedSkills.contains(value)) {
-                selectedSkills.remove(value);
-                //skills.remove(value);
-                //skills.add(value);
-              } else {
-                //selectedSkills.add(value);
-                //skills.remove(value);
-              }
-            });
-          },
-          child: Material(
-            elevation: selected ? 3 : 0,
-            shape: StadiumBorder(),
-            child: AnimatedContainer(
-              curve: Curves.easeIn,
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              duration: Duration(milliseconds: 250),
-              decoration: ShapeDecoration(
-                shape: StadiumBorder(),
-                color: selected ? color : null,
-              ),
-              child: AnimatedCrossFade(
-                duration: Duration(milliseconds: 250),
-                crossFadeState: selected
-                    ? CrossFadeState.showFirst
-                    : CrossFadeState.showSecond,
-                firstChild: Text(
-                  value,
-                  style: TextStyle(
-                    color: getTextColor(color),
-                  ),
-                ),
-                secondChild: Text(
-                  value,
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+        backgroundColor: FlavorConfig.values.theme.splashColor,
+        onSelected: (isSelected) {
+          setState(() {
+            print(value);
+            print(selectedSkills);
+            if (selectedSkills.contains(value)) {
+              selectedSkills.remove(value);
+            } else {
+              selectedSkills.add(value);
+            }
+          });
+        },
+        avatar: selected ? Icon(Icons.check) : null,
+        selectedColor: Color.fromRGBO(62, 80, 181, 1));
   }
 
   Color getTextColor(Color materialColor) {

@@ -9,10 +9,12 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/bioview.dart';
+import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
+import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/register_location.dart';
-import 'package:sevaexchange/views/skillsview.dart';
+import 'package:sevaexchange/views/onboarding/skillsview.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
@@ -86,7 +88,7 @@ class _SplashViewState extends State<SplashView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_initialized) {
-      loadingMessage = 'Loading Assets';
+      loadingMessage = 'Hang on tight';
       _precacheImage().then((_) {
         initiateLogin();
       });
@@ -120,9 +122,9 @@ class _SplashViewState extends State<SplashView> {
             colors: [
               // Color.fromARGB(255, 9, 46, 108),
               // Color.fromARGB(255, 88, 138, 224),
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor,
-              Theme.of(context).primaryColor
+              Theme.of(context).secondaryHeaderColor,
+              Theme.of(context).secondaryHeaderColor,
+              Theme.of(context).secondaryHeaderColor
             ],
             //stops: [0, 0.6, 1],
             begin: Alignment.topCenter,
@@ -156,7 +158,7 @@ class _SplashViewState extends State<SplashView> {
                   padding: const EdgeInsets.only(top: 32.0),
                   child: Text(
                     loadingMessage,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Theme.of(context).primaryColor),
                   ),
                 ),
               Container(
@@ -165,7 +167,7 @@ class _SplashViewState extends State<SplashView> {
                   height: 2,
                   width: 150,
                   child: LinearProgressIndicator(
-                    backgroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).splashColor,
                   ),
                 ),
               ),
@@ -376,7 +378,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initiateLogin() {
-    loadingMessage = 'Finding user docs';
+    loadingMessage = 'Checking, if we met before';
     _getLoggedInUserId()
         .then(handleLoggedInUserIdResponse)
         .catchError((error) {});
@@ -437,14 +439,14 @@ class _SplashViewState extends State<SplashView> {
 
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
-      loadingMessage = 'Initializing Login';
+      loadingMessage = 'Hang on tight';
       _navigateToLoginPage();
       return;
     }
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     if (loggedInUser == null) {
-      loadingMessage = 'Creating user documents';
+      loadingMessage = 'Welcome to the world of communities';
       _navigateToLoginPage();
       return;
     }
@@ -454,7 +456,7 @@ class _SplashViewState extends State<SplashView> {
       //check app version
       bool isLatestVersion =
           await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-        print("retrieved data");
+        print("We met before");
 
         String appName = packageInfo.appName;
         String packageName = packageInfo.packageName;
@@ -520,13 +522,12 @@ class _SplashViewState extends State<SplashView> {
       }
     }
 
+    if (!loggedInUser.completedIntro) {
+      await _navogateToIntro(loggedInUser);
+    }
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
-    }
-
-    if (!loggedInUser.completedIntro) {
-      await _navogateToIntro(loggedInUser);
     }
 
     if (loggedInUser.skills == null) {
@@ -540,6 +541,11 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+    print(loggedInUser.communities);
+//    if (loggedInUser.communities == null) {
+//      await _navigateToFindCommunitiesView(loggedInUser);
+//    }
+
 
     // if ()
 
@@ -553,7 +559,7 @@ class _SplashViewState extends State<SplashView> {
 //       await _navigateToWaitingView(loggedInUser);
 //     }
 
-    loadingMessage = 'Finalizing';
+    loadingMessage = 'We met before';
     _navigateToCoreView(loggedInUser);
   }
 
@@ -739,6 +745,13 @@ class _SplashViewState extends State<SplashView> {
             loadingMessage = 'Skipping bio';
           },
         ),
+      ),
+    );
+  }
+  Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FindCommunitiesView()
       ),
     );
   }
