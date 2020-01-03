@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/app_demo_humanity_first.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/search_view.dart';
@@ -686,17 +687,17 @@ class _SevaCoreViewState extends State<SevaCoreView>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SelectTimeBankForNewRequest("Feed"),
+                  builder: (context) => Home_DashBoard(),
                 ),
               );
             } else {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NewsCreate(
+                  builder: (context) => Home_DashBoard() /*NewsCreate(
                     timebankId:
                         SevaCore.of(context).loggedInUser.currentTimebank,
-                  ),
+                  ),*/
                 ),
               );
             }
@@ -887,7 +888,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
     );
   }
 
-  PageProperty get tasksPageProperty {
+   PageProperty get tasksPageProperty {
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||

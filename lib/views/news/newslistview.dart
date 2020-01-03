@@ -99,69 +99,76 @@ class NewsListState extends State<NewsList> {
                   SevaCore.of(context).loggedInUser.adminOfYanagGangs =
                       adminOfCount;
 
-                  return DropdownButton<String>(
-                    value: timebankId,
-                    onChanged: (String newValue) {
-                      if (newValue == "Create Yang Gang") {
-                        createSubTimebank(context);
-                      } else {
-                        setState(() {
-                          timebankId = newValue;
-                          SevaCore.of(context).loggedInUser.currentTimebank =
-                              newValue;
-                          SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                              adminOfCount;
+                  return DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
 
-                          didChangeDependencies();
-                        });
-                      }
-                    },
-                    items: dropdownList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      if (value == "Create Yang Gang") {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        );
-                      } else {
-                        if (value == 'All') {
+                          isExpanded: false,
+                      value: timebankId,
+                      onChanged: (String newValue) {
+                        if (newValue == "Create Yang Gang") {
+                          createSubTimebank(context);
+                        } else {
+                          setState(() {
+                            timebankId = newValue;
+                            SevaCore.of(context).loggedInUser.currentTimebank =
+                                newValue;
+                            SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+                                adminOfCount;
+
+                            didChangeDependencies();
+                          });
+                        }
+                      },
+                      items: dropdownList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        if (value == "Create Yang Gang") {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(
+                              value,
+                              style: TextStyle(color: Colors.red),
+                            ),
                           );
                         } else {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: FutureBuilder<Object>(
-                                future: FirestoreManager.getTimeBankForId(
-                                    timebankId: value),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError)
+                          if (value == 'All') {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          } else {
+                            return DropdownMenuItem<String>(
+
+                              value: value,
+                              child: FutureBuilder<Object>(
+                                  future: FirestoreManager.getTimeBankForId(
+                                      timebankId: value),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasError)
+                                      return Text(
+                                          'Please make sure you have GPS turned on.');
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Offstage();
+                                    }
+                                    TimebankModel timebankModel = snapshot.data;
                                     return Text(
-                                        'Please make sure you have GPS turned on.');
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Offstage();
-                                  }
-                                  TimebankModel timebankModel = snapshot.data;
-                                  return Text(
-                                    timebankModel.name,
-                                    style: TextStyle(fontSize: 15.0),
-                                  );
-                                }),
-                          );
+                                      timebankModel.name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(fontSize: 14.0),
+                                    );
+                                  }),
+                            );
+                          }
                         }
-                      }
-                    }).toList(),
+                      }).toList(),
+                    ),
                   );
                 },
               ),
             ),
             Container(
-              width: 120,
+              width: 105,
               child: CupertinoSegmentedControl<int>(
                 children: logoWidgets,
                 padding: EdgeInsets.only(left: 5.0, right: 5.0),

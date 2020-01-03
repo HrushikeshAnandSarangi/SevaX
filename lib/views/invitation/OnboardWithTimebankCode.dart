@@ -40,14 +40,9 @@ import '../../flavor_config.dart';
 import 'edit_timebank_view.dart';*/
 
 class OnBoardWithTimebank extends StatefulWidget {
-  final String timebankId;
 
-  TimebankModel superAdminTimebankModel;
 
-  OnBoardWithTimebank({
-  @required this.timebankId,
-  @required this.superAdminTimebankModel,
-  });
+
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
 }
@@ -68,36 +63,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   String errorMessage1 = '';
 
 
-  Future getJoinRequestData() async {
-    this.getRequestData = new JoinRequestModel();
-    this.getRequestData = await getRequestStatusForId(
-        timebankId: SevaCore.of(context).loggedInUser.currentTimebank);
-  }
-  Future<JoinRequestModel> getRequestStatusForId(
-      {@required String timebankId}) async {
-    assert(timebankId != null && timebankId.isNotEmpty,
-    "Seva UserId cannot be null or empty");
 
-    JoinRequestModel joinRequest;
-    await Firestore.instance
-        .collection('join_requests')
-        .where('entity_type', isEqualTo: 'Timebank')
-        .where('entity_id', isEqualTo: timebankId)
-        .where('user_id',
-        isEqualTo: SevaCore.of(context).loggedInUser.sevaUserID)
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-        joinRequest = JoinRequestModel.fromMap(documentSnapshot.data);
-        print("joining data $joinRequest");
-      });
-    });
-    return joinRequest;
-  }
 
     @override
   Widget build(BuildContext context) {
-      loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
 
       return Scaffold(
       appBar: AppBar(
@@ -206,11 +175,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     fontWeight: FontWeight.w500,),
 
                 ),
-                timebankModel.admins.contains(loggedInUser)
-                    ? Offstage()
-                    : timebankModel.members.contains(loggedInUser)
-                    ? Offstage()
-                :FlatButton(
+                  FlatButton(
                   child: Text(
                     'Request Join Link',
                     textAlign: TextAlign.center,

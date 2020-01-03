@@ -4,7 +4,8 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
-
+import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 
 
 
@@ -30,16 +31,22 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateMixin{
 
+  TabController controller ;
 
   @override
+  void initState() {
+    controller = TabController(initialIndex: 0,length: 3, vsync: this);
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
+    Size size=MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xFFFFFFFF),
-
 
         centerTitle: true,
         title: Text(
@@ -55,55 +62,98 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+      body: ListView(
+        children: <Widget>[
 
-            SizedBox(height: 30,),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child:
-                  FadeAnimation(1,
+         // SizedBox(height: 20,),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
 
-                    Text("Your Time Bank(s)",
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child:
+                FadeAnimation(1,
 
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                  Text("Your Time Bank(s)",
 
-                        color: Colors.black87,
-                        fontFamily: 'Europa',
-                        fontSize: 20),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+
+                      color: Colors.black87,
+                      fontFamily: 'Europa',
+                      fontSize: 20),
+                ),
+                ),
+                ),
+                //SizedBox(height: 20,),
+                FadeAnimation(1.4, Container(
+                  height: size.height*0.25,
+
+                  child: ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(left: 12),
+                    scrollDirection: Axis.horizontal,
+                    children: <Widget>[
+                      makeItem(image: 'lib/assets/splash_images/1.jpg', title: 'Time Bank 1'),
+                      makeItem(image: 'lib/assets/splash_images/2.jpg', title: 'Time Bank 2'),
+                      makeItem(image: 'lib/assets/splash_images/3.jpg', title: 'Time Bank 3'),
+                      makeItem(image: 'lib/assets/splash_images/4.jpg', title: 'Time Bank 4')
+                    ],
                   ),
-                  ),
-                  ),
-                  SizedBox(height: 20,),
-                  FadeAnimation(1.4, Container(
-                    height: 200,
+                )),
 
-                    child: ListView(
-                      padding: EdgeInsets.only(left: 12),
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        makeItem(image: 'lib/assets/splash_images/1.jpg', title: 'Time Bank 1'),
-                        makeItem(image: 'lib/assets/splash_images/2.jpg', title: 'Time Bank 2'),
-                        makeItem(image: 'lib/assets/splash_images/3.jpg', title: 'Time Bank 3'),
-                        makeItem(image: 'lib/assets/splash_images/4.jpg', title: 'Time Bank 4')
-                      ],
-                    ),
-                  )),
+                SizedBox(height: 30,),
+                Container(
+                  height: 10,
+                  color: Colors.grey[300],
+                ),
+                Container(
+                  height: 15,
+                  color: Colors.white,
+                ),
+              ],
 
-                  SizedBox(height: 20,),
+            ),
+          ),
+
+
+          StickyHeader(
+            header: Container(
+              child: TabBar(
+                labelColor: Colors.black,
+                //labelColor: Colors.white,
+                indicatorColor: Colors.black,
+                tabs: [
+                  Tab(child: Text('Pending ')),
+                  Tab(
+                      child: Text(
+                        'Not Accepted ',
+                      )),
+                  Tab(
+                      child: Text(
+                        'Completed ',
+                      )),
                 ],
+                controller: controller,
+                isScrollable: false,
+                unselectedLabelColor: Colors.black,
+
               ),
-            )
-          ],
-        ),
+            ),
+            content: Container(
+
+              height: size.height-140,
+                    child: MyTaskPage(controller),
+
+            ),
+          ),
+
+
+
+        ],
       ),
     );
   }

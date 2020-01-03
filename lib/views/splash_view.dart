@@ -562,8 +562,8 @@ class _SplashViewState extends State<SplashView> {
 //     }
 
     loadingMessage = 'We met before';
-    //_navigateToCoreView(loggedInUser);
-    _navigateToHome();
+    _navigateToCoreView(loggedInUser);
+    //_navigateToHome();
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {
