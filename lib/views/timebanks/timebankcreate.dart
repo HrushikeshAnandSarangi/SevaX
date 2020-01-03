@@ -128,7 +128,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     return Form(
         key: _formKey,
         child: Container(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
             child: SingleChildScrollView(
               child: FlavorConfig.appFlavor == Flavor.APP? createSevaX : createTimebankHumanityFirst,
             )
@@ -141,7 +141,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
             child: Text(
               'Timebank is where you can create requests and get offers with in your team.',
               textAlign: TextAlign.center,
