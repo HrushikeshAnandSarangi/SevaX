@@ -318,21 +318,21 @@ class _ProfilePageState extends State<ProfilePage>
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreateCommunity(),
-              ),
-            );
-
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
-            //     builder: (context) => EditProfilePage(
-            //       userModel: user,
-            //     ),
+            //     builder: (context) => CreateCommunity(),
             //   ),
             // );
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditProfilePage(
+                  userModel: user,
+                ),
+              ),
+            );
           },
         ),
       ],

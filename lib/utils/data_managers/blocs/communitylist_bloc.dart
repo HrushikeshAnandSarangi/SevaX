@@ -11,7 +11,11 @@ class CommunityBloc {
   Observable<CommunityListModel> get allCommunities => _communitiesFetcher.stream;
 
   fetchCommunities(name) async {
-    CommunityListModel communityListModel = await _repository.searchCommunityByName(name);
+    CommunityListModel communityListModel = CommunityListModel();
+    communityListModel.loading = true;
+    _communitiesFetcher.sink.add(communityListModel);
+    communityListModel = await _repository.searchCommunityByName(name, communityListModel);
+    communityListModel.loading = false;
     print(communityListModel.communities.length);
     _communitiesFetcher.sink.add(communityListModel);
   }

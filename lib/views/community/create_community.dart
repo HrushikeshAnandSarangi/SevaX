@@ -79,8 +79,8 @@ class CreateCommunityState extends State<CreateCommunity> {
       ),
       margin: EdgeInsets.fromLTRB(12, 12, 10, 5),
       alignment: Alignment.center,
-      // width: double.infinity,
-      child: new DropdownButtonFormField<String>(
+      width: double.infinity,
+      child: new DropdownButton<String>(
         key: _stateSelectorKey,
         items: CommunityConstants.COUNTRY_LIST.map((String value) {
           return new DropdownMenuItem<String>(
@@ -89,13 +89,13 @@ class CreateCommunityState extends State<CreateCommunity> {
           );
         }).toList(),
         // isExpanded: true,
-        validator: (val) {
-          // return "lkaknnsndlkns";
-          // return billingDetails.countryName == "Select your country"
-          //     // ? "Please select your country"
-          //     ? "null"
-          //     : "null";
-        },
+        // validator: (val) {
+        //   // return "lkaknnsndlkns";
+        //   // return billingDetails.countryName == "Select your country"
+        //   //     // ? "Please select your country"
+        //   //     ? "null"
+        //   //     : "null";
+        // },
         hint: Text(selectedCountryValue),
         onChanged: (value) {
           selectedCountryValue = value;
