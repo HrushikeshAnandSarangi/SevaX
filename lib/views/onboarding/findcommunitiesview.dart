@@ -101,23 +101,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: 'Type your community name. Ex: Alaska ',
-              hintStyle: TextStyle(color: Colors.black45)),
+              hintText: 'Type your community name. Ex: Alaska (min 5 char)',
+              hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
-        Expanded(
-          // ListView contains a group of widgets that scroll inside the drawer
-          child: StreamBuilder(
-            stream: bloc.allCommunities,
-            builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
-              if (snapshot.hasData) {
-                return buildList(snapshot.data);
-              } else if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
-              return Text("");
-            },
-          ),
-        ),
+        buildList(),
         // This container holds the align
         CreateCommunity(),
       ]),
@@ -156,22 +143,69 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   ],
                 ))));
   }
-  Widget buildList(data) {
-    return GridView.builder(
-        itemCount: data.communities.length,
-        gridDelegate:
-            new SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          print(data.communities[index]);
-          return ListTile(
-              onTap: goToNext(data),
-            title: Text(data.communities[index].name),
-            subtitle: Text(data.communities[index].primaryEmail),
-            trailing: Text("Hai"),
-          );
-        });
-  }
 
+  Widget buildList() {
+    // ListView contains a group of widgets that scroll inside the drawer
+    return StreamBuilder(
+          stream: bloc.allCommunities,
+          builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data != null && snapshot.data.loading) {
+                return Expanded(child:Center(
+                  child: CircularProgressIndicator()));
+              } else {
+                return  Expanded(child: Padding(
+                    padding:
+                    EdgeInsets.only(left: 0, right: 0, top: 12.0),
+                    child: ListView.builder(
+                        itemCount: snapshot.data.communities.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            onTap: goToNext(snapshot.data),
+                            title: Text(snapshot.data.communities[index].name,
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w700
+                                )),
+                            subtitle: Text("Created by " +
+                                snapshot.data.communities[index].created_by),
+                            trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  RaisedButton(
+                                    onPressed: () {
+                                      print('clicked');
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(0.0),
+                                          child: Text('Join'),
+                                        ),
+                                      ],
+                                    ),
+                                    color: Theme
+                                        .of(context)
+                                        .accentColor,
+                                    textColor: FlavorConfig.values
+                                        .buttonTextColor,
+                                    shape: StadiumBorder(),
+                                  )
+                                ]),
+                          );
+                        })
+                ));
+              }
+            }
+            else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            return Text("");
+
+          }
+    );
+  }
   goToNext(data) {
     print(data);
   }
