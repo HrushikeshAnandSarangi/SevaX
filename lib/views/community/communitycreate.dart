@@ -93,6 +93,7 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
     if(FlavorConfig.appFlavor == Flavor.APP){
       fetchCurrentlocation();
     }
+    print('TimebankId waifu:${widget.timebankId}');
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -139,23 +140,24 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
 
   @override
   Widget build(BuildContext context) {
-      var slidable =  SlidingUpPanel(
-          minHeight: 0,
-          maxHeight: 280,
-          color: Colors.white,
-          parallaxEnabled: true,
-          controller: _pc,
-          panel: _scrollingList(),
-          body: Form(
-              key: _formKey,
-              child:  Container(
-                  padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
-                  child: SingleChildScrollView(
-                      child: createSevaX
-                  )
-              )
-          ),
-        );
+    var form = Container(
+      padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+      child: SingleChildScrollView(
+          child: createSevaX
+      ),
+    );
+    var slidable = SlidingUpPanel(
+      minHeight: 0,
+      maxHeight: 400,
+      color: Colors.white,
+      parallaxEnabled: true,
+      controller: _pc,
+      panel: _scrollingList(),
+      body: Form(
+        key: _formKey,
+        child: form,
+      )
+    );
     return slidable;
   }
 
@@ -197,6 +199,7 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
             keyboardType: TextInputType.multiline,
             maxLines: 1,
             validator: (value) {
+
               if (value.isEmpty) {
                 return 'Please enter some text';
               }
@@ -207,7 +210,7 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
           TextFormField(
             decoration: InputDecoration(
               hintText: 'Ex: A bit more about your team',
-              ),
+            ),
             keyboardType: TextInputType.multiline,
             maxLines: null,
             validator: (value) {
@@ -307,7 +310,7 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState.validate() && _billingInformationKey.currentState.validate()) {
                             // If the form is valid, we want to show a Snackbar
                             _writeToDB();
                             // return;
@@ -332,8 +335,9 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
                       );
                     })),
           ),
-      ]
+        ]
     );
+
   }
 
   Widget headingText(String name) {
@@ -574,15 +578,39 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
   }
 
   Widget get _billingDetailsTitle {
-    return Center(
-      child: Container(
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-        child: Text(
-          'Billing Details',
-          style: TextStyle(
-              color: Colors.orange, fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Text(''),
+              Text(
+                'Billing Details',
+                style: TextStyle(
+                    color: Colors.orange, fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              Text(''),
+              GestureDetector(
+                onTap: (){
+                  _pc.close();
+                },
+                child: Text(
+                  ''' x ''',
+                  style: TextStyle(
+                    color: Colors.orange, fontSize: 20, fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      )
     );
   }
 
@@ -676,7 +704,8 @@ class CommunityCreateFormState extends State<CommunityCreateForm> {
               _continueBtn,
             ],
           ),
-        ));
+        )
+    );
   }
 
   void scrollToTop() {
