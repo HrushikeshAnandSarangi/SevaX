@@ -8,7 +8,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
-import 'package:sevaexchange/views/bioview.dart';
+// import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -541,7 +541,7 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
-    print(loggedInUser.communities);
+    // print(loggedInUser.communities);
 //    if (loggedInUser.communities == null) {
 //      await _navigateToFindCommunitiesView(loggedInUser);
 //    }
