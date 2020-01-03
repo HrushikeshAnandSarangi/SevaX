@@ -23,7 +23,8 @@ class TimebankCreate extends StatelessWidget {
   TimebankCreate({@required this.timebankId});
   @override
   Widget build(BuildContext context) {
-    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your Community' : 'Create a ${FlavorConfig.values.timebankTitle}';
+//    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your Community' : 'Create a ${FlavorConfig.values.timebankTitle}';
+    var title = /*FlavorConfig.appFlavor == Flavor.APP ?'Create your Community' : */ 'Create a ${FlavorConfig.values.timebankTitle}';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -34,7 +35,6 @@ class TimebankCreate extends StatelessWidget {
           title,
           style: TextStyle(color: Colors.black54),
         ),
-//        centerTitle: false,
       ),
       body: TimebankCreateForm(
         timebankId: timebankId,
@@ -75,7 +75,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    fetchCurrentlocation();
+    if(FlavorConfig.appFlavor == Flavor.APP){
+      fetchCurrentlocation();
+    }
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -111,7 +113,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.location =
-    location == null ? null : location;
+    location == null ? GeoFirePoint(40.754387, -73.984291) : location;
 
     createTimebank(timebankModel: timebankModel);
 
@@ -693,7 +695,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   void fetchCurrentlocation(){
     Location().getLocation().then((onValue){
       print("Location1:$onValue");
-//      setState(() {
         location = GeoFirePoint(onValue.latitude,onValue.longitude);
       LocationUtility().getFormattedAddress(
         location.latitude,
@@ -703,12 +704,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           this.selectedAddress = address;
         });
       });
-//      log('_getLocation: $address');
-//      setState(() {
-//        this.selectedAddress = address;
-//      });
-//        _getLocation();
-//      });
     });
   }
 }
