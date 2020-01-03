@@ -129,7 +129,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CommunityCreate(
+                            builder: (context) => CreateEditCommunityView(
                             timebankId: FlavorConfig.values.timebankId,
                           ))
                         );

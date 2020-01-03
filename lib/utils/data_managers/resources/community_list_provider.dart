@@ -31,7 +31,7 @@ class CommunityApiProvider {
           .getDocuments()
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-          var community = CommunityModel.fromMap(documentSnapshot.data);
+          var community = CommunityModel(documentSnapshot.data);
           communities.add(community);
         });
       });

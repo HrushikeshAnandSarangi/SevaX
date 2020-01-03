@@ -30,36 +30,30 @@ class CommunityFindBloc {
 }
 
 class CommunityCreateEditController {
-  CommunityModel community = CommunityModel();
-  TimebankModel timebank = TimebankModel();
+  CommunityModel community = CommunityModel({});
+  TimebankModel timebank = TimebankModel({});
   String selectedAddress;
   String timebankAvatarURL = null;
   List addedMembersId = [];
   List addedMembersFullname = [];
   List addedMembersPhotoURL = [];
   HashMap selectedUsers = HashMap();
-  CommunityCreateEditController({
-    this.community,
-    this.timebank,
-    this.selectedAddress,
-    this.timebankAvatarURL,
-    this.addedMembersId,
-    this.addedMembersFullname,
-    this.addedMembersPhotoURL,
-    this.selectedUsers,
-  });
+  CommunityCreateEditController() {
+  }
 }
 
 class CommunityCreateEditBloc {
   final _repository = Repository();
-  final _createEditCommunity = PublishSubject<CommunityCreateEditController>();
+  final _createEditCommunity = BehaviorSubject<CommunityCreateEditController>();
 
   Observable<CommunityCreateEditController> get createEditCommunity => _createEditCommunity.stream;
 
-  fetchCommunities(name) async {
-    _createEditCommunity.sink.add(CommunityCreateEditController());
+  CommunityCreateEditBloc(){
+    _createEditCommunity.add(CommunityCreateEditController());
   }
-
+  onChange(community) {
+    _createEditCommunity.add(community);
+  }
   dispose() {
     _createEditCommunity.close();
   }
