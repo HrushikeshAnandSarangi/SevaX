@@ -139,6 +139,39 @@ class CommunityModel extends DataModel {
     this.members = const <String>[],
   });
 
+  updateValueByKey(String key, String value) {
+    if (key == 'id') {
+      this.id = value;
+    }
+    if (key == 'name') {
+      this.name = value;
+    }
+    if (key == 'primary_email') {
+      this.primary_email = value;
+    }
+    if (key == 'billing_address') {
+      this.billing_address = new BillingAddress();
+    }
+    if (key == 'payment_records') {
+      this.payment_records = [];;
+    }
+    if (key == 'logo_url') {
+      this.logo_url = value;
+    }
+    if (key == 'cover_url') {
+      this.cover_url = value;
+    }
+    if (key == 'creator_email') {
+      this.creator_email = value;
+    }
+    if (key == 'created_by') {
+      this.created_by = value;
+    }
+    if (key == 'created_at') {
+      this.created_at = value;
+    }
+  }
+
   CommunityModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
       this.id = map['id'];

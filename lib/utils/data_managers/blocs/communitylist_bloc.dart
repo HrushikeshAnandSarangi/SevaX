@@ -1,9 +1,12 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CommunityBloc {
+class CommunityFindBloc {
   final _repository = Repository();
   final _communitiesFetcher = PublishSubject<CommunityListModel>();
   final searchOnChange = new BehaviorSubject<String>();
@@ -26,4 +29,40 @@ class CommunityBloc {
   }
 }
 
-final bloc = CommunityBloc();
+class CommunityCreateEditController {
+  CommunityModel community = CommunityModel();
+  TimebankModel timebank = TimebankModel();
+  String selectedAddress;
+  String timebankAvatarURL = null;
+  List addedMembersId = [];
+  List addedMembersFullname = [];
+  List addedMembersPhotoURL = [];
+  HashMap selectedUsers = HashMap();
+  CommunityCreateEditController({
+    this.community,
+    this.timebank,
+    this.selectedAddress,
+    this.timebankAvatarURL,
+    this.addedMembersId,
+    this.addedMembersFullname,
+    this.addedMembersPhotoURL,
+    this.selectedUsers,
+  });
+}
+
+class CommunityCreateEditBloc {
+  final _repository = Repository();
+  final _createEditCommunity = PublishSubject<CommunityCreateEditController>();
+
+  Observable<CommunityCreateEditController> get createEditCommunity => _createEditCommunity.stream;
+
+  fetchCommunities(name) async {
+    _createEditCommunity.sink.add(CommunityCreateEditController());
+  }
+
+  dispose() {
+    _createEditCommunity.close();
+  }
+}
+final createEditCommunityBloc = CommunityCreateEditBloc();
+final communityBloc = CommunityFindBloc();

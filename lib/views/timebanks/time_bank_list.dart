@@ -4,6 +4,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
+import 'package:sevaexchange/views/community/create_edit_community.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -50,7 +51,7 @@ class TimeBankList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TimebankCreate(
+                        builder: (context) => CreateEditCommunityView(
                           timebankId: timebankid,
                         ),
                       ),
@@ -68,7 +69,7 @@ class TimeBankList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TimebankCreate(
+                      builder: (context) => CreateEditCommunityView(
                         timebankId: timebankid,
                       ),
                     ),

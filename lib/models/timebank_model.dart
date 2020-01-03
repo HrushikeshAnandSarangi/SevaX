@@ -1,3 +1,4 @@
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class TimebankModel extends DataModel {
@@ -10,6 +11,10 @@ class TimebankModel extends DataModel {
   String avatarUrl;
   String ownerSevaUserId;
   String creatorEmail;
+  bool protected;
+  String rootTimebankId;
+  String parentTimebankId;
+  GeoFirePoint location;
   int postTimestamp;
   List<String> admins;
   List<String> coordinators;
@@ -22,6 +27,7 @@ class TimebankModel extends DataModel {
     this.postTimestamp,
     this.address,
     this.creatorEmail,
+    this.protected,
     this.members = const <String>[],
     this.admins = const <String>[],
     this.coordinators = const <String>[],
@@ -30,6 +36,41 @@ class TimebankModel extends DataModel {
     this.primaryNumber,
     this.avatarUrl,
   });
+  updateValueByKey(String key, dynamic value) {
+    if (key =='id') {
+      this.id= value;
+    }
+    if (key =='name') {
+      this.name= value;
+    }
+    if (key =='missionStatement') {
+      this.missionStatement= value;
+    }
+    if (key =='postTimestamp') {
+      this.postTimestamp= value;
+    }
+    if (key =='address') {
+      this.address= value;
+    }
+    if (key =='creatorEmail') {
+      this.creatorEmail= value;
+    }
+    if (key == 'protected') {
+      this.protected = value;
+    }
+    if (key =='ownerSevaUserId') {
+      this.ownerSevaUserId= value;
+    }
+    if (key =='primaryEmail') {
+      this.primaryEmail= value;
+    }
+    if (key =='primaryNumber') {
+      this.primaryNumber= value;
+    }
+    if (key =='avatarUrl') {
+      this.avatarUrl= value;
+    }
+  }
 
   TimebankModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
@@ -53,11 +94,23 @@ class TimebankModel extends DataModel {
     if (map.containsKey('creatoremail')) {
       this.creatorEmail = map['creatoremail'];
     }
+    if (map.containsKey('protected')) {
+      this.protected = map['protected'];
+    }
     if (map.containsKey('address')) {
       this.address = map['address'];
     }
     if (map.containsKey('timebankavatarurl')) {
       this.avatarUrl = map['timebankavatarurl'];
+    }
+    if (map.containsKey('rootTimebankId')) {
+      this.rootTimebankId = map['rootTimebankId'];
+    }
+    if (map.containsKey('parentTimebankId')) {
+      this.parentTimebankId = map['parentTimebankId'];
+    }
+    if (map.containsKey('location')) {
+      this.location = map['location'];
     }
 
     if (map.containsKey('admins')) {
@@ -113,6 +166,9 @@ class TimebankModel extends DataModel {
     if (this.creatorEmail != null && this.creatorEmail.isNotEmpty) {
       object['creatoremail'] = this.creatorEmail;
     }
+    if (this.protected != null) {
+      object['protected'] = this.protected;
+    }
     if (this.address != null && this.address.isNotEmpty) {
       object['address'] = this.address;
     }
@@ -130,6 +186,15 @@ class TimebankModel extends DataModel {
     }
     if (this.members != null) {
       object['members'] = this.members;
+    }
+    if (this.rootTimebankId != null) {
+      object['rootTimebankId'] = this.rootTimebankId;
+    }
+    if (this.parentTimebankId != null) {
+      object['parentTimebankId'] = this.parentTimebankId;
+    }
+    if (this.location != null) {
+      object['location'] = this.location;
     }
     return object;
   }
