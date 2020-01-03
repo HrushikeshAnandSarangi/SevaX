@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
@@ -22,14 +23,18 @@ class TimebankCreate extends StatelessWidget {
   TimebankCreate({@required this.timebankId});
   @override
   Widget build(BuildContext context) {
-    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your ${FlavorConfig.values.timebankTitle}' : 'Create a ${FlavorConfig.values.timebankTitle}';
+//    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your Community' : 'Create a ${FlavorConfig.values.timebankTitle}';
+    var title = /*FlavorConfig.appFlavor == Flavor.APP ?'Create your Community' : */ 'Create a ${FlavorConfig.values.timebankTitle}';
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        elevation: 0.5,
+        backgroundColor: Color(0xFFFFFFFF),
+        leading: BackButton(color: Colors.black54),
         title: Text(
           title,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black54),
         ),
-        centerTitle: false,
       ),
       body: TimebankCreateForm(
         timebankId: timebankId,
@@ -37,7 +42,6 @@ class TimebankCreate extends StatelessWidget {
     );
   }
 }
-//FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Codes" : "Timebank codes"
 
 // Create a Form Widget
 class TimebankCreateForm extends StatefulWidget {
@@ -71,6 +75,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
+    if(FlavorConfig.appFlavor == Flavor.APP){
+      fetchCurrentlocation();
+    }
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -121,7 +128,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     return Form(
         key: _formKey,
         child: Container(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
             child: SingleChildScrollView(
               child: FlavorConfig.appFlavor == Flavor.APP? createSevaX : createTimebankHumanityFirst,
             )
@@ -134,7 +141,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 20,right: 20,top: 10,bottom: 10),
+            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
             child: Text(
               'Timebank is where you can create requests and get offers with in your team.',
               textAlign: TextAlign.center,
@@ -215,40 +222,31 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           headingText('Is this pin at a right place?'),
 
-          Container(
-//            margin: EdgeInsets.only(left: 20),
-            child: Row(
-              children: <Widget>[
-
-                FlatButton.icon(
-                  icon: Icon(Icons.add_location),
-                  label: Text(
-                    "",
+          Center(
+            child: FlatButton.icon(
+              icon: Icon(Icons.add_location),
+              label: Text(
+                selectedAddress == null || selectedAddress.isEmpty
+                    ? 'Add Location'
+                    : selectedAddress,
+              ),
+              color: Colors.grey[200],
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<GeoFirePoint>(
+                    builder: (context) => LocationPicker(
+                      selectedLocation: location,
+                    ),
                   ),
-                  color: Colors.grey[200],
-//              onPressed: () {
-//                Navigator.push(
-//                  context,
-//                  MaterialPageRoute<GeoFirePoint>(
-//                    builder: (context) => LocationPicker(
-//                      selectedLocation: widget.geoFirePointLocation,
-//                    ),
-//                  ),
-//                ).then((point) {
-//                  if (point != null) {
-//                    widget.geoFirePointLocation = point;
-//                    print("Setting data ");
-//                    geoFirePointLocationCallback(point);
-//                  }
-//                  // _getLocation();
-//                });
-//                // imagePicker.showDialog(context);
-//              },
-                ),
-              ],
+                ).then((point) {
+                  if (point != null) location = point;
+                  _getLocation();
+                  log('ReceivedLocation: $selectedAddress');
+                });
+              },
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Container(
@@ -284,7 +282,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             side: BorderSide(color: Colors.red)
                         ),
                         child: Text(
-                          'Create ${FlavorConfig.values.timebankTitle}',
+                          'Create Community',
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),
                         ),
@@ -692,5 +690,20 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     } else {
       Text(globals.addedMembersId.toString());
     }
+  }
+
+  void fetchCurrentlocation(){
+    Location().getLocation().then((onValue){
+      print("Location1:$onValue");
+        location = GeoFirePoint(onValue.latitude,onValue.longitude);
+      LocationUtility().getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      ).then((address){
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
   }
 }

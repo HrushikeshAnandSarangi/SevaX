@@ -85,11 +85,13 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   @override
   Widget build(BuildContext context) {
     // _getAvatarURL();
-
+    var widthOfAvtar = FlavorConfig.appFlavor == Flavor.APP? 150.0 : 40.0;
     return Container(
       child: GestureDetector(
         onTap: () => imagePicker.showDialog(context),
         child: Container(
+          width: widthOfAvtar,
+          height: widthOfAvtar,
           child: globals.timebankAvatarURL == null
               ? Stack(
                   children: <Widget>[
@@ -127,8 +129,6 @@ class _TimebankAvatarState extends State<TimebankAvatar>
 
   Widget get sevaXdeafaultImage {
     return Container(
-        width: 75.0,
-        height: 75.0,
         decoration: BoxDecoration(
             color: Colors.red,
             image: DecorationImage(

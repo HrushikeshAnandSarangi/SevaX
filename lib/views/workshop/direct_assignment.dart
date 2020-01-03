@@ -42,6 +42,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   var selectedUserModelIndex = -1;
   var _isLoading = false;
   var _lastReached = false;
+  var nullcount = 0;
 
   List<Widget> _avtars = [];
   HashMap<String, int> emailIndexMap = HashMap();
@@ -69,7 +70,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange &&
-        !_isLoading) {
+        !_isLoading && nullcount<3) {
       loadNextBatchItems().then((onValue) {
         setState(() {});
       });
@@ -78,7 +79,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   @override
   Widget build(BuildContext context) {
-    if (_avtars.length == 0) {
+    if (_avtars.length == 0 && nullcount<3) {
       loadNextBatchItems();
     }
     var finalWidget = Scaffold(
@@ -140,18 +141,25 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   Widget get listViewWidget {
-    return ListView.builder(
-      controller: _controller,
-      itemCount: fetchItemsCount(),
-      itemBuilder: (BuildContext ctxt, int index) => Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: index < _avtars.length
-            ? _avtars[index]
-            : Container(
-                width: double.infinity,
-                height: 80,
-                child: circularBar,
-              ),
+    if(nullcount<3){
+      return ListView.builder(
+        controller: _controller,
+        itemCount: fetchItemsCount(),
+        itemBuilder: (BuildContext ctxt, int index) => Padding(
+          padding: const EdgeInsets.all(0.0),
+          child: index < _avtars.length
+              ? _avtars[index]
+              : Container(
+            width: double.infinity,
+            height: 80,
+            child: circularBar,
+          ),
+        ),
+      );
+    }
+    return Center(
+      child: Text(
+        'No volunteers present'
       ),
     );
   }
@@ -173,17 +181,19 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   }
 
   Future loadNextBatchItems() async {
-    if (!_isLoading && !_lastReached) {
+    if (!_isLoading && !_lastReached && nullcount<3) {
       _isLoading = true;
       FirestoreManager.getUsersForTimebankId(
               _timebankId, _pageIndex, widget.userEmail)
           .then((onValue) {
         var userModelList = onValue.userModelList;
         if (userModelList == null || userModelList.length == 0) {
+          nullcount++;
           _isLoading = false;
           _pageIndex = _pageIndex + 1;
           loadNextBatchItems();
         } else {
+          nullcount = 0;
           var addItems = userModelList.map((memberObject) {
             var member = memberObject.sevaUserID;
             if (widget.listOfMembers != null &&
@@ -227,6 +237,10 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
             _lastReached = onValue.lastPage;
           });
         }
+      });
+    }else{
+      setState(() {
+        _lastReached = true;
       });
     }
   }

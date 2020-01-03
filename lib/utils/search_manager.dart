@@ -29,6 +29,7 @@ class SearchManager {
     @required queryString,
   }) async* {
     print("searchForUser :: ---------------");
+//    sevaxuser
     String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
