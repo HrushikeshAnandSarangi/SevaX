@@ -1,3 +1,4 @@
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class TimebankModel extends DataModel {
@@ -10,89 +11,72 @@ class TimebankModel extends DataModel {
   String avatarUrl;
   String ownerSevaUserId;
   String creatorEmail;
+  bool protected;
+  String rootTimebankId;
+  String parentTimebankId;
+  GeoFirePoint location;
+  String locationAddress;
   int postTimestamp;
   List<String> admins;
   List<String> coordinators;
   List<String> members;
 
-  TimebankModel({
-    this.id,
-    this.name,
-    this.missionStatement,
-    this.postTimestamp,
-    this.address,
-    this.creatorEmail,
-    this.members = const <String>[],
-    this.admins = const <String>[],
-    this.coordinators = const <String>[],
-    this.ownerSevaUserId,
-    this.primaryEmail,
-    this.primaryNumber,
-    this.avatarUrl,
-  });
-
-  TimebankModel.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('id')) {
-      this.id = map['id'];
-    }
-    if (map.containsKey('timebankname')) {
-      this.name = map['timebankname'];
-    }
-    if (map.containsKey('missionstatement')) {
-      this.missionStatement = map['missionstatement'];
-    }
-    if (map.containsKey('primaryemail')) {
-      this.primaryEmail = map['primaryemail'];
-    }
-    if (map.containsKey('primarynumber')) {
-      this.primaryNumber = map['primarynumber'];
-    }
-    if (map.containsKey('ownersevauserid')) {
-      this.ownerSevaUserId = map['ownersevauserid'];
-    }
-    if (map.containsKey('creatoremail')) {
-      this.creatorEmail = map['creatoremail'];
-    }
-    if (map.containsKey('address')) {
-      this.address = map['address'];
-    }
-    if (map.containsKey('timebankavatarurl')) {
-      this.avatarUrl = map['timebankavatarurl'];
-    }
-
-    if (map.containsKey('admins')) {
-      List adminList = map['admins'];
-      this.admins = List.castFrom(adminList);
-    }
-
-    if (map.containsKey('coordinators')) {
-      List coordinatorList = map['coordinators'];
-      this.coordinators = List.castFrom(coordinatorList);
-    }
-
-    if (map.containsKey('members')) {
-      List memberList = map['members'];
-      this.members = List.castFrom(memberList);
-    }
-
-//    List membersEmail = map['membersemail'];
-//    List membersFullName = map['membersfullname'];
-//    List membersPhotoUrl = map['membersphotourl'];
-//
-//    List<String> membersEmailList = List.castFrom(membersEmail);
-//    List<String> membersFullNameList = List.castFrom(membersFullName);
-//    List<String> membersPhotoUrlList = List.castFrom(membersPhotoUrl);
-//
-//    this.members = _getMembersList(
-//        emailList: membersEmailList,
-//        fullNameList: membersFullNameList,
-//        photoUrlList: membersPhotoUrlList);
-
-    if (map.containsKey('posttimestamp')) {
-      this.postTimestamp = map['posttimestamp'];
-    }
+  TimebankModel(Map<String, dynamic> map) {
+    this.id = map.containsKey('id') ? map['id']: '';
+    this.name = map.containsKey('name') ? map['name']: '';
+    this.missionStatement = map.containsKey('missionStatement') ? map['missionStatement']: '';
+    this.postTimestamp = map.containsKey('postTimestamp') ? map['postTimestamp']: 0;
+    this.address = map.containsKey('address') ? map['address']: '';
+    this.creatorEmail = map.containsKey('creatorEmail') ? map['creatorEmail']: '';
+    this.protected = map.containsKey('protected') ? map['protected']: false;
+    this.locationAddress = map.containsKey('locationAddress') ? map['locationAddress']: '';
+    this.members = map.containsKey('members') ? List.castFrom(map['members']): [];
+    this.admins = map.containsKey('admins') ? List.castFrom(map['admins']): [];
+    this.coordinators = map.containsKey('coordinators') ? List.castFrom(map['coordinators']): [];
+    this.ownerSevaUserId = map.containsKey('ownerSevaUserId') ? map['ownerSevaUserId']: '';
+    this.primaryEmail = map.containsKey('primaryEmail') ? map['primaryEmail']: '';
+    this.primaryNumber = map.containsKey('primaryNumber') ? map['primaryNumber']: '';
+    this.avatarUrl = map.containsKey('avatarUrl') ? map['avatarUrl']: '';
   }
 
+  updateValueByKey(String key, dynamic value) {
+    if (key =='id') {
+      this.id= value;
+    }
+    if (key =='name') {
+      this.name= value;
+    }
+    if (key =='missionStatement') {
+      this.missionStatement= value;
+    }
+    if (key =='postTimestamp') {
+      this.postTimestamp= value;
+    }
+    if (key =='address') {
+      this.address= value;
+    }
+    if (key =='creatorEmail') {
+      this.creatorEmail= value;
+    }
+    if (key == 'protected') {
+      this.protected = value;
+    }
+    if (key =='ownerSevaUserId') {
+      this.ownerSevaUserId= value;
+    }
+    if (key =='primaryEmail') {
+      this.primaryEmail= value;
+    }
+    if (key =='primaryNumber') {
+      this.primaryNumber= value;
+    }
+    if (key =='avatarUrl') {
+      this.avatarUrl= value;
+    }
+    if (key == 'locationAddress') {
+      this.locationAddress = value;
+    }
+  }
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
     if (this.name != null && this.name.isNotEmpty) {
@@ -113,6 +97,9 @@ class TimebankModel extends DataModel {
     if (this.creatorEmail != null && this.creatorEmail.isNotEmpty) {
       object['creatoremail'] = this.creatorEmail;
     }
+    if (this.protected != null) {
+      object['protected'] = this.protected;
+    }
     if (this.address != null && this.address.isNotEmpty) {
       object['address'] = this.address;
     }
@@ -130,6 +117,18 @@ class TimebankModel extends DataModel {
     }
     if (this.members != null) {
       object['members'] = this.members;
+    }
+    if (this.rootTimebankId != null) {
+      object['rootTimebankId'] = this.rootTimebankId;
+    }
+    if (this.parentTimebankId != null) {
+      object['parentTimebankId'] = this.parentTimebankId;
+    }
+    if (this.location != null) {
+      object['location'] = this.location;
+    }
+    if (this.locationAddress != null) {
+      object['locationAddress'] = this.locationAddress;
     }
     return object;
   }

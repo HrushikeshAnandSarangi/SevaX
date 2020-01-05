@@ -35,7 +35,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           _searchText = "";
         });
       } else {
-        bloc.fetchCommunities(s);
+        communityBloc.fetchCommunities(s);
         setState(() {
           _searchText = s;
         });
@@ -45,7 +45,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   void dispose() {
-    bloc.dispose();
+    communityBloc.dispose();
     super.dispose();
   }
 
@@ -129,7 +129,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CommunityCreate(
+                            builder: (context) => CreateEditCommunityView(
                             timebankId: FlavorConfig.values.timebankId,
                           ))
                         );
@@ -154,7 +154,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   Widget buildList() {
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
-          stream: bloc.allCommunities,
+          stream: communityBloc.allCommunities,
           builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data != null && snapshot.data.loading) {
@@ -208,7 +208,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             else if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             }
-            return Text("");
+            return Expanded(child: Text(""),);
 
           }
     );

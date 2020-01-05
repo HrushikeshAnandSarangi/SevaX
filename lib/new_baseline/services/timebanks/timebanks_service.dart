@@ -52,7 +52,7 @@ class TimebanksService extends BaseService {
           snapshot.documents.forEach(
             (documentSnapshot) {
               TimebankModel model =
-                  TimebankModel.fromMap(documentSnapshot.data);
+                  TimebankModel(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
               modelList.add(model);
             },
@@ -86,7 +86,7 @@ class TimebanksService extends BaseService {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       Map<String, dynamic> dataMap = documentSnapshot.data;
-      timeBankModel = TimebankModel.fromMap(dataMap);
+      timeBankModel = TimebankModel(dataMap);
       timeBankModel.id = documentSnapshot.documentID;
     });
 
@@ -105,7 +105,7 @@ class TimebanksService extends BaseService {
     yield* data.transform(
       StreamTransformer<DocumentSnapshot, TimebankModel>.fromHandlers(
         handleData: (snapshot, modelSink) {
-          TimebankModel model = TimebankModel.fromMap(snapshot.data);
+          TimebankModel model = TimebankModel(snapshot.data);
           model.id = snapshot.documentID;
           modelSink.add(model);
         },

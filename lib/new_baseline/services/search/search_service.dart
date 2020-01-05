@@ -64,7 +64,7 @@ class SearchService extends BaseService {
     List<TimebankModel> timebankList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      TimebankModel model = TimebankModel.fromMap(sourceMap);
+      TimebankModel model = TimebankModel(sourceMap);
       model.id = map['_id'];
       timebankList.add(model);
     });
