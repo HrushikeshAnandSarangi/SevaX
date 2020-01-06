@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/views/community/create_community.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/news/overflow_constants.dart';
 import 'package:sevaexchange/views/profile/edit_bio.dart';
@@ -317,6 +318,13 @@ class _ProfilePageState extends State<ProfilePage>
             color: Colors.white,
           ),
           onPressed: () {
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => CreateCommunity(),
+            //   ),
+            // );
+
             Navigator.push(
               context,
               MaterialPageRoute(

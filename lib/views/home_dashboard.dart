@@ -45,115 +45,133 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     Size size=MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Color(0xFFFFFFFF),
+      
+      body: SafeArea(
+        child: ListView(
+          children: <Widget>[
 
-        centerTitle: true,
-        title: Text(
-          'DashBoard',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Colors.black54,
-              fontSize: 20,
+           // SizedBox(height: 20,),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
 
-              fontWeight: FontWeight.w500),
-
-        ),
-
-
-      ),
-      body: ListView(
-        children: <Widget>[
-
-         // SizedBox(height: 20,),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 2),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child:
-                FadeAnimation(1,
-
-                  Text("Your Time Bank(s)",
-
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-
-                      color: Colors.black87,
-                      fontFamily: 'Europa',
-                      fontSize: 20),
-                ),
-                ),
-                ),
-                //SizedBox(height: 20,),
-                FadeAnimation(1.4, Container(
-                  height: size.height*0.25,
-
-                  child: ListView(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.only(left: 12),
-                    scrollDirection: Axis.horizontal,
+                  Row(
                     children: <Widget>[
-                      makeItem(image: 'lib/assets/splash_images/1.jpg', title: 'Time Bank 1'),
-                      makeItem(image: 'lib/assets/splash_images/2.jpg', title: 'Time Bank 2'),
-                      makeItem(image: 'lib/assets/splash_images/3.jpg', title: 'Time Bank 3'),
-                      makeItem(image: 'lib/assets/splash_images/4.jpg', title: 'Time Bank 4')
+                      Padding(
+                        padding: EdgeInsets.all(20),
+                        child:
+                      FadeAnimation(1,
+
+                        Text("Your Time Bank(s)",
+
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+
+                            color: Colors.black87,
+                            fontFamily: 'Europa',
+                            fontSize: 20),
+                      ),
+                      ),
+                      ),
+                      Spacer(),
+
+                      IconButton(icon: Icon(Icons.add_circle_outline),
+                          iconSize: 35,
+                          color: Colors.grey,
+                          alignment: Alignment.center,
+                          onPressed: (){
+
+                          }),
+
                     ],
                   ),
-                )),
+                  //SizedBox(height: 20,),
+                  FadeAnimation(1.4, Container(
+                    height: size.height*0.25,
 
-                SizedBox(height: 30,),
-                Container(
-                  height: 10,
-                  color: Colors.grey[300],
-                ),
-                Container(
-                  height: 15,
-                  color: Colors.white,
-                ),
-              ],
+                    child: ListView(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(left: 12),
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        makeItem(image: 'lib/assets/splash_images/1.jpg', title: 'Time Bank 1'),
+                        makeItem(image: 'lib/assets/splash_images/2.jpg', title: 'Time Bank 2'),
+                        makeItem(image: 'lib/assets/splash_images/3.jpg', title: 'Time Bank 3'),
+                        makeItem(image: 'lib/assets/splash_images/4.jpg', title: 'Time Bank 4')
+                      ],
+                    ),
+                  )),
 
-            ),
-          ),
-
-
-          StickyHeader(
-            header: Container(
-              child: TabBar(
-                labelColor: Colors.black,
-                //labelColor: Colors.white,
-                indicatorColor: Colors.black,
-                tabs: [
-                  Tab(child: Text('Pending ')),
-                  Tab(
-                      child: Text(
-                        'Not Accepted ',
-                      )),
-                  Tab(
-                      child: Text(
-                        'Completed ',
-                      )),
+                  SizedBox(height: 30,),
+                  Container(
+                    height: 10,
+                    color: Colors.grey[300],
+                  ),
+                  Container(
+                    height: 15,
+                    color: Colors.white,
+                  ),
                 ],
-                controller: controller,
-                isScrollable: false,
-                unselectedLabelColor: Colors.black,
 
               ),
             ),
-            content: Container(
+          
 
-              height: size.height-140,
-                    child: MyTaskPage(controller),
+            StickyHeader(
+              header: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20,bottom: 10,top: 10),
+                      child: Text('Your Calender',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: 'Europa',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
 
+                      ),
+                      ),
+                    ),
+                    TabBar(
+                      labelColor: Colors.black,
+                      //labelColor: Colors.white,
+                      indicatorColor: Colors.black,
+                      tabs: [
+                        Tab(child: Text('Pending ')),
+                        Tab(
+                            child: Text(
+                              'Not Accepted ',
+                            )),
+                        Tab(
+                            child: Text(
+                              'Completed ',
+                            )),
+                      ],
+                      controller: controller,
+                      isScrollable: false,
+                      unselectedLabelColor: Colors.black,
+
+                    ),
+                  ],
+                ),
+              ),
+              content: Container(
+
+                height: size.height-95,
+                      child: MyTaskPage(controller),
+
+              ),
             ),
-          ),
 
 
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -165,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         margin: EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
 
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 image: AssetImage(image),
                 fit: BoxFit.cover
@@ -175,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
 
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
               gradient: LinearGradient(
                   begin: Alignment.bottomRight,
                   colors: [
@@ -188,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
             alignment: Alignment.bottomLeft,
             child: Text(title,
               style: TextStyle(
-                  color: Colors.white70,
+                  color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Europa',
                   fontSize: 14),

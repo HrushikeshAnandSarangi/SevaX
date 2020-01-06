@@ -11,6 +11,7 @@ import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+// import 'package:sevaexchange/views/bioview.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -543,7 +544,7 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
-    print(loggedInUser.communities);
+    // print(loggedInUser.communities);
     if (loggedInUser.communities == null) {
       await _navigateToFindCommunitiesView(loggedInUser);
     }
@@ -563,7 +564,6 @@ class _SplashViewState extends State<SplashView> {
 
     loadingMessage = 'We met before';
     _navigateToCoreView(loggedInUser);
-    //_navigateToHome();
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {

@@ -21,6 +21,7 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/search_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_listview.dart';
+import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
@@ -687,17 +688,17 @@ class _SevaCoreViewState extends State<SevaCoreView>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Home_DashBoard(),
+                  builder: (context) => NewsCreate(),
                 ),
               );
             } else {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Home_DashBoard() /*NewsCreate(
+                  builder: (context) => NewsCreate(
                     timebankId:
                         SevaCore.of(context).loggedInUser.currentTimebank,
-                  ),*/
+                  ),
                 ),
               );
             }
