@@ -44,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     Size size=MediaQuery.of(context).size;
     return Scaffold(
+
       backgroundColor: Colors.white,
       
       body: SafeArea(

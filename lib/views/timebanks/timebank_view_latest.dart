@@ -13,6 +13,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
