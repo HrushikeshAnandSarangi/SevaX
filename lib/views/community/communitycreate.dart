@@ -103,44 +103,6 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
 
   HashMap<String, UserModel> selectedUsers = HashMap();
 
-//  void _writeToDB() {
-//    // _checkTimebankName();
-//    // if (!_exists) {
-//
-//    int timestamp = DateTime.now().millisecondsSinceEpoch;
-//    List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
-//    globals.addedMembersId.forEach((m) {
-//      members.add(m);
-//    });
-//
-//    selectedUsers.forEach((key, user) {
-//      print("Selected member with key $key");
-//      members.add(user.sevaUserID);
-//    });
-//
-//    print("Final arrray $members");
-//
-//    timebankModel.id = Utils.getUuid();
-//    timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
-//    timebankModel.photoUrl = globals.timebankAvatarURL;
-//    timebankModel.createdAt = timestamp;
-//    timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
-//    timebankModel.coordinators = [];
-//    timebankModel.members = members;
-//    timebankModel.children = [];
-//    timebankModel.balance = 0;
-//    timebankModel.protected = protectedVal;
-//    timebankModel.parentTimebankId = widget.timebankId;
-//    timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
-//    timebankModel.location =
-//    location == null ? GeoFirePoint(40.754387, -73.984291) : location;
-//
-//    createTimebank(timebankModel: timebankModel);
-//
-//    globals.timebankAvatarURL = null;
-//    globals.addedMembersId = [];
-//  }
-
   Map onActivityResult;
 
   @override
@@ -283,10 +245,13 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                       MaterialPageRoute<GeoFirePoint>(
                         builder: (context) => LocationPicker(
                           selectedLocation: location,
+
                         ),
                       ),
                     ).then((point) {
-                      if (point != null) snapshot.data.timebank.location = point;
+                      if (point != null){
+                        location = snapshot.data.timebank.location = point;
+                      }
                       _getLocation(snapshot.data.timebank);
                       print('ReceivedLocation: $snapshot.data.timebank.locationAddress');
                     });
@@ -423,6 +388,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
   }
 
   Future _getLocation(timebank) async {
+    print('Timebank value:$timebank');
     String address = await LocationUtility().getFormattedAddress(
       timebank.location.latitude,
       timebank.location.longitude,

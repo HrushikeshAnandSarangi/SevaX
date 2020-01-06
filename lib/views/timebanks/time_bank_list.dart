@@ -69,7 +69,7 @@ class TimeBankList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CreateEditCommunityView(
+                      builder: (context) => TimebankCreate(
                         timebankId: timebankid,
                       ),
                     ),

@@ -44,12 +44,18 @@ class _LocationPickerState extends State<LocationPicker> {
   LocationData locationData;
 
   CameraPosition get initialCameraPosition {
-    return CameraPosition(
-        target: SevaCore.of(context).loggedInUser.currentPosition == null
-            ? LatLng(41.678510, -87.494080)
-            : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,
-                SevaCore.of(context).loggedInUser.currentPosition.longitude),
-        zoom: 15);
+    try{
+      return CameraPosition(
+          target: SevaCore.of(context).loggedInUser.currentPosition == null
+              ? LatLng(41.678510, -87.494080)
+              : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,
+              SevaCore.of(context).loggedInUser.currentPosition.longitude),
+          zoom: 15);
+    }catch(e){
+      return CameraPosition(
+          target: LatLng(41.678510, -87.494080),
+          zoom: 15);
+    }
   }
 
   @override
