@@ -35,7 +35,8 @@ class TimeBankList extends StatelessWidget {
               icon: Icon(Icons.home),
               onPressed: () {
                 Navigator.popUntil(
-                    context, ModalRoute.withName(Navigator.defaultRouteName));
+                    context, ModalRoute.withName(Navigator.defaultRouteName)
+                );
               },
             )
           ],

@@ -17,6 +17,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/community/communitycreate.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -69,7 +70,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
   TimebankModel timebankModel = TimebankModel();
   bool protectedVal = false;
   GeoFirePoint location;
-  String selectedAddress;
+  String selectedAddress = '';
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
@@ -107,30 +108,26 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
 
   @override
   Widget build(BuildContext context) {
-    var form = Container(
-      padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
-      child: SingleChildScrollView(
-          child: createSevaX
-      ),
-    );
-    var slidable = SlidingUpPanel(
+    return SlidingUpPanel(
       minHeight: 0,
       maxHeight: 400,
       color: Colors.white,
       parallaxEnabled: true,
+      backdropEnabled: true,
       controller: _pc,
       panel: _scrollingList(),
-      body: Form(
-        key: _formKey,
-        child: form,
-      )
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: createSevaX,
+        ),
+      ),
     );
-    return slidable;
   }
 
 
   Widget get createSevaX {
-    return StreamBuilder(
+    var colums =  StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
         builder:
         (context, snapshot) {
@@ -161,7 +158,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                         )
                       ],
                     ),
-                  )
+                  ),
               ),
               headingText('Name your Community'),
               TextFormField(
@@ -232,9 +229,9 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                 child: FlatButton.icon(
                   icon: Icon(Icons.add_location),
                   label: Text(
-                    snapshot.data.timebank.locationAddress == null || snapshot.data.timebank.locationAddress.isEmpty
+                    (snapshot.data.timebank.locationAddress == null || snapshot.data.timebank.locationAddress.isEmpty) && selectedAddress ==''
                         ? 'Add Location'
-                        : snapshot.data.timebank.locationAddress,
+                        : selectedAddress,
                   ),
                   color: Colors.grey[200],
                   onPressed: () {
@@ -251,6 +248,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
                     ).then((point) {
                       if (point != null){
                         location = snapshot.data.timebank.location = point;
+                        print("Locatyion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                       }
                       _getLocation(snapshot.data.timebank);
                       print('ReceivedLocation: $snapshot.data.timebank.locationAddress');
@@ -326,8 +324,16 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         return Text(snapshot.error.toString());
       }
       return Text("");
-        });
-      }
+        }
+      );
+    var contain = Container(
+      padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+      child: colums,
+    );
+    return SingleChildScrollView(
+      child: contain,
+    );
+  }
 
   Widget headingText(String name) {
     return Padding(
@@ -349,25 +355,29 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
         _pc.open();
         scrollIsOpen = true;
       },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            'Configure billing details',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.blue,
+      child: Container(
+        width: double.infinity,
+        height: 20,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Configure billing details',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
-          ),
-          Divider(),
-          Text(
-            '+',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.blue,
+            Divider(),
+            Text(
+              '+',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -390,11 +400,17 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
   Future _getLocation(timebank) async {
     print('Timebank value:$timebank');
     String address = await LocationUtility().getFormattedAddress(
-      timebank.location.latitude,
-      timebank.location.longitude,
+      location.latitude,
+      location.longitude,
     );
+//    setState(() {
+//      this.selectedAddress = address;
+//    });
+//    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
-    timebank.updateValueByKey('locationAddress', address);
+    setState(() {
+      this.selectedAddress = address;
+    });
   }
 
   void fetchCurrentlocation(){
