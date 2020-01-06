@@ -695,7 +695,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => NewsCreate(
+                  builder: (context) =>  NewsCreate(
                     timebankId:
                         SevaCore.of(context).loggedInUser.currentTimebank,
                   ),
