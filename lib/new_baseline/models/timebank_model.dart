@@ -10,6 +10,7 @@ class TimebankModel {
   String address;
   String creatorId;
   String photoUrl;
+  String community_id;
   int createdAt;
   List<String> admins;
   List<String> coordinators;
@@ -34,6 +35,7 @@ class TimebankModel {
       this.admins,
       this.coordinators,
       this.members,
+      this.community_id,
       this.protected,
       this.parentTimebankId,
       this.rootTimebankId,
@@ -53,6 +55,7 @@ class TimebankModel {
       address: json["address"] == null ? null : json["address"],
       creatorId: json["creator_id"] == null ? null : json["creator_id"],
       photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+      community_id: json["community_id"] == null ? null : json["community_id"],
       createdAt: json["created_at"] == null ? null : json["created_at"],
       admins: json["admins"] == null
           ? null
@@ -114,4 +117,6 @@ class TimebankModel {
     }
     return map;
   }
+
 }
+

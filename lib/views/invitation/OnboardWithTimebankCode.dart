@@ -41,7 +41,10 @@ import 'edit_timebank_view.dart';*/
 
 class OnBoardWithTimebank extends StatefulWidget {
 
+  final String communityid;
 
+
+  OnBoardWithTimebank(this.communityid);
 
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
@@ -61,6 +64,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
   bool hasError = false;
   String errorMessage1 = '';
+
 
 
 
@@ -85,330 +89,316 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
 
       ),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  //child: Text(thisText, style: Theme.of(context).textTheme.title),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: 50.0, right: 50.0, top: 10.0, bottom: 25.0),
-                  child: Text(
-                    //'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
-                    'Enter the code you received from'+' team Name ' + 'loc Admin to see the volunteer opportunities.',
-                    textDirection: TextDirection.ltr,
-                    textAlign: TextAlign.center,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height-80,
+          child: Column(
+          //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    //child: Text(thisText, style: Theme.of(context).textTheme.title),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 50.0, right: 50.0, top: 10.0, bottom: 25.0),
+                    child: Text(
+                      //'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
+                      'Enter the code you received from'+' team Name ' + 'loc Admin to see the volunteer opportunities.',
+                      textDirection: TextDirection.ltr,
+                      textAlign: TextAlign.center,
 
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  /* Padding(
+                    padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
+                    child: Text(
+                      'Enter ${FlavorConfig.values.timebankTitle} code',
+                      textDirection: TextDirection.ltr,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),*/
+                  Column(
+
+                    children: <Widget>[
+                      PinCodeTextField(
+                        pinBoxWidth: 50,
+                        autofocus: false,
+                        controller: controller,
+                        hideCharacter: false,
+                        highlight: true,
+                        keyboardType: TextInputType.text,
+                        highlightColor: Colors.blue,
+                        defaultBorderColor: Colors.grey,
+                        hasTextBorderColor: Colors.green,
+                        maxLength: 6,
+                        hasError: hasError,
+                        maskCharacter: "•",
+                        onTextChanged: (text) {
+                          setState(() {
+                            hasError = false;
+                          });
+                        },
+                        onDone: (text) {
+                          // print("############################ DONE $text");
+                          //widget.onSelectedOtp(controller.text);
+                        },
+                        pinCodeTextFieldLayoutType:
+                        PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
+                        wrapAlignment: WrapAlignment.start,
+                        pinBoxDecoration:
+                        ProvidedPinBoxDecoration.underlinedPinBoxDecoration,
+                        pinTextStyle: TextStyle(fontSize: 20.0),
+                        pinTextAnimatedSwitcherTransition:
+                        ProvidedPinBoxTextAnimation.scalingTransition,
+                        pinTextAnimatedSwitcherDuration: Duration(milliseconds: 100),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 10.0)),
+                      Visibility(
+                        child: Text(
+                          this.errorMessage1,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        visible: hasError,
+                      ),
+
+
+                    ],
+                  ),
+                  Text(
+                    'If you dont have a code, Click',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black54,
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-                /* Padding(
-                  padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
-                  child: Text(
-                    'Enter ${FlavorConfig.values.timebankTitle} code',
-                    textDirection: TextDirection.ltr,
-                    textAlign: TextAlign.left,
-                  ),
-                ),*/
-                Column(
+                      fontWeight: FontWeight.w500,),
 
-                  children: <Widget>[
-                    PinCodeTextField(
-                      pinBoxWidth: 50,
-                      autofocus: false,
-                      controller: controller,
-                      hideCharacter: false,
-                      highlight: true,
-                      keyboardType: TextInputType.text,
-                      highlightColor: Colors.blue,
-                      defaultBorderColor: Colors.grey,
-                      hasTextBorderColor: Colors.green,
-                      maxLength: 6,
-                      hasError: hasError,
-                      maskCharacter: "•",
-                      onTextChanged: (text) {
-                        setState(() {
-                          hasError = false;
-                        });
-                      },
-                      onDone: (text) {
-                        // print("############################ DONE $text");
-                        //widget.onSelectedOtp(controller.text);
-                      },
-                      pinCodeTextFieldLayoutType:
-                      PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
-                      wrapAlignment: WrapAlignment.start,
-                      pinBoxDecoration:
-                      ProvidedPinBoxDecoration.underlinedPinBoxDecoration,
-                      pinTextStyle: TextStyle(fontSize: 20.0),
-                      pinTextAnimatedSwitcherTransition:
-                      ProvidedPinBoxTextAnimation.scalingTransition,
-                      pinTextAnimatedSwitcherDuration: Duration(milliseconds: 100),
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 10.0)),
-                    Visibility(
-                      child: Text(
-                        this.errorMessage1,
-                        style: TextStyle(color: Colors.red),
+                  ),
+                    FlatButton(
+                    child: Text(
+                      'Request Join Link',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        fontSize: 17,
                       ),
-                      visible: hasError,
                     ),
-
-
-                  ],
-                ),
-                Text(
-                  'If you dont have a code, Click',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,),
-
-                ),
-                  FlatButton(
-                  child: Text(
-                    'Request Join Link',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontWeight: FontWeight.bold,
-                      decoration: TextDecoration.underline,
-                      fontSize: 17,
-                    ),
-                  ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) {
-                        // return object of type Dialog
-                        return AlertDialog(
-                          title: new Text(
-                              "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
-                          content: Form(
-                            key: formkey,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: 'Reason',
-                                labelText: 'Reason',
-                                // labelStyle: textStyle,
-                                // labelStyle: textStyle,
-                                // labelText: 'Description',
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                  const BorderRadius.all(
-                                    const Radius.circular(
-                                        20.0),
-                                  ),
-                                  borderSide: new BorderSide(
-                                    color: Colors.black,
-                                    width: 1.0,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          // return object of type Dialog
+                          return AlertDialog(
+                            title: new Text(
+                                "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
+                            content: Form(
+                              key: formkey,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Reason',
+                                  labelText: 'Reason',
+                                  // labelStyle: textStyle,
+                                  // labelStyle: textStyle,
+                                  // labelText: 'Description',
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                    const BorderRadius.all(
+                                      const Radius.circular(
+                                          20.0),
+                                    ),
+                                    borderSide: new BorderSide(
+                                      color: Colors.black,
+                                      width: 1.0,
+                                    ),
                                   ),
                                 ),
+                                keyboardType:
+                                TextInputType.multiline,
+                                maxLines: 1,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  joinRequestModel.reason =
+                                      value;
+                                },
                               ),
-                              keyboardType:
-                              TextInputType.multiline,
-                              maxLines: 1,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                joinRequestModel.reason =
-                                    value;
-                              },
                             ),
-                          ),
-                          actions: <Widget>[
-                            new FlatButton(
-                              child: new Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  fontSize: dialogButtonSize,
+                            actions: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
                                 ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(dialogContext)
-                                    .pop();
-                              },
-                            ),
-                            // usually buttons at the bottom of the dialog
-                            new FlatButton(
-                              child: new Text(
-                                "Send Join Request",
-                                style: TextStyle(
-                                  color: Theme.of(context)
-                                      .accentColor,
-                                  fontSize: dialogButtonSize,
-                                ),
-                              ),
-                              onPressed: () async {
-                                joinRequestModel.userId =
-                                    loggedInUser;
-                                joinRequestModel
-                                    .timestamp = DateTime
-                                    .now()
-                                    .millisecondsSinceEpoch;
-
-                                joinRequestModel.entityId =
-                                    timebankModel.id;
-                                joinRequestModel.entityType =
-                                    EntityType.Timebank;
-                                joinRequestModel.accepted =
-                                null;
-
-                                if (formkey.currentState
-                                    .validate()) {
-                                  await createJoinRequest(
-                                      model:
-                                      joinRequestModel);
-
-                                  JoinRequestNotificationModel
-                                  joinReqModel =
-                                  JoinRequestNotificationModel(
-                                      timebankId:
-                                      timebankModel
-                                          .id,
-                                      timebankTitle:
-                                      timebankModel
-                                          .name);
-
-                                  NotificationsModel
-                                  notification =
-                                  NotificationsModel(
-                                    id: utils.Utils.getUuid(),
-                                    targetUserId:
-                                    timebankModel
-                                        .creatorId,
-                                    senderUserId:
-                                    SevaCore.of(context)
-                                        .loggedInUser
-                                        .sevaUserID,
-                                    type: prefix0
-                                        .NotificationType
-                                        .JoinRequest,
-                                    data:
-                                    joinReqModel.toMap(),
-                                  );
-                                  notification.timebankId =
-                                      FlavorConfig
-                                          .values.timebankId;
-
-                                  UserModel timebankCreator =
-                                  await FirestoreManager
-                                      .getUserForId(
-                                      sevaUserId:
-                                      timebankModel
-                                          .creatorId);
-
-                                  await Firestore.instance
-                                      .collection('users')
-                                      .document(
-                                      timebankCreator
-                                          .email)
-                                      .collection(
-                                      "notifications")
-                                      .document(
-                                      notification.id)
-                                      .setData(notification
-                                      .toMap());
-                                  // return;
+                                onPressed: () {
                                   Navigator.of(dialogContext)
                                       .pop();
-                                }
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
+                                },
+                              ),
+                              // usually buttons at the bottom of the dialog
+                              new FlatButton(
+                                child: new Text(
+                                  "Send Join Request",
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .accentColor,
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  joinRequestModel.userId =
+                                      loggedInUser;
+                                  joinRequestModel
+                                      .timestamp = DateTime
+                                      .now()
+                                      .millisecondsSinceEpoch;
 
+                                  joinRequestModel.entityId =
+                                      timebankModel.id;
+                                  joinRequestModel.entityType =
+                                      EntityType.Timebank;
+                                  joinRequestModel.accepted =
+                                  null;
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+                                  if (formkey.currentState
+                                      .validate()) {
+                                    await createJoinRequest(
+                                        model:
+                                        joinRequestModel);
 
-                SizedBox(
-                  height: 70,
-                  width: 150,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: RaisedButton(
-                      onPressed: () {
-                        print('pressed Next');
+                                    JoinRequestNotificationModel
+                                    joinReqModel =
+                                    JoinRequestNotificationModel(
+                                        timebankId:
+                                        timebankModel
+                                            .id,
+                                        timebankTitle:
+                                        timebankModel
+                                            .name);
 
-                        this._checkFields();
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Join'),
-                          ),
-                        ],
-                      ),
-                      color: Theme.of(context).accentColor,
-                      textColor: FlavorConfig.values.buttonTextColor,
-                      shape: StadiumBorder(),
-                    ),
+                                    NotificationsModel
+                                    notification =
+                                    NotificationsModel(
+                                      id: utils.Utils.getUuid(),
+                                      targetUserId:
+                                      timebankModel
+                                          .creatorId,
+                                      senderUserId:
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID,
+                                      type: prefix0
+                                          .NotificationType
+                                          .JoinRequest,
+                                      data:
+                                      joinReqModel.toMap(),
+                                    );
+                                    notification.timebankId =
+                                        FlavorConfig
+                                            .values.timebankId;
+
+                                    UserModel timebankCreator =
+                                    await FirestoreManager
+                                        .getUserForId(
+                                        sevaUserId:
+                                        timebankModel
+                                            .creatorId);
+
+                                    await Firestore.instance
+                                        .collection('users')
+                                        .document(
+                                        timebankCreator
+                                            .email)
+                                        .collection(
+                                        "notifications")
+                                        .document(
+                                        notification.id)
+                                        .setData(notification
+                                        .toMap());
+                                    // return;
+                                    Navigator.of(dialogContext)
+                                        .pop();
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
+                ],
+              ),
+
+              Spacer(flex: 3,),
+
+              SizedBox(
+                width: 120,
+                child: RaisedButton(
+                  onPressed: () {
+                    print('pressed Next');
+
+                    this._checkFields();
+                  },
+                  child: Text('Join'),
+                  color: Theme.of(context).accentColor,
+                  textColor: FlavorConfig.values.buttonTextColor,
+                  shape: StadiumBorder(),
                 ),
-                Padding(padding: EdgeInsets.only(bottom: 40.0)),
-              ],
-            ),
+              ),
+             Spacer(),
 
-            /* Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(30.0),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(30.0),
-                    ),
-                    Expanded(
-                      child: RaisedButton(
+              /* Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.all(30.0),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(30.0),
+                      ),
+                      Expanded(
+                        child: RaisedButton(
 
-                          child: Text(
-                            'Join',
-                          ),
-                          textColor: Colors.white,
-                          color: Theme.of(context).primaryColor,
-                          onPressed: () {
-                            print('pressed Next');
+                            child: Text(
+                              'Join',
+                            ),
+                            textColor: Colors.white,
+                            color: Theme.of(context).primaryColor,
+                            onPressed: () {
+                              print('pressed Next');
 
-                            this._checkFields();
-                          },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(30.0))),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10.0),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.all(10.0),
-                )
-              ],
-            )*/
-          ],
+                              this._checkFields();
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0))),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(10.0),
+                  )
+                ],
+              )*/
+            ],
+          ),
         ),
       ),
     );

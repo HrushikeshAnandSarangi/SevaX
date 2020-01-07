@@ -578,11 +578,7 @@ class _SplashViewState extends State<SplashView> {
       builder: (context) => LoginPage(),
     ));
   }
-  Future _navigateToHome() async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => Home_DashBoard(),
-    ));
-  }
+
   Future _navigateToUpdatePage(UserModel loggedInUser, bool forced) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => UpdateView(

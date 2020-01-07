@@ -436,7 +436,7 @@ class _locationScreenState extends State<LocationView> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
-                              return OnBoardWithTimebank();
+                              return OnBoardWithTimebank("");
                             },
                           ),
                         );

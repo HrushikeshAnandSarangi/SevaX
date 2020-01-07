@@ -797,7 +797,7 @@ class _ProfilePageState extends State<ProfilePage>
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return OnBoardWithTimebank();
+              return OnBoardWithTimebank("");
             },
           ),
         );
