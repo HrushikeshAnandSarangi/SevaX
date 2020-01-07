@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:sevaexchange/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 import 'community_list_provider.dart';
 

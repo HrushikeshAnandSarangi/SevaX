@@ -17,7 +17,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/views/community/communitycreate.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -60,14 +59,15 @@ class CreateEditCommunityViewForm extends StatefulWidget {
 
 // Create a corresponding State class. This class will hold the data related to
 // the form.
-class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm> {
+class CreateEditCommunityViewFormState
+    extends State<CreateEditCommunityViewForm> {
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
 
-  TimebankModel timebankModel = TimebankModel();
+  TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress = '';
@@ -97,7 +97,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    if(FlavorConfig.appFlavor == Flavor.APP){
+    if (FlavorConfig.appFlavor == Flavor.APP) {
       fetchCurrentlocation();
     }
   }
@@ -116,218 +116,226 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       backdropEnabled: true,
       controller: _pc,
       panel: _scrollingList(),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: createSevaX,
-        ),
+      body: Form(
+        key: _formKey,
+        child: createSevaX,
       ),
     );
   }
 
-
   Widget get createSevaX {
-    var colums =  StreamBuilder(
+    var colums = StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
-        builder:
-        (context, snapshot) {
-      if (snapshot.hasData) {
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                child: Text(
-                  'Community is where you can collaborate with your organization',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Column(
-                      children: <Widget>[
-                        TimebankAvatar(),
-                        Text(''),
-                        Text(
-                          'Your Logo',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        )
-                      ],
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if ((selectedAddress.length > 0 &&
+                    snapshot.data.timebank.address.length == 0) ||
+                (snapshot.data.timebank.address != selectedAddress)) {
+              print('location updated');
+              snapshot.data.timebank
+                  .updateValueByKey('address', selectedAddress);
+              createEditCommunityBloc.onChange(snapshot.data);
+            }
+            return SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    child: Text(
+                      'Community is where you can collaborate with your organization',
+                      textAlign: TextAlign.center,
                     ),
                   ),
-              ),
-              headingText('Name your Community'),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Ex: Pets-in-town, Citizen collab",
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 1,
-                initialValue: snapshot.data.community.name,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Community name cannot be empty';
-                  }
-                  else {
-                    snapshot.data.community.updateValueByKey('name', value);
-                    createEditCommunityBloc.onChange(snapshot.data);
-                  }
-                  return "";
-                },
-              ),
-              headingText('About'),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Ex: A bit more about your team',
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Tell us more about your community.';
-                  }
-                  snapshot.data.timebank.updateValueByKey('about', value);
-                  createEditCommunityBloc.onChange(snapshot.data);
-                  return "";
-                },
-              ),
-              Row(
-                children: <Widget>[
-                  headingText('Private team'),
-                  Column(
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Column(
+                        children: <Widget>[
+                          TimebankAvatar(),
+                          Text(''),
+                          Text(
+                            'Your Logo',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  headingText('Name your Community'),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: "Ex: Pets-in-town, Citizen collab",
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 1,
+                    initialValue: snapshot.data.community.name,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Community name cannot be empty';
+                      } else {
+                        snapshot.data.community.updateValueByKey('name', value);
+                        createEditCommunityBloc.onChange(snapshot.data);
+                      }
+                      return "";
+                    },
+                  ),
+                  headingText('About'),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Ex: A bit more about your team',
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Tell us more about your community.';
+                      }
+                      snapshot.data.timebank.updateValueByKey('about', value);
+                      createEditCommunityBloc.onChange(snapshot.data);
+                      return "";
+                    },
+                  ),
+                  Row(
                     children: <Widget>[
-                      Divider(),
-                      Checkbox(
-                        value: snapshot.data.timebank.protected,
-                        onChanged: (bool value) {
-                          print(value);
-                          snapshot.data.timebank
-                              .updateValueByKey('protected', value);
-                          createEditCommunityBloc.onChange(snapshot.data);
-                          return "";
-                        },
+                      headingText('Private team'),
+                      Column(
+                        children: <Widget>[
+                          Divider(),
+                          Checkbox(
+                            value: snapshot.data.timebank.protected,
+                            onChanged: (bool value) {
+                              print(value);
+                              snapshot.data.timebank
+                                  .updateValueByKey('protected', value);
+                              createEditCommunityBloc.onChange(snapshot.data);
+                              return "";
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-
-              Text(
-                'With private team, new members needs yor approval to join team',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-              ),
-              headingText('Where is your community located at?'),
-
-              Center(
-                child: FlatButton.icon(
-                  icon: Icon(Icons.add_location),
-                  label: Text(
-                    (snapshot.data.timebank.locationAddress == null || snapshot.data.timebank.locationAddress.isEmpty) && selectedAddress ==''
-                        ? 'Add Location'
-                        : selectedAddress,
-                  ),
-                  color: Colors.grey[200],
-                  onPressed: () {
-
-                    print("Location opened : $location");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<GeoFirePoint>(
-                        builder: (context) => LocationPicker(
-                          selectedLocation: location,
-
-                        ),
-                      ),
-                    ).then((point) {
-                      if (point != null){
-                        location = snapshot.data.timebank.location = point;
-                        print("Locatyion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
-                      }
-                      _getLocation(snapshot.data.timebank);
-                      print('ReceivedLocation: $snapshot.data.timebank.locationAddress');
-                    });
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: tappableAddBillingDetails,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      'Looking for existing team ',
-                      style: TextStyle(
-
-                        color: Colors.grey,
-                      ),
+                  Text(
+                    'With private team, new members needs yor approval to join team',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
                     ),
-                    tappableFindYourTeam,
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Container(
-                    alignment: Alignment.center,
-                    child: FutureBuilder<Object>(
-                        future: getTimeBankForId(timebankId: widget.timebankId),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) return Text('Error');
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return Offstage();
-                          TimebankModel parentTimebank = snapshot.data;
-                          return RaisedButton(
-                            // color: Colors.blue,
-                            color: Colors.red,
-                            onPressed: () {
-                              // Validate will return true if the form is valid, or false if
-                              // the form is invalid.
-                              //if (location != null) {
-                              if (_formKey.currentState.validate()) {
-                                // If the form is valid, we want to show a Snackbar
+                  ),
+                  headingText('Where is your community located at?'),
+                  Center(
+                    child: FlatButton.icon(
+                      icon: Icon(Icons.add_location),
+                      label: Text(
+                        (snapshot.data.timebank.address == null ||
+                                    snapshot.data.timebank.address.isEmpty) &&
+                                selectedAddress == ''
+                            ? 'Add Location'
+                            : snapshot.data.timebank.address,
+                      ),
+                      color: Colors.grey[200],
+                      onPressed: () {
+                        print("Location opened : $location");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<GeoFirePoint>(
+                            builder: (context) => LocationPicker(
+                              selectedLocation: location,
+                            ),
+                          ),
+                        ).then((point) {
+                          if (point != null) {
+                            location = snapshot.data.timebank.location = point;
+                            print(
+                                "Locatyion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                          }
+                          _getLocation(snapshot.data);
+                          print(
+                              'ReceivedLocation: $snapshot.data.timebank.address');
+                        });
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: tappableAddBillingDetails,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'Looking for existing team ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        tappableFindYourTeam,
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: Container(
+                        alignment: Alignment.center,
+                        child: FutureBuilder<Object>(
+                            future:
+                                getTimeBankForId(timebankId: widget.timebankId),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) return Text('Error');
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) return Offstage();
+                              TimebankModel parentTimebank = snapshot.data;
+                              return RaisedButton(
+                                // color: Colors.blue,
+                                color: Colors.red,
+                                onPressed: () {
+                                  // Validate will return true if the form is valid, or false if
+                                  // the form is invalid.
+                                  //if (location != null) {
+                                  if (_formKey.currentState.validate()) {
+                                    // If the form is valid, we want to show a Snackbar
 //                                _writeToDB();
-                                // return;
+                                    // return;
 //
 //                                if (parentTimebank.children == null)
 //                                  parentTimebank.children = [];
 //                                parentTimebank.children.add(timebankModel.id);
 //                                updateTimebank(timebankModel: parentTimebank);
-                                Navigator.pop(context);
-                              }
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(18.0),
-                                side: BorderSide(color: Colors.red)
-                            ),
-                            child: Text(
-                              'Create Community',
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.white),
-                            ),
-                            textColor: Colors.blue,
-                          );
-                        })),
-              ),
-            ]
-        );
-      } else if (snapshot.hasError) {
-        return Text(snapshot.error.toString());
-      }
-      return Text("");
-        }
-      );
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(18.0),
+                                    side: BorderSide(color: Colors.red)),
+                                child: Text(
+                                  'Create Community',
+                                  style: TextStyle(
+                                      fontSize: 16.0, color: Colors.white),
+                                ),
+                                textColor: Colors.blue,
+                              );
+                            })),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(vertical: 50),
+                      child: Text(
+                        '',
+                        textAlign: TextAlign.center,
+                      ))
+                ]));
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          return Text("");
+        });
     var contain = Container(
-      padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: colums,
     );
     return SingleChildScrollView(
@@ -341,17 +349,16 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       child: Text(
         name,
         style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
         ),
       ),
     );
   }
 
-
   Widget get tappableAddBillingDetails {
-    return  GestureDetector(
-      onTap: ()  {
+    return GestureDetector(
+      onTap: () {
         _pc.open();
         scrollIsOpen = true;
       },
@@ -383,10 +390,8 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
   }
 
   Widget get tappableFindYourTeam {
-    return  GestureDetector(
-      onTap: () {
-
-      },
+    return GestureDetector(
+      onTap: () {},
       child: Text(
         'Find your team',
         style: TextStyle(
@@ -397,8 +402,8 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
     );
   }
 
-  Future _getLocation(timebank) async {
-    print('Timebank value:$timebank');
+  Future _getLocation(data) async {
+    print('Timebank value:$data');
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,
       location.longitude,
@@ -408,19 +413,20 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
 //    });
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
-    setState(() {
-      this.selectedAddress = address;
-    });
+    data.timebank.updateValueByKey('address', address);
+    createEditCommunityBloc.onChange(data);
   }
 
-  void fetchCurrentlocation(){
-    Location().getLocation().then((onValue){
+  void fetchCurrentlocation() {
+    Location().getLocation().then((onValue) {
       print("Location1:$onValue");
-        location = GeoFirePoint(onValue.latitude,onValue.longitude);
-      LocationUtility().getFormattedAddress(
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
         location.latitude,
         location.longitude,
-      ).then((address){
+      )
+          .then((address) {
         setState(() {
           this.selectedAddress = address;
         });
@@ -482,7 +488,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
           billingDetails.stateName = value;
         },
         initialValue:
-        billingDetails.stateName != null ? billingDetails.stateName : '',
+            billingDetails.stateName != null ? billingDetails.stateName : '',
         validator: BillingDetailsModel.billingValidator,
         focusNode: stateFocus,
         textInputAction: TextInputAction.next,
@@ -505,7 +511,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             billingDetails.pinCode = value;
           },
           initialValue:
-          billingDetails.pinCode != null ? billingDetails.pinCode : '',
+              billingDetails.pinCode != null ? billingDetails.pinCode : '',
           focusNode: pincodeFocus,
           textInputAction: TextInputAction.next,
           decoration: BillingDetailsModel.getInputDecoration(
@@ -583,39 +589,42 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
 
   Widget get _billingDetailsTitle {
     return Container(
-      margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Text(''),
-              Text(
-                'Billing Details',
-                style: TextStyle(
-                    color: Colors.orange, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              Text(''),
-              GestureDetector(
-                onTap: (){
-                  _pc.close();
-                },
-                child: Text(
-                  ''' x ''',
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Text(''),
+                Text(
+                  'Billing Details',
                   style: TextStyle(
-                    color: Colors.orange, fontSize: 20, fontWeight: FontWeight.bold,
-                  ),
+                      color: Colors.orange,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
-              )
-            ],
-          )
-        ],
-      )
-    );
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Text(''),
+                GestureDetector(
+                  onTap: () {
+                    _pc.close();
+                  },
+                  child: Text(
+                    ''' x ''',
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ));
   }
 
   Widget get _streetAddressWidget {
@@ -687,9 +696,9 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
 
   Widget _scrollingList() {
     return Container(
-      // var scrollController = Sc
-      //adding a margin to the top leaves an area where the user can swipe
-      //to open/close the sliding panel
+        // var scrollController = Sc
+        //adding a margin to the top leaves an area where the user can swipe
+        //to open/close the sliding panel
         margin: const EdgeInsets.only(top: 36.0),
         color: Colors.white,
         child: Form(
@@ -698,7 +707,6 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
             controller: scollContainer,
             children: <Widget>[
               _billingDetailsTitle,
-              _widgetCountrySelector,
               _stateWidget,
               _pinCodeWidget,
               _streetAddressWidget,
@@ -708,8 +716,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
               _continueBtn,
             ],
           ),
-        )
-    );
+        ));
   }
 
   void scrollToTop() {
@@ -727,9 +734,7 @@ class CreateEditCommunityViewFormState extends State<CreateEditCommunityViewForm
       duration: const Duration(milliseconds: 300),
     );
   }
-
 }
-
 
 class BillingDetailsModel {
   String countryName;

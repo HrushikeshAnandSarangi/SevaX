@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 
 class FindCommunitiesView extends StatefulWidget {

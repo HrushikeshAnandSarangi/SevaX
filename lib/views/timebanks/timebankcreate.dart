@@ -62,7 +62,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
 
-  TimebankModel timebankModel = TimebankModel();
+  TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;

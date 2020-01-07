@@ -2,7 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,7 +32,7 @@ class CommunityFindBloc {
 
 class CommunityCreateEditController {
   CommunityModel community = CommunityModel({});
-  TimebankModel timebank = TimebankModel({});
+  TimebankModel timebank = new TimebankModel({});
   String selectedAddress;
   String timebankAvatarURL = null;
   List addedMembersId = [];
@@ -39,6 +40,7 @@ class CommunityCreateEditController {
   List addedMembersPhotoURL = [];
   HashMap selectedUsers = HashMap();
   CommunityCreateEditController() {
+    print(timebank);
   }
 }
 
