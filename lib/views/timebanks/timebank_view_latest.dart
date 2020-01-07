@@ -117,7 +117,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               height: 30,
             ),
 
-          /*iUserJoined?
+          iUserJoined?
           Container(
             height: 40,
             child: GestureDetector(
@@ -154,7 +154,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             ),
           ):Container(
 
-          ),*/
+          ),
             Padding(
               padding: const EdgeInsets.only(top:10.0,left: 20),
               child: Text(widget._timebankModel.members.length.toString()+' Volunteers',style: TextStyle(
