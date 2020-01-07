@@ -48,6 +48,7 @@ class TabarView extends StatelessWidget {
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: AppBar(
+              elevation: 0.5,
               backgroundColor: Colors.white,
               automaticallyImplyLeading: true,
               primary: false,

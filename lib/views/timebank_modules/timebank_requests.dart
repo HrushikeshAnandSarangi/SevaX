@@ -23,6 +23,7 @@ import 'package:sevaexchange/views/exchange/edit_offer.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_request_details.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
@@ -754,7 +755,8 @@ class NearRequestListItems extends StatelessWidget {
             Navigator.push(
               parentContext,
               MaterialPageRoute(
-                builder: (context) => RequestCardView(requestItem: model),
+                builder: (context) =>
+                    TimeBankRequestDetails(requestItem: model),
               ),
             );
           },
@@ -1036,7 +1038,8 @@ class RequestListItems extends StatelessWidget {
             Navigator.push(
               parentContext,
               MaterialPageRoute(
-                builder: (context) => RequestCardView(requestItem: model),
+                builder: (context) =>
+                    TimeBankRequestDetails(requestItem: model),
               ),
             );
           },
@@ -1090,14 +1093,48 @@ class RequestListItems extends StatelessWidget {
                       Offstage(
                         offstage: !model.acceptors.contains(userEmail),
                         child: Container(
-                          margin: EdgeInsets.all(5),
-                          width: double.infinity,
-                          child: Text(
-                            "Applied",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(),
-                          ),
-                        ),
+                            alignment: Alignment.topRight,
+                            margin: EdgeInsets.all(12),
+                            // width: double.infinity,
+                            child: Container(
+                              width: 100,
+                              height: 32,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: EdgeInsets.all(0),
+                                color: Color.fromRGBO(44, 64, 140, 0.7),
+                                child: Row(
+                                  children: <Widget>[
+                                    SizedBox(width: 1),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(44, 64, 140, 1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                       'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () {},
+                              ),
+                            )),
                       )
                     ],
                   ),
