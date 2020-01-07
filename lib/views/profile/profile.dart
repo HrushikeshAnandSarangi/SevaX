@@ -36,6 +36,7 @@ import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 
 import 'package:sevaexchange/views/transaction_history.dart';
 import '../app_demo_humanity_first.dart';
+import '../timebank_content_holder.dart';
 import 'edit_name.dart';
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -318,21 +319,22 @@ class _ProfilePageState extends State<ProfilePage>
             color: Colors.white,
           ),
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => CreateCommunity(),
-            //   ),
-            // );
-
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditProfilePage(
-                  userModel: user,
+                builder: (context) => TimebankTabsViewHolder.of(
+                  timebankId: FlavorConfig.values.timebankId,
                 ),
               ),
             );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => EditProfilePage(
+            //       userModel: user,
+            //     ),
+            //   ),
+            // );
           },
         ),
       ],

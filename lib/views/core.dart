@@ -404,7 +404,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                       .collection("users")
                                       .document(loggedUser.email)
                                       .updateData({
-                                    "notificationsRead": unreadNotifications + notificationsRead 
+                                    "notificationsRead":
+                                        unreadNotifications + notificationsRead
                                   }).then((onValue) {
                                     setState(() {
                                       SevaCore.of(context)
@@ -676,34 +677,36 @@ class _SevaCoreViewState extends State<SevaCoreView>
   FloatingActionButton getFloatingBtn() {
     if (pages.elementAt(_selectedIndex).title == "Feeds") {
       return FloatingActionButton.extended(
-          label: Text(
-            "Create Feed",
-            style: TextStyle(fontSize: 11.0),
-          ),
-          foregroundColor: FlavorConfig.values.buttonTextColor,
-          onPressed: () {
-            if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectTimeBankForNewRequest("Feed"),
+        label: Text(
+          "Create Feed",
+          style: TextStyle(fontSize: 11.0),
+        ),
+        foregroundColor: FlavorConfig.values.buttonTextColor,
+        onPressed: () {
+          if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SelectTimeBankForNewRequest("Feed"),
+              ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewsCreate(
+                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewsCreate(
-                    timebankId:
-                        SevaCore.of(context).loggedInUser.currentTimebank,
-                  ),
-                ),
-              );
-            }
-          });
+              ),
+            );
+          }
+        },
+      );
     } else if (pages.elementAt(_selectedIndex).title == "Volunteer") {
       if (this.tabValue == 0) {
-        var floatButtonTitle = FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Create Yang Gang Request";
+        var floatButtonTitle = FlavorConfig.appFlavor == Flavor.APP
+            ? "Timebank"
+            : "Create Yang Gang Request";
         return FloatingActionButton.extended(
             label: Text(
               "Create $floatButtonTitle Request",
