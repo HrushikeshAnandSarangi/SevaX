@@ -749,12 +749,11 @@ class _SplashViewState extends State<SplashView> {
     );
   }
   Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
-    await Navigator.of(context).pushReplacement(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SevaCore(
-          loggedInUser: loggedInUser,
-          child: FindCommunitiesView(),
-        ),
+            loggedInUser: loggedInUser,
+            child: FindCommunitiesView())
       ),
     );
   }

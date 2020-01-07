@@ -71,27 +71,19 @@ class CreateEditCommunityViewFormState
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress = '';
+  String _billingDetailsError = '';
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
-  BillingDetailsModel billingDetails = BillingDetailsModel();
   GlobalKey<FormState> _billingInformationKey = GlobalKey();
   GlobalKey<FormState> _stateSelectorKey = GlobalKey();
 
   String selectedCountryValue = "Select your country";
 
-  var stateFocus = FocusNode();
-  var pincodeFocus = FocusNode();
-  var companyNameFocus = FocusNode();
-  var streetAddressFocus = FocusNode();
-  var additionalNotesFocus = FocusNode();
-  var streetAddressTwoFocus = FocusNode();
-
   var scrollIsOpen = false;
 
   void initState() {
     super.initState();
-
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
@@ -128,10 +120,10 @@ class CreateEditCommunityViewFormState
         stream: createEditCommunityBloc.createEditCommunity,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            print(snapshot.data.timebank.address);
             if ((selectedAddress.length > 0 &&
                     snapshot.data.timebank.address.length == 0) ||
                 (snapshot.data.timebank.address != selectedAddress)) {
-              print('location updated');
               snapshot.data.timebank
                   .updateValueByKey('address', selectedAddress);
               createEditCommunityBloc.onChange(snapshot.data);
@@ -180,7 +172,7 @@ class CreateEditCommunityViewFormState
                         snapshot.data.community.updateValueByKey('name', value);
                         createEditCommunityBloc.onChange(snapshot.data);
                       }
-                      return "";
+                      return null;
                     },
                   ),
                   headingText('About'),
@@ -190,13 +182,15 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
+                    initialValue: snapshot.data.timebank.missionStatement,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Tell us more about your community.';
                       }
-                      snapshot.data.timebank.updateValueByKey('about', value);
+                      snapshot.data.timebank
+                          .updateValueByKey('missionStatement', value);
                       createEditCommunityBloc.onChange(snapshot.data);
-                      return "";
+                      return null;
                     },
                   ),
                   Row(
@@ -297,7 +291,18 @@ class CreateEditCommunityViewFormState
                                   // Validate will return true if the form is valid, or false if
                                   // the form is invalid.
                                   //if (location != null) {
+                                  print(_formKey.currentState.validate());
                                   if (_formKey.currentState.validate()) {
+                                    if (_billingInformationKey.currentState.validate()) {
+                                      setState(() {
+                                        this._billingDetailsError = '';
+                                      });
+                                      Navigator.pop(context);
+                                    } else {
+                                      setState(() {
+                                        this._billingDetailsError = 'Please configure billing details';
+                                      });
+                                    }
                                     // If the form is valid, we want to show a Snackbar
 //                                _writeToDB();
                                     // return;
@@ -306,7 +311,9 @@ class CreateEditCommunityViewFormState
 //                                  parentTimebank.children = [];
 //                                parentTimebank.children.add(timebankModel.id);
 //                                updateTimebank(timebankModel: parentTimebank);
-                                    Navigator.pop(context);
+
+                                  } else {
+
                                   }
                                 },
                                 shape: RoundedRectangleBorder(
@@ -408,9 +415,9 @@ class CreateEditCommunityViewFormState
       location.latitude,
       location.longitude,
     );
-//    setState(() {
-//      this.selectedAddress = address;
-//    });
+    setState(() {
+      this.selectedAddress = address;
+    });
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
     data.timebank.updateValueByKey('address', address);
@@ -434,115 +441,6 @@ class CreateEditCommunityViewFormState
     });
   }
 
-  Widget get _widgetCountrySelector {
-    // var countryList = CommunityConstants.COUNTRY_LIST;
-    return Container(
-      padding: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5.0),
-        border: Border.all(
-          color: Colors.green,
-          style: BorderStyle.solid,
-          width: 1.0,
-        ),
-      ),
-      margin: EdgeInsets.fromLTRB(12, 12, 10, 5),
-      alignment: Alignment.center,
-      width: double.infinity,
-      child: new DropdownButton<String>(
-        key: _stateSelectorKey,
-        items: CommunityConstants.COUNTRY_LIST.map((String value) {
-          return new DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-        // isExpanded: true,
-        // validator: (val) {
-        //   // return "lkaknnsndlkns";
-        //   // return billingDetails.countryName == "Select your country"
-        //   //     // ? "Please select your country"
-        //   //     ? "null"
-        //   //     : "null";
-        // },
-        hint: Text(selectedCountryValue),
-        onChanged: (value) {
-          selectedCountryValue = value;
-          billingDetails.countryName = value;
-          setState(() {
-            print(selectedCountryValue);
-          });
-        },
-      ),
-    );
-  }
-
-  Widget get _stateWidget {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: TextFormField(
-        onFieldSubmitted: (input) {
-          FocusScope.of(context).requestFocus(pincodeFocus);
-        },
-        onChanged: (value) {
-          billingDetails.stateName = value;
-        },
-        initialValue:
-            billingDetails.stateName != null ? billingDetails.stateName : '',
-        validator: BillingDetailsModel.billingValidator,
-        focusNode: stateFocus,
-        textInputAction: TextInputAction.next,
-        decoration: BillingDetailsModel.getInputDecoration(
-          fieldTitle: "State",
-        ),
-      ),
-    );
-  }
-
-  Widget get _pinCodeWidget {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: TextFormField(
-          validator: BillingDetailsModel.billingValidator,
-          onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(streetAddressFocus);
-          },
-          onChanged: (value) {
-            billingDetails.pinCode = value;
-          },
-          initialValue:
-              billingDetails.pinCode != null ? billingDetails.pinCode : '',
-          focusNode: pincodeFocus,
-          textInputAction: TextInputAction.next,
-          decoration: BillingDetailsModel.getInputDecoration(
-            fieldTitle: "Pincode",
-          )),
-    );
-  }
-
-  Widget get _additionalNotesWidget {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: TextFormField(
-        onFieldSubmitted: (input) {
-          scrollToBottom();
-        },
-        onChanged: (value) {
-          billingDetails.additionalNotes = value;
-        },
-        initialValue: billingDetails.additionalNotes != null
-            ? billingDetails.additionalNotes
-            : '',
-        validator: BillingDetailsModel.billingValidator,
-        focusNode: additionalNotesFocus,
-        textInputAction: TextInputAction.next,
-        decoration: BillingDetailsModel.getInputDecoration(
-          fieldTitle: "Additional Notes",
-        ),
-      ),
-    );
-  }
-
   InputDecoration getData(String fieldValue) {
     return new InputDecoration(
       errorStyle: TextStyle(
@@ -564,28 +462,7 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Widget get _companyNameWidget {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: TextFormField(
-        onFieldSubmitted: (input) {
-          FocusScope.of(context).requestFocus(additionalNotesFocus);
-        },
-        onChanged: (value) {
-          billingDetails.companyName = value;
-        },
-        initialValue: billingDetails.companyName != null
-            ? billingDetails.companyName
-            : '',
-        validator: BillingDetailsModel.billingValidator,
-        focusNode: companyNameFocus,
-        textInputAction: TextInputAction.next,
-        decoration: BillingDetailsModel.getInputDecoration(
-          fieldTitle: "Company Name",
-        ),
-      ),
-    );
-  }
+
 
   Widget get _billingDetailsTitle {
     return Container(
@@ -627,133 +504,6 @@ class CreateEditCommunityViewFormState
         ));
   }
 
-  Widget get _streetAddressWidget {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: TextFormField(
-        onFieldSubmitted: (input) {
-          FocusScope.of(context).requestFocus(streetAddressTwoFocus);
-        },
-        onChanged: (value) {
-          billingDetails.streetAddressOne = value;
-        },
-        validator: BillingDetailsModel.billingValidator,
-        focusNode: streetAddressFocus,
-        textInputAction: TextInputAction.next,
-        initialValue: billingDetails.streetAddressOne != null
-            ? billingDetails.streetAddressOne
-            : '',
-        decoration: BillingDetailsModel.getInputDecoration(
-          fieldTitle: "Street Address 1",
-        ),
-      ),
-    );
-  }
-
-  Widget get _streetAddressTwoWidget {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: TextFormField(
-          onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(companyNameFocus);
-          },
-          onChanged: (value) {
-            billingDetails.streetAddressTwo = value;
-          },
-          validator: BillingDetailsModel.billingValidator,
-          focusNode: streetAddressTwoFocus,
-          textInputAction: TextInputAction.next,
-          initialValue: billingDetails.streetAddressTwo != null
-              ? billingDetails.streetAddressTwo
-              : '',
-          decoration: BillingDetailsModel.getInputDecoration(
-            fieldTitle: "Street Address 2",
-          )),
-    );
-  }
-
-  Widget get _continueBtn {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: RaisedButton(
-        child: Text("Continue"),
-        color: Colors.orange,
-        onPressed: () {
-          if (_billingInformationKey.currentState.validate()) {
-            if (billingDetails.countryName == null) {
-              scrollToTop();
-            } else {
-              print("All Good");
-              _pc.close();
-              scrollIsOpen = false;
-            }
-          }
-          print("Here are the billing details $billingDetails");
-        },
-      ),
-    );
-  }
-
-  Widget _scrollingList() {
-    return Container(
-        // var scrollController = Sc
-        //adding a margin to the top leaves an area where the user can swipe
-        //to open/close the sliding panel
-        margin: const EdgeInsets.only(top: 36.0),
-        color: Colors.white,
-        child: Form(
-          key: _billingInformationKey,
-          child: ListView(
-            controller: scollContainer,
-            children: <Widget>[
-              _billingDetailsTitle,
-              _stateWidget,
-              _pinCodeWidget,
-              _streetAddressWidget,
-              _streetAddressTwoWidget,
-              _companyNameWidget,
-              _additionalNotesWidget,
-              _continueBtn,
-            ],
-          ),
-        ));
-  }
-
-  void scrollToTop() {
-    scollContainer.animateTo(
-      0.0,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
-  }
-
-  void scrollToBottom() {
-    scollContainer.animateTo(
-      scollContainer.position.maxScrollExtent,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
-  }
-}
-
-class BillingDetailsModel {
-  String countryName;
-  String stateName;
-  String pinCode;
-  String streetAddressOne;
-  String streetAddressTwo;
-  String companyName;
-  String additionalNotes;
-
-  @override
-  String toString() {
-    return "Billing information provided : {countryName : $countryName, stateName : $stateName, pincode : $pinCode, streetAddressOne : $streetAddressOne, streetAddressTwo : $streetAddressTwo, companyName  : $companyName, additionalNotes : $additionalNotes }";
-  }
-
-  static String billingValidator(String value) {
-    return value.isEmpty ? 'Field cannot be left blank' : null;
-  }
-
   static InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
       errorStyle: TextStyle(
@@ -770,6 +520,239 @@ class BillingDetailsModel {
       ),
       hintText: fieldTitle,
       alignLabelWithHint: false,
+    );
+  }
+
+  Widget _scrollingList() {
+    var stateFocus = FocusNode();
+    var pincodeFocus = FocusNode();
+    var companyNameFocus = FocusNode();
+    var streetAddressFocus = FocusNode();
+    var additionalNotesFocus = FocusNode();
+    var streetAddressTwoFocus = FocusNode();
+    Widget _stateWidget(controller) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            FocusScope.of(context).requestFocus(pincodeFocus);
+          },
+          onChanged: (value) {
+            print(controller.community.billing_address);
+            controller.community.billing_address.updateValueByKey('state', value);
+            createEditCommunityBloc.onChange(controller);
+          },
+          initialValue: controller.community.billing_address.state != null
+              ? controller.community.billing_address.state
+              : '',
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank' : null;
+          },
+          focusNode: stateFocus,
+          textInputAction: TextInputAction.next,
+          decoration: getInputDecoration(
+            fieldTitle: "State",
+          ),
+        ),
+      );
+    }
+
+    Widget _pinCodeWidget(controller) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            FocusScope.of(context).requestFocus(streetAddressFocus);
+          },
+          onChanged: (value) {
+            print(value);
+            controller.community.billing_address.updateValueByKey('pincode', int.parse(value));
+            createEditCommunityBloc.onChange(controller);
+          },
+          initialValue: controller.community.billing_address.pincode != null ? controller.community.billing_address.pincode.toString() : '',
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank' : null;
+          },
+          focusNode: additionalNotesFocus,
+          textInputAction: TextInputAction.next,
+          decoration: getInputDecoration(
+            fieldTitle: "Pincode",
+          ),
+        ),
+      );
+    }
+
+    Widget _additionalNotesWidget(controller) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            scrollToBottom();
+          },
+          onChanged: (value) {
+            controller.community.billing_address
+                .updateValueByKey('additionalnotes', value);
+            createEditCommunityBloc.onChange(controller);
+          },
+          initialValue:
+          controller.community.billing_address.additionalnotes != null
+              ? controller.community.billing_address.additionalnotes
+              : '',
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank' : null;
+          },
+          focusNode: additionalNotesFocus,
+          textInputAction: TextInputAction.next,
+          decoration: getInputDecoration(
+            fieldTitle: "Additional Notes",
+          ),
+        ),
+      );
+    }
+    Widget _streetAddressWidget(controller) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            FocusScope.of(context).requestFocus(streetAddressTwoFocus);
+          },
+          onChanged: (value) {
+            controller.community.billing_address
+                .updateValueByKey('street_address1', value);
+            createEditCommunityBloc.onChange(controller);
+          },
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank' : null;
+          },
+          focusNode: streetAddressFocus,
+          textInputAction: TextInputAction.next,
+          initialValue:
+          controller.community.billing_address.street_address1 != null
+              ? controller.community.billing_address.street_address1
+              : '',
+          decoration: getInputDecoration(
+            fieldTitle: "Street Address 1",
+          ),
+        ),
+      );
+    }
+    Widget _streetAddressTwoWidget(controller) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: TextFormField(
+            onFieldSubmitted: (input) {
+              FocusScope.of(context).requestFocus(companyNameFocus);
+            },
+            onChanged: (value) {
+              controller.community.billing_address
+                  .updateValueByKey('street_address2', value);
+              createEditCommunityBloc.onChange(controller);
+            },
+            validator: (value) {
+              return value.isEmpty ? 'Field cannot be left blank' : null;
+            },
+            focusNode: streetAddressTwoFocus,
+            textInputAction: TextInputAction.next,
+            initialValue:
+            controller.community.billing_address.street_address2 != null
+                ? controller.community.billing_address.street_address2
+                : '',
+            decoration: getInputDecoration(
+              fieldTitle: "Street Address 2",
+            )),
+      );
+    }
+    Widget _companyNameWidget(controller) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            FocusScope.of(context).requestFocus(additionalNotesFocus);
+          },
+          onChanged: (value) {
+            controller.community.billing_address
+                .updateValueByKey('companyname', value);
+            createEditCommunityBloc.onChange(controller);
+          },
+          initialValue: controller.community.billing_address.companyname != null
+              ? controller.community.billing_address.companyname
+              : '',
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank' : null;
+          },
+          focusNode: companyNameFocus,
+          textInputAction: TextInputAction.next,
+          decoration: getInputDecoration(
+            fieldTitle: "Company Name",
+          ),
+        ),
+      );
+    }
+    Widget _continueBtn(controller) {
+      return Container(
+        margin: EdgeInsets.all(10),
+        child: RaisedButton(
+          child: Text("Continue"),
+          color: Colors.orange,
+          onPressed: () {
+            if (_billingInformationKey.currentState.validate()) {
+              if (controller.community.billing_address.country == null) {
+                scrollToTop();
+              } else {
+                print("All Good");
+                _pc.close();
+                scrollIsOpen = false;
+              }
+            }
+          },
+        ),
+      );
+    }
+    return Container(
+        // var scrollController = Sc
+        //adding a margin to the top leaves an area where the user can swipe
+        //to open/close the sliding panel
+        margin: const EdgeInsets.only(top: 36.0),
+        color: Colors.white,
+        child: Form(
+            key: _billingInformationKey,
+            child: StreamBuilder(
+                stream: createEditCommunityBloc.createEditCommunity,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView(
+                      controller: scollContainer,
+                      children: <Widget>[
+                        _billingDetailsTitle,
+                        _stateWidget(snapshot.data),
+                        _pinCodeWidget(snapshot.data),
+                        _streetAddressWidget(snapshot.data),
+                        _streetAddressTwoWidget(snapshot.data),
+                        _companyNameWidget(snapshot.data),
+                        _additionalNotesWidget(snapshot.data),
+                        _continueBtn(snapshot.data),
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  return Text("");
+                })));
+  }
+
+  void scrollToTop() {
+    scollContainer.animateTo(
+      0.0,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  void scrollToBottom() {
+    scollContainer.animateTo(
+      scollContainer.position.maxScrollExtent,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
     );
   }
 }
