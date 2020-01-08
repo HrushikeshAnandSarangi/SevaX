@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' show Client, Response;
-import 'package:sevaexchange/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class CommunityApiProvider {
   Client client = Client();
@@ -38,4 +38,11 @@ class CommunityApiProvider {
     }
     return communities;
   }
+  Future<void> createCommunityByName(CommunityModel community) async {
+     await Firestore.instance
+        .collection('communities')
+        .document(community.id)
+        .setData(community.toMap());
+  }
+
 }

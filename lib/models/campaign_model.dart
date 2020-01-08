@@ -1,5 +1,5 @@
 import 'package:sevaexchange/models/data_model.dart';
-import 'package:sevaexchange/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 class CampaignModel extends DataModel {
   String id;

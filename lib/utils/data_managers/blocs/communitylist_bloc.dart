@@ -2,7 +2,9 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/core.dart';
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,14 +33,16 @@ class CommunityFindBloc {
 
 class CommunityCreateEditController {
   CommunityModel community = CommunityModel({});
-  TimebankModel timebank = TimebankModel({});
+  TimebankModel timebank = new TimebankModel({});
   String selectedAddress;
   String timebankAvatarURL = null;
   List addedMembersId = [];
   List addedMembersFullname = [];
   List addedMembersPhotoURL = [];
+  bool loading  = false;
   HashMap selectedUsers = HashMap();
   CommunityCreateEditController() {
+    print(timebank);
   }
 }
 
@@ -56,6 +60,13 @@ class CommunityCreateEditBloc {
   }
   dispose() {
     _createEditCommunity.close();
+  }
+  createCommunity(CommunityCreateEditController community) async {
+    // create a community flow;
+    var newcommunity = await _repository.createCommunityByName(community.community);
+    var timebank = await _repository.createTimebankById(community.timebank);
+//    await _repository(community.community)
+    // create a timebank flow;
   }
 }
 final createEditCommunityBloc = CommunityCreateEditBloc();

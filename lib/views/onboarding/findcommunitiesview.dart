@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   @override
@@ -129,10 +130,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CreateEditCommunityView(
-                            timebankId: FlavorConfig.values.timebankId,
-                          ))
-                        );
+                            builder: (context1) => SevaCore(
+                                loggedInUser: SevaCore.of(context).loggedInUser,
+                                child: CreateEditCommunityView(
+                                  timebankId: FlavorConfig.values.timebankId,
+                                ))
+                          ));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

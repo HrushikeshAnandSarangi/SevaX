@@ -40,7 +40,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   var _lastReached = false;
   var _membersTitleDone = false;
   var adminsNotLoaded = true;
-  var timebankModel = TimebankModel();
+  var timebankModel = TimebankModel({});
   var _admins = List<Widget>();
   var _coordinators = List<Widget>();
   var _members = List<Widget>();

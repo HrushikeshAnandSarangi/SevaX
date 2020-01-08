@@ -1,6 +1,6 @@
 import 'package:sevaexchange/models/models.dart';
 
-class BillingAddress extends DataModel {
+class BillingAddress {
   String companyname;
   String street_address1;
   String street_address2;
@@ -19,6 +19,32 @@ class BillingAddress extends DataModel {
     this.country = map.containsKey('country')? map['country'] : '';
     this.pincode = map.containsKey('pincode')? map['pincode'] : null;
     this.additionalnotes = map.containsKey('additionalnotes')? map['additionalnotes'] : '';
+  }
+  updateValueByKey(String key, dynamic value) {
+    if (key == 'companyname') {
+      this.companyname = value;
+    }
+    if (key == 'street_address1') {
+      this.street_address1 = value;
+    }
+    if (key == 'street_address2') {
+      this.street_address2 = value;
+    }
+    if (key == 'city') {
+      this.city = value;
+    }
+    if (key == 'state') {
+      this.state = value;
+    }
+    if (key == 'country') {
+      this.country = value;
+    }
+    if (key == 'pincode') {
+      this.pincode = value;
+    }
+    if (key == 'additionalnotes') {
+      this.additionalnotes = value;
+    }
   }
 
   Map<String, dynamic> toMap() {
@@ -48,6 +74,11 @@ class BillingAddress extends DataModel {
       object['additionalnotes'] = this.additionalnotes;
     }
     return object;
+  }
+
+  @override
+  String toString() {
+    return "Billing information provided : {countryName : $companyname, stateName : $state, pincode : $pincode, streetAddressOne : $street_address1, streetAddressTwo : $street_address2, companyName  : $companyname, additionalNotes : $additionalnotes }";
   }
 }
 
