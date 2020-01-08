@@ -1,28 +1,19 @@
-import 'dart:collection';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
-import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
-// import 'package:sticky_headers/sticky_headers.dart';
-
-import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/members_of_timebank.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class Home_DashBoard extends StatelessWidget {
   final String communityId;
 
-  Home_DashBoard(
-      this.communityId); // This widget is the root of your application.
+  Home_DashBoard({
+    this.communityId,
+  }); // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -176,16 +167,16 @@ class _MyHomePageState extends State<MyHomePage>
   Widget makeItem(TimebankModel timebank) {
     return InkWell(
       onTap: () {
-      //   Navigator.push(
-      //     context,
-      //     MaterialPageRoute(
-      //         builder: (context) => TimeBankAboutView(
-      //               timebank,
-      //               SevaCore.of(context).loggedInUser.email,
-      //             )
-      //         //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
-      //         ),
-      //   );
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => TimeBankAboutView(
+        //               timebank,
+        //               SevaCore.of(context).loggedInUser.email,
+        //             )
+        //         //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
+        //         ),
+        //   );
       },
       child: AspectRatio(
         aspectRatio: 3 / 4,

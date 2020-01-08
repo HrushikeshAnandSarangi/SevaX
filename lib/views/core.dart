@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,31 +8,27 @@ import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/app_demo_humanity_first.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/exchange/help.dart';
 import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
+import 'package:sevaexchange/views/news/newslistview.dart';
+import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/search_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_listview.dart';
-import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 
-import 'package:sevaexchange/views/news/newslistview.dart';
-import 'package:sevaexchange/views/exchange/help.dart';
-
-import 'package:sevaexchange/views/profile/profile.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import '../globals.dart' as globals;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'invitation/InviteMembers.dart';
 import 'news/overflow_constants.dart';
 import 'notifications/notifications_page.dart';
@@ -685,18 +683,21 @@ class _SevaCoreViewState extends State<SevaCoreView>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Home_DashBoard(""),
+                builder: (context) => Home_DashBoard(
+                  communityId: "",
+                ),
               ),
             );
           } else {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                  Home_DashBoard("")/*NewsCreate(
+                  builder: (context) => Home_DashBoard(
+                        communityId: "",
+                      ) /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/
-              ),
+                  ),
             );
           }
         },
@@ -889,7 +890,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
     );
   }
 
-   PageProperty get tasksPageProperty {
+  PageProperty get tasksPageProperty {
     TabController controller = TabController(length: 3, vsync: this);
     return PageProperty(
       tabIcon: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST ||

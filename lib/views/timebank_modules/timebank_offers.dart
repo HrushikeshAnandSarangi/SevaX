@@ -3,10 +3,12 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:intl/intl.dart';
@@ -25,6 +27,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
+import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 import '../core.dart';
 
@@ -63,7 +66,7 @@ class OffersState extends State<OffersModule> {
                 padding: EdgeInsets.only(left: 10),
               ),
               Container(
-                margin: EdgeInsets.only(top : 12, bottom: 12),
+                margin: EdgeInsets.only(top: 12, bottom: 12),
                 child: Row(
                   children: <Widget>[
                     Text(
@@ -281,7 +284,9 @@ class OfferCardView extends StatefulWidget {
 class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
-  const OfferListItems({
+  String sevaUserId;
+
+  OfferListItems({
     Key key,
     this.parentContext,
     this.timebankId,
@@ -289,6 +294,8 @@ class OfferListItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+
     if (timebankId != 'All') {
       return StreamBuilder<List<OfferModel>>(
         stream: getOffersStream(timebankId: timebankId),
@@ -497,6 +504,52 @@ class OfferListItems extends StatelessWidget {
                       model.description.trim(),
                       style: Theme.of(parentContext).textTheme.subtitle,
                     ),
+                    Offstage(
+                      offstage: !model.offerAcceptors.contains(sevaUserId),
+                      child: Container(
+                          alignment: Alignment.topRight,
+                          margin: EdgeInsets.all(12),
+                          // width: double.infinity,
+                          child: Container(
+                            width: 100,
+                            height: 32,
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: EdgeInsets.all(0),
+                              color: Color.fromRGBO(44, 64, 140, 0.7),
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(width: 1),
+                                  Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(44, 64, 140, 1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    'Accepted',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                ],
+                              ),
+                              onPressed: () {},
+                            ),
+                          )),
+                    )
                   ],
                 ),
               ),
@@ -747,6 +800,15 @@ class OfferCardViewState extends State<OfferCardView> {
     });
   }
 
+  TextStyle titleStyle = TextStyle(
+    fontSize: 18,
+    color: Colors.black,
+  );
+
+  TextStyle subTitleStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.grey,
+  );
   @override
   Widget build(BuildContext context) {
     FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
@@ -760,27 +822,6 @@ class OfferCardViewState extends State<OfferCardView> {
       appBar: AppBar(
         actions: <Widget>[
           widget.offerModel.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID
-              ? IconButton(
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UpdateOffer(
-                          timebankId:
-                              SevaCore.of(context).loggedInUser.currentTimebank,
-                          offerModel: widget.offerModel,
-                        ),
-                      ),
-                    );
-                  },
-                )
-              : Offstage(),
-          widget.offerModel.sevaUserId ==
                       SevaCore.of(context).loggedInUser.sevaUserID &&
                   widget.offerModel.requestList.length == 0
               ? IconButton(
@@ -791,7 +832,8 @@ class OfferCardViewState extends State<OfferCardView> {
                         builder: (BuildContext viewcontext) {
                           return AlertDialog(
                             title: Text(
-                                'Are you sure you want to delete this offer?'),
+                              'Are you sure you want to delete this offer?',
+                            ),
                             actions: <Widget>[
                               FlatButton(
                                 child: Text(
@@ -824,12 +866,13 @@ class OfferCardViewState extends State<OfferCardView> {
                 )
               : Offstage()
         ],
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         title: Text(
-          widget.offerModel.title,
-          style: TextStyle(color: Colors.white),
+          "Offer Details",
+          style: TextStyle(color: Colors.black),
         ),
+        elevation: 0.5,
       ),
       body: FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
@@ -848,127 +891,234 @@ class OfferCardViewState extends State<OfferCardView> {
               child: ConstrainedBox(
                 constraints: BoxConstraints(),
                 child: Container(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(14.0),
                   child: Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: EdgeInsets.all(0),
                     color: widget.offerModel.color,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child: Text(
-                            widget.offerModel.title,
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w700,
+                        //adding sample calss tarts here
+                        SafeArea(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      widget.offerModel.title,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    CustomListTile(
+                                      leading: Icon(
+                                        Icons.access_time,
+                                        color: Colors.grey,
+                                      ),
+                                      title: Text(
+                                        'Posted on',
+                                        style: titleStyle,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      subtitle: Text(
+                                        DateFormat('EEEEEEE, MMMM dd h:mm a')
+                                            .format(
+                                          getDateTimeAccToUserTimezone(
+                                              dateTime: DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      widget.offerModel
+                                                          .timestamp),
+                                              timezoneAbb: SevaCore.of(context)
+                                                  .loggedInUser
+                                                  .timezone),
+                                        ),
+                                        style: subTitleStyle,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      trailing: Container(
+                                        height: 30,
+                                        width: 80,
+                                        child: false
+                                            ? FlatButton(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                color: Color.fromRGBO(
+                                                    44, 64, 140, 1),
+                                                child: Text(
+                                                  'Edit',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                                onPressed: () {},
+                                              )
+                                            : Container(),
+                                      ),
+                                    ),
+                                    CustomListTile(
+                                      leading: Icon(
+                                        Icons.location_on,
+                                        color: Colors.grey,
+                                      ),
+                                      title: Text(
+                                        "Location",
+                                        style: titleStyle,
+                                        maxLines: 1,
+                                      ),
+                                      subtitle: FutureBuilder<String>(
+                                        future: _getLocation(
+                                          widget.offerModel.location.latitude,
+                                          widget.offerModel.location.latitude,
+                                        ),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasError) {
+                                            return Text("Unnamed Location");
+                                          }
+
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return Text(
+                                                "Resolving location...");
+                                          }
+                                          return Text(
+                                            snapshot.data,
+                                            style: subTitleStyle,
+                                            maxLines: 1,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    CustomListTile(
+                                      // contentPadding: EdgeInsets.all(0),
+                                      leading: Icon(
+                                        Icons.person,
+                                        color: Colors.grey,
+                                      ),
+                                      title: Text(
+                                        "Offered by ${widget.offerModel.fullName}",
+                                        style: titleStyle,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                    // SizedBox(height: 20),
+                                    // Text(
+                                    //   '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} people Approved',
+                                    //   style: TextStyle(
+                                    //     fontSize: 16,
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+                                    Container(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: RichTextView(
+                                          text: widget.offerModel.description),
+                                    ),
+                                  ],
+                                ),
+                                getBottombar()
+                              ],
                             ),
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          child:
-                              RichTextView(text: widget.offerModel.description),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child:
-                              Text('Posted By: ' + widget.offerModel.fullName),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child: Text(
-                            'PostDate:  ' +
-                                DateFormat('MMMM dd, yyyy @ h:mm a').format(
-                                  getDateTimeAccToUserTimezone(
-                                      dateTime:
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              widget.offerModel.timestamp),
-                                      timezoneAbb: usertimezone),
-                                ),
-                          ),
-                        ),
+
+                        //addding sample class here ends
+
+                        // Container(
+                        //   padding: EdgeInsets.all(8.0),
+                        //   alignment: Alignment(-1.0, 0.0),
+                        //   child:
+                        //       Text('Posted By: ' + widget.offerModel.fullName),
+                        // ),
+                        // Container(
+                        //   padding: EdgeInsets.all(8.0),
+                        //   alignment: Alignment(-1.0, 0.0),
+                        //   child: Text(
+                        //     'PostDate:  ' +
+                        //         DateFormat('MMMM dd, yyyy @ h:mm a').format(
+                        //           getDateTimeAccToUserTimezone(
+                        //               dateTime:
+                        //                   DateTime.fromMillisecondsSinceEpoch(
+                        //                       widget.offerModel.timestamp),
+                        //               timezoneAbb: usertimezone),
+                        //         ),
+                        //   ),
+                        // ),
                         Container(
                           padding: EdgeInsets.all(8.0),
                           child: Text(' '),
                         ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            color: Theme.of(context).accentColor,
-                            onPressed: widget.offerModel.sevaUserId ==
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID ||
-                                    (widget.isAdmin &&
-                                        widget.offerModel.acceptedOffer)
-                                ? null
-                                : () {
-                                    widget.sevaUserIdOffer =
-                                        widget.offerModel.sevaUserId;
+                        // Container(
+                        //   padding: EdgeInsets.all(8.0),
+                        //   child: RaisedButton(
+                        //     color: Theme.of(context).accentColor,
+                        //     onPressed: widget.offerModel.sevaUserId ==
+                        //                 SevaCore.of(context)
+                        //                     .loggedInUser
+                        //                     .sevaUserID ||
+                        //             (widget.isAdmin &&
+                        //                 widget.offerModel.acceptedOffer)
+                        //         ? null
+                        //         : () {
+                        //             widget.sevaUserIdOffer =
+                        //                 widget.offerModel.sevaUserId;
 
-                                    FirestoreManager.getTimeBankForId(
-                                            timebankId:
-                                                widget.offerModel.timebankId)
-                                        .then((timebank) {
-                                      if (timebank.admins.contains(
-                                              SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .sevaUserID) ||
-                                          timebank.coordinators.contains(
-                                              SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .sevaUserID)) {
-                                        setState(() {
-                                          widget.isAdmin = true;
-                                        });
+                        //             FirestoreManager.getTimeBankForId(
+                        //                     timebankId:
+                        //                         widget.offerModel.timebankId)
+                        //                 .then((timebank) {
+                        //               if (timebank.admins.contains(
+                        //                       SevaCore.of(context)
+                        //                           .loggedInUser
+                        //                           .sevaUserID) ||
+                        //                   timebank.coordinators.contains(
+                        //                       SevaCore.of(context)
+                        //                           .loggedInUser
+                        //                           .sevaUserID)) {
+                        //                 setState(() {
+                        //                   widget.isAdmin = true;
+                        //                 });
 
-                                        _makePostRequest(widget.offerModel);
-//                                  Navigator.push(
-//                                    context,
-//                                    MaterialPageRoute(
-//                                      builder: (context) =>
-//                                          SelectRequestView(
-//                                            offerModel: offerModel,
-//                                            sevaUserIdOffer: sevaUserIdOffer,
-//                                          ),
-//                                    ),
-//                                  );
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return AlertDialog(
-                                              title:
-                                                  new Text("Permission Denied"),
-                                              content: new Text(
-                                                  "You need to be an Admin or Coordinator to have permission to send request to offers"),
-                                              actions: <Widget>[
-                                                new FlatButton(
-                                                  child: new Text("Close"),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    });
-                                  },
-                            child: Text(
-                              !widget.offerModel.acceptedOffer ||
-                                      !widget.isAdmin
-                                  ? 'Accept Offer'
-                                  : 'Offer Accepted',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        )
+                        //                 _makePostRequest(widget.offerModel);
+                        //               } else {
+                        //                 showDialog(
+                        //                   context: context,
+                        //                   builder: (BuildContext context) {
+                        //                     return AlertDialog(
+                        //                       title:
+                        //                           new Text("Permission Denied"),
+                        //                       content: new Text(
+                        //                           "You need to be an Admin or Coordinator to have permission to send request to offers"),
+                        //                       actions: <Widget>[
+                        //                         new FlatButton(
+                        //                           child: new Text("Close"),
+                        //                           onPressed: () {
+                        //                             Navigator.of(context).pop();
+                        //                           },
+                        //                         ),
+                        //                       ],
+                        //                     );
+                        //                   },
+                        //                 );
+                        //               }
+                        //             });
+                        //           },
+                        //     child: Text(
+                        //       !widget.offerModel.acceptedOffer ||
+                        //               !widget.isAdmin
+                        //           ? 'Accepts'
+                        //           : 'Accepted',
+                        //       style: TextStyle(color: Colors.white),
+                        //     ),
+                        //   ),
+                        // )
                       ],
                     ),
                   ),
@@ -1018,6 +1168,172 @@ class OfferCardViewState extends State<OfferCardView> {
     //   "userId": 1,
     //   "id": 101
     // }
+  }
+
+  bool isAccepted = false;
+  Widget getBottombar() {
+    isAccepted = widget.offerModel.offerAcceptors.contains(
+      SevaCore.of(context).loggedInUser.sevaUserID,
+    );
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0),
+      child: Container(
+        margin: EdgeInsets.only(top: 10, left: 5),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.only(right: 10),
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(color: Colors.black),
+                    children: [
+                      TextSpan(
+                        text: widget.offerModel.sevaUserId !=
+                                SevaCore.of(context).loggedInUser.sevaUserID
+                            ? 'You have${isAccepted ? '' : " not yet "} accepted this offer.'
+                            : "You created this offer",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      widget.offerModel.sevaUserId ==
+                              SevaCore.of(context).loggedInUser.sevaUserID
+                          ? TextSpan(
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                              text: '\nEdit Offer',
+                              recognizer: TapGestureRecognizer()
+                              // ..onTap = () {
+                              //   Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //       builder: (context) => OfferEdit(
+                              //         timebankId: SevaCore.of(context)
+                              //             .loggedInUser
+                              //             .currentTimebank,
+                              //         requestModel: widget.offerModel,
+                              //       ),
+                              //     ),
+                              //   );
+                              // },
+                              )
+                          : TextSpan(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Offstage(
+              offstage: widget.offerModel.sevaUserId ==
+                  SevaCore.of(context).loggedInUser.sevaUserID,
+              child: Container(
+                width: 100,
+                height: 32,
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: EdgeInsets.all(0),
+                  color: Color.fromRGBO(44, 64, 140, 0.7),
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(width: 1),
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Color.fromRGBO(44, 64, 140, 1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.check,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        widget.offerModel.offerAcceptors.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)
+                            ? 'Withdraw'
+                            : 'Accept',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Spacer(
+                        flex: 2,
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    var isAccepted = widget.offerModel.offerAcceptors
+                        .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+
+                    Firestore.instance
+                        .collection("offers")
+                        .document(widget.offerModel.id)
+                        .updateData({
+                      'offerAcceptors': isAccepted
+                          ? FieldValue.arrayRemove(
+                              [SevaCore.of(context).loggedInUser.sevaUserID])
+                          : FieldValue.arrayUnion(
+                              [SevaCore.of(context).loggedInUser.sevaUserID])
+                    });
+
+                    // widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
+
+                    // FirestoreManager.getTimeBankForId(
+                    //         timebankId: widget.offerModel.timebankId)
+                    //     .then((timebank) {
+                    //   if (timebank.admins.contains(
+                    //           SevaCore.of(context).loggedInUser.sevaUserID) ||
+                    //       timebank.coordinators.contains(
+                    //           SevaCore.of(context).loggedInUser.sevaUserID)) {
+                    //     setState(() {
+                    //       widget.isAdmin = true;
+                    //     });
+
+                    //     _makePostRequest(widget.offerModel);
+                    //   } else {
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return AlertDialog(
+                    //           title: new Text("Permission Denied"),
+                    //           content: new Text(
+                    //               "You need to be an Admin or Coordinator to have permission to send request to offers"),
+                    //           actions: <Widget>[
+                    //             new FlatButton(
+                    //               child: new Text("Close"),
+                    //               onPressed: () {
+                    //                 Navigator.of(context).pop();
+                    //               },
+                    //             ),
+                    //           ],
+                    //         );
+                    //       },
+                    //     );
+                    //   }
+                    // });
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<String> _getLocation(double lat, double lng) async {
+    String address = await LocationUtility().getFormattedAddress(lat, lng);
+    return address;
   }
 
   Future<void> deleteOffer({

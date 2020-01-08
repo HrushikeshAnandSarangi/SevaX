@@ -308,9 +308,10 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                   style: TextStyle(color: Colors.black),
                   children: [
                     TextSpan(
-                      text:  widget.requestItem.sevaUserId !=
-                            SevaCore.of(context).loggedInUser.sevaUserID ? 
-                          'You have${isApplied ? '' : " not"} applied for the request' : "You created this request",
+                      text: widget.requestItem.sevaUserId !=
+                              SevaCore.of(context).loggedInUser.sevaUserID
+                          ? 'You have${isApplied ? '' : " not"} applied for the request'
+                          : "You created this request",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
