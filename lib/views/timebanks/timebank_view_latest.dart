@@ -34,6 +34,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   UserModelListMoreStatus userModels;
   UserModel user;
   bool isDataLoaded=false;
+  bool isAdminLoaded=false;
 
 
   @override
@@ -45,17 +46,23 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   }
 
   void getData()async{
-    if(isUserJoined)
-     userModels= await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
-        widget._timebankModel.id, 1,  widget.email);
-
     user=await  FirestoreManager.getUserForId(sevaUserId: widget._timebankModel.admins[0]);
-    isDataLoaded=true;
+     isAdminLoaded=true;
+
+    if(isUserJoined){
+
+      userModels= await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
+          widget._timebankModel.id, 1,  widget.email);
+       isDataLoaded=true;
+
+    }
+
+
      setState(() {
 
      });
 
-    print('Time Bank${userModels.userModelList[0].photoURL}');
+  //  print('Time Bank${userModels.userModelList[0].photoURL}');
     //print('User Admin  ${user.fullname.toString()}');
 
   }
@@ -77,6 +84,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             CachedNetworkImage(
 
               imageUrl:widget._timebankModel.photoUrl,
+
               fit: BoxFit.fitWidth,
               errorWidget: (context,url,error)=>Center(child: Text('No Image Avaialable')),
               placeholder: (conext,url){
@@ -163,7 +171,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               ),
             ),
           ):Container(
-
+              child:
+              Center(child: CircularProgressIndicator()),
           ),
             Padding(
               padding: const EdgeInsets.only(top:10.0,left: 20),
@@ -255,13 +264,21 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                 ),
               ),
             ),
+
+
+
             Padding(
               padding: const EdgeInsets.all(20.0),
+
               child: Row(
                 children: <Widget>[
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+
+                      isAdminLoaded?
+
                       RichText(
                         text: TextSpan(style: TextStyle(color: Colors.black),
                             children: [
@@ -278,6 +295,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                                     fontSize: 16, fontFamily: 'Europa'),
                               ),
                             ]),
+                      ):Container(
+                        child:
+                        Center(child: CircularProgressIndicator()),
                       ),
                       FlatButton(
 
@@ -297,22 +317,26 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                     ],
                   ),
                   Spacer(),
-
+                  isAdminLoaded?
                   Container(
                     height: 60,
                     width: 60,
+
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
 
                         image: DecorationImage(fit: BoxFit.cover,
-                            image: NetworkImage('http://www.farazessaniphotography.com/wp-content/uploads/2016/07/4Y7C4124.jpg'))
+                            image: NetworkImage(user.photoURL)
                     ),
 
+                  )
+                  ):Container(
+                    child:
+                    Center(child: CircularProgressIndicator()),
                   ),
                 ],
               ),
             )
-
           ],
         ),
       ),

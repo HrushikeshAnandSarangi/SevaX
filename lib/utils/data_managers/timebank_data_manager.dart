@@ -79,8 +79,8 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 Stream<List<TimebankModel>> getSubTimebanksForUserStream(
     {@required String userId}) async* {
   var data = Firestore.instance
-      .collection('timebanknew')
-      .where('community_id', isEqualTo: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2')
+      .collection('communities')
+      .where('id', isEqualTo: 'cc0f1eb6-62fc-4dba-a56c-3b04c33eecce')
       .snapshots();
 
 
@@ -88,6 +88,8 @@ Stream<List<TimebankModel>> getSubTimebanksForUserStream(
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
       handleData: (snapshot, timebankSink) {
+
+        print('T_DAta${snapshot.documents}');
         List<TimebankModel> modelList = [];
         snapshot.documents.forEach(
           (documentSnapshot) {
