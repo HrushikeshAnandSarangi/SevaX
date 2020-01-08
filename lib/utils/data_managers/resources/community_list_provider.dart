@@ -77,7 +77,7 @@ class CommunityApiProvider {
     await Firestore.instance
         .collection('users')
         .document(user.email)
-        .updateData({'membershipTimebanks': user.membershipTimebanks, 'communities': user.communities}).then((onValue) {
+        .updateData({'membershipTimebanks': user.membershipTimebanks, 'communities': user.communities, 'currentCommunity': communityId}).then((onValue) {
       print("Updating completed");
     }).catchError((onError) {
       print("Error Updating introduction");
