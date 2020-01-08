@@ -72,6 +72,7 @@ class CreateEditCommunityViewFormState
   GeoFirePoint location;
   String selectedAddress = '';
   String _billingDetailsError = '';
+  String communityImageError = '';
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
@@ -152,6 +153,13 @@ class CreateEditCommunityViewFormState
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
                             ),
+                          ),
+                          Text(communityImageError,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                                fontSize: 12,
+                              )
                           )
                         ],
                       ),
@@ -287,77 +295,57 @@ class CreateEditCommunityViewFormState
                     child: Container(
                         alignment: Alignment.center,
                         child: RaisedButton(
-                                // color: Colors.blue,
-                                color: Colors.red,
+                                color: Theme.of(context).accentColor,
                                 onPressed: () {
-                                  // Validate will return true if the form is valid, or false if
-                                  // the form is invalid.
-                                  //if (location != null) {
                                   print(_formKey.currentState.validate());
                                   if (_formKey.currentState.validate()) {
                                     if (_billingInformationKey.currentState.validate()) {
                                       setState(() {
                                         this._billingDetailsError = '';
                                       });
-                                      // creation of community;
-                                      snapshot.data.community.id = Utils.getUuid();
-                                      snapshot.data.community.logo_url = globals.timebankAvatarURL;
-                                      snapshot.data.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
-                                      snapshot.data.community.created_by = SevaCore.of(context).loggedInUser.email;
-                                      snapshot.data.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
-                                      snapshot.data.community.primary_email = SevaCore.of(context).loggedInUser.email;
-                                      snapshot.data.community.admins = [SevaCore.of(context).loggedInUser.email];
-                                      // creation of default timebank;
-                                      snapshot.data.timebank.id =  Utils.getUuid();
-                                      snapshot.data.timebank.name = snapshot.data.community.name;
-                                      snapshot.data.timebank.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
-                                      snapshot.data.timebank.photoUrl = globals.timebankAvatarURL;
-                                      snapshot.data.timebank.createdAt = DateTime.now().millisecondsSinceEpoch;
-                                      snapshot.data.timebank.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
-                                      snapshot.data.timebank.coordinators = [].cast<String>();
-                                      snapshot.data.timebank.members = [].cast<String>();
-                                      snapshot.data.timebank.children = [].cast<String>();
-                                      snapshot.data.timebank.balance = 0.0;
-                                      snapshot.data.timebank.protected = snapshot.data.timebank.protected;
-                                      snapshot.data.timebank.parentTimebankId = widget.timebankId;
-                                      snapshot.data.timebank.rootTimebankId = FlavorConfig.values.timebankId;
-                                      snapshot.data.timebank.communityId = snapshot.data.community.id;
-                                      snapshot.data.timebank.address = snapshot.data.timebank.address;
-                                      snapshot.data.timebank.location = location == null ? GeoFirePoint(40.754387, -73.984291) : location;
-
-                                      // updating the community with default timebank id
-                                      snapshot.data.community.timebanks = [snapshot.data.timebank.id].cast<String>();
-                                      createEditCommunityBloc.createCommunity(snapshot.data);
-
-                                      Navigator.pop(context);
+                                      print(globals.timebankAvatarURL);
+                                      if (globals.timebankAvatarURL == null) {
+                                        setState(() {
+                                          this.communityImageError = 'Community logo is mandatory';
+                                        });
+                                      } else {
+                                        setState(() {
+                                          this.communityImageError = '';
+                                        });
+                                        // creation of community;
+                                        snapshot.data.UpdateCommunityDetails(SevaCore.of(context).loggedInUser, globals.timebankAvatarURL);
+                                        // creation of default timebank;
+                                        snapshot.data.UpdateTimebankDetails(SevaCore.of(context).loggedInUser, globals.timebankAvatarURL, widget);
+                                        // updating the community with default timebank id
+                                        snapshot.data.community.timebanks = [snapshot.data.timebank.id].cast<String>();
+                                        createEditCommunityBloc.createCommunity(snapshot.data, SevaCore.of(context).loggedInUser);
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) => SevaCore(
+                                              loggedInUser: SevaCore.of(context).loggedInUser,
+                                              child: CoreView(
+                                                sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     } else {
                                       setState(() {
                                         this._billingDetailsError = 'Please configure your billing details';
                                       });
                                     }
-                                    // If the form is valid, we want to show a Snackbar
-//                                _writeToDB();
-                                    // return;
-//
-//                                if (parentTimebank.children == null)
-//                                  parentTimebank.children = [];
-//                                parentTimebank.children.add(timebankModel.id);
-//                                updateTimebank(timebankModel: parentTimebank);
-
                                   } else {
 
                                   }
                                 },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(18.0),
-                                    side: BorderSide(color: Colors.red)),
+                                shape: StadiumBorder(),
                                 child: Text(
                                   'Create Community',
                                   style: TextStyle(
                                       fontSize: 16.0, color: Colors.white),
                                 ),
-                                textColor: Colors.blue,
+                                textColor: FlavorConfig.values.buttonTextColor,
                               )
                             ),
                   ),
