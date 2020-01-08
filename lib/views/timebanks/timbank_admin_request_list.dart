@@ -43,7 +43,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   var _lastReached = false;
   var _membersTitleDone = false;
   var adminsNotLoaded = true;
-  var timebankModel = TimebankModel();
+  var timebankModel = TimebankModel({});
   var _admins = List<Widget>();
   var _coordinators = List<Widget>();
   var _members = List<Widget>();
@@ -387,6 +387,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     _admins = [];
     _members = [];
     _adminEmails = [];
+    _requests = [];
     _coordinators = [];
     emailIndexMap = HashMap();
     indexToModelMap = HashMap();
