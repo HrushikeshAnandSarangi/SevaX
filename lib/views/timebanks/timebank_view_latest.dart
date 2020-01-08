@@ -146,7 +146,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                 padding: EdgeInsets.only(left: 20),
                 scrollDirection: Axis.horizontal,
 
-                itemCount: 10,
+                itemCount: 8,
                 itemBuilder: (context,index){
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2.5),
@@ -158,7 +158,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
 
                           image: DecorationImage(fit: BoxFit.cover,
                               image: CachedNetworkImageProvider(
-                                  userModels.userModelList[index].photoURL
+                                  userModels.userModelList[index].photoURL,
+
                               ),
                           )
                       ),
@@ -326,7 +327,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                         shape: BoxShape.circle,
 
                         image: DecorationImage(fit: BoxFit.cover,
-                            image: NetworkImage(user.photoURL)
+                            image: CachedNetworkImageProvider(user.photoURL)
                     ),
 
                   )

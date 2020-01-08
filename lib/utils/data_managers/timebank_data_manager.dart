@@ -76,33 +76,28 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 }
 
 /// Get all timebanknew associated with a User as a Stream_umesh
-Stream<List<TimebankModel>> getSubTimebanksForUserStream(
-    {@required String userId}) async* {
-  var data = Firestore.instance
+Future<List<TimebankModel>> getSubTimebanksForUserStream(
+    {@required String communityId}) async {
+
+  List<String> timeBankIdList = [];
+  List<TimebankModel> timeBankModelList = [];
+
+   await Firestore.instance
       .collection('communities')
-      .where('id', isEqualTo: 'cc0f1eb6-62fc-4dba-a56c-3b04c33eecce')
-      .snapshots();
-
-
-
-  yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
-      handleData: (snapshot, timebankSink) {
-
-        print('T_DAta${snapshot.documents}');
-        List<TimebankModel> modelList = [];
-        snapshot.documents.forEach(
-          (documentSnapshot) {
-            TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
-            if (model.rootTimebankId == FlavorConfig.values.timebankId)
-              modelList.add(model);
-          },
-        );
-
-        timebankSink.add(modelList);
-      },
-    ),
-  );
+      .document(communityId)
+      .get().then((DocumentSnapshot documentSnaphot){
+        Map<String,dynamic> dataMap = documentSnaphot.data;
+        List timeBankIdList = dataMap["timebanks"];
+        timeBankIdList=List.castFrom(timeBankIdList);
+  });
+   print(timeBankIdList);
+  for (int i = 0; i < timeBankIdList.length; i += 1) {
+    TimebankModel timeBankModel = await getTimeBankForId(
+      timebankId: timeBankIdList[i],
+    );
+    timeBankModelList.add(timeBankModel);
+  }
+  return timeBankModelList;
 }
 
 /// Get all timebanknew associated with a User as a Stream

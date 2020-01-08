@@ -37,6 +37,8 @@ class CommunityFindBloc {
 class CommunityCreateEditController {
   CommunityModel community = CommunityModel({});
   TimebankModel timebank = new TimebankModel({});
+  UserModel loggedinuser;
+  List<TimebankModel> timebanks = [];
   String selectedAddress;
   String timebankAvatarURL = null;
   List addedMembersId = [];
@@ -77,6 +79,10 @@ class CommunityCreateEditController {
     this.timebank.updateValueByKey('location', location == null ? GeoFirePoint(40.754387, -73.984291) : location);
   }
 
+  updateUserDetails(userdata) {
+    this.loggedinuser = userdata;
+  }
+
 }
 
 class CommunityCreateEditBloc {
@@ -93,6 +99,18 @@ class CommunityCreateEditBloc {
   }
   dispose() {
     _createEditCommunity.close();
+  }
+  updateUserDetails(userdata) {
+    var community = this._createEditCommunity.value;
+    community.updateUserDetails(userdata);
+    _createEditCommunity.add(community);
+  }
+  getChildTimeBanks() async{
+    var community = this._createEditCommunity.value;
+    print("weareasing${community.loggedinuser}");
+    var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity);
+    community.timebanks = timebanks;
+    _createEditCommunity.add(community);
   }
   createCommunity(CommunityCreateEditController community, UserModel user) async {
     // create a community flow;

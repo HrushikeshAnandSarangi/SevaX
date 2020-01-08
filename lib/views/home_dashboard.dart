@@ -1,9 +1,11 @@
 import 'dart:collection';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
@@ -94,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
                           color: Colors.grey,
                           alignment: Alignment.center,
                           onPressed: (){
+                            createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -210,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
 
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                  image: NetworkImage(timebank.photoUrl),
+                  image: CachedNetworkImageProvider(timebank.photoUrl),
                   fit: BoxFit.cover
               )
           ),
