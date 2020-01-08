@@ -47,7 +47,7 @@ class FirestoreManager {
         handleData: (snapshot, timebankSink) {
           List<TimebankModel> modelList = [];
           snapshot.documents.forEach((documentSnapshot) {
-            TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
+            TimebankModel model = TimebankModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
             modelList.add(model);
           });

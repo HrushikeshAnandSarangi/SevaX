@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
@@ -22,13 +23,18 @@ class TimebankCreate extends StatelessWidget {
   TimebankCreate({@required this.timebankId});
   @override
   Widget build(BuildContext context) {
+//    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your Community' : 'Create a ${FlavorConfig.values.timebankTitle}';
+    var title = /*FlavorConfig.appFlavor == Flavor.APP ?'Create your Community' : */ 'Create a ${FlavorConfig.values.timebankTitle}';
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        elevation: 0.5,
+        backgroundColor: Color(0xFFFFFFFF),
+        leading: BackButton(color: Colors.black54),
         title: Text(
-          'Create a ${FlavorConfig.values.timebankTitle}',
-          style: TextStyle(color: Colors.white),
+          title,
+          style: TextStyle(color: Colors.black54),
         ),
-        centerTitle: false,
       ),
       body: TimebankCreateForm(
         timebankId: timebankId,
@@ -36,7 +42,6 @@ class TimebankCreate extends StatelessWidget {
     );
   }
 }
-//FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang Codes" : "Timebank codes"
 
 // Create a Form Widget
 class TimebankCreateForm extends StatefulWidget {
@@ -57,7 +62,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
 
-  TimebankModel timebankModel = TimebankModel();
+  TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;
@@ -70,6 +75,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
+    if(FlavorConfig.appFlavor == Flavor.APP){
+      fetchCurrentlocation();
+    }
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -105,7 +113,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
     timebankModel.location =
-        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    location == null ? GeoFirePoint(40.754387, -73.984291) : location;
 
     createTimebank(timebankModel: timebankModel);
 
@@ -120,166 +128,78 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     return Form(
         key: _formKey,
         child: Container(
-          padding: EdgeInsets.all(20.0),
-          child: SingleChildScrollView(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Center(
-                  child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+            child: SingleChildScrollView(
+              child: FlavorConfig.appFlavor == Flavor.APP? createSevaX : createTimebankHumanityFirst,
+            )
+        )
+    );
+  }
+
+  Widget get createSevaX {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            child: Text(
+              'Timebank is where you can create requests and get offers with in your team.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Center(
+              child: Padding(
                 padding: EdgeInsets.all(5.0),
-                child: TimebankAvatar(),
-              )),
-              Padding(
-                padding: EdgeInsets.all(15.0),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: FlavorConfig.values.timebankName == "Yang 2020"
-                      ? "Yang Gang Chapter"
-                      : "Timebank Name",
-                  labelText: FlavorConfig.values.timebankName == "Yang 2020"
-                      ? "Yang Gang Chapter"
-                      : "Timebank Name",
-                  // labelStyle: textStyle,
-                  // labelStyle: textStyle,
-                  // labelText: 'Description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
+                child: Column(
+                  children: <Widget>[
+                    TimebankAvatar(),
+                    Text(''),
+                    Text(
+                      'Timebank cover',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    )
+                  ],
                 ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 1,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  timebankModel.name = value;
-                },
+              )
+          ),
+          headingText('Name your timbank'),
+          TextFormField(
+            decoration: InputDecoration(
+              hintText: "Ex: Pets-in-town, Citizen collab",
+            ),
+            keyboardType: TextInputType.multiline,
+            maxLines: 1,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              timebankModel.name = value;
+            },
+          ),
+          headingText('About'),
+          TextFormField(
+            decoration: InputDecoration(
+              hintText: 'Ex: A bit more about your team',
               ),
-              Text(' '),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'What you are about',
-                  labelText: 'Mission Statement',
-                  // labelStyle: textStyle,
-                  // labelStyle: textStyle,
-                  // labelText: 'Description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  timebankModel.missionStatement = value;
-                },
-              ),
-              Text(''),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'The Timebank\'s primary email',
-                  labelText: 'Email',
-                  // labelStyle: textStyle,
-                  // labelStyle: textStyle,
-                  // labelText: 'Description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 1,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  timebankModel.emailId = value;
-                },
-              ),
-              Text(''),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'The Timebanks primary phone number',
-                  labelText: 'Phone Number',
-                  // labelStyle: textStyle,
-                  // labelStyle: textStyle,
-                  // labelText: 'Description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 1,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  timebankModel.phoneNumber = value;
-                },
-              ),
-              Text(''),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Your main address',
-                  labelText: 'Address',
-                  // labelStyle: textStyle,
-                  // labelStyle: textStyle,
-                  // labelText: 'Description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  timebankModel.address = value;
-                },
-              ),
-              Row(
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter some text';
+              }
+              timebankModel.missionStatement = value;
+            },
+          ),
+          tappableInviteMembers,
+          Row(
+            children: <Widget>[
+              headingText('Private team'),
+              Column(
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(5),
-                  ),
-                  Text(
-                    'Closed :',
-                    style: TextStyle(fontSize: 18),
-                  ),
+                  Divider(),
                   Checkbox(
                     value: protectedVal,
                     onChanged: (bool value) {
@@ -290,90 +210,313 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   ),
                 ],
               ),
-              // Text(sevaUserID),
-              Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: FlatButton(
-                    onPressed: () async {
-                      print(
-                          " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
+            ],
+          ),
 
-                      onActivityResult = await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SelectMembersInGroup(
-                            timebankId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentTimebank,
-                            userSelected: selectedUsers == null
-                                ? selectedUsers = HashMap()
-                                : selectedUsers,
-                            userEmail: SevaCore.of(context).loggedInUser.email,
-                          ),
-                        ),
-                      );
+          Text(
+            'With private team, new members needs yor approval to join team',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+          headingText('Is this pin at a right place?'),
 
-                      if (onActivityResult != null &&
-                          onActivityResult.containsKey("membersSelected")) {
-                        selectedUsers = onActivityResult['membersSelected'];
-                        setState(() {
-                          if (selectedUsers.length == 0)
-                            memberAssignment = "Assign to volunteers";
-                          else
-                            memberAssignment =
-                                "${selectedUsers.length} volunteers selected";
-                        });
-                        print(
-                            "Data is present Selected users ${selectedUsers.length}");
-                      } else {
-                        print("No users where selected");
-                        //no users where selected
-                      }
-                    },
-                    child: Text(
-                      memberAssignment,
-                      style: TextStyle(fontSize: 16.0, color: Colors.blue),
-                    ),
-                  )),
-
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: _showMembers(),
+          Center(
+            child: FlatButton.icon(
+              icon: Icon(Icons.add_location),
+              label: Text(
+                selectedAddress == null || selectedAddress.isEmpty
+                    ? 'Add Location'
+                    : selectedAddress,
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.add_location),
-                    label: Text(
-                      selectedAddress == null || selectedAddress.isEmpty
-                          ? 'Add Location'
-                          : selectedAddress,
+              color: Colors.grey[200],
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<GeoFirePoint>(
+                    builder: (context) => LocationPicker(
+                      selectedLocation: location,
                     ),
-                    color: Colors.grey[200],
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<GeoFirePoint>(
-                          builder: (context) => LocationPicker(
-                            selectedLocation: location,
-                          ),
-                        ),
-                      ).then((point) {
-                        if (point != null) location = point;
-                        _getLocation();
-                        log('ReceivedLocation: $selectedAddress');
-                      });
-                    },
                   ),
-                ),
+                ).then((point) {
+                  if (point != null) location = point;
+                  _getLocation();
+                  log('ReceivedLocation: $selectedAddress');
+                });
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Container(
+                alignment: Alignment.center,
+                child: FutureBuilder<Object>(
+                    future: getTimeBankForId(timebankId: widget.timebankId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) return Text('Error');
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) return Offstage();
+                      TimebankModel parentTimebank = snapshot.data;
+                      return RaisedButton(
+                        // color: Colors.blue,
+                        color: Colors.red,
+                        onPressed: () {
+                          // Validate will return true if the form is valid, or false if
+                          // the form is invalid.
+                          //if (location != null) {
+                          if (_formKey.currentState.validate()) {
+                            // If the form is valid, we want to show a Snackbar
+                            _writeToDB();
+                            // return;
+
+                            if (parentTimebank.children == null)
+                              parentTimebank.children = [];
+                            parentTimebank.children.add(timebankModel.id);
+                            updateTimebank(timebankModel: parentTimebank);
+                            Navigator.pop(context);
+                          }
+                        },
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(18.0),
+                            side: BorderSide(color: Colors.red)
+                        ),
+                        child: Text(
+                          'Create Community',
+                          style: TextStyle(
+                              fontSize: 16.0, color: Colors.white),
+                        ),
+                        textColor: Colors.blue,
+                      );
+                    })),
+          ),
+      ]
+    );
+  }
+
+  Widget headingText(String name) {
+    return Padding(
+      padding: EdgeInsets.only(top: 15),
+      child: Text(
+        name,
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+        ),
+      ),
+    );
+  }
+
+  Widget get createTimebankHumanityFirst {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Center(
+            child: Padding(
+              padding: EdgeInsets.all(5.0),
+              child: TimebankAvatar(),
+            )),
+        Padding(
+          padding: EdgeInsets.all(15.0),
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: FlavorConfig.values.timebankName == "Yang 2020"
+                ? "Yang Gang Chapter"
+                : "Timebank Name",
+            labelText: FlavorConfig.values.timebankName == "Yang 2020"
+                ? "Yang Gang Chapter"
+                : "Timebank Name",
+            // labelStyle: textStyle,
+            // labelStyle: textStyle,
+            // labelText: 'Description',
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                const Radius.circular(20.0),
               ),
-              Center(
-                child: Text(
-                  'We recommend you to add a vicinity location',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+              borderSide: new BorderSide(
+                color: Colors.black,
+                width: 1.0,
               ),
+            ),
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            timebankModel.name = value;
+          },
+        ),
+        Text(' '),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: 'What you are about',
+            labelText: 'Mission Statement',
+            // labelStyle: textStyle,
+            // labelStyle: textStyle,
+            // labelText: 'Description',
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                const Radius.circular(20.0),
+              ),
+              borderSide: new BorderSide(
+                color: Colors.black,
+                width: 1.0,
+              ),
+            ),
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            timebankModel.missionStatement = value;
+          },
+        ),
+        Text(''),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: 'The Timebank\'s primary email',
+            labelText: 'Email',
+            // labelStyle: textStyle,
+            // labelStyle: textStyle,
+            // labelText: 'Description',
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                const Radius.circular(20.0),
+              ),
+              borderSide: new BorderSide(
+                color: Colors.black,
+                width: 1.0,
+              ),
+            ),
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            timebankModel.emailId = value;
+          },
+        ),
+        Text(''),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: 'The Timebanks primary phone number',
+            labelText: 'Phone Number',
+            // labelStyle: textStyle,
+            // labelStyle: textStyle,
+            // labelText: 'Description',
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                const Radius.circular(20.0),
+              ),
+              borderSide: new BorderSide(
+                color: Colors.black,
+                width: 1.0,
+              ),
+            ),
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            timebankModel.phoneNumber = value;
+          },
+        ),
+        Text(''),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: 'Your main address',
+            labelText: 'Address',
+            // labelStyle: textStyle,
+            // labelStyle: textStyle,
+            // labelText: 'Description',
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(
+                const Radius.circular(20.0),
+              ),
+              borderSide: new BorderSide(
+                color: Colors.black,
+                width: 1.0,
+              ),
+            ),
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            timebankModel.address = value;
+          },
+        ),
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(5),
+            ),
+            Text(
+              'Closed :',
+              style: TextStyle(fontSize: 18),
+            ),
+            Checkbox(
+              value: protectedVal,
+              onChanged: (bool value) {
+                setState(() {
+                  protectedVal = value;
+                });
+              },
+            ),
+          ],
+        ),
+        // Text(sevaUserID),
+        tappableInviteMembers,
+        Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: _showMembers(),
+        ),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: FlatButton.icon(
+              icon: Icon(Icons.add_location),
+              label: Text(
+                selectedAddress == null || selectedAddress.isEmpty
+                    ? 'Add Location'
+                    : selectedAddress,
+              ),
+              color: Colors.grey[200],
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<GeoFirePoint>(
+                    builder: (context) => LocationPicker(
+                      selectedLocation: location,
+                    ),
+                  ),
+                ).then((point) {
+                  if (point != null) location = point;
+                  _getLocation();
+                  log('ReceivedLocation: $selectedAddress');
+                });
+              },
+            ),
+          ),
+        ),
+        Center(
+          child: Text(
+            'We recommend you to add a vicinity location',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontStyle: FontStyle.italic),
+          ),
+        ),
 
 //              Padding(
 //                padding: const EdgeInsets.all(8.0),
@@ -414,59 +557,120 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 //                  ),
 //                ),
 //              ),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Container(
-                    alignment: Alignment.center,
-                    child: FutureBuilder<Object>(
-                        future: getTimeBankForId(timebankId: widget.timebankId),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) return Text('Error');
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) return Offstage();
-                          TimebankModel parentTimebank = snapshot.data;
-                          return RaisedButton(
-                            // color: Colors.blue,
-                            color: Colors.red,
-                            onPressed: () {
-                              // Validate will return true if the form is valid, or false if
-                              // the form is invalid.
-                              //if (location != null) {
-                              if (_formKey.currentState.validate()) {
-                                // If the form is valid, we want to show a Snackbar
-                                _writeToDB();
-                                // return;
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Container(
+              alignment: Alignment.center,
+              child: FutureBuilder<Object>(
+                  future: getTimeBankForId(timebankId: widget.timebankId),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) return Text('Error');
+                    if (snapshot.connectionState ==
+                        ConnectionState.waiting) return Offstage();
+                    TimebankModel parentTimebank = snapshot.data;
+                    return RaisedButton(
+                      // color: Colors.blue,
+                      color: Colors.red,
+                      onPressed: () {
+                        // Validate will return true if the form is valid, or false if
+                        // the form is invalid.
+                        //if (location != null) {
+                        if (_formKey.currentState.validate()) {
+                          // If the form is valid, we want to show a Snackbar
+                          _writeToDB();
+                          // return;
 
-                                if (parentTimebank.children == null)
-                                  parentTimebank.children = [];
-                                parentTimebank.children.add(timebankModel.id);
-                                updateTimebank(timebankModel: parentTimebank);
-                                Navigator.pop(context);
-                              }
+                          if (parentTimebank.children == null)
+                            parentTimebank.children = [];
+                          parentTimebank.children.add(timebankModel.id);
+                          updateTimebank(timebankModel: parentTimebank);
+                          Navigator.pop(context);
+                        }
 //                              } else {
 //                                Scaffold.of(context).showSnackBar(SnackBar(
 //                                  content: Text('Location not added'),
 //                                ));
 //                              }
-                            },
-                            child: Text(
-                              'Create ${FlavorConfig.values.timebankTitle}',
-                              style: TextStyle(
-                                  fontSize: 16.0, color: Colors.white),
-                            ),
-                            textColor: Colors.blue,
-                          );
-                        })),
-              ),
-              // Padding(
-              //   padding: EdgeInsets.only(top: 8.0),
-              //   child:
-              //   Text('Add Admins'),
-              // ),
-            ],
-          )),
-        ));
+                      },
+                      child: Text(
+                        'Create ${FlavorConfig.values.timebankTitle}',
+                        style: TextStyle(
+                            fontSize: 16.0, color: Colors.white),
+                      ),
+                      textColor: Colors.blue,
+                    );
+                  })),
+        ),
+      ],
+    );
+  }
+
+  void addVolunteers() async {
+    print(
+        " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
+
+    onActivityResult = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SelectMembersInGroup(
+          timebankId: SevaCore.of(context)
+              .loggedInUser
+              .currentTimebank,
+          userSelected: selectedUsers == null
+              ? selectedUsers = HashMap()
+              : selectedUsers,
+          userEmail: SevaCore.of(context).loggedInUser.email,
+        ),
+      ),
+    );
+
+    if (onActivityResult != null &&
+        onActivityResult.containsKey("membersSelected")) {
+      selectedUsers = onActivityResult['membersSelected'];
+      setState(() {
+        if (selectedUsers.length == 0)
+          memberAssignment = "Assign to volunteers";
+        else
+          memberAssignment =
+          "${selectedUsers.length} volunteers selected";
+      });
+      print(
+          "Data is present Selected users ${selectedUsers.length}");
+    } else {
+      print("No users where selected");
+      //no users where selected
+    }
+  }
+
+  Widget get tappableInviteMembers {
+    return FlavorConfig.appFlavor == Flavor.APP ?
+      GestureDetector(
+        onTap: () async {
+          addVolunteers();
+        },
+        child: Padding(
+        padding: EdgeInsets.only(top: 15),
+          child: Text(
+          'Invite members +',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      )
+      )
+      : Padding(
+          padding: EdgeInsets.only(top: 8.0),
+          child: FlatButton(
+            onPressed: () async {
+              addVolunteers();
+            },
+            child: Text(
+              memberAssignment,
+              style: TextStyle(fontSize: 16.0, color: Colors.blue),
+            ),
+          )
+      );
   }
 
   Future _getLocation() async {
@@ -486,5 +690,20 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     } else {
       Text(globals.addedMembersId.toString());
     }
+  }
+
+  void fetchCurrentlocation(){
+    Location().getLocation().then((onValue){
+      print("Location1:$onValue");
+        location = GeoFirePoint(onValue.latitude,onValue.longitude);
+      LocationUtility().getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      ).then((address){
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
   }
 }

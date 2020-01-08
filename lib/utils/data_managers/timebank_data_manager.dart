@@ -208,7 +208,7 @@ Future<List<String>> getAllTimebankIdStream(
       .document(timebankId)
       .get()
       .then((onValue) {
-    prefix0.TimebankModel model = prefix0.TimebankModel.fromMap(onValue.data);
+    prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
 
     var admins =  model.admins;
     var coordinators =  model.coordinators;

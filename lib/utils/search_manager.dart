@@ -29,6 +29,7 @@ class SearchManager {
     @required queryString,
   }) async* {
     print("searchForUser :: ---------------");
+//    sevaxuser
     String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
@@ -167,7 +168,7 @@ class SearchManager {
     List<TimebankModel> timebankList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      TimebankModel model = TimebankModel.fromMap(sourceMap);
+      TimebankModel model = TimebankModel(sourceMap);
       model.id = map['_id'];
       timebankList.add(model);
     });

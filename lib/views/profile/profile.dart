@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/views/community/create_community.dart';
+//import 'package:sevaexchange/views/community/create_community.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/views/news/overflow_constants.dart';
 import 'package:sevaexchange/views/profile/edit_bio.dart';
@@ -15,6 +15,7 @@ import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/profile/reported_users.dart';
 import 'package:sevaexchange/views/timebanks/edit_super_admins_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
+import 'package:sevaexchange/views/timebanks/timebank_request_list.dart';
 //import 'package:sevaexchange/views/profile/edit_profilepic.dart';
 //import 'package:shimmer/shimmer.dart';
 //import 'package:sevaexchange/globals.dart';
@@ -648,12 +649,42 @@ class _ProfilePageState extends State<ProfilePage>
           if (!firebaseUser.isEmailVerified) verifyBtn,
           administerTimebanks,
           timebankslist,
+          adminMemberRequestList,
           joinViaCode,
           tasksWidget,
           reportsData,
         ],
       ),
     );
+  }
+
+  Widget get adminMemberRequestList{
+    if(timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
+        FlavorConfig.values.timebankName != "Yang 2020"){
+      return getActionCards(
+        title: 'Member timebank request',
+        trailingIcon: Icons.navigate_next,
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(12),
+          bottomLeft: Radius.circular(12),
+        ),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return TimeBankRequestList(
+                  timebankid: FlavorConfig.values.timebankId,
+                  title: 'Timebanks List',
+                  superAdminTimebankModel: this.timebankModel,
+                );
+              },
+            ),
+          );
+        },
+      );
+    }else{
+      return Offstage();
+    }
   }
 
   Widget get reportsData {

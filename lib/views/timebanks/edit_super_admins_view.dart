@@ -101,16 +101,6 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
       });
     });
 
-//    await Firestore.instance
-//        .collection('users')
-//        .where('sevauserid', isEqualTo: sevaUserId)
-//        .getDocuments()
-//        .then((QuerySnapshot querySnapshot) {
-//      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-//        userModel = UserModel.fromMap(documentSnapshot.data);
-//      });
-//    });
-
     return joinRequest;
   }
 

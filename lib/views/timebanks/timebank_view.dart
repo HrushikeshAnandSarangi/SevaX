@@ -61,94 +61,11 @@ class _TimebankViewState extends State<TimebankView> {
     //this.getRequestData = new JoinRequestModel();
   }
 
-  Future getJoinRequestData() async {
-    this.getRequestData = new JoinRequestModel();
-    this.getRequestData = await getRequestStatusForId(
-        timebankId: SevaCore.of(context).loggedInUser.currentTimebank);
-  }
-
-  Future<JoinRequestModel> getRequestStatusForId(
-      {@required String timebankId}) async {
-    assert(timebankId != null && timebankId.isNotEmpty,
-        "Seva UserId cannot be null or empty");
-
-    JoinRequestModel joinRequest;
-    await Firestore.instance
-        .collection('join_requests')
-        .where('entity_type', isEqualTo: 'Timebank')
-        .where('entity_id', isEqualTo: timebankId)
-        .where('user_id',
-            isEqualTo: SevaCore.of(context).loggedInUser.sevaUserID)
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-        joinRequest = JoinRequestModel.fromMap(documentSnapshot.data);
-        print("joining data $joinRequest");
-      });
-    });
-
-//    await Firestore.instance
-//        .collection('users')
-//        .where('sevauserid', isEqualTo: sevaUserId)
-//        .getDocuments()
-//        .then((QuerySnapshot querySnapshot) {
-//      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-//        userModel = UserModel.fromMap(documentSnapshot.data);
-//      });
-//    });
-
-    return joinRequest;
-  }
-
   @override
   Widget build(BuildContext buildcontext) {
     loggedInUser = SevaCore.of(context).loggedInUser.sevaUserID;
-//    this.getJoinRequestData().catchError((error) {
-//      print(error);
-//    });
     return timebankStreamBuilder(buildcontext);
   }
-
-//  void showDeleteConfirmation(TimebankModel model) {
-//    print("${timebankModel.id} -----------------------");
-//    showDialog(
-//      context: context,
-//      builder: (buildContext) {
-//        return AlertDialog(
-//          title: Text('Delete ${timebankModel.name}'),
-//          content:
-//              Text('Are you sure you want to delete ${timebankModel.name}'),
-//          actions: <Widget>[
-//            RaisedButton(
-//              color: Colors.red,
-//              child: Text(
-//                '  Delete  ',
-//                style: TextStyle(color: Colors.white),
-//              ),
-//              onPressed: () async {
-//                // call firebase to delete the doc || when data is deleted the screen refreshes and shoes null pointer fix that one;
-//                Navigator.pop(context);
-//                await Firestore.instance
-//                    .collection("timebanknew")
-//                    .document(timebankModel.id)
-//                    .delete()
-//                    .then((onValue) {
-//                  Navigator.pop(buildContext);
-//                });
-//              },
-//            ),
-//            FlatButton(
-//              child: Text('Cancel'),
-//              onPressed: () {
-//                Navigator.pop(buildContext);
-//              },
-//            ),
-//          ].reversed.toList(),
-//        );
-//      },
-//      barrierDismissible: false,
-//    );
-//  }
 
   StreamBuilder<TimebankModel> timebankStreamBuilder(
       BuildContext buildcontext) {

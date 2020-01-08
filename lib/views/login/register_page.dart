@@ -194,12 +194,14 @@ class _RegisterPageState extends State<RegisterPage>
       child: Column(
         children: <Widget>[
           getFormField(
+            shouldRestrictLength: true,
             hint: 'Full Name',
             validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
             capitalization: TextCapitalization.words,
             onSave: (value) => this.fullName = value,
           ),
           getFormField(
+            shouldRestrictLength: false,
             hint: 'Email Address',
             validator: (value) {
               if (!isValidEmail(value.trim())) {
@@ -211,6 +213,7 @@ class _RegisterPageState extends State<RegisterPage>
             onSave: (value) => this.email = value.trim(),
           ),
           getFormField(
+            shouldRestrictLength: false,
             hint: 'Password',
             shouldObscure: shouldObscure,
             validator: (value) {
@@ -232,6 +235,7 @@ class _RegisterPageState extends State<RegisterPage>
             ),
           ),
           getFormField(
+            shouldRestrictLength: false,
             hint: 'Confirm Password',
             shouldObscure: shouldObscure,
             validator: (value) {
@@ -256,6 +260,7 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Widget getFormField({
+    bool shouldRestrictLength,
     String hint,
     String Function(String value) validator,
     Function(String value) onSave,
@@ -263,6 +268,7 @@ class _RegisterPageState extends State<RegisterPage>
     Widget suffix,
     TextCapitalization capitalization = TextCapitalization.none,
   }) {
+    var size = shouldRestrictLength ? 20 : 150;
     return Padding(
       padding:
           const EdgeInsets.only(bottom: 8.0, left: 16.0, right: 16.0, top: 8.0),
@@ -280,7 +286,7 @@ class _RegisterPageState extends State<RegisterPage>
         validator: validator,
         onSaved: onSave,
         inputFormatters: [
-          LengthLimitingTextInputFormatter(20),
+          LengthLimitingTextInputFormatter(size),
         ],
         obscureText: shouldObscure,
       ),

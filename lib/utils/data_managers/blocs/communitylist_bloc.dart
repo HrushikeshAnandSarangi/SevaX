@@ -1,9 +1,17 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CommunityBloc {
+class CommunityFindBloc {
   final _repository = Repository();
   final _communitiesFetcher = PublishSubject<CommunityListModel>();
   final searchOnChange = new BehaviorSubject<String>();
@@ -26,4 +34,74 @@ class CommunityBloc {
   }
 }
 
-final bloc = CommunityBloc();
+class CommunityCreateEditController {
+  CommunityModel community = CommunityModel({});
+  TimebankModel timebank = new TimebankModel({});
+  String selectedAddress;
+  String timebankAvatarURL = null;
+  List addedMembersId = [];
+  List addedMembersFullname = [];
+  List addedMembersPhotoURL = [];
+  bool loading  = false;
+  HashMap selectedUsers = HashMap();
+  CommunityCreateEditController() {
+    print(timebank);
+  }
+
+  UpdateCommunityDetails(user, timebankimageurl) {
+    this.community.id = Utils.getUuid();
+    this.community.logo_url = timebankimageurl;
+    this.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
+    this.community.created_by = user.sevaUserID;
+    this.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
+    this.community.primary_email = user.email;
+    this.community.admins = [user.sevaUserID];
+  }
+
+  UpdateTimebankDetails(user,  timebankimageurl, widget) {
+    this.timebank.updateValueByKey('id',  Utils.getUuid());
+    this.timebank.updateValueByKey('name', this.community.name);
+    this.timebank.updateValueByKey('creatorId', user.sevaUserID);
+    this.timebank.updateValueByKey('photoUrl', timebankimageurl);
+    this.timebank.updateValueByKey('createdAt', DateTime.now().millisecondsSinceEpoch);
+    this.timebank.updateValueByKey('admins', [user.sevaUserID].cast<String>());
+    this.timebank.updateValueByKey('coordinators', [].cast<String>());
+    this.timebank.updateValueByKey('members', [].cast<String>());
+    this.timebank.updateValueByKey('children', [].cast<String>());
+    this.timebank.updateValueByKey('balance', 0.0);
+    this.timebank.updateValueByKey('protected', this.timebank.protected);
+    this.timebank.updateValueByKey('parentTimebankId', widget.timebankId);
+    this.timebank.updateValueByKey('rootTimebankId', FlavorConfig.values.timebankId);
+    this.timebank.updateValueByKey('communityId', this.community.id);
+    this.timebank.updateValueByKey('address', this.timebank.address);
+    this.timebank.updateValueByKey('location', location == null ? GeoFirePoint(40.754387, -73.984291) : location);
+  }
+
+}
+
+class CommunityCreateEditBloc {
+  final _repository = Repository();
+  final _createEditCommunity = BehaviorSubject<CommunityCreateEditController>();
+
+  Observable<CommunityCreateEditController> get createEditCommunity => _createEditCommunity.stream;
+
+  CommunityCreateEditBloc(){
+    _createEditCommunity.add(CommunityCreateEditController());
+  }
+  onChange(community) {
+    _createEditCommunity.add(community);
+  }
+  dispose() {
+    _createEditCommunity.close();
+  }
+  createCommunity(CommunityCreateEditController community, UserModel user) async {
+    // create a community flow;
+//    await _repository.createCommunityByName(community.community);
+    // create a timebank flow;
+//    await _repository.createTimebankById(community.timebank);
+    // update user to the timebank.
+    await _repository.updateUserWithTimeBankIdCommunityId(user, community.timebank.id, community.community.id);
+  }
+}
+final createEditCommunityBloc = CommunityCreateEditBloc();
+final communityBloc = CommunityFindBloc();

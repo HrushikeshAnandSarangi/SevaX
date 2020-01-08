@@ -191,7 +191,8 @@ class NewsImageState extends State<NewsImage>
                       offstage: false,
                     ),
                     Offstage(
-                      child: Container(
+                      child:
+                      Container(
                         margin: EdgeInsets.only(left: 20),
                         child: FlatButton.icon(
                           icon: Icon(Icons.add_location),

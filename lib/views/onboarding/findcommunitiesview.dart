@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/community_model.dart';
-import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   @override
@@ -36,8 +37,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           _searchText = "";
         });
       } else {
-
-        bloc.fetchCommunities(s);
+        communityBloc.fetchCommunities(s);
         setState(() {
           _searchText = s;
         });
@@ -47,7 +47,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   void dispose() {
-    bloc.dispose();
+    communityBloc.dispose();
     super.dispose();
   }
 
@@ -128,7 +128,15 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     Text('Or'),
                     RaisedButton(
                       onPressed: () {
-                        print('create community');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context1) => SevaCore(
+                                loggedInUser: SevaCore.of(context).loggedInUser,
+                                child: CreateEditCommunityView(
+                                  timebankId: FlavorConfig.values.timebankId,
+                                ))
+                          ));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -150,7 +158,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   Widget buildList() {
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
-          stream: bloc.allCommunities,
+          stream: communityBloc.allCommunities,
           builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
             if (snapshot.hasData) {
               if (snapshot.data != null && snapshot.data.loading) {
@@ -212,7 +220,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             else if (snapshot.hasError) {
               return Text(snapshot.error.toString());
             }
-            return Text("");
+            return Expanded(child: Text(""),);
 
           }
     );
