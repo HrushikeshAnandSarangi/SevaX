@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
@@ -94,7 +95,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   }
 
   Widget getTimebackList(BuildContext context, String timebankId) {
-    if (timebankModel.id != null) {
+    if (timebankModel.id != "") {
       return getDataScrollView(
         context,
         timebankModel,
@@ -224,8 +225,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadItems() async{
     if(adminsNotLoaded){
-      getFutureTimebankJoinRequest().then((newList){
-        if(newList!=null){
+      getFutureTimebankJoinRequest(timebankID: widget.timebankId).then((newList){
+        if(newList!=null ){
           loadAllRequest(newList);
         }
       });
@@ -236,7 +237,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
             if (_coordinators.length == 0 && FlavorConfig.appFlavor == Flavor.APP) {
               loadNextCoordinators().then((onValue) {
                 if (_members.length == 0) {
-                  loadNextMembers();
+                  loadNextMembers().then((onValue){
+                    getFutureTimebankJoinRequest(timebankID: widget.timebankId).then((newList){
+                      if(newList!=null && newList.length>0 ){
+                        loadAllRequest(newList);
+                      }
+                    });
+                  });
                 }
               });
             } else {
@@ -252,16 +259,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     _requests = [];
     _requests.add(getSectionTitle(context, 'Requests'));
     for(var i=0;i<modelItemList.length;i++){
+      if(modelItemList[i].operationTaken){
+        continue;
+      }
       var userWidget =  FutureBuilder<UserModel>(
         future: FirestoreManager.getUserForId(sevaUserId: modelItemList[i].userId),
         builder: (context, snapshot) {
+          var requestModelItem = modelItemList[i];
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
             return shimmerWidget;
           }
+
           UserModel user = snapshot.data;
+
           widget.listOfMembers[user.sevaUserID] = user;
-          return getUserRequestWidget(user, context, timebankModel,modelItemList[i]);
+          return getUserRequestWidget(user, context, timebankModel,requestModelItem);
         },
       );
       _requests.add(userWidget);
@@ -316,9 +329,10 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
                     usersSet.add(joinRequestModel.userId);
                     timebankModel.members = usersSet.toList();
+                    joinRequestModel.operationTaken = true;
                     joinRequestModel.accepted = true;
                     await createJoinRequest(model: joinRequestModel);
-                    await updateTimebank(timebankModel);
+                    await _updateTimebank(timebankModel,admins: null);
                   },
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(20.0),
@@ -340,8 +354,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                   RaisedButton(
                     color: Colors.red,
                     onPressed: () async {
+                      joinRequestModel.operationTaken = true;
                       joinRequestModel.accepted = false;
-                      await createJoinRequest(model: joinRequestModel);
+                      createJoinRequest(model: joinRequestModel)
+                        .then((onValue){
+                        resetAndLoad();
+                      });
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20.0),
@@ -404,7 +422,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   }
 
   List<Widget> getContent(BuildContext context, TimebankModel model) {
-    if (timebankModel.id == null) {
+    if (timebankModel.id == "") {
       timebankModel = model;
     }
     loadItems();
@@ -466,46 +484,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
             .forEach((key, user) {
           _adminEmails.add(user.email);
-          if (isAdmin) {
-//            var widget = Slidable(
-//              delegate: SlidableDrawerDelegate(),
-//              actions: <Widget>[
-//                IconSlideAction(
-//                  icon: Icons.close,
-//                  color: Colors.red,
-//                  caption: 'Remove',
-//                  onTap: () {
-//                    List<String> admins =
-//                    timebankModel.admins.map((s) => s).toList();
-//                    admins.remove(user.sevaUserID);
-//                    updateTimebank(timebankModel, admins: admins);
-//                  },
-//                ),
-//              ],
-//              secondaryActions: <Widget>[
-//                IconSlideAction(
-//                  icon: Icons.arrow_downward,
-//                  color: Colors.orange,
-//                  caption: 'Coordinator',
-//                  onTap: () {
-//                    List<String> admins =
-//                    timebankModel.admins.map((s) => s).toList();
-//                    List<String> coordinators =
-//                    timebankModel.coordinators.map((s) => s).toList();
-//                    coordinators.add(user.sevaUserID);
-//                    admins.remove(user.sevaUserID);
-//                    updateTimebank(
-//                      timebankModel,
-//                      coordinators: coordinators,
-//                      admins: admins,
-//                    );
-//                  },
-//                ),
-//              ],
-//              child: getUserWidget(user, context, timebankModel),
-//            );
             _admins.add(getUserWidget(user, context, timebankModel,true));
-          }
+//          }
         });
         setState(() {});
       });
@@ -582,7 +562,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                 if(isAdmin) {
                   List<String> admins = timebankModel.admins.map((s) => s).toList();
                   admins.remove(user.sevaUserID);
-                  updateTimebank(timebankModel, admins: admins);
+                  _updateTimebank(timebankModel, admins: admins);
                 }else{
 
                 }
@@ -777,7 +757,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     List<String> coordinators = model.coordinators.map((s) => s).toList();
     coordinators.add(user.sevaUserID);
     admins.remove(user.sevaUserID);
-    updateTimebank(
+    _updateTimebank(
       model,
       coordinators: coordinators,
       admins: admins,
@@ -794,7 +774,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     admins.remove(user.sevaUserID);
     coordinators.remove(user.sevaUserID);
     members.remove(user.sevaUserID);
-    updateTimebank(
+    _updateTimebank(
       model,
       members: members,
       admins: admins,
@@ -1052,7 +1032,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     List<String> coordinators = model.coordinators.map((s) => s).toList();
     admins.add(user.sevaUserID);
     coordinators.remove(user.sevaUserID);
-    updateTimebank(
+    _updateTimebank(
       model,
       admins: admins,
       coordinators: coordinators,
@@ -1111,12 +1091,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     );
   }
 
-  Future updateTimebank(
+  Future _updateTimebank(
       TimebankModel model, {
         List<String> admins,
         List<String> coordinators,
         List<String> members,
       }) async {
+    if(model==null){
+      return;
+    }
     if (admins != null) {
       model.admins = admins;
     }
