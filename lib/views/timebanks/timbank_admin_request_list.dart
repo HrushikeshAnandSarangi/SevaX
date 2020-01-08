@@ -387,6 +387,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     _admins = [];
     _members = [];
     _adminEmails = [];
+    _requests = [];
     _coordinators = [];
     emailIndexMap = HashMap();
     indexToModelMap = HashMap();
