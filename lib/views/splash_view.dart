@@ -453,6 +453,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
 
     if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
@@ -767,13 +768,12 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
+    print('logg${loggedInUser}');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: CoreView(
-            sevaUserID: loggedInUser.sevaUserID,
-          ),
+          child: Home_DashBoard(),
         ),
       ),
     );

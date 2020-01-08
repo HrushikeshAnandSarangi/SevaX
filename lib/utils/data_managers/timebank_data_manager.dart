@@ -79,24 +79,27 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 Future<List<TimebankModel>> getSubTimebanksForUserStream(
     {@required String communityId}) async {
 
-  List<String> timeBankIdList = [];
+  List<dynamic> timeBankIdList = [];
   List<TimebankModel> timeBankModelList = [];
 
    await Firestore.instance
       .collection('communities')
-      .document(communityId)
+      .document('51fc2262-b924-4744-9d47-522acebcaafc')
       .get().then((DocumentSnapshot documentSnaphot){
         Map<String,dynamic> dataMap = documentSnaphot.data;
         List timeBankIdList = dataMap["timebanks"];
-        timeBankIdList=List.castFrom(timeBankIdList);
-  });
-   print(timeBankIdList);
+       // timeBankIdList=List.castFrom(timeBankIdList);
+        print('latest ${timeBankIdList}');
+
+
+   });
   for (int i = 0; i < timeBankIdList.length; i += 1) {
     TimebankModel timeBankModel = await getTimeBankForId(
       timebankId: timeBankIdList[i],
     );
     timeBankModelList.add(timeBankModel);
   }
+
   return timeBankModelList;
 }
 

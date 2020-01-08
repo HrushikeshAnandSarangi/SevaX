@@ -684,7 +684,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Home_DashBoard(""),
+                  builder: (context) => Home_DashBoard(),
                 ),
               );
             } else {
@@ -692,7 +692,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                 context,
                 MaterialPageRoute(
                   builder: (context) =>  
-                  Home_DashBoard("")/*NewsCreate(
+                  Home_DashBoard()/*NewsCreate(
                     timebankId:
                         SevaCore.of(context).loggedInUser.currentTimebank,
                   ),*/

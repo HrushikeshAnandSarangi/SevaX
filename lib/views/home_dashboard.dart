@@ -21,10 +21,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
 
 class Home_DashBoard extends StatelessWidget {
-  final String communityId;
-
-  Home_DashBoard(
-      this.communityId); // This widget is the root of your application.
+  Home_DashBoard(); // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

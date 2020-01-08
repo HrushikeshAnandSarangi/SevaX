@@ -109,7 +109,9 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     }
-
+    if (map.containsKey('currentCommunity')) {
+      this.currentCommunity = map['currentCommunity'];
+    }
     if (map.containsKey('blockedBy')) {
       List<String> blockedBy = List.castFrom(map['blockedBy']);
       this.blockedBy = blockedBy;
