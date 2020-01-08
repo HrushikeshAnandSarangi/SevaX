@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sevaexchange/views/core.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 
+import '../../flavor_config.dart';
 import '../../globals.dart' as globals;
 // import '../../auth/auth_provider.dart';
 // import '../../auth/auth_router.dart';
@@ -84,21 +85,17 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   @override
   Widget build(BuildContext context) {
     // _getAvatarURL();
+    var widthOfAvtar = FlavorConfig.appFlavor == Flavor.APP? 150.0 : 40.0;
     return Container(
       child: GestureDetector(
         onTap: () => imagePicker.showDialog(context),
         child: Container(
+          width: widthOfAvtar,
+          height: widthOfAvtar,
           child: globals.timebankAvatarURL == null
               ? Stack(
                   children: <Widget>[
-                    Container(
-                      child: CircleAvatar(
-                        radius: 40.0,
-                        // backgroundImage: Image.asset('profile'),
-                        backgroundImage:
-                            AssetImage('lib/assets/images/genericlogo.png'),
-                      ),
-                    ),
+                    defaultAvtarWidget,
                   ],
                 )
               : Container(
@@ -114,6 +111,35 @@ class _TimebankAvatarState extends State<TimebankAvatar>
                 ),
         ),
       ),
+    );
+  }
+  Widget get defaultAvtarWidget{
+    return FlavorConfig.appFlavor == Flavor.APP ? sevaXdeafaultImage : humanityFirstdefaultImage;
+  }
+
+  Widget get humanityFirstdefaultImage{
+    return Container(
+        child: CircleAvatar(
+          radius: 40.0,
+          backgroundImage:
+          AssetImage('lib/assets/images/genericlogo.png'),
+        ),
+      );
+  }
+
+  Widget get sevaXdeafaultImage {
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.red,
+            image: DecorationImage(
+                image: NetworkImage(
+                    'https://cdn.dribbble.com/users/2060373/screenshots/5676655/2_2x.jpg'),
+                fit: BoxFit.cover),
+            borderRadius: BorderRadius.all(Radius.circular(75.0)),
+            boxShadow: [
+              BoxShadow(blurRadius: 7.0, color: Colors.black12)
+            ]
+        )
     );
   }
 }

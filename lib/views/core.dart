@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geolocator/geolocator.dart' as prefix0;
 import 'package:location/location.dart';
 import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/themes/sevatheme.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/app_demo_humanity_first.dart';
@@ -37,7 +34,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'invitation/InviteMembers.dart';
 import 'news/overflow_constants.dart';
 import 'notifications/notifications_page.dart';
-//import 'package:connectivity/connectivity.dart';
 
 class SevaCore extends InheritedWidget {
   UserModel loggedInUser;

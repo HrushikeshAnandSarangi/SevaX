@@ -1,6 +1,6 @@
 import 'package:sevaexchange/models/models.dart';
 
-class BillingAddress extends DataModel {
+class BillingAddress {
   String companyname;
   String street_address1;
   String street_address2;
@@ -9,41 +9,41 @@ class BillingAddress extends DataModel {
   String country;
   int pincode;
   String additionalnotes;
-  BillingAddress({
-    this.companyname,
-    this.street_address1,
-    this.street_address2,
-    this.city,
-    this.state,
-    this.country,
-    this.pincode,
-    this.additionalnotes
-  });
 
-  BillingAddress.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('companyname')) {
-      this.companyname = map['companyname'];
+  BillingAddress(Map<String, dynamic> map) {
+    this.companyname = map.containsKey('companyname')? map['companyname'] : '';
+    this.street_address1 = map.containsKey('street_address1')? map['street_address1'] : '';
+    this.street_address2 = map.containsKey('street_address2')? map['street_address2'] : '';
+    this.city = map.containsKey('city')? map['city'] : '';
+    this.state = map.containsKey('state')? map['state'] : '';
+    this.country = map.containsKey('country')? map['country'] : '';
+    this.pincode = map.containsKey('pincode')? map['pincode'] : null;
+    this.additionalnotes = map.containsKey('additionalnotes')? map['additionalnotes'] : '';
+  }
+  updateValueByKey(String key, dynamic value) {
+    if (key == 'companyname') {
+      this.companyname = value;
     }
-    if (map.containsKey('street_address1')) {
-      this.street_address1 = map['street_address1'];
+    if (key == 'street_address1') {
+      this.street_address1 = value;
     }
-    if (map.containsKey('street_address2')) {
-      this.street_address2 = map['street_address2'];
+    if (key == 'street_address2') {
+      this.street_address2 = value;
     }
-    if (map.containsKey('city')) {
-      this.city = map['city'];
+    if (key == 'city') {
+      this.city = value;
     }
-    if (map.containsKey('state')) {
-      this.state = map['state'];
+    if (key == 'state') {
+      this.state = value;
     }
-    if (map.containsKey('country')) {
-      this.country = map['country'];
+    if (key == 'country') {
+      this.country = value;
     }
-    if (map.containsKey('pincode')) {
-      this.pincode = map['pincode'];
+    if (key == 'pincode') {
+      this.pincode = value;
     }
-    if (map.containsKey('additionalnotes')) {
-      this.additionalnotes = map['additionalnotes'];
+    if (key == 'additionalnotes') {
+      this.additionalnotes = value;
     }
   }
 
@@ -75,6 +75,11 @@ class BillingAddress extends DataModel {
     }
     return object;
   }
+
+  @override
+  String toString() {
+    return "Billing information provided : {countryName : $companyname, stateName : $state, pincode : $pincode, streetAddressOne : $street_address1, streetAddressTwo : $street_address2, companyName  : $companyname, additionalNotes : $additionalnotes }";
+  }
 }
 
 class PaymentRecord extends DataModel {
@@ -86,12 +91,8 @@ class PaymentRecord extends DataModel {
   });
 
   PaymentRecord.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('payment_created_on')) {
-      this.payment_created_on = map['payment_created_on'];
-    }
-    if (map.containsKey('type')) {
-      this.type = map['type'];
-    }
+    this.payment_created_on = map.containsKey('payment_created_on')? map['payment_created_on'] : '';
+    this.type = map.containsKey('type')? map['type'] : '';
   }
 
   Map<String, dynamic> toMap() {
@@ -122,71 +123,53 @@ class CommunityModel extends DataModel {
   List<String> coordinators;
   List<String> members;
 
-  CommunityModel({
-    this.id,
-    this.name,
-    this.primary_email,
-    this.billing_address,
-    this.payment_records,
-    this.logo_url,
-    this.cover_url,
-    this.creator_email,
-    this.created_by,
-    this.created_at,
-    this.timebanks = const <String>[],
-    this.admins = const <String>[],
-    this.coordinators = const <String>[],
-    this.members = const <String>[],
-  });
+  CommunityModel(Map<String, dynamic> map) {
+    this.id = map.containsKey('id') ? map['id']: '';
+    this.name = map.containsKey('name') ? map['name']: '';
+    this.primary_email = map.containsKey('primary_email') ? map['primary_email']: '';
+    this.billing_address =  map.containsKey(['billing_address']) ? BillingAddress(map['billing_address'].cast<String, dynamic>()) : BillingAddress({});
+    this.payment_records = map.containsKey('payment_records') ? [PaymentRecord.fromMap(map['payment_records'])]: [PaymentRecord.fromMap({})];
+    this.logo_url = map.containsKey('logo_url') ? map['logo_url']: '';
+    this.cover_url = map.containsKey('cover_url') ? map['cover_url']: '';
+    this.creator_email = map.containsKey('creator_email') ? map['creator_email']: '';
+    this.created_by = map.containsKey('created_by') ? map['created_by']: '';
+    this.created_at = map.containsKey('created_at') ? map['created_at']: '';
+    this.timebanks = map.containsKey('timebanks') ? List.castFrom(map['timebanks']): [];
+    this.admins = map.containsKey('admins') ? List.castFrom(map['admins']): [];
+    this.coordinators = map.containsKey('coordinators') ? List.castFrom(map['coordinators']): [];
+    this.members = map.containsKey('members') ? List.castFrom(map['members']): [];
+  }
 
-  CommunityModel.fromMap(Map<String, dynamic> map) {
-    if (map.containsKey('id')) {
-      this.id = map['id'];
+  updateValueByKey(String key, dynamic value) {
+    if (key == 'id') {
+      this.id = value;
     }
-    if (map.containsKey('name')) {
-      this.name = map['name'];
+    if (key == 'name') {
+      this.name = value;
     }
-    if (map.containsKey('primaryEmail')) {
-      this.primary_email = map['primary_email'];
+    if (key == 'primary_email') {
+      this.primary_email = value;
     }
-    if (map.containsKey('billing_address')) {
-      this.billing_address = new BillingAddress.fromMap(map['billing_address'].cast<String, dynamic>());
+    if (key == 'billing_address') {
+      this.billing_address = new BillingAddress(value);
     }
-    if (map.containsKey('payment_records')) {
-      this.payment_records = [];
+    if (key == 'payment_records') {
+      this.payment_records = [];;
     }
-    if (map.containsKey('logo_url')) {
-      this.logo_url = map['logo_url'];
+    if (key == 'logo_url') {
+      this.logo_url = value;
     }
-    if (map.containsKey('cover_url')) {
-      this.cover_url = map['cover_url'];
+    if (key == 'cover_url') {
+      this.cover_url = value;
     }
-    if (map.containsKey('creator_email')) {
-      this.creator_email = map['creator_email'];
+    if (key == 'creator_email') {
+      this.creator_email = value;
     }
-    if(map.containsKey('created_by')) {
-      this.created_by = map['created_by'];
+    if (key == 'created_by') {
+      this.created_by = value;
     }
-    if (map.containsKey('created_at')) {
-      this.created_at = map['created_at'];
-    }
-    if (map.containsKey('timebanks')) {
-      List timeBanks = map['timebanks'];
-      this.timebanks = List.castFrom(timeBanks);
-    }
-    if (map.containsKey('admins')) {
-      List admins = map['admins'];
-      this.admins = List.castFrom(admins);
-    }
-
-    if (map.containsKey('coordinators')) {
-      List coordinatorList = map['coordinators'];
-      this.coordinators = List.castFrom(coordinatorList);
-    }
-
-    if (map.containsKey('members')) {
-      List memberList = map['members'];
-      this.members = List.castFrom(memberList);
+    if (key == 'created_at') {
+      this.created_at = value;
     }
   }
 
