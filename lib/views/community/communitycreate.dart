@@ -321,7 +321,7 @@ class CreateEditCommunityViewFormState
                                         createEditCommunityBloc.createCommunity(snapshot.data, SevaCore.of(context).loggedInUser);
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
-                                            builder: (context) => SevaCore(
+                                            builder: (context1) => SevaCore(
                                               loggedInUser: SevaCore.of(context).loggedInUser,
                                               child: CoreView(
                                                 sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,

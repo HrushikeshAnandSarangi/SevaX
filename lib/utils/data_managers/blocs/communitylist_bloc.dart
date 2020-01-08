@@ -96,9 +96,9 @@ class CommunityCreateEditBloc {
   }
   createCommunity(CommunityCreateEditController community, UserModel user) async {
     // create a community flow;
-//    await _repository.createCommunityByName(community.community);
+    await _repository.createCommunityByName(community.community);
     // create a timebank flow;
-//    await _repository.createTimebankById(community.timebank);
+    await _repository.createTimebankById(community.timebank);
     // update user to the timebank.
     await _repository.updateUserWithTimeBankIdCommunityId(user, community.timebank.id, community.community.id);
   }
