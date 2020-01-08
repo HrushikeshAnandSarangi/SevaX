@@ -11,14 +11,13 @@ import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-// import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../flavor_config.dart';
@@ -26,24 +25,27 @@ import 'core.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
-  TimebankTabsViewHolder.of({this.timebankId});
+  final TimebankModel timebankModel;
+  TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
   @override
   Widget build(BuildContext context) {
     return TabarView(
       timebankId: timebankId,
+      timebankModel: timebankModel,
     );
   }
 }
 
 class TabarView extends StatelessWidget {
   final String timebankId;
-  TabarView({this.timebankId});
+  final TimebankModel timebankModel;
+  TabarView({this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 5,
+        length: 4,
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight),
@@ -70,9 +72,6 @@ class TabarView extends StatelessWidget {
                   Tab(
                     text: "About",
                   ),
-                  Tab(
-                    text: "Members",
-                  ),
                 ],
               ),
             ),
@@ -88,8 +87,10 @@ class TabarView extends StatelessWidget {
               OffersModule.of(
                 timebankId: timebankId,
               ),
-              Icon(Icons.directions_car),
-              Icon(Icons.directions_transit),
+              TimeBankAboutView.of(
+                timebankModel: timebankModel,
+                email: SevaCore.of(context).loggedInUser.email,
+              )
             ],
           ),
         ),

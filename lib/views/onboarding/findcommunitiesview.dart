@@ -5,6 +5,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/community_model.dart';
+import 'package:sevaexchange/views/home_dashboard.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   @override
@@ -34,6 +36,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           _searchText = "";
         });
       } else {
+
         bloc.fetchCommunities(s);
         setState(() {
           _searchText = s;
@@ -174,6 +177,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                 children: <Widget>[
                                   RaisedButton(
                                     onPressed: () {
+
+                                      Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                      builder: (context) => OnBoardWithTimebank(snapshot.data.communities[index].id)
+                                      //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
+                                      ),
+                                      );
                                       print('clicked');
                                     },
                                     child: Row(
@@ -181,7 +192,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                       children: <Widget>[
                                         Padding(
                                           padding: const EdgeInsets.all(0.0),
-                                          child: Text('Join'),
+                                          child: Text('Join',),
                                         ),
                                       ],
                                     ),

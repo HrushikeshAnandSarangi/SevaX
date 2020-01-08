@@ -75,8 +75,10 @@ class _CompletedListState extends State<CompletedList> {
   @override
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
-      return Center(
-        child: Text('You have not completed any tasks'),
+      return Padding(
+        padding: const EdgeInsets.only(top:58.0),
+        child: Text('You have not completed any tasks',
+            textAlign: TextAlign.center),
       );
     }
     return ListView.builder(

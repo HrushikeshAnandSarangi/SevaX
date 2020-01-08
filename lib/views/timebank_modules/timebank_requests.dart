@@ -770,8 +770,9 @@ class NearRequestListItems extends StatelessWidget {
                     height: 45,
                     width: 45,
                     child: FadeInImage.assetNetwork(
-                        placeholder: 'lib/assets/images/profile.png',
-                        image: model.photoUrl),
+                      placeholder: 'lib/assets/images/profile.png',
+                      image: model.photoUrl,
+                    ),
                   ),
                 ),
                 SizedBox(width: 16),
@@ -1122,7 +1123,7 @@ class RequestListItems extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Text(
-                                       'Applied',
+                                      'Applied',
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),

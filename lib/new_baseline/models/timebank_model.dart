@@ -10,6 +10,7 @@ class TimebankModel {
   String address;
   String creatorId;
   String photoUrl;
+  String community_id;
   int createdAt;
   List<String> admins;
   List<String> coordinators;
@@ -21,26 +22,27 @@ class TimebankModel {
   double balance;
   GeoFirePoint location;
 
-  TimebankModel(
-      {this.id,
-      this.name,
-      this.missionStatement,
-      this.emailId,
-      this.phoneNumber,
-      this.address,
-      this.creatorId,
-      this.photoUrl,
-      this.createdAt,
-      this.admins,
-      this.coordinators,
-      this.members,
-      this.protected,
-      this.parentTimebankId,
-      this.rootTimebankId,
-      this.children,
-      this.balance,
-      this.location,
-      });
+  TimebankModel({
+    this.id,
+    this.name,
+    this.missionStatement,
+    this.emailId,
+    this.phoneNumber,
+    this.address,
+    this.creatorId,
+    this.photoUrl,
+    this.createdAt,
+    this.admins,
+    this.coordinators,
+    this.members,
+    this.community_id,
+    this.protected,
+    this.parentTimebankId,
+    this.rootTimebankId,
+    this.children,
+    this.balance,
+    this.location,
+  });
 
   factory TimebankModel.fromMap(Map<String, dynamic> json) {
     TimebankModel timebankModel = new TimebankModel(
@@ -53,6 +55,7 @@ class TimebankModel {
       address: json["address"] == null ? null : json["address"],
       creatorId: json["creator_id"] == null ? null : json["creator_id"],
       photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+      community_id: json["community_id"] == null ? null : json["community_id"],
       createdAt: json["created_at"] == null ? null : json["created_at"],
       admins: json["admins"] == null
           ? null
@@ -113,5 +116,11 @@ class TimebankModel {
       map['location'] = this.location.data;
     }
     return map;
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "{ id: ${this.id}, { name : ${this.name} },  { name : ${this.members} } }";
   }
 }

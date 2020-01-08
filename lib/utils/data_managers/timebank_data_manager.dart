@@ -55,6 +55,36 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
       .where('members', arrayContains: userId)
       .snapshots();
 
+
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
+      handleData: (snapshot, timebankSink) {
+        List<TimebankModel> modelList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
+            if (model.rootTimebankId == FlavorConfig.values.timebankId)
+              modelList.add(model);
+          },
+        );
+
+        timebankSink.add(modelList);
+      },
+    ),
+  );
+}
+
+/// Get all timebanknew associated with a User as a Stream_umesh
+Stream<List<TimebankModel>> getSubTimebanksForUserStream(
+    {@required String userId}) async* {
+  var data = Firestore.instance
+      .collection('timebanknew')
+      .where('community_id', isEqualTo: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2')
+      .snapshots();
+
+
+
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
       handleData: (snapshot, timebankSink) {

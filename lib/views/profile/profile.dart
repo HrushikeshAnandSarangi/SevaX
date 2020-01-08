@@ -319,11 +319,13 @@ class _ProfilePageState extends State<ProfilePage>
             color: Colors.white,
           ),
           onPressed: () {
+            print("$timebankModel   ()()()()()(");
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => TimebankTabsViewHolder.of(
                   timebankId: FlavorConfig.values.timebankId,
+                  timebankModel: timebankModel,
                 ),
               ),
             );
@@ -799,7 +801,7 @@ class _ProfilePageState extends State<ProfilePage>
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return OnBoardWithTimebank();
+              // return OnBoardWithTimebank("");
             },
           ),
         );

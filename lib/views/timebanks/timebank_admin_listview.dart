@@ -135,6 +135,7 @@ Widget getTimebanks(BuildContext context, String isFrom) {
                   ),
                 ),
               );
-            });
+            }
+            );
       });
 }
