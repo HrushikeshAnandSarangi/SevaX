@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/user_model.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+
 
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -30,7 +32,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   bool iUserJoined=true;
   String loggedInUser;
   UserModelListMoreStatus userModels;
-
+  UserModel user;
 
 
   @override
@@ -42,11 +44,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   }
 
   void getData()async{
-     userModels= await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
+     userModels= await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
         widget._timebankModel.id, 1,  widget.email);
+ //    user=await  FirestoreManager.getUserForId(sevaUserId: widget._timebankModel.admins[0]);
+
      setState(() {
 
      });
+
     print('Time Bank${userModels.userModelList[0].photoURL}');
 
   }
@@ -186,22 +191,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 20,bottom: 10),
-              child: Text(widget._timebankModel.missionStatement,
-                style: TextStyle(
-                fontFamily: 'Europa',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-              ),
-            ),
+
           Padding(
             padding: const EdgeInsets.all(20.0),
             child:Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(text,
+                Text(widget._timebankModel.missionStatement,
                     style: TextStyle(
                       fontFamily: 'Europa',
                       fontSize: 16,
@@ -264,9 +260,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                       RichText(
                         text: TextSpan(style: TextStyle(color: Colors.black),
                             children: [
-
                               TextSpan(
-                                text: "Admin",
+                                text: 'Admin',
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
