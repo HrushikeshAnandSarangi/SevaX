@@ -10,5 +10,6 @@ class Repository {
   Future searchCommunityByName(name, communities) => communityApiProvider.searchCommunityByName(name, communities);
   Future createCommunityByName(community) => communityApiProvider.createCommunityByName(community);
   Future createTimebankById(timebank) => createTimebank(timebankModel: timebank);
+  Future updateUserWithTimeBankIdCommunityId(user, timebankId, communityId) => communityApiProvider.updateUserWithTimeBankIdCommunityId(user, timebankId, communityId);
 //  Future<TrailerModel> fetchTrailers(int movieId) => moviesApiProvider.fetchTrailer(movieId);
 }

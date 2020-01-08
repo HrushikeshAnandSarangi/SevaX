@@ -18,6 +18,19 @@ import 'package:sevaexchange/views/profile/edit_bio.dart';
 import 'package:sevaexchange/views/profile/edit_interests.dart';
 import 'package:sevaexchange/views/profile/edit_skills.dart';
 import 'package:sevaexchange/views/profile/reported_users.dart';
+import 'package:sevaexchange/views/timebanks/edit_super_admins_view.dart';
+import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
+import 'package:sevaexchange/views/timebanks/timebank_request_list.dart';
+//import 'package:sevaexchange/views/profile/edit_profilepic.dart';
+//import 'package:shimmer/shimmer.dart';
+//import 'package:sevaexchange/globals.dart';
+//import 'package:sevaexchange/main.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/views/tasks/completed_list.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
@@ -648,12 +661,42 @@ class _ProfilePageState extends State<ProfilePage>
           if (!firebaseUser.isEmailVerified) verifyBtn,
           administerTimebanks,
           timebankslist,
+          adminMemberRequestList,
           joinViaCode,
           tasksWidget,
           reportsData,
         ],
       ),
     );
+  }
+
+  Widget get adminMemberRequestList{
+    if(timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
+        FlavorConfig.values.timebankName != "Yang 2020"){
+      return getActionCards(
+        title: 'Member timebank request',
+        trailingIcon: Icons.navigate_next,
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(12),
+          bottomLeft: Radius.circular(12),
+        ),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return TimeBankRequestList(
+                  timebankid: FlavorConfig.values.timebankId,
+                  title: 'Timebanks List',
+                  superAdminTimebankModel: this.timebankModel,
+                );
+              },
+            ),
+          );
+        },
+      );
+    }else{
+      return Offstage();
+    }
   }
 
   Widget get reportsData {

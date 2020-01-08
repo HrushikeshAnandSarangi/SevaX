@@ -119,6 +119,7 @@ class CommunityModel extends DataModel {
   String creator_email;
   String created_by;
   String created_at;
+  String primary_timebank;
   List<String> timebanks;
   List<String> admins;
   List<String> coordinators;
@@ -141,6 +142,7 @@ class CommunityModel extends DataModel {
         map.containsKey('creator_email') ? map['creator_email'] : '';
     this.created_by = map.containsKey('created_by') ? map['created_by'] : '';
     this.created_at = map.containsKey('created_at') ? map['created_at'] : '';
+    this.primary_timebank = map.containsKey('primary_timebank') ? map['primary_timebank']: '';
     this.timebanks =
         map.containsKey('timebanks') ? List.castFrom(map['timebanks']) : [];
     this.admins = map.containsKey('admins') ? List.castFrom(map['admins']) : [];
@@ -187,6 +189,9 @@ class CommunityModel extends DataModel {
     if (key == 'created_at') {
       this.created_at = value;
     }
+    if (key == 'primary_timebank') {
+      this.primary_timebank = value;
+    }
   }
 
   Map<String, dynamic> toMap() {
@@ -231,6 +236,9 @@ class CommunityModel extends DataModel {
     }
     if (this.members != null) {
       object['members'] = this.members;
+    }
+    if (this.primary_timebank != null) {
+      object['primary_timebank'] = this.primary_timebank;
     }
     return object;
   }
