@@ -87,6 +87,9 @@ class TabarView extends StatelessWidget {
               OffersModule.of(
                 timebankId: timebankId,
               ),
+              // OffersModule.of(
+              //   timebankId: timebankId,
+              // ),
               TimeBankAboutView.of(
                 timebankModel: timebankModel,
                 email: SevaCore.of(context).loggedInUser.email,
