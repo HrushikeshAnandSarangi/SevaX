@@ -220,7 +220,17 @@ class CreateEditCommunityViewFormState
                       color: Colors.grey,
                     ),
                   ),
-                  headingText('Where is your community located at?'),
+                  headingText('Your community location.'),
+                  Text(
+                        'Community location will help your members to locate',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      ),
                   Center(
                     child: FlatButton.icon(
                       icon: Icon(Icons.add_location),
@@ -263,7 +273,7 @@ class CreateEditCommunityViewFormState
                     child: Row(
                       children: <Widget>[
                         Text(
-                          'Looking for existing team ',
+                          'Looking for existing team',
                           style: TextStyle(
                             color: Colors.grey,
                           ),
@@ -276,15 +286,7 @@ class CreateEditCommunityViewFormState
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Container(
                         alignment: Alignment.center,
-                        child: FutureBuilder<Object>(
-                            future:
-                                getTimeBankForId(timebankId: widget.timebankId),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) return Text('Error');
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) return Offstage();
-                              TimebankModel parentTimebank = snapshot.data;
-                              return RaisedButton(
+                        child: RaisedButton(
                                 // color: Colors.blue,
                                 color: Colors.red,
                                 onPressed: () {
@@ -297,10 +299,40 @@ class CreateEditCommunityViewFormState
                                       setState(() {
                                         this._billingDetailsError = '';
                                       });
+                                      // creation of community;
+                                      snapshot.data.community.id = Utils.getUuid();
+                                      snapshot.data.community.logo_url = globals.timebankAvatarURL;
+                                      snapshot.data.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
+                                      snapshot.data.community.created_by = SevaCore.of(context).loggedInUser.email;
+                                      snapshot.data.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
+                                      snapshot.data.community.primary_email = SevaCore.of(context).loggedInUser.email;
+                                      snapshot.data.community.admins = [SevaCore.of(context).loggedInUser.email];
+                                      // creation of default timebank;
+                                      snapshot.data.timebank.id =  Utils.getUuid();
+                                      snapshot.data.timebank.name = snapshot.data.community.name;
+                                      snapshot.data.timebank.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
+                                      snapshot.data.timebank.photoUrl = globals.timebankAvatarURL;
+                                      snapshot.data.timebank.createdAt = DateTime.now().millisecondsSinceEpoch;
+                                      snapshot.data.timebank.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
+                                      snapshot.data.timebank.coordinators = [].cast<String>();
+                                      snapshot.data.timebank.members = [].cast<String>();
+                                      snapshot.data.timebank.children = [].cast<String>();
+                                      snapshot.data.timebank.balance = 0.0;
+                                      snapshot.data.timebank.protected = snapshot.data.timebank.protected;
+                                      snapshot.data.timebank.parentTimebankId = widget.timebankId;
+                                      snapshot.data.timebank.rootTimebankId = FlavorConfig.values.timebankId;
+                                      snapshot.data.timebank.communityId = snapshot.data.community.id;
+                                      snapshot.data.timebank.address = snapshot.data.timebank.address;
+                                      snapshot.data.timebank.location = location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+
+                                      // updating the community with default timebank id
+                                      snapshot.data.community.timebanks = [snapshot.data.timebank.id].cast<String>();
+                                      createEditCommunityBloc.createCommunity(snapshot.data);
+
                                       Navigator.pop(context);
                                     } else {
                                       setState(() {
-                                        this._billingDetailsError = 'Please configure billing details';
+                                        this._billingDetailsError = 'Please configure your billing details';
                                       });
                                     }
                                     // If the form is valid, we want to show a Snackbar
@@ -326,8 +358,8 @@ class CreateEditCommunityViewFormState
                                       fontSize: 16.0, color: Colors.white),
                                 ),
                                 textColor: Colors.blue,
-                              );
-                            })),
+                              )
+                            ),
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(vertical: 50),
@@ -371,8 +403,10 @@ class CreateEditCommunityViewFormState
       },
       child: Container(
         width: double.infinity,
-        height: 20,
-        child: Row(
+        height: 50,
+        child: Column(
+        children: <Widget>[
+          Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
@@ -380,6 +414,7 @@ class CreateEditCommunityViewFormState
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
+                fontSize: 14,
               ),
             ),
             Divider(),
@@ -387,12 +422,26 @@ class CreateEditCommunityViewFormState
               '+',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
+                fontSize: 14,
                 color: Colors.blue,
               ),
-            ),
+            )
           ],
         ),
-      ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                _billingDetailsError,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                  fontSize: 12,
+                ),
+              )
+            ],
+          ),
+      ])),
     );
   }
 
@@ -400,10 +449,10 @@ class CreateEditCommunityViewFormState
     return GestureDetector(
       onTap: () {},
       child: Text(
-        'Find your team',
+        ' Find your team',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.grey,
+          color: Colors.blue,
         ),
       ),
     );
@@ -573,7 +622,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
-          focusNode: additionalNotesFocus,
+          focusNode: pincodeFocus,
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Pincode",

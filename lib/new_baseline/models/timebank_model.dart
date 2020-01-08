@@ -17,6 +17,7 @@ class TimebankModel extends DataModel{
   List<String> members;
   bool protected;
   String parentTimebankId;
+  String communityId;
   String rootTimebankId;
   List<String> children;
   double balance;
@@ -37,9 +38,11 @@ class TimebankModel extends DataModel{
     this.members = map.containsKey("members") ? List.castFrom(map['members']) : [];
     this.protected = map.containsKey("protected") ? map["protected"] : false;
     this.parentTimebankId = map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
+    this.communityId = map.containsKey("community_id") ? map["community_id"] : '';
     this.rootTimebankId = map.containsKey("root_timebank_id") ? map["root_timebank_id"] : '';
     this.children = map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0;
+    this.location = map.containsKey("location") ? map["location"] : GeoFirePoint(40.754387, -73.984291);
   }
   updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
@@ -120,6 +123,7 @@ class TimebankModel extends DataModel{
       "members": members == null ? null : new List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
       "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
+      "community_id" : communityId == null ? null : communityId,
       "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
       "children": children == null ? null : new List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
