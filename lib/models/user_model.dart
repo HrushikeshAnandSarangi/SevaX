@@ -78,7 +78,7 @@ class UserModel extends DataModel {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
-  UserModel.fromMap(Map<String, dynamic> map) {
+   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
     }
@@ -109,7 +109,9 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     }
-
+    if (map.containsKey('currentCommunity')) {
+      this.currentCommunity = map['currentCommunity'];
+    }
     if (map.containsKey('blockedBy')) {
       List<String> blockedBy = List.castFrom(map['blockedBy']);
       this.blockedBy = blockedBy;
@@ -174,8 +176,6 @@ class UserModel extends DataModel {
     } else {
       this.timezone = 'PT';
     }
-
-
   }
 
   UserModel.fromDynamic(dynamic user) {

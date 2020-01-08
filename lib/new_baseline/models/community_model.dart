@@ -210,7 +210,7 @@ class CommunityModel extends DataModel {
       object['created_by'] = this.created_by;
     }
     if (this.timebanks != null) {
-      object['timebanks '] = this.timebanks;
+      object['timebanks'] = this.timebanks;
     }
     if (this.admins != null) {
       object['admins'] = this.admins;
