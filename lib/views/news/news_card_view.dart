@@ -26,11 +26,11 @@ class NewsCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           newsModel.title == null ? newsModel.fullName : newsModel.title.trim(),
-          style: TextStyle(fontSize: 16.0, color: Colors.white),
+          style: TextStyle(fontSize: 16.0, color: Colors.black),
         ),
         actions: <Widget>[
           _getDeleteButton(context),

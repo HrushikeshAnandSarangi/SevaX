@@ -325,7 +325,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                                 .setData(notification.toMap());
                                             Navigator.of(dialogContext).pop();
                                             Navigator.of(context).pop();
-                                            
 
                                             return;
                                           }

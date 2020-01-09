@@ -181,7 +181,7 @@ class _DataScrollPickerState extends State<DataScrollPicker> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: _selectedIndex == index
-                        ? Theme.of(context).primaryColor
+                        ? Colors.black
                         : Color(0xffcccccc),
                   ),
                 ),

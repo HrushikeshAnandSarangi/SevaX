@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
-
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
@@ -49,6 +46,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
 
   @override
   Widget build(BuildContext context) {
+    var futures = <Future>[];
+
+    widget.timebankModel.members.forEach((member) {
+      futures.add(getUserForId(sevaUserId: member));
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -94,9 +97,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               child: Text(
                 widget.timebankModel.name,
                 style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa'),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                ),
               ),
             ),
             SizedBox(
@@ -106,31 +110,62 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                 ? Container(
                     height: 40,
                     child: GestureDetector(
-                      onTap: () {
-                        print('listview clicked');
-                      },
-                      child: ListView.builder(
-                        padding: EdgeInsets.only(left: 20),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 2.5),
-                            child: Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: CachedNetworkImageProvider(userModels
-                                        .userModelList[index].photoURL),
-                                  )),
-                            ),
-                          );
-                        },
-                      ),
+                      child: FutureBuilder(
+                          future: Future.wait(futures),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                margin: EdgeInsets.only(left: 15),
+                                child: Text("Getting volunteers..."),
+                              );
+                            }
+
+                            if (widget.timebankModel.members.length == 0) {
+                              return Container(
+                                margin: EdgeInsets.only(left: 15),
+                                child: Text("No Volunteers joined yet."),
+                              );
+                            }
+
+                            List<String> memberPhotoUrlList = [];
+                            for (var i = 0;
+                                i < widget.timebankModel.members.length;
+                                i++) {
+                              UserModel userModel = snapshot.data[i];
+                              if (userModel != null) {
+                                
+                                userModel.photoURL != null
+                                    ? memberPhotoUrlList.add(userModel.photoURL)
+                                    : print("Userimage not yet set");
+                              }
+                            }
+
+                            return ListView(
+                              padding: EdgeInsets.only(left: 15),
+                              scrollDirection: Axis.horizontal,
+                              children: <Widget>[
+                                ...memberPhotoUrlList.map((photoUrl) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.5),
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: CachedNetworkImageProvider(
+                                              photoUrl,
+                                            ),
+                                          )),
+                                    ),
+                                  );
+                                }).toList()
+                              ],
+                            );
+                          }),
                     ),
                   )
                 : Container(),
