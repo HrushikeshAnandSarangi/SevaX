@@ -56,109 +56,112 @@ class NewsListState extends State<NewsList> {
               padding: EdgeInsets.only(left: 10),
             ),
             Expanded(
-              child: StreamBuilder<Object>(
-                stream: FirestoreManager.getTimebanksForUserStream(
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return Text('Please make sure you have GPS turned on.');
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  timebankList = snapshot.data;
-                  List<String> dropdownList = [];
-
-                  int adminOfCount = 0;
-                  if (FlavorConfig.values.timebankName == "Yang 2020") {
-                    dropdownList.add("Create Yang Gang");
-                  }
-                  timebankList.forEach((t) {
-                    dropdownList.add(t.id);
-
-                    if (t.admins.contains(
-                        SevaCore.of(context).loggedInUser.sevaUserID)) {
-                      adminOfCount++;
-
-                      SevaCore.of(context)
-                          .loggedInUser
-                          .timebankIdForYangGangAdmin = t.id;
-                    }
-                  });
-
-                  SevaCore.of(context).loggedInUser.associatedWithTimebanks =
-                      dropdownList.length;
-                  SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                      adminOfCount;
-
-                  return DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-
-                          isExpanded: false,
-                      value: timebankId,
-                      onChanged: (String newValue) {
-                        if (newValue == "Create Yang Gang") {
-                          createSubTimebank(context);
-                        } else {
-                          setState(() {
-                            timebankId = newValue;
-                            SevaCore.of(context).loggedInUser.currentTimebank =
-                                newValue;
-                            SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                                adminOfCount;
-
-                            didChangeDependencies();
-                          });
-                        }
-                      },
-                      items: dropdownList
-                          .map<DropdownMenuItem<String>>((String value) {
-                        if (value == "Create Yang Gang") {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          );
-                        } else {
-                          if (value == 'All') {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          } else {
-                            return DropdownMenuItem<String>(
-
-                              value: value,
-                              child: FutureBuilder<Object>(
-                                  future: FirestoreManager.getTimeBankForId(
-                                      timebankId: value),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasError)
-                                      return Text(
-                                          'Please make sure you have GPS turned on.');
-                                    if (snapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return Offstage();
-                                    }
-                                    TimebankModel timebankModel = snapshot.data;
-                                    return Text(
-                                      timebankModel.name,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(fontSize: 14.0),
-                                    );
-                                  }),
-                            );
-                          }
-                        }
-                      }).toList(),
-                    ),
-                  );
-                },
-              ),
+              child: Text(''),
             ),
+            // Expanded(
+            //   child: StreamBuilder<Object>(
+            //     stream: FirestoreManager.getTimebanksForUserStream(
+            //       userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            //     ),
+            //     builder: (context, snapshot) {
+            //       if (snapshot.hasError)
+            //         return Text('Please make sure you have GPS turned on.');
+            //       if (snapshot.connectionState == ConnectionState.waiting) {
+            //         return Center(child: CircularProgressIndicator());
+            //       }
+            //       timebankList = snapshot.data;
+            //       List<String> dropdownList = [];
+
+            //       int adminOfCount = 0;
+            //       if (FlavorConfig.values.timebankName == "Yang 2020") {
+            //         dropdownList.add("Create Yang Gang");
+            //       }
+            //       timebankList.forEach((t) {
+            //         dropdownList.add(t.id);
+
+            //         if (t.admins.contains(
+            //             SevaCore.of(context).loggedInUser.sevaUserID)) {
+            //           adminOfCount++;
+
+            //           SevaCore.of(context)
+            //               .loggedInUser
+            //               .timebankIdForYangGangAdmin = t.id;
+            //         }
+            //       });
+
+            //       SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+            //           dropdownList.length;
+            //       SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+            //           adminOfCount;
+
+            //       return DropdownButtonHideUnderline(
+            //         child: DropdownButton<String>(
+
+            //               isExpanded: false,
+            //           value: timebankId,
+            //           onChanged: (String newValue) {
+            //             if (newValue == "Create Yang Gang") {
+            //               createSubTimebank(context);
+            //             } else {
+            //               setState(() {
+            //                 timebankId = newValue;
+            //                 SevaCore.of(context).loggedInUser.currentTimebank =
+            //                     newValue;
+            //                 SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+            //                     adminOfCount;
+
+            //                 didChangeDependencies();
+            //               });
+            //             }
+            //           },
+            //           items: dropdownList
+            //               .map<DropdownMenuItem<String>>((String value) {
+            //             if (value == "Create Yang Gang") {
+            //               return DropdownMenuItem<String>(
+            //                 value: value,
+            //                 child: Text(
+            //                   value,
+            //                   style: TextStyle(color: Colors.red),
+            //                 ),
+            //               );
+            //             } else {
+            //               if (value == 'All') {
+            //                 return DropdownMenuItem<String>(
+            //                   value: value,
+            //                   child: Text(value),
+            //                 );
+            //               } else {
+            //                 return DropdownMenuItem<String>(
+
+            //                   value: value,
+            //                   child: FutureBuilder<Object>(
+            //                       future: FirestoreManager.getTimeBankForId(
+            //                           timebankId: value),
+            //                       builder: (context, snapshot) {
+            //                         if (snapshot.hasError)
+            //                           return Text(
+            //                               'Please make sure you have GPS turned on.');
+            //                         if (snapshot.connectionState ==
+            //                             ConnectionState.waiting) {
+            //                           return Offstage();
+            //                         }
+            //                         TimebankModel timebankModel = snapshot.data;
+            //                         return Text(
+            //                           timebankModel.name,
+            //                           maxLines: 1,
+            //                           overflow: TextOverflow.ellipsis,
+            //                           style: TextStyle(fontSize: 14.0),
+            //                         );
+            //                       }),
+            //                 );
+            //               }
+            //             }
+            //           }).toList(),
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ),
             Container(
               width: 105,
               child: CupertinoSegmentedControl<int>(

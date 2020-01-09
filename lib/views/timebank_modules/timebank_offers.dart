@@ -98,6 +98,9 @@ class OffersState extends State<OffersModule> {
               Padding(
                 padding: EdgeInsets.only(left: 10),
               ),
+              Expanded(
+                child: Container(),
+              ),
               // StreamBuilder<List<TimebankModel>>(
               //     stream: FirestoreManager.getTimebanksForUserStream(
               //       userId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -1283,7 +1286,8 @@ class OfferCardViewState extends State<OfferCardView> {
                     ],
                   ),
                   onPressed: () {
-                    if ( widget.timebankModel != null &&  widget.timebankModel.protected) {
+                    if (widget.timebankModel != null &&
+                        widget.timebankModel.protected) {
                       _showProtectedTimebankMessage();
                       return;
                     }

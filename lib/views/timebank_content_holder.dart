@@ -204,9 +204,9 @@ class DiscussionListState extends State<DiscussionList> {
               Padding(
                 padding: EdgeInsets.only(left: 10),
               ),
-              // Container(
-              //   width: double.infinity,
-              // ),
+              Expanded(
+                child: Container(),
+              ),
               Container(
                 width: 120,
                 child: CupertinoSegmentedControl<int>(
