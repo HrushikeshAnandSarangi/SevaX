@@ -574,7 +574,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                   admins.remove(user.sevaUserID);
                   _updateTimebank(timebankModel, admins: admins);
                 }else{
-
+                  List<String> members = timebankModel.members.map((s) => s).toList();
+                  members.remove(user.sevaUserID);
+                  _updateTimebank(timebankModel, members: members);
                 }
               },
               shape: RoundedRectangleBorder(
