@@ -131,6 +131,7 @@ class TimeBankRequestList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => TimebankRequestAdminPage(
+                      isUserAdmin: model.admins.contains(UserData.shared.user.sevaUserID),
                       timebankId: model.id,
                       userEmail: SevaCore.of(context)
                           .loggedInUser
