@@ -45,7 +45,9 @@ Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
-    requestList.add(model);
+    if(model.entityId == timebankID){
+      requestList.add(model);
+    }
   });
   return requestList;
 }
