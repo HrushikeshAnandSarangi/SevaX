@@ -47,7 +47,7 @@ Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
     requestList.add(model);
-    print('hghghg ${model.toString()}');
+
 
   });
   return requestList;
@@ -57,6 +57,7 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
 @required String userID, }) async {
   Query query = Firestore.instance
       .collection('join_requests')
+      .where('entity_type',isEqualTo: 'TimeBank')
       .where('user_id', isEqualTo: userID);
   QuerySnapshot snapshot = await query.getDocuments();
   print('hghghg ${query.getDocuments()}');
@@ -68,12 +69,42 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
-    if(model.entityId == timebankID){
+    if(model.userId == userID){
       requestList.add(model);
     }
   });
   return requestList;
 }
+
+Stream<List<JoinRequestModel>> getTimebankUserRequests({
+  @required String userID,
+}) async* {
+  var data = Firestore.instance
+      .collection('join_requests')
+      .where('user_id', isEqualTo: userID)
+  //.where('accepted', isEqualTo: null)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<JoinRequestModel>>.fromHandlers(
+      handleData: (snapshot, joinrequestSink) {
+        List<JoinRequestModel> joinrequestList = [];
+        snapshot.documents.forEach(
+              (documentSnapshot) {
+            JoinRequestModel model =
+            JoinRequestModel.fromMap(documentSnapshot.data);
+            print('requests data ${documentSnapshot.data}');
+
+
+            if (model.accepted == null) joinrequestList.add(model);
+          },
+        );
+        joinrequestSink.add(joinrequestList);
+      },
+    ),
+  );
+}
+
 
 
 Stream<List<JoinRequestModel>> getTimebankJoinRequest({
@@ -102,6 +133,8 @@ Stream<List<JoinRequestModel>> getTimebankJoinRequest({
     ),
   );
 }
+
+
 
 //Get chats for a user
 Stream<List<UserModel>> getRequestDetailsStream({

@@ -26,8 +26,14 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   void getData() async{
     createEditCommunityBloc.getChildTimeBanks();
-    _joinRequestModels= await getFutureTimebankJoinRequest(timebankID:'c53e0b26-4421-446d-9e40-301110f3720a');
-    print('User request ${_joinRequestModels}');
+
+    getFutureUserRequest(userID: SevaCore.of(context).loggedInUser.sevaUserID).then((newList){
+      if(newList!=null ){
+        print('User request ${newList}');
+
+      }
+    });
+
   }
 
   Widget build(BuildContext context) {
