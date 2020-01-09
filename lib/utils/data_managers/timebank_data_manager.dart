@@ -151,6 +151,9 @@ Stream<List<ReportModel>> getReportedUsersStream(
 
 /// Update Timebanks
 Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
+  if(timebankModel==null){
+    return;
+  }
   return await Firestore.instance
       .collection('timebanknew')
       .document(timebankModel.id)

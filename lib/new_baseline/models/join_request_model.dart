@@ -5,6 +5,7 @@ class JoinRequestModel {
   int timestamp;
   String entityId;
   EntityType entityType;
+  bool operationTaken;
 
   JoinRequestModel({
     this.userId,
@@ -13,6 +14,7 @@ class JoinRequestModel {
     this.timestamp,
     this.entityId,
     this.entityType,
+    this.operationTaken,
   });
 
   factory JoinRequestModel.fromMap(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class JoinRequestModel {
       reason: json["reason"] == null ? null : json["reason"],
       timestamp: json["timestamp"] == null ? null : json["timestamp"],
       entityId: json["entity_id"] == null ? null : json["entity_id"],
+      operationTaken: json["operation_taken"] == null ? false : json["operation_taken"],
     );
     if (json.containsKey('entity_type')) {
       String typeString = json['type'];
@@ -42,6 +45,7 @@ class JoinRequestModel {
       "reason": reason == null ? null : reason,
       "timestamp": timestamp == null ? null : timestamp,
       "entity_id": entityId == null ? null : entityId,
+      "operation_taken": operationTaken == null ? false : operationTaken,
     };
     if (this.entityType != null) {
       map['entity_type'] = this.entityType.toString().split('.').last;
