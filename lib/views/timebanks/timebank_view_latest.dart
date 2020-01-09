@@ -39,13 +39,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   }
 
   void getData()async{
-    user=await  FirestoreManager.getUserForId(sevaUserId: widget._timebankModel.admins[0]);
+    user=await  FirestoreManager.getUserForId(sevaUserId: widget.timebankModel.admins[0]);
      isAdminLoaded=true;
 
     if(isUserJoined){
 
       userModels= await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
-          widget._timebankModel.id, 1,  widget.email);
+          widget.timebankModel.id, 1,  widget.email);
        isDataLoaded=true;
 
     }
@@ -69,7 +69,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
           children: <Widget>[
             CachedNetworkImage(
 
-              imageUrl:widget._timebankModel.photoUrl,
+              imageUrl:widget.timebankModel.photoUrl,
 
               fit: BoxFit.fitWidth,
               errorWidget: (context, url, error) =>
