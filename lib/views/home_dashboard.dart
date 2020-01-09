@@ -5,6 +5,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
@@ -16,13 +17,13 @@ class Home_DashBoard extends StatelessWidget {
   }); // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      home: MyHomePage(),
+    return Scaffold(
+      // debugShowCheckedModeBanner: false,
+      // title: 'Flutter Demo',
+      // theme: ThemeData(
+      //   primaryColor: Colors.white,
+      // ),
+      body: MyHomePage(),
     );
   }
 }
@@ -167,16 +168,15 @@ class _MyHomePageState extends State<MyHomePage>
   Widget makeItem(TimebankModel timebank) {
     return InkWell(
       onTap: () {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => TimeBankAboutView(
-        //               timebank,
-        //               SevaCore.of(context).loggedInUser.email,
-        //             )
-        //         //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
-        //         ),
-        //   );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TimebankTabsViewHolder.of(
+              timebankId: timebank.id,
+              timebankModel: timebank,
+            ),
+          ),
+        );
       },
       child: AspectRatio(
         aspectRatio: 3 / 4,

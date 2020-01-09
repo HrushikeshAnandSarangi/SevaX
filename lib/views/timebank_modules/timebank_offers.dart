@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,34 +5,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/edit_offer.dart';
-import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 import '../core.dart';
 
 class OffersModule extends StatefulWidget {
   final String timebankId;
-  OffersModule.of({this.timebankId});
+  TimebankModel timebankModel;
+
+  OffersModule.of({this.timebankId, this.timebankModel});
 
   @override
   OffersState createState() => OffersState();
@@ -73,12 +70,24 @@ class OffersState extends State<OffersModule> {
                       'My Offers',
                       style: (TextStyle(fontWeight: FontWeight.w500)),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 10,
-                        child: Image.asset("lib/assets/images/add.png"),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateOffer(
+                              timebankId: timebankId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 10,
+                          child: Image.asset("lib/assets/images/add.png"),
+                        ),
                       ),
                     ),
                   ],
@@ -269,11 +278,12 @@ class OffersState extends State<OffersModule> {
 
 class OfferCardView extends StatefulWidget {
   final OfferModel offerModel;
+  TimebankModel timebankModel;
   String sevaUserIdOffer;
 
   bool isAdmin = false;
 
-  OfferCardView({this.offerModel});
+  OfferCardView({this.offerModel, this.timebankModel});
 
   @override
   State<StatefulWidget> createState() {
@@ -295,7 +305,6 @@ class OfferListItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-
     if (timebankId != 'All') {
       return StreamBuilder<List<OfferModel>>(
         stream: getOffersStream(timebankId: timebankId),
@@ -793,6 +802,8 @@ class OfferCardViewState extends State<OfferCardView> {
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
         if (widget.isAdmin == false) {
           setState(() {
+            widget.timebankModel = timebank;
+
             widget.isAdmin = true;
           });
         }
@@ -1271,6 +1282,10 @@ class OfferCardViewState extends State<OfferCardView> {
                     ],
                   ),
                   onPressed: () {
+                    if (!widget.timebankModel.protected) {
+                      _showProtectedTimebankMessage();
+                      return;
+                    } 
                     var isAccepted = widget.offerModel.offerAcceptors
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID);
 
@@ -1334,6 +1349,29 @@ class OfferCardViewState extends State<OfferCardView> {
   Future<String> _getLocation(double lat, double lng) async {
     String address = await LocationUtility().getFormattedAddress(lat, lng);
     return address;
+  }
+
+  void _showProtectedTimebankMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Protected Timebank"),
+          content: new Text("You cannot accept offers in a protcted timebank"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> deleteOffer({

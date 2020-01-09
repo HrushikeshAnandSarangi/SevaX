@@ -433,13 +433,13 @@ class _locationScreenState extends State<LocationView> {
                       color: Colors.transparent,
                       elevation: 0.0,
                       onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return OnBoardWithTimebank("");
-                            },
-                          ),
-                        );
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) {
+                        //       return OnBoardWithTimebank("");
+                        //     },
+                        //   ),
+                        // );
                       },
                     ),
                   ),

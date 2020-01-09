@@ -56,9 +56,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            SizedBox(
-              height: 50,
-            ),
             CachedNetworkImage(
               imageUrl: widget.timebankModel.photoUrl,
               fit: BoxFit.fitWidth,

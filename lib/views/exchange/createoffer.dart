@@ -20,15 +20,15 @@ class CreateOffer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        // iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Create volunteer offer',
-          style: TextStyle(
-              color: Colors.white
-          ),
+          // style: TextStyle(
+          //     color: Colors.white
+          // ),
         ),
         centerTitle: false,
       ),

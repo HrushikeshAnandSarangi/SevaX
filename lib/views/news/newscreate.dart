@@ -36,11 +36,11 @@ class NewsCreate extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             "Create feed",
-            style: TextStyle(color: Colors.white),
+            // style: TextStyle(color: Colors.white),
           ),
           centerTitle: false,
           actions: <Widget>[
@@ -420,7 +420,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: RaisedButton(
                   shape: StadiumBorder(),
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).primaryColor,
                   onPressed: () async {
                     if (location != null) {
                       if (formKey.currentState.validate()) {

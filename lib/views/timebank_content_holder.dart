@@ -8,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
+import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
@@ -43,37 +44,39 @@ class TabarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 4,
+    return Scaffold(
+      body: DefaultTabController(
+        length: 5,
         child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: AppBar(
-              elevation: 0.5,
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: true,
-              primary: false,
-              bottom: TabBar(
-                labelColor: Colors.black,
-                indicatorColor: Colors.black,
-                indicatorSize: TabBarIndicatorSize.label,
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                    text: "Discussions",
-                  ),
-                  Tab(
-                    text: "Requests",
-                  ),
-                  Tab(
-                    text: "Offers",
-                  ),
-                  Tab(
-                    text: "About",
-                  ),
-                ],
-              ),
+          appBar: AppBar(
+            elevation: 0.5,
+            backgroundColor: Colors.white,
+            // automaticallyImplyLeading: true,
+            // primary: false,
+
+            title: Text(timebankModel.name),
+            bottom: TabBar(
+              labelColor: Colors.black,
+              indicatorColor: Colors.black,
+              indicatorSize: TabBarIndicatorSize.label,
+              isScrollable: true,
+              tabs: [
+                Tab(
+                  text: "Discussions",
+                ),
+                Tab(
+                  text: "Requests",
+                ),
+                Tab(
+                  text: "Offers",
+                ),
+                Tab(
+                  text: "About",
+                ),
+                Tab(
+                  text: "Members",
+                ),
+              ],
             ),
           ),
           body: TabBarView(
@@ -83,13 +86,16 @@ class TabarView extends StatelessWidget {
               ),
               RequestsModule.of(
                 timebankId: timebankId,
+                timebankModel: timebankModel,
               ),
               OffersModule.of(
                 timebankId: timebankId,
+                timebankModel: timebankModel,
               ),
-              // OffersModule.of(
-              //   timebankId: timebankId,
-              // ),
+              TimeBankAboutView.of(
+                timebankModel: timebankModel,
+                email: SevaCore.of(context).loggedInUser.email,
+              ),
               TimeBankAboutView.of(
                 timebankModel: timebankModel,
                 email: SevaCore.of(context).loggedInUser.email,
@@ -409,12 +415,25 @@ class DiscussionListState extends State<DiscussionList> {
               //     );
               //   }
               // },
-              child: Container(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  'Start a new discussion...',
-                  style: TextStyle(color: Colors.black),
-                  textAlign: TextAlign.left,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsCreate(
+                        timebankId:
+                            SevaCore.of(context).loggedInUser.currentTimebank,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    'Start a new discussion...',
+                    style: TextStyle(color: Colors.black),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
               ),
             ),

@@ -1,27 +1,19 @@
-import 'dart:collection';
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/edit_offer.dart';
-import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_request_details.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -31,8 +23,9 @@ import '../core.dart';
 
 class RequestsModule extends StatefulWidget {
   final String timebankId;
+  final TimebankModel timebankModel;
 
-  RequestsModule.of({this.timebankId});
+  RequestsModule.of({this.timebankId, this.timebankModel});
 
   @override
   RequestsState createState() => RequestsState();
@@ -100,6 +93,20 @@ class RequestsState extends State<RequestsModule> {
                         ),
                         onTap: () {
                           //Create a new request
+                          if (widget.timebankModel.protected) {
+                            //show dialog its a protcted timebank
+                            _showProtectedTimebankMessage();
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateRequest(
+                                  timebankId: timebankId,
+                                ),
+                              ),
+                            );
+                          }
+
                           print("Create a new request");
                         },
                       ),
@@ -271,6 +278,29 @@ class RequestsState extends State<RequestsModule> {
                 )
         ],
       ),
+    );
+  }
+
+  void _showProtectedTimebankMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Protected Timebank"),
+          content: new Text("You cannot post requests in a protcted timebank"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
