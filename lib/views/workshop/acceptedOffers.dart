@@ -146,6 +146,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: Text(
                                 model.description,
+                                overflow: TextOverflow.ellipsis,
                                 style:
                                     Theme.of(parentContext).textTheme.subtitle,
                               ),
