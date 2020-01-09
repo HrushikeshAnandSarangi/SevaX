@@ -313,6 +313,7 @@ class _RequestCardViewState extends State<RequestCardView> {
     FirestoreManager.acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 

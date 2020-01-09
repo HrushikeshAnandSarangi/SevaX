@@ -200,29 +200,30 @@ Future<void> updateOfferWithRequest({
       .setData(offer.toMap(), merge: true);
 }
 
-Future<void> acceptOfferRequest({
-  @required OfferModel offer,
-  @required RequestModel request,
-}) async {
-  await Firestore.instance
-      .collection('notifications')
-      .document(offer.sevaUserId)
-      .collection('offerRequest')
-      .document(offer.id)
-      .delete();
+// Future<void> acceptOfferRequest({
+//   @required OfferModel offer,
+//   @required RequestModel request,
+// }) async {
+//   await Firestore.instance
+//       .collection('notifications')
+//       .document(offer.sevaUserId)
+//       .collection('offerRequest')
+//       .document(offer.id)
+//       .delete();
 
-  await Firestore.instance
-      .collection('offers')
-      .document(offer.id)
-      .setData(offer.toMap());
+//   await Firestore.instance
+//       .collection('offers')
+//       .document(offer.id)
+//       .setData(offer.toMap());
 
-  await FirestoreManager.acceptRequest(
-      requestModel: request, senderUserId: null);
+//   await FirestoreManager.acceptRequest(
+//       requestModel: request, senderUserId: null,
+//       );
 
-  await Firestore.instance
-      .collection('notifications')
-      .document(request.sevaUserId)
-      .collection('offerAccepted')
-      .document(request.id)
-      .setData(request.toMap());
-}
+//   await Firestore.instance
+//       .collection('notifications')
+//       .document(request.sevaUserId)
+//       .collection('offerAccepted')
+//       .document(request.id)
+//       .setData(request.toMap());
+// }

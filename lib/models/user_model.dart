@@ -49,32 +49,31 @@ class UserModel extends DataModel {
   List<String> blockedMembers = [];
   LocationData currentPosition;
 
-  UserModel({
-    this.bio,
-    this.email,
-    this.fullname,
-    this.photoURL,
-    this.interests,
-    this.membershipCampaigns,
-    this.membershipTimebanks,
-    this.sevaUserID,
-    this.skills,
-    this.currentBalance,
-    this.calendar,
-    this.otp,
-    this.requestStatus,
-    //this.availability,
-    this.timezone,
-    this.tokens,
-    this.reportedUsers,
-    this.blockedMembers,
-    this.acceptedEULA,
-    this.completedIntro,
-    this.blockedBy,
-    this.currentPosition,
-    this.currentCommunity,
-    this.communities
-  }) {
+  UserModel(
+      {this.bio,
+      this.email,
+      this.fullname,
+      this.photoURL,
+      this.interests,
+      this.membershipCampaigns,
+      this.membershipTimebanks,
+      this.sevaUserID,
+      this.skills,
+      this.currentBalance,
+      this.calendar,
+      this.otp,
+      this.requestStatus,
+      //this.availability,
+      this.timezone,
+      this.tokens,
+      this.reportedUsers,
+      this.blockedMembers,
+      this.acceptedEULA,
+      this.completedIntro,
+      this.blockedBy,
+      this.currentPosition,
+      this.currentCommunity,
+      this.communities}) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
@@ -104,6 +103,11 @@ class UserModel extends DataModel {
       this.blockedMembers = List();
       // print("Blocked Data not present");
     }
+
+    if (map.containsKey('currentCommunity')) {
+      this.currentCommunity = map['currentCommunity'];
+    }
+
     if (map.containsKey('communities')) {
       //print("Blocked Data present");
       List<String> communities = List.castFrom(map['communities']);
@@ -174,8 +178,6 @@ class UserModel extends DataModel {
     } else {
       this.timezone = 'PT';
     }
-
-
   }
 
   UserModel.fromDynamic(dynamic user) {
@@ -264,7 +266,7 @@ class UserModel extends DataModel {
     } else {
       this.notificationsRead = 0;
     }
-    
+
     return object;
   }
 

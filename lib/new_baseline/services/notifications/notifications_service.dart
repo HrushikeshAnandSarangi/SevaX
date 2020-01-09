@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -164,6 +165,7 @@ class NotificationsService extends BaseService {
   }
 
   /// update a notification as read using[notificationId] and [userEmail]
+  //check once
   Future<void> readNotification(String notificationId, String userEmail) async {
     log.i(
         'readNotification: NotificationId: $notificationId \n UserEmail: $userEmail');
@@ -172,10 +174,9 @@ class NotificationsService extends BaseService {
         .document(userEmail)
         .collection('notifications')
         .document(notificationId)
-        .setData(
-          NotificationsModel(isRead: true).toMap(),
-          merge: true,
-        );
+        .updateData({
+      'isRead': true,
+    });
   }
 
   /// get a stream of unread notifications for an [userEmail]

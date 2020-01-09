@@ -1,15 +1,16 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/notifications_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 Location location = new Location();
 Geoflutterfire geo = Geoflutterfire();
@@ -150,16 +151,19 @@ Stream<List<RequestModel>> getNearRequestListStream(
   );
 }
 
-Future<void> sendOfferRequest(
-    {@required OfferModel offerModel, @required String requestSevaID}) async {
+Future<void> sendOfferRequest({
+  @required OfferModel offerModel,
+  @required String requestSevaID,
+  @required String communityId,
+}) async {
   NotificationsModel model = NotificationsModel(
-    targetUserId: offerModel.sevaUserId,
-    data: offerModel.toMap(),
-    type: NotificationType.OfferAccept,
-    id: utils.Utils.getUuid(),
-    isRead: false,
-    senderUserId: requestSevaID,
-  );
+      targetUserId: offerModel.sevaUserId,
+      data: offerModel.toMap(),
+      type: NotificationType.OfferAccept,
+      id: utils.Utils.getUuid(),
+      isRead: false,
+      senderUserId: requestSevaID,
+      communityId: communityId);
   await utils.offerAcceptNotification(
     model: model,
   );
@@ -170,6 +174,7 @@ Future<void> acceptRequest({
   @required String senderUserId,
   bool isWithdrawal = false,
   bool fromOffer = false,
+  @required String communityId,
 }) async {
   assert(requestModel != null);
 
@@ -186,6 +191,7 @@ Future<void> acceptRequest({
       id: utils.Utils.getUuid(),
       isRead: false,
       senderUserId: senderUserId,
+      communityId: communityId,
     );
 
     if (isWithdrawal)
