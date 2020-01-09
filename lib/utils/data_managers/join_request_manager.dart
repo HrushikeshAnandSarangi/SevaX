@@ -57,18 +57,18 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
 @required String userID, }) async {
   Query query = Firestore.instance
       .collection('join_requests')
-      .where('entity_type',isEqualTo: 'TimeBank')
+     // .where('entity_type',isEqualTo: 'TimeBank')
       .where('user_id', isEqualTo: userID);
   QuerySnapshot snapshot = await query.getDocuments();
-  print('hghghg ${query.getDocuments()}');
+ // print('ghghgh ${snapshot.documents}');
   if(snapshot.documents == null) {
-    print('data null');
-
     return [];
   }
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
+    print('hghghg ${model.userId}');
+
     if(model.userId == userID){
       requestList.add(model);
     }
@@ -76,18 +76,21 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
   return requestList;
 }
 
+/*
 Stream<List<JoinRequestModel>> getTimebankUserRequests({
   @required String userID,
 }) async* {
   var data = Firestore.instance
       .collection('join_requests')
+      .where('entity_type' , isEqualTo: 'TimeBank')
       .where('user_id', isEqualTo: userID)
-  //.where('accepted', isEqualTo: null)
       .snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<JoinRequestModel>>.fromHandlers(
       handleData: (snapshot, joinrequestSink) {
+        print('requests data ${snapshot.toString()}');
+
         List<JoinRequestModel> joinrequestList = [];
         snapshot.documents.forEach(
               (documentSnapshot) {
@@ -104,6 +107,7 @@ Stream<List<JoinRequestModel>> getTimebankUserRequests({
     ),
   );
 }
+*/
 
 
 

@@ -14,8 +14,8 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 class TimeBankAboutView extends StatefulWidget {
   final TimebankModel timebankModel;
   final String email;
-
-  TimeBankAboutView.of({this.timebankModel, this.email});
+  final userId;
+  TimeBankAboutView.of({this.timebankModel, this.email,this.userId});
 
   @override
   _TimeBankAboutViewState createState() => _TimeBankAboutViewState();
@@ -25,7 +25,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   String text =
       "We provide full-cycle services in the areas of App development, web-based enterprise solutions, web application and portal development, We combine our solid business domain experience, technical expertise, profound knowledge of latest industry trends and quality-driven delivery model to offer progressive, end-to-end mobile and web solutions.Single app for all user-types: Teachers, Students & Parent Teachers can take attendance, students can view timetables, parents can view attendance, principal and admins can send messages & announcements, etc. using the same app,Though the traditional login mechanism with the username and password is preferred by the majority of users; the One Time Password (OTP) login via SMS and Emails is favored by all the app users. We have incorporated both of them in the school mobile app to choose the one that suits you the best.";
   bool descTextShowFlag = false;
-  bool isUserJoined=true;
+  bool isUserJoined=false;
   String loggedInUser;
   UserModelListMoreStatus userModels;
   UserModel user;
@@ -34,16 +34,17 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
 
   @override
   void initState() {
-    getData(); // TODO: implement initState
     super.initState();
+    getData(); // TODO: implement initState
+
   }
 
   void getData()async{
     user=await  FirestoreManager.getUserForId(sevaUserId: widget.timebankModel.admins[0]);
      isAdminLoaded=true;
 
-    if(isUserJoined){
-
+    if(widget.timebankModel.members.contains(widget.userId)){
+      isUserJoined=true;
       userModels= await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
           widget.timebankModel.id, 1,  widget.email);
        isDataLoaded=true;
@@ -51,7 +52,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
     }
 
 
-    setState(() {});
+    setState(() {
+
+    });
 
   //  print('Time Bank${userModels.userModelList[0].photoURL}');
     //print('User Admin  ${user.fullname.toString()}');
@@ -67,18 +70,18 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            CachedNetworkImage(
+            Center(
+              child: CachedNetworkImage(
 
-              imageUrl:widget.timebankModel.photoUrl,
+                imageUrl:widget.timebankModel.photoUrl,
 
-              fit: BoxFit.fitWidth,
-              errorWidget: (context, url, error) =>
-                  Center(child: Text('No Image Avaialable')),
-              placeholder: (conext, url) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
+                fit: BoxFit.fitWidth,
+                errorWidget: (context, url, error) =>
+                     Text('No Image Avaialable'),
+                placeholder: (conext, url) {
+                  return CircularProgressIndicator();
+                },
+              ),
             ),
             SizedBox(
               height: 30,
@@ -154,8 +157,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               ),
             ),
           ):Container(
-              child:
-              Center(child: CircularProgressIndicator()),
+
           ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
@@ -323,8 +325,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
 
                   )
                   ):Container(
-                    child:
-                    Center(child: CircularProgressIndicator()),
+
                   ),
                 ],
               ),

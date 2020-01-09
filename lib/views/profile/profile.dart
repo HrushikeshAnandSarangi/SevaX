@@ -324,9 +324,7 @@ class _ProfilePageState extends State<ProfilePage>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Home_DashBoard(
-                  communityId: "",
-                ),
+                builder: (context) => Home_DashBoard(),
               ),
             );
             // Navigator.push(

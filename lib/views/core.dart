@@ -684,18 +684,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
               context,
               MaterialPageRoute(
                 builder: (context) => Home_DashBoard(
-                  communityId: "",
-          label: Text(
-            "Create Feed",
-            style: TextStyle(fontSize: 11.0),
-          ),
-          foregroundColor: FlavorConfig.values.buttonTextColor,
-          onPressed: () {
-            if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Home_DashBoard(),
                 ),
               ),
             );
@@ -704,7 +692,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
               context,
               MaterialPageRoute(
                   builder: (context) => Home_DashBoard(
-                        communityId: "",
                       ) /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/
@@ -713,20 +700,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
           }
         },
       );
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                  Home_DashBoard()/*NewsCreate(
-                    timebankId:
-                        SevaCore.of(context).loggedInUser.currentTimebank,
-                  ),*/
-                ),
-              );
-            }
-          });
     } else if (pages.elementAt(_selectedIndex).title == "Volunteer") {
       if (this.tabValue == 0) {
         var floatButtonTitle = FlavorConfig.appFlavor == Flavor.APP
