@@ -15,14 +15,14 @@ class OfferModel extends DataModel {
   String sevaUserId;
   String associatedRequest;
   List<String> requestList;
+  List<String> offerAcceptors;
   int timestamp;
   String timebankId;
   GeoFirePoint location;
   bool acceptedOffer = false;
   String root_timebank_id;
-  
-  String photoUrlImage = "";
 
+  String photoUrlImage = "";
 
   Color color;
 
@@ -51,6 +51,13 @@ class OfferModel extends DataModel {
 
     if (map.containsKey("offerAccepted")) {
       this.acceptedOffer = map['offerAccepted'];
+    }
+
+    if (map.containsKey("offerAcceptors")) {
+      List<String> offerAcceptors = List.castFrom(map['offerAcceptors']);
+      this.offerAcceptors = offerAcceptors;
+    } else {
+      this.offerAcceptors = [];
     }
 
     if (map.containsKey('title')) {
@@ -101,6 +108,8 @@ class OfferModel extends DataModel {
     }
     if (map.containsKey("offerAccepted")) {
       this.acceptedOffer = map['offerAccepted'];
+    } else {
+      this.offerAcceptors = [];
     }
     if (map.containsKey('title')) {
       this.title = map['title'];
@@ -132,6 +141,11 @@ class OfferModel extends DataModel {
     } else {
       this.requestList = [];
     }
+    if (map.containsKey("offerAcceptors")) {
+      List<String> offerAcceptors = List.castFrom(map['offerAcceptors']);
+      this.offerAcceptors = offerAcceptors;
+    }
+
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
     }
@@ -189,6 +203,11 @@ class OfferModel extends DataModel {
     }
     if (this.location != null) {
       map['location'] = this.location.data;
+    }
+    if (this.offerAcceptors != null) {
+      map['offerAcceptors'] = this.offerAcceptors;
+    } else {
+      map['offerAcceptors'] = [];
     }
 
     return map;

@@ -18,25 +18,21 @@ import 'dart:ui';
 
 import 'data_managers/chat_data_manager.dart';
 
-
-
 class SearchTimebankMemberElastic extends StatefulWidget {
   String timebankId;
   MEMBER_SELECTION_MODE selectionMode;
   NewsModel newsModel;
   bool isFromShare = false;
 
-  SearchTimebankMemberElastic(String timebankId,
-      bool isFromShare,
-      NewsModel newsModel,
-      MEMBER_SELECTION_MODE selectionMode){
+  SearchTimebankMemberElastic(String timebankId, bool isFromShare,
+      NewsModel newsModel, MEMBER_SELECTION_MODE selectionMode) {
     this.timebankId = timebankId;
     this.isFromShare = isFromShare;
     this.newsModel = newsModel;
     this.selectionMode = selectionMode;
   }
 
-  createState()=>_SearchTimebankMemberElastic();
+  createState() => _SearchTimebankMemberElastic();
 }
 
 class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
@@ -50,7 +46,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
     super.initState();
     FirestoreManager.getAllTimebankIdStream(
       timebankId: widget.timebankId,
-    ).then((onValue){
+    ).then((onValue) {
       setState(() {
         validItems = onValue;
       });
@@ -66,8 +62,9 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
       searchOnChange.add(queryString);
     }
   }
+
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
@@ -93,18 +90,23 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
           ),
         ),
       ),
-      body:
-      Column(
-          children: <Widget>[
-            Expanded(
-              child: ResultViewElastic(SearchType.USER, searchTextController, widget.timebankId,validItems,widget.selectionMode,widget.newsModel,widget.isFromShare),
-            ),
-          ],
-        ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ResultViewElastic(
+                SearchType.USER,
+                searchTextController,
+                widget.timebankId,
+                validItems,
+                widget.selectionMode,
+                widget.newsModel,
+                widget.isFromShare),
+          ),
+        ],
+      ),
     );
   }
 }
-
 
 class ResultViewElastic extends StatefulWidget {
   final SearchType type;
@@ -115,17 +117,16 @@ class ResultViewElastic extends StatefulWidget {
   final NewsModel newsModel;
   final bool isFromShare;
 
-  ResultViewElastic(this.type, this.controller, this.timebankId,this.validItems,this.selectionMode,this.newsModel,this.isFromShare);
+  ResultViewElastic(this.type, this.controller, this.timebankId,
+      this.validItems, this.selectionMode, this.newsModel, this.isFromShare);
 
   @override
-  _ResultViewElasticState createState(){
+  _ResultViewElasticState createState() {
     return _ResultViewElasticState();
   }
 }
 
 class _ResultViewElasticState extends State<ResultViewElastic> {
-
-
   bool checkValidSting(String str) {
     return str != null && str.trim().length != 0;
   }
@@ -137,12 +138,12 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
         str == null || str == "No content"
             ? Offstage()
             : Text(
-          fullName == null ? defaultUsername : fullName.trim(),
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-          ),
-        ),
+                fullName == null ? defaultUsername : fullName.trim(),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
+              ),
         Text(
           str.trim(),
           maxLines: 2,
@@ -170,7 +171,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
   Widget getUserWidget(UserModel user, BuildContext context) {
     return GestureDetector(
       onTap: () async {
-
         switch (widget.selectionMode) {
           case MEMBER_SELECTION_MODE.NEW_CHAT:
             if (user.email == SevaCore.of(context).loggedInUser.email) {
@@ -189,7 +189,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               print("Model2" + model.user2);
 
               await createChat(chat: model).then(
-                    (_) {
+                (_) {
                   Navigator.of(context).pop();
 
                   Navigator.push(
@@ -200,7 +200,8 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                         chatModel: model,
                         isFromShare: false,
                         news: NewsModel(),
-                        isFromNewChat: IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
+                        isFromNewChat: IsFromNewChat(
+                            true, DateTime.now().millisecondsSinceEpoch),
                       ),
                     ),
                   );
@@ -230,7 +231,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               print("Model2" + model.user2);
 
               await createChat(chat: model).then(
-                    (_) {
+                (_) {
                   Navigator.of(context).pop();
 
                   Navigator.push(
@@ -292,7 +293,6 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
 //        return user.email == SevaCore.of(context).loggedInUser.email
 //            ? null
 //            : () {};
-
       },
       child: Card(
         color: Colors.white,
@@ -326,17 +326,19 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
 
     if (widget.controller.text.trim().isEmpty) {
       return Center(
-          child: ClipOval(
-            child: FadeInImage.assetNetwork(
-                placeholder: 'lib/assets/images/search.png',
-                image: 'lib/assets/images/search.png'),
-          ));
+        child: ClipOval(
+          child: FadeInImage.assetNetwork(
+              placeholder: 'lib/assets/images/search.png',
+              image: 'lib/assets/images/search.png'),
+        ),
+      );
     } else if (widget.controller.text.trim().length < 3) {
       print('Search requires minimum 3 characters');
       return getEmptyWidget('Users', 'Search requires minimum 3 characters');
     }
     return StreamBuilder<List<UserModel>>(
-      stream: SearchManager.searchForUserWithTimebankId(queryString: widget.controller.text, validItems: widget.validItems),
+      stream: SearchManager.searchForUserWithTimebankId(
+          queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
         print('$snapshot');
         if (snapshot.hasError) {
@@ -364,7 +366,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               );
             }
             UserModel user = userList.elementAt(index - 1);
-            return getUserWidget(user,context);
+            return getUserWidget(user, context);
           },
           itemCount: userList.length + 1,
         );

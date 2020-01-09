@@ -73,10 +73,9 @@ dependencies:
   simple_animations: ^1.3.3
   flutter_screenutil: ^0.7.0
   sticky_headers: ^0.1.8
-
   sliding_up_panel: ^0.3.6
-  cached_network_image: ^2.0.0
-
+  cached_network_image: '2.0.0'
+  # cached_network_image 2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -138,6 +137,9 @@ flutter:
     - lib/assets/images/Info_3.png
     - lib/assets/images/Info_4.png
     - lib/assets/images/yang_fourth_.jpg
+    - lib/assets/images/add.png
+    - lib/assets/images/add_.png
+    - lib/assets/images/add__.png
     # - lib/assets/images/andrew_mic.jpg
     - lib/assets/images/yang_in_crowd.png
     - lib/assets/images/yang_speaking.jpg

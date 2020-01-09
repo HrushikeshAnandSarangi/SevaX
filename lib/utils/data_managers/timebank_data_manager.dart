@@ -53,6 +53,7 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
   var data = Firestore.instance
       .collection('timebanknew')
       .where('members', arrayContains: userId)
+      .where("parent")
       .snapshots();
 
 

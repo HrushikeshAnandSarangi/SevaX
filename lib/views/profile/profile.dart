@@ -1,14 +1,19 @@
-import 'dart:core' as prefix0;
+import 'dart:async';
 import 'dart:core';
+import 'dart:core' as prefix0;
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
-//import 'package:sevaexchange/views/community/create_community.dart';
-import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
-import 'package:sevaexchange/views/news/overflow_constants.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/edit_bio.dart';
 import 'package:sevaexchange/views/profile/edit_interests.dart';
 import 'package:sevaexchange/views/profile/edit_skills.dart';
@@ -27,20 +32,17 @@ import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
-import 'dart:math';
-import 'dart:async';
-import 'package:sevaexchange/flavor_config.dart';
-
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/tasks/completed_list.dart';
+import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
-
 import 'package:sevaexchange/views/transaction_history.dart';
-import '../app_demo_humanity_first.dart';
+import 'package:tree_view/tree_view.dart';
+import 'package:sevaexchange/views/home_dashboard.dart';
+
+import '../timebank_content_holder.dart';
 import 'edit_name.dart';
 import 'edit_profile.dart';
 import 'timezone.dart';
-import 'package:tree_view/tree_view.dart';
 
 class ProfileView extends StatelessWidget {
   @override
@@ -319,21 +321,31 @@ class _ProfilePageState extends State<ProfilePage>
             color: Colors.white,
           ),
           onPressed: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => CreateCommunity(),
-            //   ),
-            // );
-
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditProfilePage(
-                  userModel: user,
+                builder: (context) => Home_DashBoard(
+                  communityId: "",
                 ),
               ),
             );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => TimebankTabsViewHolder.of(
+            //       timebankId: FlavorConfig.values.timebankId,
+            //       timebankModel: timebankModel,
+            //     ),
+            //   ),
+            // );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => EditProfilePage(
+            //       userModel: user,
+            //     ),
+            //   ),
+            // );
           },
         ),
       ],
@@ -828,7 +840,7 @@ class _ProfilePageState extends State<ProfilePage>
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return OnBoardWithTimebank("");
+              // return OnBoardWithTimebank("");
             },
           ),
         );
