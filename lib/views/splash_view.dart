@@ -773,7 +773,7 @@ class _SplashViewState extends State<SplashView> {
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: Home_DashBoard(),
+          child: CoreView(),
         ),
       ),
     );

@@ -39,7 +39,30 @@ Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
       .where('entity_type', isEqualTo: 'Timebank')
       .where('entity_id', isEqualTo: timebankID);
   QuerySnapshot snapshot = await query.getDocuments();
+
   if(snapshot.documents == null) {
+    return [];
+  }
+  var requestList = List<JoinRequestModel>();
+  snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    var model = JoinRequestModel.fromMap(documentSnapshot.data);
+    requestList.add(model);
+    print('hghghg ${model.toString()}');
+
+  });
+  return requestList;
+}
+////to get the user requests --umesh
+Future<List<JoinRequestModel>> getFutureUserRequest({
+@required String userID, }) async {
+  Query query = Firestore.instance
+      .collection('join_requests')
+      .where('user_id', isEqualTo: userID);
+  QuerySnapshot snapshot = await query.getDocuments();
+  print('hghghg ${query.getDocuments()}');
+  if(snapshot.documents == null) {
+    print('data null');
+
     return [];
   }
   var requestList = List<JoinRequestModel>();

@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../core.dart';
@@ -14,6 +16,8 @@ class JoinSubTimeBankView extends StatefulWidget {
 }
 
 class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
+  List<JoinRequestModel>  _joinRequestModels;
+  bool isDataLoaded=false;
   @override
   void initState() {
     super.initState();
@@ -22,27 +26,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   void getData() async{
     createEditCommunityBloc.getChildTimeBanks();
+    _joinRequestModels= await getFutureTimebankJoinRequest(timebankID:'c53e0b26-4421-446d-9e40-301110f3720a');
+    print('User request ${_joinRequestModels}');
   }
-  /*List<Map<String, dynamic>> litems = [
-    {
-      "url": "https://images.adsttc.com/media/images/5d67/9f09/284d/d1be/6000/0109/newsletter/02_ZQ.jpg?1567071993",
-      "name": "Hosur-San Timebank",
-      "location": "Bangalore, India",
-      "memberCount": "6787 Members"
-    },
-    {
-      "url": "https://cdn.britannica.com/15/152315-050-226AA671/twin-towers-skyline-Lower-Manhattan-World-Trade-September-11-2001.jpg",
-      "name": "Hebbal Timebank",
-      "location": "Bangalore, India",
-      "memberCount": "2332 Members"
-    },
-    {
-      "url": "https://cdn.britannica.com/15/152315-050-226AA671/twin-towers-skyline-Lower-Manhattan-World-Trade-September-11-2001.jpg",
-      "name": "Hebbal Timebank",
-      "location": "Bangalore, India",
-      "memberCount": "2332 Members"
-    }
-  ];*/
 
   Widget build(BuildContext context) {
     return Scaffold(
