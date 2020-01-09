@@ -23,8 +23,6 @@ class TimebankCreate extends StatelessWidget {
   TimebankCreate({@required this.timebankId});
   @override
   Widget build(BuildContext context) {
-//    var title = FlavorConfig.appFlavor == Flavor.APP ? 'Create your Community' : 'Create a ${FlavorConfig.values.timebankTitle}';
-    var title = /*FlavorConfig.appFlavor == Flavor.APP ?'Create your Community' : */ 'Create a ${FlavorConfig.values.timebankTitle}';
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -32,7 +30,7 @@ class TimebankCreate extends StatelessWidget {
         backgroundColor: Color(0xFFFFFFFF),
         leading: BackButton(color: Colors.black54),
         title: Text(
-          title,
+          'Create a ${FlavorConfig.values.timebankTitle}',
           style: TextStyle(color: Colors.black54),
         ),
       ),
@@ -266,15 +264,16 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           // the form is invalid.
                           //if (location != null) {
                           if (_formKey.currentState.validate()) {
-                            // If the form is valid, we want to show a Snackbar
+//                            print("Hello");
+//                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();
-                            // return;
-
-                            if (parentTimebank.children == null)
-                              parentTimebank.children = [];
-                            parentTimebank.children.add(timebankModel.id);
-                            updateTimebank(timebankModel: parentTimebank);
-                            Navigator.pop(context);
+//                            // return;
+//
+//                            if (parentTimebank.children == null)
+//                              parentTimebank.children = [];
+//                            parentTimebank.children.add(timebankModel.id);
+//                            updateTimebank(timebankModel: parentTimebank);
+//                            Navigator.pop(context);
                           }
                         },
                         shape: RoundedRectangleBorder(

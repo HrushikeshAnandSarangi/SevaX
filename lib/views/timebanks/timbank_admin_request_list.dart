@@ -484,7 +484,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
             .forEach((key, user) {
           _adminEmails.add(user.email);
-            _admins.add(getUserWidget(user, context, timebankModel,true));
+          _admins.add(getUserWidget(user, context, timebankModel,true));
 //          }
         });
         setState(() {});
