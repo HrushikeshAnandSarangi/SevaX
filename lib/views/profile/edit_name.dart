@@ -12,7 +12,6 @@ class EditName extends StatefulWidget {
 }
 
 class _EditNameState extends State<EditName> {
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   var fullnameController = TextEditingController();
   String fullname = ' ';
@@ -24,7 +23,6 @@ class _EditNameState extends State<EditName> {
 
   @override
   Widget build(BuildContext context) {
-  
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -74,16 +72,13 @@ class _EditNameState extends State<EditName> {
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
                     setState(() {
-                      SevaCore.of(context).loggedInUser.fullname =
-                          fullname;
+                      SevaCore.of(context).loggedInUser.fullname = fullname;
                     });
-
                     Firestore.instance
                         .collection("users")
                         .document(SevaCore.of(context).loggedInUser.email)
-                        .updateData({'fullname': fullname}).then(
-                            (onValue) {
-                      print("Updated fullname to ${fullname}");
+                        .updateData({'fullname': fullname}).then((onValue) {
+                      // print("Updated fullname to ${fullname}");
                       Navigator.of(context).pop();
                     });
                   }
