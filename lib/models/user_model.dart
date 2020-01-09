@@ -78,7 +78,7 @@ class UserModel extends DataModel {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
-  UserModel.fromMap(Map<String, dynamic> map) {
+   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
     }
@@ -176,8 +176,6 @@ class UserModel extends DataModel {
     } else {
       this.timezone = 'PT';
     }
-
-
   }
 
   UserModel.fromDynamic(dynamic user) {
