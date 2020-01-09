@@ -33,6 +33,8 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         title: Container(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -40,12 +42,13 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
           children: <Widget>[
             Text(
               'Request Status',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           ],
         )),
         bottom: TabBar(
-          labelColor: Colors.white,
+          indicatorColor: Colors.black,
+          labelColor: Colors.black,
           tabs: [
             Tab(child: Text('Pending requests')),
             Tab(child: Text('Approved members')),

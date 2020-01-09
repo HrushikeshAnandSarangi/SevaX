@@ -1,6 +1,8 @@
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -8,14 +10,21 @@ import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
+
 
 import '../core.dart';
+import '../timebank_content_holder.dart';
 
 
 class JoinSubTimeBankView extends StatefulWidget {
-  final String seveUserId;
+  final UserModel loggedInUserModel;
 
-  JoinSubTimeBankView(this.seveUserId);
+  JoinSubTimeBankView(this.loggedInUserModel);
 
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
 
@@ -23,6 +32,19 @@ class JoinSubTimeBankView extends StatefulWidget {
 }
 
 class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
+  // TRUE: register page, FALSE: login page
+  TextEditingController controller = TextEditingController();
+  TimebankModel timebankModel;
+  //TimebankModel superAdminModel;
+  JoinRequestModel joinRequestModel = new JoinRequestModel();
+  JoinRequestModel getRequestData = new JoinRequestModel();
+  UserModel ownerModel;
+  String title = 'Loading';
+  String loggedInUser;
+  final formkey = GlobalKey<FormState>();
+
+  bool hasError = false;
+  String errorMessage1 = '';
   List<JoinRequestModel>  _joinRequestModels;
   bool isDataLoaded=false;
   @override
@@ -33,7 +55,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   void getData() async{
     createEditCommunityBloc.getChildTimeBanks();
-    _joinRequestModels= await getFutureUserRequest(userID: widget.seveUserId);
+    _joinRequestModels= await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
       isDataLoaded=true;
       setState(() {
 
@@ -118,9 +140,15 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                   itemBuilder: (context, index) {
                     TimebankModel timebank = timebankList.elementAt(index);
-                    String status=compareTimeBanks(_joinRequestModels,timebank);
-                    print(timebank.children.toString());
-                    return makeItem(timebank,status);
+                    String status;
+                    if(_joinRequestModels!=null) {
+                      status = compareTimeBanks(_joinRequestModels, timebank);
+                      print(timebank.children.toString());
+                      return makeItem(timebank, status);
+                    }else{
+                      status='Join';
+                      return makeItem(timebank, status);
+                    }
                   },
                   padding: const EdgeInsets.all(8),
                   shrinkWrap: true,
@@ -143,8 +171,16 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget makeItem(TimebankModel timebank, String status) {
     return InkWell(
       onTap: (){
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => TimeBankAboutView.of(timebankModel:timebank,userId: widget.seveUserId)));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TimebankTabsViewHolder.of(
+              timebankId: timebank.id,
+              timebankModel: timebank,
+            ),
+          ),
+        );
+
       },
       child: Padding(
           padding: const EdgeInsets.all(6.0),
@@ -177,7 +213,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          timebank.name,
+                          timebank.name??"",
                           style: TextStyle(
                             fontFamily: "Europa",
                             fontSize: 18,
@@ -187,7 +223,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                         ),
                         Text(
                           timebank.address + ' .' +
-                              timebank.members.length.toString(),
+                              timebank.members.length.toString()??"",
                           style: TextStyle(
                               fontFamily: "Europa",
                               fontSize: 14,
@@ -207,11 +243,68 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                       shape: StadiumBorder(),
                       textColor: Colors.lightBlue,
                       child: Text(
-                          status,
+                          status??"",
                           style: TextStyle(fontSize: 14)
                       ),
-                      onPressed: status=='Join'?() {
-                        print('Join btn clicked');
+                      onPressed: status=='Join'?() async {
+                        print(
+                            "Timebank Model sub time bank $timebankModel");
+                        joinRequestModel.userId = widget
+                            .loggedInUserModel.sevaUserID;
+                        joinRequestModel.timestamp =
+                            DateTime.now()
+                                .millisecondsSinceEpoch;
+
+                        joinRequestModel.entityId =
+                            timebankModel.id;
+                        joinRequestModel.entityType =
+                            EntityType.Timebank;
+                        joinRequestModel.accepted = null;
+
+                        if (formkey.currentState.validate()) {
+                          await createJoinRequest(
+                              model: joinRequestModel);
+
+                          JoinRequestNotificationModel
+                          joinReqModel =
+                          JoinRequestNotificationModel(
+                              timebankId:
+                              timebankModel.id,
+                              timebankTitle:
+                              timebankModel.name);
+
+                          NotificationsModel notification =
+                          NotificationsModel(
+                            id: utils.Utils.getUuid(),
+                            targetUserId:
+                            timebankModel.creatorId,
+                            senderUserId: widget
+                                .loggedInUserModel.sevaUserID,
+                            type: prefix0
+                                .NotificationType.JoinRequest,
+                            data: joinReqModel.toMap(),
+                          );
+                          notification.timebankId =
+                              FlavorConfig.values.timebankId;
+
+                          UserModel timebankCreator =
+                          await FirestoreManager
+                              .getUserForId(
+                              sevaUserId:
+                              timebankModel
+                                  .creatorId);
+
+                          await Firestore.instance
+                              .collection('users')
+                              .document(timebankCreator.email)
+                              .collection("notifications")
+                              .document(notification.id)
+                              .setData(notification.toMap());
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+
+                          return;
+                        }
                       }:null,
                     ),
                   ),
@@ -240,8 +333,11 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         return 'Rejected';
       }
 
-      return 'Join';
 
     }
+    return 'Join';
+
   }
 }
+
+

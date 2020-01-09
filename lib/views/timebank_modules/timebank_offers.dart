@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
+import 'package:sevaexchange/views/exchange/edit_offer.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
@@ -803,7 +804,6 @@ class OfferCardViewState extends State<OfferCardView> {
         if (widget.isAdmin == false) {
           setState(() {
             widget.timebankModel = timebank;
-
             widget.isAdmin = true;
           });
         }
@@ -1186,6 +1186,25 @@ class OfferCardViewState extends State<OfferCardView> {
     isAccepted = widget.offerModel.offerAcceptors.contains(
       SevaCore.of(context).loggedInUser.sevaUserID,
     );
+    var textSpan = TextSpan(
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.blue,
+      ),
+      text: '\nEdit Offer',
+      recognizer: TapGestureRecognizer()
+        ..onTap = () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UpdateOffer(
+                timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                offerModel: widget.offerModel,
+              ),
+            ),
+          );
+        },
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(
@@ -1212,27 +1231,7 @@ class OfferCardViewState extends State<OfferCardView> {
                       ),
                       widget.offerModel.sevaUserId ==
                               SevaCore.of(context).loggedInUser.sevaUserID
-                          ? TextSpan(
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                              ),
-                              text: '\nEdit Offer',
-                              recognizer: TapGestureRecognizer()
-                              // ..onTap = () {
-                              //   Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //       builder: (context) => OfferEdit(
-                              //         timebankId: SevaCore.of(context)
-                              //             .loggedInUser
-                              //             .currentTimebank,
-                              //         requestModel: widget.offerModel,
-                              //       ),
-                              //     ),
-                              //   );
-                              // },
-                              )
+                          ? textSpan
                           : TextSpan(),
                     ],
                   ),
@@ -1241,7 +1240,9 @@ class OfferCardViewState extends State<OfferCardView> {
             ),
             Offstage(
               offstage: widget.offerModel.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID,
+                      SevaCore.of(context).loggedInUser.sevaUserID ||
+                  widget.offerModel.offerAcceptors
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID),
               child: Container(
                 width: 100,
                 height: 32,
@@ -1282,10 +1283,10 @@ class OfferCardViewState extends State<OfferCardView> {
                     ],
                   ),
                   onPressed: () {
-                    if (!widget.timebankModel.protected) {
+                    if ( widget.timebankModel != null &&  widget.timebankModel.protected) {
                       _showProtectedTimebankMessage();
                       return;
-                    } 
+                    }
                     var isAccepted = widget.offerModel.offerAcceptors
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID);
 
@@ -1300,42 +1301,38 @@ class OfferCardViewState extends State<OfferCardView> {
                               [SevaCore.of(context).loggedInUser.sevaUserID])
                     });
 
-                    // widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
+                    widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
 
-                    // FirestoreManager.getTimeBankForId(
-                    //         timebankId: widget.offerModel.timebankId)
-                    //     .then((timebank) {
-                    //   if (timebank.admins.contains(
-                    //           SevaCore.of(context).loggedInUser.sevaUserID) ||
-                    //       timebank.coordinators.contains(
-                    //           SevaCore.of(context).loggedInUser.sevaUserID)) {
-                    //     setState(() {
-                    //       widget.isAdmin = true;
-                    //     });
-
-                    //     _makePostRequest(widget.offerModel);
-                    //   } else {
-                    //     showDialog(
-                    //       context: context,
-                    //       builder: (BuildContext context) {
-                    //         return AlertDialog(
-                    //           title: new Text("Permission Denied"),
-                    //           content: new Text(
-                    //               "You need to be an Admin or Coordinator to have permission to send request to offers"),
-                    //           actions: <Widget>[
-                    //             new FlatButton(
-                    //               child: new Text("Close"),
-                    //               onPressed: () {
-                    //                 Navigator.of(context).pop();
-                    //               },
-                    //             ),
-                    //           ],
-                    //         );
-                    //       },
-                    //     );
-                    //   }
-                    // });
-                    Navigator.pop(context);
+                    FirestoreManager.getTimeBankForId(
+                            timebankId: widget.offerModel.timebankId)
+                        .then((timebank) async {
+                      if (timebank.admins.contains(
+                              SevaCore.of(context).loggedInUser.sevaUserID) ||
+                          timebank.coordinators.contains(
+                              SevaCore.of(context).loggedInUser.sevaUserID)) {
+                        await _makePostRequest(widget.offerModel);
+                        Navigator.of(context).pop();
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: new Text("Permission Denied"),
+                              content: new Text(
+                                  "You need to be an Admin or Coordinator to have permission to send request to offers"),
+                              actions: <Widget>[
+                                new FlatButton(
+                                  child: new Text("Close"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    });
                   },
                 ),
               ),

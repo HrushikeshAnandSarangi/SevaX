@@ -255,6 +255,10 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 : () {};
 
             break;
+          default:
+            return(){
+              print("");
+            };
         }
 
 //        if (user.email != SevaCore.of(context).loggedInUser.email) {

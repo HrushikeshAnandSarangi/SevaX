@@ -28,11 +28,13 @@ class SelectTimeBankForNewsShareState extends State<SelectTimeBankNewsShare> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
               ? "Select Yang Gang Chapter"
               : "Select Timebank",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
       ),
       body: getTimebanks(context, newsModel),

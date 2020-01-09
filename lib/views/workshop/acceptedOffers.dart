@@ -37,9 +37,11 @@ class AcceptedOffersViewState extends State<AcceptedOffers> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           'Accepted Offers',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         elevation: 0,
         actions: <Widget>[],

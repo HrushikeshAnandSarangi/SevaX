@@ -271,7 +271,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                         ),
                                         onPressed: () async {
                                           print(
-                                              "Timebank Model $timebankModel");
+                                              "Timebank Model code screen $timebankModel");
                                           joinRequestModel.userId = widget
                                               .loggedInUserModel.sevaUserID;
                                           joinRequestModel.timestamp =
@@ -325,7 +325,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                                 .setData(notification.toMap());
                                             Navigator.of(dialogContext).pop();
                                             Navigator.of(context).pop();
-                                            
 
                                             return;
                                           }
