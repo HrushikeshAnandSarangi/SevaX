@@ -463,7 +463,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           );
 
           if (onActivityResult != null &&
-              onActivityResult.containsKey("membersSelected")) {
+\
+          onActivityResult.containsKey("membersSelected")) {
             selectedUsers = onActivityResult['membersSelected'];
             setState(() {
               if (selectedUsers.length == 0)
