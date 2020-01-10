@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ),
               content: Container(
-                height: size.height - 95,
+                height: size.height -110,
                 child: MyTaskPage(controller),
               ),
             ),
@@ -186,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage>
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                  image: CachedNetworkImageProvider(timebank.photoUrl),
+                  image: CachedNetworkImageProvider(timebank.photoUrl ?? 'https://www.quantabiodesign.com/wp-content/uploads/No-Photo-Available-768x960.jpg'),
                   fit: BoxFit.cover
               )
           ),

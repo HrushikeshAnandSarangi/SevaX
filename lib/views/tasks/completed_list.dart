@@ -82,6 +82,8 @@ class _CompletedListState extends State<CompletedList> {
       );
     }
     return ListView.builder(
+      physics: NeverScrollableScrollPhysics(),
+
       itemBuilder: (context, index) {
         RequestModel model = requestList.elementAt(index);
 

@@ -1,4 +1,6 @@
 // import 'package:cached_network_image/cached_network_image.dart';
+//import 'dart:html';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -370,25 +372,25 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   CompareToTimeBank compareTimeBanks(List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
 
-
+    CompareToTimeBank status;
     for(int i=0;i<joinRequestModels.length;i++){
 
       JoinRequestModel requestModel =joinRequestModels[i];
 
-      if(requestModel.entityId==timeBank.id && joinRequestModels[i].accepted){
+      if(requestModel.entityId==timeBank.id && joinRequestModels[i].accepted==true){
         return CompareToTimeBank.JOINED;
-      }
-
-      if(requestModel.entityId==timeBank.id && requestModel.operationTaken==false){
+      } else if(requestModel.entityId==timeBank.id && requestModel.operationTaken==false){
         return CompareToTimeBank.REQUESTED;
       }
-      if(requestModel.entityId==timeBank.id && requestModel.operationTaken==true && requestModel.accepted==false){
+      else if(requestModel.entityId==timeBank.id && requestModel.operationTaken==true && requestModel.accepted==false){
         return CompareToTimeBank.REJECTED;
+      }else{
+       return CompareToTimeBank.JOIN;
       }
 
 
     }
-    return CompareToTimeBank.JOIN;
+   return CompareToTimeBank.JOIN;
 
   }
 }
