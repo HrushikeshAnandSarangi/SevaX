@@ -39,6 +39,7 @@ class CommunityApiProvider {
     }
     return communities;
   }
+
   Future<void> createCommunityByName(CommunityModel community) async {
      await Firestore.instance
         .collection('communities')

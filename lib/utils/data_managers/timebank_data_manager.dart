@@ -77,31 +77,28 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 }
 
 /// Get all timebanknew associated with a User as a Stream_umesh
-Stream<List<TimebankModel>> getSubTimebanksForUserStream(
-    {@required String userId}) async* {
-  var data = Firestore.instance
-      .collection('timebanknew')
-      .where('community_id', isEqualTo: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2')
-      .snapshots();
+Future<List<TimebankModel>> getSubTimebanksForUserStream(
+    {@required String communityId}) async {
 
+  List<String> timeBankIdList = [];
+  List<TimebankModel> timeBankModelList = [];
 
-
-  yield* data.transform(
-    StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
-      handleData: (snapshot, timebankSink) {
-        List<TimebankModel> modelList = [];
-        snapshot.documents.forEach(
-          (documentSnapshot) {
-            TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
-            if (model.rootTimebankId == FlavorConfig.values.timebankId)
-              modelList.add(model);
-          },
-        );
-
-        timebankSink.add(modelList);
-      },
-    ),
-  );
+   await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get().then((DocumentSnapshot documentSnaphot){
+        Map<String,dynamic> dataMap = documentSnaphot.data;
+        List timeBankIdList = dataMap["timebanks"];
+        timeBankIdList=List.castFrom(timeBankIdList);
+  });
+   print(timeBankIdList);
+  for (int i = 0; i < timeBankIdList.length; i += 1) {
+    TimebankModel timeBankModel = await getTimeBankForId(
+      timebankId: timeBankIdList[i],
+    );
+    timeBankModelList.add(timeBankModel);
+  }
+  return timeBankModelList;
 }
 
 /// Get all timebanknew associated with a User as a Stream
@@ -156,6 +153,9 @@ Stream<List<ReportModel>> getReportedUsersStream(
 
 /// Update Timebanks
 Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
+  if(timebankModel==null){
+    return;
+  }
   return await Firestore.instance
       .collection('timebanknew')
       .document(timebankModel.id)

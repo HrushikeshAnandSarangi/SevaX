@@ -1,6 +1,7 @@
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../core.dart';
@@ -8,9 +9,20 @@ import '../core.dart';
 
 class JoinSubTimeBankView extends StatefulWidget {
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
+
+
 }
 
 class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  void getData() async{
+    createEditCommunityBloc.getChildTimeBanks();
+  }
   /*List<Map<String, dynamic>> litems = [
     {
       "url": "https://images.adsttc.com/media/images/5d67/9f09/284d/d1be/6000/0109/newsletter/02_ZQ.jpg?1567071993",
@@ -67,20 +79,15 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         .size;
 
     List<TimebankModel> timebankList = [];
-    return StreamBuilder<List<TimebankModel>>(
-        stream: FirestoreManager.getSubTimebanksForUserStream(
-          userId: SevaCore
-              .of(context)
-              .loggedInUser
-              .sevaUserID,
-        ),
+    return StreamBuilder<CommunityCreateEditController>(
+        stream: createEditCommunityBloc.createEditCommunity,
         builder: (context, snapshot) {
           print(snapshot.data);
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          timebankList = snapshot.data;
+          timebankList = snapshot.data.timebanks;
           timebankList.forEach((t) {
             dropdownList.add(t.id);
           });

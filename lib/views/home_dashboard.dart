@@ -1,3 +1,5 @@
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -82,6 +84,8 @@ class _MyHomePageState extends State<MyHomePage>
                           color: Colors.grey,
                           alignment: Alignment.center,
                           onPressed: () {
+                            createEditCommunityBloc.updateUserDetails(
+                                SevaCore.of(context).loggedInUser);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -185,7 +189,8 @@ class _MyHomePageState extends State<MyHomePage>
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                  image: NetworkImage(timebank.photoUrl), fit: BoxFit.cover)),
+                  image: CachedNetworkImageProvider(timebank.photoUrl),
+                  fit: BoxFit.cover)),
           child: Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(

@@ -42,6 +42,9 @@ class TimebankModel extends DataModel{
     this.rootTimebankId = map.containsKey("root_timebank_id") ? map["root_timebank_id"] : '';
     this.children = map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0;
+    this.location = getLocation(map);
+  }
+  GeoFirePoint getLocation(map){
     GeoFirePoint geoFirePoint;
     if( map.containsKey("location") && map["location"]!=null && map['location']['geopoint']!=null){
       GeoPoint geoPoint = map['location']['geopoint'];
@@ -49,8 +52,9 @@ class TimebankModel extends DataModel{
     }else{
       geoFirePoint = GeoFirePoint(40.754387, -73.984291);
     }
-    this.location = geoFirePoint;
+    return geoFirePoint;
   }
+
   updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
       this.id = value;
