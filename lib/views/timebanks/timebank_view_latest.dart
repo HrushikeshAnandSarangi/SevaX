@@ -81,7 +81,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               child: CachedNetworkImage(
 
                 imageUrl:widget.timebankModel.photoUrl,
-
                 fit: BoxFit.fitWidth,
                 errorWidget: (context, url, error) =>
                      Text('No Image Avaialable'),

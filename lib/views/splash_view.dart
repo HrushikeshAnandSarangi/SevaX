@@ -524,9 +524,9 @@ class _SplashViewState extends State<SplashView> {
       }
     }
 
-    if (!loggedInUser.completedIntro) {
-      await _navogateToIntro(loggedInUser);
-    }
+    // if (!loggedInUser.completedIntro) {
+    //   await _navogateToIntro(loggedInUser);
+    // }
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
@@ -550,7 +550,6 @@ class _SplashViewState extends State<SplashView> {
     if(loggedInUser.currentCommunity != null || loggedInUser.currentCommunity != ""){
       await _navigateToHome_DashBoardView(loggedInUser);
     }
-
 
     // if ()
 
@@ -764,16 +763,14 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
+
   Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (context) => SevaCore(
-              loggedInUser: loggedInUser,
-              child: Home_DashBoard())
-      ),
+          builder: (context) =>
+              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
     );
   }
-
 
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);

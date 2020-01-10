@@ -47,11 +47,12 @@ class _ChatListViewState extends State<ChatListView> {
         List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             'Messages',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
           )),
       body: StreamBuilder<List<ChatModel>>(
         stream: getChatsforUser(
