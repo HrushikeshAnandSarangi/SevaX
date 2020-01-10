@@ -159,7 +159,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                       CompareToTimeBank status;
                     if(_joinRequestModels!=null) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
-                      print(timebank.children.toString());
+                     // print(timebank.children.toString());
                       return makeItem(timebank, status);
                     }else{
                       status = CompareToTimeBank.JOIN;
