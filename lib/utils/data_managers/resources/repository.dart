@@ -11,6 +11,7 @@ class Repository {
 
   Future searchCommunityByName(name, communities) => communityApiProvider.searchCommunityByName(name, communities);
   Future createCommunityByName(community) => communityApiProvider.createCommunityByName(community);
+  Future updateCommunityWithUserId(communityid, userid) => communityApiProvider.updateCommunityWithUserId(communityid, userid);
   Future createTimebankById(timebank) => createTimebank(timebankModel: timebank);
   Future updateUserWithTimeBankIdCommunityId(user, timebankId, communityId) => communityApiProvider.updateUserWithTimeBankIdCommunityId(user, timebankId, communityId);
   Future getSubTimebanksForUser(communitId) => getSubTimebanksForUserStream(communityId: communitId);

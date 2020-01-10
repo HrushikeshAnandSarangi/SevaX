@@ -141,6 +141,7 @@ class CommunityCreateEditBloc {
   updateUser(timebank) async {
     var tm = TimebankModel(timebank);
      var communitytemp = await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
+     await _repository.updateCommunityWithUserId(communitytemp.id, this._createEditCommunity.value.loggedinuser.sevaUserID);
      await _repository.updateUserWithTimeBankIdCommunityId(this._createEditCommunity.value.loggedinuser, tm.id, communitytemp.id);
   }
 
