@@ -12,12 +12,13 @@ import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
-import 'package:sevaexchange/views/onboarding/skillsview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 import 'package:sevaexchange/views/home_dashboard.dart';
+
+import 'home_page_router.dart';
+import 'onboarding/skillsview.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -550,7 +551,6 @@ class _SplashViewState extends State<SplashView> {
     }
 
 
-
     // if ()
 
 //    String location = loggedInUser.availability.location;
@@ -752,12 +752,14 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
+
   Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SevaCore(
-            loggedInUser: loggedInUser,
-            child: FindCommunitiesView())
+          loggedInUser: loggedInUser,
+          child: HomePageRouter(),
+        ),
       ),
     );
   }

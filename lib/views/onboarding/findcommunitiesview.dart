@@ -103,7 +103,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               hasFloatingPlaceholder: false,
               alignLabelWithHint: true,
               isDense: true,
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey,
+              ),
               contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
               filled: true,
               fillColor: Colors.white,
