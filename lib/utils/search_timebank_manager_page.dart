@@ -66,7 +66,7 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         leading: new IconButton(
           icon: new Icon(Icons.arrow_back, color: Colors.white),
