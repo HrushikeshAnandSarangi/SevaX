@@ -285,7 +285,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             side: BorderSide(color: Colors.red)
                         ),
                         child: Text(
-                          'Create Community',
+                          'Create Timebank',
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),
                         ),
