@@ -60,11 +60,19 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   @override
   void initState() {
     super.initState();
+
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     getData();
   }
 
   void getData() async{
     createEditCommunityBloc.getChildTimeBanks(context);
+
     _joinRequestModels= await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
       isDataLoaded=true;
       setState(() {
@@ -254,8 +262,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                           getTimeBankStatusTitle(status)??"",
                           style: TextStyle(fontSize: 14)
                       ),
-                      onPressed:() async {
-                        print('print time data ${widget.loggedInUserModel.sevaUserID}');
+                      onPressed: status== CompareToTimeBank.JOIN?() async {
+                     //    print('print time data ${timebank.creatorId}');
                         joinRequestModel.reason="i want to join";
                         joinRequestModel.userId = widget
                             .loggedInUserModel.sevaUserID;
@@ -267,11 +275,10 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                             timebank.id;
                         joinRequestModel.entityType =
                             EntityType.Timebank;
-                        joinRequestModel.accepted = null;
+                        joinRequestModel.accepted = false;
 
-                        if (formkey.currentState.validate()) {
-                          await createJoinRequest(
-                              model: joinRequestModel);
+
+                          await createJoinRequest(model: joinRequestModel);
 
                           JoinRequestNotificationModel
                           joinReqModel =
@@ -296,13 +303,14 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                           notification.timebankId =
                               FlavorConfig.values.timebankId;
+                        //  print('creator id ${notification.timebankId}');
 
                           UserModel timebankCreator =
                           await FirestoreManager
                               .getUserForId(
                               sevaUserId:
                               timebank.creatorId);
-                          print("creator id ${timebank.creatorId}");
+                          //print('time creator email ${timebankCreator.email}');
 
                           await Firestore.instance
                               .collection('users')
@@ -310,11 +318,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               .collection("notifications")
                               .document(notification.id)
                               .setData(notification.toMap());
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+
+                        setState(() {
+                            getData();
+                        });
 
                           return;
-                        }
+
                       }:null,
                     ),
                   ),

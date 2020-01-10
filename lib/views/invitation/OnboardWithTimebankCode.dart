@@ -282,7 +282,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                               timebankModel.id;
                                           joinRequestModel.entityType =
                                               EntityType.Timebank;
-                                          joinRequestModel.accepted = null;
+                                          joinRequestModel.accepted = false;
 
                                           if (formkey.currentState.validate()) {
                                             await createJoinRequest(
@@ -307,6 +307,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                                   .NotificationType.JoinRequest,
                                               data: joinReqModel.toMap(),
                                             );
+
+
                                             notification.timebankId =
                                                 FlavorConfig.values.timebankId;
 
