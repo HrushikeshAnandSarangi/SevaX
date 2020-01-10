@@ -1,18 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/chat_model.dart';
+import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/messages/chatview.dart';
 
 // import 'package:sevaexchange/views/core.dart';
 
 class TimeBankAboutView extends StatefulWidget {
   final TimebankModel timebankModel;
   final String email;
-
-  TimeBankAboutView.of({this.timebankModel, this.email});
+  final userId;
+  TimeBankAboutView.of({this.timebankModel, this.email,this.userId});
 
   @override
   _TimeBankAboutViewState createState() => _TimeBankAboutViewState();
@@ -22,26 +26,40 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   String text =
       "We provide full-cycle services in the areas of App development, web-based enterprise solutions, web application and portal development, We combine our solid business domain experience, technical expertise, profound knowledge of latest industry trends and quality-driven delivery model to offer progressive, end-to-end mobile and web solutions.Single app for all user-types: Teachers, Students & Parent Teachers can take attendance, students can view timetables, parents can view attendance, principal and admins can send messages & announcements, etc. using the same app,Though the traditional login mechanism with the username and password is preferred by the majority of users; the One Time Password (OTP) login via SMS and Emails is favored by all the app users. We have incorporated both of them in the school mobile app to choose the one that suits you the best.";
   bool descTextShowFlag = false;
-  bool iUserJoined = true;
+  bool isUserJoined=false;
   String loggedInUser;
   UserModelListMoreStatus userModels;
   UserModel user;
+  bool isDataLoaded=false;
+  bool isAdminLoaded=false;
 
   @override
   void initState() {
-    getData(); // TODO: implement initState
     super.initState();
+    getData(); // TODO: implement initState
+
   }
 
-  void getData() async {
-    userModels = await FirestoreManager
-        .getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
-            widget.timebankModel.id, 1, widget.email);
-    //    user=await  FirestoreManager.getUserForId(sevaUserId: widget.timebankModel.admins[0]);
+  void getData()async{
+    user=await  FirestoreManager.getUserForId(sevaUserId: widget.timebankModel.admins[0]);
+     isAdminLoaded=true;
 
-    setState(() {});
+    if(widget.timebankModel.members.contains(widget.userId)){
+      isUserJoined=true;
+      userModels= await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
+          widget.timebankModel.id, 1,  widget.email);
+       isDataLoaded=true;
 
-    print('Time Bank${userModels.userModelList[0].photoURL}');
+    }
+
+
+    setState(() {
+
+    });
+
+  //  print('Time Bank${userModels.userModelList[0].photoURL}');
+    //print('User Admin  ${user.fullname.toString()}');
+
   }
 
   @override
@@ -59,16 +77,18 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            CachedNetworkImage(
-              imageUrl: widget.timebankModel.photoUrl,
-              fit: BoxFit.fitWidth,
-              errorWidget: (context, url, error) =>
-                  Center(child: Text('No Image Avaialable')),
-              placeholder: (conext, url) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
+            Center(
+              child: CachedNetworkImage(
+
+                imageUrl:widget.timebankModel.photoUrl,
+
+                fit: BoxFit.fitWidth,
+                errorWidget: (context, url, error) =>
+                     Text('No Image Avaialable'),
+                placeholder: (conext, url) {
+                  return CircularProgressIndicator();
+                },
+              ),
             ),
             SizedBox(
               height: 30,
@@ -106,7 +126,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             SizedBox(
               height: 30,
             ),
-            iUserJoined
+            isUserJoined
                 ? Container(
                     height: 40,
                     child: GestureDetector(
@@ -134,7 +154,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                                 i++) {
                               UserModel userModel = snapshot.data[i];
                               if (userModel != null) {
-                                
+
                                 userModel.photoURL != null
                                     ? memberPhotoUrlList.add(userModel.photoURL)
                                     : print("Userimage not yet set");
@@ -169,6 +189,47 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                     ),
                   )
                 : Container(),
+
+            isUserJoined&&isDataLoaded?
+
+          Container(
+            height: 40,
+            child: GestureDetector(
+              onTap: (){
+                print('listview clicked');
+              },
+              child: ListView.builder(
+                padding: EdgeInsets.only(left: 20),
+                scrollDirection: Axis.horizontal,
+
+                itemCount: 8,
+                itemBuilder: (context,index){
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.5),
+                    child: Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+
+                          image: DecorationImage(fit: BoxFit.cover,
+                              image: CachedNetworkImageProvider(
+                                  userModels.userModelList[index].photoURL,
+
+                              ),
+                          )
+                      ),
+
+                    ),
+                  );
+                },
+
+
+              ),
+            ),
+          ):Container(
+
+          ),
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
@@ -268,19 +329,27 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                 ),
               ),
             ),
+
+
+
             Padding(
               padding: const EdgeInsets.all(20.0),
+
               child: Row(
                 children: <Widget>[
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+
+                      isAdminLoaded?
+
                       RichText(
                         text: TextSpan(
                             style: TextStyle(color: Colors.black),
                             children: [
                               TextSpan(
-                                text: 'Admin',
+                                text: user.fullname??'',
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -292,10 +361,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                                     fontSize: 16, fontFamily: 'Europa'),
                               ),
                             ]),
+                      ):Container(
+                        child:
+                        Center(child: CircularProgressIndicator()),
                       ),
                       FlatButton(
                         onPressed: () {
-                          print('Clicked');
+                          startChat(user.email,widget.email,context);
+                        //  print('Clicked');
                         },
                         child: Text(
                           'Message',
@@ -310,15 +383,21 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                     ],
                   ),
                   Spacer(),
+                  isAdminLoaded?
                   Container(
                     height: 60,
                     width: 60,
+
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(
-                                'http://www.farazessaniphotography.com/wp-content/uploads/2016/07/4Y7C4124.jpg'))),
+
+                        image: DecorationImage(fit: BoxFit.cover,
+                            image: CachedNetworkImageProvider(user.photoURL)
+                    ),
+
+                  )
+                  ):Container(
+
                   ),
                 ],
               ),
@@ -328,4 +407,43 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
       ),
     );
   }
+}
+
+void startChat(String email, String loggedUserEmail, BuildContext context) async {
+  if (email == loggedUserEmail) {
+    return null;
+  } else  {
+    List users = [
+      email,
+      loggedUserEmail
+    ];
+    print("Listing users");
+    users.sort();
+    ChatModel model = ChatModel();
+    model.user1 = users[0];
+    model.user2 = users[1];
+    print("Model1" + model.user1);
+    print("Model2" + model.user2);
+
+    await createChat(chat: model).then(
+          (_) {
+        Navigator.of(context).pop();
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatView(
+              useremail: email,
+              chatModel: model,
+              isFromShare: false,
+              news: NewsModel(),
+              isFromNewChat: IsFromNewChat(
+                  true, DateTime.now().millisecondsSinceEpoch),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }

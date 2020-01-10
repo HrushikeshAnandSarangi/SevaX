@@ -51,7 +51,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   TimebankModel timebankModel;
   //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
-  JoinRequestModel getRequestData = new JoinRequestModel();
+//  JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -271,7 +271,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                         ),
                                         onPressed: () async {
                                           print(
-                                              "Timebank Model $timebankModel");
+                                              "Timebank Model code screen $timebankModel");
                                           joinRequestModel.userId = widget
                                               .loggedInUserModel.sevaUserID;
                                           joinRequestModel.timestamp =
@@ -282,7 +282,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                               timebankModel.id;
                                           joinRequestModel.entityType =
                                               EntityType.Timebank;
-                                          joinRequestModel.accepted = null;
+                                          joinRequestModel.accepted = false;
 
                                           if (formkey.currentState.validate()) {
                                             await createJoinRequest(
@@ -309,6 +309,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                                   .NotificationType.JoinRequest,
                                               data: joinReqModel.toMap(),
                                             );
+
+
                                             notification.timebankId =
                                                 FlavorConfig.values.timebankId;
 
@@ -318,6 +320,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                                         sevaUserId:
                                                             timebankModel
                                                                 .creatorId);
+                                            print("creator id ${timebankCreator.email}");
 
                                             await Firestore.instance
                                                 .collection('users')
