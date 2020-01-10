@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
+//import 'package:collection/ lib\views\timebank_content_holder.dart';
 
 class TimebankModel extends DataModel{
   String id;
@@ -23,7 +25,10 @@ class TimebankModel extends DataModel{
   double balance;
   GeoFirePoint location;
 
+ // CompareToTimeBank joinStatus;
+
   TimebankModel(map) {
+
     this.id = map.containsKey("id") ? map["id"] : '';
     this.name = map.containsKey("name") ? map["name"] : '';
     this.missionStatement = map.containsKey("missionStatement") ? map["missionStatement"] : '';
@@ -43,6 +48,10 @@ class TimebankModel extends DataModel{
     this.children = map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0;
     this.location = getLocation(map);
+
+   // joinStatus = CompareToTimeBank.JOIN;
+
+
   }
   GeoFirePoint getLocation(map){
     GeoFirePoint geoFirePoint;

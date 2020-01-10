@@ -27,6 +27,7 @@ import 'package:flutter/cupertino.dart';
 import '../flavor_config.dart';
 import 'core.dart';
 
+
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
   final TimebankModel timebankModel;
@@ -41,162 +42,242 @@ class TimebankTabsViewHolder extends StatelessWidget {
   }
 }
 
+enum AboutUserRole{
+  ADMIN, JOINED_USER, NORMAL_USER
+}
+
 class TabarView extends StatelessWidget {
   final String timebankId;
   final TimebankModel timebankModel;
+
+
+
   TabarView({this.timebankId, this.timebankModel});
-  bool isAdmin = false;
-  bool isJoinedUser=false;
+
 
   @override
   Widget build(BuildContext context) {
 
-      isJoinedUser= timebankModel.admins
-          .contains(SevaCore.of(context).loggedInUser.sevaUserID);
-    isAdmin = timebankModel.admins
-        .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+
+
     return Scaffold(
-      body:
-      DefaultTabController(
-        length: !isAdmin ?  !isJoinedUser ? 2 : 5 : 6,
-        child: Scaffold(
-          appBar: AppBar(
-            elevation: 0.5,
-            backgroundColor: Colors.white,
-            title: Text(timebankModel.name),
-            bottom: !isAdmin
-                ? !isJoinedUser ? TabBar(
-                    labelColor: Colors.black,
-                    indicatorColor: Colors.black,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    isScrollable: true,
-                    tabs: [
-                      Tab(
-                        text: "About",
-                      ),
-                      Tab(
-                        text: "Members",
-                      )
-                    ],
-                  ):
-                  TabBar(
-              labelColor: Colors.black,
-              indicatorColor: Colors.black,
-              indicatorSize: TabBarIndicatorSize.label,
-              isScrollable: true,
-              tabs: [
-                Tab(
-                  text: "Discussions",
-                ),
-                Tab(
-                  text: "Requests",
-                ),
-                Tab(
-                  text: "Offers",
-                ),
-                Tab(
-                  text: "About",
-                ),
-                Tab(
-                  text: "Members",
-                ),
-              ],
-            )
-                : TabBar(
-                    labelColor: Colors.black,
-                    indicatorColor: Colors.black,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    isScrollable: true,
-                    tabs: [
-                      Tab(
-                        text: "Discussions",
-                      ),
-                      Tab(
-                        text: "Requests",
-                      ),
-                      Tab(
-                        text: "Offers",
-                      ),
-                      Tab(
-                        text: "About",
-                      ),
-                      Tab(
-                        text: "Members",
-                      ),
-                      Tab(
-                        text: "Manage",
-                      ),
-                    ],
-                  ),
-          ),
-          body: !isAdmin
-              ? !isJoinedUser  ? TabBarView(
-            children: [
-              TimeBankAboutView.of(
-                timebankModel: timebankModel,
-                email: SevaCore.of(context).loggedInUser.email,
-              ),
-              TimeBankAboutView.of(
-                timebankModel: timebankModel,
-                email: SevaCore.of(context).loggedInUser.email,
-              ),
-            ],
-          ):
-          TabBarView(
-                  children: [
-                    DiscussionList(
-                      timebankId: timebankId,
-                    ),
-                    RequestsModule.of(
-                      timebankId: timebankId,
-                      timebankModel: timebankModel,
-                    ),
-                    OffersModule.of(
-                      timebankId: timebankId,
-                      timebankModel: timebankModel,
-                    ),
-                    TimeBankAboutView.of(
-                      timebankModel: timebankModel,
-                      email: SevaCore.of(context).loggedInUser.email,
-                    ),
-                    TimeBankAboutView.of(
-                      timebankModel: timebankModel,
-                      email: SevaCore.of(context).loggedInUser.email,
-                    ),
-                  ],
-                )
-              : TabBarView(
-                  children: [
-                    DiscussionList(
-                      timebankId: timebankId,
-                    ),
-                    RequestsModule.of(
-                      timebankId: timebankId,
-                      timebankModel: timebankModel,
-                    ),
-                    OffersModule.of(
-                      timebankId: timebankId,
-                      timebankModel: timebankModel,
-                    ),
-                    TimeBankAboutView.of(
-                      timebankModel: timebankModel,
-                      email: SevaCore.of(context).loggedInUser.email,
-                    ),
-                    TimeBankAboutView.of(
-                      timebankModel: timebankModel,
-                      email: SevaCore.of(context).loggedInUser.email,
-                    ),
-                    ManageTimebankSeva.of(
-                      timebankModel: timebankModel,
-                    )
-                  ],
-                ),
-        ),
-      ),
+      body: getUserRole(determineUserRoleInAbout(
+        sevaUserId: SevaCore
+            .of(context)
+            .loggedInUser
+            .sevaUserID,
+        timeBankModel: timebankModel,
+      ), context, timebankModel, timebankId,)
     );
   }
 }
 
+
+Widget getUserRole(AboutUserRole role,BuildContext context,TimebankModel timebankModel, String timebankId) {
+
+  switch(role){
+
+
+    case AboutUserRole.ADMIN:
+      return createAdminTabBar(context, timebankModel,timebankId);
+
+    case AboutUserRole.JOINED_USER:
+      return createJoinedUserTabBar(context, timebankModel,timebankId);
+
+
+
+    case AboutUserRole.NORMAL_USER:
+      return createNormalUserTabBar(context, timebankModel,timebankId);
+
+
+    default:
+      return createNormalUserTabBar(context, timebankModel,timebankId);
+
+  }
+
+
+}
+Widget createAdminTabBar(BuildContext context,TimebankModel timebankModel, String timebankId){
+  return DefaultTabController(
+    length:6,
+    child: Scaffold(
+      appBar: AppBar(
+        elevation: 0.5,
+        backgroundColor: Colors.white,
+        title: Text(timebankModel.name),
+        bottom:
+         TabBar(
+          labelColor: Colors.black,
+          indicatorColor: Colors.black,
+          indicatorSize: TabBarIndicatorSize.label,
+          isScrollable: true,
+          tabs: [
+            Tab(
+              text: "Discussions",
+            ),
+            Tab(
+              text: "Requests",
+            ),
+            Tab(
+              text: "Offers",
+            ),
+            Tab(
+              text: "About",
+            ),
+            Tab(
+              text: "Members",
+            ),
+            Tab(
+              text: "Manage",
+            ),
+          ],
+        ),
+      ),
+      body:  TabBarView(
+        children: [
+          DiscussionList(
+            timebankId: timebankId,
+          ),
+          RequestsModule.of(
+            timebankId: timebankId,
+            timebankModel: timebankModel,
+          ),
+          OffersModule.of(
+            timebankId: timebankId,
+            timebankModel: timebankModel,
+          ),
+          TimeBankAboutView.of(
+            timebankModel: timebankModel,
+            email: SevaCore.of(context).loggedInUser.email,
+          ),
+          TimeBankAboutView.of(
+            timebankModel: timebankModel,
+            email: SevaCore.of(context).loggedInUser.email,
+          ),
+          ManageTimebankSeva.of(
+            timebankModel: timebankModel,
+          )
+        ],
+      ),
+    ),
+  );
+}
+Widget createJoinedUserTabBar(BuildContext context,TimebankModel timebankModel, String timebankId){
+  return DefaultTabController(
+    length:5,
+    child: Scaffold(
+      appBar: AppBar(
+        elevation: 0.5,
+        backgroundColor: Colors.white,
+        title: Text(timebankModel.name),
+        bottom:
+        TabBar(
+          labelColor: Colors.black,
+          indicatorColor: Colors.black,
+          indicatorSize: TabBarIndicatorSize.label,
+          isScrollable: true,
+          tabs: [
+            Tab(
+              text: "Discussions",
+            ),
+            Tab(
+              text: "Requests",
+            ),
+            Tab(
+              text: "Offers",
+            ),
+            Tab(
+              text: "About",
+            ),
+            Tab(
+              text: "Members",
+            ),
+          ],
+        )
+
+      ),
+      body:
+      TabBarView(
+        children: [
+          DiscussionList(
+            timebankId: timebankId,
+          ),
+          RequestsModule.of(
+            timebankId: timebankId,
+            timebankModel: timebankModel,
+          ),
+          OffersModule.of(
+            timebankId: timebankId,
+            timebankModel: timebankModel,
+          ),
+          TimeBankAboutView.of(
+            timebankModel: timebankModel,
+            email: SevaCore.of(context).loggedInUser.email,
+          ),
+          TimeBankAboutView.of(
+            timebankModel: timebankModel,
+            email: SevaCore.of(context).loggedInUser.email,
+          ),
+        ],
+      )
+
+    ),
+  );
+}
+Widget createNormalUserTabBar(BuildContext context,TimebankModel timebankModel, String timebankId) {
+  return DefaultTabController(
+    length:2,
+    child: Scaffold(
+      appBar: AppBar(
+        elevation: 0.5,
+        backgroundColor: Colors.white,
+        title: Text(timebankModel.name),
+        bottom: TabBar(
+          labelColor: Colors.black,
+          indicatorColor: Colors.black,
+          indicatorSize: TabBarIndicatorSize.label,
+          isScrollable: true,
+          tabs: [
+            Tab(
+              text: "About",
+            ),
+            Tab(
+              text: "Members",
+            )
+          ],
+        )
+
+      ),
+      body: TabBarView(
+        children: [
+          TimeBankAboutView.of(
+            timebankModel: timebankModel,
+            email: SevaCore.of(context).loggedInUser.email,
+          ),
+          TimeBankAboutView.of(
+            timebankModel: timebankModel,
+            email: SevaCore.of(context).loggedInUser.email,
+          ),
+        ],
+      )
+    ),
+  );
+}
+AboutUserRole determineUserRoleInAbout({String sevaUserId,TimebankModel timeBankModel}){
+
+  if(timeBankModel.admins
+      .contains(sevaUserId)){
+      return AboutUserRole.ADMIN;
+
+  }else if(timeBankModel.members
+      .contains(sevaUserId)){
+    return AboutUserRole.JOINED_USER;
+  }else{
+    return AboutUserRole.NORMAL_USER;
+  }
+
+
+}
 class DiscussionList extends StatefulWidget {
   final String timebankId;
   DiscussionList({this.timebankId});
@@ -1177,4 +1258,6 @@ class DiscussionListState extends State<DiscussionList> {
       ),
     );
   }
+
+
 }

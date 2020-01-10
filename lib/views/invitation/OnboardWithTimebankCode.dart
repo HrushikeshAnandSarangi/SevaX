@@ -51,7 +51,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   TimebankModel timebankModel;
   //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
-  JoinRequestModel getRequestData = new JoinRequestModel();
+//  JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -316,6 +316,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                                         sevaUserId:
                                                             timebankModel
                                                                 .creatorId);
+                                            print("creator id ${timebankCreator.email}");
 
                                             await Firestore.instance
                                                 .collection('users')
