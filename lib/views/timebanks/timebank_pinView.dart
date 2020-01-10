@@ -112,8 +112,8 @@ class _LoginSignupScreenState extends State<PinView> {
                     });
                   },
                   onDone: (text) {},
-                  pinCodeTextFieldLayoutType:
-                      PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
+                  // pinCodeTextFieldLayoutType:
+                  //     PinCodeTextFieldLayoutType.AUTO_ADJUST_WIDTH,
                   wrapAlignment: WrapAlignment.start,
                   pinBoxDecoration:
                       ProvidedPinBoxDecoration.defaultPinBoxDecoration,

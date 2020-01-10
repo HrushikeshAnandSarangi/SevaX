@@ -166,9 +166,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                   // print("############################ DONE $text");
                                   //widget.onSelectedOtp(controller.text);
                                 },
-                                pinCodeTextFieldLayoutType:
-                                    PinCodeTextFieldLayoutType
-                                        .AUTO_ADJUST_WIDTH,
+                                // pinCodeTextFieldLayoutType:
+                                //     PinCodeTextFieldLayoutType
+                                //         .AUTO_ADJUST_WIDTH,
                                 wrapAlignment: WrapAlignment.start,
                                 pinBoxDecoration: ProvidedPinBoxDecoration
                                     .underlinedPinBoxDecoration,
