@@ -14,6 +14,6 @@ class Repository {
   Future createTimebankById(timebank) => createTimebank(timebankModel: timebank);
   Future updateUserWithTimeBankIdCommunityId(user, timebankId, communityId) => communityApiProvider.updateUserWithTimeBankIdCommunityId(user, timebankId, communityId);
   Future getSubTimebanksForUser(communitId) => getSubTimebanksForUserStream(communityId: communitId);
- // Future getSubTimebanksForUser(communitId, BuildContext context) => getSubTimebanksForUserStream(communityId: communitId,sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID);
+  Future getTimebankDetailsById(timebankId) => getTimeBankForId(timebankId: timebankId);
 //  Future<TrailerModel> fetchTrailers(int movieId) => moviesApiProvider.fetchTrailer(movieId);
 }
