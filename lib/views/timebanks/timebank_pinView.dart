@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:sevaexchange/views/onboarding/bioview.dart';
-import '../../splash_view.dart';
-import '../splash_view.dart';
-import 'timebank_congratsView.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
-import 'timebank_join_request.dart';
+import '../splash_view.dart';
 //import 'package:sevaexchange/views/core.dart';
 
 typedef StringListCallback = void Function(String otp);
