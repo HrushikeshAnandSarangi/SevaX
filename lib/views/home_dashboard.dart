@@ -20,11 +20,6 @@ class Home_DashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // debugShowCheckedModeBanner: false,
-      // title: 'Flutter Demo',
-      // theme: ThemeData(
-      //   primaryColor: Colors.white,
-      // ),
       body: MyHomePage(),
     );
   }
