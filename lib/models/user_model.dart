@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import '../flavor_config.dart';
 
@@ -115,9 +111,7 @@ class UserModel extends DataModel {
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
     }
-    if (map.containsKey('currentCommunity')) {
-      this.currentCommunity = map['currentCommunity'];
-    }
+
     if (map.containsKey('blockedBy')) {
       List<String> blockedBy = List.castFrom(map['blockedBy']);
       this.blockedBy = blockedBy;
@@ -181,6 +175,9 @@ class UserModel extends DataModel {
       this.timezone = map['timezone'];
     } else {
       this.timezone = 'PT';
+    }
+    if (map.containsKey('currentCommunity')) {
+      this.currentCommunity = map['currentCommunity'];
     }
   }
 
