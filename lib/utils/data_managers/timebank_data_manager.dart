@@ -175,7 +175,7 @@ Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
 /// Get a particular Timebank by it's ID
 Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   assert(timebankId != null && timebankId.isNotEmpty,
-      'Time bank ID cannot be null or empty');
+  'Time bank ID cannot be null or empty');
 
   TimebankModel timeBankModel;
   await Firestore.instance
@@ -190,6 +190,24 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
 
   return timeBankModel;
 }
+Future<TimebankModel> getTimebankDetailsByCommunityId({@required String communityId}) async {
+  var timebank;
+  if (communityId.isNotEmpty) {
+    await Firestore.instance
+        .collection('communities')
+        .where('community_id', isEqualTo: communityId)
+        .getDocuments()
+        .then((QuerySnapshot querySnapshot) {
+      if (querySnapshot.documents.isNotEmpty && querySnapshot.documents.length == 1) {
+        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+          timebank = TimebankModel(documentSnapshot.data);
+        });
+      }
+    });
+  }
+  return timebank;
+}
+
 
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(

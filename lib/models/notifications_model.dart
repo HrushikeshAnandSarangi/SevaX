@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/models/data_model.dart';
 
 class NotificationsModel extends DataModel {
@@ -8,15 +9,18 @@ class NotificationsModel extends DataModel {
   String senderUserId;
   bool isRead;
   String timebankId;
+  String communityId;
 
-  NotificationsModel(
-      {this.id,
-      this.type,
-      this.data,
-      this.targetUserId,
-      this.isRead = false,
-      this.senderUserId,
-      this.timebankId});
+  NotificationsModel({
+    this.id,
+    this.type,
+    this.data,
+    this.targetUserId,
+    this.isRead = false,
+    this.senderUserId,
+    this.timebankId,
+    @required this.communityId,
+  });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {

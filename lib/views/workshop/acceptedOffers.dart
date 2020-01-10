@@ -124,13 +124,14 @@ class _ViewAcceptedOffers extends StatelessWidget {
                     child: Row(
                       children: <Widget>[
                         ClipOval(
-                            child: SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: FadeInImage.assetNetwork(
-                              placeholder: 'lib/assets/images/profile.png',
-                              image: user.photoURL),
-                        )),
+                          child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: FadeInImage.assetNetwork(
+                                placeholder: 'lib/assets/images/profile.png',
+                                image: user.photoURL),
+                          ),
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -146,6 +147,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: Text(
                                 model.description,
+                                overflow: TextOverflow.ellipsis,
                                 style:
                                     Theme.of(parentContext).textTheme.subtitle,
                               ),
@@ -268,7 +270,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    getBio(userModel),
+                  getBio(userModel),
                   Center(
                     child: Text(
                         "${userModel.fullname} will be automatically added to the campaign request.",
@@ -337,18 +339,16 @@ class _ViewAcceptedOffers extends StatelessWidget {
         });
   }
 
-  Widget getBio(UserModel userModel){
-    if(userModel.bio != null) {
-      if(userModel.bio.length <100){
+  Widget getBio(UserModel userModel) {
+    if (userModel.bio != null) {
+      if (userModel.bio.length < 100) {
         return Center(
-          child: Text(
-              userModel.bio
-          ),
+          child: Text(userModel.bio),
         );
       }
       return Container(
         height: 100,
-        child:  SingleChildScrollView(
+        child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
             userModel.bio,
@@ -361,9 +361,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text(
-          "Bio not yet updated"
-      ),
+      child: Text("Bio not yet updated"),
     );
   }
 

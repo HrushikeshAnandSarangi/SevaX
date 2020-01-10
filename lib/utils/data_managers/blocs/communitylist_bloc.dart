@@ -138,8 +138,14 @@ class CommunityCreateEditBloc {
     // update user to the timebank.
     await _repository.updateUserWithTimeBankIdCommunityId(user, community.timebank.id, community.community.id);
   }
+  updateUser(timebank) async {
+     var timebanktemp = await _repository.getTimebankDetailsByCommunityIdrepo(timebank.community_id);
+     print(timebanktemp);
+  }
+
   Future VerifyTimebankWithCode(String code, func) async {
-    // get the timebanks with the code.
+    // get the timebanks with the code.\
+
     Firestore.instance
         .collection("timebankCodes")
         .where("timebankCode", isEqualTo: code)
@@ -174,6 +180,7 @@ class CommunityCreateEditBloc {
                 .document(f.data['timebankId'])
                 .get()
                 .then((DocumentSnapshot timeBank) async {
+                  updateUser(timeBank.data);
               await func(timeBank.data['name'].toString());
             });
           }

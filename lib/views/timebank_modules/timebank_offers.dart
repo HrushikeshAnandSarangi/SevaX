@@ -98,6 +98,9 @@ class OffersState extends State<OffersModule> {
               Padding(
                 padding: EdgeInsets.only(left: 10),
               ),
+              Expanded(
+                child: Container(),
+              ),
               // StreamBuilder<List<TimebankModel>>(
               //     stream: FirestoreManager.getTimebanksForUserStream(
               //       userId: SevaCore.of(context).loggedInUser.sevaUserID,
@@ -1142,10 +1145,10 @@ class OfferCardViewState extends State<OfferCardView> {
 
   String offerStatusLabel;
 
-  _makePostRequest(OfferModel offerModel) async {
+  Future _makePostRequest(OfferModel offerModel) async {
     // set up POST request arguments
     String url =
-        'https://us-central1-sevaexchange.cloudfunctions.net/acceptOffer';
+        'https://us-central1-sevaxproject4sevax.cloudfunctions.net/acceptOffer';
     Map<String, String> headers = {"Content-type": "application/json"};
     Map<String, String> body = {
       'id': offerModel.id,
@@ -1182,6 +1185,7 @@ class OfferCardViewState extends State<OfferCardView> {
   }
 
   bool isAccepted = false;
+  BuildContext dialogContext;
   Widget getBottombar() {
     isAccepted = widget.offerModel.offerAcceptors.contains(
       SevaCore.of(context).loggedInUser.sevaUserID,
@@ -1222,7 +1226,7 @@ class OfferCardViewState extends State<OfferCardView> {
                       TextSpan(
                         text: widget.offerModel.sevaUserId !=
                                 SevaCore.of(context).loggedInUser.sevaUserID
-                            ? 'You have${isAccepted ? '' : " not yet "} accepted this offer.'
+                            ? 'You have${isAccepted ? '' : " not yet"} accepted this offer.'
                             : "You created this offer",
                         style: TextStyle(
                           fontSize: 16,
@@ -1282,11 +1286,23 @@ class OfferCardViewState extends State<OfferCardView> {
                       ),
                     ],
                   ),
-                  onPressed: () {
-                    if ( widget.timebankModel != null &&  widget.timebankModel.protected) {
+                  onPressed: () async {
+                    if (widget.timebankModel != null &&
+                        widget.timebankModel.protected) {
                       _showProtectedTimebankMessage();
                       return;
                     }
+
+                    showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (createDialogContext) {
+                          dialogContext = createDialogContext;
+                          return AlertDialog(
+                            title: Text('Please wait..'),
+                            content: LinearProgressIndicator(),
+                          );
+                        });
                     var isAccepted = widget.offerModel.offerAcceptors
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID);
 
@@ -1302,37 +1318,45 @@ class OfferCardViewState extends State<OfferCardView> {
                     });
 
                     widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
+                    var tempOutput =
+                        new List<String>.from(widget.offerModel.offerAcceptors);
+                    tempOutput
+                        .add(SevaCore.of(context).loggedInUser.sevaUserID);
+                    widget.offerModel.offerAcceptors = tempOutput;
+                    await _makePostRequest(widget.offerModel);
+                    Navigator.of(dialogContext).pop();
+                    Navigator.of(context).pop();
 
-                    FirestoreManager.getTimeBankForId(
-                            timebankId: widget.offerModel.timebankId)
-                        .then((timebank) async {
-                      if (timebank.admins.contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID) ||
-                          timebank.coordinators.contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID)) {
-                        await _makePostRequest(widget.offerModel);
-                        Navigator.of(context).pop();
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: new Text("Permission Denied"),
-                              content: new Text(
-                                  "You need to be an Admin or Coordinator to have permission to send request to offers"),
-                              actions: <Widget>[
-                                new FlatButton(
-                                  child: new Text("Close"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    });
+                    // FirestoreManager.getTimeBankForId(
+                    //         timebankId: widget.offerModel.timebankId)
+                    //     .then((timebank) async {
+                    //   // print("recieved details");
+                    //   if (timebank.admins.contains(
+                    //           SevaCore.of(context).loggedInUser.sevaUserID) ||
+                    //       timebank.coordinators.contains(
+                    //           SevaCore.of(context).loggedInUser.sevaUserID)) {
+
+                    //   } else {
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return AlertDialog(
+                    //           title: new Text("Permission Denied"),
+                    //           content: new Text(
+                    //               "You need to be an Admin or Coordinator to have permission to send request to offers"),
+                    //           actions: <Widget>[
+                    //             new FlatButton(
+                    //               child: new Text("Close"),
+                    //               onPressed: () {
+                    //                 Navigator.of(context).pop();
+                    //               },
+                    //             ),
+                    //           ],
+                    //         );
+                    //       },
+                    //     );
+                    //   }
+                    // });
                   },
                 ),
               ),

@@ -15,6 +15,7 @@ import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
+import 'package:sevaexchange/views/home_dashboard.dart';
 
 import 'home_page_router.dart';
 import 'onboarding/skillsview.dart';
@@ -542,9 +543,13 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToBioView(loggedInUser);
     }
     // print(loggedInUser.communities);
-    if (loggedInUser.communities == null) {
+    if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
     }
+    if(loggedInUser.currentCommunity != null || loggedInUser.currentCommunity != ""){
+      await _navigateToHome_DashBoardView(loggedInUser);
+    }
+
 
     // if ()
 
@@ -758,6 +763,16 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
+  Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => SevaCore(
+              loggedInUser: loggedInUser,
+              child: Home_DashBoard())
+      ),
+    );
+  }
+
 
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
