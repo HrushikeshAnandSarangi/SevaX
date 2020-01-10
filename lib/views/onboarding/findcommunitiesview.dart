@@ -130,6 +130,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     Text('Or'),
                     RaisedButton(
                       onPressed: () {
+                        createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -137,8 +138,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                     loggedInUser:
                                         SevaCore.of(context).loggedInUser,
                                     child: CreateEditCommunityView(
-                                      timebankId:
-                                          FlavorConfig.values.timebankId,
+                                      timebankId: FlavorConfig.values.timebankId,
                                     ))));
                       },
                       child: Row(
@@ -187,21 +187,15 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                   children: <Widget>[
                                     RaisedButton(
                                       onPressed: () {
-                                        var communityModel =
-                                            snapshot.data.communities[index];
+                                        var communityModel = snapshot.data.communities[index];
+                                        createEditCommunityBloc.selectCommunity(communityModel);
+                                        createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
                                         // snapshot.data.communities[index].
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (contexts) =>
-                                                OnBoardWithTimebank(
-                                                    timebankId:
-                                                        communityModel.id,
-                                                    communityModel:
-                                                        communityModel,
-                                                    loggedInUserModel:
-                                                        SevaCore.of(context)
-                                                            .loggedInUser),
+                                                OnBoardWithTimebank(),
                                           ),
                                         );
                                         print('clicked');

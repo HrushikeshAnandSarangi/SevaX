@@ -12,5 +12,6 @@ class Repository {
   Future createTimebankById(timebank) => createTimebank(timebankModel: timebank);
   Future updateUserWithTimeBankIdCommunityId(user, timebankId, communityId) => communityApiProvider.updateUserWithTimeBankIdCommunityId(user, timebankId, communityId);
   Future getSubTimebanksForUser(communitId) => getSubTimebanksForUserStream(communityId: communitId);
+  Future getTimebankDetailsById(timebankId) => getTimeBankForId(timebankId: timebankId);
 //  Future<TrailerModel> fetchTrailers(int movieId) => moviesApiProvider.fetchTrailer(movieId);
 }
