@@ -31,17 +31,27 @@ class JoinSubTimeBankView extends StatefulWidget {
 
 }
 
+enum CompareToTimeBank{
+  JOINED, REQUESTED, REJECTED, JOIN
+}
+
+
 class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   // TRUE: register page, FALSE: login page
   TextEditingController controller = TextEditingController();
   TimebankModel timebankModel;
   //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
-  JoinRequestModel getRequestData = new JoinRequestModel();
+  //JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
   final formkey = GlobalKey<FormState>();
+
+   static const String JOIN ="Join";
+   static const String JOINED="Joined";
+   static const String REQUESTED="Requested";
+   static const String REJECTED="Rejected";
 
   bool hasError = false;
   String errorMessage1 = '';
@@ -50,23 +60,29 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   @override
   void initState() {
     super.initState();
+
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     getData();
   }
 
   void getData() async{
-    createEditCommunityBloc.getChildTimeBanks();
+    createEditCommunityBloc.getChildTimeBanks(context);
+
     _joinRequestModels= await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
       isDataLoaded=true;
       setState(() {
 
       });
+
       //print('User request ${}');
 
 
        // print('User request ${newList}');
-
-
-
   }
 
   Widget build(BuildContext context) {
@@ -140,13 +156,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                   itemBuilder: (context, index) {
                     TimebankModel timebank = timebankList.elementAt(index);
-                    String status;
+                      CompareToTimeBank status;
                     if(_joinRequestModels!=null) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
-                      print(timebank.children.toString());
+                     // print(timebank.children.toString());
                       return makeItem(timebank, status);
                     }else{
-                      status='Join';
+                      status = CompareToTimeBank.JOIN;
                       return makeItem(timebank, status);
                     }
                   },
@@ -168,7 +184,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         });
   }
 
-  Widget makeItem(TimebankModel timebank, String status) {
+  Widget makeItem(TimebankModel timebank, CompareToTimeBank status) {
     return InkWell(
       onTap: (){
         Navigator.push(
@@ -243,12 +259,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                       shape: StadiumBorder(),
                       textColor: Colors.lightBlue,
                       child: Text(
-                          status??"",
+                          getTimeBankStatusTitle(status)??"",
                           style: TextStyle(fontSize: 14)
                       ),
-                      onPressed: status=='Join'?() async {
-                        print(
-                            "Timebank Model sub time bank $timebankModel");
+                      onPressed: status== CompareToTimeBank.JOIN?() async {
+                     //    print('print time data ${timebank.creatorId}');
+                        joinRequestModel.reason="i want to join";
                         joinRequestModel.userId = widget
                             .loggedInUserModel.sevaUserID;
                         joinRequestModel.timestamp =
@@ -256,43 +272,45 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                                 .millisecondsSinceEpoch;
 
                         joinRequestModel.entityId =
-                            timebankModel.id;
+                            timebank.id;
                         joinRequestModel.entityType =
                             EntityType.Timebank;
-                        joinRequestModel.accepted = null;
+                        joinRequestModel.accepted = false;
 
-                        if (formkey.currentState.validate()) {
-                          await createJoinRequest(
-                              model: joinRequestModel);
+
+                          await createJoinRequest(model: joinRequestModel);
 
                           JoinRequestNotificationModel
                           joinReqModel =
                           JoinRequestNotificationModel(
                               timebankId:
-                              timebankModel.id,
+                              timebank.id,
                               timebankTitle:
-                              timebankModel.name);
+                              timebank.name);
 
                           NotificationsModel notification =
                           NotificationsModel(
                             id: utils.Utils.getUuid(),
                             targetUserId:
-                            timebankModel.creatorId,
+                            timebank.creatorId,
                             senderUserId: widget
                                 .loggedInUserModel.sevaUserID,
                             type: prefix0
                                 .NotificationType.JoinRequest,
                             data: joinReqModel.toMap(),
                           );
+
+
                           notification.timebankId =
                               FlavorConfig.values.timebankId;
+                        //  print('creator id ${notification.timebankId}');
 
                           UserModel timebankCreator =
                           await FirestoreManager
                               .getUserForId(
                               sevaUserId:
-                              timebankModel
-                                  .creatorId);
+                              timebank.creatorId);
+                          //print('time creator email ${timebankCreator.email}');
 
                           await Firestore.instance
                               .collection('users')
@@ -300,11 +318,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               .collection("notifications")
                               .document(notification.id)
                               .setData(notification.toMap());
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+
+                        setState(() {
+                            getData();
+                        });
 
                           return;
-                        }
+
                       }:null,
                     ),
                   ),
@@ -317,27 +337,62 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     );
   }
 
-  String compareTimeBanks(List<JoinRequestModel> joinRequestModels, TimebankModel timebank) {
+
+
+  String getTimeBankStatusTitle(CompareToTimeBank status) {
+
+    switch(status){
+
+
+      case CompareToTimeBank.JOIN:
+        return JOIN;
+
+      case CompareToTimeBank.JOINED:
+        return JOINED;
+
+
+      case CompareToTimeBank.REJECTED:
+        return REJECTED;
+
+
+      case CompareToTimeBank.REQUESTED:
+        return REQUESTED;
+
+      default:
+        return JOIN;
+
+
+
+    }
+
+
+  }
+
+  CompareToTimeBank compareTimeBanks(List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
+
 
     for(int i=0;i<joinRequestModels.length;i++){
 
+      JoinRequestModel requestModel =joinRequestModels[i];
 
-      if(joinRequestModels[i].entityId==timebank.id && joinRequestModels[i].accepted==true){
-        return 'Joined';
+      if(requestModel.entityId==timeBank.id && joinRequestModels[i].accepted){
+        return CompareToTimeBank.JOINED;
       }
 
-      if(joinRequestModels[i].entityId==timebank.id && joinRequestModels[i].operationTaken==false){
-        return 'Requested';
+      if(requestModel.entityId==timeBank.id && requestModel.operationTaken==false){
+        return CompareToTimeBank.REQUESTED;
       }
-      if(joinRequestModels[i].entityId==timebank.id && joinRequestModels[i].operationTaken==true && joinRequestModels[i].accepted==false){
-        return 'Rejected';
+      if(requestModel.entityId==timeBank.id && requestModel.operationTaken==true && requestModel.accepted==false){
+        return CompareToTimeBank.REJECTED;
       }
 
 
     }
-    return 'Join';
+    return CompareToTimeBank.JOIN;
 
   }
 }
+
+
 
 
