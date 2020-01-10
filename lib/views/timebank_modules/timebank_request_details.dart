@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as prefix0;
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -11,7 +11,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
-import 'package:intl/intl.dart';
 // import 'package:timezone/browser.dart';
 
 class TimeBankRequestDetails extends StatefulWidget {
@@ -410,6 +409,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
     acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -421,6 +421,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 }

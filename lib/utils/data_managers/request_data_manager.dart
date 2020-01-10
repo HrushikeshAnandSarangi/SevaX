@@ -236,6 +236,7 @@ Future<void> requestComplete({
 Future<void> rejectRequestCompletion({
   @required RequestModel model,
   @required String userId,
+  @required String communityid,
 }) async {
   await Firestore.instance
       .collection('requests')
@@ -248,6 +249,7 @@ Future<void> rejectRequestCompletion({
     senderUserId: model.sevaUserId,
     type: NotificationType.RequestCompletedRejected,
     data: model.toMap(),
+    communityId: communityid,
   );
   await utils.createTaskCompletedApprovedNotification(model: notification);
 }
@@ -255,6 +257,7 @@ Future<void> rejectRequestCompletion({
 Future<void> approveRequestCompletion({
   @required RequestModel model,
   @required String userId,
+  @required String communityId,
 }) async {
   await Firestore.instance
       .collection('requests')
@@ -269,6 +272,7 @@ Future<void> approveRequestCompletion({
     senderUserId: model.sevaUserId,
     type: NotificationType.RequestCompletedApproved,
     data: model.toMap(),
+    communityId: communityId,
   );
 
   num transactionvalue = model.durationOfRequest / 60;
@@ -284,6 +288,7 @@ Future<void> approveRequestCompletion({
       id: utils.Utils.getUuid(),
       targetUserId: model.sevaUserId,
       senderUserId: userId,
+      communityId: communityId,
       type: NotificationType.TransactionDebit,
       data: model.transactions
           .where((transactionModel) {
@@ -308,6 +313,7 @@ Future<void> approveRequestCompletion({
     id: utils.Utils.getUuid(),
     targetUserId: userId,
     senderUserId: model.sevaUserId,
+    communityId: communityId,
     type: NotificationType.TransactionCredit,
     data: model.transactions
         .where((transactionModel) {
@@ -330,6 +336,7 @@ Future<void> approveAcceptRequest({
   @required RequestModel requestModel,
   @required String approvedUserId,
   @required String notificationId,
+  @required String communityId,
 }) async {
   await Firestore.instance
       .collection('requests')
@@ -339,6 +346,7 @@ Future<void> approveAcceptRequest({
   NotificationsModel model = NotificationsModel(
     id: utils.Utils.getUuid(),
     targetUserId: approvedUserId,
+    communityId: communityId,
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: requestModel.toMap(),
@@ -355,6 +363,7 @@ Future<void> rejectAcceptRequest({
   @required RequestModel requestModel,
   @required String rejectedUserId,
   @required String notificationId,
+  @required String communityId,
 }) async {
   await Firestore.instance
       .collection('requests')
@@ -367,6 +376,7 @@ Future<void> rejectAcceptRequest({
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestReject,
     data: requestModel.toMap(),
+    communityId: communityId,
   );
 
   await utils.removeAcceptRequestNotification(

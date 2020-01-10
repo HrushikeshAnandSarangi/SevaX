@@ -325,6 +325,7 @@ class _RequestCardViewState extends State<RequestCardView> {
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 

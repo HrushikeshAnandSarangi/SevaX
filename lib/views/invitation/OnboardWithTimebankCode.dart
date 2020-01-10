@@ -299,6 +299,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                             NotificationsModel notification =
                                                 NotificationsModel(
                                               id: utils.Utils.getUuid(),
+                                              communityId:
+                                                  widget.communityModel.id,
                                               targetUserId:
                                                   timebankModel.creatorId,
                                               senderUserId: widget

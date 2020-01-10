@@ -339,6 +339,7 @@ class _RequestCardViewState extends State<RequestCardView> {
     FirestoreManager.acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -350,6 +351,7 @@ class _RequestCardViewState extends State<RequestCardView> {
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -943,8 +945,8 @@ class RequestListItems extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
-            UserModel user = snapshot.data;
-            String loggedintimezone = user.timezone;
+            // UserModel user = snapshot.data;
+            // String loggedintimezone = user.timezone;
 
             return StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getAllRequestListStream(),

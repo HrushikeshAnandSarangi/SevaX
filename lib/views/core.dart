@@ -334,7 +334,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
               actions: [
                 StreamBuilder<Object>(
                   stream: FirestoreManager.getNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email),
+                    userEmail: SevaCore.of(context).loggedInUser.email,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
