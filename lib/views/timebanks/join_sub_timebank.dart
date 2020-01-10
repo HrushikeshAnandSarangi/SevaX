@@ -73,7 +73,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   void getData() async{
-    createEditCommunityBloc.getChildTimeBanks(context);
+    createEditCommunityBloc.getChildTimeBanks();
 
     _joinRequestModels= await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
       isDataLoaded=true;
@@ -241,7 +241,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                         ),
                         Text(
                           timebank.address + ' .' +
-                              timebank.members.length.toString()??"",
+                              timebank.members.length.toString()??" ",
                           style: TextStyle(
                               fontFamily: "Europa",
                               fontSize: 14,
@@ -320,11 +320,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               .collection("notifications")
                               .document(notification.id)
                               .setData(notification.toMap());
-
-                        setState(() {
-                            getData();
-                        });
-
+                            setState(() {
+                              getData();
+                            });
                           return;
 
                       }:null,
@@ -372,7 +370,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   CompareToTimeBank compareTimeBanks(List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
 
-    CompareToTimeBank status;
+   // CompareToTimeBank status;
     for(int i=0;i<joinRequestModels.length;i++){
 
       JoinRequestModel requestModel =joinRequestModels[i];
