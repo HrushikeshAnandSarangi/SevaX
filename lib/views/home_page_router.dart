@@ -29,9 +29,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
     pages = [
       JoinSubTimeBankView(SevaCore.of(context).loggedInUser),
       NotificationsPage(),
-      Home_DashBoard(
-        'sammpleId'
-      ),
+      Home_DashBoard(),
       ChatListView(),
       ProfilePage(),
     ];

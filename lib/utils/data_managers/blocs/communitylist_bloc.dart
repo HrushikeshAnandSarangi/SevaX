@@ -117,7 +117,7 @@ class CommunityCreateEditBloc {
     community.selectCommunity(currentCommunity);
     _createEditCommunity.add(community);
   }
-  getChildTimeBanks(BuildContext context) async{
+  getChildTimeBanks() async{
     var community = this._createEditCommunity.value;
     var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity);
   //  var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity,context);

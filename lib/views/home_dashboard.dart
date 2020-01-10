@@ -12,9 +12,7 @@ import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class Home_DashBoard extends StatelessWidget {
-  final String communityId;
-  Home_DashBoard(
-      this.communityId); // This widget is the root of your application.
+  Home_DashBoard(); // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ),
               content: Container(
-                height: size.height - 95,
+                height: size.height -110,
                 child: MyTaskPage(controller),
               ),
             ),
@@ -188,8 +186,11 @@ class _MyHomePageState extends State<MyHomePage>
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                  image: CachedNetworkImageProvider(timebank.photoUrl),
-                  fit: BoxFit.cover)),
+                  image: CachedNetworkImageProvider(timebank.photoUrl ?? 'https://www.quantabiodesign.com/wp-content/uploads/No-Photo-Available-768x960.jpg'),
+                  fit: BoxFit.cover
+              )
+          ),
+
           child: Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(

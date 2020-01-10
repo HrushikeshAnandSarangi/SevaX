@@ -80,7 +80,7 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 
 /// Get all timebanknew associated with a User as a Stream_umesh
 Future<List<TimebankModel>> getSubTimebanksForUserStream(
-    {@required String communityId,@required String sevaUserId}) async {
+    {@required String communityId}) async {
   List<dynamic> timeBankIdList = [];
   List<TimebankModel> timeBankModelList = [];
 
@@ -106,6 +106,8 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
     }*/
 
     timeBankModelList.add(timeBankModel);
+    print("hey ${timeBankModel.admins}");
+
   }
   return timeBankModelList;
 }
