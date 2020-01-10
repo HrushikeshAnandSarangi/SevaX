@@ -8,6 +8,7 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -47,12 +48,25 @@ class _CreateRequestState extends State<CreateRequest> {
         ),
         centerTitle: false,
       ),
-      body: RequestCreateForm(
-        isOfferRequest: widget.isOfferRequest,
-        offer: widget.offer,
-        timebankId: widget.timebankId,
-        userModel: widget.userModel,
-      ),
+      body:StreamBuilder<UserModelController>(
+          stream: userBloc.getLoggedInUser,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.data != null) {
+              return RequestCreateForm(
+                isOfferRequest: widget.isOfferRequest,
+                offer: widget.offer,
+                timebankId: widget.timebankId,
+                userModel: widget.userModel,
+                loggedInUser: snapshot.data.loggedinuser
+              );
+            }
+            return Text('');
+          }
+      )
     );
   }
 }
@@ -62,8 +76,9 @@ class RequestCreateForm extends StatefulWidget {
   final OfferModel offer;
   final String timebankId;
   final UserModel userModel;
+  final UserModel loggedInUser;
   RequestCreateForm(
-      {this.isOfferRequest, this.offer, this.timebankId, this.userModel});
+      {this.isOfferRequest, this.offer, this.timebankId, this.userModel, this.loggedInUser});
 
   @override
   RequestCreateFormState createState() {
@@ -98,7 +113,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   @override
   void didChangeDependencies() {
     FirestoreManager.getUserForIdStream(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID)
+            sevaUserId: widget.loggedInUser.sevaUserID)
         .listen((userModel) {
       this.requestModel.email = userModel.email;
       this.requestModel.fullName = userModel.fullname;
@@ -440,8 +455,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           onActivityResult = await Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => SelectMembersInGroup(
-                timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-                userEmail: SevaCore.of(context).loggedInUser.email,
+                timebankId: widget.loggedInUser.currentTimebank,
+                userEmail: widget.loggedInUser.email,
                 userSelected: selectedUsers,
               ),
             ),
