@@ -22,11 +22,11 @@ class UpdateOffer extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        // iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           "Update volunteer offer",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
       ),

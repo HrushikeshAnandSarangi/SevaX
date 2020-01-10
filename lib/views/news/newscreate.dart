@@ -287,9 +287,21 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             autofocus: true,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
+                              labelStyle: prefix0.TextStyle(
+                                color: Colors.black
+                              ),
                               alignLabelWithHint: false,
                               hintText: 'Text, URL and Hashtags ',
                               labelText: 'What would you like to share',
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(0.0),
+                                ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(0.0),
@@ -420,7 +432,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: RaisedButton(
                   shape: StadiumBorder(),
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).accentColor,
                   onPressed: () async {
                     if (location != null) {
                       if (formKey.currentState.validate()) {

@@ -14,11 +14,7 @@ import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class Home_DashBoard extends StatelessWidget {
-  final String communityId;
-
-  Home_DashBoard({
-    this.communityId,
-  }); // This widget is the root of your application.
+  Home_DashBoard(); // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => JoinSubTimeBankView()
+                                  builder: (context) => JoinSubTimeBankView(SevaCore.of(context).loggedInUser)
                                   //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
                                   ),
                             );

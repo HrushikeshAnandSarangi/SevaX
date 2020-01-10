@@ -12,11 +12,12 @@ import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
-import 'package:sevaexchange/views/onboarding/skillsview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
+
+import 'home_page_router.dart';
+import 'onboarding/skillsview.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -448,6 +449,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
 
     if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
@@ -543,7 +545,6 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.communities == null) {
       await _navigateToFindCommunitiesView(loggedInUser);
     }
-
 
     // if ()
 
@@ -746,12 +747,14 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
+
   Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SevaCore(
-            loggedInUser: loggedInUser,
-            child: FindCommunitiesView())
+          loggedInUser: loggedInUser,
+          child: HomePageRouter(),
+        ),
       ),
     );
   }
@@ -762,13 +765,12 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
+    print('logg${loggedInUser}');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: CoreView(
-            sevaUserID: loggedInUser.sevaUserID,
-          ),
+          child: CoreView(),
         ),
       ),
     );

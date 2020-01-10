@@ -684,7 +684,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
               context,
               MaterialPageRoute(
                 builder: (context) => Home_DashBoard(
-                  communityId: "",
                 ),
               ),
             );
@@ -693,7 +692,6 @@ class _SevaCoreViewState extends State<SevaCoreView>
               context,
               MaterialPageRoute(
                   builder: (context) => Home_DashBoard(
-                        communityId: "",
                       ) /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/

@@ -35,7 +35,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
   //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
-  JoinRequestModel getRequestData = new JoinRequestModel();
+//  JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -278,17 +278,21 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                         timebankId: timebankModel.id,
                                         timebankTitle: timebankModel.name);
 
-                                NotificationsModel notification =
-                                    NotificationsModel(
-                                  id: utils.Utils.getUuid(),
-                                  targetUserId: timebankModel.creatorId,
-                                  senderUserId: communityCreateEditSnapshot
-                                      .loggedinuser.sevaUserID,
-                                  type: prefix0.NotificationType.JoinRequest,
-                                  data: joinReqModel.toMap(),
-                                );
-                                notification.timebankId =
-                                    FlavorConfig.values.timebankId;
+                                            NotificationsModel notification =
+                                                NotificationsModel(
+                                              id: utils.Utils.getUuid(),
+                                              targetUserId:
+                                                  timebankModel.creatorId,
+                                              senderUserId: communityCreateEditSnapshot
+                                                  .loggedinuser.sevaUserID,
+                                              type: prefix0
+                                                  .NotificationType.JoinRequest,
+                                              data: joinReqModel.toMap(),
+                                            );
+
+
+                                            notification.timebankId =
+                                                FlavorConfig.values.timebankId;
 
                                 UserModel timebankCreator =
                                     await FirestoreManager.getUserForId(

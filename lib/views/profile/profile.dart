@@ -321,23 +321,23 @@ class _ProfilePageState extends State<ProfilePage>
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Home_DashBoard(
-                  communityId: "",
-                ),
-              ),
-            );
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
-            //     builder: (context) => TimebankTabsViewHolder.of(
-            //       timebankId: FlavorConfig.values.timebankId,
-            //       timebankModel: timebankModel,
+            //     builder: (context) => Home_DashBoard(
+            //       communityId: "",
             //     ),
             //   ),
             // );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TimebankTabsViewHolder.of(
+                  timebankId: FlavorConfig.values.timebankId,
+                  timebankModel: timebankModel,
+                ),
+              ),
+            );
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(

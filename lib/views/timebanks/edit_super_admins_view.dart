@@ -1,47 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix2;
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/models/join_req_model.dart';
-import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
-import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
-import 'package:sevaexchange/new_baseline/models/notifications_model.dart';
-import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/utils.dart' as prefix1;
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/admin_viewe_requests.dart';
-import 'package:sevaexchange/views/exchange/createoffer.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
+import 'package:sevaexchange/views/campaigns/campaignsview.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
-import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/branch_list.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
-import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/timebanks/timebankedit.dart';
-import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
-import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_requests_view.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-import 'package:sevaexchange/views/membersmanage.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-
-import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/timebankedit.dart';
+import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 import '../../flavor_config.dart';
-import 'edit_super_admins_view.dart';
 import 'edit_timebank_view.dart';
 
 class EditSuperTimebankView extends StatefulWidget {
