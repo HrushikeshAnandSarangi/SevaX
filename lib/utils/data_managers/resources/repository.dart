@@ -15,6 +15,6 @@ class Repository {
   Future updateUserWithTimeBankIdCommunityId(user, timebankId, communityId) => communityApiProvider.updateUserWithTimeBankIdCommunityId(user, timebankId, communityId);
   Future getSubTimebanksForUser(communitId) => getSubTimebanksForUserStream(communityId: communitId);
   Future getTimebankDetailsById(timebankId) => getTimeBankForId(timebankId: timebankId);
-  Future getTimebankDetailsByCommunityIdrepo(communityId) => getTimebankDetailsByCommunityId(communityId: communityId);
+  Future getCommunityDetailsByCommunityIdrepo(communityId) => getCommunityDetailsByCommunityId(communityId: communityId);
 //  Future<TrailerModel> fetchTrailers(int movieId) => moviesApiProvider.fetchTrailer(movieId);
 }

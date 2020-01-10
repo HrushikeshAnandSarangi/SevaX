@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/offer_model.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -188,22 +189,21 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
 
   return timeBankModel;
 }
-Future<TimebankModel> getTimebankDetailsByCommunityId({@required String communityId}) async {
-  var timebank;
-  if (communityId.isNotEmpty) {
-    await Firestore.instance
-        .collection('communities')
-        .where('community_id', isEqualTo: communityId)
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      if (querySnapshot.documents.isNotEmpty && querySnapshot.documents.length == 1) {
-        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-          timebank = TimebankModel(documentSnapshot.data);
-        });
-      }
-    });
-  }
-  return timebank;
+Future<CommunityModel> getCommunityDetailsByCommunityId({@required String communityId}) async {
+  assert(communityId != null && communityId.isNotEmpty,
+      'Time bank ID cannot be null or empty');
+
+  CommunityModel communityModel;
+  await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> dataMap = documentSnapshot.data;
+    communityModel = CommunityModel(dataMap);
+  });
+
+  return communityModel;
 }
 
 

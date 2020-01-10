@@ -139,13 +139,13 @@ class CommunityCreateEditBloc {
     await _repository.updateUserWithTimeBankIdCommunityId(user, community.timebank.id, community.community.id);
   }
   updateUser(timebank) async {
-     var timebanktemp = await _repository.getTimebankDetailsByCommunityIdrepo(timebank.community_id);
-     print(timebanktemp);
+    var tm = TimebankModel(timebank);
+     var communitytemp = await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
+     await _repository.updateUserWithTimeBankIdCommunityId(this._createEditCommunity.value.loggedinuser, tm.id, communitytemp.id);
   }
 
   Future VerifyTimebankWithCode(String code, func) async {
-    // get the timebanks with the code.\
-
+    // get the timebanks with the code.
     Firestore.instance
         .collection("timebankCodes")
         .where("timebankCode", isEqualTo: code)
