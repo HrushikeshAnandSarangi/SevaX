@@ -87,7 +87,13 @@ class MyTasksList extends StatelessWidget {
               }
               List<RequestModel> requestModelList = snapshot.data;
               if (requestModelList.length == 0) {
-                return Center(child: Text('No Pending Tasks'));
+                return Padding(
+                  padding: const EdgeInsets.only(top: 58.0),
+                  child: Text(
+                    'No Pending Tasks',
+                    textAlign: TextAlign.center,
+                  ),
+                );
               }
               return ListView.builder(
                 itemCount: requestModelList.length,
@@ -573,6 +579,7 @@ class TaskCardViewState extends State<TaskCardView> {
           type: NotificationType.RequestCompleted,
           senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
           targetUserId: requestModel.sevaUserId,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
       );
 

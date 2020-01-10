@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -145,20 +147,23 @@ Future<void> offerRejectNotification({
       .setData(model.toMap());
 }
 
-Future<void> readNotification(String notificationId, String userEmail) async {
+Future<void> readNotification(
+  String notificationId,
+  String userEmail,
+) async {
   await Firestore.instance
       .collection('users')
       .document(userEmail)
       .collection('notifications')
       .document(notificationId)
-      .setData(
-        NotificationsModel(isRead: true).toMap(),
-        merge: true,
-      );
+      .updateData({
+    'isRead': true,
+  });
 }
 
 Stream<List<NotificationsModel>> getNotifications({
   String userEmail,
+  @required String communityId,
 }) async* {
   var data = Firestore.instance
       .collection('users')
@@ -166,6 +171,10 @@ Stream<List<NotificationsModel>> getNotifications({
       .collection('notifications')
       .where('isRead', isEqualTo: false)
       .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where(
+        'communityId',
+        isEqualTo: communityId,
+      )
       .snapshots();
 
   yield* data.transform(

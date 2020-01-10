@@ -36,11 +36,11 @@ class NewsCreate extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             "Create feed",
-            style: TextStyle(color: Colors.white),
+            // style: TextStyle(color: Colors.white),
           ),
           centerTitle: false,
           actions: <Widget>[
@@ -287,9 +287,21 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             autofocus: true,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
+                              labelStyle: prefix0.TextStyle(
+                                color: Colors.black
+                              ),
                               alignLabelWithHint: false,
                               hintText: 'Text, URL and Hashtags ',
                               labelText: 'What would you like to share',
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(0.0),
+                                ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(0.0),

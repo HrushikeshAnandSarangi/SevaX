@@ -90,7 +90,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   Widget getTimebackList(BuildContext context, String timebankId) {
-    if (timebankModel.id != null) {
+    if (timebankModel.id != "") {
       return getDataScrollView(
         context,
         timebankModel,
@@ -262,7 +262,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   List<Widget> getContent(BuildContext context, TimebankModel model) {
-    if (timebankModel.id == null) {
+    if (timebankModel.id == "") {
       timebankModel = model;
     }
     loadItems();
@@ -315,6 +315,8 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       bool isAdmin = timebankModel.admins.contains(
         SevaCore.of(context).loggedInUser.sevaUserID,
       );
+
+      print(timebankModel.admins);
       FirestoreManager.getUserForUserModels(admins: timebankModel.admins)
           .then((onValue) {
         _admins = [];
@@ -438,6 +440,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
               widget.timebankId, _pageIndex, widget.userEmail)
           .then((onValue) {
+
         var userModelList = onValue.userModelList;
         if (userModelList == null || userModelList.length == 0) {
 //          if (userModelList == null) {

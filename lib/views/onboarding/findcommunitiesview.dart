@@ -4,9 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
+
+
 
 class FindCommunitiesView extends StatefulWidget {
   @override
@@ -92,7 +103,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               hasFloatingPlaceholder: false,
               alignLabelWithHint: true,
               isDense: true,
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey,
+              ),
               contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
               filled: true,
               fillColor: Colors.white,
@@ -112,9 +126,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ]),
     );
   }
+
   Widget CreateCommunity() {
     return Container(
-      // This align moves the children to the bottom
+        // This align moves the children to the bottom
         child: Align(
             alignment: FractionalOffset.bottomCenter,
             // This container holds all the children that will be aligned
@@ -127,15 +142,16 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     Text('Or'),
                     RaisedButton(
                       onPressed: () {
+                        createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context1) => SevaCore(
-                                loggedInUser: SevaCore.of(context).loggedInUser,
-                                child: CreateEditCommunityView(
-                                  timebankId: FlavorConfig.values.timebankId,
-                                ))
-                          ));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context1) => SevaCore(
+                                    loggedInUser:
+                                        SevaCore.of(context).loggedInUser,
+                                    child: CreateEditCommunityView(
+                                      timebankId: FlavorConfig.values.timebankId,
+                                    ))));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -157,65 +173,73 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   Widget buildList() {
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
-          stream: communityBloc.allCommunities,
-          builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data != null && snapshot.data.loading) {
-                return Expanded(child:Center(
-                  child: CircularProgressIndicator()));
-              } else {
-                return  Expanded(child: Padding(
-                    padding:
-                    EdgeInsets.only(left: 0, right: 0, top: 12.0),
-                    child: ListView.builder(
-                        itemCount: snapshot.data.communities.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            onTap: goToNext(snapshot.data),
-                            title: Text(snapshot.data.communities[index].name,
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.w700
-                                )),
-                            subtitle: Text("Created by " +
-                                snapshot.data.communities[index].created_by),
-                            trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: () {
-                                      print('clicked');
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: Text('Join'),
-                                        ),
-                                      ],
-                                    ),
-                                    color: Theme
-                                        .of(context)
-                                        .accentColor,
-                                    textColor: FlavorConfig.values
-                                        .buttonTextColor,
-                                    shape: StadiumBorder(),
-                                  )
-                                ]),
-                          );
-                        })
-                ));
-              }
+        stream: communityBloc.allCommunities,
+        builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != null && snapshot.data.loading) {
+              return Expanded(
+                  child: Center(child: CircularProgressIndicator()));
+            } else {
+              return Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 0, right: 0, top: 12.0),
+                      child: ListView.builder(
+                          itemCount: snapshot.data.communities.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              onTap: goToNext(snapshot.data),
+                              title: Text(snapshot.data.communities[index].name,
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.w700)),
+                              subtitle: Text("Created by " +
+                                  snapshot.data.communities[index].created_by),
+                              trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RaisedButton(
+                                      onPressed: () {
+                                        var communityModel = snapshot.data.communities[index];
+                                        createEditCommunityBloc.selectCommunity(communityModel);
+                                        createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
+                                        // snapshot.data.communities[index].
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (contexts) =>
+                                                OnBoardWithTimebank(),
+                                          ),
+                                        );
+                                        print('clicked');
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(0.0),
+                                            child: Text('Join'),
+                                          ),
+                                        ],
+                                      ),
+                                      color: Theme.of(context).accentColor,
+                                      textColor:
+                                          FlavorConfig.values.buttonTextColor,
+                                      shape: StadiumBorder(),
+                                    )
+                                  ]),
+                            );
+                          })));
             }
-            else if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            }
-            return Expanded(child: Text(""),);
-
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
           }
-    );
+          return Expanded(
+            child: Text(""),
+          );
+        });
   }
+
   goToNext(data) {
     print(data);
   }

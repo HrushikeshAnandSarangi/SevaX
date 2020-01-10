@@ -11,6 +11,7 @@ import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
+import '../core.dart';
 
 class ViewRequestStatus extends StatefulWidget {
   final RequestModel requestModel;
@@ -33,6 +34,8 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         title: Container(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -40,12 +43,13 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
           children: <Widget>[
             Text(
               'Request Status',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.black),
             ),
           ],
         )),
         bottom: TabBar(
-          labelColor: Colors.white,
+          indicatorColor: Colors.black,
+          labelColor: Colors.black,
           tabs: [
             Tab(child: Text('Pending requests')),
             Tab(child: Text('Approved members')),
@@ -300,6 +304,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
       requestModel: model,
       rejectedUserId: user.sevaUserID,
       notificationId: notificationId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -320,6 +325,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
       requestModel: model,
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -628,9 +634,13 @@ class ApprovedMembers extends StatelessWidget {
                           // request declined
 
                           declineRequestedMember(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            communityId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentCommunity,
+                          );
 
                           Navigator.pop(viewContext);
                         },
@@ -646,9 +656,13 @@ class ApprovedMembers extends StatelessWidget {
                         onPressed: () async {
                           // Once approved
                           approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            communityId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentCommunity,
+                          );
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -665,6 +679,7 @@ class ApprovedMembers extends StatelessWidget {
     RequestModel model,
     UserModel user,
     String notificationId,
+    @required String communityId,
   }) {
     List<String> acceptedUsers = model.acceptors;
     Set<String> usersSet = acceptedUsers.toSet();
@@ -676,6 +691,7 @@ class ApprovedMembers extends StatelessWidget {
       requestModel: model,
       rejectedUserId: user.sevaUserID,
       notificationId: notificationId,
+      communityId: communityId,
     );
   }
 
@@ -683,6 +699,7 @@ class ApprovedMembers extends StatelessWidget {
     RequestModel model,
     UserModel user,
     String notificationId,
+    @required String communityId,
   }) {
     List<String> approvedUsers = model.approvedUsers;
     Set<String> usersSet = approvedUsers.toSet();
@@ -696,6 +713,7 @@ class ApprovedMembers extends StatelessWidget {
       requestModel: model,
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
+      communityId: communityId,
     );
   }
 

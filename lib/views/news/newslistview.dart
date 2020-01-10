@@ -7,24 +7,16 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
-import 'package:sevaexchange/views/messages/new_select_member.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:sevaexchange/views/workshop/UpdateApp.dart';
-import 'package:meet_network_image/meet_network_image.dart';
-
 import 'package:timeago/timeago.dart' as timeAgo;
-
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/messages/new_chat.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 // import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../flavor_config.dart';
 import '../core.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,104 +56,114 @@ class NewsListState extends State<NewsList> {
               padding: EdgeInsets.only(left: 10),
             ),
             Expanded(
-              child: StreamBuilder<Object>(
-                stream: FirestoreManager.getTimebanksForUserStream(
-                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError)
-                    return Text('Please make sure you have GPS turned on.');
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  timebankList = snapshot.data;
-                  List<String> dropdownList = [];
-
-                  int adminOfCount = 0;
-                  if (FlavorConfig.values.timebankName == "Yang 2020") {
-                    dropdownList.add("Create Yang Gang");
-                  }
-                  timebankList.forEach((t) {
-                    dropdownList.add(t.id);
-
-                    if (t.admins.contains(
-                        SevaCore.of(context).loggedInUser.sevaUserID)) {
-                      adminOfCount++;
-
-                      SevaCore.of(context)
-                          .loggedInUser
-                          .timebankIdForYangGangAdmin = t.id;
-                    }
-                  });
-
-                  SevaCore.of(context).loggedInUser.associatedWithTimebanks =
-                      dropdownList.length;
-                  SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                      adminOfCount;
-
-                  return DropdownButton<String>(
-                    value: timebankId,
-                    onChanged: (String newValue) {
-                      if (newValue == "Create Yang Gang") {
-                        createSubTimebank(context);
-                      } else {
-                        setState(() {
-                          timebankId = newValue;
-                          SevaCore.of(context).loggedInUser.currentTimebank =
-                              newValue;
-                          SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                              adminOfCount;
-
-                          didChangeDependencies();
-                        });
-                      }
-                    },
-                    items: dropdownList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      if (value == "Create Yang Gang") {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        );
-                      } else {
-                        if (value == 'All') {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        } else {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: FutureBuilder<Object>(
-                                future: FirestoreManager.getTimeBankForId(
-                                    timebankId: value),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError)
-                                    return Text(
-                                        'Please make sure you have GPS turned on.');
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Offstage();
-                                  }
-                                  TimebankModel timebankModel = snapshot.data;
-                                  return Text(
-                                    timebankModel.name,
-                                    style: TextStyle(fontSize: 15.0),
-                                  );
-                                }),
-                          );
-                        }
-                      }
-                    }).toList(),
-                  );
-                },
-              ),
+              child: Text(''),
             ),
+            // Expanded(
+            //   child: StreamBuilder<Object>(
+            //     stream: FirestoreManager.getTimebanksForUserStream(
+            //       userId: SevaCore.of(context).loggedInUser.sevaUserID,
+            //     ),
+            //     builder: (context, snapshot) {
+            //       if (snapshot.hasError)
+            //         return Text('Please make sure you have GPS turned on.');
+            //       if (snapshot.connectionState == ConnectionState.waiting) {
+            //         return Center(child: CircularProgressIndicator());
+            //       }
+            //       timebankList = snapshot.data;
+            //       List<String> dropdownList = [];
+
+            //       int adminOfCount = 0;
+            //       if (FlavorConfig.values.timebankName == "Yang 2020") {
+            //         dropdownList.add("Create Yang Gang");
+            //       }
+            //       timebankList.forEach((t) {
+            //         dropdownList.add(t.id);
+
+            //         if (t.admins.contains(
+            //             SevaCore.of(context).loggedInUser.sevaUserID)) {
+            //           adminOfCount++;
+
+            //           SevaCore.of(context)
+            //               .loggedInUser
+            //               .timebankIdForYangGangAdmin = t.id;
+            //         }
+            //       });
+
+            //       SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+            //           dropdownList.length;
+            //       SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+            //           adminOfCount;
+
+            //       return DropdownButtonHideUnderline(
+            //         child: DropdownButton<String>(
+
+            //               isExpanded: false,
+            //           value: timebankId,
+            //           onChanged: (String newValue) {
+            //             if (newValue == "Create Yang Gang") {
+            //               createSubTimebank(context);
+            //             } else {
+            //               setState(() {
+            //                 timebankId = newValue;
+            //                 SevaCore.of(context).loggedInUser.currentTimebank =
+            //                     newValue;
+            //                 SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+            //                     adminOfCount;
+
+            //                 didChangeDependencies();
+            //               });
+            //             }
+            //           },
+            //           items: dropdownList
+            //               .map<DropdownMenuItem<String>>((String value) {
+            //             if (value == "Create Yang Gang") {
+            //               return DropdownMenuItem<String>(
+            //                 value: value,
+            //                 child: Text(
+            //                   value,
+            //                   style: TextStyle(color: Colors.red),
+            //                 ),
+            //               );
+            //             } else {
+            //               if (value == 'All') {
+            //                 return DropdownMenuItem<String>(
+            //                   value: value,
+            //                   child: Text(value),
+            //                 );
+            //               } else {
+            //                 return DropdownMenuItem<String>(
+
+            //                   value: value,
+            //                   child: FutureBuilder<Object>(
+            //                       future: FirestoreManager.getTimeBankForId(
+            //                           timebankId: value),
+            //                       builder: (context, snapshot) {
+            //                         if (snapshot.hasError)
+            //                           return Text(
+            //                               'Please make sure you have GPS turned on.');
+            //                         if (snapshot.connectionState ==
+            //                             ConnectionState.waiting) {
+            //                           return Offstage();
+            //                         }
+            //                         TimebankModel timebankModel = snapshot.data;
+            //                         return Text(
+            //                           timebankModel.name,
+            //                           maxLines: 1,
+            //                           overflow: TextOverflow.ellipsis,
+            //                           style: TextStyle(fontSize: 14.0),
+            //                         );
+            //                       }),
+            //                 );
+            //               }
+            //             }
+            //           }).toList(),
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ),
             Container(
-              width: 120,
+              width: 105,
               child: CupertinoSegmentedControl<int>(
                 children: logoWidgets,
                 padding: EdgeInsets.only(left: 5.0, right: 5.0),

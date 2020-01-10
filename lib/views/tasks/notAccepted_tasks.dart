@@ -56,8 +56,10 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
   @override
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
-      return Center(
-        child: Text('There are currenlty none'),
+      return Padding(
+        padding: const EdgeInsets.only(top:58.0),
+        child: Text('There are currenlty none',
+            textAlign: TextAlign.center),
       );
     }
     return ListView.builder(

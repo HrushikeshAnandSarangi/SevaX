@@ -16,12 +16,11 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/views/core.dart';
+
 import 'package:sevaexchange/views/exchange/select_request_view.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
@@ -46,7 +45,6 @@ class HelpViewState extends State<HelpView> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     FirestoreManager.getTimeBankForId(
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
@@ -315,6 +313,7 @@ class _RequestCardViewState extends State<RequestCardView> {
     FirestoreManager.acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -326,6 +325,7 @@ class _RequestCardViewState extends State<RequestCardView> {
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -1074,7 +1074,7 @@ class OfferCardViewState extends State<OfferCardView> {
   _makePostRequest(OfferModel offerModel) async {
     // set up POST request arguments
     String url =
-        'https://us-central1-sevaexchange.cloudfunctions.net/acceptOffer';
+        'https://us-central1-sevaxproject4sevax.cloudfunctions.net/acceptOffer';
     Map<String, String> headers = {"Content-type": "application/json"};
     Map<String, String> body = {
       'id': offerModel.id,

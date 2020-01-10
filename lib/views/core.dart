@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,29 +8,27 @@ import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/app_demo_humanity_first.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/exchange/help.dart';
+import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
+import 'package:sevaexchange/views/news/newslistview.dart';
+import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/search_view.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_listview.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 
-import 'package:sevaexchange/views/news/newslistview.dart';
-import 'package:sevaexchange/views/exchange/help.dart';
-
-import 'package:sevaexchange/views/profile/profile.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import '../globals.dart' as globals;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'invitation/InviteMembers.dart';
 import 'news/overflow_constants.dart';
 import 'notifications/notifications_page.dart';
@@ -334,7 +334,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
               actions: [
                 StreamBuilder<Object>(
                   stream: FirestoreManager.getNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email),
+                    userEmail: SevaCore.of(context).loggedInUser.email,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
@@ -400,7 +403,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                       .collection("users")
                                       .document(loggedUser.email)
                                       .updateData({
-                                    "notificationsRead": unreadNotifications + notificationsRead 
+                                    "notificationsRead":
+                                        unreadNotifications + notificationsRead
                                   }).then((onValue) {
                                     setState(() {
                                       SevaCore.of(context)
@@ -672,34 +676,39 @@ class _SevaCoreViewState extends State<SevaCoreView>
   FloatingActionButton getFloatingBtn() {
     if (pages.elementAt(_selectedIndex).title == "Feeds") {
       return FloatingActionButton.extended(
-          label: Text(
-            "Create Feed",
-            style: TextStyle(fontSize: 11.0),
-          ),
-          foregroundColor: FlavorConfig.values.buttonTextColor,
-          onPressed: () {
-            if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectTimeBankForNewRequest("Feed"),
+        label: Text(
+          "Create Feed",
+          style: TextStyle(fontSize: 11.0),
+        ),
+        foregroundColor: FlavorConfig.values.buttonTextColor,
+        onPressed: () {
+          if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Home_DashBoard(
+                  "sampleId"
                 ),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewsCreate(
-                    timebankId:
-                        SevaCore.of(context).loggedInUser.currentTimebank,
+              ),
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Home_DashBoard(
+                      "sampleId") /*NewsCreate(
+                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                ),*/
                   ),
-                ),
-              );
-            }
-          });
+            );
+          }
+        },
+      );
     } else if (pages.elementAt(_selectedIndex).title == "Volunteer") {
       if (this.tabValue == 0) {
-        var floatButtonTitle = FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Create Yang Gang Request";
+        var floatButtonTitle = FlavorConfig.appFlavor == Flavor.APP
+            ? "Timebank"
+            : "Create Yang Gang Request";
         return FloatingActionButton.extended(
             label: Text(
               "Create $floatButtonTitle Request",

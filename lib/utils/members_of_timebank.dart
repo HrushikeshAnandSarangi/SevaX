@@ -85,11 +85,11 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
-        !_controller.position.outOfRange && !_isLoading) {
-      if(!_lastReached){
-        loadNextBatchItems().then((onValue){
-          setState(() {
-          });
+        !_controller.position.outOfRange &&
+        !_isLoading) {
+      if (!_lastReached) {
+        loadNextBatchItems().then((onValue) {
+          setState(() {});
         });
       }
     }
@@ -97,31 +97,35 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   @override
   Widget build(BuildContext context) {
-    if(_avtars.length==0 && !_isLoading) {
+    if (_avtars.length == 0 && !_isLoading) {
       loadNextBatchItems();
     }
     var color = Theme.of(context);
     print("Color ${color.primaryColor}");
     var finalWidget = Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           "Select volunteer",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         elevation: 0,
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.search,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () {
               Navigator.pop(context);
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                    SearchTimebankMemberElastic(widget.timebankId, widget.isFromShare,widget.newsModel, widget.selectionMode),
+                  builder: (context) => SearchTimebankMemberElastic(
+                      widget.timebankId,
+                      widget.isFromShare,
+                      widget.newsModel,
+                      widget.selectionMode),
                 ),
               );
             },
@@ -165,11 +169,9 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget getContent(BuildContext context, TimebankModel model) {
-    if(_avtars.length == 0 && _lastReached) {
+    if (_avtars.length == 0 && _lastReached) {
       return Center(
-        child: Text(
-          'No volunteers present'
-        ),
+        child: Text('No volunteers present'),
       );
     } else if (_avtars.length == 0 && _showMoreItems && !_isLoading) {
       return circularBar;
@@ -196,7 +198,6 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   }
 
   Widget loadItems() {
-
     return Container(
       width: double.infinity,
       height: 80,
@@ -227,7 +228,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     nullcount++;
     _isLoading = false;
     _pageIndex = _pageIndex + 1;
-    if(nullcount>=3){
+    if (nullcount >= 3) {
       setState(() {
         _lastReached = true;
       });
@@ -239,13 +240,15 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
   Future loadNextBatchItems() async {
     if (!_isLoading && !_lastReached) {
       _isLoading = true;
-      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex, SevaCore.of(context).loggedInUser.email).then((onValue) {
-        if(onValue==null){
+      FirestoreManager.getUsersForTimebankId(widget.timebankId, _pageIndex,
+              SevaCore.of(context).loggedInUser.email)
+          .then((onValue) {
+        if (onValue == null) {
           checkAndStopLoading();
           return;
         }
         var userModelList = onValue.userModelList;
-        if(userModelList==null || userModelList.length == 0){
+        if (userModelList == null || userModelList.length == 0) {
           checkAndStopLoading();
           return;
         }
@@ -285,7 +288,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
             _indexSoFar = _indexSoFar + iterationCount;
             _pageIndex = _pageIndex + 1;
           });
-        }else{
+        } else {
           checkAndStopLoading();
           return;
         }

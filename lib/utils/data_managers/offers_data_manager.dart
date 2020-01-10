@@ -4,10 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
+import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:meta/meta.dart';
 
 Location loc = new Location();
 Geoflutterfire geoflutterfire = Geoflutterfire();
@@ -200,29 +199,30 @@ Future<void> updateOfferWithRequest({
       .setData(offer.toMap(), merge: true);
 }
 
-Future<void> acceptOfferRequest({
-  @required OfferModel offer,
-  @required RequestModel request,
-}) async {
-  await Firestore.instance
-      .collection('notifications')
-      .document(offer.sevaUserId)
-      .collection('offerRequest')
-      .document(offer.id)
-      .delete();
+// Future<void> acceptOfferRequest({
+//   @required OfferModel offer,
+//   @required RequestModel request,
+// }) async {
+//   await Firestore.instance
+//       .collection('notifications')
+//       .document(offer.sevaUserId)
+//       .collection('offerRequest')
+//       .document(offer.id)
+//       .delete();
 
-  await Firestore.instance
-      .collection('offers')
-      .document(offer.id)
-      .setData(offer.toMap());
+//   await Firestore.instance
+//       .collection('offers')
+//       .document(offer.id)
+//       .setData(offer.toMap());
 
-  await FirestoreManager.acceptRequest(
-      requestModel: request, senderUserId: null);
+//   await FirestoreManager.acceptRequest(
+//       requestModel: request, senderUserId: null,
+//       );
 
-  await Firestore.instance
-      .collection('notifications')
-      .document(request.sevaUserId)
-      .collection('offerAccepted')
-      .document(request.id)
-      .setData(request.toMap());
-}
+//   await Firestore.instance
+//       .collection('notifications')
+//       .document(request.sevaUserId)
+//       .collection('offerAccepted')
+//       .document(request.id)
+//       .setData(request.toMap());
+// }

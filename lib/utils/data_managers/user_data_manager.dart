@@ -7,6 +7,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
+import '../../flavor_config.dart';
+
 /// Create a [user]
 Future<void> createUser({
   @required UserModel user,
@@ -99,7 +101,9 @@ Future<UserModel> getUserForId({@required String sevaUserId}) async {
       .getDocuments()
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+      print('user data ${userModel}');
       userModel = UserModel.fromMap(documentSnapshot.data);
+      print('logg user${userModel.email}');
     });
   });
 
@@ -146,14 +150,56 @@ class UserModelListMoreStatus {
 
 Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
     String timebankId, int index, String email) async {
+  var storage = 'sevaexchange';
+  var saveXLink = '';
+  if(FlavorConfig.values.timebankName == "Yang 2020"){
+    saveXLink = '';
+    storage = 'sevaexchange';
+  }else{
+    saveXLink = 'Sevax';
+    storage = 'sevaxproject4sevax';
+  }
   var urlLink =
-      'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
+      'https://us-central1-$storage.cloudfunctions.net/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
 
   print("==============$urlLink==============");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+  print('res--->$res');
   if (res.statusCode == 200) {
     var data = json.decode(res.body);
+    print(res.body);
+    var rest = data["result"] as List;
+    var useModelStatus = UserModelListMoreStatus();
+    useModelStatus.userModelList =
+        rest.map<UserModel>((json) => UserModel.fromMap(json)).toList();
+    useModelStatus.lastPage = (data["lastPage"] as bool);
+    return useModelStatus;
+  }
+  return UserModelListMoreStatus();
+}
+
+
+Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
+    String timebankId, int index, String email) async {
+  var storage = 'sevaexchange';
+  var saveXLink = '';
+  if(FlavorConfig.values.timebankName == "Yang 2020"){
+    saveXLink = '';
+    storage = 'sevaexchange';
+  }else{
+    saveXLink = 'Sevax';
+    storage = 'sevaxproject4sevax';
+  }
+  var urlLink =
+      'https://us-central1-$storage.cloudfunctions.net/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
+  print("==============$urlLink==============");
+  var res = await http
+      .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
+  print('res--->$res');
+  if (res.statusCode == 200) {
+    var data = json.decode(res.body);
+    print(res.body);
     var rest = data["result"] as List;
     var useModelStatus = UserModelListMoreStatus();
     useModelStatus.userModelList =
@@ -166,8 +212,18 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
 
 Future<UserModelListMoreStatus> getUsersForTimebankId(
     String timebankId, int index, String email) async {
+  var storage = 'sevaexchange';
+  var saveXLink = '';
+  if(FlavorConfig.values.timebankName == "Yang 2020"){
+    saveXLink = '';
+    storage = 'sevaexchange';
+  }else{
+    saveXLink = 'Sevax';
+    storage = 'sevaxproject4sevax';
+  }
+  print("peekaboo:${FlavorConfig.values.timebankName}");
   var urlLink =
-      'https://us-central1-sevaexchange.cloudfunctions.net/timebankMembers?timebankId=$timebankId&page=$index&userId=$email';
+      'https://us-central1-$storage.cloudfunctions.net/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
   if (res.statusCode == 200) {

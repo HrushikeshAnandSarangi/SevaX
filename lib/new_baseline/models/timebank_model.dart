@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
+//import 'package:collection/ lib\views\timebank_content_holder.dart';
 
 class TimebankModel extends DataModel{
   String id;
@@ -23,7 +25,10 @@ class TimebankModel extends DataModel{
   double balance;
   GeoFirePoint location;
 
+ // CompareToTimeBank joinStatus;
+
   TimebankModel(map) {
+
     this.id = map.containsKey("id") ? map["id"] : '';
     this.name = map.containsKey("name") ? map["name"] : '';
     this.missionStatement = map.containsKey("missionStatement") ? map["missionStatement"] : '';
@@ -42,8 +47,23 @@ class TimebankModel extends DataModel{
     this.rootTimebankId = map.containsKey("root_timebank_id") ? map["root_timebank_id"] : '';
     this.children = map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0;
-    this.location = map.containsKey("location") ? map["location"] : GeoFirePoint(40.754387, -73.984291);
+    this.location = getLocation(map);
+
+   // joinStatus = CompareToTimeBank.JOIN;
+
+
   }
+  GeoFirePoint getLocation(map){
+    GeoFirePoint geoFirePoint;
+    if( map.containsKey("location") && map["location"]!=null && map['location']['geopoint']!=null){
+      GeoPoint geoPoint = map['location']['geopoint'];
+      geoFirePoint = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    }else{
+      geoFirePoint = GeoFirePoint(40.754387, -73.984291);
+    }
+    return geoFirePoint;
+  }
+
   updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
       this.id = value;
