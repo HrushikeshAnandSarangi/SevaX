@@ -63,7 +63,6 @@ Stream<List<NewsModel>> getNewsStream({@required String timebankID}) async* {
             modelList[i].location.geoPoint.longitude,
           );
           modelList[i].placeAddress = data;
-          
         }
       }
 
@@ -93,19 +92,27 @@ Stream<List<NewsModel>> getNearNewsStream(
   double lng = userLocation.longitude;
 
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
-  var query = Firestore.instance.collection('news').where('entity', isEqualTo: {
-    'entityType': 'timebanks',
-    'entityId': timebankID,
-    //'entityName': FlavorConfig.timebankName,
-  });
+
+  var query = Firestore.instance.collection('news')
+  .where(
+    'entity',
+    isEqualTo: {
+      'entityType': 'timebanks',
+      'entityId': timebankID,
+      //'entityName': FlavorConfig.timebankName,
+    },
+  );
 
   var data = geos
       .collection(collectionRef: query)
       .within(center: center, radius: 20, field: 'location', strictMode: true);
 
+  print("-------------$lat---------$lng--------${data.toString()}");
+
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
           handleData: (querySnapshot, newsSink) async {
+    print("-------------------------------------------------------");
     List<NewsModel> modelList = [];
 
     querySnapshot.forEach((document) {

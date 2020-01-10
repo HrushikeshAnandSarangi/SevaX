@@ -22,27 +22,12 @@ class TimeBankRequestList extends StatelessWidget {
         @required this.title,
         @required this.superAdminTimebankModel});
 
+  //Removing app bar
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          //automaticallyImplyLeading: false,
-          title: Text(
-            "${FlavorConfig.values.timebankTitle} request list",
-            style: TextStyle(color: Colors.white),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.home),
-              onPressed: () {
-                Navigator.popUntil(
-                    context, ModalRoute.withName(Navigator.defaultRouteName)
-                );
-              },
-            )
-          ],
-        ),
-        body: getSubTimebanks(timebankid));
+        body: getSubTimebanks(timebankid)
+    );
   }
 
   Widget getSubTimebanks(String timebankId) {
@@ -81,6 +66,7 @@ class TimeBankRequestList extends StatelessWidget {
       BuildContext context,
       List<TimebankModel> reportedList,
       ) {
+
     return getContent(context, reportedList);
   }
 
@@ -131,6 +117,7 @@ class TimeBankRequestList extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => TimebankRequestAdminPage(
+                      isUserAdmin: model.admins.contains(UserData.shared.user.sevaUserID),
                       timebankId: model.id,
                       userEmail: SevaCore.of(context)
                           .loggedInUser

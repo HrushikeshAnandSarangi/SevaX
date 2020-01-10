@@ -83,15 +83,17 @@ class _LocationPickerState extends State<LocationPicker> {
   Widget build(context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
         title: Text(
           'Add Location',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.search,
-              color: Colors.white,
+              color: Colors.black,
             ),
             onPressed: () async {
               LocationDataModel dataModel = LocationDataModel("", null, null);

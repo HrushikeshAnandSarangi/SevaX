@@ -99,7 +99,6 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                 SizedBox(height: 16),
                 FlatButton(
                   onPressed: () {
-
                     isofferrequest = true;
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -112,7 +111,6 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                         },
                       ),
                     );
-                    
                   },
                   child: Text('Create a request'),
                   textColor: Colors.blueAccent,
@@ -224,9 +222,14 @@ class _SelectRequestViewState extends State<SelectRequestView> {
                 offerRequestList.add(selectedRequestModel.id);
                 offer.requestList = offerRequestList.toList();
                 updateOfferWithRequest(offer: offer);
+
                 sendOfferRequest(
-                    offerModel: offer,
-                    requestSevaID: selectedRequestModel.sevaUserId);
+                  offerModel: offer,
+                  requestSevaID: selectedRequestModel.sevaUserId,
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity,
+                );
+
                 Navigator.pop(context);
                 Navigator.pop(context);
               },

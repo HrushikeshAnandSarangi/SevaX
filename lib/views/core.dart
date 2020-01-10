@@ -334,7 +334,10 @@ class _SevaCoreViewState extends State<SevaCoreView>
               actions: [
                 StreamBuilder<Object>(
                   stream: FirestoreManager.getNotifications(
-                      userEmail: SevaCore.of(context).loggedInUser.email),
+                    userEmail: SevaCore.of(context).loggedInUser.email,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
+                  ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
@@ -684,6 +687,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
               context,
               MaterialPageRoute(
                 builder: (context) => Home_DashBoard(
+                  "sampleId"
                 ),
               ),
             );
@@ -692,7 +696,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
               context,
               MaterialPageRoute(
                   builder: (context) => Home_DashBoard(
-                      ) /*NewsCreate(
+                      "sampleId") /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/
                   ),

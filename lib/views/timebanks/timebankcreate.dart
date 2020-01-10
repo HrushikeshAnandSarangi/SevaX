@@ -110,6 +110,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     timebankModel.protected = protectedVal;
     timebankModel.parentTimebankId = widget.timebankId;
     timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
+    timebankModel.address = selectedAddress;
     timebankModel.location =
     location == null ? GeoFirePoint(40.754387, -73.984291) : location;
 
@@ -269,11 +270,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             _writeToDB();
 //                            // return;
 //
-//                            if (parentTimebank.children == null)
-//                              parentTimebank.children = [];
-//                            parentTimebank.children.add(timebankModel.id);
-//                            updateTimebank(timebankModel: parentTimebank);
-//                            Navigator.pop(context);
+                            try{
+
+                              parentTimebank.children.add(timebankModel.id);
+                            }catch(e){
+                              print("Error:$e");
+                            }
+                            updateTimebank(timebankModel: parentTimebank);
+                            Navigator.pop(context);
                           }
                         },
                         shape: RoundedRectangleBorder(
@@ -281,7 +285,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             side: BorderSide(color: Colors.red)
                         ),
                         child: Text(
-                          'Create Community',
+                          'Create Timebank',
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.white),
                         ),
@@ -572,25 +576,20 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       // color: Colors.blue,
                       color: Colors.red,
                       onPressed: () {
-                        // Validate will return true if the form is valid, or false if
-                        // the form is invalid.
-                        //if (location != null) {
+
                         if (_formKey.currentState.validate()) {
                           // If the form is valid, we want to show a Snackbar
-                          _writeToDB();
-                          // return;
-
-                          if (parentTimebank.children == null)
-                            parentTimebank.children = [];
-                          parentTimebank.children.add(timebankModel.id);
-                          updateTimebank(timebankModel: parentTimebank);
+                          try{
+                            _writeToDB();
+                            if (parentTimebank.children == null)
+                              parentTimebank.children = [];
+                            parentTimebank.children.add(timebankModel.id);
+                            updateTimebank(timebankModel: parentTimebank);
+                          }catch(e){
+                            print("Error is:$e");
+                          }
                           Navigator.pop(context);
                         }
-//                              } else {
-//                                Scaffold.of(context).showSnackBar(SnackBar(
-//                                  content: Text('Location not added'),
-//                                ));
-//                              }
                       },
                       child: Text(
                         'Create ${FlavorConfig.values.timebankTitle}',

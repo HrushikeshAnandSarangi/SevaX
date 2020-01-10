@@ -12,11 +12,11 @@ GoogleMapsPlaces _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 class CustomSearchScaffold1 extends PlacesAutocompleteWidget {
   CustomSearchScaffold1()
       : super(
-    apiKey: kGoogleApiKey,
-    sessionToken: Uuid1().generateV4(),
-    language: "en",
-    components: [],
-  );
+          apiKey: kGoogleApiKey,
+          sessionToken: Uuid1().generateV4(),
+          language: "en",
+          components: [],
+        );
 
   @override
   _CustomSearchScaffoldState1 createState() => _CustomSearchScaffoldState1();
@@ -49,7 +49,11 @@ class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
   String locationText;
   @override
   Widget build(BuildContext context) {
-    final appBar = AppBar(title: AppBarPlacesAutoCompleteTextField());
+    final appBar = AppBar(
+      iconTheme: IconThemeData(color: Colors.black),
+      backgroundColor: Colors.white,
+      title: AppBarPlacesAutoCompleteTextField(),
+    );
     final body = PlacesAutocompleteResult(
       onTap: (p) {
         displayPrediction(p, searchScaffoldKey.currentState);
@@ -67,13 +71,13 @@ class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
       // get detail (lat/lng)
       print(p.description);
       PlacesDetailsResponse detail =
-      await _places.getDetailsByPlaceId(p.placeId);
+          await _places.getDetailsByPlaceId(p.placeId);
       final lat = detail.result.geometry.location.lat;
       final lng = detail.result.geometry.location.lng;
       LocationDataModel data = LocationDataModel(
-          p.description,
-          lat,
-          lng,
+        p.description,
+        lat,
+        lng,
       );
       Navigator.pop(context, data);
       scaffold.showSnackBar(
