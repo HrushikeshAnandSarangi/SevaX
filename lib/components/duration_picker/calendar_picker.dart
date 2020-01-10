@@ -31,10 +31,12 @@ class CalendarPickerState extends State<CalendarPicker> {
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
+        backgroundColor: Colors.white,
       ),
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Row(

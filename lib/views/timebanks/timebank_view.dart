@@ -69,7 +69,8 @@ class _TimebankViewState extends State<TimebankView> {
 
   StreamBuilder<TimebankModel> timebankStreamBuilder(
       BuildContext buildcontext) {
-    var timebankName = FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang Gang";
+    var timebankName =
+        FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang Gang";
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
           timebankId: widget.timebankId),
@@ -321,6 +322,10 @@ class _TimebankViewState extends State<TimebankView> {
                                                         notification =
                                                         NotificationsModel(
                                                       id: utils.Utils.getUuid(),
+                                                      communityId:
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .currentCommunity,
                                                       targetUserId:
                                                           timebankModel
                                                               .creatorId,

@@ -38,13 +38,13 @@ class _CreateRequestState extends State<CreateRequest> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        // iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
               ? "Create Yang Gang Request"
               : "Create Campaign Request",
-          style: TextStyle(color: Colors.white),
+          // style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
       ),

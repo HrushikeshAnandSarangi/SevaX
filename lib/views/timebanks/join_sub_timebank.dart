@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -124,23 +124,22 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 3.3 / 2.3,
-              child: CachedNetworkImage(
+            // AspectRatio(
+            //   aspectRatio: 3.3 / 2.3,
+            //   child: CachedNetworkImage(
+            //     imageUrl: timebank.photoUrl,
+            //     fit: BoxFit.fitWidth,
+            //     errorWidget: (context, url, error) =>
+            //         Center(child: Text('No Image Avaialable')),
+            //     placeholder: (conext, url) {
+            //       return Center(
+            //         child: CircularProgressIndicator(
 
-                imageUrl: timebank.photoUrl,
-                fit: BoxFit.fitWidth,
-                errorWidget: (context, url, error) =>
-                    Center(child: Text('No Image Avaialable')),
-                placeholder: (conext, url) {
-                  return Center(
-                    child: CircularProgressIndicator(
-
-                    ),
-                  );
-                },
-              ),
-            ),
+            //         ),
+            //       );
+            //     },
+            //   ),
+            // ),
             Row(
               children: <Widget>[
                 SizedBox(

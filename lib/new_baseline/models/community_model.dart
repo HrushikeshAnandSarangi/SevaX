@@ -11,14 +11,17 @@ class BillingAddress {
   String additionalnotes;
 
   BillingAddress(Map<String, dynamic> map) {
-    this.companyname = map.containsKey('companyname')? map['companyname'] : '';
-    this.street_address1 = map.containsKey('street_address1')? map['street_address1'] : '';
-    this.street_address2 = map.containsKey('street_address2')? map['street_address2'] : '';
-    this.city = map.containsKey('city')? map['city'] : '';
-    this.state = map.containsKey('state')? map['state'] : '';
-    this.country = map.containsKey('country')? map['country'] : '';
-    this.pincode = map.containsKey('pincode')? map['pincode'] : null;
-    this.additionalnotes = map.containsKey('additionalnotes')? map['additionalnotes'] : '';
+    this.companyname = map.containsKey('companyname') ? map['companyname'] : '';
+    this.street_address1 =
+        map.containsKey('street_address1') ? map['street_address1'] : '';
+    this.street_address2 =
+        map.containsKey('street_address2') ? map['street_address2'] : '';
+    this.city = map.containsKey('city') ? map['city'] : '';
+    this.state = map.containsKey('state') ? map['state'] : '';
+    this.country = map.containsKey('country') ? map['country'] : '';
+    this.pincode = map.containsKey('pincode') ? map['pincode'] : null;
+    this.additionalnotes =
+        map.containsKey('additionalnotes') ? map['additionalnotes'] : '';
   }
   updateValueByKey(String key, dynamic value) {
     if (key == 'companyname') {
@@ -85,14 +88,12 @@ class BillingAddress {
 class PaymentRecord extends DataModel {
   String payment_created_on;
   String type;
-  PaymentRecord({
-    this.payment_created_on,
-    this.type
-  });
+  PaymentRecord({this.payment_created_on, this.type});
 
   PaymentRecord.fromMap(Map<String, dynamic> map) {
-    this.payment_created_on = map.containsKey('payment_created_on')? map['payment_created_on'] : '';
-    this.type = map.containsKey('type')? map['type'] : '';
+    this.payment_created_on =
+        map.containsKey('payment_created_on') ? map['payment_created_on'] : '';
+    this.type = map.containsKey('type') ? map['type'] : '';
   }
 
   Map<String, dynamic> toMap() {
@@ -125,21 +126,31 @@ class CommunityModel extends DataModel {
   List<String> members;
 
   CommunityModel(Map<String, dynamic> map) {
-    this.id = map.containsKey('id') ? map['id']: '';
-    this.name = map.containsKey('name') ? map['name']: '';
-    this.primary_email = map.containsKey('primary_email') ? map['primary_email']: '';
-    this.billing_address =  map.containsKey(['billing_address']) ? BillingAddress(map['billing_address'].cast<String, dynamic>()) : BillingAddress({});
-    this.payment_records = map.containsKey('payment_records') ? [PaymentRecord.fromMap(map['payment_records'])]: [PaymentRecord.fromMap({})];
-    this.logo_url = map.containsKey('logo_url') ? map['logo_url']: '';
-    this.cover_url = map.containsKey('cover_url') ? map['cover_url']: '';
-    this.creator_email = map.containsKey('creator_email') ? map['creator_email']: '';
-    this.created_by = map.containsKey('created_by') ? map['created_by']: '';
-    this.created_at = map.containsKey('created_at') ? map['created_at']: '';
+    this.id = map.containsKey('id') ? map['id'] : '';
+    this.name = map.containsKey('name') ? map['name'] : '';
+    this.primary_email =
+        map.containsKey('primary_email') ? map['primary_email'] : '';
+    this.billing_address = map.containsKey(['billing_address'])
+        ? BillingAddress(map['billing_address'].cast<String, dynamic>())
+        : BillingAddress({});
+    this.payment_records = map.containsKey('payment_records')
+        ? [PaymentRecord.fromMap(map['payment_records'])]
+        : [PaymentRecord.fromMap({})];
+    this.logo_url = map.containsKey('logo_url') ? map['logo_url'] : '';
+    this.cover_url = map.containsKey('cover_url') ? map['cover_url'] : '';
+    this.creator_email =
+        map.containsKey('creator_email') ? map['creator_email'] : '';
+    this.created_by = map.containsKey('created_by') ? map['created_by'] : '';
+    this.created_at = map.containsKey('created_at') ? map['created_at'] : '';
     this.primary_timebank = map.containsKey('primary_timebank') ? map['primary_timebank']: '';
-    this.timebanks = map.containsKey('timebanks') ? List.castFrom(map['timebanks']): [];
-    this.admins = map.containsKey('admins') ? List.castFrom(map['admins']): [];
-    this.coordinators = map.containsKey('coordinators') ? List.castFrom(map['coordinators']): [];
-    this.members = map.containsKey('members') ? List.castFrom(map['members']): [];
+    this.timebanks =
+        map.containsKey('timebanks') ? List.castFrom(map['timebanks']) : [];
+    this.admins = map.containsKey('admins') ? List.castFrom(map['admins']) : [];
+    this.coordinators = map.containsKey('coordinators')
+        ? List.castFrom(map['coordinators'])
+        : [];
+    this.members =
+        map.containsKey('members') ? List.castFrom(map['members']) : [];
   }
 
   updateValueByKey(String key, dynamic value) {
@@ -149,15 +160,20 @@ class CommunityModel extends DataModel {
     if (key == 'name') {
       this.name = value;
     }
+
     if (key == 'primary_email') {
       this.primary_email = value;
     }
+
     if (key == 'billing_address') {
       this.billing_address = new BillingAddress(value);
     }
+
     if (key == 'payment_records') {
-      this.payment_records = [];;
+      this.payment_records = [];
+      ;
     }
+
     if (key == 'logo_url') {
       this.logo_url = value;
     }
@@ -228,18 +244,19 @@ class CommunityModel extends DataModel {
   }
 }
 
-
 class CommunityListModel {
   List<CommunityModel> communities = [];
-  bool loading  = false;
+  bool loading = false;
   CommunityListModel();
 
   add(community) {
     this.communities.add(community);
   }
+
   removeall() {
     this.communities = [];
   }
+
   List<CommunityModel> get getCommunities => communities;
 }
 

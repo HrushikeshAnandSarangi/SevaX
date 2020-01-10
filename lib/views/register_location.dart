@@ -1,19 +1,16 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:sevaexchange/models/availability.dart';
-import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/popup.dart';
-import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-import '../flavor_config.dart';
-import 'package:google_maps_webservice/places.dart';
-import 'dart:math';
 
-import 'invitation/OnboardWithTimebankCode.dart';
+import '../flavor_config.dart';
 
 const kGoogleApiKey = "AIzaSyAsFTtNd5UvFnzDk9sTD0EyesFkWVKQoZY";
 // to get places detail (lat/lng)
@@ -433,13 +430,13 @@ class _locationScreenState extends State<LocationView> {
                       color: Colors.transparent,
                       elevation: 0.0,
                       onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return OnBoardWithTimebank("");
-                            },
-                          ),
-                        );
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) {
+                        //       return OnBoardWithTimebank("");
+                        //     },
+                        //   ),
+                        // );
                       },
                     ),
                   ),

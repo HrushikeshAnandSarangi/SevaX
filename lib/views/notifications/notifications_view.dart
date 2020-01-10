@@ -6,11 +6,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -18,10 +17,8 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:http/http.dart' as http;
 import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
-
 import 'package:shimmer/shimmer.dart';
 
 class NotificationViewHolder extends StatefulWidget {
@@ -36,8 +33,14 @@ class NotificationsView extends State<NotificationViewHolder> {
   Widget build(BuildContext context) {
     String email = SevaCore.of(context).loggedInUser.email;
 
+    String communityId = SevaCore.of(context).loggedInUser.sevaUserID;
+    print("$communityId ---------------------------------------------------------------------");
+
     return StreamBuilder<List<NotificationsModel>>(
-      stream: FirestoreManager.getNotifications(userEmail: email),
+      stream: FirestoreManager.getNotifications(
+        userEmail: email,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      ),
       builder: (context_firestore, snapshot) {
         if (snapshot.hasError) {
           return Text(snapshot.error.toString());
@@ -484,6 +487,9 @@ class NotificationsView extends State<NotificationViewHolder> {
                             FirestoreManager.acceptRequest(
                               requestModel: model,
                               senderUserId: loggedinUserID,
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
                             );
                             offermodel.associatedRequest = requestid;
                             updateOfferWithRequest(offer: offermodel);
@@ -580,6 +586,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
+      communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
     FirestoreManager.readNotification(
@@ -897,6 +904,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     FirestoreManager.rejectRequestCompletion(
       model: model,
       userId: userId,
+      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
     // creating chat
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
@@ -1252,6 +1260,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       requestModel: model,
       rejectedUserId: user.sevaUserID,
       notificationId: notificationId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -1272,6 +1281,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       requestModel: model,
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
