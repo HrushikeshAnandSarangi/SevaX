@@ -122,7 +122,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         padding: EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

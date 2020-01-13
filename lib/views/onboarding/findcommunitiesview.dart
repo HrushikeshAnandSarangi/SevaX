@@ -192,8 +192,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                   style: TextStyle(
                                       fontSize: 20.0,
                                       fontWeight: FontWeight.w700)),
-                              subtitle: Text("Created by " +
-                                  snapshot.data.communities[index].created_by),
+                              // subtitle: Text("Created by " +
+                              //     snapshot.data.communities[index].created_by),
+                              subtitle: Text("Comunity" ),
                               trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[

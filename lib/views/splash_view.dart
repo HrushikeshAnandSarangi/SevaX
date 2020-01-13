@@ -527,6 +527,7 @@ class _SplashViewState extends State<SplashView> {
     // if (!loggedInUser.completedIntro) {
     //   await _navogateToIntro(loggedInUser);
     // }
+    loadingMessage = 'We met before';
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
@@ -547,9 +548,11 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
     }
-    if(loggedInUser.currentCommunity != null || loggedInUser.currentCommunity != ""){
-      await _navigateToHome_DashBoardView(loggedInUser);
-    }
+
+    // if (loggedInUser.currentCommunity != null ||
+    //     loggedInUser.currentCommunity != "") {
+    //   await _navigateToHome_DashBoardView(loggedInUser);
+    // }
 
     // if ()
 
@@ -563,7 +566,6 @@ class _SplashViewState extends State<SplashView> {
 //       await _navigateToWaitingView(loggedInUser);
 //     }
 
-    loadingMessage = 'We met before';
     _navigateToCoreView(loggedInUser);
   }
 
@@ -758,21 +760,28 @@ class _SplashViewState extends State<SplashView> {
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: FindCommunitiesView(
-
-          ),
+          child: FindCommunitiesView(),
         ),
       ),
     );
   }
 
-  Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) =>
-              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
-    );
-  }
+  // Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
+  //   await Navigator.of(context).pushReplacement(
+  //     MaterialPageRoute(
+  //         builder: (context) =>
+  //             SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
+  //   );
+  //   // await Navigator.of(context).push(MaterialPageRoute(builder: (context) => SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())), );
+  //   // await Navigator.of(context).pushReplacement(
+  //   //   MaterialPageRoute(
+  //   //     builder: (context) => SevaCore(
+  //   //       loggedInUser: loggedInUser,
+  //   //       child: Home_DashBoard("SevaCore.of(context).loggedInUser"),
+  //   //     ),
+  //   //   ),
+  //   // );
+  // }
 
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
@@ -780,12 +789,16 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
-    print('logg${loggedInUser}');
+    // print('logg>>>>>>>>>>>>>>>>>>>>>>>>>>${loggedInUser}');
+
+    print("Inside views");
+//    print("${SevaCore.of(context).loggedInUser}  <<<<<<<<<<<<<<");
+
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: CoreView(),
+          child: HomePageRouter(),
         ),
       ),
     );

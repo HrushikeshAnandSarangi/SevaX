@@ -38,9 +38,7 @@ class RequestsState extends State<RequestsModule> {
     globals.orCreateSelector = 0;
   }
 
-  RequestsState() {
-    timebankId = FlavorConfig.values.timebankId;
-  }
+  RequestsState() {}
 
   bool isNearme = false;
   List<TimebankModel> timebankList = [];
@@ -61,6 +59,8 @@ class RequestsState extends State<RequestsModule> {
   @override
   Widget build(BuildContext context) {
     _setORValue();
+    timebankId = widget.timebankModel.id;
+    print("----------->>>$timebankId");
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 10),
       child: Column(
@@ -435,7 +435,8 @@ class _RequestCardViewState extends State<RequestCardView> {
       ),
       body: FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+          ),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');

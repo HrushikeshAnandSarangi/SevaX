@@ -9,6 +9,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/material_app.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -17,6 +18,7 @@ import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
 import 'package:sevaexchange/views/home_dashboard.dart';
+import 'package:sevaexchange/views/home_page_router.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
@@ -64,87 +66,63 @@ class SevaCore extends InheritedWidget {
 //  }
 }
 
-class CoreView extends StatefulWidget {
-  final String sevaUserID;
+// class CoreView extends StatefulWidget {
+//   final String sevaUserID;
 
-  CoreView({@required this.sevaUserID});
+//   CoreView({@required this.sevaUserID});
 
-  @override
-  _CoreViewState createState() => _CoreViewState();
-}
+//   @override
+//   _CoreViewState createState() => _CoreViewState();
+// }
 
-class _CoreViewState extends State<CoreView> {
-  UserModel user;
+// class _CoreViewState extends State<CoreView> {
+//   UserModel user;
 
-  @override
-  void initState() {
-    super.initState();
-    // _getCurrentLocation();
-    UserData.shared.isFromLogin = false;
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     // _getCurrentLocation();
+//     UserData.shared.isFromLogin = false;
+//   }
 
-//  _getCurrentLocation() {
-//    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-//
-//    geolocator
-//        .getCurrentPosition(desiredAccuracy: prefix0.LocationAccuracy.best)
-//        .then((Position position) {
-//      // setState(() {
-//      SevaCore.of(context).loggedInUser.currentPosition = position;
-//      //});
-//    }).catchError((e) {
-//      print(e);
-//    });
-//  }
+//   @override
+//   void didChangeDependencies() {
+//     // SevaCore.of(context).loggedInUser.sevaUserID = "qgc7oclcyhXP6jjnFG1rXmVZ7Bp2";
+//     user = UserModel(
+//       sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+//       email: SevaCore.of(context).loggedInUser.email,
+//       photoURL: SevaCore.of(context).loggedInUser.photoURL,
+//     );
 
-  @override
-  void didChangeDependencies() {
-    // SevaCore.of(context).loggedInUser.sevaUserID = "qgc7oclcyhXP6jjnFG1rXmVZ7Bp2";
-    user = UserModel(
-      sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-      email: SevaCore.of(context).loggedInUser.email,
-      photoURL: SevaCore.of(context).loggedInUser.photoURL,
-    );
+//     if (user.blockedMembers != null) {
+//       SevaCore.of(context).loggedInUser.blockedMembers = user.blockedMembers;
+//       // print("Updated blocked");
+//     } else {
+//       // print("blocked users not init");
+//     }
 
-    if (user.blockedMembers != null) {
-      SevaCore.of(context).loggedInUser.blockedMembers = user.blockedMembers;
-      // print("Updated blocked");
-    } else {
-      // print("blocked users not init");
-    }
+//     // print("Seva Core User -> ${user.toString()}");
 
-    // print("Seva Core User -> ${user.toString()}");
+//     FirestoreManager.getUserForId(sevaUserId: widget.sevaUserID).then((user) {
+//       if (mounted) {
+//         setState(() => this.user = user);
+//         // print("mounting data ");
+//       } else {
+//         // print("skipping mount as data is already mounted");
+//       }
+//     });
 
-    FirestoreManager.getUserForId(sevaUserId: widget.sevaUserID).then((user) {
-      if (mounted) {
-        setState(() => this.user = user);
-        // print("mounting data ");
-      } else {
-        // print("skipping mount as data is already mounted");
-      }
-    });
+//     super.didChangeDependencies();
+//   }
 
-    super.didChangeDependencies();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return
-        //AnnotatedRegion<SystemUiOverlayStyle>(
-        //child:
-        MaterialApp(
-      theme: FlavorConfig.values.theme,
-      home: SevaCoreView(user: user),
-      // ),
-      // value: SystemUiOverlayStyle(
-      //   statusBarBrightness: Brightness.dark,
-      //   //statusBarColor: Theme.of(context).primaryColor,
-      //   systemNavigationBarIconBrightness: Brightness.dark,
-      //   statusBarIconBrightness: Brightness.dark
-      // ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       theme: FlavorConfig.values.theme,
+//       home: HomePageRouter(),
+//     );
+//   }
+// }
 
 class SevaCoreView extends StatefulWidget {
   final UserModel user;
@@ -383,8 +361,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     unreadNotifications =
                         unreadNotifications - notificationsRead;
 
-                    print(
-                        "unRead Notifications after subtraction ----------------------------------------- $unreadNotifications");
+                    print("unRead Notifications after subtraction ----------------------------------------- $unreadNotifications");
 
                     if (unreadNotifications > 0) {
                       return Container(
@@ -686,16 +663,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Home_DashBoard(
-                  "sampleId"
-                ),
+                builder: (context) => HomeDashBoard("sampleId"),
               ),
             );
           } else {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => Home_DashBoard(
+                  builder: (context) => HomeDashBoard(
                       "sampleId") /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/

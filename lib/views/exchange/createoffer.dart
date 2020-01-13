@@ -25,7 +25,7 @@ class CreateOffer extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Create volunteer offer',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
       ),

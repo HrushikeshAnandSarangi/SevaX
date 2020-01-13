@@ -12,11 +12,11 @@ class ReviewEarningsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: Colors.black),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             'Review Earnings',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black,)
           ),
         ),
         body: ReviewEarning());

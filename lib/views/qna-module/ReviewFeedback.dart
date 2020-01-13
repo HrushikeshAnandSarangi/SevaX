@@ -30,10 +30,18 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
       home: Scaffold(
         appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
-            title: Text(toolbarTitle),
+            title: Text(
+              toolbarTitle,
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
             automaticallyImplyLeading: false,
             leading: IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.black,
+              ),
               onPressed: () => {
                 //  Navigator.popUntil(
                 //     context, ModalRoute.withName(Navigator.defaultRouteName))

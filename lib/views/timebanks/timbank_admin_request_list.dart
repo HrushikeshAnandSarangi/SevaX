@@ -1,22 +1,17 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-
-import 'dart:ui';
+import 'package:shimmer/shimmer.dart';
 
 import 'edit_super_admins_view.dart';
 
@@ -132,7 +127,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
       child: CustomScrollView(
         controller: _pageScrollController,
         slivers: <Widget>[
-          getAppBar(context, timebankModel),
+          // getAppBar(context, timebankModel),
           SliverList(
             delegate: SliverChildListDelegate(
               getContent(context, timebankModel),
@@ -148,7 +143,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Theme.of(context).primaryColor,
       centerTitle: true,
-      expandedHeight: 250,
+      expandedHeight: 0,
       floating: false,
       snap: false,
       pinned: true,

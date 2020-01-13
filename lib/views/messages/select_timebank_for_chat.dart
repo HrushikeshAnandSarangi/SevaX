@@ -20,11 +20,12 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
               ? "Select Yang Gang Chapter"
               : "Select Timebank",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
       ),
       body: getTimebanks(context),
