@@ -288,7 +288,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       return 'Please enter some text';
                     }
                     requestModel.description = value;
-                    return '';
+                    // return null;
                   },
                 ),
                 SizedBox(height: 40),
@@ -310,7 +310,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   keyboardType: TextInputType.number,
                   validator: (value) => value.isEmpty
                       ? 'Please enter the number of volunteers needed'
-                      : '',
+                      : null,
                 ),
                 SizedBox(height: 20),
                 if (FlavorConfig.appFlavor != Flavor.APP)

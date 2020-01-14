@@ -527,7 +527,6 @@ class _SplashViewState extends State<SplashView> {
     // if (!loggedInUser.completedIntro) {
     //   await _navogateToIntro(loggedInUser);
     // }
-    loadingMessage = 'We met before';
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
@@ -544,9 +543,13 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+    loadingMessage = 'We met before';
+
     // print(loggedInUser.communities);
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
+    } else {
+      _navigateToCoreView(loggedInUser);
     }
 
     // if (loggedInUser.currentCommunity != null ||
@@ -565,8 +568,6 @@ class _SplashViewState extends State<SplashView> {
 //     if (loggedInUser.requestStatus == "pending") {
 //       await _navigateToWaitingView(loggedInUser);
 //     }
-
-    _navigateToCoreView(loggedInUser);
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {
@@ -760,7 +761,9 @@ class _SplashViewState extends State<SplashView> {
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: FindCommunitiesView(),
+          child: FindCommunitiesView(
+            keepOnBackPress: false,
+          ),
         ),
       ),
     );

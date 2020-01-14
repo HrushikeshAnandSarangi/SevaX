@@ -26,7 +26,7 @@ class CreateEditCommunityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Create your Community';
+    var title = 'Create your community';
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -149,7 +149,7 @@ class CreateEditCommunityViewFormState
                           TimebankAvatar(),
                           Text(''),
                           Text(
-                            'Your Logo',
+                            'Community Logo',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -186,7 +186,7 @@ class CreateEditCommunityViewFormState
                   headingText('About'),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Ex: A bit more about your team',
+                      hintText: 'Ex: A bit more about your community',
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -203,7 +203,7 @@ class CreateEditCommunityViewFormState
                   ),
                   Row(
                     children: <Widget>[
-                      headingText('Private team'),
+                      headingText('Private community'),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -222,7 +222,7 @@ class CreateEditCommunityViewFormState
                     ],
                   ),
                   Text(
-                    'With private team, new members needs yor approval to join team',
+                    'With private community, new members needs yor approval to join community',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -263,7 +263,7 @@ class CreateEditCommunityViewFormState
                           if (point != null) {
                             location = snapshot.data.timebank.location = point;
                             print(
-                                "Locatyion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                                "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                           }
                           _getLocation(snapshot.data);
                           print(
@@ -276,18 +276,23 @@ class CreateEditCommunityViewFormState
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: tappableAddBillingDetails,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          'Looking for existing team',
-                          style: TextStyle(
-                            color: Colors.grey,
+                  Container(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Looking for existing community',
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        tappableFindYourTeam,
-                      ],
+                          tappableFindYourTeam,
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -400,6 +405,7 @@ class CreateEditCommunityViewFormState
         scrollIsOpen = true;
       },
       child: Container(
+          margin: EdgeInsets.only(top: 20),
           width: double.infinity,
           height: 50,
           child: Column(children: <Widget>[
@@ -446,7 +452,7 @@ class CreateEditCommunityViewFormState
     return GestureDetector(
       onTap: () {},
       child: Text(
-        ' Find your team',
+        ' Find your community',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.blue,

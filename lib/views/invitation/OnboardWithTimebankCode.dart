@@ -57,7 +57,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           leading: BackButton(color: Colors.black54),
           centerTitle: true,
           title: Text(
-            'Join' + 'Community',
+            'Join' + ' Community',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.black54,

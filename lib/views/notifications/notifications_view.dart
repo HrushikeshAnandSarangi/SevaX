@@ -33,8 +33,8 @@ class NotificationsView extends State<NotificationViewHolder> {
   Widget build(BuildContext context) {
     String email = SevaCore.of(context).loggedInUser.email;
 
-    String communityId = SevaCore.of(context).loggedInUser.sevaUserID;
-    print("$communityId ---------------------------------------------------------------------");
+    String communityId = SevaCore.of(context).loggedInUser.currentCommunity;
+    print("$communityId <<<<---------------------------------------------------------------------");
 
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(

@@ -257,6 +257,7 @@ class _AuthRouterState extends State<AuthRouter> {
 
   Widget getMaterialApp({@required Widget child}) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: FlavorConfig.values.theme,
       home: child,
     );

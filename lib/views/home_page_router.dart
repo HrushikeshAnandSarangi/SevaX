@@ -43,6 +43,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: FlavorConfig.values.theme,
       home: Scaffold(
         body: Stack(

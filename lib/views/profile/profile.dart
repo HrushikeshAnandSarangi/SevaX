@@ -379,7 +379,9 @@ class _ProfilePageState extends State<ProfilePage>
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return FindCommunitiesView();
+                                          return FindCommunitiesView(
+                                            keepOnBackPress: true,
+                                          );
                                         },
                                       ),
                                     );

@@ -2,24 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
-import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/views/community/communitycreate.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
-
-
 
 class FindCommunitiesView extends StatefulWidget {
+  final bool keepOnBackPress;
+
+  FindCommunitiesView({@required this.keepOnBackPress});
+
   @override
   State<StatefulWidget> createState() {
     return FindCommunitiesViewState();
@@ -65,16 +59,18 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: widget.keepOnBackPress,
+          leading:
+              widget.keepOnBackPress ? BackButton(color: Colors.black54) : null,
           elevation: 0.5,
           backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
           title: Text(
             'Find your community',
             style: TextStyle(
-                color: Colors.black54,
-                fontSize: 20,
-                fontWeight: FontWeight.w500),
+              color: Colors.black54,
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         body: SearchTeams());
@@ -88,7 +84,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          'Look for existing teams to join',
+          'Look for existing communities to join',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -142,7 +138,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     Text('Or'),
                     RaisedButton(
                       onPressed: () {
-                        createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
+                        createEditCommunityBloc.updateUserDetails(
+                            SevaCore.of(context).loggedInUser);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -150,7 +147,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                     loggedInUser:
                                         SevaCore.of(context).loggedInUser,
                                     child: CreateEditCommunityView(
-                                      timebankId: FlavorConfig.values.timebankId,
+                                      timebankId:
+                                          FlavorConfig.values.timebankId,
                                     ))));
                       },
                       child: Row(
@@ -194,15 +192,20 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                       fontWeight: FontWeight.w700)),
                               // subtitle: Text("Created by " +
                               //     snapshot.data.communities[index].created_by),
-                              subtitle: Text("Comunity" ),
+                              subtitle: Text("Comunity"),
                               trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     RaisedButton(
                                       onPressed: () {
-                                        var communityModel = snapshot.data.communities[index];
-                                        createEditCommunityBloc.selectCommunity(communityModel);
-                                        createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
+                                        var communityModel =
+                                            snapshot.data.communities[index];
+                                        createEditCommunityBloc
+                                            .selectCommunity(communityModel);
+                                        createEditCommunityBloc
+                                            .updateUserDetails(
+                                                SevaCore.of(context)
+                                                    .loggedInUser);
                                         // snapshot.data.communities[index].
                                         Navigator.push(
                                           context,
