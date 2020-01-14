@@ -208,7 +208,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           });
         },
         avatar: selected ? Icon(Icons.check) : null,
-        selectedColor: Color.fromRGBO(62, 80, 181, 1));
+        selectedColor: Colors.green);
   }
   Color getTextColor(Color materialColor) {
     List<MaterialColor> lights = [
@@ -428,7 +428,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           });
         },
         avatar: selected ? Icon(Icons.check) : null,
-        selectedColor: Color.fromRGBO(62, 80, 181, 1));
+        selectedColor: Colors.green);
   }
 
   Color getTextColor(Color materialColor) {

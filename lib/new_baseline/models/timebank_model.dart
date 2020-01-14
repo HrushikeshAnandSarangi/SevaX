@@ -125,6 +125,9 @@ class TimebankModel extends DataModel {
     if (key == 'balance') {
       this.balance = value;
     }
+    if (key == 'community_id'){
+      this.communityId = value;
+    }
   }
 
   factory TimebankModel.fromMap(Map<String, dynamic> json) {

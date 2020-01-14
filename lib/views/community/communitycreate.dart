@@ -1,23 +1,21 @@
 import 'dart:collection';
-import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/views/community/constants.dart';
-import 'package:sevaexchange/views/home_page_router.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/home_page_router.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -301,7 +299,7 @@ class CreateEditCommunityViewFormState
                         alignment: Alignment.center,
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
-                          onPressed: () {
+                          onPressed: () async {
                             print(_formKey.currentState.validate());
                             if (_formKey.currentState.validate()) {
                               if (_billingInformationKey.currentState
@@ -327,16 +325,45 @@ class CreateEditCommunityViewFormState
                                   );
                                   // creation of default timebank;
                                   snapshot.data.UpdateTimebankDetails(
-                                      SevaCore.of(context).loggedInUser,
-                                      globals.timebankAvatarURL,
-                                      widget);
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                    widget,
+                                  );
                                   // updating the community with default timebank id
                                   snapshot.data.community.timebanks = [
                                     snapshot.data.timebank.id
                                   ].cast<String>();
+
+                                  snapshot.data.community.primary_timebank =
+                                      snapshot.data.timebank.id;
+
                                   createEditCommunityBloc.createCommunity(
-                                      snapshot.data,
-                                      SevaCore.of(context).loggedInUser);
+                                    snapshot.data,
+                                    SevaCore.of(context).loggedInUser,
+                                  );
+
+                                  await Firestore.instance
+                                      .collection("users")
+                                      .document(SevaCore.of(context)
+                                          .loggedInUser
+                                          .email)
+                                      .updateData({
+                                    'communities': FieldValue.arrayUnion([
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID
+                                    ]),
+                                    'currentCommunity':
+                                        snapshot.data.community.id
+                                  });
+
+                                  setState(() {
+                                    SevaCore.of(context)
+                                            .loggedInUser
+                                            .currentCommunity =
+                                        snapshot.data.community.id;
+                                  });
+
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context1) => SevaCore(

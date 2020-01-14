@@ -77,7 +77,7 @@ class CommunityCreateEditController {
         .updateValueByKey('createdAt', DateTime.now().millisecondsSinceEpoch);
     this.timebank.updateValueByKey('admins', [user.sevaUserID].cast<String>());
     this.timebank.updateValueByKey('coordinators', [].cast<String>());
-    this.timebank.updateValueByKey('members', [].cast<String>());
+    this.timebank.updateValueByKey('members', [user.sevaUserID].cast<String>());
     this.timebank.updateValueByKey('children', [].cast<String>());
     this.timebank.updateValueByKey('balance', 0.0);
     this.timebank.updateValueByKey('protected', this.timebank.protected);
@@ -85,7 +85,7 @@ class CommunityCreateEditController {
     this
         .timebank
         .updateValueByKey('rootTimebankId', FlavorConfig.values.timebankId);
-    this.timebank.updateValueByKey('communityId', this.community.id);
+    this.timebank.updateValueByKey('community_id', this.community.id);
     this.timebank.updateValueByKey('address', this.timebank.address);
     this.timebank.updateValueByKey('location',
         location == null ? GeoFirePoint(40.754387, -73.984291) : location);

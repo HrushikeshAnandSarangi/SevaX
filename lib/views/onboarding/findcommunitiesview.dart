@@ -57,23 +57,27 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: widget.keepOnBackPress,
-          leading:
-              widget.keepOnBackPress ? BackButton(color: Colors.black54) : null,
-          elevation: 0.5,
-          backgroundColor: Color(0xFFFFFFFF),
-          title: Text(
-            'Find your community',
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+    return MaterialApp(
+      theme: FlavorConfig.values.theme,
+      home: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: widget.keepOnBackPress,
+            leading: widget.keepOnBackPress
+                ? BackButton(color: Colors.black54)
+                : null,
+            elevation: 0.5,
+            backgroundColor: Color(0xFFFFFFFF),
+            title: Text(
+              'Find your community',
+              style: TextStyle(
+                color: Colors.black54,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-        ),
-        body: SearchTeams());
+          body: SearchTeams()),
+    );
   }
 
   Widget SearchTeams() {
@@ -207,14 +211,17 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                                 SevaCore.of(context)
                                                     .loggedInUser);
                                         // snapshot.data.communities[index].
+
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (contexts) =>
-                                                OnBoardWithTimebank(),
+                                                OnBoardWithTimebank(
+                                              communityModel: communityModel,
+                                            ),
                                           ),
                                         );
-                                        print('clicked');
+                                        print('clicked ${communityModel.id}');
                                       },
                                       child: Row(
                                         mainAxisAlignment:

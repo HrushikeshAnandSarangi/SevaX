@@ -87,7 +87,7 @@ class _ChatListViewState extends State<ChatListView> {
 
               List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
-                return Center(child: Text('No Chats'));
+                return Center(child: Text('No Messages'));
               }
 
               return ListView.builder(
