@@ -66,63 +66,87 @@ class SevaCore extends InheritedWidget {
 //  }
 }
 
-// class CoreView extends StatefulWidget {
-//   final String sevaUserID;
+class CoreView extends StatefulWidget {
+  final String sevaUserID;
 
-//   CoreView({@required this.sevaUserID});
+  CoreView({@required this.sevaUserID});
 
-//   @override
-//   _CoreViewState createState() => _CoreViewState();
-// }
+  @override
+  _CoreViewState createState() => _CoreViewState();
+}
 
-// class _CoreViewState extends State<CoreView> {
-//   UserModel user;
+class _CoreViewState extends State<CoreView> {
+  UserModel user;
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     // _getCurrentLocation();
-//     UserData.shared.isFromLogin = false;
-//   }
+  @override
+  void initState() {
+    super.initState();
+    // _getCurrentLocation();
+    UserData.shared.isFromLogin = false;
+  }
 
-//   @override
-//   void didChangeDependencies() {
-//     // SevaCore.of(context).loggedInUser.sevaUserID = "qgc7oclcyhXP6jjnFG1rXmVZ7Bp2";
-//     user = UserModel(
-//       sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-//       email: SevaCore.of(context).loggedInUser.email,
-//       photoURL: SevaCore.of(context).loggedInUser.photoURL,
-//     );
+//  _getCurrentLocation() {
+//    final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+//
+//    geolocator
+//        .getCurrentPosition(desiredAccuracy: prefix0.LocationAccuracy.best)
+//        .then((Position position) {
+//      // setState(() {
+//      SevaCore.of(context).loggedInUser.currentPosition = position;
+//      //});
+//    }).catchError((e) {
+//      print(e);
+//    });
+//  }
 
-//     if (user.blockedMembers != null) {
-//       SevaCore.of(context).loggedInUser.blockedMembers = user.blockedMembers;
-//       // print("Updated blocked");
-//     } else {
-//       // print("blocked users not init");
-//     }
+  @override
+  void didChangeDependencies() {
+    // SevaCore.of(context).loggedInUser.sevaUserID = "qgc7oclcyhXP6jjnFG1rXmVZ7Bp2";
+    user = UserModel(
+      sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+      email: SevaCore.of(context).loggedInUser.email,
+      photoURL: SevaCore.of(context).loggedInUser.photoURL,
+    );
 
-//     // print("Seva Core User -> ${user.toString()}");
+    if (user.blockedMembers != null) {
+      SevaCore.of(context).loggedInUser.blockedMembers = user.blockedMembers;
+      // print("Updated blocked");
+    } else {
+      // print("blocked users not init");
+    }
 
-//     FirestoreManager.getUserForId(sevaUserId: widget.sevaUserID).then((user) {
-//       if (mounted) {
-//         setState(() => this.user = user);
-//         // print("mounting data ");
-//       } else {
-//         // print("skipping mount as data is already mounted");
-//       }
-//     });
+    // print("Seva Core User -> ${user.toString()}");
 
-//     super.didChangeDependencies();
-//   }
+    FirestoreManager.getUserForId(sevaUserId: widget.sevaUserID).then((user) {
+      if (mounted) {
+        setState(() => this.user = user);
+        // print("mounting data ");
+      } else {
+        // print("skipping mount as data is already mounted");
+      }
+    });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       theme: FlavorConfig.values.theme,
-//       home: HomePageRouter(),
-//     );
-//   }
-// }
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return
+        //AnnotatedRegion<SystemUiOverlayStyle>(
+        //child:
+        MaterialApp(
+      theme: FlavorConfig.values.theme,
+      home: SevaCoreView(user: user),
+      // ),
+      // value: SystemUiOverlayStyle(
+      //   statusBarBrightness: Brightness.dark,
+      //   //statusBarColor: Theme.of(context).primaryColor,
+      //   systemNavigationBarIconBrightness: Brightness.dark,
+      //   statusBarIconBrightness: Brightness.dark
+      // ),
+    );
+  }
+}
 
 class SevaCoreView extends StatefulWidget {
   final UserModel user;

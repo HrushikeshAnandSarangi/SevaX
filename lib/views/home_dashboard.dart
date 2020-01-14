@@ -231,7 +231,7 @@ class _MyHomePageState extends State<MyHomePage>
     return StreamBuilder<List<TimebankModel>>(
         stream: FirestoreManager.getTimebanksForUserStream(
           userId: SevaCore.of(context).loggedInUser.sevaUserID,
-          // userId: "",
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');

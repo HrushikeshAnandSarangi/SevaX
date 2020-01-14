@@ -40,6 +40,7 @@ Widget getTimebanks(BuildContext context) {
   return StreamBuilder<List<TimebankModel>>(
       stream: FirestoreManager.getTimebanksForUserStream(
         userId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');

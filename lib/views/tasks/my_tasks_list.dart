@@ -95,6 +95,7 @@ class MyTasksList extends StatelessWidget {
               }
               return ListView.builder(
                 itemCount: requestModelList.length,
+                physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (listContext, index) {
                   RequestModel model = requestModelList[index];
 

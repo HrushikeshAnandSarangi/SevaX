@@ -319,10 +319,12 @@ class CreateEditCommunityViewFormState
                                   setState(() {
                                     this.communityImageError = '';
                                   });
+
                                   // creation of community;
                                   snapshot.data.UpdateCommunityDetails(
-                                      SevaCore.of(context).loggedInUser,
-                                      globals.timebankAvatarURL);
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                  );
                                   // creation of default timebank;
                                   snapshot.data.UpdateTimebankDetails(
                                       SevaCore.of(context).loggedInUser,

@@ -121,6 +121,8 @@ class RequestsState extends State<RequestsModule> {
                   child: StreamBuilder<Object>(
                       stream: FirestoreManager.getTimebanksForUserStream(
                         userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
                       ),
                       builder: (context, snapshot) {
                         if (snapshot.hasError)

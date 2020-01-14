@@ -1,4 +1,6 @@
 // import 'package:cached_network_image/cached_network_image.dart';
+//import 'dart:html';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +66,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   void getData() async {
-    createEditCommunityBloc.getChildTimeBanks(context);
+    createEditCommunityBloc.getChildTimeBanks();
 
     _joinRequestModels =
         await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
@@ -233,7 +235,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                           timebank.address +
                                   ' .' +
                                   timebank.members.length.toString() ??
-                              "",
+                              " ",
                           style: TextStyle(
                               fontFamily: "Europa",
                               fontSize: 14,
@@ -299,8 +301,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                               setState(() {
                                 getData();
-                              });
 
+                            });
                               return;
                             }
                           : null,
@@ -333,25 +335,25 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   CompareToTimeBank compareTimeBanks(
-      List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
+      List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {// CompareToTimeBank status;
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
 
       if (requestModel.entityId == timeBank.id &&
-          joinRequestModels[i].accepted) {
+          joinRequestModels[i].accepted==true) {
         return CompareToTimeBank.JOINED;
-      }
-
-      if (requestModel.entityId == timeBank.id &&
+      } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
       }
-      if (requestModel.entityId == timeBank.id &&
+      else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == true &&
           requestModel.accepted == false) {
         return CompareToTimeBank.REJECTED;
+      }else{
+       return CompareToTimeBank.JOIN;
       }
     }
-    return CompareToTimeBank.JOIN;
+   return CompareToTimeBank.JOIN;
   }
 }

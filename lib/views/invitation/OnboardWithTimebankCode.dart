@@ -278,21 +278,18 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                         timebankId: timebankModel.id,
                                         timebankTitle: timebankModel.name);
 
-                                            NotificationsModel notification =
-                                                NotificationsModel(
-                                              id: utils.Utils.getUuid(),
-                                              targetUserId:
-                                                  timebankModel.creatorId,
-                                              senderUserId: communityCreateEditSnapshot
-                                                  .loggedinuser.sevaUserID,
-                                              type: prefix0
-                                                  .NotificationType.JoinRequest,
-                                              data: joinReqModel.toMap(),
-                                            );
+                                NotificationsModel notification =
+                                    NotificationsModel(
+                                  id: utils.Utils.getUuid(),
+                                  targetUserId: timebankModel.creatorId,
+                                  senderUserId: communityCreateEditSnapshot
+                                      .loggedinuser.sevaUserID,
+                                  type: prefix0.NotificationType.JoinRequest,
+                                  data: joinReqModel.toMap(),
+                                );
 
-
-                                            notification.timebankId =
-                                                FlavorConfig.values.timebankId;
+                                notification.timebankId =
+                                    FlavorConfig.values.timebankId;
 
                                 UserModel timebankCreator =
                                     await FirestoreManager.getUserForId(
@@ -384,51 +381,41 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   void _checkFields() {
     if (controller.text.length == 6) {
       var response;
-      var func = (state) =>
-      {
-        if (state == 'no_code')
-          {
-            _showDialog(
-                activityContext: context,
-                mode: TimeBankResponseModes.CODE_EXPIRED,
-                dialogTitle: "Code Expired!",
-                dialogSubTitle:
-                "This ${FlavorConfig.values.timebankName == "Yang 2020"
-                    ? "Yang Gang"
-                    : "Timebank"} code has been expired, please request the admin for a noew one!")
-          }
-        else
-          if (state == 'Invalid')
-            {
-              _showDialog(
-                  activityContext: context,
-                  mode: TimeBankResponseModes.CODE_EXPIRED,
-                  dialogTitle: "Code Expired!",
-                  dialogSubTitle:
-                  "This ${FlavorConfig.values.timebankName == "Yang 2020"
-                      ? "Yang Gang"
-                      : "Timebank"} code has been expired, please request the admin for a noew one!")
-            }
-          else
-            {
-              response = _showDialog(
-                  mode: TimeBankResponseModes.ONBOARDED,
-                  dialogTitle: "Awesome!",
-                  dialogSubTitle:
-                  "You have been onboaded to ${state
-                      .toString()} successfully.\nYou can switch to this ${FlavorConfig
-                      .values.timebankName == "Yang 2020"
-                      ? "Yang Gang"
-                      : "Timebank"}."),
-              response.then((onValue) {
-                print("onboadrd");
-                Navigator.popUntil(
-                    context, ModalRoute.withName(Navigator.defaultRouteName));
-                // Navigator.of(context).pop();
-              })
-            }
-      };
-      createEditCommunityBloc.VerifyTimebankWithCode(controller.text,func);
+      var func = (state) => {
+            if (state == 'no_code')
+              {
+                _showDialog(
+                    activityContext: context,
+                    mode: TimeBankResponseModes.CODE_EXPIRED,
+                    dialogTitle: "Code Expired!",
+                    dialogSubTitle:
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+              }
+            else if (state == 'Invalid')
+              {
+                _showDialog(
+                    activityContext: context,
+                    mode: TimeBankResponseModes.CODE_EXPIRED,
+                    dialogTitle: "Code Expired!",
+                    dialogSubTitle:
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+              }
+            else
+              {
+                response = _showDialog(
+                    mode: TimeBankResponseModes.ONBOARDED,
+                    dialogTitle: "Awesome!",
+                    dialogSubTitle:
+                        "You have been onboaded to ${state.toString()} successfully."),
+                response.then((onValue) {
+                  print("onboadrd");
+                  Navigator.popUntil(
+                      context, ModalRoute.withName(Navigator.defaultRouteName));
+                  // Navigator.of(context).pop();
+                })
+              }
+          };
+      createEditCommunityBloc.VerifyTimebankWithCode(controller.text, func);
     } else {
       if (controller.text.length != 6) {
         setError(errorMessage: "Please enter PIN to verify");

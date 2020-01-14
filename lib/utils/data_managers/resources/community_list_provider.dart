@@ -40,6 +40,17 @@ class CommunityApiProvider {
     return communities;
   }
 
+  Future<void> updateCommunityWithUserId(communityId, userId) async {
+    var response = await Firestore.instance
+        .collection("communities")
+        .document(communityId)
+        .updateData({
+      'members': FieldValue.arrayUnion(
+          [userId])
+    });
+    return response;
+  }
+
   Future<void> createCommunityByName(CommunityModel community) async {
      await Firestore.instance
         .collection('communities')

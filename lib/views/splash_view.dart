@@ -552,6 +552,8 @@ class _SplashViewState extends State<SplashView> {
       _navigateToCoreView(loggedInUser);
     }
 
+    _navigateToCoreView(loggedInUser);
+
     // if (loggedInUser.currentCommunity != null ||
     //     loggedInUser.currentCommunity != "") {
     //   await _navigateToHome_DashBoardView(loggedInUser);
@@ -769,22 +771,13 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  // Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
-  //   await Navigator.of(context).pushReplacement(
-  //     MaterialPageRoute(
-  //         builder: (context) =>
-  //             SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
-  //   );
-  //   // await Navigator.of(context).push(MaterialPageRoute(builder: (context) => SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())), );
-  //   // await Navigator.of(context).pushReplacement(
-  //   //   MaterialPageRoute(
-  //   //     builder: (context) => SevaCore(
-  //   //       loggedInUser: loggedInUser,
-  //   //       child: Home_DashBoard("SevaCore.of(context).loggedInUser"),
-  //   //     ),
-  //   //   ),
-  //   // );
-  // }
+  Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) =>
+              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
+    );
+  }
 
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
@@ -792,11 +785,7 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
-    // print('logg>>>>>>>>>>>>>>>>>>>>>>>>>>${loggedInUser}');
-
-    print("Inside views");
-//    print("${SevaCore.of(context).loggedInUser}  <<<<<<<<<<<<<<");
-
+    print('logg${loggedInUser}');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(
