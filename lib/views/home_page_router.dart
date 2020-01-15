@@ -34,7 +34,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         loggedInUserModel: SevaCore.of(context).loggedInUser,
       ),
       NotificationsPage(),
-      HomeDashBoard('sammpleId'),
+      HomeDashBoard(),
       ChatListView(),
       ProfilePage(),
     ];

@@ -27,6 +27,8 @@ class JoinSubTimeBankView extends StatefulWidget {
 
   JoinSubTimeBankView({this.loggedInUserModel, @required this.isFromDash});
 
+
+
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
 }
 
@@ -94,7 +96,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           actions: <Widget>[
             Offstage(
               offstage: true,
-              child: FlatButton(
+              child: widget.isFromDash ? FlatButton(
                 child: Text(
                   "Continue",
                   style: TextStyle(
@@ -105,16 +107,11 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 textColor: Colors.lightBlue,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HomeDashBoard("sampleId")));
+                      builder: (context) => HomeDashBoard()));
                 },
-              ),
+              ): Text(""),
             )
           ]),
-      body: isDataLoaded
-          ? SingleChildScrollView(
-              child: getTimebanks(context: context),
-            )
-          : Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -341,6 +338,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted==true) {
+        return CompareToTimeBank.JOINED;
+      }
+      if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
         return CompareToTimeBank.JOINED;
       } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {

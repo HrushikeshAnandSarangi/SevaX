@@ -6,14 +6,21 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/register_location.dart';
+import 'package:sevaexchange/views/onboarding/skillsview.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
@@ -572,7 +579,11 @@ class _SplashViewState extends State<SplashView> {
 //       await _navigateToWaitingView(loggedInUser);
 //     }
   }
-
+  Future _timeBankPage(TimebankModel model, UserModel loggedInUser) async {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => TimebankTabsViewHolder.of(timebankId: model.id,timebankModel: model),
+    ));
+  }
   Future<UserModel> _getSignedInUserDocs(String userId) async {
     UserModel userModel = await fireStoreManager.getUserForId(
       sevaUserId: userId,

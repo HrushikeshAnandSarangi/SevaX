@@ -381,9 +381,7 @@ class CreateEditCommunityViewFormState
                                         builder: (context1) => SevaCore(
                                           loggedInUser:
                                               SevaCore.of(context).loggedInUser,
-                                          child: HomePageRouter(
-                                              // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-                                              ),
+                                          child: HomePageRouter(),
                                         ),
                                       ),
                                       (Route<dynamic> route) => false);

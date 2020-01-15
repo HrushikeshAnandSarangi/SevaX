@@ -18,6 +18,8 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = Flavor.APP;
   WidgetsFlutterBinding.ensureInitialized();
+
+  FlavorConfig.appFlavor = Flavor.APP;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(
