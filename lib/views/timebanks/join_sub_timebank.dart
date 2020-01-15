@@ -342,15 +342,16 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted==true) {
         return CompareToTimeBank.JOINED;
+      } else if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
+        return CompareToTimeBank.JOINED;
       } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
-      }
-      else if (requestModel.entityId == timeBank.id &&
+      } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == true &&
           requestModel.accepted == false) {
         return CompareToTimeBank.REJECTED;
-      }else{
+      } else {
        return CompareToTimeBank.JOIN;
       }
     }

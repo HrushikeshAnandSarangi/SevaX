@@ -800,6 +800,7 @@ class OfferCardViewState extends State<OfferCardView> {
     super.initState();
     FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
         .then((timebank) {
+      widget.timebankModel = timebank;
       if (timebank.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators
