@@ -125,6 +125,7 @@ class RequestsState extends State<RequestsModule> {
                             SevaCore.of(context).loggedInUser.currentCommunity,
                       ),
                       builder: (context, snapshot) {
+
                         if (snapshot.hasError)
                           return new Text('Error: ${snapshot.error}');
                         if (snapshot.connectionState ==
