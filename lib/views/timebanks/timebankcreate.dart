@@ -99,6 +99,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     print("Final arrray $members");
 
     timebankModel.id = Utils.getUuid();
+    timebankModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
     timebankModel.photoUrl = globals.timebankAvatarURL;
     timebankModel.createdAt = timestamp;

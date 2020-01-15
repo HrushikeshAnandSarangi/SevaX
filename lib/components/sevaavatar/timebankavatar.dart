@@ -130,7 +130,6 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   Widget get sevaXdeafaultImage {
     return Container(
         decoration: BoxDecoration(
-            color: Colors.red,
             image: DecorationImage(
                 image: NetworkImage(
                     'https://cdn.dribbble.com/users/2060373/screenshots/5676655/2_2x.jpg'),
