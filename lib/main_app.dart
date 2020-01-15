@@ -16,8 +16,6 @@ import 'views/messages/list_members_timebank.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  FlavorConfig.appFlavor = Flavor.APP;
-  WidgetsFlutterBinding.ensureInitialized();
 
   FlavorConfig.appFlavor = Flavor.APP;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
