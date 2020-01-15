@@ -111,9 +111,14 @@ class RequestService extends BaseService {
     bool fromOffer = false,
     @required String communityId,
   }) async {
-    log.i(
-        'acceptRequest: RequestModel: ${requestModel.toMap()} \n SenderUserId: $senderUserId');
-    assert(requestModel != null);
+
+    // log.i(
+    //     'acceptRequest: RequestModel: ${requestModel.toMap()} \n SenderUserId: $senderUserId');
+    // assert(requestModel != null);
+
+    print("==============${requestModel}");
+
+    return;
 
     await Firestore.instance
         .collection('requests')

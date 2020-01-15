@@ -84,6 +84,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     }
     var finalWidget = Scaffold(
       appBar: AppBar(
+        iconTheme:  IconThemeData(
+          color: Colors.white
+        ),
         title: Text(
           "Select volunteers",
           style: TextStyle(color: Colors.white),
@@ -208,6 +211,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                   return shimmerWidget;
                 }
                 UserModel user = snapshot.data;
+                if(user.email == widget.userEmail){
+                  return Offstage();
+                }
                 widget.listOfMembers[user.sevaUserID] = user;
                 return getUserWidget(user, context);
               },

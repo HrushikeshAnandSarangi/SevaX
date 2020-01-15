@@ -47,11 +47,12 @@ class _ChatListViewState extends State<ChatListView> {
         List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             'Messages',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
           )),
       body: StreamBuilder<List<ChatModel>>(
         stream: getChatsforUser(
@@ -86,7 +87,7 @@ class _ChatListViewState extends State<ChatListView> {
 
               List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
-                return Center(child: Text('No Chats'));
+                return Center(child: Text('No Messages'));
               }
 
               return ListView.builder(
@@ -100,40 +101,44 @@ class _ChatListViewState extends State<ChatListView> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(
-          Icons.chat,
-        ),
-        label: Text('New Chat'),
-        foregroundColor: FlavorConfig.values.buttonTextColor,
-        onPressed: () {
-          if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SelectTimeBankForNewChat()),
-            );
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SelectMembersFromTimebank(
-                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-                  newsModel: NewsModel(),
-                  isFromShare: false,
-                  selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
-                  userSelected: HashMap(),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: FloatingActionButton.extended(
+          icon: Icon(
+            Icons.chat,
+          ),
+          label: Text('New Chat'),
+          foregroundColor: FlavorConfig.values.buttonTextColor,
+          onPressed: () {
+            if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SelectTimeBankForNewChat()),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SelectMembersFromTimebank(
+                    timebankId:
+                        SevaCore.of(context).loggedInUser.currentTimebank,
+                    newsModel: NewsModel(),
+                    isFromShare: false,
+                    selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
+                    userSelected: HashMap(),
+                  ),
                 ),
-              ),
-            );
-          }
-          // NewsModel news;
-          // Navigator.push(
-          //   context,
-          //   // MaterialPageRoute(builder: (context) => NewChat(false, news)),
-          //   MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
-          // );
-        },
+              );
+            }
+            // NewsModel news;
+            // Navigator.push(
+            //   context,
+            //   // MaterialPageRoute(builder: (context) => NewChat(false, news)),
+            //   MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
+            // );
+          },
+        ),
       ),
     );
   }
@@ -143,6 +148,7 @@ class _ChatListViewState extends State<ChatListView> {
     return StreamBuilder<List<TimebankModel>>(
         stream: FirestoreManager.getTimebanksForUserStream(
           userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');

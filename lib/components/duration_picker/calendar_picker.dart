@@ -134,7 +134,7 @@ class CalendarPickerState extends State<CalendarPicker> {
 
 Widget getBottomButton(BuildContext context, VoidCallback onTap, String title) {
   return Material(
-    color: Theme.of(context).primaryColor,
+    color: Colors.black,
     child: InkWell(
       onTap: onTap,
       child: SafeArea(

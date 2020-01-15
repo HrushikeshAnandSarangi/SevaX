@@ -277,10 +277,17 @@ class _RegisterPageState extends State<RegisterPage>
         decoration: InputDecoration(
           labelText: hint,
           suffix: suffix,
-          counterStyle: TextStyle(
-            height: double.minPositive,
-          ),
+          labelStyle: TextStyle(color: Colors.black),
+          suffixStyle: TextStyle(color: Colors.black),
+          counterStyle:
+              TextStyle(height: double.minPositive, color: Colors.black),
           counterText: "",
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
         ),
         textCapitalization: capitalization,
         validator: validator,

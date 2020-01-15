@@ -17,11 +17,11 @@ class _TimezoneViewState extends State<TimezoneView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
+          iconTheme: IconThemeData(color: Colors.black),
+          backgroundColor: Colors.white,
           title: Text(
             'My Timezone',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
           ),
         ),
         body: TimezoneList());

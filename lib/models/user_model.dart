@@ -1,9 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
-import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/views/core.dart';
 
 import '../flavor_config.dart';
 
@@ -77,7 +73,7 @@ class UserModel extends DataModel {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
-  UserModel.fromMap(Map<String, dynamic> map) {
+   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
     }
@@ -179,6 +175,9 @@ class UserModel extends DataModel {
       this.timezone = map['timezone'];
     } else {
       this.timezone = 'PT';
+    }
+    if (map.containsKey('currentCommunity')) {
+      this.currentCommunity = map['currentCommunity'];
     }
   }
 

@@ -47,6 +47,7 @@ Widget getTimebanks(BuildContext context, String isFrom) {
             )
           : FirestoreManager.getTimebanksForUserStream(
               userId: SevaCore.of(context).loggedInUser.sevaUserID,
+              communityId: SevaCore.of(context).loggedInUser.currentCommunity,
             ),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -135,7 +136,6 @@ Widget getTimebanks(BuildContext context, String isFrom) {
                   ),
                 ),
               );
-            }
-            );
+            });
       });
 }

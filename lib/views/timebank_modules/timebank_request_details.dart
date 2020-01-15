@@ -205,8 +205,11 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     }
 
                     if (snapshot.data.length == 0) {
-                      return Center(
-                        child: Text('No approved members'),
+                      return Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          'No approved members',
+                        ),
                       );
                     }
 

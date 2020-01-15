@@ -194,6 +194,8 @@ Future<void> acceptRequest({
       communityId: communityId,
     );
 
+    print("Creating notification model $model");
+
     if (isWithdrawal)
       await utils.withdrawAcceptRequestNotification(
         notificationsModel: model,

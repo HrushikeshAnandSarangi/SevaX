@@ -38,9 +38,7 @@ class RequestsState extends State<RequestsModule> {
     globals.orCreateSelector = 0;
   }
 
-  RequestsState() {
-    timebankId = FlavorConfig.values.timebankId;
-  }
+  RequestsState() {}
 
   bool isNearme = false;
   List<TimebankModel> timebankList = [];
@@ -61,6 +59,8 @@ class RequestsState extends State<RequestsModule> {
   @override
   Widget build(BuildContext context) {
     _setORValue();
+    timebankId = widget.timebankModel.id;
+    print("----------->>>$timebankId");
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 10),
       child: Column(
@@ -121,8 +121,11 @@ class RequestsState extends State<RequestsModule> {
                   child: StreamBuilder<Object>(
                       stream: FirestoreManager.getTimebanksForUserStream(
                         userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                        communityId:
+                            SevaCore.of(context).loggedInUser.currentCommunity,
                       ),
                       builder: (context, snapshot) {
+
                         if (snapshot.hasError)
                           return new Text('Error: ${snapshot.error}');
                         if (snapshot.connectionState ==
@@ -292,7 +295,7 @@ class RequestsState extends State<RequestsModule> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Protected Timebank"),
-          content: new Text("You cannot post requests in a protcted timebank"),
+          content: new Text("You cannot post requests in a protected timebank"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
@@ -435,7 +438,8 @@ class _RequestCardViewState extends State<RequestCardView> {
       ),
       body: FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+          ),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');

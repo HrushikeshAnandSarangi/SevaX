@@ -13,7 +13,6 @@ import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
-
 class CreateOffer extends StatelessWidget {
   final String timebankId;
   CreateOffer({this.timebankId});
@@ -26,9 +25,7 @@ class CreateOffer extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Create volunteer offer',
-          // style: TextStyle(
-          //     color: Colors.white
-          // ),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
       ),
@@ -97,154 +94,141 @@ class MyCustomFormState extends State<MyCustomForm> {
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
     TextStyle finalStyle = TextStyle(
-        fontSize: 18,
-        color: textStyle.color,
-        decoration: textStyle.decoration,
+      fontSize: 18,
+      color: textStyle.color,
+      decoration: textStyle.decoration,
     );
     // Build a Form widget using the _formKey we created above
-    return Form(
-      key: _formKey,
-      child: Container(
-        padding: EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(' '),
-              TextFormField(
-                decoration: InputDecoration(hintText: 'Volunteer offer title'),
-                keyboardType: TextInputType.text,
-                style: finalStyle,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter the subject of your Offer';
-                  }
-                  title = value;
-                },
-              ),
-              Padding(
-                padding: EdgeInsets.all(15.0),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Your offer and any #hashtags',
-                  labelText: 'Volunteer offer description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Form(
+        key: _formKey,
+        child: Container(
+          padding: EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Title',
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 10,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  description = value;
-                },
-              ),
-              Padding(
-                padding: EdgeInsets.all(15.0),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Describe My Availability',
-                  labelText: 'Availability',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
+                TextFormField(
+                  decoration:
+                      InputDecoration(hintText: 'Volunteer offer title'),
+                  keyboardType: TextInputType.text,
+                  style: finalStyle,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the subject of your Offer';
+                    }
+                    title = value;
+                  },
                 ),
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  schedule = value;
-                },
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.add_location),
-                    label: Text(
-                      selectedAddress == null || selectedAddress.isEmpty
-                          ? 'Add Location'
-                          : selectedAddress,
-                    ),
-                    color: Colors.grey[200],
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<GeoFirePoint>(
-                          builder: (context) => LocationPicker(
-                            selectedLocation: location,
+                SizedBox(height: 40),
+                Text(
+                  'Volunteer offer description',
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+                TextFormField(
+                  maxLength: 500,
+                  decoration: InputDecoration(
+                    hintText: 'Your offer and any #hashtags',
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    description = value;
+                  },
+                ),
+                SizedBox(height: 20),
+                Text('Availability',
+                    style: TextStyle(color: Colors.grey, fontSize: 14)),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Describe My Availability',
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  maxLength: 100,
+                  maxLines: null,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    schedule = value;
+                  },
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: FlatButton.icon(
+                      icon: Icon(Icons.add_location),
+                      label: Text(
+                        selectedAddress == null || selectedAddress.isEmpty
+                            ? 'Add Location'
+                            : selectedAddress,
+                      ),
+                      color: Colors.grey[200],
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<GeoFirePoint>(
+                            builder: (context) => LocationPicker(
+                              selectedLocation: location,
+                            ),
                           ),
-                        ),
-                      ).then((point) {
-                        if (point != null) location = point;
-                        _getLocation();
-                        log('ReceivedLocation: $selectedAddress');
-                      });
-                    },
+                        ).then((point) {
+                          if (point != null) location = point;
+                          _getLocation();
+                          log('ReceivedLocation: $selectedAddress');
+                        });
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Center(
-                  child: RaisedButton(
-                    shape: StadiumBorder(),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {
-                      //if (location != null) {
-                      if (_formKey.currentState.validate()) {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Creating Offer')),
-                        );
-                        _writeToDB();
-                        Navigator.pop(context);
-                      }
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: Center(
+                    child: Container(
+                      height: 50,
+                      child: RaisedButton(
+                        shape: StadiumBorder(),
+                        color: Theme.of(context).accentColor,
+                        onPressed: () {
+                          //if (location != null) {
+                          if (_formKey.currentState.validate()) {
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Creating Offer')),
+                            );
+                            _writeToDB();
+                            Navigator.pop(context);
+                          } else {
+                            print("Invalid data");
+                          }
 //                      } else {
 //                        Scaffold.of(context).showSnackBar(SnackBar(
 //                          content: Text('Location not added'),
 //                        ));
 //                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.attachment,
-                          size: 24.0,
-                          color: FlavorConfig.values.buttonTextColor,
-                        ),
-                        Text(' '),
-                        Text(
-                          'Create volunteer offer',
+                        },
+                        child: Text(
+                          '  Create volunteer offer  ',
                           style: TextStyle(
                             color: FlavorConfig.values.buttonTextColor,
+                            // fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
-                      ],
+                        textColor: Colors.white,
+                      ),
                     ),
-                    textColor: Colors.white,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
