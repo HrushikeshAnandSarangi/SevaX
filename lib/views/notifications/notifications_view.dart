@@ -64,6 +64,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           );
         }
         return ListView.builder(
+          padding: EdgeInsets.only(bottom: 20),
           itemCount: notifications.length,
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);
