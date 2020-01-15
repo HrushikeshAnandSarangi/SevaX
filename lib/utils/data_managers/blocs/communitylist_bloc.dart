@@ -108,6 +108,8 @@ class UserModelController {
   }
 }
 class UserBloc {
+  final _repository = Repository();
+
   final _userController = BehaviorSubject<UserModelController>();
   Observable<UserModelController> get getLoggedInUser => _userController.stream;
   UserBloc() {
@@ -118,6 +120,8 @@ class UserBloc {
     userc.updateLoggedInUserDetails(userdata);
     _userController.add(userc);
   }
+
+
 }
 class CommunityCreateEditBloc {
   final _repository = Repository();
@@ -129,7 +133,16 @@ class CommunityCreateEditBloc {
   CommunityCreateEditBloc() {
     _createEditCommunity.add(CommunityCreateEditController());
   }
+  getChildTimeBanks(BuildContext context) async {
+    var community = this._createEditCommunity.value;
+    var communityid = userBloc.getLoggedInUser;
 
+    var timebanks = await _repository
+        .getSubTimebanksForUser(SevaCore.of(context).loggedInUser.currentCommunity);
+    //  var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity,context);
+    community.timebanks = timebanks;
+    _createEditCommunity.add(community);
+    }
   onChange(community) {
     _createEditCommunity.add(community);
   }
@@ -150,14 +163,7 @@ class CommunityCreateEditBloc {
     _createEditCommunity.add(community);
   }
 
-  getChildTimeBanks() async {
-    var community = this._createEditCommunity.value;
-    var timebanks = await _repository
-        .getSubTimebanksForUser(community.loggedinuser.currentCommunity);
-    //  var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity,context);
-    community.timebanks = timebanks;
-    _createEditCommunity.add(community);
-  }
+
 
   getCommunityPrimaryTimebank() async {
     var community = this._createEditCommunity.value;

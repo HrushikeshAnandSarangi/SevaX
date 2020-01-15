@@ -68,7 +68,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   void getData() async {
-    createEditCommunityBloc.getChildTimeBanks();
+    createEditCommunityBloc.getChildTimeBanks(context);
 
     _joinRequestModels =
         await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
@@ -111,7 +111,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 },
               ): Text(""),
             )
-          ]),
+          ],
+
+      ),
+        body: isDataLoaded?  SingleChildScrollView(
+    child: getTimebanks(context: context),
+    ):Center(child: CircularProgressIndicator()),
+
     );
   }
 
@@ -124,7 +130,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     return StreamBuilder<CommunityCreateEditController>(
         stream: createEditCommunityBloc.createEditCommunity,
         builder: (context, snapshot) {
-          print(snapshot.data);
+          print('timee${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -153,10 +159,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     TimebankModel timebank = timebankList.elementAt(index);
                     CompareToTimeBank status;
                     if (_joinRequestModels != null) {
+                      print('timee ${timebank.children.toString()}');
+
                       status = compareTimeBanks(_joinRequestModels, timebank);
-                      // print(timebank.children.toString());
                       return makeItem(timebank, status);
                     } else {
+                      print('timee ${timebank.children.toString()}');
+
                       status = CompareToTimeBank.JOIN;
                       return makeItem(timebank, status);
                     }

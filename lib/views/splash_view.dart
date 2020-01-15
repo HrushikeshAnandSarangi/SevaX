@@ -578,13 +578,13 @@ class _SplashViewState extends State<SplashView> {
 //     if (loggedInUser.requestStatus == "pending") {
 //       await _navigateToWaitingView(loggedInUser);
 //     }
-    TimebankModel model = await FirestoreManager.getTimeBankForId(
+   /* TimebankModel model = await FirestoreManager.getTimeBankForId(
       timebankId: 'f0c49d32-f7f4-48cf-90d8-3712e04a1a85',
     );
    _timeBankPage(model,SevaCore.of(context).loggedInUser);
 
     print('time bank data ${model.name}');
-    loadingMessage = 'We met before';
+    loadingMessage = 'We met before';*/
     //_navigateToCoreView(loggedInUser);
   }
 
