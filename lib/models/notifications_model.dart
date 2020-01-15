@@ -30,6 +30,10 @@ class NotificationsModel extends DataModel {
       this.timebankId = map['timebankId'];
     }
 
+    if (map.containsKey("communityId")) {
+      this.communityId = map['senderUserId'];
+    }
+
     if (map.containsKey('senderUserId')) {
       this.senderUserId = map['senderUserId'];
     }
@@ -122,6 +126,10 @@ class NotificationsModel extends DataModel {
 
     if (this.isRead != null) {
       map['isRead'] = this.isRead;
+    }
+
+    if (this.communityId != null) {
+      map['communityId'] = this.communityId;
     }
     return map;
   }

@@ -70,7 +70,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   _scrollListener() {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange &&
-        !_isLoading && nullcount<3) {
+        !_isLoading &&
+        nullcount < 3) {
       loadNextBatchItems().then((onValue) {
         setState(() {});
       });
@@ -79,15 +80,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
 
   @override
   Widget build(BuildContext context) {
-    if (_avtars.length == 0 && nullcount<3) {
+    if (_avtars.length == 0 && nullcount < 3) {
       loadNextBatchItems();
     }
     var finalWidget = Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        iconTheme:  IconThemeData(
-          color: Colors.black
-        ),
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           "Select volunteers",
           style: TextStyle(color: Colors.black),
@@ -104,8 +103,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               alignment: Alignment.center,
               height: double.infinity,
               child: Container(
-margin: EdgeInsets.only(right: 20),
-
+                margin: EdgeInsets.only(right: 20),
                 child: Text(
                   "Save",
                   style: prefix0.TextStyle(color: Colors.black),
@@ -149,7 +147,7 @@ margin: EdgeInsets.only(right: 20),
   }
 
   Widget get listViewWidget {
-    if(nullcount<3){
+    if (nullcount < 3) {
       return ListView.builder(
         controller: _controller,
         itemCount: fetchItemsCount(),
@@ -158,17 +156,15 @@ margin: EdgeInsets.only(right: 20),
           child: index < _avtars.length
               ? _avtars[index]
               : Container(
-            width: double.infinity,
-            height: 80,
-            child: circularBar,
-          ),
+                  width: double.infinity,
+                  height: 80,
+                  child: circularBar,
+                ),
         ),
       );
     }
     return Center(
-      child: Text(
-        'No volunteers present'
-      ),
+      child: Text('No volunteers present'),
     );
   }
 
@@ -189,7 +185,7 @@ margin: EdgeInsets.only(right: 20),
   }
 
   Future loadNextBatchItems() async {
-    if (!_isLoading && !_lastReached && nullcount<3) {
+    if (!_isLoading && !_lastReached && nullcount < 3) {
       _isLoading = true;
       FirestoreManager.getUsersForTimebankId(
               _timebankId, _pageIndex, widget.userEmail)
@@ -216,7 +212,7 @@ margin: EdgeInsets.only(right: 20),
                   return shimmerWidget;
                 }
                 UserModel user = snapshot.data;
-                if(user.email == widget.userEmail){
+                if (user.email == widget.userEmail) {
                   return Offstage();
                 }
                 widget.listOfMembers[user.sevaUserID] = user;
@@ -243,13 +239,13 @@ margin: EdgeInsets.only(right: 20),
           }
           _isLoading = false;
         }
-        if(onValue.lastPage){
+        if (onValue.lastPage) {
           setState(() {
             _lastReached = onValue.lastPage;
           });
         }
       });
-    }else{
+    } else {
       setState(() {
         _lastReached = true;
       });

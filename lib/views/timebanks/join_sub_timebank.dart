@@ -108,7 +108,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => HomeDashBoard(
-                        
+
                       )));
                 },
               ): Text(""),
@@ -165,7 +165,10 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
-                    } else {
+                    } else if (timebank.members.contains(widget.loggedInUserModel.sevaUserID)) {
+                      status = CompareToTimeBank.JOINED;
+                       return makeItem(timebank, status);
+                      } else {
                       print('timee ${timebank.children.toString()}');
 
                       status = CompareToTimeBank.JOIN;
@@ -343,7 +346,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   CompareToTimeBank compareTimeBanks(
-      List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {// CompareToTimeBank status;
+      List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
+        // CompareToTimeBank status;
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
 
@@ -351,9 +355,10 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           joinRequestModels[i].accepted==true) {
         return CompareToTimeBank.JOINED;
       }
-      if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
+     else if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
         return CompareToTimeBank.JOINED;
-      } else if (requestModel.entityId == timeBank.id &&
+      }
+       else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
       }
