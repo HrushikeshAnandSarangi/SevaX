@@ -1,13 +1,15 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meta/meta.dart';
 import 'package:sevaexchange/base/base_service.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:meta/meta.dart';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class RequestService extends BaseService {
   /// Create a request[requestModel]
@@ -80,8 +82,11 @@ class RequestService extends BaseService {
   }
 
   /// Create notification for offer request from request creator[requestSevaID] to offer creator[offermodel]
-  Future<void> sendOfferRequest(
-      {@required OfferModel offerModel, @required String requestSevaID}) async {
+  Future<void> sendOfferRequest({
+    @required OfferModel offerModel,
+    @required String requestSevaID,
+    @required String communityId,
+  }) async {
     log.i(
         'sendOfferRequest: OfferModel: ${offerModel.toMap()} \n RequestSevaId: $requestSevaID');
     NotificationsModel model = NotificationsModel(
@@ -91,6 +96,7 @@ class RequestService extends BaseService {
       id: utils.Utils.getUuid(),
       isRead: false,
       senderUserId: requestSevaID,
+      communityId: communityId,
     );
     await utils.offerAcceptNotification(
       model: model,
@@ -103,6 +109,7 @@ class RequestService extends BaseService {
     @required String senderUserId,
     bool isWithdrawal = false,
     bool fromOffer = false,
+    @required String communityId,
   }) async {
     log.i(
         'acceptRequest: RequestModel: ${requestModel.toMap()} \n SenderUserId: $senderUserId');
@@ -121,6 +128,7 @@ class RequestService extends BaseService {
         id: utils.Utils.getUuid(),
         isRead: false,
         senderUserId: senderUserId,
+        communityId: communityId,
       );
 
       if (isWithdrawal)
@@ -149,6 +157,7 @@ class RequestService extends BaseService {
   Future<void> rejectRequestCompletion({
     @required RequestModel model,
     @required String userId,
+    @required String communityId,
   }) async {
     log.i(
         'rejectRequestCompletion: RequestModel: ${model.toMap()} \n UserId: $userId');
@@ -163,6 +172,7 @@ class RequestService extends BaseService {
       senderUserId: model.sevaUserId,
       type: NotificationType.RequestCompletedRejected,
       data: model.toMap(),
+      communityId: communityId,
     );
     await utils.createTaskCompletedApprovedNotification(model: notification);
   }
@@ -172,6 +182,7 @@ class RequestService extends BaseService {
   Future<void> approveRequestCompletion({
     @required RequestModel model,
     @required String userId,
+    @required String communityId,
   }) async {
     log.i(
         'approveRequestCompletion: RequestModel: ${model.toMap()} \n UserID: $userId');
@@ -188,6 +199,7 @@ class RequestService extends BaseService {
       senderUserId: model.sevaUserId,
       type: NotificationType.RequestCompletedApproved,
       data: model.toMap(),
+      communityId: communityId,
     );
 
     num transactionvalue = model.durationOfRequest / 60;
@@ -200,6 +212,7 @@ class RequestService extends BaseService {
       id: utils.Utils.getUuid(),
       targetUserId: userId,
       senderUserId: model.sevaUserId,
+      communityId: communityId,
       type: NotificationType.TransactionCredit,
       data: model.transactions
           .where((transactionModel) {
@@ -224,6 +237,7 @@ class RequestService extends BaseService {
     @required RequestModel requestModel,
     @required String approvedUserId,
     @required String notificationId,
+    @required String communityId,
   }) async {
     log.i(
         'approveAcceptRequest: RequestModel: ${requestModel.toMap()} \n ApprovedUserID: $approvedUserId \n NotificationID: $notificationId');
@@ -238,6 +252,7 @@ class RequestService extends BaseService {
       senderUserId: requestModel.sevaUserId,
       type: NotificationType.RequestApprove,
       data: requestModel.toMap(),
+      communityId: communityId,
     );
 
     await utils.removeAcceptRequestNotification(
@@ -253,6 +268,7 @@ class RequestService extends BaseService {
     @required RequestModel requestModel,
     @required String rejectedUserId,
     @required String notificationId,
+    @required String communityId,
   }) async {
     log.i(
         'rejectAcceptRequest: RequestModel: ${requestModel.toMap()} \n ApprovedUserID: $rejectedUserId \n NotificationID: $notificationId');
@@ -268,6 +284,7 @@ class RequestService extends BaseService {
       senderUserId: requestModel.sevaUserId,
       type: NotificationType.RequestReject,
       data: requestModel.toMap(),
+      communityId: communityId,
     );
 
     await utils.removeAcceptRequestNotification(

@@ -102,7 +102,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
       child: Container(
         padding: EdgeInsets.all(8),
         decoration: ShapeDecoration(
-          color: Color(0xfff2f2f2),
+          // color: Color(0xfff2f2f2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
@@ -126,7 +126,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
                   : TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.black,
                     ),
             ),
           ],

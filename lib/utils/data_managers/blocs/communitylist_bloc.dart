@@ -1,9 +1,13 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import '../resources/repository.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,13 +17,15 @@ class CommunityFindBloc {
   final _communitiesFetcher = PublishSubject<CommunityListModel>();
   final searchOnChange = new BehaviorSubject<String>();
 
-  Observable<CommunityListModel> get allCommunities => _communitiesFetcher.stream;
+  Observable<CommunityListModel> get allCommunities =>
+      _communitiesFetcher.stream;
 
   fetchCommunities(name) async {
     CommunityListModel communityListModel = CommunityListModel();
     communityListModel.loading = true;
     _communitiesFetcher.sink.add(communityListModel);
-    communityListModel = await _repository.searchCommunityByName(name, communityListModel);
+    communityListModel =
+        await _repository.searchCommunityByName(name, communityListModel);
     communityListModel.loading = false;
     print(communityListModel.communities.length);
     _communitiesFetcher.sink.add(communityListModel);
@@ -34,15 +40,63 @@ class CommunityFindBloc {
 class CommunityCreateEditController {
   CommunityModel community = CommunityModel({});
   TimebankModel timebank = new TimebankModel({});
+  UserModel loggedinuser;
+  List<TimebankModel> timebanks = [];
   String selectedAddress;
   String timebankAvatarURL = null;
   List addedMembersId = [];
   List addedMembersFullname = [];
   List addedMembersPhotoURL = [];
-  bool loading  = false;
+  bool loading = false;
   HashMap selectedUsers = HashMap();
+  CommunityModel selectedCommunity;
+
   CommunityCreateEditController() {
     print(timebank);
+  }
+
+  UpdateCommunityDetails(user, timebankimageurl) {
+    this.community.id = Utils.getUuid();
+    this.community.logo_url = timebankimageurl;
+    this.community.created_at =
+        DateTime.now().millisecondsSinceEpoch.toString();
+    this.community.created_by = user.sevaUserID;
+    this.community.created_at =
+        DateTime.now().millisecondsSinceEpoch.toString();
+    this.community.primary_email = user.email;
+    this.community.admins = [user.sevaUserID];
+  }
+
+  UpdateTimebankDetails(user, timebankimageurl, widget) {
+    this.timebank.updateValueByKey('id', Utils.getUuid());
+    this.timebank.updateValueByKey('name', this.community.name);
+    this.timebank.updateValueByKey('creatorId', user.sevaUserID);
+    this.timebank.updateValueByKey('photoUrl', timebankimageurl);
+    this
+        .timebank
+        .updateValueByKey('createdAt', DateTime.now().millisecondsSinceEpoch);
+    this.timebank.updateValueByKey('admins', [user.sevaUserID].cast<String>());
+    this.timebank.updateValueByKey('coordinators', [].cast<String>());
+    this.timebank.updateValueByKey('members', [user.sevaUserID].cast<String>());
+    this.timebank.updateValueByKey('children', [].cast<String>());
+    this.timebank.updateValueByKey('balance', 0.0);
+    this.timebank.updateValueByKey('protected', this.timebank.protected);
+    this.timebank.updateValueByKey('parentTimebankId', widget.timebankId);
+    this
+        .timebank
+        .updateValueByKey('rootTimebankId', FlavorConfig.values.timebankId);
+    this.timebank.updateValueByKey('community_id', this.community.id);
+    this.timebank.updateValueByKey('address', this.timebank.address);
+    this.timebank.updateValueByKey('location',
+        location == null ? GeoFirePoint(40.754387, -73.984291) : location);
+  }
+
+  updateUserDetails(userdata) {
+    this.loggedinuser = userdata;
+  }
+
+  selectCommunity(CommunityModel community) {
+    this.selectedCommunity = community;
   }
 }
 
@@ -50,24 +104,118 @@ class CommunityCreateEditBloc {
   final _repository = Repository();
   final _createEditCommunity = BehaviorSubject<CommunityCreateEditController>();
 
-  Observable<CommunityCreateEditController> get createEditCommunity => _createEditCommunity.stream;
+  Observable<CommunityCreateEditController> get createEditCommunity =>
+      _createEditCommunity.stream;
 
-  CommunityCreateEditBloc(){
+  CommunityCreateEditBloc() {
     _createEditCommunity.add(CommunityCreateEditController());
   }
+
   onChange(community) {
     _createEditCommunity.add(community);
   }
+
   dispose() {
     _createEditCommunity.close();
   }
-  createCommunity(CommunityCreateEditController community) async {
+
+  updateUserDetails(userdata) {
+    var community = this._createEditCommunity.value;
+    community.updateUserDetails(userdata);
+    _createEditCommunity.add(community);
+  }
+
+  selectCommunity(CommunityModel currentCommunity) {
+    var community = this._createEditCommunity.value;
+    community.selectCommunity(currentCommunity);
+    _createEditCommunity.add(community);
+  }
+
+  getChildTimeBanks() async {
+    var community = this._createEditCommunity.value;
+    var timebanks = await _repository
+        .getSubTimebanksForUser(community.loggedinuser.currentCommunity);
+    //  var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity,context);
+    community.timebanks = timebanks;
+    _createEditCommunity.add(community);
+  }
+
+  getCommunityPrimaryTimebank() async {
+    var community = this._createEditCommunity.value;
+    var timebank = await _repository
+        .getTimebankDetailsById(community.selectedCommunity.primary_timebank);
+    community.timebank = timebank;
+    _createEditCommunity.add(community);
+  }
+
+  createCommunity(
+      CommunityCreateEditController community, UserModel user) async {
     // create a community flow;
-    var newcommunity = await _repository.createCommunityByName(community.community);
-    var timebank = await _repository.createTimebankById(community.timebank);
-//    await _repository(community.community)
+    await _repository.createCommunityByName(community.community);
     // create a timebank flow;
+    await _repository.createTimebankById(community.timebank);
+    // update user to the timebank.
+    await _repository.updateUserWithTimeBankIdCommunityId(
+        user, community.timebank.id, community.community.id);
+  }
+
+  updateUser(timebank) async {
+    var tm = TimebankModel(timebank);
+    var communitytemp =
+        await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
+    await _repository.updateCommunityWithUserId(communitytemp.id,
+        this._createEditCommunity.value.loggedinuser.sevaUserID);
+    await _repository.updateUserWithTimeBankIdCommunityId(
+        this._createEditCommunity.value.loggedinuser, tm.id, communitytemp.id);
+  }
+
+  Future VerifyTimebankWithCode(String code, func) async {
+    // get the timebanks with the code.
+    Firestore.instance
+        .collection("timebankCodes")
+        .where("timebankCode", isEqualTo: code)
+        .getDocuments()
+        .then((QuerySnapshot snapshot) async {
+      if (snapshot.documents.length > 0) {
+        // timabnk code exists , check its validity
+        snapshot.documents.forEach((f) async {
+          if (DateTime.now().millisecondsSinceEpoch > f.data['validUpto']) {
+            await func("Invalid");
+          } else {
+            //code matche and is alive
+            // add to usersOnBoarded
+            Firestore.instance
+                .collection("timebankCodes")
+                .document(f.documentID)
+                .updateData({
+              'usersOnboarded': FieldValue.arrayUnion(
+                  [this._createEditCommunity.value.loggedinuser.sevaUserID])
+            });
+
+            Firestore.instance
+                .collection("timebanknew")
+                .document(f.data['timebankId'])
+                .updateData({
+              'members': FieldValue.arrayUnion(
+                  [this._createEditCommunity.value.loggedinuser.sevaUserID])
+            });
+
+            Firestore.instance
+                .collection("timebanknew")
+                .document(f.data['timebankId'])
+                .get()
+                .then((DocumentSnapshot timeBank) async {
+              updateUser(timeBank.data);
+              await func(timeBank.data['name'].toString());
+            });
+          }
+        });
+      } else {
+        func("no_code");
+      }
+    });
   }
 }
+
 final createEditCommunityBloc = CommunityCreateEditBloc();
 final communityBloc = CommunityFindBloc();

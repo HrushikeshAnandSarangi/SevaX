@@ -31,10 +31,12 @@ class CalendarPickerState extends State<CalendarPicker> {
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
+        backgroundColor: Colors.white,
       ),
+      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Row(
@@ -132,7 +134,7 @@ class CalendarPickerState extends State<CalendarPicker> {
 
 Widget getBottomButton(BuildContext context, VoidCallback onTap, String title) {
   return Material(
-    color: Theme.of(context).primaryColor,
+    color: Colors.black,
     child: InkWell(
       onTap: onTap,
       child: SafeArea(

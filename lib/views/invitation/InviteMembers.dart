@@ -4,15 +4,10 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
-    as prefix0;
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:share/share.dart';
 
-import '../core.dart';
 import 'TimebankCodeModel.dart';
 
 class InviteMembers extends StatefulWidget {
@@ -32,12 +27,14 @@ class InviteMembersState extends State<InviteMembers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020"
-              ? "Yang Gang Codes"
-              : "Timebank codes",
-          style: TextStyle(color: Colors.white),
-        ),
+            FlavorConfig.values.timebankName == "Yang 2020"
+                ? "Yang Gang Codes"
+                : "Timebank codes",
+            style: TextStyle(
+              color: Colors.black,
+            )),
       ),
       body: Column(
         children: <Widget>[
@@ -61,7 +58,10 @@ class InviteMembersState extends State<InviteMembers> {
 
                 if (codeList.length == 0) {
                   return Center(
-                    child: Text('No codes genrated yet.'),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text('No codes genrated yet.'),
+                    ),
                   );
                 }
                 return Expanded(
@@ -123,7 +123,7 @@ class InviteMembersState extends State<InviteMembers> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         icon: Icon(Icons.add),
         label: Text("Generate Code"),
         onPressed: () {
@@ -213,7 +213,7 @@ class InviteMembersState extends State<InviteMembers> {
   static String createCryptoRandomString([int length = 10]) {
     final Random _random = Random.secure();
     var values = List<int>.generate(length, (i) => _random.nextInt(100));
-    return base64Url.encode(values).substring(0, 5).toLowerCase();
+    return base64Url.encode(values).substring(0, 6).toLowerCase();
   }
 
   void registerTimebankCode(

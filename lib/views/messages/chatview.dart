@@ -1,19 +1,16 @@
-import 'dart:collection';
+import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
-import 'dart:async';
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:intl/intl.dart';
-import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -95,7 +92,10 @@ class _ChatViewState extends State<ChatView> {
       backgroundColor: Colors.indigo[50],
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
           onPressed: widget.isFromShare == null
               ? () {
                   Navigator.pop(context);
@@ -149,7 +149,7 @@ class _ChatViewState extends State<ChatView> {
                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       ),
                       Text('${partnerUser.fullname.split(" ")[0]}',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                           overflow: TextOverflow.ellipsis),
                     ],
                   );

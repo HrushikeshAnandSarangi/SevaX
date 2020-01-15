@@ -1,22 +1,21 @@
 import 'dart:collection';
-import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/views/community/constants.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/home_page_router.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -25,7 +24,7 @@ class CreateEditCommunityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Create your Community';
+    var title = 'Create your community';
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -72,6 +71,7 @@ class CreateEditCommunityViewFormState
   GeoFirePoint location;
   String selectedAddress = '';
   String _billingDetailsError = '';
+  String communityImageError = '';
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
@@ -147,12 +147,18 @@ class CreateEditCommunityViewFormState
                           TimebankAvatar(),
                           Text(''),
                           Text(
-                            'Your Logo',
+                            'Community Logo',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
                             ),
-                          )
+                          ),
+                          Text(communityImageError,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                                fontSize: 12,
+                              ))
                         ],
                       ),
                     ),
@@ -178,7 +184,7 @@ class CreateEditCommunityViewFormState
                   headingText('About'),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Ex: A bit more about your team',
+                      hintText: 'Ex: A bit more about your community',
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -195,7 +201,7 @@ class CreateEditCommunityViewFormState
                   ),
                   Row(
                     children: <Widget>[
-                      headingText('Private team'),
+                      headingText('Private community'),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -214,7 +220,7 @@ class CreateEditCommunityViewFormState
                     ],
                   ),
                   Text(
-                    'With private team, new members needs yor approval to join team',
+                    'With private community, new members needs yor approval to join community',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -222,15 +228,15 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Your community location.'),
                   Text(
-                        'Community location will help your members to locate',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      ),
+                    'Community location will help your members to locate',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  ),
                   Center(
                     child: FlatButton.icon(
                       icon: Icon(Icons.add_location),
@@ -255,7 +261,7 @@ class CreateEditCommunityViewFormState
                           if (point != null) {
                             location = snapshot.data.timebank.location = point;
                             print(
-                                "Locatyion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                                "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                           }
                           _getLocation(snapshot.data);
                           print(
@@ -268,18 +274,23 @@ class CreateEditCommunityViewFormState
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: tappableAddBillingDetails,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          'Looking for existing team',
-                          style: TextStyle(
-                            color: Colors.grey,
+                  Container(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Looking for existing community',
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
-                        tappableFindYourTeam,
-                      ],
+                          tappableFindYourTeam,
+                        ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -287,79 +298,100 @@ class CreateEditCommunityViewFormState
                     child: Container(
                         alignment: Alignment.center,
                         child: RaisedButton(
-                                // color: Colors.blue,
-                                color: Colors.red,
-                                onPressed: () {
-                                  // Validate will return true if the form is valid, or false if
-                                  // the form is invalid.
-                                  //if (location != null) {
-                                  print(_formKey.currentState.validate());
-                                  if (_formKey.currentState.validate()) {
-                                    if (_billingInformationKey.currentState.validate()) {
-                                      setState(() {
-                                        this._billingDetailsError = '';
-                                      });
-                                      // creation of community;
-                                      snapshot.data.community.id = Utils.getUuid();
-                                      snapshot.data.community.logo_url = globals.timebankAvatarURL;
-                                      snapshot.data.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
-                                      snapshot.data.community.created_by = SevaCore.of(context).loggedInUser.email;
-                                      snapshot.data.community.created_at = DateTime.now().millisecondsSinceEpoch.toString();
-                                      snapshot.data.community.primary_email = SevaCore.of(context).loggedInUser.email;
-                                      snapshot.data.community.admins = [SevaCore.of(context).loggedInUser.email];
-                                      // creation of default timebank;
-                                      snapshot.data.timebank.id =  Utils.getUuid();
-                                      snapshot.data.timebank.name = snapshot.data.community.name;
-                                      snapshot.data.timebank.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
-                                      snapshot.data.timebank.photoUrl = globals.timebankAvatarURL;
-                                      snapshot.data.timebank.createdAt = DateTime.now().millisecondsSinceEpoch;
-                                      snapshot.data.timebank.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
-                                      snapshot.data.timebank.coordinators = [].cast<String>();
-                                      snapshot.data.timebank.members = [].cast<String>();
-                                      snapshot.data.timebank.children = [].cast<String>();
-                                      snapshot.data.timebank.balance = 0.0;
-                                      snapshot.data.timebank.protected = snapshot.data.timebank.protected;
-                                      snapshot.data.timebank.parentTimebankId = widget.timebankId;
-                                      snapshot.data.timebank.rootTimebankId = FlavorConfig.values.timebankId;
-                                      snapshot.data.timebank.communityId = snapshot.data.community.id;
-                                      snapshot.data.timebank.address = snapshot.data.timebank.address;
-                                      snapshot.data.timebank.location = location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+                          color: Theme.of(context).accentColor,
+                          onPressed: () async {
+                            print(_formKey.currentState.validate());
+                            if (_formKey.currentState.validate()) {
+                              if (_billingInformationKey.currentState
+                                  .validate()) {
+                                setState(() {
+                                  this._billingDetailsError = '';
+                                });
+                                print(globals.timebankAvatarURL);
+                                if (globals.timebankAvatarURL == null) {
+                                  setState(() {
+                                    this.communityImageError =
+                                        'Community logo is mandatory';
+                                  });
+                                } else {
+                                  setState(() {
+                                    this.communityImageError = '';
+                                  });
 
-                                      // updating the community with default timebank id
-                                      snapshot.data.community.timebanks = [snapshot.data.timebank.id].cast<String>();
-                                      createEditCommunityBloc.createCommunity(snapshot.data);
+                                  // creation of community;
+                                  snapshot.data.UpdateCommunityDetails(
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                  );
+                                  // creation of default timebank;
+                                  snapshot.data.UpdateTimebankDetails(
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                    widget,
+                                  );
+                                  // updating the community with default timebank id
+                                  snapshot.data.community.timebanks = [
+                                    snapshot.data.timebank.id
+                                  ].cast<String>();
 
-                                      Navigator.pop(context);
-                                    } else {
-                                      setState(() {
-                                        this._billingDetailsError = 'Please configure your billing details';
-                                      });
-                                    }
-                                    // If the form is valid, we want to show a Snackbar
-//                                _writeToDB();
-                                    // return;
-//
-//                                if (parentTimebank.children == null)
-//                                  parentTimebank.children = [];
-//                                parentTimebank.children.add(timebankModel.id);
-//                                updateTimebank(timebankModel: parentTimebank);
+                                  snapshot.data.community.primary_timebank =
+                                      snapshot.data.timebank.id;
 
-                                  } else {
+                                  createEditCommunityBloc.createCommunity(
+                                    snapshot.data,
+                                    SevaCore.of(context).loggedInUser,
+                                  );
 
-                                  }
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(18.0),
-                                    side: BorderSide(color: Colors.red)),
-                                child: Text(
-                                  'Create Community',
-                                  style: TextStyle(
-                                      fontSize: 16.0, color: Colors.white),
-                                ),
-                                textColor: Colors.blue,
-                              )
-                            ),
+                                  await Firestore.instance
+                                      .collection("users")
+                                      .document(SevaCore.of(context)
+                                          .loggedInUser
+                                          .email)
+                                      .updateData({
+                                    'communities': FieldValue.arrayUnion([
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID
+                                    ]),
+                                    'currentCommunity':
+                                        snapshot.data.community.id
+                                  });
+
+                                  setState(() {
+                                    SevaCore.of(context)
+                                            .loggedInUser
+                                            .currentCommunity =
+                                        snapshot.data.community.id;
+                                  });
+
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context1) => SevaCore(
+                                        loggedInUser:
+                                            SevaCore.of(context).loggedInUser,
+                                        child: HomePageRouter(
+                                            // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                                            ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                setState(() {
+                                  this._billingDetailsError =
+                                      'Please configure your billing details';
+                                });
+                              }
+                            } else {}
+                          },
+                          shape: StadiumBorder(),
+                          child: Text(
+                            'Create Community',
+                            style:
+                                TextStyle(fontSize: 16.0, color: Colors.white),
+                          ),
+                          textColor: FlavorConfig.values.buttonTextColor,
+                        )),
                   ),
                   Padding(
                       padding: EdgeInsets.symmetric(vertical: 50),
@@ -402,46 +434,46 @@ class CreateEditCommunityViewFormState
         scrollIsOpen = true;
       },
       child: Container(
-        width: double.infinity,
-        height: 50,
-        child: Column(
-        children: <Widget>[
-          Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              'Configure billing details',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-                fontSize: 14,
-              ),
-            ),
-            Divider(),
-            Text(
-              '+',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: Colors.blue,
-              ),
-            )
-          ],
-        ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                _billingDetailsError,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                  fontSize: 12,
+          margin: EdgeInsets.only(top: 20),
+          width: double.infinity,
+          height: 50,
+          child: Column(children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Configure billing details',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                    fontSize: 14,
+                  ),
                 ),
-              )
-            ],
-          ),
-      ])),
+                Divider(),
+                Text(
+                  '+',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Colors.blue,
+                  ),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  _billingDetailsError,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
+                )
+              ],
+            ),
+          ])),
     );
   }
 
@@ -449,7 +481,7 @@ class CreateEditCommunityViewFormState
     return GestureDetector(
       onTap: () {},
       child: Text(
-        ' Find your team',
+        ' Find your community',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.blue,
@@ -510,8 +542,6 @@ class CreateEditCommunityViewFormState
       alignLabelWithHint: false,
     );
   }
-
-
 
   Widget get _billingDetailsTitle {
     return Container(
@@ -588,7 +618,8 @@ class CreateEditCommunityViewFormState
           },
           onChanged: (value) {
             print(controller.community.billing_address);
-            controller.community.billing_address.updateValueByKey('state', value);
+            controller.community.billing_address
+                .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
           initialValue: controller.community.billing_address.state != null
@@ -615,10 +646,13 @@ class CreateEditCommunityViewFormState
           },
           onChanged: (value) {
             print(value);
-            controller.community.billing_address.updateValueByKey('pincode', int.parse(value));
+            controller.community.billing_address
+                .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.pincode != null ? controller.community.billing_address.pincode.toString() : '',
+          initialValue: controller.community.billing_address.pincode != null
+              ? controller.community.billing_address.pincode.toString()
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
@@ -644,9 +678,9 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           initialValue:
-          controller.community.billing_address.additionalnotes != null
-              ? controller.community.billing_address.additionalnotes
-              : '',
+              controller.community.billing_address.additionalnotes != null
+                  ? controller.community.billing_address.additionalnotes
+                  : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
@@ -658,6 +692,7 @@ class CreateEditCommunityViewFormState
         ),
       );
     }
+
     Widget _streetAddressWidget(controller) {
       return Container(
         margin: EdgeInsets.all(10),
@@ -676,15 +711,16 @@ class CreateEditCommunityViewFormState
           focusNode: streetAddressFocus,
           textInputAction: TextInputAction.next,
           initialValue:
-          controller.community.billing_address.street_address1 != null
-              ? controller.community.billing_address.street_address1
-              : '',
+              controller.community.billing_address.street_address1 != null
+                  ? controller.community.billing_address.street_address1
+                  : '',
           decoration: getInputDecoration(
             fieldTitle: "Street Address 1",
           ),
         ),
       );
     }
+
     Widget _streetAddressTwoWidget(controller) {
       return Container(
         margin: EdgeInsets.all(10),
@@ -703,14 +739,15 @@ class CreateEditCommunityViewFormState
             focusNode: streetAddressTwoFocus,
             textInputAction: TextInputAction.next,
             initialValue:
-            controller.community.billing_address.street_address2 != null
-                ? controller.community.billing_address.street_address2
-                : '',
+                controller.community.billing_address.street_address2 != null
+                    ? controller.community.billing_address.street_address2
+                    : '',
             decoration: getInputDecoration(
               fieldTitle: "Street Address 2",
             )),
       );
     }
+
     Widget _companyNameWidget(controller) {
       return Container(
         margin: EdgeInsets.all(10),
@@ -737,6 +774,7 @@ class CreateEditCommunityViewFormState
         ),
       );
     }
+
     Widget _continueBtn(controller) {
       return Container(
         margin: EdgeInsets.all(10),
@@ -757,6 +795,7 @@ class CreateEditCommunityViewFormState
         ),
       );
     }
+
     return Container(
         // var scrollController = Sc
         //adding a margin to the top leaves an area where the user can swipe

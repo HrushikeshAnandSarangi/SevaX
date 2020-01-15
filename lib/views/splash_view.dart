@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -10,14 +11,10 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import 'package:sevaexchange/utils/preference_manager.dart';
-import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
-import 'package:sevaexchange/views/bioview.dart';
-import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
-// import 'package:sevaexchange/views/bioview.dart';
-import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
+import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:sevaexchange/views/onboarding/skillsview.dart';
@@ -26,6 +23,10 @@ import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
+import 'package:sevaexchange/views/home_dashboard.dart';
+
+import 'home_page_router.dart';
+import 'onboarding/skillsview.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -457,6 +458,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+    print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
 
     if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
@@ -529,9 +531,9 @@ class _SplashViewState extends State<SplashView> {
       }
     }
 
-    if (!loggedInUser.completedIntro) {
-      await _navogateToIntro(loggedInUser);
-    }
+    // if (!loggedInUser.completedIntro) {
+    //   await _navogateToIntro(loggedInUser);
+    // }
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
@@ -548,11 +550,21 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+    loadingMessage = 'We met before';
+
     // print(loggedInUser.communities);
-    if (loggedInUser.communities == null) {
+    if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
+    } else {
+      _navigateToCoreView(loggedInUser);
     }
 
+    // _navigateToCoreView(loggedInUser);
+
+    // if (loggedInUser.currentCommunity != null ||
+    //     loggedInUser.currentCommunity != "") {
+    //   await _navigateToHome_DashBoardView(loggedInUser);
+    // }
 
     // if ()
 
@@ -764,13 +776,25 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
+
   Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
+    await Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(
-            loggedInUser: loggedInUser,
-            child: FindCommunitiesView())
+          loggedInUser: loggedInUser,
+          child: FindCommunitiesView(
+            keepOnBackPress: false,
+          ),
+        ),
       ),
+    );
+  }
+
+  Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) =>
+              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
     );
   }
 
@@ -778,15 +802,14 @@ class _SplashViewState extends State<SplashView> {
     await fireStoreManager.updateUser(user: user);
   }
 
-  void _navigateToCoreView(UserModel loggedInUser,) {
+  void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
+    print('logg${loggedInUser}');
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: CoreView(
-            sevaUserID: loggedInUser.sevaUserID,
-          ),
+          child: HomePageRouter(),
         ),
       ),
     );

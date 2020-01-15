@@ -1,25 +1,29 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
+import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
+import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
+import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
+import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/timebanks/timebank_view.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../flavor_config.dart';
 import 'core.dart';
@@ -27,6 +31,9 @@ import 'core.dart';
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
   final TimebankModel timebankModel;
+  //final UserModel loggedInUser;
+
+ // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
   //final UserModel loggedInUser;
   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
   //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
@@ -41,77 +48,260 @@ class TimebankTabsViewHolder extends StatelessWidget {
   }
 }
 
+enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
+
 class TabarView extends StatelessWidget {
   final String timebankId;
   final TimebankModel timebankModel;
+
   //final UserModel loggedInUser;
   //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
   TabarView({this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 4,
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: AppBar(
-              elevation: 0.5,
-              backgroundColor: Colors.white,
-              automaticallyImplyLeading: true,
-              primary: false,
-              bottom: TabBar(
-                labelColor: Colors.black,
-                indicatorColor: Colors.black,
-                indicatorSize: TabBarIndicatorSize.label,
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                    text: "Discussions",
-                  ),
-                  Tab(
-                    text: "Requests",
-                  ),
-                  Tab(
-                    text: "Offers",
-                  ),
-                  Tab(
-                    text: "About",
-                  ),
-                ],
-              ),
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              DiscussionList(
-                timebankId: timebankId,
-              ),
-              RequestsModule.of(
-                timebankId: timebankId,
-              ),
-              OffersModule.of(
-                timebankId: timebankId,
-              ),
-              // OffersModule.of(
-              //   timebankId: timebankId,
-              // ),
-              TimeBankAboutView.of(
-                timebankModel: timebankModel,
-                email: loggedInUser.email,
-              )
-            ],
-          ),
+    return Scaffold(
+      body: getUserRole(
+        determineUserRoleInAbout(
+          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+          timeBankModel: timebankModel,
         ),
+        context,
+        timebankModel,
+        timebankId,
       ),
     );
   }
 }
 
+Widget getUserRole(
+  AboutUserRole role,
+  BuildContext context,
+  TimebankModel timebankModel,
+  String timebankId,
+) {
+  switch (role) {
+    case AboutUserRole.ADMIN:
+      return createAdminTabBar(
+        context,
+        timebankModel,
+        timebankId,
+      );
+
+    case AboutUserRole.JOINED_USER:
+      return createJoinedUserTabBar(
+        context,
+        timebankModel,
+        timebankId,
+      );
+
+    case AboutUserRole.NORMAL_USER:
+      return createNormalUserTabBar(
+        context,
+        timebankModel,
+        timebankId,
+      );
+
+    default:
+      return createNormalUserTabBar(
+        context,
+        timebankModel,
+        timebankId,
+      );
+  }
+}
+
+Widget createAdminTabBar(
+  BuildContext context,
+  TimebankModel timebankModel,
+  String timebankId,
+) {
+  return DefaultTabController(
+    length: 6,
+    child: Scaffold(
+      appBar: AppBar(
+        elevation: 0.5,
+        backgroundColor: Colors.white,
+        title: Text(timebankModel.name),
+        bottom: TabBar(
+          labelColor: Colors.black,
+          indicatorColor: Colors.black,
+          indicatorSize: TabBarIndicatorSize.label,
+          isScrollable: true,
+          tabs: [
+            Tab(
+              text: "Discussions",
+            ),
+            Tab(
+              text: "Requests",
+            ),
+            Tab(
+              text: "Offers",
+            ),
+            Tab(
+              text: "About",
+            ),
+            Tab(
+              text: "Members",
+            ),
+            Tab(
+              text: "Manage",
+            ),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        children: [
+          DiscussionList(
+            timebankId: timebankId,
+          ),
+          RequestsModule.of(
+            timebankId: timebankId,
+            timebankModel: timebankModel,
+          ),
+          OffersModule.of(
+            timebankId: timebankId,
+            timebankModel: timebankModel,
+          ),
+          TimeBankAboutView.of(
+            timebankModel: timebankModel,
+            email: SevaCore.of(context).loggedInUser.email,
+          ),
+          TimebankRequestAdminPage(
+            isUserAdmin: timebankModel.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+            timebankId: timebankModel.id,
+            userEmail: SevaCore.of(context).loggedInUser.email,
+          ),
+          ManageTimebankSeva.of(
+            timebankModel: timebankModel,
+          )
+        ],
+      ),
+    ),
+  );
+}
+
+Widget createJoinedUserTabBar(
+  BuildContext context,
+  TimebankModel timebankModel,
+  String timebankId,
+) {
+  return DefaultTabController(
+    length: 5,
+    child: Scaffold(
+        appBar: AppBar(
+            elevation: 0.5,
+            backgroundColor: Colors.white,
+            title: Text(timebankModel.name),
+            bottom: TabBar(
+              labelColor: Colors.black,
+              indicatorColor: Colors.black,
+              indicatorSize: TabBarIndicatorSize.label,
+              isScrollable: true,
+              tabs: [
+                Tab(
+                  text: "Discussions",
+                ),
+                Tab(
+                  text: "Requests",
+                ),
+                Tab(
+                  text: "Offers",
+                ),
+                Tab(
+                  text: "About",
+                ),
+                Tab(
+                  text: "Members",
+                ),
+              ],
+            )),
+        body: TabBarView(
+          children: [
+            DiscussionList(
+              timebankId: timebankId,
+            ),
+            RequestsModule.of(
+              timebankId: timebankId,
+              timebankModel: timebankModel,
+            ),
+            OffersModule.of(
+              timebankId: timebankId,
+              timebankModel: timebankModel,
+            ),
+            TimeBankAboutView.of(
+              timebankModel: timebankModel,
+              email: SevaCore.of(context).loggedInUser.email,
+            ),
+            TimebankRequestAdminPage(
+              isUserAdmin: timebankModel.admins.contains(
+                SevaCore.of(context).loggedInUser.sevaUserID,
+              ),
+              timebankId: timebankModel.id,
+              userEmail: SevaCore.of(context).loggedInUser.email,
+            ),
+          ],
+        )),
+  );
+}
+
+Widget createNormalUserTabBar(
+  BuildContext context,
+  TimebankModel timebankModel,
+  String timebankId,
+) {
+  return DefaultTabController(
+    length: 2,
+    child: Scaffold(
+        appBar: AppBar(
+            elevation: 0.5,
+            backgroundColor: Colors.white,
+            title: Text(timebankModel.name),
+            bottom: TabBar(
+              labelColor: Colors.black,
+              indicatorColor: Colors.black,
+              indicatorSize: TabBarIndicatorSize.label,
+              isScrollable: true,
+              tabs: [
+                Tab(
+                  text: "About",
+                ),
+                Tab(
+                  text: "Members",
+                )
+              ],
+            )),
+        body: TabBarView(
+          children: [
+            TimeBankAboutView.of(
+              timebankModel: timebankModel,
+              email: SevaCore.of(context).loggedInUser.email,
+            ),
+            TimeBankAboutView.of(
+              timebankModel: timebankModel,
+              email: SevaCore.of(context).loggedInUser.email,
+            ),
+          ],
+        )),
+  );
+}
+
+AboutUserRole determineUserRoleInAbout(
+    {String sevaUserId, TimebankModel timeBankModel}) {
+  if (timeBankModel.admins.contains(sevaUserId)) {
+    return AboutUserRole.ADMIN;
+  } else if (timeBankModel.members.contains(sevaUserId)) {
+    return AboutUserRole.JOINED_USER;
+  } else {
+    return AboutUserRole.NORMAL_USER;
+  }
+}
+
 class DiscussionList extends StatefulWidget {
+  final String loggedInUser;
   final String timebankId;
-  DiscussionList({this.timebankId});
+  DiscussionList({this.timebankId, this.loggedInUser});
   @override
   DiscussionListState createState() {
     return DiscussionListState();
@@ -148,9 +338,9 @@ class DiscussionListState extends State<DiscussionList> {
               Padding(
                 padding: EdgeInsets.only(left: 10),
               ),
-              // Container(
-              //   width: double.infinity,
-              // ),
+              Expanded(
+                child: Container(),
+              ),
               Container(
                 width: 120,
                 child: CupertinoSegmentedControl<int>(
@@ -416,12 +606,25 @@ class DiscussionListState extends State<DiscussionList> {
               //     );
               //   }
               // },
-              child: Container(
-                alignment: Alignment.bottomLeft,
-                child: Text(
-                  'Start a new discussion...',
-                  style: TextStyle(color: Colors.black),
-                  textAlign: TextAlign.left,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsCreate(
+                        timebankId:
+                            SevaCore.of(context).loggedInUser.currentTimebank,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  alignment: Alignment.bottomLeft,
+                  child: Text(
+                    'Start a new discussion...',
+                    style: TextStyle(color: Colors.black),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
               ),
             ),
@@ -825,7 +1028,7 @@ class DiscussionListState extends State<DiscussionList> {
                                         horizontal: 6, vertical: 2),
                                     child: Icon(
                                       Icons.share,
-                                      color: Theme.of(context).primaryColor,
+                                      color: Colors.black,
                                       size: 20,
                                     ),
                                   ),

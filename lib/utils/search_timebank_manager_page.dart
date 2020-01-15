@@ -66,17 +66,17 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         leading: new IconButton(
-          icon: new Icon(Icons.arrow_back, color: Colors.white),
+          icon: new Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Container(
           padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: TextField(
             onChanged: _search,
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.black),
             controller: searchTextController,
             decoration: InputDecoration(
                 hasFloatingPlaceholder: false,
@@ -255,6 +255,10 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
                 : () {};
 
             break;
+          default:
+            return(){
+              print("");
+            };
         }
 
 //        if (user.email != SevaCore.of(context).loggedInUser.email) {

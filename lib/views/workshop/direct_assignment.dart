@@ -208,6 +208,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
                   return shimmerWidget;
                 }
                 UserModel user = snapshot.data;
+                if(user.email == widget.userEmail){
+                  return Offstage();
+                }
                 widget.listOfMembers[user.sevaUserID] = user;
                 return getUserWidget(user, context);
               },

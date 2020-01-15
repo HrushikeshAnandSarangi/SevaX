@@ -9,7 +9,6 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:flutter/gestures.dart';
@@ -48,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: true,
       key: _scaffoldKey,
@@ -81,32 +80,33 @@ class _LoginPageState extends State<LoginPage> {
                       height: ScreenUtil.getInstance().setHeight(60),
                     ),
                     content,
-                    RichText
-                      (
-                      text: TextSpan
-                        (
-                        style: TextStyle( color: Colors.black45, fontSize: 12 ),
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(color: Colors.black45, fontSize: 12),
                         text: 'By continuing, you agree to SevaX',
-                        children: <TextSpan>
-                        [
-                          TextSpan
-                            (
-                              text: ' Terms of Service', style: TextStyle(color: Theme.of(context).accentColor),
-                              recognizer: TapGestureRecognizer() ..onTap = showTermsPage
-                          ),
-
-                          TextSpan( text: ' We will manage information as described in our' ),
-                          TextSpan
-                            (
-                              text: ' Privacy Policy ', style: TextStyle(color: Theme.of(context).accentColor),
-                              recognizer: TapGestureRecognizer() ..onTap = showPrivacyPolicyPage
-                          ),
-                          TextSpan( text: ' and' ),
-                          TextSpan
-                            (
-                              text: ' Cookie Policy', style: TextStyle(color: Theme.of(context).accentColor),
-                              recognizer: TapGestureRecognizer() ..onTap = showCookiePolicyPage
-                          ),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: ' Terms of Service',
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = showTermsPage),
+                          TextSpan(
+                              text:
+                                  ' We will manage information as described in our'),
+                          TextSpan(
+                              text: ' Privacy Policy ',
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = showPrivacyPolicyPage),
+                          TextSpan(text: ' and'),
+                          TextSpan(
+                              text: ' Cookie Policy',
+                              style: TextStyle(
+                                  color: Theme.of(context).accentColor),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = showCookiePolicyPage),
                         ],
                       ),
                     ),
@@ -166,12 +166,15 @@ class _LoginPageState extends State<LoginPage> {
                                         signInWithEmailAndPassword();
                                       },
                                 child: Center(
-                                  child: Text("Sign in",
-                                      style: TextStyle(
-                                          color: FlavorConfig
-                                              .values.buttonTextColor,
-                                          fontSize: 18,
-                                          letterSpacing: 1.0)),
+                                  child: Text(
+                                    "Sign in",
+                                    style: TextStyle(
+                                      color:
+                                          FlavorConfig.values.buttonTextColor,
+                                      fontSize: 18,
+                                      letterSpacing: 1.0,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -194,6 +197,23 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+          ),
+          IgnorePointer(
+            ignoring: true,
+            child: isLoading
+                ? Container(
+                    color: Colors.grey.withOpacity(0.5),
+                    child: Center(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20),
+                        // Text('Loading ...',style: Text,)
+                      ],
+                    )),
+                  )
+                : Container(),
           )
         ],
       ),
@@ -261,15 +281,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget get content {
     return FadeAnimation(
-        1.5,
-        new Container(
-          width: double.infinity,
-          height: ScreenUtil.getInstance().setHeight(250),
-          decoration: BoxDecoration(
-              color: Colors.white),
-          child: Padding(
-            padding:
-                EdgeInsets.only( top: 8.0, bottom: 0.0),
+      1.5,
+      new Container(
+        width: double.infinity,
+        // height: ScreenUtil.getInstance().setHeight(250),
+        decoration: BoxDecoration(color: Colors.white),
+        child: Padding(
+            padding: EdgeInsets.only(top: 8.0, bottom: 0.0),
             child: Form(
               key: _formKey,
               child: Column(
@@ -333,137 +351,141 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: ScreenUtil.getInstance().setHeight(15),
                   ),
-                  SizedBox(height: 32),
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(12),
-                        child: FlatButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      'Enter email',
-                                    ),
-                                    content: Form(
-                                      key: _formKeyDialog,
-                                      child: TextFormField(
-                                        validator: (value) {
-                                          if (value.isEmpty) {
-                                            return 'Please enter email to update';
-                                          } else if (!validateEmail(value.trim())) {
-                                            return 'Please enter a valid email';
-                                          }
-                                          _textFieldControllerResetEmail = value;
-                                        },
-                                        // validator: validateEmail,
-                                        onChanged: (value) {
-                                          print("$value");
-                                        },
-                                        initialValue: "",
-                                        keyboardType: TextInputType.emailAddress,
-                                        controller: null,
-                                        decoration: InputDecoration(
-                                          hintText: "Your email address",
-                                          // errorText: isEmailValidForReset
-                                          //     ? null
-                                          //     : validateEmail(
-                                          //         _textFieldControllerResetEmail.text,
-                                          //       ),
-                                        ),
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      new FlatButton(
-                                        child: new Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                            fontSize: dialogButtonSize,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(
-                                            {
-                                              "sendResetLink": false,
-                                              "userEmail": null
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      new FlatButton(
-                                        child: new Text(
-                                          'Reset Password',
-                                          style: TextStyle(
-                                            fontSize: dialogButtonSize,
-                                          ),
-                                        ),
-                                        onPressed: () {
-                                          if (!_formKeyDialog.currentState
-                                              .validate()) {
-                                            return;
-                                          }
-                                          Navigator.of(context).pop({
-                                            "sendResetLink": true,
-                                            "userEmail":
-                                            _textFieldControllerResetEmail.trim()
-                                          });
-                                        },
-                                      )
-                                    ],
-                                  );
-                                }).then((onActivityResult) {
-                              if (onActivityResult != null &&
-                                  onActivityResult['sendResetLink'] != null &&
-                                  onActivityResult['sendResetLink'] &&
-                                  onActivityResult['userEmail'] != null &&
-                                  onActivityResult['userEmail']
-                                      .toString()
-                                      .isNotEmpty) {
-                                print("send reset link");
-                                resetPassword(onActivityResult['userEmail']);
-                                _scaffoldKey.currentState.hideCurrentSnackBar();
-                              } else {
-                                print("Cancelled forgot passowrd");
-                              }
-                            });
-                          },
-                          child: Text(
-                            "Forgot password",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  FlatButton(
-                    materialTapTargetSize: MaterialTapTargetSize.padded,
-                    padding: EdgeInsets.all(0),
-                    onPressed: () async {
-                      isLoading = true;
-                      UserModel user = await Navigator.of(context).push(
-                        MaterialPageRoute<UserModel>(
-                          builder: (context) => RegisterPage(),
-                        ),
-                      );
-                      isLoading = false;
-                      if (user != null) _processLogin(user);
-                    },
-                    child: Text(
-                      'Create an Account',
-                      style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  )
+                  // SizedBox(height: 32),
+                  // Column(
+                  //   children: <Widget>[
+                  //     Container(
+                  //       margin: EdgeInsets.all(12),
+                  //       child: FlatButton(
+                  //         onPressed: () {
+                  //           showDialog(
+                  //               context: context,
+                  //               builder: (context) {
+                  //                 return AlertDialog(
+                  //                   title: Text(
+                  //                     'Enter email',
+                  //                   ),
+                  //                   content: Form(
+                  //                     key: _formKeyDialog,
+                  //                     child: TextFormField(
+                  //                       validator: (value) {
+                  //                         if (value.isEmpty) {
+                  //                           return 'Please enter email to update';
+                  //                         } else if (!validateEmail(
+                  //                             value.trim())) {
+                  //                           return 'Please enter a valid email';
+                  //                         }
+                  //                         _textFieldControllerResetEmail =
+                  //                             value;
+                  //                       },
+                  //                       // validator: validateEmail,
+                  //                       onChanged: (value) {
+                  //                         print("$value");
+                  //                       },
+                  //                       initialValue: "",
+                  //                       keyboardType:
+                  //                           TextInputType.emailAddress,
+                  //                       controller: null,
+                  //                       decoration: InputDecoration(
+                  //                         hintText: "Your email address",
+                  //                         // errorText: isEmailValidForReset
+                  //                         //     ? null
+                  //                         //     : validateEmail(
+                  //                         //         _textFieldControllerResetEmail.text,
+                  //                         //       ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                   actions: <Widget>[
+                  //                     new FlatButton(
+                  //                       child: new Text(
+                  //                         'Cancel',
+                  //                         style: TextStyle(
+                  //                           fontSize: dialogButtonSize,
+                  //                         ),
+                  //                       ),
+                  //                       onPressed: () {
+                  //                         Navigator.of(context).pop(
+                  //                           {
+                  //                             "sendResetLink": false,
+                  //                             "userEmail": null
+                  //                           },
+                  //                         );
+                  //                       },
+                  //                     ),
+                  //                     new FlatButton(
+                  //                       child: new Text(
+                  //                         'Reset Password',
+                  //                         style: TextStyle(
+                  //                           fontSize: dialogButtonSize,
+                  //                         ),
+                  //                       ),
+                  //                       onPressed: () {
+                  //                         if (!_formKeyDialog.currentState
+                  //                             .validate()) {
+                  //                           return;
+                  //                         }
+                  //                         Navigator.of(context).pop({
+                  //                           "sendResetLink": true,
+                  //                           "userEmail":
+                  //                               _textFieldControllerResetEmail
+                  //                                   .trim()
+                  //                         });
+                  //                       },
+                  //                     )
+                  //                   ],
+                  //                 );
+                  //               }).then((onActivityResult) {
+                  //             if (onActivityResult != null &&
+                  //                 onActivityResult['sendResetLink'] != null &&
+                  //                 onActivityResult['sendResetLink'] &&
+                  //                 onActivityResult['userEmail'] != null &&
+                  //                 onActivityResult['userEmail']
+                  //                     .toString()
+                  //                     .isNotEmpty) {
+                  //               print("send reset link");
+                  //               resetPassword(onActivityResult['userEmail']);
+                  //               _scaffoldKey.currentState.hideCurrentSnackBar();
+                  //             } else {
+                  //               print("Cancelled forgot passowrd");
+                  //             }
+                  //           });
+                  //         },
+                  //         child: Text(
+                  //           "Forgot password",
+                  //           style: TextStyle(
+                  //             color: Colors.white,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  // SizedBox(height: 8),
+                  // FlatButton(
+                  //   materialTapTargetSize: MaterialTapTargetSize.padded,
+                  //   padding: EdgeInsets.all(0),
+                  //   onPressed: () async {
+                  //     isLoading = true;
+                  //     UserModel user = await Navigator.of(context).push(
+                  //       MaterialPageRoute<UserModel>(
+                  //         builder: (context) => RegisterPage(),
+                  //       ),
+                  //     );
+                  //     isLoading = false;
+                  //     if (user != null) _processLogin(user);
+                  //   },
+                  //   child: Text(
+                  //     'Create an Account',
+                  //     style: TextStyle(
+                  //         color: Theme.of(context).accentColor,
+                  //         fontWeight: FontWeight.w700),
+                  //   ),
+                  // )
+                  SizedBox(height: 30),
                 ],
               ),
-            )
-        ),
+            )),
       ),
     );
   }
@@ -558,6 +580,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void signInWithEmailAndPassword() async {
     if (!_formKey.currentState.validate()) return;
+    FocusScope.of(context).requestFocus(FocusNode());
     _formKey.currentState.save();
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
@@ -649,13 +672,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void showTermsPage() {
-
-  }
-  void showPrivacyPolicyPage() {
-
-  }
-  void showCookiePolicyPage() {
-
-  }
+  void showTermsPage() {}
+  void showPrivacyPolicyPage() {}
+  void showCookiePolicyPage() {}
 }

@@ -1,22 +1,22 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
-import 'package:sevaexchange/main.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/splash_view.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -277,10 +277,17 @@ class _RegisterPageState extends State<RegisterPage>
         decoration: InputDecoration(
           labelText: hint,
           suffix: suffix,
-          counterStyle: TextStyle(
-            height: double.minPositive,
-          ),
+          labelStyle: TextStyle(color: Colors.black),
+          suffixStyle: TextStyle(color: Colors.black),
+          counterStyle:
+              TextStyle(height: double.minPositive, color: Colors.black),
           counterText: "",
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+          ),
         ),
         textCapitalization: capitalization,
         validator: validator,
@@ -303,70 +310,70 @@ class _RegisterPageState extends State<RegisterPage>
             onPressed: isLoading
                 ? null
                 : () async {
-              isLoading = true;
-              if (selectedImage == null) {
-                if (!_formKey.currentState.validate()) {
-                  isLoading = false;
-                  return;
-                }
-                showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (BuildContext viewContext) {
-                    // return object of type Dialog
-                    return  WillPopScope(
-                        onWillPop: () {},
-                    child: AlertDialog(
-                      title: Text('Add Photo?'),
-                      content: Text('Do you want to add profile pic?'),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text(
-                      'Skip and register',
-                      style: TextStyle(
-                        fontSize: dialogButtonSize,
-                      ),
-                    ),
-                          onPressed: () async {
-                            Navigator.pop(viewContext);
-                            if (!_formKey.currentState.validate()) {
-                              isLoading = false;
-                              return;
-                            }
-                            _formKey.currentState.save();
-                            await createUser();
-                            isLoading = false;
-                          },
-                        ),
-                        FlatButton(
-                          child: Text(
-                            'Add Photo',
-                            style: TextStyle(
-                              fontSize: dialogButtonSize,
+                    isLoading = true;
+                    if (selectedImage == null) {
+                      if (!_formKey.currentState.validate()) {
+                        isLoading = false;
+                        return;
+                      }
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (BuildContext viewContext) {
+                          // return object of type Dialog
+                          return WillPopScope(
+                            onWillPop: () {},
+                            child: AlertDialog(
+                              title: Text('Add Photo?'),
+                              content: Text('Do you want to add profile pic?'),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text(
+                                    'Skip and register',
+                                    style: TextStyle(
+                                      fontSize: dialogButtonSize,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    Navigator.pop(viewContext);
+                                    if (!_formKey.currentState.validate()) {
+                                      isLoading = false;
+                                      return;
+                                    }
+                                    _formKey.currentState.save();
+                                    await createUser();
+                                    isLoading = false;
+                                  },
+                                ),
+                                FlatButton(
+                                  child: Text(
+                                    'Add Photo',
+                                    style: TextStyle(
+                                      fontSize: dialogButtonSize,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(viewContext);
+                                    imagePicker.showDialog(context);
+                                    isLoading = false;
+                                    return;
+                                  },
+                                ),
+                              ],
                             ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(viewContext);
-                            imagePicker.showDialog(context);
-                            isLoading = false;
-                            return;
-                          },
-                        ),
-                      ],
-                    ),
-                    );
+                          );
+                        },
+                      );
+                    } else {
+                      if (!_formKey.currentState.validate()) {
+                        isLoading = false;
+                        return;
+                      }
+                      _formKey.currentState.save();
+                      await createUser();
+                      isLoading = false;
+                    }
                   },
-                );
-              } else {
-                if (!_formKey.currentState.validate()) {
-                  isLoading = false;
-                  return;
-                }
-                _formKey.currentState.save();
-                await createUser();
-                isLoading = false;
-              }
-            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -385,9 +392,7 @@ class _RegisterPageState extends State<RegisterPage>
                 ),
               ],
             ),
-            color: Theme
-                .of(context)
-                .accentColor,
+            color: Theme.of(context).accentColor,
             textColor: FlavorConfig.values.buttonTextColor,
             shape: StadiumBorder(),
           ),
@@ -523,7 +528,6 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-
   // signup with google flow
   Widget get signUpWithGoogle {
     return Column(
@@ -559,14 +563,15 @@ class _RegisterPageState extends State<RegisterPage>
       ],
     );
   }
+
   Widget horizontalLine() => Padding(
-    padding: EdgeInsets.symmetric(horizontal: 16.0),
-    child: Container(
-      width: ScreenUtil.getInstance().setWidth(120),
-      height: 1.0,
-      color: Colors.black26.withOpacity(.2),
-    ),
-  );
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: Container(
+          width: ScreenUtil.getInstance().setWidth(120),
+          height: 1.0,
+          color: Colors.black26.withOpacity(.2),
+        ),
+      );
 
   void useGoogleSignIn() async {
     isLoading = true;
@@ -583,6 +588,7 @@ class _RegisterPageState extends State<RegisterPage>
     isLoading = false;
     _processLogin(user);
   }
+
   void _processLogin(UserModel userModel) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
@@ -590,6 +596,7 @@ class _RegisterPageState extends State<RegisterPage>
       ),
     );
   }
+
   void handlePlatformException(PlatformException error) {
     print(error.message);
     if (error.message.contains("no user record")) {
@@ -619,6 +626,7 @@ class _RegisterPageState extends State<RegisterPage>
       );
     }
   }
+
   Future<void> resetPassword(String email) async {
     await FirebaseAuth.instance
         .sendPasswordResetEmail(email: email)

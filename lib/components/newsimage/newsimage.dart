@@ -1,20 +1,14 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:image/image.dart';
-import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
-import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart'
-    as prefix0;
-import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/news/newscreate.dart';
-
-import '../../globals.dart' as globals;
 import 'dart:io';
-import '../location_picker.dart';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/views/core.dart';
+
 import './image_picker_handler.dart';
+import '../../globals.dart' as globals;
+import '../location_picker.dart';
 
 class NewsImage extends StatefulWidget {
   String photoCredits;

@@ -32,6 +32,85 @@ Future<void> createJoinRequest({@required JoinRequestModel model}) async {
       .setData(model.toMap(), merge: true);
 }
 
+Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
+@required String timebankID, }) async {
+  Query query = Firestore.instance
+      .collection('join_requests')
+      .where('entity_type', isEqualTo: 'Timebank')
+      .where('entity_id', isEqualTo: timebankID);
+  QuerySnapshot snapshot = await query.getDocuments();
+
+  if(snapshot.documents == null) {
+    return [];
+  }
+  var requestList = List<JoinRequestModel>();
+  snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    var model = JoinRequestModel.fromMap(documentSnapshot.data);
+    requestList.add(model);
+
+
+  });
+  return requestList;
+}
+////to get the user requests --umesh
+Future<List<JoinRequestModel>> getFutureUserRequest({
+@required String userID, }) async {
+  Query query = Firestore.instance
+      .collection('join_requests')
+     // .where('entity_type',isEqualTo: 'TimeBank')
+      .where('user_id', isEqualTo: userID);
+  QuerySnapshot snapshot = await query.getDocuments();
+ print('ghghgh ${snapshot.documents}');
+  if(snapshot.documents == null) {
+    return [];
+  }
+  var requestList = List<JoinRequestModel>();
+  snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+    var model = JoinRequestModel.fromMap(documentSnapshot.data);
+    print('hghghg ${model.userId}');
+
+    if(model.userId == userID){
+      requestList.add(model);
+    }
+  });
+  return requestList;
+}
+
+/*
+Stream<List<JoinRequestModel>> getTimebankUserRequests({
+  @required String userID,
+}) async* {
+  var data = Firestore.instance
+      .collection('join_requests')
+      .where('entity_type' , isEqualTo: 'TimeBank')
+      .where('user_id', isEqualTo: userID)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<JoinRequestModel>>.fromHandlers(
+      handleData: (snapshot, joinrequestSink) {
+        print('requests data ${snapshot.toString()}');
+
+        List<JoinRequestModel> joinrequestList = [];
+        snapshot.documents.forEach(
+              (documentSnapshot) {
+            JoinRequestModel model =
+            JoinRequestModel.fromMap(documentSnapshot.data);
+            print('requests data ${documentSnapshot.data}');
+
+
+            if (model.accepted == null) joinrequestList.add(model);
+          },
+        );
+        joinrequestSink.add(joinrequestList);
+      },
+    ),
+  );
+}
+*/
+
+
+
 Stream<List<JoinRequestModel>> getTimebankJoinRequest({
   @required String timebankID,
 }) async* {
@@ -59,6 +138,8 @@ Stream<List<JoinRequestModel>> getTimebankJoinRequest({
   );
 }
 
+
+
 //Get chats for a user
 Stream<List<UserModel>> getRequestDetailsStream({
   @required String requestId,
@@ -78,42 +159,6 @@ Stream<List<UserModel>> getRequestDetailsStream({
         model.acceptors.forEach((member) {
           futures.add(getUserInfo(member));
         });
-
-        // snapshot.documents.forEach(
-        //   (documentSnapshot) async {
-        //     ChatModel model = ChatModel.fromMap(documentSnapshot.data);
-
-        //     if ((model.user1 == email || model.user2 == email) &&
-        //         model.lastMessage != null &&
-        //         model.rootTimebank == FlavorConfig.values.timebankId &&
-        //         !model.softDeletedBy.contains(
-        //           email,
-        //         )) {
-        //       if (model.user1 == email) {
-        //         futures.add(getUserInfo(model.user2));
-        //       }
-        //       if (model.user2 == email) {
-        //         futures.add(getUserInfo(model.user1));
-        //       }
-        //       chatlist.add(model);
-        //       // print("Chat list size ${chatlist.length}");
-        //     }
-
-        //     // email = "anitha.beberg@gmail.com";
-        //     // if ((model.user1 == "anitha.beberg@gmail.com" ||
-        //     //         model.user2 == "anitha.beberg@gmail.com") &&
-        //     //     model.lastMessage != null &&
-        //     //     model.rootTimebank == FlavorConfig.values.timebankId) {
-        //     //   if (model.user1 == email) {
-        //     //     futures.add(getUserInfo(model.user2));
-        //     //   }
-        //     //   if (model.user2 == email) {
-        //     //     futures.add(getUserInfo(model.user1));
-        //     //   }
-        //     //   chatlist.add(model);
-        //     // }
-        //   },
-        // );
         await Future.wait(futures).then((onValue) {
           var i = 0;
           while (i < userModelList.length) {
@@ -127,44 +172,3 @@ Stream<List<UserModel>> getRequestDetailsStream({
     ),
   );
 }
-
-// Stream<List<UserModel>> getRequestStatusStream({
-//   @required String requestId,
-// }) async {
-//   Firestore.instance.collection('requests').document(requestId).get().then(
-//     (requestDetails) async {
-//       var futures = <Future>[];
-//       RequestModel model = RequestModel.fromMap(
-//         requestDetails.data,
-//       );
-
-//       model.approvedUsers.forEach((membersId) {
-//         futures.add(
-//           Firestore.instance
-//               .collection("users")
-//               .document(membersId)
-//               .get()
-//               .then((onValue) {
-//             return onValue;
-//           }),
-//         );
-//       });
-
-//       List<UserModel> usersRequested = List();
-//       await Future.wait(futures).then((onValue) {
-//         for (int i = 0; i < model.approvedUsers.length; i++) {
-//           var user = UserModel.fromDynamic(onValue[i]);
-//           usersRequested.add(user);
-//         }
-//         print(
-//             "return 0 ----------------------------------- ${usersRequested.length}");
-//         return usersRequested;
-//       });
-
-//       return usersRequested;
-//     },
-//   );
-//   // 9797799469
-//   List<UserModel> usersRequested = List();
-//   return usersRequested;
-// }

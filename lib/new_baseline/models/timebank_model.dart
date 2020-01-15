@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
+//import 'package:collection/ lib\views\timebank_content_holder.dart';
 
-class TimebankModel extends DataModel{
+class TimebankModel extends DataModel {
   String id;
   String name;
   String missionStatement;
@@ -23,37 +25,54 @@ class TimebankModel extends DataModel{
   double balance;
   GeoFirePoint location;
 
+  // CompareToTimeBank joinStatus;
+
   TimebankModel(map) {
     this.id = map.containsKey("id") ? map["id"] : '';
     this.name = map.containsKey("name") ? map["name"] : '';
-    this.missionStatement = map.containsKey("missionStatement") ? map["missionStatement"] : '';
+    this.missionStatement =
+        map.containsKey("missionStatement") ? map["missionStatement"] : '';
     this.emailId = map.containsKey("email_id") ? map["email_id"] : '';
-    this.phoneNumber = map.containsKey("phone_number") ? map["phone_number"] : '';
+    this.phoneNumber =
+        map.containsKey("phone_number") ? map["phone_number"] : '';
     this.address = map.containsKey("address") ? map["address"] : '';
     this.creatorId = map.containsKey("creator_id") ? map["creator_id"] : '';
     this.photoUrl = map.containsKey("photo_url") ? map["photo_url"] : '';
     this.createdAt = map.containsKey("created_at") ? map["created_at"] : 0;
     this.admins = map.containsKey("admins") ? List.castFrom(map['admins']) : [];
-    this.coordinators = map.containsKey("coordinators") ? List.castFrom(map['coordinators']) : [];
-    this.members = map.containsKey("members") ? List.castFrom(map['members']) : [];
+    this.coordinators = map.containsKey("coordinators")
+        ? List.castFrom(map['coordinators'])
+        : [];
+    this.members =
+        map.containsKey("members") ? List.castFrom(map['members']) : [];
     this.protected = map.containsKey("protected") ? map["protected"] : false;
-    this.parentTimebankId = map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
-    this.communityId = map.containsKey("community_id") ? map["community_id"] : '';
-    this.rootTimebankId = map.containsKey("root_timebank_id") ? map["root_timebank_id"] : '';
-    this.children = map.containsKey("children") ? List.castFrom(map['children']) : [];
+    this.parentTimebankId =
+        map.containsKey("parent_timebank_id") ? map["parent_timebank_id"] : '';
+    this.communityId =
+        map.containsKey("community_id") ? map["community_id"] : '';
+    this.rootTimebankId =
+        map.containsKey("root_timebank_id") ? map["root_timebank_id"] : '';
+    this.children =
+        map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0;
-    this.location =getLocation(map);
+    this.location = getLocation(map);
+
+    // joinStatus = CompareToTimeBank.JOIN;
   }
-  GeoFirePoint getLocation(map){
+  GeoFirePoint getLocation(map) {
     GeoFirePoint geoFirePoint;
-    if( map.containsKey("location") && map["location"]!=null && map['location']['geopoint']!=null){
+    if (map.containsKey("location") &&
+        map["location"] != null &&
+        map['location']['geopoint'] != null) {
       GeoPoint geoPoint = map['location']['geopoint'];
-      geoFirePoint = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
-    }else{
+      geoFirePoint = Geoflutterfire()
+          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    } else {
       geoFirePoint = GeoFirePoint(40.754387, -73.984291);
     }
     return geoFirePoint;
   }
+
   updateValueByKey(String key, dynamic value) {
     if (key == 'id') {
       this.id = value;
@@ -106,7 +125,11 @@ class TimebankModel extends DataModel{
     if (key == 'balance') {
       this.balance = value;
     }
+    if (key == 'community_id'){
+      this.communityId = value;
+    }
   }
+
   factory TimebankModel.fromMap(Map<String, dynamic> json) {
     TimebankModel timebankModel = new TimebankModel(json);
     if (json.containsKey('location')) {
@@ -128,14 +151,21 @@ class TimebankModel extends DataModel{
       "creator_id": creatorId == null ? null : creatorId,
       "photo_url": photoUrl == null ? null : photoUrl,
       "created_at": createdAt == null ? null : createdAt,
-      "admins": admins == null ? null : new List<dynamic>.from(admins.map((x) => x)),
-      "coordinators": coordinators == null ? null : new List<dynamic>.from(coordinators.map((x) => x)),
-      "members": members == null ? null : new List<dynamic>.from(members.map((x) => x)),
+      "admins":
+          admins == null ? null : new List<dynamic>.from(admins.map((x) => x)),
+      "coordinators": coordinators == null
+          ? null
+          : new List<dynamic>.from(coordinators.map((x) => x)),
+      "members": members == null
+          ? null
+          : new List<dynamic>.from(members.map((x) => x)),
       "protected": protected == null ? null : protected,
       "parent_timebank_id": parentTimebankId == null ? null : parentTimebankId,
-      "community_id" : communityId == null ? null : communityId,
+      "community_id": communityId == null ? null : communityId,
       "root_timebank_id": rootTimebankId == null ? null : rootTimebankId,
-      "children": children == null ? null : new List<dynamic>.from(children.map((x) => x)),
+      "children": children == null
+          ? null
+          : new List<dynamic>.from(children.map((x) => x)),
       "balance": balance == null ? null : balance,
     };
     if (this.location != null) {

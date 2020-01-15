@@ -2,13 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 
 class FindCommunitiesView extends StatefulWidget {
+  final bool keepOnBackPress;
+
+  FindCommunitiesView({@required this.keepOnBackPress});
+
   @override
   State<StatefulWidget> createState() {
     return FindCommunitiesViewState();
@@ -52,21 +57,27 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0.5,
-          backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
-          title: Text(
-            'Find your community',
-            style: TextStyle(
+    return MaterialApp(
+      theme: FlavorConfig.values.theme,
+      home: Scaffold(
+          appBar: AppBar(
+            automaticallyImplyLeading: widget.keepOnBackPress,
+            leading: widget.keepOnBackPress
+                ? BackButton(color: Colors.black54)
+                : null,
+            elevation: 0.5,
+            backgroundColor: Color(0xFFFFFFFF),
+            title: Text(
+              'Find your community',
+              style: TextStyle(
                 color: Colors.black54,
                 fontSize: 20,
-                fontWeight: FontWeight.w500),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
-        ),
-        body: SearchTeams());
+          body: SearchTeams()),
+    );
   }
 
   Widget SearchTeams() {
@@ -77,7 +88,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          'Look for existing teams to join',
+          'Look for existing communities to join',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -92,7 +103,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               hasFloatingPlaceholder: false,
               alignLabelWithHint: true,
               isDense: true,
-              prefixIcon: Icon(Icons.search),
+              prefixIcon: Icon(
+                Icons.search,
+                color: Colors.grey,
+              ),
               contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
               filled: true,
               fillColor: Colors.white,
@@ -112,9 +126,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ]),
     );
   }
+
   Widget CreateCommunity() {
     return Container(
-      // This align moves the children to the bottom
+        // This align moves the children to the bottom
         child: Align(
             alignment: FractionalOffset.bottomCenter,
             // This container holds all the children that will be aligned
@@ -127,15 +142,18 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                     Text('Or'),
                     RaisedButton(
                       onPressed: () {
+                        createEditCommunityBloc.updateUserDetails(
+                            SevaCore.of(context).loggedInUser);
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context1) => SevaCore(
-                                loggedInUser: SevaCore.of(context).loggedInUser,
-                                child: CreateEditCommunityView(
-                                  timebankId: FlavorConfig.values.timebankId,
-                                ))
-                          ));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context1) => SevaCore(
+                                    loggedInUser:
+                                        SevaCore.of(context).loggedInUser,
+                                    child: CreateEditCommunityView(
+                                      timebankId:
+                                          FlavorConfig.values.timebankId,
+                                    ))));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -157,65 +175,82 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   Widget buildList() {
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
-          stream: communityBloc.allCommunities,
-          builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data != null && snapshot.data.loading) {
-                return Expanded(child:Center(
-                  child: CircularProgressIndicator()));
-              } else {
-                return  Expanded(child: Padding(
-                    padding:
-                    EdgeInsets.only(left: 0, right: 0, top: 12.0),
-                    child: ListView.builder(
-                        itemCount: snapshot.data.communities.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(
-                            onTap: goToNext(snapshot.data),
-                            title: Text(snapshot.data.communities[index].name,
-                                style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.w700
-                                )),
-                            subtitle: Text("Created by " +
-                                snapshot.data.communities[index].created_by),
-                            trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  RaisedButton(
-                                    onPressed: () {
-                                      print('clicked');
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: Text('Join'),
-                                        ),
-                                      ],
-                                    ),
-                                    color: Theme
-                                        .of(context)
-                                        .accentColor,
-                                    textColor: FlavorConfig.values
-                                        .buttonTextColor,
-                                    shape: StadiumBorder(),
-                                  )
-                                ]),
-                          );
-                        })
-                ));
-              }
-            }
-            else if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            }
-            return Expanded(child: Text(""),);
+        stream: communityBloc.allCommunities,
+        builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != null && snapshot.data.loading) {
+              return Expanded(
+                  child: Center(child: CircularProgressIndicator()));
+            } else {
+              return Expanded(
+                  child: Padding(
+                      padding: EdgeInsets.only(left: 0, right: 0, top: 12.0),
+                      child: ListView.builder(
+                          itemCount: snapshot.data.communities.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              onTap: goToNext(snapshot.data),
+                              title: Text(snapshot.data.communities[index].name,
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.w700)),
+                              // subtitle: Text("Created by " +
+                              //     snapshot.data.communities[index].created_by),
+                              subtitle: Text("Comunity"),
+                              trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    RaisedButton(
+                                      onPressed: () {
+                                        var communityModel =
+                                            snapshot.data.communities[index];
+                                        createEditCommunityBloc
+                                            .selectCommunity(communityModel);
+                                        createEditCommunityBloc
+                                            .updateUserDetails(
+                                                SevaCore.of(context)
+                                                    .loggedInUser);
+                                        // snapshot.data.communities[index].
 
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (contexts) =>
+                                                OnBoardWithTimebank(
+                                              communityModel: communityModel,
+                                            ),
+                                          ),
+                                        );
+                                        print('clicked ${communityModel.id}');
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(0.0),
+                                            child: Text('Join'),
+                                          ),
+                                        ],
+                                      ),
+                                      color: Theme.of(context).accentColor,
+                                      textColor:
+                                          FlavorConfig.values.buttonTextColor,
+                                      shape: StadiumBorder(),
+                                    )
+                                  ]),
+                            );
+                          })));
+            }
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
           }
-    );
+          return Expanded(
+            child: Text(""),
+          );
+        });
   }
+
   goToNext(data) {
     print(data);
   }

@@ -1,23 +1,21 @@
 import 'dart:async';
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
-
+import 'package:intl/intl.dart';
+import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/qna-module/ReviewLandingPage.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
-import 'package:intl/intl.dart';
-
-import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+
 import '../../flavor_config.dart';
 import 'completed_list.dart';
 import 'notAccepted_tasks.dart';
@@ -88,13 +86,16 @@ class MyTasksList extends StatelessWidget {
               List<RequestModel> requestModelList = snapshot.data;
               if (requestModelList.length == 0) {
                 return Padding(
-                  padding: const EdgeInsets.only(top:58.0),
-                  child: Text('No Pending Tasks',
-                  textAlign: TextAlign.center,),
+                  padding: const EdgeInsets.only(top: 58.0),
+                  child: Text(
+                    'No Pending Tasks',
+                    textAlign: TextAlign.center,
+                  ),
                 );
               }
               return ListView.builder(
                 itemCount: requestModelList.length,
+                physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (listContext, index) {
                   RequestModel model = requestModelList[index];
 
@@ -577,6 +578,7 @@ class TaskCardViewState extends State<TaskCardView> {
           type: NotificationType.RequestCompleted,
           senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
           targetUserId: requestModel.sevaUserId,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
       );
 

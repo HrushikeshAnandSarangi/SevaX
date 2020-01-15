@@ -126,6 +126,8 @@ class RequestsState extends State<Requests> {
               StreamBuilder<Object>(
                   stream: FirestoreManager.getTimebanksForUserStream(
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
                   ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError)
@@ -313,6 +315,7 @@ class _RequestCardViewState extends State<RequestCardView> {
     FirestoreManager.acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -324,6 +327,7 @@ class _RequestCardViewState extends State<RequestCardView> {
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -625,6 +629,8 @@ class OffersState extends State<Offers> {
               StreamBuilder<List<TimebankModel>>(
                   stream: FirestoreManager.getTimebanksForUserStream(
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
                   ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError)
@@ -1072,7 +1078,7 @@ class OfferCardViewState extends State<OfferCardView> {
   _makePostRequest(OfferModel offerModel) async {
     // set up POST request arguments
     String url =
-        'https://us-central1-sevaexchange.cloudfunctions.net/acceptOffer';
+        'https://us-central1-sevaxproject4sevax.cloudfunctions.net/acceptOffer';
     Map<String, String> headers = {"Content-type": "application/json"};
     Map<String, String> body = {
       'id': offerModel.id,

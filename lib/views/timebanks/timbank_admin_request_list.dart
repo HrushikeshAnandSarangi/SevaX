@@ -1,35 +1,36 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/timebanks/edit_timebank.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import 'dart:ui';
+import 'package:shimmer/shimmer.dart';
 
 import 'edit_super_admins_view.dart';
-import 'edit_timebank_view.dart';
 
-class TimebankAdminPage extends StatefulWidget {
+class TimebankRequestAdminPage extends StatefulWidget {
   final String timebankId;
   final String userEmail;
+  final bool isUserAdmin;
   HashMap<String, UserModel> listOfMembers = HashMap();
 
-  TimebankAdminPage({@required this.timebankId, @required this.userEmail});
+  TimebankRequestAdminPage(
+      {@required this.isUserAdmin,
+      @required this.timebankId,
+      @required this.userEmail});
 
   @override
   _TimebankAdminPageState createState() => _TimebankAdminPageState();
 }
 
-class _TimebankAdminPageState extends State<TimebankAdminPage> {
+class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   ScrollController _listController;
   ScrollController _pageScrollController;
   var _indexSoFar = 0;
@@ -38,12 +39,12 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   var selectedUserModelIndex = -1;
   var _isLoading = false;
   var _lastReached = false;
-  var _membersTitleDone = false;
   var adminsNotLoaded = true;
   var timebankModel = TimebankModel({});
   var _admins = List<Widget>();
   var _coordinators = List<Widget>();
   var _members = List<Widget>();
+  var _requests = List<Widget>();
   var _adminEmails = List<String>();
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
@@ -122,16 +123,19 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     BuildContext context,
     TimebankModel timebankModel,
   ) {
-    return CustomScrollView(
-      controller: _pageScrollController,
-      slivers: <Widget>[
-        getAppBar(context, timebankModel),
-        SliverList(
-          delegate: SliverChildListDelegate(
-            getContent(context, timebankModel),
+    return Container(
+      color: Colors.white,
+      child: CustomScrollView(
+        controller: _pageScrollController,
+        slivers: <Widget>[
+          // getAppBar(context, timebankModel),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              getContent(context, timebankModel),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -140,7 +144,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       iconTheme: IconThemeData(color: Colors.white),
       backgroundColor: Theme.of(context).primaryColor,
       centerTitle: true,
-      expandedHeight: 250,
+      expandedHeight: 0,
       floating: false,
       snap: false,
       pinned: true,
@@ -215,14 +219,23 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     );
   }
 
-  Future loadItems() async{
-    if(adminsNotLoaded){
+  Future loadItems() async {
+    if (adminsNotLoaded) {
       loadNextAdmins().then((onValue) {
         adminsNotLoaded = false;
         if (_coordinators.length == 0 && FlavorConfig.appFlavor == Flavor.APP) {
           loadNextCoordinators().then((onValue) {
             if (_members.length == 0) {
-              loadNextMembers();
+              loadNextMembers().then((onValue) {
+                if (widget.isUserAdmin) {
+                  getFutureTimebankJoinRequest(timebankID: widget.timebankId)
+                      .then((newList) {
+                    if (newList != null && newList.length > 0) {
+                      loadAllRequest(newList);
+                    }
+                  });
+                }
+              });
             }
           });
         } else {
@@ -234,18 +247,147 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     }
   }
 
-  void resetVariables(){
+  Future loadAllRequest(List<JoinRequestModel> modelItemList) {
+    _requests = [];
+    _requests.add(getSectionTitle(context, 'Requests'));
+    for (var i = 0; i < modelItemList.length; i++) {
+      if (modelItemList[i].operationTaken) {
+        continue;
+      }
+      var userWidget = FutureBuilder<UserModel>(
+        future:
+            FirestoreManager.getUserForId(sevaUserId: modelItemList[i].userId),
+        builder: (context, snapshot) {
+          var requestModelItem = modelItemList[i];
+          if (snapshot.hasError) return Text(snapshot.error.toString());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return shimmerWidget;
+          }
+
+          UserModel user = snapshot.data;
+
+          widget.listOfMembers[user.sevaUserID] = user;
+          return getUserRequestWidget(
+              user, context, timebankModel, requestModelItem);
+        },
+      );
+      _requests.add(userWidget);
+    }
+    ;
+    if (_requests.length == 1) {
+      _requests = [];
+    }
+    setState(() {});
+  }
+
+  Widget getUserRequestWidget(UserModel user, BuildContext context,
+      TimebankModel model, JoinRequestModel joinRequestModel) {
+    user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
+    user.fullname = user.fullname == null ? defaultUsername : user.fullname;
+    var item = Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                    user.fullname,
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            widget.isUserAdmin
+                ? Row(
+                    children: <Widget>[
+                      Padding(
+                          padding: EdgeInsets.only(left: 2, right: 2),
+                          child: RaisedButton(
+                            color: Colors.blue,
+                            onPressed: () async {
+                              List<String> members = timebankModel.members;
+                              Set<String> usersSet = members.toSet();
+
+                              usersSet.add(joinRequestModel.userId);
+                              timebankModel.members = usersSet.toList();
+                              joinRequestModel.operationTaken = true;
+                              joinRequestModel.accepted = true;
+                              await createJoinRequest(model: joinRequestModel);
+                              await _updateTimebank(timebankModel,
+                                  admins: null);
+                            },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0),
+                                side: BorderSide(color: Colors.blue)),
+                            child: Text(
+                              'Approve',
+                              style: TextStyle(
+                                  fontSize: 10.0, color: Colors.white),
+                            ),
+                            textColor: Colors.blue,
+                          )),
+                      Padding(
+                        padding: EdgeInsets.only(left: 2, right: 2),
+                        child: RaisedButton(
+                          color: Colors.red,
+                          onPressed: () async {
+                            joinRequestModel.operationTaken = true;
+                            joinRequestModel.accepted = false;
+                            createJoinRequest(model: joinRequestModel)
+                                .then((onValue) {
+                              resetAndLoad();
+                            });
+                          },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(20.0),
+                              side: BorderSide(color: Colors.red)),
+                          child: Text(
+                            'Reject',
+                            style:
+                                TextStyle(fontSize: 10.0, color: Colors.white),
+                          ),
+                          textColor: Colors.blue,
+                        ),
+                      )
+                    ],
+                  )
+                : Offstage(),
+          ],
+        ));
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            //                   <--- left side
+            color: Colors.grey,
+            width: 0.2,
+          ),
+        ),
+      ),
+      child: item,
+    );
+  }
+
+  void resetVariables() {
     _pageIndex = 1;
     _indexSoFar = 0;
     currSelectedState = false;
     selectedUserModelIndex = -1;
     _isLoading = false;
     _lastReached = false;
-    _membersTitleDone = false;
     adminsNotLoaded = true;
     _admins = [];
     _members = [];
     _adminEmails = [];
+    _requests = [];
     _coordinators = [];
     emailIndexMap = HashMap();
     indexToModelMap = HashMap();
@@ -255,9 +397,8 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
 
   void resetAndLoad() {
     resetVariables();
-    loadItems().then((onValue){
-      setState(() {
-      });
+    loadItems().then((onValue) {
+      setState(() {});
     });
   }
 
@@ -275,8 +416,19 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     if (FlavorConfig.appFlavor == Flavor.APP) {
       _avtars.addAll(_coordinators);
     }
+    _avtars.addAll(_requests);
     _avtars.addAll(_members);
     return _avtars;
+  }
+
+  Widget get emptyCard {
+    return Container(
+        color: Colors.grey[50],
+        child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Center(
+              child: Text('No user found'),
+            )));
   }
 
   Widget get listViewWidget {
@@ -289,12 +441,12 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       itemBuilder: (BuildContext ctxt, int index) => Padding(
         padding: const EdgeInsets.all(0.0),
         child: index < _avtars.length
-        ? _avtars[index]
-        : Container(
-            width: double.infinity,
-            height: 80,
-            child: circularBar,
-          ),
+            ? _avtars[index]
+            : Container(
+                width: double.infinity,
+                height: 80,
+                child: circularBar,
+              ),
       ),
     );
   }
@@ -315,60 +467,110 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       bool isAdmin = timebankModel.admins.contains(
         SevaCore.of(context).loggedInUser.sevaUserID,
       );
-
-      print(timebankModel.admins);
       FirestoreManager.getUserForUserModels(admins: timebankModel.admins)
           .then((onValue) {
         _admins = [];
         _adminEmails = [];
-        _admins.add(getSectionTitle(context, 'Admins'));
+        _admins.add(getSectionTitle(context, 'Admins & Organizers'));
         SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
             .forEach((key, user) {
           _adminEmails.add(user.email);
-          if (isAdmin) {
-            var widget = Slidable(
-              delegate: SlidableDrawerDelegate(),
-              actions: <Widget>[
-                IconSlideAction(
-                  icon: Icons.close,
-                  color: Colors.red,
-                  caption: 'Remove',
-                  onTap: () {
-                    List<String> admins =
-                    timebankModel.admins.map((s) => s).toList();
-                    admins.remove(user.sevaUserID);
-                    updateTimebank(timebankModel, admins: admins);
-                  },
-                ),
-              ],
-              secondaryActions: <Widget>[
-                IconSlideAction(
-                  icon: Icons.arrow_downward,
-                  color: Colors.orange,
-                  caption: 'Coordinator',
-                  onTap: () {
-                    List<String> admins =
-                    timebankModel.admins.map((s) => s).toList();
-                    List<String> coordinators =
-                    timebankModel.coordinators.map((s) => s).toList();
-                    coordinators.add(user.sevaUserID);
-                    admins.remove(user.sevaUserID);
-                    updateTimebank(
-                      timebankModel,
-                      coordinators: coordinators,
-                      admins: admins,
-                    );
-                  },
-                ),
-              ],
-              child: getUserWidget(user, context, timebankModel),
-            );
-            _admins.add(widget);
-          }
+          _admins.add(getUserWidget(user, context, timebankModel, true));
         });
         setState(() {});
       });
     }
+  }
+
+  Widget getUserWidget(
+    UserModel user,
+    BuildContext context,
+    TimebankModel model,
+    bool isAdmin,
+  ) {
+    user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
+    user.fullname = user.fullname == null ? defaultUsername : user.fullname;
+    var item = Padding(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                    user.fullname,
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            getUserWidgetButton(user, context, model, isAdmin),
+          ],
+        ));
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            //                   <--- left side
+            color: Colors.grey,
+            width: 0.2,
+          ),
+        ),
+      ),
+      child: item,
+    );
+  }
+
+  Widget getUserWidgetButton(
+    UserModel user,
+    BuildContext context,
+    TimebankModel model,
+    bool isAdmin,
+  ) {
+    print(
+        "SevaCore.of(context).loggedInUser.sevaUserID:${SevaCore.of(context).loggedInUser.sevaUserID}");
+    print("user.sevaUserID:${user.sevaUserID}");
+
+    return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
+            !widget.isUserAdmin
+        ? Offstage()
+        : Row(
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(left: 2, right: 2),
+                  child: RaisedButton(
+                    color: Colors.blue,
+                    onPressed: () {
+                      if (isAdmin) {
+                        List<String> admins =
+                            timebankModel.admins.map((s) => s).toList();
+                        admins.remove(user.sevaUserID);
+                        _updateTimebank(timebankModel, admins: admins);
+                      } else {
+                        List<String> members =
+                            timebankModel.members.map((s) => s).toList();
+                        members.remove(user.sevaUserID);
+                        _updateTimebank(timebankModel, members: members);
+                      }
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(20.0),
+                        side: BorderSide(color: Colors.blue)),
+                    child: Text(
+                      'Remove',
+                      style: TextStyle(fontSize: 10.0, color: Colors.white),
+                    ),
+                    textColor: Colors.blue,
+                  )),
+            ],
+          );
   }
 
   Future loadNextCoordinators() async {
@@ -376,7 +578,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       timebankModel.coordinators = List<String>();
     }
     if (timebankModel.coordinators.length != 0) {
-      bool isCoordinator  = timebankModel.coordinators.contains(
+      bool isCoordinator = timebankModel.coordinators.contains(
         SevaCore.of(context).loggedInUser.sevaUserID,
       );
 
@@ -389,44 +591,25 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
             .forEach((key, user) {
           _adminEmails.add(user.email);
           if (isCoordinator) {
-            var widget =  Slidable(
-                delegate: SlidableDrawerDelegate(),
-                actions: <Widget>[
-                  IconSlideAction(
-                    icon: Icons.close,
-                    color: Colors.red,
-                    caption: 'Remove',
-                    onTap: () {
-                      List<String> coordinators =
-                      user.coordinators.map((s) => s).toList();
-                      coordinators.remove(user.sevaUserID);
-                      updateTimebank(user, coordinators: coordinators);
-                    },
-                  ),
-                ],
-//                secondaryActions: <Widget>[
+//            var widget =  Slidable(
+//              delegate: SlidableDrawerDelegate(),
+//              actions: <Widget>[
 //                IconSlideAction(
-//                  icon: Icons.arrow_downward,
-//                  color: Colors.orange,
-//                  caption: 'Coordinator',
+//                  icon: Icons.close,
+//                  color: Colors.red,
+//                  caption: 'Remove',
 //                  onTap: () {
-//                    List<String> admins =
-//                    timebankModel.admins.map((s) => s).toList();
 //                    List<String> coordinators =
-//                    timebankModel.coordinators.map((s) => s).toList();
-//                    coordinators.add(user.sevaUserID);
-//                    admins.remove(user.sevaUserID);
-//                    updateTimebank(
-//                      timebankModel,
-//                      coordinators: coordinators,
-//                      admins: admins,
-//                    );
+//                    user.coordinators.map((s) => s).toList();
+//                    coordinators.remove(user.sevaUserID);
+//                    updateTimebank(user, coordinators: coordinators);
 //                  },
 //                ),
 //              ],
-              child: getUserWidget(user, context, timebankModel),
-            );
-            _coordinators.add(widget);
+//              child: getUserWidget(user, context, timebankModel),
+//            );
+            _coordinators
+                .add(getUserWidget(user, context, timebankModel, true));
           }
         });
         setState(() {});
@@ -435,37 +618,40 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   Future loadNextMembers() async {
+    if (_members.length == 0) {
+      _members.add(getSectionTitle(context, 'Members'));
+    }
     if (!_isLoading && !_lastReached) {
       _isLoading = true;
       FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
               widget.timebankId, _pageIndex, widget.userEmail)
           .then((onValue) {
-
         var userModelList = onValue.userModelList;
         if (userModelList == null || userModelList.length == 0) {
-//          if (userModelList == null) {
-            nullCount++;
-//          }
+          nullCount++;
           _isLoading = false;
           _pageIndex = _pageIndex + 1;
-          if(nullCount<3){
+          if (nullCount < 3) {
             loadNextMembers();
-          }else{
+          } else {
             setState(() {
+              if (_members.length == 1) {
+                _members.add(emptyCard);
+              }
               _lastReached = true;
             });
           }
         } else {
           nullCount = 0;
           var addItems = userModelList.map((memberObject) {
-            if(_adminEmails.contains(memberObject.email.trim())){
+            if (_adminEmails.contains(memberObject.email.trim())) {
               return Offstage();
             }
             var member = memberObject.sevaUserID;
             if (widget.listOfMembers != null &&
                 widget.listOfMembers.containsKey(member)) {
               return getUserWidget(
-                  widget.listOfMembers[member], context, timebankModel);
+                  widget.listOfMembers[member], context, timebankModel, false);
             }
             return FutureBuilder<UserModel>(
               future: FirestoreManager.getUserForId(sevaUserId: member),
@@ -476,21 +662,17 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                 }
                 UserModel user = snapshot.data;
                 widget.listOfMembers[user.sevaUserID] = user;
-                return getUserWidget(user, context, timebankModel);
+                return getUserWidget(user, context, timebankModel, false);
               },
             );
           }).toList();
-          if (!_membersTitleDone) {
-            var memberTitle = getSectionTitle(context, 'Members');
-            _members.add(memberTitle);
-            _membersTitleDone = true;
-          }
           if (addItems.length > 0) {
             var lastIndex = _members.length;
             setState(() {
               var iterationCount = 0;
               for (int i = 0; i < addItems.length; i++) {
-                if (emailIndexMap[userModelList[i].email] == null && !_adminEmails.contains(userModelList[i].email.trim())) {
+                if (emailIndexMap[userModelList[i].email] == null &&
+                    !_adminEmails.contains(userModelList[i].email.trim())) {
                   // Filtering duplicates
                   _members.add(addItems[i]);
                   indexToModelMap[lastIndex] = userModelList[i];
@@ -506,6 +688,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
         }
         if (onValue.lastPage == true) {
           setState(() {
+            if (_members.length == 1) {
+              _members.add(emptyCard);
+            }
             _lastReached = onValue.lastPage;
           });
         }
@@ -514,9 +699,6 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   }
 
   Widget getCoordinationList(BuildContext context, TimebankModel model) {
-    bool isAdmin = model.admins.contains(
-      SevaCore.of(context).loggedInUser.sevaUserID,
-    );
     if (model.coordinators == null || model.coordinators.isEmpty)
       return Container();
 
@@ -535,26 +717,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
-              if (isAdmin) {
-                return Slidable(
-                  delegate: SlidableDrawerDelegate(),
-                  actions: <Widget>[
-                    IconSlideAction(
-                      icon: Icons.close,
-                      color: Colors.red,
-                      caption: 'Remove',
-                      onTap: () {
-                        List<String> coordinators =
-                            model.coordinators.map((s) => s).toList();
-                        coordinators.remove(user.sevaUserID);
-                        updateTimebank(model, coordinators: coordinators);
-                      },
-                    ),
-                  ],
-                  child: getUserWidget(user, context, model),
-                );
-              }
-              return getUserWidget(user, context, model);
+              return getUserWidget(user, context, model, true);
             },
           );
         }).toList(),
@@ -567,7 +730,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     List<String> coordinators = model.coordinators.map((s) => s).toList();
     coordinators.add(user.sevaUserID);
     admins.remove(user.sevaUserID);
-    updateTimebank(
+    _updateTimebank(
       model,
       coordinators: coordinators,
       admins: admins,
@@ -584,223 +747,11 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     admins.remove(user.sevaUserID);
     coordinators.remove(user.sevaUserID);
     members.remove(user.sevaUserID);
-    updateTimebank(
+    _updateTimebank(
       model,
       members: members,
       admins: admins,
       coordinators: coordinators,
-    );
-  }
-
-  Widget getUserWidget(
-      UserModel user, BuildContext context, TimebankModel model) {
-    user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
-    user.fullname = user.fullname == null ? defaultUsername : user.fullname;
-    return Card(
-      elevation: 0.0,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: NetworkImage(user.photoURL),
-        ),
-        title: Text(user.fullname),
-        subtitle: Text(user.email),
-        onTap: () {
-          // Push to profile in
-          handleAction(
-            context: context,
-            model: model,
-            user: user,
-          );
-        },
-        onLongPress: () {
-          handleAction(
-            context: context,
-            model: model,
-            user: user,
-          );
-        },
-      ),
-    );
-  }
-
-  void handleAction({
-    TimebankModel model,
-    BuildContext context,
-    UserModel user,
-  }) {
-    if (!model.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ProfileViewer(
-            userEmail: user.email,
-          ),
-        ),
-      );
-    } else {
-      showDialogForAdminAccess(
-        model: model,
-        context: context,
-        isAdmin: model.admins.contains(user.sevaUserID),
-        userModel: user,
-      );
-    }
-  }
-
-// crate dialog for approval or rejection
-  void showDialogForAdminAccess(
-      {TimebankModel model,
-      BuildContext context,
-      UserModel userModel,
-      bool isAdmin}) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext viewContext) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            content: Form(
-              //key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  // _getCloseButton(viewContext),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        width: double.infinity,
-                        child: isAdmin && model.admins.length > 1
-                            ? FlatButton(
-                                child: Text(
-                                  'Remove as admin',
-                                ),
-                                onPressed: () async {
-                                  // request declined
-                                  if (isAdmin) {
-                                    removeAsAdmin(
-                                      model,
-                                      userModel,
-                                    );
-                                  } else {
-                                    print("Add as admin");
-                                    addToAdmin(
-                                      model,
-                                      userModel,
-                                    );
-                                  }
-                                  Navigator.pop(viewContext);
-                                },
-                              )
-                            : isAdmin
-                                ? Offstage()
-                                : FlatButton(
-                                    child: Text(
-                                      'Add as Admin',
-                                    ),
-                                    onPressed: () async {
-                                      // request declined
-                                      if (isAdmin) {
-                                        removeAsAdmin(
-                                          model,
-                                          userModel,
-                                        );
-                                      } else {
-                                        print("Add as admin");
-                                        addToAdmin(
-                                          model,
-                                          userModel,
-                                        );
-                                      }
-                                      Navigator.pop(viewContext);
-                                    },
-                                  ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: FlatButton(
-                          child: Text(
-                            'View profile',
-                          ),
-                          onPressed: () async {
-                            // Once approved
-                            print("View profile");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfileViewer(
-                                  userEmail: userModel.email,
-                                ),
-                              ),
-                            );
-                            Navigator.pop(viewContext);
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: isAdmin
-                            ? Offstage()
-                            : FlatButton(
-                                child: Text(
-                                  'Remove member',
-                                ),
-                                onPressed: () async {
-                                  //Remove a member
-                                  removeFromTimebank(model, userModel);
-
-                                  Navigator.pop(viewContext);
-                                },
-                              ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: FlatButton(
-                          child: Text(
-                            'Cancel',
-                          ),
-                          onPressed: () async {
-                            // Once approved
-                            Navigator.pop(viewContext);
-                          },
-                        ),
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Widget _getCloseButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: Container(
-        alignment: FractionalOffset.topRight,
-        child: Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(
-                'lib/assets/images/close.png',
-              ),
-            ),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -809,7 +760,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     List<String> coordinators = model.coordinators.map((s) => s).toList();
     admins.add(user.sevaUserID);
     coordinators.remove(user.sevaUserID);
-    updateTimebank(
+    _updateTimebank(
       model,
       admins: admins,
       coordinators: coordinators,
@@ -819,9 +770,17 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   Widget getSectionTitle(BuildContext context, String title) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.subtitle,
+      child: Row(
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.black,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -864,12 +823,15 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     );
   }
 
-  Future updateTimebank(
+  Future _updateTimebank(
     TimebankModel model, {
     List<String> admins,
     List<String> coordinators,
     List<String> members,
   }) async {
+    if (model == null) {
+      return;
+    }
     if (admins != null) {
       model.admins = admins;
     }

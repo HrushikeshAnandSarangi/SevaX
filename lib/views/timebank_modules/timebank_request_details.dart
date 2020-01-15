@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:image/image.dart' as prefix0;
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -11,7 +11,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
-import 'package:intl/intl.dart';
 // import 'package:timezone/browser.dart';
 
 class TimeBankRequestDetails extends StatefulWidget {
@@ -206,8 +205,11 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     }
 
                     if (snapshot.data.length == 0) {
-                      return Center(
-                        child: Text('No approved members'),
+                      return Container(
+                        margin: EdgeInsets.only(left: 20),
+                        child: Text(
+                          'No approved members',
+                        ),
                       );
                     }
 
@@ -308,9 +310,10 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                   style: TextStyle(color: Colors.black),
                   children: [
                     TextSpan(
-                      text:  widget.requestItem.sevaUserId !=
-                            SevaCore.of(context).loggedInUser.sevaUserID ? 
-                          'You have${isApplied ? '' : " not"} applied for the request' : "You created this request",
+                      text: widget.requestItem.sevaUserId !=
+                              SevaCore.of(context).loggedInUser.sevaUserID
+                          ? 'You have${isApplied ? '' : " not"} applied for the request'
+                          : "You created this request",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -409,6 +412,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
     acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 
@@ -420,6 +424,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
   }
 }
