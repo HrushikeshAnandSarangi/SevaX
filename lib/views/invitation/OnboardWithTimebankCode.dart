@@ -280,7 +280,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                     JoinRequestNotificationModel(
                                         timebankId: timebankModel.id,
                                         timebankTitle: timebankModel.name);
-
                                 NotificationsModel notification =
                                     NotificationsModel(
                                   id: utils.Utils.getUuid(),
@@ -409,7 +408,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     mode: TimeBankResponseModes.ONBOARDED,
                     dialogTitle: "Awesome!",
                     dialogSubTitle:
-                        "You have been onboaded to ${state.toString()} successfully."),
+                        "You have been onboarded to ${state.toString()} successfully."),
                 response.then((onValue) async {
                   print("onboadrd");
                   // Navigator.popUntil(context, ModalRoute.withName(Navigator.));
@@ -434,13 +433,22 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                         widget.communityModel.id;
                   });
 
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                      builder: (context1) => HomePageRouter(
-                          // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-                          ),
-                    ),
-                  );
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context1) => SevaCore(
+                          loggedInUser: SevaCore.of(context).loggedInUser,
+                          child: HomePageRouter(),
+                        ),
+                      ),
+                      (Route<dynamic> route) => false);
+
+                  // Navigator.of(context).pushReplacement(
+                  //   MaterialPageRoute(
+                  //     builder: (context1) => HomePageRouter(
+                  //         // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                  //         ),
+                  //   ),
+                  // );
                 })
               }
           };
