@@ -36,38 +36,36 @@ class _CreateRequestState extends State<CreateRequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        // iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
-              ? "Create Yang Gang Request"
-              : "Create Campaign Request",
-          // style: TextStyle(color: Colors.white),
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          // iconTheme: IconThemeData(color: Colors.white),
+          backgroundColor: Theme.of(context).primaryColor,
+          title: Text(
+            FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
+                ? "Create Yang Gang Request"
+                : "Create Campaign Request",
+            // style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: false,
         ),
-        centerTitle: false,
-      ),
-      body:StreamBuilder<UserModelController>(
-          stream: userBloc.getLoggedInUser,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.data != null) {
-              return RequestCreateForm(
-                isOfferRequest: widget.isOfferRequest,
-                offer: widget.offer,
-                timebankId: widget.timebankId,
-                userModel: widget.userModel,
-                loggedInUser: snapshot.data.loggedinuser
-              );
-            }
-            return Text('');
-          }
-      )
-    );
+        body: StreamBuilder<UserModelController>(
+            stream: userBloc.getLoggedInUser,
+            builder: (context, snapshot) {
+              if (snapshot.hasError)
+                return new Text('Error: ${snapshot.error}');
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.data != null) {
+                return RequestCreateForm(
+                    isOfferRequest: widget.isOfferRequest,
+                    offer: widget.offer,
+                    timebankId: widget.timebankId,
+                    userModel: widget.userModel,
+                    loggedInUser: snapshot.data.loggedinuser);
+              }
+              return Text('');
+            }));
   }
 }
 
@@ -78,7 +76,11 @@ class RequestCreateForm extends StatefulWidget {
   final UserModel userModel;
   final UserModel loggedInUser;
   RequestCreateForm(
-      {this.isOfferRequest, this.offer, this.timebankId, this.userModel, this.loggedInUser});
+      {this.isOfferRequest,
+      this.offer,
+      this.timebankId,
+      this.userModel,
+      this.loggedInUser});
 
   @override
   RequestCreateFormState createState() {
@@ -107,6 +109,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
+
     print(location);
   }
 
@@ -114,12 +117,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   void didChangeDependencies() {
     FirestoreManager.getUserForIdStream(
             sevaUserId: widget.loggedInUser.sevaUserID)
-        .listen((userModel) {
-      this.requestModel.email = userModel.email;
-      this.requestModel.fullName = userModel.fullname;
-      this.requestModel.photoUrl = userModel.photoURL;
-      this.requestModel.sevaUserId = userModel.sevaUserID;
-    });
+        .listen((userModel) {});
     super.didChangeDependencies();
   }
 
@@ -131,6 +129,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       color: Colors.grey,
       fontFamily: 'Europa',
     );
+
+    UserModel loggedInUser = SevaCore.of(context).loggedInUser;
+    this.requestModel.email = loggedInUser.email;
+    this.requestModel.fullName = loggedInUser.fullname;
+    this.requestModel.photoUrl = loggedInUser.photoURL;
+    this.requestModel.sevaUserId = loggedInUser.sevaUserID;
+
     return Form(
       key: _formKey,
       child: Container(
