@@ -100,6 +100,25 @@ class CommunityCreateEditController {
   }
 }
 
+class UserModelController {
+  var loggedinuser = UserModel();
+
+  updateLoggedInUserDetails(UserModel userdata) {
+    this.loggedinuser = userdata;
+  }
+}
+class UserBloc {
+  final _userController = BehaviorSubject<UserModelController>();
+  Observable<UserModelController> get getLoggedInUser => _userController.stream;
+  UserBloc() {
+    _userController.add(UserModelController());
+  }
+  updateUserDetails(UserModel userdata) {
+    var userc = this._userController.value;
+    userc.updateLoggedInUserDetails(userdata);
+    _userController.add(userc);
+  }
+}
 class CommunityCreateEditBloc {
   final _repository = Repository();
   final _createEditCommunity = BehaviorSubject<CommunityCreateEditController>();
@@ -219,3 +238,4 @@ class CommunityCreateEditBloc {
 
 final createEditCommunityBloc = CommunityCreateEditBloc();
 final communityBloc = CommunityFindBloc();
+final userBloc = UserBloc();

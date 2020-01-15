@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -586,11 +587,7 @@ class _SplashViewState extends State<SplashView> {
     loadingMessage = 'We met before';
     //_navigateToCoreView(loggedInUser);
   }
-  Future _timeBankPage(TimebankModel model, UserModel loggedInUser) async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => TimebankTabsViewHolder.of(timebankId: model.id,timebankModel: model),
-    ));
-  }
+
   Future<UserModel> _getSignedInUserDocs(String userId) async {
     UserModel userModel = await fireStoreManager.getUserForId(
       sevaUserId: userId,
@@ -791,6 +788,9 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
+    print('hai');
+    userBloc.updateUserDetails(loggedInUser);
+    print('hey');
     await Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) =>
