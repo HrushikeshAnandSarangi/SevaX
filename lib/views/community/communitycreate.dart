@@ -364,17 +364,27 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.community.id;
                                   });
 
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context1) => SevaCore(
-                                        loggedInUser:
-                                            SevaCore.of(context).loggedInUser,
-                                        child: HomePageRouter(
-                                            // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-                                            ),
+                                  // Navigator.of(context).pushReplacement(
+                                  //   MaterialPageRoute(
+                                  //     builder: (context1) => SevaCore(
+                                  //       loggedInUser:
+                                  //           SevaCore.of(context).loggedInUser,
+                                  //       child: HomePageRouter(
+                                  //           // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                                  //           ),
+                                  //     ),
+                                  //   ),
+                                  // );
+
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context1) => SevaCore(
+                                          loggedInUser:
+                                              SevaCore.of(context).loggedInUser,
+                                          child: HomePageRouter(),
+                                        ),
                                       ),
-                                    ),
-                                  );
+                                      (Route<dynamic> route) => false);
                                 }
                               } else {
                                 setState(() {

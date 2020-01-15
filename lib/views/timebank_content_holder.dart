@@ -18,7 +18,6 @@ import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart'
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/edit_super_admins_view.dart';
@@ -36,12 +35,12 @@ import '../flavor_config.dart';
 import 'core.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
-
-
   final String timebankId;
   final TimebankModel timebankModel;
   //final UserModel loggedInUser;
 
+ // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
+  //final UserModel loggedInUser;
 
 
 
@@ -63,9 +62,10 @@ enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
 class TabarView extends StatelessWidget {
   final String timebankId;
   final TimebankModel timebankModel;
-  UserModel loggedInUser;
 
-  TabarView({this.timebankId, this.timebankModel, this.loggedInUser});
+  //final UserModel loggedInUser;
+  //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
+  TabarView({this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {

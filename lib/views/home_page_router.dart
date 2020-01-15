@@ -132,5 +132,3 @@ class CustomBottomNavigationItem extends StatelessWidget {
     );
   }
 }
-
-

@@ -90,9 +90,8 @@ class _MyHomePageState extends State<MyHomePage>
                               context,
                               MaterialPageRoute(
                                   builder: (context) => TimebankCreate(
-                                        timebankId: "",
-                                      )
-                                  //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
+                                        timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+                                      ),
                                   ),
                             );
                           }),
