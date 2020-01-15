@@ -339,6 +339,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted==true) {
         return CompareToTimeBank.JOINED;
+      }
+      if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
+        return CompareToTimeBank.JOINED;
       } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
