@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com</string>
+	<string>405168293226-j60rgr3iojb092ocbg9m8fjdljmr3oc4.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao</string>
+	<string>com.googleusercontent.apps.405168293226-j60rgr3iojb092ocbg9m8fjdljmr3oc4</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>405168293226-q0r5i6vl0sa0h402e37pb1pvgtjvr7bl.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAN1i87LDcy81Bh2dFi8eyfrziFHEltxA0</string>
+	<string>AIzaSyCfJs1RFK22W-KvpPWkTmJ3lhrGEKoJ-Gc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1030900930316</string>
+	<string>405168293226</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.sevaexchange.app</string>
 	<key>PROJECT_ID</key>
-	<string>sevaxproject4sevax</string>
+	<string>sevaexchange</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sevaxproject4sevax.appspot.com</string>
+	<string>sevaexchange.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1030900930316:ios:48e3764f4656cabe4bdb29</string>
+	<string>1:405168293226:ios:7f8fae93be80a349</string>
 	<key>DATABASE_URL</key>
-	<string>https://sevaxproject4sevax.firebaseio.com</string>
+	<string>https://sevaexchange.firebaseio.com</string>
 </dict>
 </plist>
