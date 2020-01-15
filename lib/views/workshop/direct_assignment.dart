@@ -84,12 +84,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     }
     var finalWidget = Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         iconTheme:  IconThemeData(
-          color: Colors.white
+          color: Colors.black
         ),
         title: Text(
           "Select volunteers",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         elevation: 0,
         actions: <Widget>[
@@ -102,9 +103,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.center,
               height: double.infinity,
-              child: Text(
-                "Save",
-                style: prefix0.TextStyle(color: Colors.white),
+              child: Container(
+margin: EdgeInsets.only(right: 20),
+
+                child: Text(
+                  "Save",
+                  style: prefix0.TextStyle(color: Colors.black),
+                ),
               ),
             ),
           ),

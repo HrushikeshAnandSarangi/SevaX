@@ -107,7 +107,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 textColor: Colors.lightBlue,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HomeDashBoard()));
+                      builder: (context) => HomeDashBoard(
+                        
+                      )));
                 },
               ): Text(""),
             )

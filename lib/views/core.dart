@@ -385,7 +385,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     unreadNotifications =
                         unreadNotifications - notificationsRead;
 
-                    print("unRead Notifications after subtraction ----------------------------------------- $unreadNotifications");
+                    print(
+                        "unRead Notifications after subtraction ----------------------------------------- $unreadNotifications");
 
                     if (unreadNotifications > 0) {
                       return Container(
@@ -687,15 +688,15 @@ class _SevaCoreViewState extends State<SevaCoreView>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomeDashBoard("sampleId"),
+                builder: (context) => HomeDashBoard(),
               ),
             );
           } else {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => HomeDashBoard(
-                      "sampleId") /*NewsCreate(
+                  builder: (context) =>
+                      HomeDashBoard() /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/
                   ),
