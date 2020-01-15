@@ -174,9 +174,9 @@ class CalendarWidgetState extends State<CalendarWidget> {
               : '${dayNumber - _beginMonthPadding}',
           style: TextStyle(
               color: <Color>() {
-                if (isInSelectedRange(dayNumber)) return Colors.white;
+                if (isInSelectedRange(dayNumber)) return Colors.blue;
                 if (isCurrentDay(dayNumber))
-                  return Theme.of(context).primaryColor;
+                  return Colors.black;
                 if (isPastDay(dayNumber)) return Colors.grey;
                 return Colors.black;
               }(),

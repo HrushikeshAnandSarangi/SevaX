@@ -16,8 +16,8 @@ import 'views/messages/list_members_timebank.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   FlavorConfig.appFlavor = Flavor.APP;
+  WidgetsFlutterBinding.ensureInitialized();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(

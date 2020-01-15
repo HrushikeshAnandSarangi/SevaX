@@ -34,7 +34,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         loggedInUserModel: SevaCore.of(context).loggedInUser,
       ),
       NotificationsPage(),
-      HomeDashBoard(),
+      HomeDashBoard('sammpleId'),
       ChatListView(),
       ProfilePage(),
     ];
@@ -132,3 +132,5 @@ class CustomBottomNavigationItem extends StatelessWidget {
     );
   }
 }
+
+

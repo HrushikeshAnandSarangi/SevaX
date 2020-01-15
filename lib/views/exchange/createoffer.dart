@@ -78,7 +78,6 @@ class MyCustomFormState extends State<MyCustomForm> {
       email: SevaCore.of(context).loggedInUser.email,
       fullName: SevaCore.of(context).loggedInUser.fullname,
       title: title,
-
       id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       description: description,
