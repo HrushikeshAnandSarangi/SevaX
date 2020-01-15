@@ -42,7 +42,17 @@ class TimebankModel extends DataModel{
     this.rootTimebankId = map.containsKey("root_timebank_id") ? map["root_timebank_id"] : '';
     this.children = map.containsKey("children") ? List.castFrom(map['children']) : [];
     this.balance = map.containsKey("balance") ? map["balance"] : 0;
-    this.location = map.containsKey("location") ? map["location"] : GeoFirePoint(40.754387, -73.984291);
+    this.location =getLocation(map);
+  }
+  GeoFirePoint getLocation(map){
+    GeoFirePoint geoFirePoint;
+    if( map.containsKey("location") && map["location"]!=null && map['location']['geopoint']!=null){
+      GeoPoint geoPoint = map['location']['geopoint'];
+      geoFirePoint = Geoflutterfire().point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+    }else{
+      geoFirePoint = GeoFirePoint(40.754387, -73.984291);
+    }
+    return geoFirePoint;
   }
   updateValueByKey(String key, dynamic value) {
     if (key == 'id') {

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
@@ -26,10 +27,14 @@ import 'core.dart';
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
   final TimebankModel timebankModel;
+  //final UserModel loggedInUser;
   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
+  //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
+
   @override
   Widget build(BuildContext context) {
     return TabarView(
+     // loggedInUser: loggedInUser,
       timebankId: timebankId,
       timebankModel: timebankModel,
     );
@@ -39,6 +44,8 @@ class TimebankTabsViewHolder extends StatelessWidget {
 class TabarView extends StatelessWidget {
   final String timebankId;
   final TimebankModel timebankModel;
+  //final UserModel loggedInUser;
+  //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
   TabarView({this.timebankId, this.timebankModel});
 
   @override
@@ -92,7 +99,7 @@ class TabarView extends StatelessWidget {
               // ),
               TimeBankAboutView.of(
                 timebankModel: timebankModel,
-                email: SevaCore.of(context).loggedInUser.email,
+                email: loggedInUser.email,
               )
             ],
           ),

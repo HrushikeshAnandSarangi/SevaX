@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => JoinSubTimeBankView()
+                                  builder: (context) => JoinSubTimeBankView(isPostJoin: true,)
                                   //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
                                   ),
                             );

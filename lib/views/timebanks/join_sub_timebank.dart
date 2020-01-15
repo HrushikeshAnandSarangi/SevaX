@@ -7,6 +7,10 @@ import '../core.dart';
 
 
 class JoinSubTimeBankView extends StatefulWidget {
+  final bool isPostJoin;
+
+  JoinSubTimeBankView({@required this.isPostJoin});
+
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
 }
 
@@ -46,14 +50,14 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             centerTitle: true,
 
             actions: <Widget>[
-              FlatButton(
+              widget.isPostJoin ? FlatButton(
                 child: Text("Continue", style: TextStyle(
                   fontSize: 16,
                   fontFamily: "Europa",
                 ),),
                 textColor: Colors.lightBlue,
                 onPressed: () {},
-              )
+              ):Text(""),
             ]),
         body: getTimebanks(context: context)
     );
