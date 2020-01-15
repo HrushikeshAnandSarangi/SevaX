@@ -9,6 +9,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/material_app.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -17,6 +18,7 @@ import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
 import 'package:sevaexchange/views/home_dashboard.dart';
+import 'package:sevaexchange/views/home_page_router.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
@@ -383,8 +385,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     unreadNotifications =
                         unreadNotifications - notificationsRead;
 
-                    print(
-                        "unRead Notifications after subtraction ----------------------------------------- $unreadNotifications");
+                    print("unRead Notifications after subtraction ----------------------------------------- $unreadNotifications");
 
                     if (unreadNotifications > 0) {
                       return Container(
@@ -686,16 +687,14 @@ class _SevaCoreViewState extends State<SevaCoreView>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Home_DashBoard(
-                  "sampleId"
-                ),
+                builder: (context) => HomeDashBoard("sampleId"),
               ),
             );
           } else {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => Home_DashBoard(
+                  builder: (context) => HomeDashBoard(
                       "sampleId") /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/

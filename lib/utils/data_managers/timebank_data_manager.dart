@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/offer_model.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -50,14 +51,12 @@ Future<List<TimebankModel>> getTimeBanksForUser(
 
 /// Get all timebanknew associated with a User as a Stream
 Stream<List<TimebankModel>> getTimebanksForUserStream(
-    {@required String userId}) async* {
+    {@required String userId, @required String communityId}) async* {
   var data = Firestore.instance
       .collection('timebanknew')
       .where('members', arrayContains: userId)
-      .where("parent")
+      .where('community_id', isEqualTo: communityId)
       .snapshots();
-
-
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<TimebankModel>>.fromHandlers(
@@ -79,19 +78,20 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 
 /// Get all timebanknew associated with a User as a Stream_umesh
 Future<List<TimebankModel>> getSubTimebanksForUserStream(
-    {@required String communityId,@required String sevaUserId}) async {
+    {@required String communityId}) async {
   List<dynamic> timeBankIdList = [];
   List<TimebankModel> timeBankModelList = [];
 
-   await Firestore.instance
+  await Firestore.instance
       .collection('communities')
       .document(communityId)
-      .get().then((DocumentSnapshot documentSnaphot){
-        Map<String, dynamic> dataMap = documentSnaphot.data;
-        print("hey ${dataMap}");
-        timeBankIdList = dataMap["timebanks"];
+      .get()
+      .then((DocumentSnapshot documentSnaphot) {
+    Map<String, dynamic> dataMap = documentSnaphot.data;
+    print("hey ${dataMap}");
+    timeBankIdList = dataMap["timebanks"];
   });
-   print(timeBankIdList);
+  print(timeBankIdList);
   for (int i = 0; i < timeBankIdList.length; i += 1) {
     TimebankModel timeBankModel = await getTimeBankForId(
       timebankId: timeBankIdList[i],
@@ -105,6 +105,7 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
     }*/
 
     timeBankModelList.add(timeBankModel);
+    print("hey ${timeBankModel.admins}");
   }
   return timeBankModelList;
 }
@@ -161,7 +162,7 @@ Stream<List<ReportModel>> getReportedUsersStream(
 
 /// Update Timebanks
 Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
-  if(timebankModel==null){
+  if (timebankModel == null) {
     return;
   }
   return await Firestore.instance
@@ -189,6 +190,24 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   return timeBankModel;
 }
 
+Future<CommunityModel> getCommunityDetailsByCommunityId(
+    {@required String communityId}) async {
+  assert(communityId != null && communityId.isNotEmpty,
+      'Time bank ID cannot be null or empty');
+
+  CommunityModel communityModel;
+  await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    Map<String, dynamic> dataMap = documentSnapshot.data;
+    communityModel = CommunityModel(dataMap);
+  });
+
+  return communityModel;
+}
+
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
     {@required String timebankId}) async* {
@@ -209,7 +228,7 @@ Stream<TimebankModel> getTimebankModelStream(
 }
 
 Future<List<String>> getAllTimebankIdStream(
-    {@required String timebankId})  async{
+    {@required String timebankId}) async {
   return Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
@@ -217,9 +236,9 @@ Future<List<String>> getAllTimebankIdStream(
       .then((onValue) {
     prefix0.TimebankModel model = prefix0.TimebankModel(onValue.data);
 
-    var admins =  model.admins;
-    var coordinators =  model.coordinators;
-    var members =  model.members;
+    var admins = model.admins;
+    var coordinators = model.coordinators;
+    var members = model.members;
     var allItems = List<String>();
     allItems.addAll(admins);
     allItems.addAll(coordinators);
@@ -241,7 +260,7 @@ Stream<List<TimebankModel>> getAllMyTimebanks(
       handleData: (snapshot, reportsList) {
         List<TimebankModel> modelList = [];
         snapshot.documents.forEach(
-              (documentSnapshot) {
+          (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
             modelList.add(model);
           },
@@ -265,7 +284,6 @@ Stream<List<TimebankModel>> getChildTimebanks(
       handleData: (snapshot, reportsList) {
         List<TimebankModel> modelList = [];
 
-        
         snapshot.documents.forEach(
           (documentSnapshot) {
             TimebankModel model = TimebankModel.fromMap(documentSnapshot.data);
@@ -293,7 +311,8 @@ Stream<List<prefix0.OfferModel>> getOffersApprovedByAdmin(
         List<prefix0.OfferModel> modelList = [];
         snapshot.documents.forEach(
           (documentSnapshot) {
-            prefix0.OfferModel model = prefix0.OfferModel.fromMap(documentSnapshot.data);
+            prefix0.OfferModel model =
+                prefix0.OfferModel.fromMap(documentSnapshot.data);
             modelList.add(model);
           },
         );

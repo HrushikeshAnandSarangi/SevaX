@@ -44,9 +44,7 @@ class OffersState extends State<OffersModule> {
     globals.orCreateSelector = 1;
   }
 
-  OffersState() {
-    timebankId = FlavorConfig.values.timebankId;
-  }
+  OffersState() {}
   List<TimebankModel> timebankList = [];
   bool isNearme = false;
   int sharedValue = 0;
@@ -54,6 +52,8 @@ class OffersState extends State<OffersModule> {
   @override
   Widget build(BuildContext context) {
     _setORValue();
+    timebankId = widget.timebankModel.id;
+
     return Column(
       children: <Widget>[
         Offstage(

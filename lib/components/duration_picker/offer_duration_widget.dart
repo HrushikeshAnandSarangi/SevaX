@@ -126,7 +126,7 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
                   : TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.black,
                     ),
             ),
           ],

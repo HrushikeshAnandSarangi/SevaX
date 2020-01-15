@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -9,12 +10,14 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
-class Home_DashBoard extends StatelessWidget {
+class HomeDashBoard extends StatelessWidget {
   final String communityId;
-  Home_DashBoard(
-      this.communityId); // This widget is the root of your application.
+  HomeDashBoard(this.communityId);
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,8 +90,9 @@ class _MyHomePageState extends State<MyHomePage>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => JoinSubTimeBankView(
-                                      SevaCore.of(context).loggedInUser)
+                                  builder: (context) => TimebankCreate(
+                                        timebankId: "",
+                                      )
                                   //TimeBankAboutView(SevaCore.of(context).loggedInUser.currentTimebank,),
                                   ),
                             );
@@ -158,7 +162,8 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ),
               content: Container(
-                height: size.height - 95,
+                height: size.height - 140,
+                // height: size.height - 10,
                 child: MyTaskPage(controller),
               ),
             ),
@@ -188,7 +193,8 @@ class _MyHomePageState extends State<MyHomePage>
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                  image: CachedNetworkImageProvider(timebank.photoUrl),
+                  image: CachedNetworkImageProvider(
+                      timebank.photoUrl ?? defaultUserImageURL),
                   fit: BoxFit.cover)),
           child: Container(
             padding: EdgeInsets.all(10),
@@ -224,6 +230,7 @@ class _MyHomePageState extends State<MyHomePage>
     return StreamBuilder<List<TimebankModel>>(
         stream: FirestoreManager.getTimebanksForUserStream(
           userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');

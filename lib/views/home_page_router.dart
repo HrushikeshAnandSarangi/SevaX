@@ -8,6 +8,8 @@ import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 
+import '../flavor_config.dart';
+
 class HomePageRouter extends StatefulWidget {
   @override
   _BottomNavBarRouterState createState() => _BottomNavBarRouterState();
@@ -27,11 +29,12 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     pages = [
-      JoinSubTimeBankView(SevaCore.of(context).loggedInUser),
-      NotificationsPage(),
-      Home_DashBoard(
-        'sammpleId'
+      JoinSubTimeBankView(
+        isFromDash: true,
+        loggedInUserModel: SevaCore.of(context).loggedInUser,
       ),
+      NotificationsPage(),
+      HomeDashBoard('sammpleId'),
       ChatListView(),
       ProfilePage(),
     ];
@@ -39,49 +42,53 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height - 65,
-            child: pages[selected],
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 65,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey[300],
-                    blurRadius: 100.0,
-                  ),
-                ],
-              ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: FlavorConfig.values.theme,
+      home: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height - 65,
+              child: pages[selected],
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: CurvedNavigationBar(
-              animationDuration: Duration(milliseconds: 300),
-              index: selected,
-              backgroundColor: Colors.transparent,
-              buttonBackgroundColor: Colors.orange,
-              height: 60,
-              items: List.generate(
-                5,
-                (index) => CustomBottomNavigationItem(
-                  selected: selected == index,
-                  index: index,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 65,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey[300],
+                      blurRadius: 100.0,
+                    ),
+                  ],
                 ),
               ),
-              onTap: (index) {
-                selected = index;
-                setState(() {});
-              },
             ),
-          ),
-        ],
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CurvedNavigationBar(
+                animationDuration: Duration(milliseconds: 300),
+                index: selected,
+                backgroundColor: Colors.transparent,
+                buttonBackgroundColor: Colors.orange,
+                height: 60,
+                items: List.generate(
+                  5,
+                  (index) => CustomBottomNavigationItem(
+                    selected: selected == index,
+                    index: index,
+                  ),
+                ),
+                onTap: (index) {
+                  selected = index;
+                  setState(() {});
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

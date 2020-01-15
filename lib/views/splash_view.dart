@@ -544,13 +544,21 @@ class _SplashViewState extends State<SplashView> {
     if (loggedInUser.bio == null) {
       await _navigateToBioView(loggedInUser);
     }
+    loadingMessage = 'We met before';
+
     // print(loggedInUser.communities);
     if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
       await _navigateToFindCommunitiesView(loggedInUser);
+    } else {
+      _navigateToCoreView(loggedInUser);
     }
-    if(loggedInUser.currentCommunity != null || loggedInUser.currentCommunity != ""){
-      await _navigateToHome_DashBoardView(loggedInUser);
-    }
+
+    // _navigateToCoreView(loggedInUser);
+
+    // if (loggedInUser.currentCommunity != null ||
+    //     loggedInUser.currentCommunity != "") {
+    //   await _navigateToHome_DashBoardView(loggedInUser);
+    // }
 
     // if ()
 
@@ -563,9 +571,6 @@ class _SplashViewState extends State<SplashView> {
 //     if (loggedInUser.requestStatus == "pending") {
 //       await _navigateToWaitingView(loggedInUser);
 //     }
-
-    loadingMessage = 'We met before';
-    _navigateToCoreView(loggedInUser);
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {
@@ -755,12 +760,12 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
+    await Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
           child: FindCommunitiesView(
-
+            keepOnBackPress: false,
           ),
         ),
       ),
@@ -789,7 +794,7 @@ class _SplashViewState extends State<SplashView> {
       MaterialPageRoute(
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
-          child: CoreView(),
+          child: HomePageRouter(),
         ),
       ),
     );

@@ -20,11 +20,12 @@ class SelectTimeBankForNewChatState extends State<SelectTimeBankForNewChat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
               ? "Select Yang Gang Chapter"
               : "Select Timebank",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
       ),
       body: getTimebanks(context),
@@ -39,6 +40,7 @@ Widget getTimebanks(BuildContext context) {
   return StreamBuilder<List<TimebankModel>>(
       stream: FirestoreManager.getTimebanksForUserStream(
         userId: SevaCore.of(context).loggedInUser.sevaUserID,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');

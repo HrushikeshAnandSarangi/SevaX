@@ -1,21 +1,15 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:app_settings/app_settings.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:geolocator/geolocator.dart' as prefix1;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:location/location.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:location/location.dart' as prefix0;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'dart:async';
-
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/availability.dart';
 import 'package:sevaexchange/models/location_model.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -44,17 +38,16 @@ class _LocationPickerState extends State<LocationPicker> {
   LocationData locationData;
 
   CameraPosition get initialCameraPosition {
-    try{
+    try {
       return CameraPosition(
           target: SevaCore.of(context).loggedInUser.currentPosition == null
               ? LatLng(41.678510, -87.494080)
-              : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,
-              SevaCore.of(context).loggedInUser.currentPosition.longitude),
+              : LatLng(
+                  SevaCore.of(context).loggedInUser.currentPosition.latitude,
+                  SevaCore.of(context).loggedInUser.currentPosition.longitude),
           zoom: 15);
-    }catch(e){
-      return CameraPosition(
-          target: LatLng(41.678510, -87.494080),
-          zoom: 15);
+    } catch (e) {
+      return CameraPosition(target: LatLng(41.678510, -87.494080), zoom: 15);
     }
   }
 

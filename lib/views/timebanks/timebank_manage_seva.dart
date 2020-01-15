@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 import '../admin_viewe_requests.dart';
@@ -26,6 +27,7 @@ class ManageTimebankSeva extends StatelessWidget {
             ),
             viewRequests(context: context),
             viewAcceptedOffers(context: context),
+            manageTimebankCodes(context: context),
           ],
         ),
       ),
@@ -68,9 +70,35 @@ class ManageTimebankSeva extends StatelessWidget {
         );
       },
       child: Container(
-        margin: EdgeInsets.only( top: 20 ),
+        margin: EdgeInsets.only(top: 20),
         child: Text(
           'View accepted offers',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget manageTimebankCodes({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InviteMembers(
+              timebankModel.id,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Invite members via code',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,

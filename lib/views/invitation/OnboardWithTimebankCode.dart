@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
@@ -15,14 +14,17 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
+import '../core.dart';
+import '../home_page_router.dart';
 /*import 'edit_super_admins_view.dart';
 import 'edit_timebank_view.dart';*/
 
 class OnBoardWithTimebank extends StatefulWidget {
-  OnBoardWithTimebank() {}
+  final CommunityModel communityModel;
+
+  OnBoardWithTimebank({this.communityModel});
 
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
@@ -57,7 +59,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
           leading: BackButton(color: Colors.black54),
           centerTitle: true,
           title: Text(
-            'Join' + 'Community',
+            'Join' + ' Community',
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.black54,
@@ -128,6 +130,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ),
                 ),
               ),
+
               /* Padding(
                     padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
                     child: Text(
@@ -278,21 +281,18 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                                         timebankId: timebankModel.id,
                                         timebankTitle: timebankModel.name);
 
-                                            NotificationsModel notification =
-                                                NotificationsModel(
-                                              id: utils.Utils.getUuid(),
-                                              targetUserId:
-                                                  timebankModel.creatorId,
-                                              senderUserId: communityCreateEditSnapshot
-                                                  .loggedinuser.sevaUserID,
-                                              type: prefix0
-                                                  .NotificationType.JoinRequest,
-                                              data: joinReqModel.toMap(),
-                                            );
+                                NotificationsModel notification =
+                                    NotificationsModel(
+                                  id: utils.Utils.getUuid(),
+                                  targetUserId: timebankModel.creatorId,
+                                  senderUserId: communityCreateEditSnapshot
+                                      .loggedinuser.sevaUserID,
+                                  type: prefix0.NotificationType.JoinRequest,
+                                  data: joinReqModel.toMap(),
+                                );
 
-
-                                            notification.timebankId =
-                                                FlavorConfig.values.timebankId;
+                                notification.timebankId =
+                                    FlavorConfig.values.timebankId;
 
                                 UserModel timebankCreator =
                                     await FirestoreManager.getUserForId(
@@ -384,51 +384,67 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   void _checkFields() {
     if (controller.text.length == 6) {
       var response;
-      var func = (state) =>
-      {
-        if (state == 'no_code')
-          {
-            _showDialog(
-                activityContext: context,
-                mode: TimeBankResponseModes.CODE_EXPIRED,
-                dialogTitle: "Code Expired!",
-                dialogSubTitle:
-                "This ${FlavorConfig.values.timebankName == "Yang 2020"
-                    ? "Yang Gang"
-                    : "Timebank"} code has been expired, please request the admin for a noew one!")
-          }
-        else
-          if (state == 'Invalid')
-            {
-              _showDialog(
-                  activityContext: context,
-                  mode: TimeBankResponseModes.CODE_EXPIRED,
-                  dialogTitle: "Code Expired!",
-                  dialogSubTitle:
-                  "This ${FlavorConfig.values.timebankName == "Yang 2020"
-                      ? "Yang Gang"
-                      : "Timebank"} code has been expired, please request the admin for a noew one!")
-            }
-          else
-            {
-              response = _showDialog(
-                  mode: TimeBankResponseModes.ONBOARDED,
-                  dialogTitle: "Awesome!",
-                  dialogSubTitle:
-                  "You have been onboaded to ${state
-                      .toString()} successfully.\nYou can switch to this ${FlavorConfig
-                      .values.timebankName == "Yang 2020"
-                      ? "Yang Gang"
-                      : "Timebank"}."),
-              response.then((onValue) {
-                print("onboadrd");
-                Navigator.popUntil(
-                    context, ModalRoute.withName(Navigator.defaultRouteName));
-                // Navigator.of(context).pop();
-              })
-            }
-      };
-      createEditCommunityBloc.VerifyTimebankWithCode(controller.text,func);
+      var func = (state) => {
+            if (state == 'no_code')
+              {
+                _showDialog(
+                    activityContext: context,
+                    mode: TimeBankResponseModes.CODE_EXPIRED,
+                    dialogTitle: "Code Expired!",
+                    dialogSubTitle:
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+              }
+            else if (state == 'Invalid')
+              {
+                _showDialog(
+                    activityContext: context,
+                    mode: TimeBankResponseModes.CODE_EXPIRED,
+                    dialogTitle: "Code Expired!",
+                    dialogSubTitle:
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+              }
+            else
+              {
+                response = _showDialog(
+                    mode: TimeBankResponseModes.ONBOARDED,
+                    dialogTitle: "Awesome!",
+                    dialogSubTitle:
+                        "You have been onboaded to ${state.toString()} successfully."),
+                response.then((onValue) async {
+                  print("onboadrd");
+                  // Navigator.popUntil(context, ModalRoute.withName(Navigator.));
+                  // Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
+                  // Navigator.of(context).pop();
+                  // print(SevaCore.of(context).loggedInUser);
+
+                  //widget.communityModel.id
+                  //here is the thing
+
+                  await Firestore.instance
+                      .collection("users")
+                      .document(SevaCore.of(context).loggedInUser.email)
+                      .updateData({
+                    'communities':
+                        FieldValue.arrayUnion([widget.communityModel.id]),
+                    'currentCommunity': widget.communityModel.id
+                  });
+
+                  setState(() {
+                    SevaCore.of(context).loggedInUser.currentCommunity =
+                        widget.communityModel.id;
+                  });
+
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context1) => HomePageRouter(
+                          // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                          ),
+                    ),
+                  );
+                })
+              }
+          };
+      createEditCommunityBloc.VerifyTimebankWithCode(controller.text, func);
     } else {
       if (controller.text.length != 6) {
         setError(errorMessage: "Please enter PIN to verify");
