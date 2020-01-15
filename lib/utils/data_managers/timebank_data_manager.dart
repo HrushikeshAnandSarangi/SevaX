@@ -8,6 +8,7 @@ import 'package:sevaexchange/new_baseline/models/offer_model.dart';
 
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
+import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_listview.dart';
 
@@ -78,24 +79,31 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
 
 /// Get all timebanknew associated with a User as a Stream_umesh
 Future<List<TimebankModel>> getSubTimebanksForUserStream(
-    {@required String communityId}) async {
-
-  List<String> timeBankIdList = [];
+    {@required String communityId,@required String sevaUserId}) async {
+  List<dynamic> timeBankIdList = [];
   List<TimebankModel> timeBankModelList = [];
 
    await Firestore.instance
       .collection('communities')
       .document(communityId)
       .get().then((DocumentSnapshot documentSnaphot){
-        Map<String,dynamic> dataMap = documentSnaphot.data;
-        List timeBankIdList = dataMap["timebanks"];
-        timeBankIdList=List.castFrom(timeBankIdList);
+        Map<String, dynamic> dataMap = documentSnaphot.data;
+        print("hey ${dataMap}");
+        timeBankIdList = dataMap["timebanks"];
   });
    print(timeBankIdList);
   for (int i = 0; i < timeBankIdList.length; i += 1) {
     TimebankModel timeBankModel = await getTimeBankForId(
       timebankId: timeBankIdList[i],
     );
+    /*if(timeBankModel.members.contains(sevaUserId)){
+      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
+    } else if(timeBankModel.admins.contains(sevaUserId)){
+      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
+    }else{
+      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
+    }*/
+
     timeBankModelList.add(timeBankModel);
   }
   return timeBankModelList;

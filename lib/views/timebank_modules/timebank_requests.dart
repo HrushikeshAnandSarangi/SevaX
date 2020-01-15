@@ -9,6 +9,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -33,7 +34,7 @@ class RequestsModule extends StatefulWidget {
 
 class RequestsState extends State<RequestsModule> {
   String timebankId;
-
+  UserModel loggedInUser;
   _setORValue() {
     globals.orCreateSelector = 0;
   }
@@ -61,226 +62,253 @@ class RequestsState extends State<RequestsModule> {
   @override
   Widget build(BuildContext context) {
     _setORValue();
-    return Container(
-      margin: EdgeInsets.only(left: 0, right: 0, top: 10),
-      child: Column(
-        children: <Widget>[
-          Offstage(
-            offstage: false,
-            child: Row(
-              // crossAxisAlignment: CrossAxisAlignment.end,
-              // mainAxisAlignment: MainAxisAlignment.,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
-                  // width: double.,
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'My Requests',
-                        // FlavorConfig.values.timebankTitle,
-                        style: (TextStyle(fontWeight: FontWeight.w500)),
-                      ),
-                      GestureDetector(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 10,
-                            child: Image.asset("lib/assets/images/add.png"),
+    return StreamBuilder<UserModelController>(
+        stream: userBloc.getLoggedInUser,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.data != null) {
+            loggedInUser = snapshot.data.loggedinuser;
+            return Container(
+              margin: EdgeInsets.only(left: 0, right: 0, top: 10),
+              child: Column(
+                children: <Widget>[
+                  Offstage(
+                    offstage: false,
+                    child: Row(
+                      // crossAxisAlignment: CrossAxisAlignment.end,
+                      // mainAxisAlignment: MainAxisAlignment.,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: 10, bottom: 10, left: 10),
+                          // width: double.,
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                'My Requests',
+                                // FlavorConfig.values.timebankTitle,
+                                style: (TextStyle(fontWeight: FontWeight.w500)),
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 10,
+                                    child: Image.asset(
+                                        "lib/assets/images/add.png"),
+                                  ),
+                                ),
+                                onTap: () {
+                                  //Create a new request
+                                  if (widget.timebankModel.protected) {
+                                    //show dialog its a protcted timebank
+                                    _showProtectedTimebankMessage();
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateRequest(
+                                              timebankId: timebankId,
+                                            ),
+                                      ),
+                                    );
+                                  }
+
+                                  print("Create a new request");
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                        onTap: () {
-                          //Create a new request
-                          if (widget.timebankModel.protected) {
-                            //show dialog its a protcted timebank
-                            _showProtectedTimebankMessage();
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateRequest(
-                                  timebankId: timebankId,
-                                ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                        ),
+                        Offstage(
+                          offstage: true,
+                          child: StreamBuilder<Object>(
+                              stream: FirestoreManager
+                                  .getTimebanksForUserStream(
+                                userId: loggedInUser
+                                    .sevaUserID,
                               ),
-                            );
-                          }
-
-                          print("Create a new request");
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10),
-                ),
-                Offstage(
-                  offstage: true,
-                  child: StreamBuilder<Object>(
-                      stream: FirestoreManager.getTimebanksForUserStream(
-                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError)
-                          return new Text('Error: ${snapshot.error}');
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                        timebankList = snapshot.data;
-                        List<String> dropdownList = [];
-
-                        int adminOfCount = 0;
-                        if (FlavorConfig.values.timebankName == "Yang 2020") {
-                          dropdownList.add("Create Yang Gang");
-                        }
-                        timebankList.forEach((t) {
-                          dropdownList.add(t.id);
-
-                          if (t.admins.contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID)) {
-                            adminOfCount++;
-
-                            SevaCore.of(context)
-                                .loggedInUser
-                                .timebankIdForYangGangAdmin = t.id;
-                          }
-                        });
-
-                        SevaCore.of(context)
-                            .loggedInUser
-                            .associatedWithTimebanks = dropdownList.length;
-                        SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                            adminOfCount;
-
-                        return Expanded(
-                          child: DropdownButton<String>(
-                            value: timebankId,
-                            onChanged: (String newValue) {
-                              if (newValue == "Create Yang Gang") {
-                                {
-                                  this.createSubTimebank(context);
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError)
+                                  return new Text('Error: ${snapshot.error}');
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
                                 }
-                              } else {
+                                timebankList = snapshot.data;
+                                List<String> dropdownList = [];
+
+                                int adminOfCount = 0;
+                                if (FlavorConfig.values.timebankName ==
+                                    "Yang 2020") {
+                                  dropdownList.add("Create Yang Gang");
+                                }
+                                timebankList.forEach((t) {
+                                  dropdownList.add(t.id);
+
+                                  if (t.admins.contains(
+                                      loggedInUser
+                                          .sevaUserID)) {
+                                    adminOfCount++;
+
+                                    loggedInUser
+                                        .timebankIdForYangGangAdmin = t.id;
+                                  }
+                                });
+
+                                loggedInUser
+                                    .associatedWithTimebanks =
+                                    dropdownList.length;
+                                loggedInUser
+                                    .adminOfYanagGangs =
+                                    adminOfCount;
+
+                                return Expanded(
+                                  child: DropdownButton<String>(
+                                    value: timebankId,
+                                    onChanged: (String newValue) {
+                                      if (newValue == "Create Yang Gang") {
+                                        {
+                                          this.createSubTimebank(context);
+                                        }
+                                      } else {
+                                        setState(() {
+                                          loggedInUser
+                                              .currentTimebank = newValue;
+                                          timebankId = newValue;
+                                        });
+                                      }
+                                    },
+                                    items: dropdownList
+                                        .map<DropdownMenuItem<String>>((
+                                        String value) {
+                                      if (value == "Create Yang Gang") {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        );
+                                      } else {
+                                        if (value == 'All') {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        } else {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: FutureBuilder<Object>(
+                                                future:
+                                                FirestoreManager
+                                                    .getTimeBankForId(
+                                                    timebankId: value),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasError)
+                                                    return new Text(
+                                                        'Error: ${snapshot
+                                                            .error}');
+                                                  if (snapshot
+                                                      .connectionState ==
+                                                      ConnectionState.waiting) {
+                                                    return Offstage();
+                                                  }
+                                                  TimebankModel timebankModel =
+                                                      snapshot.data;
+                                                  return Text(
+                                                    timebankModel.name,
+                                                    style: TextStyle(
+                                                        fontSize: 15.0),
+                                                  );
+                                                }),
+                                          );
+                                        }
+                                      }
+                                    }).toList(),
+                                  ),
+                                );
+                              }),
+                        ),
+                        Expanded(
+                          child: Container(),
+                        ),
+                        Container(
+                          width: 120,
+                          child: CupertinoSegmentedControl<int>(
+                            selectedColor: Color.fromARGB(255, 4, 47, 110),
+                            children: logoWidgets,
+
+                            padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                            //selectedColor: Colors.deepOrange,
+                            groupValue: sharedValue,
+                            onValueChanged: (int val) {
+                              print(val);
+                              if (val != sharedValue) {
                                 setState(() {
-                                  SevaCore.of(context)
-                                      .loggedInUser
-                                      .currentTimebank = newValue;
-                                  timebankId = newValue;
+                                  if (isNearme == true)
+                                    isNearme = false;
+                                  else
+                                    isNearme = true;
+                                });
+                                setState(() {
+                                  sharedValue = val;
                                 });
                               }
                             },
-                            items: dropdownList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              if (value == "Create Yang Gang") {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                );
-                              } else {
-                                if (value == 'All') {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                } else {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: FutureBuilder<Object>(
-                                        future:
-                                            FirestoreManager.getTimeBankForId(
-                                                timebankId: value),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasError)
-                                            return new Text(
-                                                'Error: ${snapshot.error}');
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return Offstage();
-                                          }
-                                          TimebankModel timebankModel =
-                                              snapshot.data;
-                                          return Text(
-                                            timebankModel.name,
-                                            style: TextStyle(fontSize: 15.0),
-                                          );
-                                        }),
-                                  );
-                                }
-                              }
-                            }).toList(),
+                            //groupValue: sharedValue,
                           ),
-                        );
-                      }),
-                ),
-                Expanded(
-                  child: Container(),
-                ),
-                Container(
-                  width: 120,
-                  child: CupertinoSegmentedControl<int>(
-                    selectedColor: Color.fromARGB(255, 4, 47, 110),
-                    children: logoWidgets,
-
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    //selectedColor: Colors.deepOrange,
-                    groupValue: sharedValue,
-                    onValueChanged: (int val) {
-                      print(val);
-                      if (val != sharedValue) {
-                        setState(() {
-                          if (isNearme == true)
-                            isNearme = false;
-                          else
-                            isNearme = true;
-                        });
-                        setState(() {
-                          sharedValue = val;
-                        });
-                      }
-                    },
-                    //groupValue: sharedValue,
+                        ),
+                        //  RaisedButton(
+                        //    onPressed: () {
+                        //      setState(() {
+                        //        if (isNearme == true)
+                        //          isNearme = false;
+                        //        else
+                        //          isNearme = true;
+                        //      });
+                        //    },
+                        //    child: isNearme == false ? Text('Near Me') : Text('All'),
+                        //    color: Theme.of(context).accentColor,
+                        //    textColor: Colors.white,
+                        //  ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 5),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                //  RaisedButton(
-                //    onPressed: () {
-                //      setState(() {
-                //        if (isNearme == true)
-                //          isNearme = false;
-                //        else
-                //          isNearme = true;
-                //      });
-                //    },
-                //    child: isNearme == false ? Text('Near Me') : Text('All'),
-                //    color: Theme.of(context).accentColor,
-                //    textColor: Colors.white,
-                //  ),
-                Padding(
-                  padding: EdgeInsets.only(right: 5),
-                ),
-              ],
-            ),
-          ),
-          Divider(
-            color: Colors.white,
-            height: 0,
-          ),
-          isNearme == true
-              ? NearRequestListItems(
-                  parentContext: context,
-                  timebankId: timebankId,
-                )
-              : RequestListItems(
-                  parentContext: context,
-                  timebankId: timebankId,
-                )
-        ],
-      ),
+                  Divider(
+                    color: Colors.white,
+                    height: 0,
+                  ),
+                  isNearme == true
+                      ? NearRequestListItems(
+                    parentContext: context,
+                    timebankId: timebankId,
+                    loggedInUser : snapshot.data.loggedinuser
+                  )
+                      : RequestListItems(
+                    parentContext: context,
+                    timebankId: timebankId,
+                      loggedInUser: snapshot.data.loggedinuser
+                  )
+                ],
+              ),
+            );
+          }
+          return Text('');
+        }
     );
   }
 
@@ -332,37 +360,48 @@ class RequestCardView extends StatefulWidget {
 }
 
 class _RequestCardViewState extends State<RequestCardView> {
+  UserModel loggedInUser;
   void _acceptRequest() {
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
-    acceptorList.add(SevaCore.of(context).loggedInUser.email);
+    acceptorList.add(loggedInUser.email);
     widget.requestItem.acceptors = acceptorList.toList();
     FirestoreManager.acceptRequest(
       requestModel: widget.requestItem,
-      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      senderUserId: loggedInUser.sevaUserID,
+      communityId: loggedInUser.currentCommunity,
     );
   }
 
   void _withdrawRequest() {
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
-    acceptorList.remove(SevaCore.of(context).loggedInUser.email);
+    acceptorList.remove(loggedInUser.email);
     widget.requestItem.acceptors = acceptorList.toList();
     FirestoreManager.acceptRequest(
       requestModel: widget.requestItem,
-      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      senderUserId: loggedInUser.sevaUserID,
       isWithdrawal: true,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      communityId: loggedInUser.currentCommunity,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          widget.requestItem.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID
-              ? IconButton(
+    return StreamBuilder<UserModelController>(
+    stream: userBloc.getLoggedInUser,
+    builder: (context, snapshot) {
+      print(snapshot.data);
+      if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (snapshot.data != null) {
+        loggedInUser = snapshot.data.loggedinuser;
+        return Scaffold(
+            appBar: AppBar(
+              actions: <Widget>[
+                widget.requestItem.sevaUserId ==
+                    loggedInUser.sevaUserID
+                    ? IconButton(
                   icon: Icon(
                     Icons.edit,
                     color: Colors.white,
@@ -373,18 +412,18 @@ class _RequestCardViewState extends State<RequestCardView> {
                       MaterialPageRoute(
                         builder: (context) => EditRequest(
                           timebankId:
-                              SevaCore.of(context).loggedInUser.currentTimebank,
+                          loggedInUser.currentTimebank,
                           requestModel: widget.requestItem,
                         ),
                       ),
                     );
                   },
                 )
-              : Offstage(),
-          widget.requestItem.sevaUserId ==
-                      SevaCore.of(context).loggedInUser.sevaUserID &&
-                  widget.requestItem.acceptors.length == 0
-              ? IconButton(
+                    : Offstage(),
+                widget.requestItem.sevaUserId ==
+                    loggedInUser.sevaUserID &&
+                    widget.requestItem.acceptors.length == 0
+                    ? IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
                     showDialog(
@@ -424,180 +463,183 @@ class _RequestCardViewState extends State<RequestCardView> {
                         });
                   },
                 )
-              : Offstage()
-        ],
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          widget.requestItem.title,
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: FutureBuilder<Object>(
-          future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            UserModel userModel = snapshot.data;
-            String usertimezone = userModel.timezone;
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(),
-                child: Container(
-                  padding: EdgeInsets.all(10.0),
+                    : Offstage()
+              ],
+              iconTheme: IconThemeData(color: Colors.white),
+              backgroundColor: Theme.of(context).primaryColor,
+              title: Text(
+                widget.requestItem.title,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            body: FutureBuilder<Object>(
+            future: FirestoreManager.getUserForId(
+                sevaUserId: loggedInUser.sevaUserID),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return new Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              UserModel userModel = snapshot.data;
+              String usertimezone = userModel.timezone;
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(),
                   child: Container(
                     padding: EdgeInsets.all(10.0),
-                    color: widget.requestItem.color,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child: Text(
-                            widget.requestItem.title,
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          child: RichTextView(
-                              text: widget.requestItem.description),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child: Text(
-                            'From:  ' +
-                                DateFormat('MMMM dd, yyyy @ h:mm a').format(
-                                  getDateTimeAccToUserTimezone(
-                                      dateTime:
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              widget.requestItem.requestStart),
-                                      timezoneAbb: usertimezone),
-                                ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child: Text(
-                            'Until:  ' +
-                                DateFormat('MMMM dd, yyyy @ h:mm a').format(
-                                  getDateTimeAccToUserTimezone(
-                                      dateTime:
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              widget.requestItem.requestEnd),
-                                      timezoneAbb: usertimezone),
-                                ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child:
-                              Text('Posted By: ' + widget.requestItem.fullName),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child: Text(
-                            'PostDate:  ' +
-                                DateFormat('MMMM dd, yyyy @ h:mm a').format(
-                                  getDateTimeAccToUserTimezone(
-                                      dateTime:
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              widget.requestItem.postTimestamp),
-                                      timezoneAbb: usertimezone),
-                                ),
-                          ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          alignment: Alignment(-1.0, 0.0),
-                          child: Text('Number of volunteers required: ' +
-                              '${widget.requestItem.numberOfApprovals}'),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(' '),
-                        ),
-                        Container(
-                          padding: EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            color: Theme.of(context).accentColor,
-                            onPressed: widget.requestItem.sevaUserId ==
-                                    SevaCore.of(context).loggedInUser.sevaUserID
-                                ? null
-                                : () {
-                                    widget.requestItem.acceptors.contains(
-                                            SevaCore.of(context)
-                                                .loggedInUser
-                                                .email)
-                                        ? _withdrawRequest()
-                                        : _acceptRequest();
-                                    Navigator.pop(context);
-                                  },
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      color: widget.requestItem.color,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            alignment: Alignment(-1.0, 0.0),
                             child: Text(
-                              widget.requestItem.acceptors.contains(
-                                      SevaCore.of(context).loggedInUser.email)
-                                  ? 'Withdraw Request'
-                                  : 'Accept Request',
+                              widget.requestItem.title,
                               style: TextStyle(
-                                color: FlavorConfig.values.buttonTextColor,
+                                  fontSize: 18.0, fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            child: RichTextView(
+                                text: widget.requestItem.description),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            alignment: Alignment(-1.0, 0.0),
+                            child: Text(
+                              'From:  ' +
+                                  DateFormat('MMMM dd, yyyy @ h:mm a').format(
+                                    getDateTimeAccToUserTimezone(
+                                        dateTime:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            widget.requestItem.requestStart),
+                                        timezoneAbb: usertimezone),
+                                  ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            alignment: Alignment(-1.0, 0.0),
+                            child: Text(
+                              'Until:  ' +
+                                  DateFormat('MMMM dd, yyyy @ h:mm a').format(
+                                    getDateTimeAccToUserTimezone(
+                                        dateTime:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            widget.requestItem.requestEnd),
+                                        timezoneAbb: usertimezone),
+                                  ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            alignment: Alignment(-1.0, 0.0),
+                            child:
+                            Text('Posted By: ' + widget.requestItem.fullName),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            alignment: Alignment(-1.0, 0.0),
+                            child: Text(
+                              'PostDate:  ' +
+                                  DateFormat('MMMM dd, yyyy @ h:mm a').format(
+                                    getDateTimeAccToUserTimezone(
+                                        dateTime:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            widget.requestItem.postTimestamp),
+                                        timezoneAbb: usertimezone),
+                                  ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            alignment: Alignment(-1.0, 0.0),
+                            child: Text('Number of volunteers required: ' +
+                                '${widget.requestItem.numberOfApprovals}'),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(' '),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(8.0),
+                            child: RaisedButton(
+                              color: Theme.of(context).accentColor,
+                              onPressed: widget.requestItem.sevaUserId ==
+                                  loggedInUser.sevaUserID
+                                  ? null
+                                  : () {
+                                widget.requestItem.acceptors.contains(
+                                   loggedInUser
+                                        .email)
+                                    ? _withdrawRequest()
+                                    : _acceptRequest();
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                widget.requestItem.acceptors.contains(
+                                    loggedInUser.email)
+                                    ? 'Withdraw Request'
+                                    : 'Accept Request',
+                                style: TextStyle(
+                                  color: FlavorConfig.values.buttonTextColor,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        widget.requestItem.sevaUserId !=
-                                SevaCore.of(context).loggedInUser.sevaUserID
-                            ? Offstage()
-                            : Container(
-                                padding: EdgeInsets.all(8.0),
-                                child: RaisedButton(
-                                  color: Theme.of(context).accentColor,
-                                  onPressed: widget.requestItem.approvedUsers
-                                              .length <
-                                          1
-                                      ? null
-                                      : () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        RequestStatusView(
-                                                          requestId: widget
-                                                              .requestItem.id,
-                                                        ),
-                                                fullscreenDialog: true),
-                                          );
-                                        },
-                                  child: Text(
-                                    widget.requestItem.approvedUsers.length < 1
-                                        ? 'No Approved members yet'
-                                        : 'View Approved Members',
-                                    style: TextStyle(
-                                      color:
-                                          FlavorConfig.values.buttonTextColor,
-                                    ),
-                                  ),
+                          widget.requestItem.sevaUserId !=
+                              loggedInUser.sevaUserID
+                              ? Offstage()
+                              : Container(
+                            padding: EdgeInsets.all(8.0),
+                            child: RaisedButton(
+                              color: Theme.of(context).accentColor,
+                              onPressed: widget.requestItem.approvedUsers
+                                  .length <
+                                  1
+                                  ? null
+                                  : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder:
+                                          (BuildContext context) =>
+                                          RequestStatusView(
+                                            requestId: widget
+                                                .requestItem.id,
+                                          ),
+                                      fullscreenDialog: true),
+                                );
+                              },
+                              child: Text(
+                                widget.requestItem.approvedUsers.length < 1
+                                    ? 'No Approved members yet'
+                                    : 'View Approved Members',
+                                style: TextStyle(
+                                  color:
+                                  FlavorConfig.values.buttonTextColor,
                                 ),
                               ),
-                      ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }),
-    );
+              );
+            }
+      )
+        );
+    }
+      return Text("");
+    });
   }
 
   Future<void> deleteRequest({
@@ -615,16 +657,18 @@ class _RequestCardViewState extends State<RequestCardView> {
 class NearRequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+  final UserModel loggedInUser;
 
-  const NearRequestListItems({Key key, this.timebankId, this.parentContext})
+  const NearRequestListItems({Key key, this.timebankId, this.parentContext,  this.loggedInUser})
       : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
     if (timebankId != 'All') {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+              sevaUserId: loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -640,9 +684,11 @@ class NearRequestListItems extends StatelessWidget {
                 timebankId: timebankId,
               ),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+                  AsyncSnapshot<
+                      List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
+                  return new Text(
+                      'Error: ${requestListSnapshot.error}');
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
@@ -652,7 +698,8 @@ class NearRequestListItems extends StatelessWidget {
                         requestListSnapshot.data;
 
                     requestModelList = filterBlockedRequestsContent(
-                        context: context, requestModelList: requestModelList);
+                        context: context,
+                        requestModelList: requestModelList);
 
                     if (requestModelList.length == 0) {
                       return Padding(
@@ -680,19 +727,19 @@ class NearRequestListItems extends StatelessWidget {
                       ),
                     );
 
-                  // Expanded(
-                  //   child: Container(
-                  //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  //     child: ListView(
-                  //       children: requestModelList.map(
-                  //         (RequestModel requestModel) {
-                  //           return getRequestView(
-                  //               requestModel, loggedintimezone);
-                  //         },
-                  //       ).toList(),
-                  //     ),
-                  //   ),
-                  // );
+                // Expanded(
+                //   child: Container(
+                //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                //     child: ListView(
+                //       children: requestModelList.map(
+                //         (RequestModel requestModel) {
+                //           return getRequestView(
+                //               requestModel, loggedintimezone);
+                //         },
+                //       ).toList(),
+                //     ),
+                //   ),
+                // );
                 }
               },
             );
@@ -700,7 +747,7 @@ class NearRequestListItems extends StatelessWidget {
     } else {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+              sevaUserId: loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -714,21 +761,24 @@ class NearRequestListItems extends StatelessWidget {
             return StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getNearRequestListStream(),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+                  AsyncSnapshot<
+                      List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
+                  return new Text(
+                      'Error: ${requestListSnapshot.error}');
                 }
                 switch (requestListSnapshot.connectionState) {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
-                  //filter
+                //filter
 
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
 
                     requestModelList = filterBlockedRequestsContent(
-                        context: context, requestModelList: requestModelList);
+                        context: context,
+                        requestModelList: requestModelList);
 
                     if (requestModelList.length == 0) {
                       return Padding(
@@ -739,12 +789,14 @@ class NearRequestListItems extends StatelessWidget {
 
                     return Expanded(
                       child: Container(
-                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                        padding: EdgeInsets.only(
+                            left: 15.0, right: 15.0),
                         child: ListView(
                           children: requestModelList.map(
-                            (RequestModel requestModel) {
+                                (RequestModel requestModel) {
                               return getRequestView(
-                                  requestModel, loggedintimezone, context);
+                                  requestModel, loggedintimezone,
+                                  context);
                             },
                           ).toList(),
                         ),
@@ -757,16 +809,15 @@ class NearRequestListItems extends StatelessWidget {
     }
   }
 
+
   List<RequestModel> filterBlockedRequestsContent(
       {List<RequestModel> requestModelList, BuildContext context}) {
     List<RequestModel> filteredList = [];
 
-    requestModelList.forEach((request) => SevaCore.of(context)
-                .loggedInUser
+    requestModelList.forEach((request) => loggedInUser
                 .blockedMembers
                 .contains(request.sevaUserId) ||
-            SevaCore.of(context)
-                .loggedInUser
+           loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
         ? "Filtering blocked content"
@@ -876,8 +927,9 @@ class NearRequestListItems extends StatelessWidget {
 class RequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+  final UserModel loggedInUser;
 
-  const RequestListItems({Key key, this.timebankId, this.parentContext})
+  const RequestListItems({Key key, this.timebankId, this.parentContext, this.loggedInUser})
       : super(key: key);
 
   @override
@@ -885,7 +937,7 @@ class RequestListItems extends StatelessWidget {
     if (timebankId != 'All') {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+              sevaUserId: loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -922,14 +974,14 @@ class RequestListItems extends StatelessWidget {
                     }
 
                     var consolidatedList =
-                        GroupRequestCommons.groupAndConsolidateRequests(
-                            requestModelList,
-                            SevaCore.of(context).loggedInUser.sevaUserID);
+                    GroupRequestCommons.groupAndConsolidateRequests(
+                        requestModelList,
+                        loggedInUser.sevaUserID);
 
                     return formatListFrom(
                         consolidatedList: consolidatedList,
                         loggedintimezone: loggedintimezone,
-                        userEmail: SevaCore.of(context).loggedInUser.email);
+                        userEmail: loggedInUser.email);
                 }
               },
             );
@@ -937,7 +989,7 @@ class RequestListItems extends StatelessWidget {
     } else {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+              sevaUserId:  loggedInUser.sevaUserID),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return new Text('Error: ${snapshot.error}');
@@ -972,9 +1024,9 @@ class RequestListItems extends StatelessWidget {
                       );
                     }
                     var consolidatedList =
-                        GroupRequestCommons.groupAndConsolidateRequests(
-                            requestModelList,
-                            SevaCore.of(context).loggedInUser.sevaUserID);
+                    GroupRequestCommons.groupAndConsolidateRequests(
+                        requestModelList,
+                        loggedInUser.sevaUserID);
                     return formatListFrom(consolidatedList: consolidatedList);
                 }
               },
@@ -989,12 +1041,10 @@ class RequestListItems extends StatelessWidget {
   }) {
     List<RequestModel> filteredList = [];
 
-    requestModelList.forEach((request) => SevaCore.of(context)
-                .loggedInUser
+    requestModelList.forEach((request) => loggedInUser
                 .blockedMembers
                 .contains(request.sevaUserId) ||
-            SevaCore.of(context)
-                .loggedInUser
+            loggedInUser
                 .blockedBy
                 .contains(request.sevaUserId)
         ? "Filtering blocked content"
