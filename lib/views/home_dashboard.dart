@@ -14,8 +14,7 @@ import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class HomeDashBoard extends StatelessWidget {
-  final String communityId;
-  HomeDashBoard(this.communityId);
+  HomeDashBoard();
 
   // This widget is the root of your application.
   @override
