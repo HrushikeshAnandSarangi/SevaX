@@ -62,6 +62,7 @@ class RequestEditForm extends StatefulWidget {
   final OfferModel offer;
   final String timebankId;
   RequestModel requestModel;
+
   RequestEditForm(
       {this.isOfferRequest, this.offer, this.timebankId, this.requestModel});
 
@@ -86,6 +87,13 @@ class RequestEditFormState extends State<RequestEditForm> {
   String selectedAddress;
 
   String _selectedTimebankId;
+
+  TextStyle hintTextStyle = TextStyle(
+    fontSize: 14,
+    // fontWeight: FontWeight.bold,
+    color: Colors.grey,
+    fontFamily: 'Europa',
+  );
 
   @override
   void initState() {
@@ -128,16 +136,24 @@ class RequestEditFormState extends State<RequestEditForm> {
     return Form(
       key: _formKey,
       child: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(30.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Text(
+                'Campign request title',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.grey,
+                ),
+              ),
               TextFormField(
-                decoration: InputDecoration(hintText: 'Campign request title'),
+                // decoration: InputDecoration(hintText: 'Campign request title'),
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.sentences,
-                style: textStyle,
                 initialValue: widget.requestModel.title,
                 onChanged: (value) {
                   widget.requestModel.title = value;
@@ -262,23 +278,24 @@ class RequestEditFormState extends State<RequestEditForm> {
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
+              Text(
+                'Campign request description',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.grey,
+                ),
+              ),
               TextFormField(
                 initialValue: widget.requestModel.description,
                 decoration: InputDecoration(
-                  hintText: 'Your Campign Request and any #hashtags',
-                  labelText: 'Campign request description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
+                  hintText: 'Your Campign Request \nand any #hashtags',
+                  hintStyle: hintTextStyle,
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLines: 10,
+                maxLines: 4,
+                maxLength: 500,
                 onChanged: (value) {
                   widget.requestModel.description = value;
                 },
@@ -292,20 +309,30 @@ class RequestEditFormState extends State<RequestEditForm> {
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
+              Text(
+                'No. of volunteers',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.grey,
+                ),
+              ),
               TextFormField(
                 initialValue: "${widget.requestModel.numberOfApprovals}",
                 decoration: InputDecoration(
                   hintText: 'No. of approvals',
-                  labelText: 'No. of volunteers',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
+                  hintStyle: hintTextStyle,
+
+                  // border: OutlineInputBorder(
+                  //   borderRadius: const BorderRadius.all(
+                  //     const Radius.circular(20.0),
+                  //   ),
+                  //   borderSide: new BorderSide(
+                  //     color: Colors.black,
+                  //     width: 1.0,
+                  //   ),
+                  // ),
                 ),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
@@ -320,13 +347,19 @@ class RequestEditFormState extends State<RequestEditForm> {
               ),
 //              if (FlavorConfig.appFlavor != Flavor.APP)
               //addVolunteersForAdmin(),
+              SizedBox(height: 20),
               Center(
                 child: FlatButton.icon(
                   icon: Icon(Icons.add_location),
-                  label: Text(
-                    selectedAddress == null || selectedAddress.isEmpty
-                        ? '${this._getLocation()}'
-                        : selectedAddress,
+                  label: SizedBox(
+                    width: MediaQuery.of(context).size.width - 160,
+                    child: Text(
+                      selectedAddress == null || selectedAddress.isEmpty
+                          ? '${this._getLocation()}'
+                          : selectedAddress,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   color: Colors.grey[200],
                   onPressed: () {
@@ -346,30 +379,33 @@ class RequestEditFormState extends State<RequestEditForm> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: Center(
-                  child: RaisedButton(
-                    shape: StadiumBorder(),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () async {
-                      if (location != null) {
-                        widget.requestModel.requestStart =
-                            OfferDurationWidgetState.starttimestamp;
-                        widget.requestModel.requestEnd =
-                            OfferDurationWidgetState.endtimestamp;
-                        widget.requestModel.location = location;
+                  child: Container(
+                    width: 250,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: StadiumBorder(),
+                      color: Theme.of(context).accentColor,
+                      onPressed: () async {
+                        if (location != null) {
+                          widget.requestModel.requestStart =
+                              OfferDurationWidgetState.starttimestamp;
+                          widget.requestModel.requestEnd =
+                              OfferDurationWidgetState.endtimestamp;
+                          widget.requestModel.location = location;
 
-                        //adding some members for humanity first
+                          //adding some members for humanity first
 //                        List<String> arrayOfSelectedMembers = List();
 //                        selectedUsers
 //                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
 //                        requestModel.approvedUsers = arrayOfSelectedMembers;
-                        print(widget.requestModel.toMap());
-                        //adding some members for humanity first
+                          print(widget.requestModel.toMap());
+                          //adding some members for humanity first
 
-                        if (_formKey.currentState.validate()) {
-                          await this
-                              .updateRequest(requestModel: widget.requestModel);
+                          if (_formKey.currentState.validate()) {
+                            await this.updateRequest(
+                                requestModel: widget.requestModel);
 
 //                          if (widget.isOfferRequest == true) {
 //                            OfferModel offer = widget.offer;
@@ -389,34 +425,98 @@ class RequestEditFormState extends State<RequestEditForm> {
 //                            Navigator.pop(context);
 //                            Navigator.pop(context);
 //                          }
-                          Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('Location not added'),
+                          ));
                         }
-                      } else {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('Location not added'),
-                        ));
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.attachment,
-                          size: 24.0,
+                      },
+                      child: Text(
+                        "Update Campign Request".padLeft(10).padRight(10),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
                           color: FlavorConfig.values.buttonTextColor,
                         ),
-                        Text(' '),
-                        Text(
-                          'Update Campign Request',
-                          style: TextStyle(
-                            color: FlavorConfig.values.buttonTextColor,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
               ),
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(vertical: 16.0),
+//                 child: Center(
+//                   child: RaisedButton(
+//                     shape: StadiumBorder(),
+//                     color: Theme.of(context).accentColor,
+//                     onPressed: () async {
+//                       if (location != null) {
+//                         widget.requestModel.requestStart =
+//                             OfferDurationWidgetState.starttimestamp;
+//                         widget.requestModel.requestEnd =
+//                             OfferDurationWidgetState.endtimestamp;
+//                         widget.requestModel.location = location;
+
+//                         //adding some members for humanity first
+// //                        List<String> arrayOfSelectedMembers = List();
+// //                        selectedUsers
+// //                            .forEach((k, v) => arrayOfSelectedMembers.add(k));
+// //                        requestModel.approvedUsers = arrayOfSelectedMembers;
+//                         print(widget.requestModel.toMap());
+//                         //adding some members for humanity first
+
+//                         if (_formKey.currentState.validate()) {
+//                           await this
+//                               .updateRequest(requestModel: widget.requestModel);
+
+// //                          if (widget.isOfferRequest == true) {
+// //                            OfferModel offer = widget.offer;
+// //
+// //                            Set<String> offerRequestList = () {
+// //                              if (offer.requestList == null) return [];
+// //                              return offer.requestList;
+// //                            }()
+// //                                .toSet();
+// //                            offerRequestList.add(requestModel.id);
+// //                            offer.requestList = offerRequestList.toList();
+// //                            FirestoreManager.updateOfferWithRequest(
+// //                                offer: offer);
+// //                            sendOfferRequest(
+// //                                offerModel: widget.offer,
+// //                                requestSevaID: requestModel.sevaUserId);
+// //                            Navigator.pop(context);
+// //                            Navigator.pop(context);
+// //                          }
+//                           Navigator.pop(context);
+//                         }
+//                       } else {
+//                         Scaffold.of(context).showSnackBar(SnackBar(
+//                           content: Text('Location not added'),
+//                         ));
+//                       }
+//                     },
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: <Widget>[
+//                         Icon(
+//                           Icons.attachment,
+//                           size: 24.0,
+//                           color: FlavorConfig.values.buttonTextColor,
+//                         ),
+//                         Text(' '),
+//                         Text(
+//                           'Update Campign Request',
+//                           style: TextStyle(
+//                             color: FlavorConfig.values.buttonTextColor,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
             ],
           ),
         ),
