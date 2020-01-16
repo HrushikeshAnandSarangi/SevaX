@@ -125,6 +125,7 @@ class RequestsState extends State<RequestsModule> {
                             SevaCore.of(context).loggedInUser.currentCommunity,
                       ),
                       builder: (context, snapshot) {
+
                         if (snapshot.hasError)
                           return new Text('Error: ${snapshot.error}');
                         if (snapshot.connectionState ==
@@ -294,7 +295,7 @@ class RequestsState extends State<RequestsModule> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Protected Timebank"),
-          content: new Text("You cannot post requests in a protcted timebank"),
+          content: new Text("You cannot post requests in a protected timebank"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 
 import 'package:sevaexchange/models/models.dart';
 //import 'package:sevaexchange/models/transaction_model.dart';
@@ -112,6 +113,11 @@ class _CompletedListState extends State<CompletedList> {
                   return CircleAvatar();
                 }
                 UserModel user = snapshot.data;
+                if(user==null){
+                  return CircleAvatar(
+                    backgroundImage: NetworkImage(defaultUserImageURL),
+                  );
+                }
                 return CircleAvatar(
                   backgroundImage: NetworkImage(user.photoURL),
                 );
@@ -151,6 +157,9 @@ class _CompletedListState extends State<CompletedList> {
                   return Text('');
                 }
                 UserModel user = snapshot.data;
+                if(user==null){
+                  return Text('');
+                }
                 return Text('${user.fullname}');
               },
             ),

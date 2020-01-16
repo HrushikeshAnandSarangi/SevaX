@@ -99,9 +99,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                             child: FloatingActionButton(
                               child: Icon(
                                 Icons.camera_alt,
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: Colors.white,
                               onPressed: () {
                                 imagePicker.showDialog(context);
                                 isLoading = false;

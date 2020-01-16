@@ -83,9 +83,9 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
                 alignLabelWithHint: true,
                 isDense: true,
                 enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white)),
+                    borderSide: BorderSide(color: Colors.black)),
                 hintText: 'Search members',
-                hintStyle: TextStyle(color: Colors.white)),
+                hintStyle: TextStyle(color: Colors.black)),
             // controller: searchTextController,
           ),
         ),

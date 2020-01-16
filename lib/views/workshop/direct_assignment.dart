@@ -84,6 +84,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     }
     var finalWidget = Scaffold(
       appBar: AppBar(
+        iconTheme:  IconThemeData(
+          color: Colors.white
+        ),
         title: Text(
           "Select volunteers",
           style: TextStyle(color: Colors.black),

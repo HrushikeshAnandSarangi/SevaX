@@ -9,6 +9,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
@@ -580,11 +581,7 @@ class _SplashViewState extends State<SplashView> {
 //       await _navigateToWaitingView(loggedInUser);
 //     }
   }
-  Future _timeBankPage(TimebankModel model, UserModel loggedInUser) async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => TimebankTabsViewHolder.of(timebankId: model.id,timebankModel: model),
-    ));
-  }
+
   Future<UserModel> _getSignedInUserDocs(String userId) async {
     UserModel userModel = await fireStoreManager.getUserForId(
       sevaUserId: userId,
