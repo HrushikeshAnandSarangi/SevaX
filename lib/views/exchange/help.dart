@@ -126,6 +126,8 @@ class RequestsState extends State<Requests> {
               StreamBuilder<Object>(
                   stream: FirestoreManager.getTimebanksForUserStream(
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
                   ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError)
@@ -627,6 +629,8 @@ class OffersState extends State<Offers> {
               StreamBuilder<List<TimebankModel>>(
                   stream: FirestoreManager.getTimebanksForUserStream(
                     userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
                   ),
                   builder: (context, snapshot) {
                     if (snapshot.hasError)

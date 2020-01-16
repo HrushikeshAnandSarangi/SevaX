@@ -99,6 +99,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     print("Final arrray $members");
 
     timebankModel.id = Utils.getUuid();
+    timebankModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
     timebankModel.photoUrl = globals.timebankAvatarURL;
     timebankModel.createdAt = timestamp;
@@ -142,7 +143,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
             child: Text(
-              'Timebank is where you can create requests and get offers with in your team.',
+              'Timebank is where you can create requests and get offers with in your timebank.',
               textAlign: TextAlign.center,
             ),
           ),
@@ -164,7 +165,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 ),
               )
           ),
-          headingText('Name your timbank'),
+          headingText('Name your timebank'),
           TextFormField(
             decoration: InputDecoration(
               hintText: "Ex: Pets-in-town, Citizen collab",
@@ -181,7 +182,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           headingText('About'),
           TextFormField(
             decoration: InputDecoration(
-              hintText: 'Ex: A bit more about your team',
+              hintText: 'Ex: A bit more about your timebank',
               ),
             keyboardType: TextInputType.multiline,
             maxLines: null,
@@ -195,7 +196,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           tappableInviteMembers,
           Row(
             children: <Widget>[
-              headingText('Private team'),
+              headingText('Private timebank'),
               Column(
                 children: <Widget>[
                   Divider(),
@@ -213,7 +214,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
 
           Text(
-            'With private team, new members needs yor approval to join team',
+            'With private timebank, new members needs yor approval to join timebank',
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey,

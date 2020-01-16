@@ -44,9 +44,7 @@ class OffersState extends State<OffersModule> {
     globals.orCreateSelector = 1;
   }
 
-  OffersState() {
-    timebankId = FlavorConfig.values.timebankId;
-  }
+  OffersState() {}
   List<TimebankModel> timebankList = [];
   bool isNearme = false;
   int sharedValue = 0;
@@ -54,6 +52,8 @@ class OffersState extends State<OffersModule> {
   @override
   Widget build(BuildContext context) {
     _setORValue();
+    timebankId = widget.timebankModel.id;
+
     return Column(
       children: <Widget>[
         Offstage(
@@ -800,6 +800,7 @@ class OfferCardViewState extends State<OfferCardView> {
     super.initState();
     FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
         .then((timebank) {
+      widget.timebankModel = timebank;
       if (timebank.admins
               .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
           timebank.coordinators

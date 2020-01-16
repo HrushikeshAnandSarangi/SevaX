@@ -1,16 +1,14 @@
-import 'dart:ffi';
+import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
-import 'dart:math';
-import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
-import 'package:sevaexchange/views/profile/profileedit.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/profile/profileedit.dart';
 
 class ProfileViewer extends StatefulWidget {
   final String userEmail;

@@ -1,6 +1,7 @@
 // Lecagy code Not getting used
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/views/home_page_router.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -81,9 +82,9 @@ class _ChipsTile extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => CoreView(
-                              sevaUserID: null,
-                            ),
+                            builder: (BuildContext context) => HomePageRouter(
+                                // sevaUserID: null,
+                                ),
                           ),
                         );
                       },

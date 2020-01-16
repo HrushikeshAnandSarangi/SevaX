@@ -25,7 +25,7 @@ class CreateOffer extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Create volunteer offer',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
       ),
@@ -123,7 +123,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                       return 'Please enter the subject of your Offer';
                     }
                     title = value;
-                    return '';
                   },
                 ),
                 SizedBox(height: 40),
@@ -143,7 +142,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                       return 'Please enter some text';
                     }
                     description = value;
-                    return '';
                   },
                 ),
                 SizedBox(height: 20),
@@ -207,6 +205,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                             );
                             _writeToDB();
                             Navigator.pop(context);
+                          } else {
+                            print("Invalid data");
                           }
 //                      } else {
 //                        Scaffold.of(context).showSnackBar(SnackBar(

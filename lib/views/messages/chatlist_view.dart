@@ -87,7 +87,7 @@ class _ChatListViewState extends State<ChatListView> {
 
               List<ChatModel> chatModelList = allChalModelList;
               if (chatModelList.length == 0) {
-                return Center(child: Text('No Chats'));
+                return Center(child: Text('No Messages'));
               }
 
               return ListView.builder(
@@ -148,6 +148,7 @@ class _ChatListViewState extends State<ChatListView> {
     return StreamBuilder<List<TimebankModel>>(
         stream: FirestoreManager.getTimebanksForUserStream(
           userId: SevaCore.of(context).loggedInUser.sevaUserID,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (context, snapshot) {
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
