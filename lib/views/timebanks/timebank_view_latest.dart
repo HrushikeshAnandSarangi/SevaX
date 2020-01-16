@@ -41,9 +41,17 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   }
 
   void getData() async {
+   // print('Admin id  ${widget.timebankModel.admins[0]}');
+
     user = await FirestoreManager.getUserForId(
         sevaUserId: widget.timebankModel.admins[0]);
-    isAdminLoaded = true;
+
+    if(user!=null){
+      isAdminLoaded = true;
+    }
+
+
+
 
     if (widget.timebankModel.members.contains(widget.userId)) {
       isUserJoined = true;
@@ -56,7 +64,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
     setState(() {});
 
     //  print('Time Bank${userModels.userModelList[0].photoURL}');
-    //print('User Admin  ${user.fullname.toString()}');
   }
 
   @override
@@ -79,7 +86,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             Container(
               width: MediaQuery.of(context).size.width,
               child: CachedNetworkImage(
-                imageUrl: widget.timebankModel.photoUrl,
+                imageUrl: widget.timebankModel.photoUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png',
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) =>
                     Text('No Image Avaialable'),
@@ -113,7 +120,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: Text(
-                widget.timebankModel.name,
+                widget.timebankModel.name ?? " ",
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -176,7 +183,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
                                             image: CachedNetworkImageProvider(
-                                              photoUrl,
+                                              photoUrl ?? Icons.person,
                                             ),
                                           )),
                                     ),
@@ -224,7 +231,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
-                widget.timebankModel.members.length.toString() + ' Volunteers',
+                widget.timebankModel.members.length.toString() + ' Volunteers' ?? '0 Volunteers',
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 18,
@@ -235,7 +242,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: Text(
-                widget.timebankModel.address,
+                widget.timebankModel.address ?? '',
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 16,
@@ -333,7 +340,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                                   style: TextStyle(color: Colors.black),
                                   children: [
                                     TextSpan(
-                                      text: user.fullname ?? '',
+                                      text: user.fullname ?? ' ',
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -347,7 +354,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                                   ]),
                             )
                           : Container(
-                              child: Center(child: CircularProgressIndicator()),
+                              child: Text('Admin not Available'),
                             ),
                       Padding(
                         padding: const EdgeInsets.only(top:8.0),
@@ -379,9 +386,20 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image:
-                                    CachedNetworkImageProvider(user.photoURL)),
-                          ))
-                      : Container(),
+                                    CachedNetworkImageProvider(user.photoURL ?? 'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
+                          ),
+                  )
+                      : Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image:
+                            CachedNetworkImageProvider('https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
+                      ),
+                  ),
                 ],
               ),
             )
