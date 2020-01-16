@@ -86,8 +86,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
       appBar: AppBar(
         title: Text(
           "Select volunteers",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
+        backgroundColor:Colors.white ,
         elevation: 0,
         actions: <Widget>[
           GestureDetector(
@@ -99,9 +100,12 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.center,
               height: double.infinity,
-              child: Text(
-                "Save",
-                style: prefix0.TextStyle(color: Colors.white),
+              child: Padding(
+                padding: const EdgeInsets.only(right:8.0),
+                child: Text(
+                  "Save",
+                  style: prefix0.TextStyle(color: Colors.black),
+                ),
               ),
             ),
           ),

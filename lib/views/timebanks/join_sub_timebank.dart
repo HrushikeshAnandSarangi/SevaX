@@ -159,13 +159,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     TimebankModel timebank = timebankList.elementAt(index);
                     CompareToTimeBank status;
                     if (_joinRequestModels != null) {
-                      print('timee ${timebank.children.toString()}');
 
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
-                    } else {
-                      print('timee ${timebank.children.toString()}');
-
+                    } else if (timebank.members.contains(widget.loggedInUserModel.sevaUserID)) {
+                      status= CompareToTimeBank.JOINED;
+                      return makeItem(timebank, status);
+                    }else {
                       status = CompareToTimeBank.JOIN;
                       return makeItem(timebank, status);
                     }
@@ -348,10 +348,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted==true) {
         return CompareToTimeBank.JOINED;
-      }
-      if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
+      } else if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)){
         return CompareToTimeBank.JOINED;
-      } else if (requestModel.entityId == timeBank.id &&
+      }else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
       }

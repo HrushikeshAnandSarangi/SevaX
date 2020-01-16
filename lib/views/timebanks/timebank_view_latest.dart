@@ -76,10 +76,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Center(
+            Container(
+              width: MediaQuery.of(context).size.width,
               child: CachedNetworkImage(
                 imageUrl: widget.timebankModel.photoUrl,
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
                 errorWidget: (context, url, error) =>
                     Text('No Image Avaialable'),
                 placeholder: (conext, url) {
@@ -273,7 +274,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                         descTextShowFlag = !descTextShowFlag;
                       });
                     },
-                    child: Row(
+                    child: widget.timebankModel.missionStatement.length > 100 ? Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         descTextShowFlag
@@ -296,7 +297,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                                 ),
                               )
                       ],
-                    ),
+                    ): Container(),
                   ),
                 ],
               ),
@@ -348,19 +349,21 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                           : Container(
                               child: Center(child: CircularProgressIndicator()),
                             ),
-                      FlatButton(
-                        onPressed: () {
-                          startChat(user.email, widget.email, context);
-                          //  print('Clicked');
-                        },
-                        child: Text(
-                          'Message',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: 'Europa',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.lightBlueAccent,
+                      Padding(
+                        padding: const EdgeInsets.only(top:8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            startChat(user.email, widget.email, context);
+                          },
+                          child: Text(
+                            'Message',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                              fontFamily: 'Europa',
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.lightBlueAccent,
+                            ),
                           ),
                         ),
                       ),
