@@ -91,7 +91,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           "Select volunteers",
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor:Colors.white ,
         elevation: 0,
         actions: <Widget>[
           GestureDetector(
@@ -103,8 +102,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.center,
               height: double.infinity,
-              child: Container(
-                margin: EdgeInsets.only(right: 20),
+              child: Padding(
+                padding: const EdgeInsets.only(right:8.0),
                 child: Text(
                   "Save",
                   style: prefix0.TextStyle(color: Colors.black),

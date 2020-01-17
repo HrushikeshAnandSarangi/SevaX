@@ -27,8 +27,6 @@ class JoinSubTimeBankView extends StatefulWidget {
 
   JoinSubTimeBankView({this.loggedInUserModel, @required this.isFromDash});
 
-
-
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
 }
 
@@ -83,41 +81,43 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
 //          leading: BackButton(color: Colors.black87),
 
-          title: Text("Time Banks",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: "Europa",
-              )),
-          centerTitle: true,
-          actions: <Widget>[
-            Offstage(
-              offstage: true,
-              child: widget.isFromDash ? FlatButton(
-                child: Text(
-                  "Continue",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: "Europa",
-                  ),
-                ),
-                textColor: Colors.lightBlue,
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HomeDashBoard()));
-                },
-              ): Text(""),
-            )
-          ],
-
+        title: Text("Time Banks",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: "Europa",
+            )),
+        centerTitle: true,
+        actions: <Widget>[
+          Offstage(
+            offstage: true,
+            child: widget.isFromDash
+                ? FlatButton(
+                    child: Text(
+                      "Continue",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Europa",
+                      ),
+                    ),
+                    textColor: Colors.lightBlue,
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => HomeDashBoard()));
+                    },
+                  )
+                : Text(""),
+          )
+        ],
       ),
-        body: isDataLoaded?  SingleChildScrollView(
-    child: getTimebanks(context: context),
-    ):Center(child: CircularProgressIndicator()),
-
+      body: isDataLoaded
+          ? SingleChildScrollView(
+              child: getTimebanks(context: context),
+            )
+          : Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -159,13 +159,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     TimebankModel timebank = timebankList.elementAt(index);
                     CompareToTimeBank status;
                     if (_joinRequestModels != null) {
-
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
-                    } else if (timebank.members.contains(widget.loggedInUserModel.sevaUserID)) {
-                      status= CompareToTimeBank.JOINED;
+                    } else if (timebank.members
+                        .contains(widget.loggedInUserModel.sevaUserID)) {
+                      status = CompareToTimeBank.JOINED;
                       return makeItem(timebank, status);
-                    }else {
+                    } else {
                       status = CompareToTimeBank.JOIN;
                       return makeItem(timebank, status);
                     }
@@ -307,8 +307,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                               setState(() {
                                 getData();
-
-                            });
+                              });
                               return;
                             }
                           : null,
@@ -342,28 +341,27 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   CompareToTimeBank compareTimeBanks(
       List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
-        // CompareToTimeBank status;
+    // CompareToTimeBank status;
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
 
       if (requestModel.entityId == timeBank.id &&
-          joinRequestModels[i].accepted==true) {
+          joinRequestModels[i].accepted == true) {
         return CompareToTimeBank.JOINED;
-      } else if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)){
+      } else if (timeBank.members
+          .contains(widget.loggedInUserModel.sevaUserID)) {
         return CompareToTimeBank.JOINED;
-      }else if (requestModel.entityId == timeBank.id &&
->>>>>>> .merge_file_a05712
+      } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
-      }
-      else if (requestModel.entityId == timeBank.id &&
+      } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == true &&
           requestModel.accepted == false) {
         return CompareToTimeBank.REJECTED;
-      }else{
-       return CompareToTimeBank.JOIN;
+      } else {
+        return CompareToTimeBank.JOIN;
       }
     }
-   return CompareToTimeBank.JOIN;
+    return CompareToTimeBank.JOIN;
   }
 }
