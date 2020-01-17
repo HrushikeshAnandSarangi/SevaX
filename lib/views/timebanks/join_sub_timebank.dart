@@ -158,11 +158,17 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                   itemBuilder: (context, index) {
                     TimebankModel timebank = timebankList.elementAt(index);
                     CompareToTimeBank status;
-                    if (_joinRequestModels != null) {
+
+                    if (_joinRequestModels.length != 0) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
-                    } else if (timebank.members
-                        .contains(widget.loggedInUserModel.sevaUserID)) {
+                    } else if (timebank.admins.contains(widget.loggedInUserModel.sevaUserID)) {
+                      status = CompareToTimeBank.JOINED;
+                      return makeItem(timebank, status);
+                    }else if (timebank.coordinators.contains(widget.loggedInUserModel.sevaUserID)) {
+                      status = CompareToTimeBank.JOINED;
+                      return makeItem(timebank, status);
+                    }else if (timebank.members.contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
                       return makeItem(timebank, status);
                     } else {
@@ -342,11 +348,18 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   CompareToTimeBank compareTimeBanks(
       List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
     // CompareToTimeBank status;
+    print("inside compareTimeBanks" + joinRequestModels.length.toString());
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
 
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {
+        return CompareToTimeBank.JOINED;
+      } else if(timeBank.admins
+          .contains(widget.loggedInUserModel.sevaUserID)){
+        return CompareToTimeBank.JOINED;
+      } else if(timeBank.coordinators
+          .contains(widget.loggedInUserModel.sevaUserID)){
         return CompareToTimeBank.JOINED;
       } else if (timeBank.members
           .contains(widget.loggedInUserModel.sevaUserID)) {
