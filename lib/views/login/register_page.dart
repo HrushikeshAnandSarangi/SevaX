@@ -578,10 +578,10 @@ class _RegisterPageState extends State<RegisterPage>
     try {
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
-      print(erorr);
+      print( "Platform Exception --->  $erorr" );
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print(error);
+      print("Failed signing in the user with Exception :  $error" );
     }
     isLoading = false;
     _processLogin(user);

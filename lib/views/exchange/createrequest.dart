@@ -135,7 +135,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     this.requestModel.fullName = loggedInUser.fullname;
     this.requestModel.photoUrl = loggedInUser.photoURL;
     this.requestModel.sevaUserId = loggedInUser.sevaUserID;
-    
+
     return Form(
       key: _formKey,
       child: Container(
@@ -390,8 +390,22 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
+  BuildContext dialogContext;
+
   void createRequest() async {
     // if (location != null) {
+
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text('Creating feed'),
+            content: LinearProgressIndicator(),
+          );
+        });
+
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
@@ -424,6 +438,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         Navigator.pop(context);
         Navigator.pop(context);
       }
+      Navigator.pop(dialogContext);
       Navigator.pop(context);
     }
   }

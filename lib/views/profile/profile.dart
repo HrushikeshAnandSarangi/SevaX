@@ -10,6 +10,7 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
@@ -161,8 +162,8 @@ class _ProfilePageState extends State<ProfilePage>
   void navigateToSettings() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => EditProfilePage(
+      FadeRoute(
+        page: EditProfilePage(
           userModel: user,
         ),
       ),

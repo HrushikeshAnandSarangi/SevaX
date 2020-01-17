@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/base/base_service.dart';
 import 'dart:convert';
 
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class SearchService extends BaseService {
   static final String _baseUrl =
@@ -134,4 +136,5 @@ class SearchService extends BaseService {
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
     return hitList;
   }
+
 }

@@ -352,7 +352,6 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               Container(
                 width: 120,
-
                 child: CupertinoSegmentedControl<int>(
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
@@ -387,38 +386,44 @@ class DiscussionListState extends State<DiscussionList> {
         Divider(
           color: Colors.white,
           height: 0,
-        ),
-        Row(
-          children: <Widget>[
-            CircleAvatar(
+        ),InkWell(
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NewsCreate(timebankId: widget.timebankId,)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage:
+                  NetworkImage(SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
 
-            ),
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: new BorderRadius.circular(10.7),
+                      color: Colors.grey[200],
+                    ),
 
-            TextField(
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                  hasFloatingPlaceholder: false,
-                  alignLabelWithHint: true,
-                  isDense: true,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(' Start a new discussion....',
+                        maxLines: 1,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                        fontSize: 16),
+                      ),
+                    ),
                   ),
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                  filled: true,
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(25.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7)),
-                  hintText: 'Start new Discussions',
-                  hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
+
         widget.timebankId != 'All' && isNearMe == false
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(
@@ -442,7 +447,7 @@ class DiscussionListState extends State<DiscussionList> {
                       print("Size of incloming docs ${newsList.length}");
                       if (newsList.length == 0) {
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(28.0),
                           child: Center(child: Text('Your feed is empty')),
                         );
                       }

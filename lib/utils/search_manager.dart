@@ -304,4 +304,6 @@ class SearchManager {
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
     return hitList;
   }
+
+
 }
