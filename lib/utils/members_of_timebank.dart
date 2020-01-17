@@ -144,7 +144,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
         actions: <Widget>[
           IconButton(
             icon: Icon(
-              Icons.search,
+              Icons.arrow_back,
               color: Colors.black,
             ),
             onPressed: () {

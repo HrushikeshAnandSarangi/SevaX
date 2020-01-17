@@ -386,7 +386,44 @@ class DiscussionListState extends State<DiscussionList> {
         Divider(
           color: Colors.white,
           height: 0,
+        ),InkWell(
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NewsCreate(timebankId: widget.timebankId,)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage:
+                  NetworkImage(SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
+
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: new BorderRadius.circular(10.7),
+                      color: Colors.grey[200],
+                    ),
+
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(' Start a new discussion....',
+                        maxLines: 1,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                        fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
+
         widget.timebankId != 'All' && isNearMe == false
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(
@@ -410,7 +447,7 @@ class DiscussionListState extends State<DiscussionList> {
                       print("Size of incloming docs ${newsList.length}");
                       if (newsList.length == 0) {
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(28.0),
                           child: Center(child: Text('Your feed is empty')),
                         );
                       }

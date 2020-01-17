@@ -22,7 +22,17 @@ class CommunityApiProvider {
 //    }
 //  }
 
+  Future<bool> isCommunityFound(String enteredName) async{
+    //ommunityBloc.fetchCommunities(enteredName);
+    CommunityListModel communities=CommunityListModel();
+    var communitiesFound = await searchCommunityByName(enteredName,communities);
+    if(communitiesFound==null||communitiesFound.communities==null || communitiesFound.communities.length==0){
+      return false;
+    }else{
+      return true;
+    }
 
+  }
   Future<CommunityListModel> searchCommunityByName(String name,CommunityListModel communities) async {
     communities.removeall();
     if (name.isNotEmpty && name.length > 4) {
@@ -33,6 +43,8 @@ class CommunityApiProvider {
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
           var community = CommunityModel(documentSnapshot.data);
+         // print("community data ${community.name}");
+
           communities.add(community);
         });
       });

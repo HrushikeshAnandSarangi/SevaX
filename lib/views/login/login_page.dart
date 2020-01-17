@@ -67,7 +67,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Image.asset("lib/assets/images/image_02.png")
                 ],
-              )),
+              ),
+          ),
           SingleChildScrollView(
             child: FadeAnimation(
               1.4,
