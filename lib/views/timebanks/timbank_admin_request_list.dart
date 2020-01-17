@@ -464,9 +464,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
       timebankModel.admins = List<String>();
     }
     if (timebankModel.admins.length != 0) {
-      bool isAdmin = timebankModel.admins.contains(
-        SevaCore.of(context).loggedInUser.sevaUserID,
-      );
       FirestoreManager.getUserForUserModels(admins: timebankModel.admins)
           .then((onValue) {
         _admins = [];
@@ -474,7 +471,10 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         _admins.add(getSectionTitle(context, 'Admins & Organizers'));
         SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
             .forEach((key, user) {
-          _adminEmails.add(user.email);
+
+          String email = user.email.toString().trim();
+          print("Admin:$email");
+          _adminEmails.add(email);
           _admins.add(getUserWidget(user, context, timebankModel, true));
         });
         setState(() {});
@@ -671,12 +671,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
             setState(() {
               var iterationCount = 0;
               for (int i = 0; i < addItems.length; i++) {
+                var email = userModelList[i].email.trim();
                 if (emailIndexMap[userModelList[i].email] == null &&
-                    !_adminEmails.contains(userModelList[i].email.trim())) {
+                    !_adminEmails.contains(email)) {
+                  print("Member email found:$email");
                   // Filtering duplicates
                   _members.add(addItems[i]);
                   indexToModelMap[lastIndex] = userModelList[i];
-                  emailIndexMap[userModelList[i].email] = lastIndex++;
+                  emailIndexMap[email] = lastIndex++;
                   iterationCount++;
                 }
               }

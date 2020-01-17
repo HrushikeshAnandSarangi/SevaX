@@ -253,11 +253,6 @@ Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
         DocumentSnapshot documentSnapshot = snapshot.documents[0];
         UserModel model = UserModel.fromMap(documentSnapshot.data);
 
-        DocumentSnapshot walletSnapshot = await Firestore.instance
-            .collection('wallet')
-            .document(model.email)
-            .get();
-
         model.sevaUserID = sevaUserId;
         userSink.add(model);
       },

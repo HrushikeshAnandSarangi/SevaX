@@ -89,7 +89,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                 imageUrl: widget.timebankModel.photoUrl ?? ' ',
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) =>
-                    Text('No Image Avaialable',textAlign: TextAlign.center,),
+                Container(
+                  height: 80,
+                  child: Center(
+                    child: Text('No Image Avaialable',textAlign: TextAlign.center,),
+                  )
+                ),
                 placeholder: (conext, url) {
                   return Center(child: CircularProgressIndicator());
                 },
