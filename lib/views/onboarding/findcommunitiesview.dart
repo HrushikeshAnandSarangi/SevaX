@@ -66,7 +66,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           appBar: AppBar(
             automaticallyImplyLeading: widget.keepOnBackPress,
             leading: widget.keepOnBackPress
-                ? BackButton(color: Colors.black54)
+                ? BackButton(
+                    color: Colors.black54,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
                 : null,
             elevation: 0.5,
             backgroundColor: Color(0xFFFFFFFF),
