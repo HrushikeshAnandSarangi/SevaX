@@ -352,6 +352,7 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               Container(
                 width: 120,
+
                 child: CupertinoSegmentedControl<int>(
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
@@ -386,6 +387,37 @@ class DiscussionListState extends State<DiscussionList> {
         Divider(
           color: Colors.white,
           height: 0,
+        ),
+        Row(
+          children: <Widget>[
+            CircleAvatar(
+
+            ),
+
+            TextField(
+              style: TextStyle(color: Colors.black),
+              decoration: InputDecoration(
+                  hasFloatingPlaceholder: false,
+                  alignLabelWithHint: true,
+                  isDense: true,
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                  filled: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: new BorderSide(color: Colors.white),
+                    borderRadius: new BorderRadius.circular(25.7),
+                  ),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: new BorderRadius.circular(25.7)),
+                  hintText: 'Start new Discussions',
+                  hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
+            ),
+          ],
         ),
         widget.timebankId != 'All' && isNearMe == false
             ? StreamBuilder<List<NewsModel>>(

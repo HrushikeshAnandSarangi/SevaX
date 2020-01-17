@@ -91,6 +91,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           "Select volunteers",
           style: TextStyle(color: Colors.black),
         ),
+        backgroundColor:Colors.white ,
         elevation: 0,
         actions: <Widget>[
           GestureDetector(
@@ -102,8 +103,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.center,
               height: double.infinity,
+<<<<<<< .merge_file_a15768
               child: Container(
                 margin: EdgeInsets.only(right: 20),
+=======
+              child: Padding(
+                padding: const EdgeInsets.only(right:8.0),
+>>>>>>> .merge_file_a22396
                 child: Text(
                   "Save",
                   style: prefix0.TextStyle(color: Colors.black),
@@ -113,6 +119,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           ),
         ],
       ),
+
       body: getList(
         timebankId: FlavorConfig.values.timebankName == "Yang 2020"
             ? FlavorConfig.values.timebankId

@@ -91,6 +91,18 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
     await createOffer(offerModel: model);
   }
 
+  TextStyle hintStyle = TextStyle(
+    fontFamily: 'Europa',
+    fontSize: 14,
+    color: Colors.grey,
+  );
+
+  TextStyle textStyle = TextStyle(
+    fontFamily: 'Europa',
+    fontSize: 16,
+    color: Colors.grey,
+  );
+
   @override
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
@@ -98,17 +110,25 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
     return Form(
       key: _formKey,
       child: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(30.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(' '),
+              Text(
+                'Volunteer offer title',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                ),
+              ),
               TextFormField(
-                decoration: InputDecoration(hintText: 'Volunteer offer title'),
+                // decoration: InputDecoration(hintText: 'Volunteer offer title'),
                 initialValue: widget.offerModel.title,
                 keyboardType: TextInputType.text,
-                style: textStyle,
+                // style: textStyle,
                 onChanged: (value) {
                   widget.offerModel.title = value;
                 },
@@ -122,23 +142,25 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
               Padding(
                 padding: EdgeInsets.all(15.0),
               ),
+              Text(
+                'Volunteer offer description',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                ),
+              ),
               TextFormField(
                 initialValue: widget.offerModel.description,
                 decoration: InputDecoration(
-                  hintText: 'Your offer and any #hashtags',
-                  labelText: 'Volunteer offer description',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
+                  hintText: 'Your offer \nand any #hashtags',
+                  hintStyle: hintStyle,
+                  // labelText: '',
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLines: 10,
+                maxLines: 4,
+                maxLength: 500,
                 onChanged: (value) {
                   widget.offerModel.description = value;
                 },
@@ -150,25 +172,26 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
                 },
               ),
               Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: EdgeInsets.all(10.0),
+              ),
+              Text(
+                'Availability',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                ),
               ),
               TextFormField(
                 initialValue: widget.offerModel.schedule,
                 decoration: InputDecoration(
                   hintText: 'Describe My Availability',
-                  labelText: 'Availability',
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(20.0),
-                    ),
-                    borderSide: new BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
+                  hintStyle: hintStyle,
+                  // labelText: 'Availability',
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLines: 4,
+                maxLines: 2,
                 onChanged: (value) {
                   widget.offerModel.schedule = value;
                 },
@@ -179,15 +202,21 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
                   schedule = value;
                 },
               ),
+              SizedBox(height: 20),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: FlatButton.icon(
                     icon: Icon(Icons.add_location),
-                    label: Text(
-                      selectedAddress == null || selectedAddress.isEmpty
-                          ? '${this._getLocation()}'
-                          : selectedAddress,
+                    label: SizedBox(
+                      width: MediaQuery.of(context).size.width - 180,
+                      child: Text(
+                        selectedAddress == null || selectedAddress.isEmpty
+                            ? '${this._getLocation()}'
+                            : selectedAddress,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     color: Colors.grey[200],
                     onPressed: () {
@@ -208,49 +237,87 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: Center(
-                  child: RaisedButton(
-                    shape: StadiumBorder(),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () {
-                      if (location != null) {
-                        if (_formKey.currentState.validate()) {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text('Update Offer')),
-                          );
-                          widget.offerModel.location = this.location;
-                          //_writeToDB();
-                          this.updateOffer(offerModel: widget.offerModel);
-                          Navigator.pop(context);
+                  child: Container(
+                    width: 200,
+                    height: 50,
+                    child: RaisedButton(
+                      shape: StadiumBorder(),
+                      color: Theme.of(context).accentColor,
+                      onPressed: () {
+                        if (location != null) {
+                          if (_formKey.currentState.validate()) {
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Update Offer')),
+                            );
+                            widget.offerModel.location = this.location;
+                            //_writeToDB();
+                            this.updateOffer(offerModel: widget.offerModel);
+                            Navigator.pop(context);
+                          }
+                        } else {
+                          Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text('Location not added'),
+                          ));
                         }
-                      } else {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('Location not added'),
-                        ));
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.attachment,
-                          size: 24.0,
+                      },
+                      child: Text(
+                        'Update Volunteer Offer'.padLeft(10).padRight(10),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
                           color: FlavorConfig.values.buttonTextColor,
                         ),
-                        Text(' '),
-                        Text(
-                          'Update volunteer offer',
-                          style: TextStyle(
-                            color: FlavorConfig.values.buttonTextColor,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    textColor: Colors.white,
                   ),
                 ),
               ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(vertical: 16.0),
+              //   child: Center(
+              //     child: RaisedButton(
+              //       shape: StadiumBorder(),
+              //       color: Theme.of(context).accentColor,
+              //       onPressed: () {
+              //         if (location != null) {
+              //           if (_formKey.currentState.validate()) {
+              //             Scaffold.of(context).showSnackBar(
+              //               SnackBar(content: Text('Update Offer')),
+              //             );
+              //             widget.offerModel.location = this.location;
+              //             //_writeToDB();
+              //             this.updateOffer(offerModel: widget.offerModel);
+              //             Navigator.pop(context);
+              //           }
+              //         } else {
+              //           Scaffold.of(context).showSnackBar(SnackBar(
+              //             content: Text('Location not added'),
+              //           ));
+              //         }
+              //       },
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: <Widget>[
+              //           Icon(
+              //             Icons.attachment,
+              //             size: 24.0,
+              //             color: FlavorConfig.values.buttonTextColor,
+              //           ),
+              //           Text(' '),
+              //           Text(
+              //             'Update volunteer offer',
+              //             style: TextStyle(
+              //               color: FlavorConfig.values.buttonTextColor,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       textColor: Colors.white,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -270,7 +337,6 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
   }
 
   Future _getLocation() async {
-    
     print("-------->>>>.  $location ");
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,

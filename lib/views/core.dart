@@ -695,8 +695,12 @@ class _SevaCoreViewState extends State<SevaCoreView>
             Navigator.push(
               context,
               MaterialPageRoute(
+<<<<<<< .merge_file_a11172
                   builder: (context) =>
                       HomeDashBoard() /*NewsCreate(
+=======
+                  builder: (context) => HomeDashBoard() /*NewsCreate(
+>>>>>>> .merge_file_a20976
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/
                   ),
