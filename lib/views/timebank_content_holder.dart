@@ -39,10 +39,8 @@ class TimebankTabsViewHolder extends StatelessWidget {
   final TimebankModel timebankModel;
   //final UserModel loggedInUser;
 
- // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
+  // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
   //final UserModel loggedInUser;
-
-
 
   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
   //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
@@ -50,7 +48,7 @@ class TimebankTabsViewHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabarView(
-     // loggedInUser: loggedInUser,
+      // loggedInUser: loggedInUser,
       timebankId: timebankId,
       timebankModel: timebankModel,
     );
@@ -352,7 +350,6 @@ class DiscussionListState extends State<DiscussionList> {
               ),
               Container(
                 width: 120,
-
                 child: CupertinoSegmentedControl<int>(
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
@@ -390,32 +387,32 @@ class DiscussionListState extends State<DiscussionList> {
         ),
         Row(
           children: <Widget>[
-            CircleAvatar(
-
-            ),
-
-            TextField(
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                  hasFloatingPlaceholder: false,
-                  alignLabelWithHint: true,
-                  isDense: true,
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
-                  filled: true,
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: new BorderSide(color: Colors.white),
-                    borderRadius: new BorderRadius.circular(25.7),
-                  ),
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: new BorderRadius.circular(25.7)),
-                  hintText: 'Start new Discussions',
-                  hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
+            CircleAvatar(),
+            Container(
+              width: MediaQuery.of(context).size.width - 60,
+              child: TextField(
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                    hasFloatingPlaceholder: false,
+                    alignLabelWithHint: true,
+                    isDense: true,
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                    filled: true,
+                    fillColor: Colors.white,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: new BorderSide(color: Colors.white),
+                      borderRadius: new BorderRadius.circular(25.7),
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: new BorderRadius.circular(25.7)),
+                    hintText: 'Start new Discussions',
+                    hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
+              ),
             ),
           ],
         ),
