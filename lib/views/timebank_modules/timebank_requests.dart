@@ -93,8 +93,23 @@ class RequestsState extends State<RequestsModule> {
                         ),
                         onTap: () {
                           //Create a new request
+
                           if (widget.timebankModel.protected) {
                             //show dialog its a protcted timebank
+
+                            if (widget.timebankModel.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CreateRequest(
+                                    timebankId: timebankId,
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
                             _showProtectedTimebankMessage();
                           } else {
                             Navigator.push(
@@ -125,7 +140,6 @@ class RequestsState extends State<RequestsModule> {
                             SevaCore.of(context).loggedInUser.currentCommunity,
                       ),
                       builder: (context, snapshot) {
-
                         if (snapshot.hasError)
                           return new Text('Error: ${snapshot.error}');
                         if (snapshot.connectionState ==
