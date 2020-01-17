@@ -168,10 +168,10 @@ class MyTasksList extends StatelessWidget {
                 shadows: shadowList,
               ),
               child: ListTile(
-                  title: Text(model.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold
-                  ),),
+                  title: Text(
+                    model.title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -183,7 +183,8 @@ class MyTasksList extends StatelessWidget {
                         spacing: 8,
                         children: <Widget>[
                           Text(
-                            getTimeFormattedString(model.requestStart,userTimezone),
+                            getTimeFormattedString(
+                                model.requestStart, userTimezone),
                             style: TextStyle(color: Colors.black),
                           ),
                           Icon(
@@ -192,8 +193,8 @@ class MyTasksList extends StatelessWidget {
                             size: 14,
                           ),
                           Text(
-                              getTimeFormattedString(model.requestEnd,userTimezone),
-
+                            getTimeFormattedString(
+                                model.requestEnd, userTimezone),
                             style: TextStyle(color: Colors.black),
                           ),
                         ],
@@ -219,6 +220,7 @@ class MyTasksList extends StatelessWidget {
           );
         });
   }
+
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
     DateFormat dateFormat = DateFormat('d MMM hh:mm a ');
     DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
@@ -229,6 +231,7 @@ class MyTasksList extends StatelessWidget {
     );
     return from;
   }
+
   Widget get taskShimmer {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -425,7 +428,6 @@ class TaskCardViewState extends State<TaskCardView> {
                               ],
                               decoration: InputDecoration(
                                 hintText: 'Hours',
-                                border: UnderlineInputBorder(),
                                 hasFloatingPlaceholder: true,
                                 labelText: 'Hours',
                               ),
