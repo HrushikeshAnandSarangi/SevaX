@@ -69,7 +69,7 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
               modelList.add(model);
           },
         );
-
+        modelList.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         timebankSink.add(modelList);
       },
     ),

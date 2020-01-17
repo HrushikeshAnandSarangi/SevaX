@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/qna-module/ReviewLandingPage.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
@@ -167,7 +168,10 @@ class MyTasksList extends StatelessWidget {
                 shadows: shadowList,
               ),
               child: ListTile(
-                  title: Text(model.title),
+                  title: Text(
+                    model.title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -175,16 +179,12 @@ class MyTasksList extends StatelessWidget {
                       SizedBox(height: 4),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
-                        runAlignment: WrapAlignment.center,
+                        //runAlignment: WrapAlignment.center,
                         spacing: 8,
                         children: <Widget>[
                           Text(
-                            format.format(
-                              getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                      model.requestStart),
-                                  timezoneAbb: userTimezone),
-                            ),
+                            getTimeFormattedString(
+                                model.requestStart, userTimezone),
                             style: TextStyle(color: Colors.black),
                           ),
                           Icon(
@@ -193,12 +193,8 @@ class MyTasksList extends StatelessWidget {
                             size: 14,
                           ),
                           Text(
-                            format.format(
-                              getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                      model.requestEnd),
-                                  timezoneAbb: userTimezone),
-                            ),
+                            getTimeFormattedString(
+                                model.requestEnd, userTimezone),
                             style: TextStyle(color: Colors.black),
                           ),
                         ],
@@ -223,6 +219,17 @@ class MyTasksList extends StatelessWidget {
             ),
           );
         });
+  }
+
+  String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
+    DateFormat dateFormat = DateFormat('d MMM hh:mm a ');
+    DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
+    DateTime localtime = getDateTimeAccToUserTimezone(
+        dateTime: datetime, timezoneAbb: timezoneAbb);
+    String from = dateFormat.format(
+      localtime,
+    );
+    return from;
   }
 
   Widget get taskShimmer {
@@ -421,7 +428,6 @@ class TaskCardViewState extends State<TaskCardView> {
                               ],
                               decoration: InputDecoration(
                                 hintText: 'Hours',
-                                border: UnderlineInputBorder(),
                                 hasFloatingPlaceholder: true,
                                 labelText: 'Hours',
                               ),

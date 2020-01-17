@@ -51,7 +51,7 @@ class _ChatListViewState extends State<ChatListView> {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            'Messages',
+            'Conversations',
             style: TextStyle(color: Colors.black),
           )),
       body: StreamBuilder<List<ChatModel>>(
@@ -240,107 +240,126 @@ class _ChatListViewState extends State<ChatListView> {
 
     // if (chatModel.user1 == SevaCore.of(context).loggedInUser.email) {
 
-    return Container(
-      child: Card(
-        elevation: 0,
-        child: InkWell(
-          onTap: () {
-            print("Getting intp existing chat");
-            Navigator.push(
-              parentContext,
-              MaterialPageRoute(
-                builder: (context) => ChatView(
-                  useremail:
-                      SevaCore.of(context).loggedInUser.email == chatModel.user1
-                          ? chatModel.user2
-                          : chatModel.user1,
-                  chatModel: chatModel,
-                ),
-              ),
-            );
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ClipOval(
-                  child: Container(
-                    height: 45,
-                    width: 45,
-                    child: FadeInImage.assetNetwork(
-                      placeholder: 'lib/assets/images/profile.png',
-                      image: chatModel.photoURL == null
-                          ? "https://firebasestorage.googleapis.com/v0/b/sevaexchange.appspot.com/o/timebanklogos%2Fseva_default.jpg?alt=media&token=e3804df4-6146-4bfb-8c8e-b24a62da312d"
-                          : chatModel.photoURL,
-                    ),
+    return Dismissible(
+      key: Key(chatModel.user1),
+
+      onDismissed: (direction){
+        _ackAlert(
+          SevaCore.of(context).loggedInUser.email,
+          chatModel,
+          context,
+        );
+        // Then show a snackbar.
+
+      },
+      // a red background as the item is swiped away.
+      background: Container(color: Colors.red),
+
+      child: Container(
+        child: Card(
+          elevation: 0,
+          child: InkWell(
+            onTap: () {
+              print("Getting intp existing chat");
+              Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => ChatView(
+                    useremail:
+                        SevaCore.of(context).loggedInUser.email == chatModel.user1
+                            ? chatModel.user2
+                            : chatModel.user1,
+                    chatModel: chatModel,
                   ),
                 ),
-                Container(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        chatModel.messagTitleUserName == null
-                            ? 'Not added '
-                            : chatModel.messagTitleUserName,
-                        style: Theme.of(parentContext).textTheme.subhead,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ClipOval(
+                    child: Container(
+                      height: 45,
+                      width: 45,
+                      child: FadeInImage.assetNetwork(
+                        placeholder: 'lib/assets/images/profile.png',
+                        image: chatModel.photoURL == null
+                            ? "https://firebasestorage.googleapis.com/v0/b/sevaexchange.appspot.com/o/timebanklogos%2Fseva_default.jpg?alt=media&token=e3804df4-6146-4bfb-8c8e-b24a62da312d"
+                            : chatModel.photoURL,
                       ),
-                      Text(
-                        lastmessage,
-                        style: TextStyle(color: Colors.grey),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      timeAgo.format(
-                        DateTime.fromMillisecondsSinceEpoch(
-                            chatModel.timestamp),
-                      ),
-                      style: TextStyle(fontSize: 10),
                     ),
-                    Row(
+                  ),
+                  Container(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          chatModel.unreadStatus != null &&
-                                  chatModel.unreadStatus.containsKey(
-                                    userEmail,
-                                  )
-                              ? "${chatModel.unreadStatus[userEmail] == 0 ? '' : chatModel.unreadStatus[userEmail]}"
-                              : '',
+                          chatModel.messagTitleUserName == null
+                              ? 'Not added '
+                              : chatModel.messagTitleUserName,
+                          style: Theme.of(parentContext).textTheme.subhead,
                         ),
-                        ClipOval(
-                          child: Container(
-                            height: 35,
-                            width: 35,
-                            child: GestureDetector(
-                              child: IconButton(
-                                icon: Image.asset(
-                                    'lib/assets/images/recycle-bin.png'),
-                                iconSize: 30,
-                                onPressed: () {
-                                  _ackAlert(
-                                    SevaCore.of(context).loggedInUser.email,
-                                    chatModel,
-                                    context,
-                                  );
-                                },
+                        Text(
+                          lastmessage,
+                          style: TextStyle(color: Colors.grey),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(right:8.0),
+                        child: Text(
+                          timeAgo.format(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                chatModel.timestamp),
+                          ).replaceAll('hours ago', 'h'),
+                          style: TextStyle(fontSize: 10),
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            chatModel.unreadStatus != null &&
+                                    chatModel.unreadStatus.containsKey(
+                                      userEmail,
+                                    )
+                                ? "${chatModel.unreadStatus[userEmail] == 0 ? '' : chatModel.unreadStatus[userEmail]}"
+                                : '',
+                          ),
+                          ClipOval(
+                            child: Container(
+                              height: 35,
+                              width: 35,
+                              child: GestureDetector(
+                                child: IconButton(
+                                  icon: Image.asset(
+                                      'lib/assets/images/recycle-bin.png'),
+                                  iconSize: 30,
+                                  onPressed: () {
+                                    _ackAlert(
+                                      SevaCore.of(context).loggedInUser.email,
+                                      chatModel,
+                                      context,
+                                    );
+                                  },
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
+                        ],
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -539,6 +558,9 @@ class _ChatListViewState extends State<ChatListView> {
                 ),
               ),
               onPressed: () {
+                setState(() {
+
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -585,6 +607,8 @@ class _ChatListViewState extends State<ChatListView> {
 
                 setState(() {
                   print("Update and remove the object from list");
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text("${chatModel.messagTitleUserName} Removed")));
                   // chatModel = chatModel;
                 });
 

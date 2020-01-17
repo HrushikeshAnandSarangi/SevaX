@@ -9,17 +9,22 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
+import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
 class HomeDashBoard extends StatelessWidget {
-  // final String communityId;
-  // HomeDashBoard(this.communityId);
+  HomeDashBoard();
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // debugShowCheckedModeBanner: false,
+      // title: 'Flutter Demo',
+      // theme: ThemeData(
+      //   primaryColor: Colors.white,
+      // ),
       body: MyHomePage(),
     );
   }

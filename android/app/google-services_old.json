@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "1030900930316-sv6h132ufst636cdomb9nd127nebv7lt.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sevaexchange.app",
-            "certificate_hash": "3be468344c03dce92cfb72b2d3fd8201afc5a2f0"
-          }
-        },
-        {
           "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -38,13 +30,6 @@
             {
               "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.sevaexchange.app"
-              }
             }
           ]
         }
