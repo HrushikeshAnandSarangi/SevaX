@@ -86,12 +86,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             Container(
               width: MediaQuery.of(context).size.width,
               child: CachedNetworkImage(
-                imageUrl: widget.timebankModel.photoUrl ?? 'https://upload.wikimedia.org/wikipedia/commons/7/75/No_image_available.png',
+                imageUrl: widget.timebankModel.photoUrl ?? ' ',
                 fit: BoxFit.cover,
                 errorWidget: (context, url, error) =>
-                    Text('No Image Avaialable'),
+                    Text('No Image Avaialable',textAlign: TextAlign.center,),
                 placeholder: (conext, url) {
-                  return CircularProgressIndicator();
+                  return Center(child: CircularProgressIndicator());
                 },
               ),
             ),
