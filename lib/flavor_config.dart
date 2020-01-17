@@ -58,6 +58,26 @@ class FlavorConfig {
             fontFamily: 'Europa',
             splashColor: Colors.grey,
             bottomAppBarColor: Colors.white,
+            inputDecorationTheme: InputDecorationTheme(
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  style: BorderStyle.solid,
+                ),
+              ),
+            ),
           ),
         );
         break;
