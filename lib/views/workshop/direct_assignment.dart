@@ -91,7 +91,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           "Select volunteers",
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor:Colors.white ,
         elevation: 0,
         actions: <Widget>[
           GestureDetector(
