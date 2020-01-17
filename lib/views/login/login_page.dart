@@ -649,6 +649,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _processLogin(UserModel userModel) {
+    if(userModel==null){
+      return;
+    }
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SplashView(),
