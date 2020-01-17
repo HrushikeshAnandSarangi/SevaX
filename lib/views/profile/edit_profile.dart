@@ -594,6 +594,10 @@ class _EditProfilePageState extends State<EditProfilePage>
             new FlatButton(
               child: new Text("Log Out"),
               onPressed: () {
+                SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                  statusBarBrightness: Brightness.light,
+                  statusBarColor: Colors.white,
+                ));
                 Navigator.of(context).pop();
                 _signOut(context);
               },

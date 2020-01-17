@@ -66,15 +66,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 ? BackButton(color: Colors.black54)
                 : null,
             elevation: 0.5,
-            backgroundColor: Color(0xFFFFFFFF),
             title: Text(
-              'Find your community',
+              'Find your Timebank',
               style: TextStyle(
-                color: Colors.black54,
                 fontSize: 20,
-                fontWeight: FontWeight.w500,
               ),
             ),
+            centerTitle: true,
           ),
           body: SearchTeams()),
     );
@@ -122,54 +120,64 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
         buildList(),
         // This container holds the align
-        CreateCommunity(),
+        createCommunity(),
       ]),
     );
   }
 
-  Widget CreateCommunity() {
+  Widget createCommunity() {
     return Container(
-        // This align moves the children to the bottom
-        child: Align(
-            alignment: FractionalOffset.bottomCenter,
-            // This container holds all the children that will be aligned
-            // on the bottom and should not scroll with the above ListView
-            child: Container(
-                height: 100,
-                width: 200,
-                child: Column(
-                  children: <Widget>[
-                    Text('Or'),
-                    RaisedButton(
-                      onPressed: () {
-                        createEditCommunityBloc.updateUserDetails(
-                            SevaCore.of(context).loggedInUser);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context1) => SevaCore(
-                                    loggedInUser:
-                                        SevaCore.of(context).loggedInUser,
-                                    child: CreateEditCommunityView(
-                                      timebankId:
-                                          FlavorConfig.values.timebankId,
-                                    ))));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: Text('Create your Community'),
-                          ),
-                        ],
+      // This align moves the children to the bottom
+      child: Align(
+        alignment: FractionalOffset.bottomCenter,
+        // This container holds all the children that will be aligned
+        // on the bottom and should not scroll with the above ListView
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                width: 134,
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Next',
+                    style: Theme.of(context).primaryTextTheme.button,
+                  ),
+                  // color: Theme.of(context).accentColor,
+                  // textColor: FlavorConfig.values.buttonTextColor,
+                  // shape: StadiumBorder(),
+                ),
+              ),
+              SizedBox(height: 5),
+              Text('Or'),
+              FlatButton(
+                child: Text(
+                  'Create your timebank',
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                onPressed: () {
+                  createEditCommunityBloc
+                      .updateUserDetails(SevaCore.of(context).loggedInUser);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context1) => SevaCore(
+                        loggedInUser: SevaCore.of(context).loggedInUser,
+                        child: CreateEditCommunityView(
+                          timebankId: FlavorConfig.values.timebankId,
+                        ),
                       ),
-                      color: Theme.of(context).accentColor,
-                      textColor: FlavorConfig.values.buttonTextColor,
-                      shape: StadiumBorder(),
-                    )
-                  ],
-                ))));
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildList() {
