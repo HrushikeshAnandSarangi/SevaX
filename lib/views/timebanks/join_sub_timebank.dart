@@ -107,9 +107,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 textColor: Colors.lightBlue,
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HomeDashBoard(
-
-                      )));
+                      builder: (context) => HomeDashBoard()));
                 },
               ): Text(""),
             )
@@ -165,17 +163,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
                     } else if (timebank.members.contains(widget.loggedInUserModel.sevaUserID)) {
-<<<<<<< .merge_file_a13148
-                      status = CompareToTimeBank.JOINED;
-                       return makeItem(timebank, status);
-                      } else {
-                      print('timee ${timebank.children.toString()}');
-
-=======
                       status= CompareToTimeBank.JOINED;
                       return makeItem(timebank, status);
                     }else {
->>>>>>> .merge_file_a05712
                       status = CompareToTimeBank.JOIN;
                       return makeItem(timebank, status);
                     }
@@ -359,13 +349,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted==true) {
         return CompareToTimeBank.JOINED;
-<<<<<<< .merge_file_a13148
-      }
-     else if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)) {
-        return CompareToTimeBank.JOINED;
-      }
-       else if (requestModel.entityId == timeBank.id &&
-=======
       } else if (timeBank.members.contains(widget.loggedInUserModel.sevaUserID)){
         return CompareToTimeBank.JOINED;
       }else if (requestModel.entityId == timeBank.id &&

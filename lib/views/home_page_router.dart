@@ -126,11 +126,9 @@ class CustomBottomNavigationItem extends StatelessWidget {
             ? Container()
             : Text(
                 bottomNavigationData[index].title,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.grey, fontSize: 12),
               ),
       ],
     );
   }
 }
-
-
