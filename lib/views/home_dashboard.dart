@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage>
                         child: FadeAnimation(
                           1,
                           Text(
-                            "Your Time Bank(s)",
+                            "Your Groups",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black87,
@@ -89,10 +89,12 @@ class _MyHomePageState extends State<MyHomePage>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => TimebankCreate(
-                                        timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-                                      ),
-                                  ),
+                                builder: (context) => TimebankCreate(
+                                  timebankId: SevaCore.of(context)
+                                      .loggedInUser
+                                      .currentTimebank,
+                                ),
+                              ),
                             );
                           }),
                     ],
@@ -138,19 +140,21 @@ class _MyHomePageState extends State<MyHomePage>
                       ),
                     ),
                     TabBar(
-                      labelColor: Colors.black,
+                      labelColor: Theme.of(context).primaryColor,
+                      unselectedLabelStyle: TextStyle(color: Colors.grey),
+                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
                       //labelColor: Colors.white,
-                      indicatorColor: Colors.black,
+                      indicatorColor: Theme.of(context).primaryColor,
                       tabs: [
-                        Tab(child: Text('Pending ')),
                         Tab(
-                            child: Text(
-                          'Not Accepted ',
-                        )),
+                          child: Text('Pending '),
+                        ),
                         Tab(
-                            child: Text(
-                          'Completed ',
-                        )),
+                          child: Text('Not Accepted '),
+                        ),
+                        Tab(
+                          child: Text('Completed '),
+                        ),
                       ],
                       controller: controller,
                       isScrollable: false,

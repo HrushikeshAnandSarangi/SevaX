@@ -199,7 +199,7 @@ class OffersState extends State<OffersModule> {
               Container(
                 width: 120,
                 child: CupertinoSegmentedControl<int>(
-                  selectedColor: Color.fromARGB(255, 4, 47, 110),
+                  selectedColor: Theme.of(context).primaryColor,
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
                   //selectedColor: Colors.deepOrange,
@@ -442,7 +442,7 @@ class OfferListItems extends StatelessWidget {
         var isMyContent =
             (offerModelList as OfferTitle).groupTitle.contains("My");
         return Container(
-          height: isMyContent ? 0 : 15,
+          height: isMyContent ? 0 : 18,
           margin: isMyContent ? EdgeInsets.all(0) : EdgeInsets.all(12),
           child: Text(
             GroupOfferCommons.getGroupTitleForOffer(
@@ -889,11 +889,9 @@ class OfferCardViewState extends State<OfferCardView> {
                 )
               : Offstage()
         ],
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
         title: Text(
           "Offer Details",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         elevation: 0.5,
       ),
@@ -999,7 +997,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                       subtitle: FutureBuilder<String>(
                                         future: _getLocation(
                                           widget.offerModel.location.latitude,
-                                          widget.offerModel.location.latitude,
+                                          widget.offerModel.location.longitude,
                                         ),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasError) {

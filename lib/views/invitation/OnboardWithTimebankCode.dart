@@ -54,24 +54,23 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
-          centerTitle: true,
-          title: Text(
-            'Join' + ' Community',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black54,
-                fontSize: 20,
-                fontWeight: FontWeight.w500),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Join Headspace Community',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            // fontWeight: FontWeight.w500,
           ),
         ),
-        body: SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Column(
-                    children: <Widget>[timebankStreamBuilder(context)]))));
+      ),
+      body: SingleChildScrollView(
+        child: Container(child: timebankStreamBuilder(context)),
+      ),
+    );
+    // child: Column(
+    //     children: <Widget>[]))));
   }
 
   Widget timebankStreamBuilder(context) {
@@ -102,7 +101,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     this.timebankModel = communityCreateEditSnapshot.timebank;
     // globals.timebankAvatarURL = timebankModel.photoUrl;
     return Container(
-      height: MediaQuery.of(context).size.height - 80,
+      height: MediaQuery.of(context).size.height - 90,
       child: Column(
         //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -196,7 +195,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   'Request Join Link',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: Theme.of(context).accentColor,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
                     fontSize: 17,
@@ -322,16 +321,17 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             flex: 3,
           ),
           SizedBox(
-            width: 120,
+            width: 134,
             child: RaisedButton(
               onPressed: () {
                 print('pressed Next');
 
                 this._checkFields();
               },
-              child: Text('Join'),
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text(
+                'Join',
+                style: Theme.of(context).primaryTextTheme.button,
+              ),
               shape: StadiumBorder(),
             ),
           ),

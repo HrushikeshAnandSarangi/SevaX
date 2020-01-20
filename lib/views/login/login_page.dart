@@ -43,6 +43,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarBrightness: Brightness.light,
+    //   // statusBarColor: Color(0x0FF766FE0),
+    // ));
     UserData.shared.isFromLogin = true;
     ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
     ScreenUtil.instance =
@@ -73,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
             child: FadeAnimation(
               1.4,
               Padding(
-                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 80.0),
+                padding: EdgeInsets.only(left: 28.0, right: 28.0, top: 100.0),
                 child: Column(
                   children: <Widget>[
                     logo,
@@ -120,7 +124,42 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Text("New User? "),
+                            Text(
+                              "New User? ",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                isLoading = true;
+                                UserModel user =
+                                    await Navigator.of(context).push(
+                                  MaterialPageRoute<UserModel>(
+                                    builder: (context) => RegisterPage(),
+                                  ),
+                                );
+                                isLoading = false;
+                                if (user != null) _processLogin(user);
+                              },
+                              child: Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  color: Theme.of(context).accentColor,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Spacer(),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              "Forgot Password? ",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
                             InkWell(
                                 onTap: () async {
                                   isLoading = true;
@@ -133,56 +172,183 @@ class _LoginPageState extends State<LoginPage> {
                                   isLoading = false;
                                   if (user != null) _processLogin(user);
                                 },
-                                child: Text(
-                                  "Sign Up",
-                                  style: TextStyle(
-                                      color: Theme.of(context).accentColor),
+                                child: InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              'Enter email',
+                                            ),
+                                            content: Form(
+                                              key: _formKeyDialog,
+                                              child: TextFormField(
+                                                validator: (value) {
+                                                  if (value.isEmpty) {
+                                                    return 'Please enter email to update';
+                                                  } else if (!validateEmail(
+                                                      value.trim())) {
+                                                    return 'Please enter a valid email';
+                                                  }
+                                                  _textFieldControllerResetEmail =
+                                                      value;
+                                                },
+                                                // validator: validateEmail,
+                                                onChanged: (value) {
+                                                  print("$value");
+                                                },
+                                                initialValue: "",
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                controller: null,
+                                                decoration: InputDecoration(
+                                                  hintText:
+                                                      "Your email address",
+                                                  // errorText: isEmailValidForReset
+                                                  //     ? null
+                                                  //     : validateEmail(
+                                                  //         _textFieldControllerResetEmail.text,
+                                                  //       ),
+                                                ),
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              new FlatButton(
+                                                child: new Text(
+                                                  'Cancel',
+                                                  style: TextStyle(
+                                                    fontSize: dialogButtonSize,
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                    {
+                                                      "sendResetLink": false,
+                                                      "userEmail": null
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                              new FlatButton(
+                                                child: new Text(
+                                                  'Reset Password',
+                                                  style: TextStyle(
+                                                    fontSize: dialogButtonSize,
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  if (!_formKeyDialog
+                                                      .currentState
+                                                      .validate()) {
+                                                    return;
+                                                  }
+                                                  Navigator.of(context).pop({
+                                                    "sendResetLink": true,
+                                                    "userEmail":
+                                                        _textFieldControllerResetEmail
+                                                            .trim()
+                                                  });
+                                                },
+                                              )
+                                            ],
+                                          );
+                                        }).then((onActivityResult) {
+                                      if (onActivityResult != null &&
+                                          onActivityResult['sendResetLink'] !=
+                                              null &&
+                                          onActivityResult['sendResetLink'] &&
+                                          onActivityResult['userEmail'] !=
+                                              null &&
+                                          onActivityResult['userEmail']
+                                              .toString()
+                                              .isNotEmpty) {
+                                        print("send reset link");
+                                        resetPassword(
+                                            onActivityResult['userEmail']);
+                                        _scaffoldKey.currentState
+                                            .hideCurrentSnackBar();
+                                      } else {
+                                        print("Cancelled forgot passowrd");
+                                      }
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    child: Text(
+                                      "Reset",
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor),
+                                    ),
+                                  ),
                                 ))
                           ],
                         ),
-                        InkWell(
-                          child: Container(
-                            width: ScreenUtil.getInstance().setWidth(250),
-                            height: ScreenUtil.getInstance().setHeight(70),
-                            decoration: BoxDecoration(
-                                gradient: LinearGradient(colors: [
-                                  Theme.of(context).accentColor,
-                                  Theme.of(context).accentColor
-                                ]),
-                                borderRadius: BorderRadius.circular(50.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Theme.of(context)
-                                          .accentColor
-                                          .withOpacity(.3),
-                                      offset: Offset(0.0, 8.0),
-                                      blurRadius: 8.0)
-                                ]),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: isLoading
-                                    ? null
-                                    : () {
-                                        signInWithEmailAndPassword();
-                                      },
-                                child: Center(
-                                  child: Text(
-                                    "Sign in",
-                                    style: TextStyle(
-                                      color:
-                                          FlavorConfig.values.buttonTextColor,
-                                      fontSize: 18,
-                                      letterSpacing: 1.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
                       ],
                     ),
+                    SizedBox(height: 20),
+                    Container(
+                      width: 134,
+                      height: 39,
+                      child: RaisedButton(
+                        shape: StadiumBorder(),
+                        color: Color(0x0FF766FE0),
+                        child: Text(
+                          'Sign in',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                signInWithEmailAndPassword();
+                              },
+                      ),
+                    ),
+                    // InkWell(
+                    //   child: Container(
+                    //     width: ScreenUtil.getInstance().setWidth(250),
+                    //     height: ScreenUtil.getInstance().setHeight(70),
+                    //     decoration: BoxDecoration(
+                    //         gradient: LinearGradient(colors: [
+                    //           Theme.of(context).accentColor,
+                    //           Theme.of(context).accentColor
+                    //         ]),
+                    //         borderRadius: BorderRadius.circular(50.0),
+                    //         boxShadow: [
+                    //           BoxShadow(
+                    //               color: Theme.of(context)
+                    //                   .accentColor
+                    //                   .withOpacity(.3),
+                    //               offset: Offset(0.0, 8.0),
+                    //               blurRadius: 8.0)
+                    //         ]),
+                    //     child: Material(
+                    //       color: Colors.transparent,
+                    //       child: InkWell(
+                    //         onTap: isLoading
+                    //             ? null
+                    //             : () {
+                    //                 signInWithEmailAndPassword();
+                    //               },
+                    //         child: Center(
+                    //           child: Text(
+                    //             "Sign in",
+                    //             style: TextStyle(
+                    //               color: FlavorConfig.values.buttonTextColor,
+                    //               fontSize: 18,
+                    //               letterSpacing: 1.0,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(40),
                     ),
@@ -314,44 +480,39 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: TextFormField(
-                      obscureText: _shouldObscurePassword,
-                      style: textStyle,
-                      cursorColor: Colors.black54,
-                      validator: _validatePassword,
-                      onSaved: _savePassword,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black54)),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black54),
-                        ),
-                        labelText: 'PASSWORD',
-                        labelStyle: textStyle,
-                        suffix: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _shouldObscurePassword = !_shouldObscurePassword;
-                            });
-                          },
-                          child: Text(
-                            'Show',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: _shouldObscurePassword
-                                  ? Colors.black54
-                                  : Colors.black,
-                            ),
+                  TextFormField(
+                    obscureText: _shouldObscurePassword,
+                    style: textStyle,
+                    cursorColor: Colors.black54,
+                    validator: _validatePassword,
+                    onSaved: _savePassword,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54)),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
+                      ),
+                      labelText: 'PASSWORD',
+                      labelStyle: textStyle,
+                      suffix: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _shouldObscurePassword = !_shouldObscurePassword;
+                          });
+                        },
+                        child: Text(
+                          'Show',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _shouldObscurePassword
+                                ? Colors.black54
+                                : Colors.black,
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: ScreenUtil.getInstance().setHeight(15),
-                  ),
+                  SizedBox(height: 22),
                   // SizedBox(height: 32),
                   // Column(
                   //   children: <Widget>[
@@ -483,7 +644,7 @@ class _LoginPageState extends State<LoginPage> {
                   //         fontWeight: FontWeight.w700),
                   //   ),
                   // )
-                  SizedBox(height: 30),
+                  // SizedBox(height: 30),
                 ],
               ),
             )),
@@ -650,7 +811,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _processLogin(UserModel userModel) {
-    if(userModel==null){
+    if (userModel == null) {
       return;
     }
     Navigator.of(context).pushReplacement(

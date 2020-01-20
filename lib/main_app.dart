@@ -4,15 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
-import 'package:sevaexchange/views/messages/new_select_member.dart';
-import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/timebank_pinView.dart';
-import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
 import 'models/news_model.dart';
-import 'views/messages/list_members_timebank.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,8 +36,10 @@ void main() {
     },
   );
 
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(statusBarBrightness: Brightness.dark));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarBrightness: Brightness.light,
+    // statusBarColor: Colors.white,
+  ));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
@@ -60,6 +56,7 @@ class MainApplication extends StatelessWidget {
     return AuthProvider(
       auth: Auth(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: FlavorConfig.values.theme,
         // home: RequestStatusView(
         //   requestId: "anitha.beberg@gmail.com*1573268670404",

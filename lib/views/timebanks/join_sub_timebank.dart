@@ -81,13 +81,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-//          leading: BackButton(color: Colors.black87),
-
-        title: Text("Time Banks",
+        title: Text("Group",
             style: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.bold,
               fontFamily: "Europa",
             )),
         centerTitle: true,
@@ -149,7 +145,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
                   child: Text(
-                    "Join the timebank to contribute to the community for the change",
+                    "Join the group to contribute to the timebank for the change",
                   ),
                 ),
                 ListView.separated(
@@ -162,13 +158,16 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     if (_joinRequestModels.length != 0) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
-                    } else if (timebank.admins.contains(widget.loggedInUserModel.sevaUserID)) {
+                    } else if (timebank.admins
+                        .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
                       return makeItem(timebank, status);
-                    }else if (timebank.coordinators.contains(widget.loggedInUserModel.sevaUserID)) {
+                    } else if (timebank.coordinators
+                        .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
                       return makeItem(timebank, status);
-                    }else if (timebank.members.contains(widget.loggedInUserModel.sevaUserID)) {
+                    } else if (timebank.members
+                        .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
                       return makeItem(timebank, status);
                     } else {
@@ -261,8 +260,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     padding: const EdgeInsets.only(right: 7),
                     child: RaisedButton(
                       elevation: 0,
-                      shape: StadiumBorder(),
-                      textColor: Colors.lightBlue,
+                      color: Colors.grey[300],
+                      textColor: Theme.of(context).primaryColor,
                       child: Text(getTimeBankStatusTitle(status) ?? "",
                           style: TextStyle(fontSize: 14)),
                       onPressed: status == CompareToTimeBank.JOIN
@@ -355,11 +354,11 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {
         return CompareToTimeBank.JOINED;
-      } else if(timeBank.admins
-          .contains(widget.loggedInUserModel.sevaUserID)){
+      } else if (timeBank.admins
+          .contains(widget.loggedInUserModel.sevaUserID)) {
         return CompareToTimeBank.JOINED;
-      } else if(timeBank.coordinators
-          .contains(widget.loggedInUserModel.sevaUserID)){
+      } else if (timeBank.coordinators
+          .contains(widget.loggedInUserModel.sevaUserID)) {
         return CompareToTimeBank.JOINED;
       } else if (timeBank.members
           .contains(widget.loggedInUserModel.sevaUserID)) {

@@ -242,7 +242,7 @@ class RequestsState extends State<RequestsModule> {
                 Container(
                   width: 120,
                   child: CupertinoSegmentedControl<int>(
-                    selectedColor: Color.fromARGB(255, 4, 47, 110),
+                    selectedColor: Theme.of(context).primaryColor,
                     children: logoWidgets,
 
                     padding: EdgeInsets.only(left: 5.0, right: 5.0),
@@ -1060,7 +1060,7 @@ class RequestListItems extends StatelessWidget {
         var isMyContent = (model as GroupTitle).groupTitle.contains("My");
 
         return Container(
-          height: !isMyContent ? 15 : 0,
+          height: !isMyContent ? 18 : 0,
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
           child: Text(
             GroupRequestCommons.getGroupTitle(
