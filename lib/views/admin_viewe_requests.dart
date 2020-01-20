@@ -344,12 +344,10 @@ class ViewRequestsForAdmin extends StatelessWidget {
     if (timebankId != 'All') {
       return Scaffold(
           appBar: AppBar(
-            iconTheme: IconThemeData(color: Colors.black),
-            backgroundColor: Colors.white,
             title: Text(
               "Select a request",
               style: TextStyle(
-                color: Colors.black,
+                fontSize: 18,
               ),
             ),
           ),

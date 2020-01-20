@@ -63,21 +63,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     return MaterialApp(
       theme: FlavorConfig.values.theme,
       home: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             automaticallyImplyLeading: widget.keepOnBackPress,
-            leading: widget.keepOnBackPress
-                ? BackButton(
-                    color: Colors.black54,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                : null,
             elevation: 0.5,
             title: Text(
               'Find your Timebank',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
               ),
             ),
             centerTitle: true,

@@ -27,14 +27,14 @@ class InviteMembersState extends State<InviteMembers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(
-            FlavorConfig.values.timebankName == "Yang 2020"
-                ? "Yang Gang Codes"
-                : "Timebank codes",
-            style: TextStyle(
-              color: Colors.black,
-            )),
+          FlavorConfig.values.timebankName == "Yang 2020"
+              ? "Yang Gang Codes"
+              : "Timebank codes",
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -123,7 +123,7 @@ class InviteMembersState extends State<InviteMembers> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.black,
+        foregroundColor: Colors.white,
         icon: Icon(Icons.add),
         label: Text("Generate Code"),
         onPressed: () {

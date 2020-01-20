@@ -135,17 +135,17 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     print("Color ${color.primaryColor}");
     var finalWidget = Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(
           "Select volunteer",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         elevation: 0,
         actions: <Widget>[
           IconButton(
             icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
+              Icons.search,
+              // Icons.arrow_back,
+              // color: Colors.black,
             ),
             onPressed: () {
               Navigator.pop(context);

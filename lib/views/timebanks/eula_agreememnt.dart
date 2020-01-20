@@ -25,9 +25,7 @@ class EulaAgreementState extends State<EulaAgreement> {
               title: new Text(
                 'EULA Agreement',
                 style: TextStyle(
-                  // color: Colors.black54,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
                 ),
               ),
             ),

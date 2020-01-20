@@ -61,15 +61,11 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        backgroundColor: Colors.white,
+        
         title: Text(
           "Request Details",
           style: TextStyle(
-            color: Colors.black,
+            fontSize: 18,
           ),
         ),
       ),

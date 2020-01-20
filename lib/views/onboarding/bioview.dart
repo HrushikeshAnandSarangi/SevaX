@@ -41,7 +41,7 @@ class _BioViewState extends State<BioView> {
             elevation: 0.5,
             title: Text(
               'Bio',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 18),
             ),
             centerTitle: true,
           ),

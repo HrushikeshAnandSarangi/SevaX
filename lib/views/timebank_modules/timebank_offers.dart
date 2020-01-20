@@ -881,11 +881,9 @@ class OfferCardViewState extends State<OfferCardView> {
                 )
               : Offstage()
         ],
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
         title: Text(
           "Offer Details",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         elevation: 0.5,
       ),
