@@ -25,7 +25,7 @@ class CreateOffer extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Create volunteer offer',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         centerTitle: false,
       ),
@@ -193,10 +193,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Center(
                     child: Container(
-                      height: 50,
                       child: RaisedButton(
-                        shape: StadiumBorder(),
-                        color: Theme.of(context).accentColor,
+                        // shape: StadiumBorder(),
+                        // color: Theme.of(context).accentColor,
                         onPressed: () {
                           //if (location != null) {
                           if (_formKey.currentState.validate()) {
@@ -216,11 +215,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         },
                         child: Text(
                           '  Create volunteer offer  ',
-                          style: TextStyle(
-                            color: FlavorConfig.values.buttonTextColor,
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style: Theme.of(context).primaryTextTheme.button,
                         ),
                         textColor: Colors.white,
                       ),

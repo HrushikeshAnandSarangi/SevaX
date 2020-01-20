@@ -43,13 +43,17 @@ class FlavorConfig {
               // color: Color.fromARGB(255, 255, 166, 35),
               color: Color(0x0FF766FE0),
               // color: Colors.black,
+
               textTheme: TextTheme(
                 title: TextStyle(color: Colors.white),
               ),
-              iconTheme: IconThemeData(color: Colors.white),
+
+              iconTheme: IconThemeData(
+                color: Colors.white,
+              ),
               // iconTheme: IconThemeData(color: Colors.white),
               elevation: 0.7,
-              actionsIconTheme: IconThemeData(color: Colors.black),
+              actionsIconTheme: IconThemeData(color: Colors.white),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.green,

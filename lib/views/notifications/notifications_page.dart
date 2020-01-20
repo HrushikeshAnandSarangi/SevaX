@@ -7,11 +7,12 @@ class NotificationsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            'Notifications',
-            style: TextStyle(color: Colors.black),
-          )),
+        title: Text(
+          'Notifications',
+          style: TextStyle(fontSize: 18),
+        ),
+        centerTitle: true,
+      ),
       body: NotificationViewHolder(),
     );
   }

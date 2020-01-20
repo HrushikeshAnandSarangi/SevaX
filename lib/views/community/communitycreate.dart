@@ -31,8 +31,8 @@ class CreateEditCommunityView extends StatelessWidget {
         title: Text(
           title,
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            
           ),
         ),
       ),
