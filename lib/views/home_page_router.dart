@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sevaexchange/utils/animations/bottom_nav_data.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_dashboard.dart';
@@ -109,6 +110,10 @@ class CustomBottomNavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarBrightness: Brightness.light,
+  //   statusBarColor: Color(0x0FF766FE0),
+  // ));
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
@@ -117,8 +122,10 @@ class CustomBottomNavigationItem extends StatelessWidget {
         Container(
           height: selected ? selectedSize : unSelectedSize,
           child: Icon(
-            bottomNavigationData[index].icon,
-            color: selected ? Colors.white : Colors.grey,
+            selected
+                ? bottomNavigationData[index].icon
+                : bottomNavigationData[index].iconOutline,
+            color: selected ? Colors.white : Theme.of(context).primaryColor,
             // size: 40,
           ),
         ),

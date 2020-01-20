@@ -81,13 +81,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-//          leading: BackButton(color: Colors.black87),
-
-        title: Text("Time Banks",
+        title: Text("Time Bank",
             style: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.bold,
               fontFamily: "Europa",
             )),
         centerTitle: true,
@@ -261,8 +257,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     padding: const EdgeInsets.only(right: 7),
                     child: RaisedButton(
                       elevation: 0,
-                      shape: StadiumBorder(),
-                      textColor: Colors.lightBlue,
+                      color: Colors.grey[300],
+                      textColor: Theme.of(context).primaryColor,
                       child: Text(getTimeBankStatusTitle(status) ?? "",
                           style: TextStyle(fontSize: 14)),
                       onPressed: status == CompareToTimeBank.JOIN

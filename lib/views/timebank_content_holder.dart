@@ -130,61 +130,95 @@ Widget createAdminTabBar(
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        backgroundColor: Colors.white,
-        title: Text(timebankModel.name),
-        bottom: TabBar(
-          labelColor: Colors.black,
-          indicatorColor: Colors.black,
-          indicatorSize: TabBarIndicatorSize.label,
-          isScrollable: true,
-          tabs: [
-            Tab(
-              text: "Discussions",
-            ),
-            Tab(
-              text: "Requests",
-            ),
-            Tab(
-              text: "Offers",
-            ),
-            Tab(
-              text: "About",
-            ),
-            Tab(
-              text: "Members",
-            ),
-            Tab(
-              text: "Manage",
-            ),
-          ],
-        ),
+        centerTitle: true,
+        title: Text(timebankModel.name, style: TextStyle(fontSize: 18)),
+        // bottom: TabBar(
+        //   labelColor: Colors.black,
+        //   indicatorColor: Colors.black,
+        //   indicatorSize: TabBarIndicatorSize.label,
+        //   isScrollable: true,
+        //   tabs: [
+        //     Tab(
+        //       text: "Discussions",
+        //     ),
+        //     Tab(
+        //       text: "Requests",
+        //     ),
+        //     Tab(
+        //       text: "Offers",
+        //     ),
+        //     Tab(
+        //       text: "About",
+        //     ),
+        //     Tab(
+        //       text: "Members",
+        //     ),
+        //     Tab(
+        //       text: "Manage",
+        //     ),
+        //   ],
+        // ),
       ),
-      body: TabBarView(
-        children: [
-          DiscussionList(
-            timebankId: timebankId,
+      body: Column(
+        children: <Widget>[
+          TabBar(
+            labelColor: Theme.of(context).primaryColor,
+            indicatorColor: Theme.of(context).primaryColor,
+            indicatorSize: TabBarIndicatorSize.label,
+            unselectedLabelColor: Colors.black,
+            isScrollable: true,
+            tabs: [
+              Tab(
+                text: "Discussions",
+              ),
+              Tab(
+                text: "Requests",
+              ),
+              Tab(
+                text: "Offers",
+              ),
+              Tab(
+                text: "About",
+              ),
+              Tab(
+                text: "Members",
+              ),
+              Tab(
+                text: "Manage",
+              ),
+            ],
           ),
-          RequestsModule.of(
-            timebankId: timebankId,
-            timebankModel: timebankModel,
+          Container(
+            height: MediaQuery.of(context).size.height - 137,
+            child: TabBarView(
+              children: [
+                DiscussionList(
+                  timebankId: timebankId,
+                ),
+                RequestsModule.of(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
+                ),
+                OffersModule.of(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
+                ),
+                TimeBankAboutView.of(
+                  timebankModel: timebankModel,
+                  email: SevaCore.of(context).loggedInUser.email,
+                ),
+                TimebankRequestAdminPage(
+                  isUserAdmin: timebankModel.admins
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                  timebankId: timebankModel.id,
+                  userEmail: SevaCore.of(context).loggedInUser.email,
+                ),
+                ManageTimebankSeva.of(
+                  timebankModel: timebankModel,
+                )
+              ],
+            ),
           ),
-          OffersModule.of(
-            timebankId: timebankId,
-            timebankModel: timebankModel,
-          ),
-          TimeBankAboutView.of(
-            timebankModel: timebankModel,
-            email: SevaCore.of(context).loggedInUser.email,
-          ),
-          TimebankRequestAdminPage(
-            isUserAdmin: timebankModel.admins
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID),
-            timebankId: timebankModel.id,
-            userEmail: SevaCore.of(context).loggedInUser.email,
-          ),
-          ManageTimebankSeva.of(
-            timebankModel: timebankModel,
-          )
         ],
       ),
     ),
@@ -355,7 +389,7 @@ class DiscussionListState extends State<DiscussionList> {
                 child: CupertinoSegmentedControl<int>(
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                  selectedColor: Color.fromARGB(255, 4, 47, 110),
+                  selectedColor: Theme.of(context).primaryColor,
                   groupValue: sharedValue,
                   onValueChanged: (int val) {
                     print(val);
