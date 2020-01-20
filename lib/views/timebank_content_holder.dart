@@ -327,9 +327,10 @@ Widget createNormalUserTabBar(
               timebankModel: timebankModel,
               email: SevaCore.of(context).loggedInUser.email,
             ),
-            TimeBankAboutView.of(
-              timebankModel: timebankModel,
-              email: SevaCore.of(context).loggedInUser.email,
+            TimebankRequestAdminPage(
+              isUserAdmin: false,
+              timebankId: timebankModel.id,
+              userEmail: SevaCore.of(context).loggedInUser.email,
             ),
           ],
         )),

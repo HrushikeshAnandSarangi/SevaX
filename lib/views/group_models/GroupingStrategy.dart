@@ -81,7 +81,6 @@ class GroupRequestCommons {
   }
 
   static String getGroupTitle({String groupKey}) {
-
     switch (groupKey) {
       case "MyPost":
         return "My Requests";
@@ -136,6 +135,8 @@ class GroupOfferCommons {
 
     List<OfferModelList> consolidatedList = List();
 
+    hashedList.keys.toList()..sort();
+
     hashedList.forEach((k, v) {
       consolidatedList.add(OfferTitle.create(groupTitle: k));
       for (var req in v) {
@@ -171,6 +172,8 @@ class GroupOfferCommons {
       }
     }
 
+    hashMap.keys.toList()..sort();
+
     return hashMap;
   }
 
@@ -182,7 +185,6 @@ class GroupOfferCommons {
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
         return 'Group Offers';
-
       default:
         return "Others";
     }

@@ -442,8 +442,8 @@ class OfferListItems extends StatelessWidget {
         var isMyContent =
             (offerModelList as OfferTitle).groupTitle.contains("My");
         return Container(
-          height: isMyContent ? 0 : 18,
-          margin: isMyContent ? EdgeInsets.all(0) : EdgeInsets.all(12),
+          height: isMyContent ? 18 : 18,
+          margin: isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(12),
           child: Text(
             GroupOfferCommons.getGroupTitleForOffer(
                 groupKey: (offerModelList as OfferTitle).groupTitle),

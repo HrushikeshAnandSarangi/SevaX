@@ -57,7 +57,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'Join Headspace Community',
+          'Join Timebank',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 18,
@@ -116,9 +116,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     left: 50.0, right: 50.0, top: 10.0, bottom: 25.0),
                 child: Text(
                   //'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
-                  'Enter the code you received from' +
-                      ' team Name ' +
-                      'loc Admin to see the volunteer opportunities.',
+                  'Enter the code you received from your admin to see the volunteer opportunities.',
                   textDirection: TextDirection.ltr,
                   textAlign: TextAlign.center,
 
