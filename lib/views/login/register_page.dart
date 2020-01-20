@@ -61,15 +61,15 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-          centerTitle: true,
-          elevation: 0.5,
-          // backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
-          title: new Text('Your details',
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500))),
+        centerTitle: true,
+        elevation: 0.5,
+        title: new Text(
+          'Your details',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
