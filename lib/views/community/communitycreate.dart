@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,14 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page_router.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -55,10 +59,20 @@ class CreateEditCommunityViewForm extends StatefulWidget {
   }
 }
 
+
+
 // Create a corresponding State class. This class will hold the data related to
 // the form.
 class CreateEditCommunityViewFormState
     extends State<CreateEditCommunityViewForm> {
+
+  final TextEditingController searchTextController =
+  new TextEditingController();
+
+
+
+
+
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
   //
@@ -71,6 +85,7 @@ class CreateEditCommunityViewFormState
   String selectedAddress = '';
   String _billingDetailsError = '';
   String communityImageError = '';
+  String enteredName ='';
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
@@ -80,6 +95,8 @@ class CreateEditCommunityViewFormState
   String selectedCountryValue = "Select your country";
 
   var scrollIsOpen = false;
+  var communityFound = false;
+
 
   void initState() {
     super.initState();
@@ -91,6 +108,9 @@ class CreateEditCommunityViewFormState
     if (FlavorConfig.appFlavor == Flavor.APP) {
       fetchCurrentlocation();
     }
+
+
+
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -138,7 +158,7 @@ class CreateEditCommunityViewFormState
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Center(
+                        Center(
                     child: Padding(
                       padding: EdgeInsets.all(5.0),
                       child: Column(
@@ -164,22 +184,32 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your Community'),
                   TextFormField(
+                    onChanged: (value){
+                      enteredName=value;
+                    },
                     decoration: InputDecoration(
                       hintText: "Ex: Pets-in-town, Citizen collab",
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    initialValue: snapshot.data.community.name,
-                    validator: (value) {
-                      if (value.isEmpty) {
+                    initialValue: snapshot.data.community.name??'',
+                   onSaved: (value) => enteredName=value,
+                   validator: (value) {
+                      if (value.isEmpty ) {
                         return 'Community name cannot be empty';
-                      } else {
+                     } else if(communityFound){
+                        return 'Community name already exist';
+                     }
+                      else {
+                        enteredName = value;
                         snapshot.data.community.updateValueByKey('name', value);
                         createEditCommunityBloc.onChange(snapshot.data);
                       }
-                      return null;
+
+                     return null;
                     },
                   ),
+
                   headingText('About'),
                   TextFormField(
                     decoration: InputDecoration(
@@ -298,7 +328,9 @@ class CreateEditCommunityViewFormState
                         alignment: Alignment.center,
                         child: RaisedButton(
                           onPressed: () async {
+
                             print(_formKey.currentState.validate());
+
                             if (_formKey.currentState.validate()) {
                               if (_billingInformationKey.currentState
                                   .validate()) {
@@ -315,7 +347,11 @@ class CreateEditCommunityViewFormState
                                   setState(() {
                                     this.communityImageError = '';
                                   });
-
+                                  communityFound = await isCommunityFound(enteredName);
+                                  if(communityFound){
+                                    print("Found:$communityFound");
+                                    return;
+                                  }
                                   // creation of community;
                                   snapshot.data.UpdateCommunityDetails(
                                     SevaCore.of(context).loggedInUser,
@@ -421,6 +457,7 @@ class CreateEditCommunityViewFormState
       child: contain,
     );
   }
+
 
   Widget headingText(String name) {
     return Padding(
@@ -851,4 +888,35 @@ class CreateEditCommunityViewFormState
       duration: const Duration(milliseconds: 300),
     );
   }
+
+  Future<bool> isCommunityFound(String enteredName) async{
+    //ommunityBloc.fetchCommunities(enteredName);
+    CommunityListModel communities=CommunityListModel();
+    var communitiesFound = await searchCommunityByName(enteredName,communities);
+    if(communitiesFound==null||communitiesFound.communities==null || communitiesFound.communities.length==0){
+      return false;
+    }else{
+      return true;
+    }
+
+  }
+  Future<CommunityListModel> searchCommunityByName(String name,CommunityListModel communities) async {
+    communities.removeall();
+    if (name.isNotEmpty && name.length > 4) {
+      await Firestore.instance
+          .collection('communities')
+          .where('name', isEqualTo: name)
+          .getDocuments()
+          .then((QuerySnapshot querySnapshot) {
+        querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+          var community = CommunityModel(documentSnapshot.data);
+          print("community data ${community.name}");
+
+          communities.add(community);
+        });
+      });
+    }
+    return communities;
+  }
 }
+

@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
@@ -34,7 +37,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         .addListener(() => _textUpdates.add(searchTextController.text));
 
     Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 1200))
+        .debounceTime(Duration(milliseconds: 400))
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {
@@ -202,7 +205,28 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                       fontWeight: FontWeight.w700)),
                               // subtitle: Text("Created by " +
                               //     snapshot.data.communities[index].created_by),
-                              subtitle: Text("Comunity"),
+                              subtitle: FutureBuilder(
+                                future: getUserForId(sevaUserId:snapshot.data.communities[index].created_by),
+                                builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Text(
+                                      "Not found",
+                                    );
+                                  }
+                                  else if(snapshot.connectionState==ConnectionState.waiting){
+                                    return Text("...");
+                                  }
+                                  else if (snapshot.hasData) {
+                                    return Text(
+                                      "Created by "+snapshot.data.fullname,
+                                    );
+                                  } else {
+                                    return Text(
+                                      "Community",
+                                    );
+                                  }
+                                },
+                              ),
                               trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[

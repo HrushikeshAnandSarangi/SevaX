@@ -14,9 +14,9 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/splash_view.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/splash_view.dart' as DefaultSplashView;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -586,10 +586,10 @@ class _RegisterPageState extends State<RegisterPage>
     try {
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
-      print(erorr);
+      print("Platform Exception --->  $erorr");
       handlePlatformException(erorr);
     } on Exception catch (error) {
-      print(error);
+      print("Failed signing in the user with Exception :  $error");
     }
     isLoading = false;
     _processLogin(user);
@@ -601,7 +601,7 @@ class _RegisterPageState extends State<RegisterPage>
     }
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => SplashView(),
+        builder: (context) => DefaultSplashView.SplashView(),
       ),
     );
   }
