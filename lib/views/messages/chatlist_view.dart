@@ -48,12 +48,12 @@ class _ChatListViewState extends State<ChatListView> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text(
-            'Conversations',
-            style: TextStyle(color: Colors.black),
-          )),
+        title: Text(
+          'Conversations',
+          style: TextStyle(fontSize: 18),
+        ),
+        centerTitle: true,
+      ),
       body: StreamBuilder<List<ChatModel>>(
         stream: getChatsforUser(
           email: SevaCore.of(context).loggedInUser.email,
@@ -243,14 +243,13 @@ class _ChatListViewState extends State<ChatListView> {
     return Dismissible(
       key: Key(chatModel.user1),
 
-      onDismissed: (direction){
+      onDismissed: (direction) {
         _ackAlert(
           SevaCore.of(context).loggedInUser.email,
           chatModel,
           context,
         );
         // Then show a snackbar.
-
       },
       // a red background as the item is swiped away.
       background: Container(color: Colors.red),
@@ -265,10 +264,10 @@ class _ChatListViewState extends State<ChatListView> {
                 parentContext,
                 MaterialPageRoute(
                   builder: (context) => ChatView(
-                    useremail:
-                        SevaCore.of(context).loggedInUser.email == chatModel.user1
-                            ? chatModel.user2
-                            : chatModel.user1,
+                    useremail: SevaCore.of(context).loggedInUser.email ==
+                            chatModel.user1
+                        ? chatModel.user2
+                        : chatModel.user1,
                     chatModel: chatModel,
                   ),
                 ),
@@ -315,12 +314,14 @@ class _ChatListViewState extends State<ChatListView> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(right:8.0),
+                        padding: const EdgeInsets.only(right: 8.0),
                         child: Text(
-                          timeAgo.format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                chatModel.timestamp),
-                          ).replaceAll('hours ago', 'h'),
+                          timeAgo
+                              .format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    chatModel.timestamp),
+                              )
+                              .replaceAll('hours ago', 'h'),
                           style: TextStyle(fontSize: 10),
                         ),
                       ),
@@ -558,9 +559,7 @@ class _ChatListViewState extends State<ChatListView> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-
-                });
+                setState(() {});
                 Navigator.of(context).pop();
               },
             ),
@@ -607,8 +606,9 @@ class _ChatListViewState extends State<ChatListView> {
 
                 setState(() {
                   print("Update and remove the object from list");
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text("${chatModel.messagTitleUserName} Removed")));
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text("${chatModel.messagTitleUserName} Removed")));
                   // chatModel = chatModel;
                 });
 

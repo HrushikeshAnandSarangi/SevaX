@@ -27,7 +27,7 @@ class TimebankCreate extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0.5,
-        leading: BackButton(color: Colors.black54),
+        // leading: BackButton(color: Colors.black54),
         title: Text(
           'Create a ${FlavorConfig.values.timebankTitle}',
           style: TextStyle(

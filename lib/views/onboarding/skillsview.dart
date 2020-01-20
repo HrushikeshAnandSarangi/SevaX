@@ -101,8 +101,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
           title: Text(
             'Interests',
             style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
+              fontSize: 18,
+              
             ),
           ),
           centerTitle: true,
@@ -334,7 +334,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           elevation: 0.5,
           title: Text(
             'Skills',
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 18),
           ),
           centerTitle: true,
         ),

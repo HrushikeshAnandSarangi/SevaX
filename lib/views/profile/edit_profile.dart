@@ -444,6 +444,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                 child: Container(
                   width: 134,
                   child: RaisedButton(
+                    color: Colors.red,
                     child: Text(
                       'Logout',
                       style: Theme.of(context).primaryTextTheme.button,
@@ -585,7 +586,10 @@ class _EditProfilePageState extends State<EditProfilePage>
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Log Out"),
+              child: new Text(
+                "Log Out",
+                style: TextStyle(color: Colors.red),
+              ),
               onPressed: () {
                 // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                 //   statusBarBrightness: Brightness.light,
