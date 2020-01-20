@@ -1260,6 +1260,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                 SevaCore.of(context)
                                     .loggedInUser
                                     .timebankIdForYangGangAdmin,
+                                    SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity,
                               ),
                             ),
                           ),

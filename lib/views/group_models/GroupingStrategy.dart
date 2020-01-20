@@ -150,6 +150,8 @@ class GroupOfferCommons {
       {List<OfferModel> offerModelList, String sevaUserId}) {
     HashMap<String, List<OfferModel>> hashMap = new HashMap();
 
+    // offerModelList.sort();
+
     for (var offer in offerModelList) {
       if (offer.sevaUserId == sevaUserId) {
         if (hashMap["MyOffers"] == null) {

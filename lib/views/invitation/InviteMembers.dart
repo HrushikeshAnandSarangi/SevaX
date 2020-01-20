@@ -6,15 +6,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:share/share.dart';
 
 import 'TimebankCodeModel.dart';
 
 class InviteMembers extends StatefulWidget {
+  final String communityId;
   final String timebankId;
 
-  InviteMembers(this.timebankId);
+  InviteMembers(this.timebankId, this.communityId);
 
   @override
   State<StatefulWidget> createState() => InviteMembersState(timebankId);
@@ -201,8 +201,7 @@ class InviteMembersState extends State<InviteMembers> {
                   timebankCode: timebankCode,
                   timebankId: timebankId,
                   validUpto: oneDayFromToday,
-                  communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity,
+                  communityId: widget.communityId,
                 );
                 Navigator.of(context).pop("completed");
               },
@@ -230,7 +229,7 @@ class InviteMembersState extends State<InviteMembers> {
       "timebankCode": timebankCode,
       "validUpto": validUpto,
       "createdOn": DateTime.now().millisecondsSinceEpoch,
-      "timebankCode": communityId,
+      "communityId": communityId,
     }).then((doc) {
       // task completed
     });
