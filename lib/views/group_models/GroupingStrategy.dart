@@ -81,13 +81,14 @@ class GroupRequestCommons {
   }
 
   static String getGroupTitle({String groupKey}) {
-
     switch (groupKey) {
       case "MyPost":
         return "My Requests";
 
       case "Others":
-        return FlavorConfig.appFlavor == Flavor.APP ? "Timebank Requests" : "Yang Gang Requests";
+        return FlavorConfig.appFlavor == Flavor.APP
+            ? "Timebank Requests"
+            : "Yang Gang Requests";
 
       default:
         return "Others";
@@ -156,15 +157,18 @@ class GroupOfferCommons {
         } else {
           //add to existing
           hashMap["MyOffers"].add(offer);
+          print("adding to my offers__________________ $offer");
         }
       } else {
         if (hashMap["Others"] == null) {
           //create new list
           hashMap["Others"] = List();
           hashMap["Others"].add(offer);
+          print("adding to other offers__________________ $offer");
         } else {
           //add to existing
           hashMap["Others"].add(offer);
+          print("adding to other offers__________________ $offer");
         }
       }
     }

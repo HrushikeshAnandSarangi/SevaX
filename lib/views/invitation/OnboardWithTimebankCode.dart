@@ -388,19 +388,19 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               {
                 _showDialog(
                     activityContext: context,
-                    mode: TimeBankResponseModes.CODE_EXPIRED,
-                    dialogTitle: "Code Expired!",
+                    mode: TimeBankResponseModes.NO_CODE,
+                    dialogTitle: "Code not found",
                     dialogSubTitle:
-                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code was not registered, please check the code and try again!")
               }
-            else if (state == 'Invalid')
+            else if (state == 'code_expired')
               {
                 _showDialog(
                     activityContext: context,
                     mode: TimeBankResponseModes.CODE_EXPIRED,
-                    dialogTitle: "Code Expired!",
+                    dialogTitle: "Code Experired!",
                     dialogSubTitle:
-                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a new one!")
               }
             else
               {
@@ -452,7 +452,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 })
               }
           };
-      createEditCommunityBloc.VerifyTimebankWithCode(controller.text, func);
+      createEditCommunityBloc.VerifyTimebankWithCode(
+        controller.text,
+        func,
+        widget.communityModel.id,
+      );
     } else {
       if (controller.text.length != 6) {
         setError(errorMessage: "Please enter PIN to verify");

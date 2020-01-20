@@ -39,10 +39,8 @@ class TimebankTabsViewHolder extends StatelessWidget {
   final TimebankModel timebankModel;
   //final UserModel loggedInUser;
 
- // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
+  // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
   //final UserModel loggedInUser;
-
-
 
   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
   //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
@@ -50,7 +48,7 @@ class TimebankTabsViewHolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabarView(
-     // loggedInUser: loggedInUser,
+      // loggedInUser: loggedInUser,
       timebankId: timebankId,
       timebankModel: timebankModel,
     );
@@ -386,35 +384,40 @@ class DiscussionListState extends State<DiscussionList> {
         Divider(
           color: Colors.white,
           height: 0,
-        ),InkWell(
-          onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>NewsCreate(timebankId: widget.timebankId,)));
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NewsCreate(
+                      timebankId: widget.timebankId,
+                    )));
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: <Widget>[
                 CircleAvatar(
-                  backgroundImage:
-                  NetworkImage(SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL),
+                  backgroundImage: NetworkImage(
+                      SevaCore.of(context).loggedInUser.photoURL ??
+                          defaultUserImageURL),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 Expanded(
-
                   child: Container(
                     height: 40,
                     decoration: BoxDecoration(
                       borderRadius: new BorderRadius.circular(10.7),
                       color: Colors.grey[200],
                     ),
-
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(' Start a new discussion....',
+                      child: Text(
+                        ' Start a new discussion....',
                         maxLines: 1,
                         textAlign: TextAlign.start,
-                        style: TextStyle(
-                        fontSize: 16),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                   ),
@@ -423,7 +426,6 @@ class DiscussionListState extends State<DiscussionList> {
             ),
           ),
         ),
-
         widget.timebankId != 'All' && isNearMe == false
             ? StreamBuilder<List<NewsModel>>(
                 stream: FirestoreManager.getNewsStream(
@@ -468,9 +470,9 @@ class DiscussionListState extends State<DiscussionList> {
                               if (index == 0) {
                                 return Column(
                                   children: <Widget>[
-                                    getCreateFeedCard(
-                                      news: newsList.elementAt(index),
-                                    ),
+                                    // getCreateFeedCard(
+                                    //   news: newsList.elementAt(index),
+                                    // ),
                                     getNewsCard(
                                       newsList.elementAt(index),
                                       false,

@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:share/share.dart';
 
 import 'TimebankCodeModel.dart';
@@ -200,6 +201,8 @@ class InviteMembersState extends State<InviteMembers> {
                   timebankCode: timebankCode,
                   timebankId: timebankId,
                   validUpto: oneDayFromToday,
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity,
                 );
                 Navigator.of(context).pop("completed");
               },
@@ -216,13 +219,18 @@ class InviteMembersState extends State<InviteMembers> {
     return base64Url.encode(values).substring(0, 6).toLowerCase();
   }
 
-  void registerTimebankCode(
-      {String timebankId, String timebankCode, int validUpto}) {
+  void registerTimebankCode({
+    String timebankId,
+    String timebankCode,
+    int validUpto,
+    String communityId,
+  }) {
     Firestore.instance.collection("timebankCodes").add({
       "timebankId": timebankId,
       "timebankCode": timebankCode,
       "validUpto": validUpto,
-      "createdOn": DateTime.now().millisecondsSinceEpoch
+      "createdOn": DateTime.now().millisecondsSinceEpoch,
+      "timebankCode": communityId,
     }).then((doc) {
       // task completed
     });

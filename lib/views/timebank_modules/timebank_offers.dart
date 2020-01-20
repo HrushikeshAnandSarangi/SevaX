@@ -337,6 +337,9 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+              
+              print("============== $consolidatedList");
+
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -372,7 +375,9 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-              // return Text('sample');
+              
+
+
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -411,6 +416,9 @@ class OfferListItems extends StatelessWidget {
                 );
               }
               return getOfferWidget(consolidatedList[index]);
+
+
+
             }
             // children: consolidatedList.map((OfferModelList offerModel) {
             //   return getOfferWidget(offerModel);
@@ -630,7 +638,7 @@ class NearOfferListItems extends StatelessWidget {
               }
               return Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       OfferModel offer = offersList[index];
@@ -705,10 +713,10 @@ class NearOfferListItems extends StatelessWidget {
 
   Widget getOfferWidget(OfferModel model) {
     return Container(
-      decoration: containerDecoration,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      // decoration: containerDecoration,
+      // margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Card(
-        elevation: 0,
+        elevation: 2,
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -1289,7 +1297,9 @@ class OfferCardViewState extends State<OfferCardView> {
                   ),
                   onPressed: () async {
                     if (widget.timebankModel != null &&
-                        widget.timebankModel.protected) {
+                        widget.timebankModel.protected &&
+                        !(widget.timebankModel.admins.contains(
+                            SevaCore.of(context).loggedInUser.sevaUserID))) {
                       _showProtectedTimebankMessage();
                       return;
                     }
