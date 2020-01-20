@@ -86,17 +86,20 @@ class _BioViewState extends State<BioView> {
                             textCapitalization: TextCapitalization.sentences,
                             minLines: 6,
                             maxLines: 50,
+                            maxLength: 150,
                             validator: (value) {
                               if (value.trim().isEmpty) {
                                 return 'Its easy, please fill few words about you.';
                               }
+                              if (value.length < 50)
+                                return '* min 50 characters';
                               this.bio = value;
                             },
                           ),
-                          Text(
-                            '*min 100 characters',
-                            style: TextStyle(color: Colors.red),
-                          )
+                          // Text(
+                          //   '*min 100 characters',
+                          //   style: TextStyle(color: Colors.red),
+                          // )
                         ],
                       ),
                     )
