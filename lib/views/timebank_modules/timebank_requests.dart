@@ -1059,7 +1059,7 @@ class RequestListItems extends StatelessWidget {
         var isMyContent = (model as GroupTitle).groupTitle.contains("My");
 
         return Container(
-          height: !isMyContent ? 15 : 0,
+          height: !isMyContent ? 18 : 0,
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
           child: Text(
             GroupRequestCommons.getGroupTitle(

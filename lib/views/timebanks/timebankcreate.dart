@@ -29,7 +29,8 @@ class TimebankCreate extends StatelessWidget {
         elevation: 0.5,
         // leading: BackButton(color: Colors.black54),
         title: Text(
-          'Create a ${FlavorConfig.values.timebankTitle}',
+          // 'Create a ${FlavorConfig.values.timebankTitle}',
+          'Create Your Group',
           style: TextStyle(
             fontSize: 20,
           ),
@@ -145,7 +146,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
-              'Timebank is where you can create requests and get offers with in your timebank.',
+              'Group is a subset of a Timebank that may be temporary. Ex: committees, project teams.',
               textAlign: TextAlign.center,
             ),
           ),
@@ -155,9 +156,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             child: Column(
               children: <Widget>[
                 TimebankAvatar(),
-                Text(''),
+                SizedBox(height: 5),
                 Text(
-                  'Timebank cover',
+                  'Your logo',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
@@ -166,7 +167,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ],
             ),
           )),
-          headingText('Name your timebank'),
+          headingText('Name your group'),
           TextFormField(
             decoration: InputDecoration(
               hintText: "Ex: Pets-in-town, Citizen collab",
@@ -183,7 +184,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           headingText('About'),
           TextFormField(
             decoration: InputDecoration(
-              hintText: 'Ex: A bit more about your timebank',
+              hintText: 'Ex: A bit more about your group',
             ),
             keyboardType: TextInputType.multiline,
             maxLines: null,
@@ -197,7 +198,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           tappableInviteMembers,
           Row(
             children: <Widget>[
-              headingText('Private timebank'),
+              headingText('Private group'),
               Column(
                 children: <Widget>[
                   Divider(),
@@ -216,7 +217,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ],
           ),
           Text(
-            'With private timebank, new members needs yor approval to join timebank',
+            'With protected group, user to user transactions are disabled.',
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey,

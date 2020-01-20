@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage>
                         child: FadeAnimation(
                           1,
                           Text(
-                            "Your Time Bank(s)",
+                            "Your Groups",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black87,
@@ -96,8 +96,7 @@ class _MyHomePageState extends State<MyHomePage>
                                 ),
                               ),
                             );
-                          }
-                      ),
+                          }),
                     ],
                   ),
                   //SizedBox(height: 20,),

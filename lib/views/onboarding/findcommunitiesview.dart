@@ -87,7 +87,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          'Look for existing communities to join',
+          'Look for existing timebanks to join',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -116,7 +116,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: 'Type your community name. Ex: Alaska (min 5 char)',
+              hintText: 'Type your timebank name. Ex: Alaska (min 5 char)',
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         buildList(),
@@ -206,19 +206,21 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                               // subtitle: Text("Created by " +
                               //     snapshot.data.communities[index].created_by),
                               subtitle: FutureBuilder(
-                                future: getUserForId(sevaUserId:snapshot.data.communities[index].created_by),
-                                builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+                                future: getUserForId(
+                                    sevaUserId: snapshot
+                                        .data.communities[index].created_by),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<UserModel> snapshot) {
                                   if (snapshot.hasError) {
                                     return Text(
                                       "Not found",
                                     );
-                                  }
-                                  else if(snapshot.connectionState==ConnectionState.waiting){
+                                  } else if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return Text("...");
-                                  }
-                                  else if (snapshot.hasData) {
+                                  } else if (snapshot.hasData) {
                                     return Text(
-                                      "Created by "+snapshot.data.fullname,
+                                      "Created by " + snapshot.data.fullname,
                                     );
                                   } else {
                                     return Text(
