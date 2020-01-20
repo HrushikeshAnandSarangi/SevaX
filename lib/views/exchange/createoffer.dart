@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
@@ -69,6 +70,9 @@ class MyCustomFormState extends State<MyCustomForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.timebankId = _selectedTimebankId;
+    if (FlavorConfig.appFlavor == Flavor.APP) {
+      fetchCurrentlocation();
+    }
   }
 
   void _writeToDB() async {
@@ -243,6 +247,23 @@ class MyCustomFormState extends State<MyCustomForm> {
     log('_getLocation: $address');
     setState(() {
       this.selectedAddress = address;
+    });
+  }
+
+  void fetchCurrentlocation() {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
     });
   }
 }

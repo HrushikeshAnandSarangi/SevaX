@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'edit_super_admins_view.dart';
@@ -49,6 +50,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
   HashMap<String, bool> adminToModelMap = HashMap();
+  Map onActivityResult;
+  var selectedUsers = HashMap();
   var nullCount = 0;
 
   @override
@@ -603,6 +606,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadNextMembers() async {
     if (_members.length == 0) {
+//      var addMember = GestureDetector(
+//        child: Row(
+//          children: <Widget>[
+//            getSectionTitle(context, 'Members'),
+//            CircleAvatar(
+//              backgroundColor: Colors.white,
+//              radius: 10,
+//              child: Image.asset("lib/assets/images/add.png"),
+//            ),
+//          ],
+//        ),
+//        onTap: (){
+//          addVolunteers();
+//        },
+//      );
+//      _members.add(addMember);
       _members.add(getSectionTitle(context, 'Members'));
     }
     if (!_isLoading && !_lastReached) {
@@ -769,6 +788,20 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         ],
       ),
     );
+  }
+
+  void addVolunteers() async {
+    onActivityResult = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SelectMembersInGroup(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          userSelected:
+          selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
+          userEmail: SevaCore.of(context).loggedInUser.email,
+        ),
+      ),
+    );
+
   }
 
   Widget getDataCard({

@@ -991,7 +991,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                       subtitle: FutureBuilder<String>(
                                         future: _getLocation(
                                           widget.offerModel.location.latitude,
-                                          widget.offerModel.location.latitude,
+                                          widget.offerModel.location.longitude,
                                         ),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasError) {
