@@ -110,10 +110,10 @@ class CustomBottomNavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarBrightness: Brightness.light,
-    statusBarColor: Color(0x0FF766FE0),
-  ));
+  //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarBrightness: Brightness.light,
+  //   statusBarColor: Color(0x0FF766FE0),
+  // ));
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,

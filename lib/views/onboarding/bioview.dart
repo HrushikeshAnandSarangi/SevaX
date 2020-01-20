@@ -39,7 +39,6 @@ class _BioViewState extends State<BioView> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             elevation: 0.5,
-            leading: BackButton(color: Colors.black54),
             title: Text(
               'Bio',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),

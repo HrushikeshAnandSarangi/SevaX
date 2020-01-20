@@ -46,6 +46,7 @@ class FlavorConfig {
               textTheme: TextTheme(
                 title: TextStyle(color: Colors.white),
               ),
+              iconTheme: IconThemeData(color: Colors.white),
               // iconTheme: IconThemeData(color: Colors.white),
               elevation: 0.7,
               actionsIconTheme: IconThemeData(color: Colors.black),

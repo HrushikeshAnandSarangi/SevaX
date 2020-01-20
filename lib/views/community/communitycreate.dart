@@ -27,14 +27,13 @@ class CreateEditCommunityView extends StatelessWidget {
     var title = 'Create your community';
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         elevation: 0.5,
-        backgroundColor: Color(0xFFFFFFFF),
-        leading: BackButton(color: Colors.black54),
         title: Text(
           title,
           style: TextStyle(
-              color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w500),
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       body: CreateEditCommunityViewForm(
@@ -298,7 +297,6 @@ class CreateEditCommunityViewFormState
                     child: Container(
                         alignment: Alignment.center,
                         child: RaisedButton(
-                          color: Theme.of(context).accentColor,
                           onPressed: () async {
                             print(_formKey.currentState.validate());
                             if (_formKey.currentState.validate()) {

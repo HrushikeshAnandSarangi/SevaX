@@ -160,12 +160,12 @@ Widget createAdminTabBar(
       body: Column(
         children: <Widget>[
           TabBar(
-            labelColor: Colors.black,
-            indicatorColor: Colors.black,
+            labelColor: Theme.of(context).primaryColor,
+            indicatorColor: Theme.of(context).primaryColor,
             indicatorSize: TabBarIndicatorSize.label,
+            unselectedLabelColor: Colors.black,
             isScrollable: true,
             tabs: [
-              
               Tab(
                 text: "Discussions",
               ),
@@ -387,7 +387,7 @@ class DiscussionListState extends State<DiscussionList> {
                 child: CupertinoSegmentedControl<int>(
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                  selectedColor: Color.fromARGB(255, 4, 47, 110),
+                  selectedColor: Theme.of(context).primaryColor,
                   groupValue: sharedValue,
                   onValueChanged: (int val) {
                     print(val);

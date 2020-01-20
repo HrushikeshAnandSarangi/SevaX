@@ -125,7 +125,6 @@ class RequestsState extends State<RequestsModule> {
                             SevaCore.of(context).loggedInUser.currentCommunity,
                       ),
                       builder: (context, snapshot) {
-
                         if (snapshot.hasError)
                           return new Text('Error: ${snapshot.error}');
                         if (snapshot.connectionState ==
@@ -227,7 +226,7 @@ class RequestsState extends State<RequestsModule> {
                 Container(
                   width: 120,
                   child: CupertinoSegmentedControl<int>(
-                    selectedColor: Color.fromARGB(255, 4, 47, 110),
+                    selectedColor: Theme.of(context).primaryColor,
                     children: logoWidgets,
 
                     padding: EdgeInsets.only(left: 5.0, right: 5.0),

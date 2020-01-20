@@ -19,9 +19,9 @@ class EulaAgreementState extends State<EulaAgreement> {
             appBar: AppBar(
               centerTitle: true,
               elevation: 0.5,
-              leading: BackButton(
-                color: Colors.white,
-              ),
+              // leading: BackButton(
+              //   color: Colors.white,
+              // ),
               title: new Text(
                 'EULA Agreement',
                 style: TextStyle(
