@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -15,6 +17,7 @@ import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class TimeBankRequestDetails extends StatefulWidget {
   final RequestModel requestItem;
+  TimebankModel timebankModel;
 
   final bool applied;
   TimeBankRequestDetails({Key key, this.applied = false, this.requestItem})
@@ -45,6 +48,15 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
   @override
   void initState() {
     super.initState();
+
+    getTimeBankForId(timebankId: widget.requestItem.timebankId)
+        .then((timebank) {
+      widget.timebankModel = timebank;
+      if (timebank.admins
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+          timebank.coordinators
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
+    });
   }
 
   @override
@@ -383,14 +395,18 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     ],
                   ),
                   onPressed: () {
-                    if (isApplied) {
-                      print("Withraw request");
-                      _withdrawRequest();
+                    if (widget.timebankModel.protected) {
+                      if (widget.timebankModel.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID)) {
+                        applyAction();
+                      } else {
+                        //show dialog
+                        _showProtectedTimebankMessage();
+                        print("not authorized");
+                      }
                     } else {
-                      print("Accept request");
-                      _acceptRequest();
+                      applyAction();
                     }
-                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -399,6 +415,40 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
         ),
       ),
     );
+  }
+
+  void _showProtectedTimebankMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Protected Timebank"),
+          content: new Text("You cannot accept requests in a protected timebank"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void applyAction() {
+    if (isApplied) {
+      print("Withraw request");
+      _withdrawRequest();
+    } else {
+      print("Accept request");
+      _acceptRequest();
+    }
+    Navigator.pop(context);
   }
 
   void _acceptRequest() {

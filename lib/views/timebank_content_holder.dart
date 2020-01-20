@@ -512,9 +512,9 @@ class DiscussionListState extends State<DiscussionList> {
                               if (index == 0) {
                                 return Column(
                                   children: <Widget>[
-                                    getCreateFeedCard(
-                                      news: newsList.elementAt(index),
-                                    ),
+                                    // getCreateFeedCard(
+                                    //   news: newsList.elementAt(index),
+                                    // ),
                                     getNewsCard(
                                       newsList.elementAt(index),
                                       false,

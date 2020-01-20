@@ -599,11 +599,12 @@ class _RegisterPageState extends State<RegisterPage>
     if (userModel == null) {
       return;
     }
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => DefaultSplashView.SplashView(),
-      ),
-    );
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => DefaultSplashView.SplashView(),
+        ),
+        (Route<dynamic> route) => false);
   }
 
   void handlePlatformException(PlatformException error) {
