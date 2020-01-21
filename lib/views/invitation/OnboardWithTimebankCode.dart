@@ -54,24 +54,23 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
-          centerTitle: true,
-          title: Text(
-            'Join' + ' Community',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.black54,
-                fontSize: 20,
-                fontWeight: FontWeight.w500),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          'Join Timebank',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            // fontWeight: FontWeight.w500,
           ),
         ),
-        body: SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: Column(
-                    children: <Widget>[timebankStreamBuilder(context)]))));
+      ),
+      body: SingleChildScrollView(
+        child: Container(child: timebankStreamBuilder(context)),
+      ),
+    );
+    // child: Column(
+    //     children: <Widget>[]))));
   }
 
   Widget timebankStreamBuilder(context) {
@@ -102,7 +101,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     this.timebankModel = communityCreateEditSnapshot.timebank;
     // globals.timebankAvatarURL = timebankModel.photoUrl;
     return Container(
-      height: MediaQuery.of(context).size.height - 80,
+      height: MediaQuery.of(context).size.height - 90,
       child: Column(
         //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -117,9 +116,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     left: 50.0, right: 50.0, top: 10.0, bottom: 25.0),
                 child: Text(
                   //'Enter the code you received from your ${FlavorConfig.values.timebankTitle} Coordinator to see the exchange opportunities for your group.',
-                  'Enter the code you received from' +
-                      ' team Name ' +
-                      'loc Admin to see the volunteer opportunities.',
+                  'Enter the code you received from your admin to see the volunteer opportunities.',
                   textDirection: TextDirection.ltr,
                   textAlign: TextAlign.center,
 
@@ -196,7 +193,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   'Request Join Link',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: Theme.of(context).accentColor,
                     fontWeight: FontWeight.bold,
                     decoration: TextDecoration.underline,
                     fontSize: 17,
@@ -322,16 +319,17 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
             flex: 3,
           ),
           SizedBox(
-            width: 120,
+            width: 134,
             child: RaisedButton(
               onPressed: () {
                 print('pressed Next');
 
                 this._checkFields();
               },
-              child: Text('Join'),
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text(
+                'Join',
+                style: Theme.of(context).primaryTextTheme.button,
+              ),
               shape: StadiumBorder(),
             ),
           ),
@@ -388,19 +386,19 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               {
                 _showDialog(
                     activityContext: context,
-                    mode: TimeBankResponseModes.CODE_EXPIRED,
-                    dialogTitle: "Code Expired!",
+                    mode: TimeBankResponseModes.NO_CODE,
+                    dialogTitle: "Code not found",
                     dialogSubTitle:
-                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code was not registered, please check the code and try again!")
               }
-            else if (state == 'Invalid')
+            else if (state == 'code_expired')
               {
                 _showDialog(
                     activityContext: context,
                     mode: TimeBankResponseModes.CODE_EXPIRED,
-                    dialogTitle: "Code Expired!",
+                    dialogTitle: "Code Experired!",
                     dialogSubTitle:
-                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a noew one!")
+                        "This ${FlavorConfig.values.timebankName == "Yang 2020" ? "Yang Gang" : "Timebank"} code has been expired, please request the admin for a new one!")
               }
             else
               {
@@ -452,7 +450,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 })
               }
           };
-      createEditCommunityBloc.VerifyTimebankWithCode(controller.text, func);
+      createEditCommunityBloc.VerifyTimebankWithCode(
+        controller.text,
+        func,
+        widget.communityModel.id,
+      );
     } else {
       if (controller.text.length != 6) {
         setError(errorMessage: "Please enter PIN to verify");

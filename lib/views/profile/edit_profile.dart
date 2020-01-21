@@ -68,10 +68,9 @@ class _EditProfilePageState extends State<EditProfilePage>
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          backgroundColor: Colors.white,
           title: Text(
             'Profile',
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(fontSize: 18),
           ),
         ),
         body: ModalProgressHUD(
@@ -443,17 +442,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                   vertical: 20,
                 ),
                 child: Container(
-                  width: 100,
-                  height: 40,
+                  width: 134,
                   child: RaisedButton(
                     color: Colors.red,
-                    shape: StadiumBorder(),
                     child: Text(
                       'Logout',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                      style: Theme.of(context).primaryTextTheme.button,
                     ),
                     onPressed: logOut,
                   ),
@@ -592,8 +586,15 @@ class _EditProfilePageState extends State<EditProfilePage>
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Log Out"),
+              child: new Text(
+                "Log Out",
+                style: TextStyle(color: Colors.red),
+              ),
               onPressed: () {
+                // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                //   statusBarBrightness: Brightness.light,
+                //   statusBarColor: Colors.white,
+                // ));
                 Navigator.of(context).pop();
                 _signOut(context);
               },

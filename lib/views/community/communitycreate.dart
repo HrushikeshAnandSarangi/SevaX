@@ -28,17 +28,15 @@ class CreateEditCommunityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Create your community';
+    var title = 'Create your Timebank';
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         elevation: 0.5,
-        backgroundColor: Color(0xFFFFFFFF),
-        leading: BackButton(color: Colors.black54),
         title: Text(
           title,
           style: TextStyle(
-              color: Colors.black54, fontSize: 20, fontWeight: FontWeight.w500),
+            fontSize: 18,
+          ),
         ),
       ),
       body: CreateEditCommunityViewForm(
@@ -60,19 +58,12 @@ class CreateEditCommunityViewForm extends StatefulWidget {
   }
 }
 
-
-
 // Create a corresponding State class. This class will hold the data related to
 // the form.
 class CreateEditCommunityViewFormState
     extends State<CreateEditCommunityViewForm> {
-
   final TextEditingController searchTextController =
-  new TextEditingController();
-
-
-
-
+      new TextEditingController();
 
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
@@ -86,7 +77,7 @@ class CreateEditCommunityViewFormState
   String selectedAddress = '';
   String _billingDetailsError = '';
   String communityImageError = '';
-  String enteredName ='';
+  String enteredName = '';
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
@@ -98,7 +89,6 @@ class CreateEditCommunityViewFormState
   var scrollIsOpen = false;
   var communityFound = false;
 
-
   void initState() {
     super.initState();
     globals.timebankAvatarURL = null;
@@ -109,9 +99,6 @@ class CreateEditCommunityViewFormState
     if (FlavorConfig.appFlavor == Flavor.APP) {
       fetchCurrentlocation();
     }
-
-
-
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -155,11 +142,11 @@ class CreateEditCommunityViewFormState
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
-                      'Community is where you can collaborate with your organization',
+                      'Timebank is where you can collaborate with your organization',
                       textAlign: TextAlign.center,
                     ),
                   ),
-                        Center(
+                  Center(
                     child: Padding(
                       padding: EdgeInsets.all(5.0),
                       child: Column(
@@ -167,7 +154,7 @@ class CreateEditCommunityViewFormState
                           TimebankAvatar(),
                           Text(''),
                           Text(
-                            'Community Logo',
+                            'Timebank Logo',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -183,45 +170,43 @@ class CreateEditCommunityViewFormState
                       ),
                     ),
                   ),
-                  headingText('Name your Community'),
+                  headingText('Name your timebank'),
                   TextFormField(
-                    onChanged: (value){
-                      enteredName=value;
+                    onChanged: (value) {
+                      enteredName = value;
                     },
                     decoration: InputDecoration(
                       hintText: "Ex: Pets-in-town, Citizen collab",
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    initialValue: snapshot.data.community.name??'',
-                   onSaved: (value) => enteredName=value,
-                   validator: (value) {
-                      if (value.isEmpty ) {
-                        return 'Community name cannot be empty';
-                     } else if(communityFound){
-                        return 'Community name already exist';
-                     }
-                      else {
+                    initialValue: snapshot.data.community.name ?? '',
+                    onSaved: (value) => enteredName = value,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Timebank name cannot be empty';
+                      } else if (communityFound) {
+                        return 'Timebank name already exist';
+                      } else {
                         enteredName = value;
                         snapshot.data.community.updateValueByKey('name', value);
                         createEditCommunityBloc.onChange(snapshot.data);
                       }
 
-                     return null;
+                      return null;
                     },
                   ),
-
                   headingText('About'),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Ex: A bit more about your community',
+                      hintText: 'Ex: A bit more about your timebank',
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     initialValue: snapshot.data.timebank.missionStatement,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Tell us more about your community.';
+                        return 'Tell us more about your timebank.';
                       }
                       snapshot.data.timebank
                           .updateValueByKey('missionStatement', value);
@@ -231,7 +216,7 @@ class CreateEditCommunityViewFormState
                   ),
                   Row(
                     children: <Widget>[
-                      headingText('Private community'),
+                      headingText('Protected Timebank'),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -250,15 +235,15 @@ class CreateEditCommunityViewFormState
                     ],
                   ),
                   Text(
-                    'With private community, new members needs yor approval to join community',
+                    'With protected timebank, user to user transactions are disabled.',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
                     ),
                   ),
-                  headingText('Your community location.'),
+                  headingText('Your timebank location.'),
                   Text(
-                    'Community location will help your members to locate',
+                    'Timebank location will help your members to locate',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -313,7 +298,7 @@ class CreateEditCommunityViewFormState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Looking for existing community',
+                            'Looking for existing timebank',
                             style: TextStyle(
                               color: Colors.grey,
                             ),
@@ -328,9 +313,7 @@ class CreateEditCommunityViewFormState
                     child: Container(
                         alignment: Alignment.center,
                         child: RaisedButton(
-                          color: Theme.of(context).accentColor,
                           onPressed: () async {
-
                             print(_formKey.currentState.validate());
 
                             if (_formKey.currentState.validate()) {
@@ -349,8 +332,9 @@ class CreateEditCommunityViewFormState
                                   setState(() {
                                     this.communityImageError = '';
                                   });
-                                  communityFound = await isCommunityFound(enteredName);
-                                  if(communityFound){
+                                  communityFound =
+                                      await isCommunityFound(enteredName);
+                                  if (communityFound) {
                                     print("Found:$communityFound");
                                     return;
                                   }
@@ -432,7 +416,7 @@ class CreateEditCommunityViewFormState
                           },
                           shape: StadiumBorder(),
                           child: Text(
-                            'Create Community',
+                            'Create Timebank',
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
@@ -459,7 +443,6 @@ class CreateEditCommunityViewFormState
       child: contain,
     );
   }
-
 
   Widget headingText(String name) {
     return Padding(
@@ -528,7 +511,7 @@ class CreateEditCommunityViewFormState
     return GestureDetector(
       onTap: () {},
       child: Text(
-        ' Find your community',
+        ' Find your timebank',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.blue,
@@ -891,18 +874,22 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Future<bool> isCommunityFound(String enteredName) async{
+  Future<bool> isCommunityFound(String enteredName) async {
     //ommunityBloc.fetchCommunities(enteredName);
-    CommunityListModel communities=CommunityListModel();
-    var communitiesFound = await searchCommunityByName(enteredName,communities);
-    if(communitiesFound==null||communitiesFound.communities==null || communitiesFound.communities.length==0){
+    CommunityListModel communities = CommunityListModel();
+    var communitiesFound =
+        await searchCommunityByName(enteredName, communities);
+    if (communitiesFound == null ||
+        communitiesFound.communities == null ||
+        communitiesFound.communities.length == 0) {
       return false;
-    }else{
+    } else {
       return true;
     }
-
   }
-  Future<CommunityListModel> searchCommunityByName(String name,CommunityListModel communities) async {
+
+  Future<CommunityListModel> searchCommunityByName(
+      String name, CommunityListModel communities) async {
     communities.removeall();
     if (name.isNotEmpty && name.length > 4) {
       await Firestore.instance
@@ -921,4 +908,3 @@ class CreateEditCommunityViewFormState
     return communities;
   }
 }
-

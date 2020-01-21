@@ -94,7 +94,6 @@ class _ChatViewState extends State<ChatView> {
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Colors.black,
           ),
           onPressed: widget.isFromShare == null
               ? () {
@@ -149,7 +148,7 @@ class _ChatViewState extends State<ChatView> {
                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       ),
                       Text('${partnerUser.fullname.split(" ")[0]}',
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(fontSize: 18),
                           overflow: TextOverflow.ellipsis),
                     ],
                   );
@@ -168,8 +167,10 @@ class _ChatViewState extends State<ChatView> {
                   context,
                 ).then((result) {
                   print("result " + result);
-                  blockMember();
-                  Navigator.pop(context);
+                  if (result == 'BLOCK') {
+                    blockMember();
+                    Navigator.pop(context);
+                  }
                 });
               },
             ),
@@ -185,7 +186,9 @@ class _ChatViewState extends State<ChatView> {
                   email: SevaCore.of(context).loggedInUser.email,
                   isFromNewChat: widget.isFromNewChat == null
                       ? IsFromNewChat(
-                          false, DateTime.now().millisecondsSinceEpoch)
+                          false,
+                          DateTime.now().millisecondsSinceEpoch,
+                        )
                       : widget.isFromNewChat),
               builder: (BuildContext context,
                   AsyncSnapshot<List<MessageModel>> chatListSnapshot) {

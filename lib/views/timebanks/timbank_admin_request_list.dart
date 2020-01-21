@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'edit_super_admins_view.dart';
@@ -49,6 +50,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
   HashMap<String, bool> adminToModelMap = HashMap();
+  Map onActivityResult;
+  var selectedUsers = HashMap();
   var nullCount = 0;
 
   @override
@@ -285,60 +288,57 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
     user.fullname = user.fullname == null ? defaultUsername : user.fullname;
     var item = Padding(
-        padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Text(
-                    user.fullname,
-                    style: TextStyle(
-                      fontSize: 17,
+            Expanded(
+              child: Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(user.photoURL),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Text(
+                        user.fullname,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             widget.isUserAdmin
                 ? Row(
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.only(left: 2, right: 2),
-                          child: RaisedButton(
-                            color: Colors.blue,
-                            onPressed: () async {
-                              List<String> members = timebankModel.members;
-                              Set<String> usersSet = members.toSet();
-
-                              usersSet.add(joinRequestModel.userId);
-                              timebankModel.members = usersSet.toList();
-                              joinRequestModel.operationTaken = true;
-                              joinRequestModel.accepted = true;
-                              await createJoinRequest(model: joinRequestModel);
-                              await _updateTimebank(timebankModel,
-                                  admins: null);
-                            },
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(20.0),
-                                side: BorderSide(color: Colors.blue)),
-                            child: Text(
-                              'Approve',
-                              style: TextStyle(
-                                  fontSize: 10.0, color: Colors.white),
-                            ),
-                            textColor: Colors.blue,
-                          )),
+                        padding: EdgeInsets.only(left: 2, right: 2),
+                        child: CustomRaisedButton(
+                          action: Actions.Approve,
+                          onTap: () async {
+                            List<String> members = timebankModel.members;
+                            Set<String> usersSet = members.toSet();
+                            usersSet.add(joinRequestModel.userId);
+                            timebankModel.members = usersSet.toList();
+                            joinRequestModel.operationTaken = true;
+                            joinRequestModel.accepted = true;
+                            await createJoinRequest(model: joinRequestModel);
+                            await _updateTimebank(timebankModel, admins: null);
+                          },
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.only(left: 2, right: 2),
-                        child: RaisedButton(
-                          color: Colors.red,
-                          onPressed: () async {
+                        child: CustomRaisedButton(
+                          action: Actions.Reject,
+                          onTap: () async {
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = false;
                             createJoinRequest(model: joinRequestModel)
@@ -346,22 +346,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                               resetAndLoad();
                             });
                           },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0),
-                              side: BorderSide(color: Colors.red)),
-                          child: Text(
-                            'Reject',
-                            style:
-                                TextStyle(fontSize: 10.0, color: Colors.white),
-                          ),
-                          textColor: Colors.blue,
                         ),
-                      )
+                      ),
                     ],
                   )
                 : Offstage(),
           ],
-        ));
+        ),
+      ),
+    );
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -423,12 +416,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Widget get emptyCard {
     return Container(
-        color: Colors.grey[50],
-        child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Center(
-              child: Text('No user found'),
-            )));
+      color: Colors.grey[50],
+      child: Padding(
+        padding: EdgeInsets.all(10),
+        child: Center(
+          child: Text('No user found'),
+        ),
+      ),
+    );
   }
 
   Widget get listViewWidget {
@@ -471,7 +466,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         _admins.add(getSectionTitle(context, 'Admins & Organizers'));
         SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
             .forEach((key, user) {
-
           String email = user.email.toString().trim();
           print("Admin:$email");
           _adminEmails.add(email);
@@ -544,31 +538,24 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         : Row(
             children: <Widget>[
               Padding(
-                  padding: EdgeInsets.only(left: 2, right: 2),
-                  child: RaisedButton(
-                    color: Colors.blue,
-                    onPressed: () {
-                      if (isAdmin) {
-                        List<String> admins =
-                            timebankModel.admins.map((s) => s).toList();
-                        admins.remove(user.sevaUserID);
-                        _updateTimebank(timebankModel, admins: admins);
-                      } else {
-                        List<String> members =
-                            timebankModel.members.map((s) => s).toList();
-                        members.remove(user.sevaUserID);
-                        _updateTimebank(timebankModel, members: members);
-                      }
-                    },
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0),
-                        side: BorderSide(color: Colors.blue)),
-                    child: Text(
-                      'Remove',
-                      style: TextStyle(fontSize: 10.0, color: Colors.white),
-                    ),
-                    textColor: Colors.blue,
-                  )),
+                padding: EdgeInsets.only(left: 2, right: 2),
+                child: CustomRaisedButton(
+                  action: Actions.Remove,
+                  onTap: () {
+                    if (isAdmin) {
+                      List<String> admins =
+                          timebankModel.admins.map((s) => s).toList();
+                      admins.remove(user.sevaUserID);
+                      _updateTimebank(timebankModel, admins: admins);
+                    } else {
+                      List<String> members =
+                          timebankModel.members.map((s) => s).toList();
+                      members.remove(user.sevaUserID);
+                      _updateTimebank(timebankModel, members: members);
+                    }
+                  },
+                ),
+              ),
             ],
           );
   }
@@ -619,6 +606,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadNextMembers() async {
     if (_members.length == 0) {
+//      var addMember = GestureDetector(
+//        child: Row(
+//          children: <Widget>[
+//            getSectionTitle(context, 'Members'),
+//            CircleAvatar(
+//              backgroundColor: Colors.white,
+//              radius: 10,
+//              child: Image.asset("lib/assets/images/add.png"),
+//            ),
+//          ],
+//        ),
+//        onTap: (){
+//          addVolunteers();
+//        },
+//      );
+//      _members.add(addMember);
       _members.add(getSectionTitle(context, 'Members'));
     }
     if (!_isLoading && !_lastReached) {
@@ -787,6 +790,20 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     );
   }
 
+  void addVolunteers() async {
+    onActivityResult = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SelectMembersInGroup(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          userSelected:
+          selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
+          userEmail: SevaCore.of(context).loggedInUser.email,
+        ),
+      ),
+    );
+
+  }
+
   Widget getDataCard({
     @required String title,
   }) {
@@ -846,5 +863,34 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     await FirestoreManager.updateTimebank(timebankModel: model).then((onValue) {
       resetAndLoad();
     });
+  }
+}
+
+enum Actions {
+  Approve,
+  Reject,
+  Remove,
+}
+
+class CustomRaisedButton extends StatelessWidget {
+  final Actions action;
+  final Function onTap;
+
+  const CustomRaisedButton({
+    Key key,
+    this.onTap,
+    this.action,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return RaisedButton(
+      padding: EdgeInsets.all(0),
+      color: action == Actions.Approve ? null : Colors.red,
+      child: Text(
+        action.toString().split('.')[1],
+        style: TextStyle(fontSize: 12),
+      ),
+      onPressed: onTap,
+    );
   }
 }

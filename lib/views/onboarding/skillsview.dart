@@ -98,74 +98,73 @@ class _InterestViewNewState extends State<InterestViewNew> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0.5,
-          backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
           title: Text(
             'Interests',
             style: TextStyle(
-                color: Colors.black54,
-                fontSize: 20,
-                fontWeight: FontWeight.w500),
+              fontSize: 18,
+              
+            ),
           ),
+          centerTitle: true,
         ),
-        body: ListView(
+        body: Column(
           children: <Widget>[
-            Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 20.0),
+            ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 16.0, top: 20.0, bottom: 20.0),
+                  child: Text(
+                    'We would like to personalize the experiance based on your interests',
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      child: list(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Spacer(),
+            SizedBox(
+              width: 134,
+              child: RaisedButton(
+                onPressed: () {
+                  widget.onSelectedInterests(interests.toList());
+                },
                 child: Text(
-                  'We would like to personalize the experiance based on your interests',
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                )),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  child: list(),
+                  'Next',
+                  style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-          ],
-        ),
-        bottomNavigationBar: ButtonBar(
-          children: <Widget>[
             FlatButton(
               onPressed: () {
                 widget.onSkipped();
               },
-              child: Text('Skip'),
+              child: Text(
+                'Skip',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
             ),
-            SizedBox(
-                height: 35,
-                width: 100,
-                child: Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      widget.onSelectedInterests(interests.toList());
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Text('Next'),
-                        ),
-                      ],
-                    ),
-                    color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
-                    shape: StadiumBorder(),
-                  ),
-                ))
+            SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
+
   Widget list() {
     if (interests.length > 0) {
       return Padding(
@@ -188,28 +187,46 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
   Widget chip(String value, bool selected) {
     return FilterChip(
-        label: Text(value),
-        labelStyle: TextStyle(
-            color: FlavorConfig.values.buttonTextColor,
-            fontSize: 12.0,
-            fontWeight: FontWeight.bold),
-        selected: selected,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        backgroundColor: FlavorConfig.values.theme.splashColor,
-        onSelected: (isSelected) {
-          setState(() {
-            if (selectedInterests.contains(value)) {
-              selectedInterests.remove(value);
-            } else {
-              selectedInterests.add(value);
-            }
-          });
-        },
-        avatar: selected ? Icon(Icons.check) : null,
-        selectedColor: Colors.green);
+      label: Text(value),
+      labelStyle: TextStyle(
+          color: selected ? Colors.white : Colors.black,
+          fontSize: 12.0,
+          fontWeight: FontWeight.bold),
+      selected: selected,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      backgroundColor: Colors.grey[300],
+      onSelected: (isSelected) {
+        setState(() {
+          if (selectedInterests.contains(value)) {
+            selectedInterests.remove(value);
+          } else {
+            selectedInterests.add(value);
+          }
+        });
+      },
+      showCheckmark: false,
+      // checkmarkColor: Color(0xFFF70C493),
+      avatar: selected
+          ? Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFFFFFFFF),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.check,
+                  color: Color(0xFFF70C493),
+                  size: 18,
+                ),
+              ),
+            )
+          : null,
+      selectedColor: Color(0xFFF70C493),
+    );
   }
+
   Color getTextColor(Color materialColor) {
     List<MaterialColor> lights = [
       Colors.blue,
@@ -315,71 +332,90 @@ class _SkillViewNewState extends State<SkillViewNew> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0.5,
-          backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
           title: Text(
             'Skills',
-            style: TextStyle(
-                color: Colors.black54,
-                fontSize: 20,
-                fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 18),
           ),
+          centerTitle: true,
         ),
-        body: ListView(
+        body: Column(
           children: <Widget>[
-            Padding(
-                padding: const EdgeInsets.only(left: 16.0, top: 20.0, bottom: 20.0),
+            Container(
+              // height: MediaQuery.of(context).size.height - 100,
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(
+                          left: 16.0, top: 20.0, bottom: 20.0),
+                      child: Text(
+                        'Lets get to know more, Which skills do you know more',
+                        style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: list(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            SizedBox(
+              width: 134,
+              child: RaisedButton(
+                onPressed: () {
+                  widget.onSelectedSkills(selectedSkills.toList());
+                },
                 child: Text(
-                  'Lets get to know more, Which skills do you know more',
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500),
-                )),
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  child: list(),
+                  'Next',
+                  style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-          ],
-        ),
-        bottomNavigationBar: ButtonBar(
-          children: <Widget>[
             FlatButton(
               onPressed: () {
                 widget.onSkipped();
               },
-              child: Text('Skip'),
+              child: Text(
+                'Skip',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
             ),
-            SizedBox(
-                height: 35,
-                width: 100,
-                child: Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      widget.onSelectedSkills(selectedSkills.toList());
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(0.0),
-                          child: Text('Next'),
-                        ),
-                      ],
-                    ),
-                    color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
-                    shape: StadiumBorder(),
-                  ),
-                ))
+            SizedBox(height: 20),
           ],
         ),
+        // bottomNavigationBar: ButtonBar(
+        //   children: <Widget>[
+        //     FlatButton(
+        //       onPressed: () {
+        //         widget.onSkipped();
+        //       },
+        //       child: Text('Skip'),
+        //     ),
+        //     SizedBox(
+        //       width: 134,
+        //       child: RaisedButton(
+        //         onPressed: () {
+        //           widget.onSelectedSkills(selectedSkills.toList());
+        //         },
+        //         child: Text(
+        //           'Next',
+        //           style: Theme.of(context).primaryTextTheme.button,
+        //         ),
+        //       ),
+        //     )
+        //   ],
+        // ),
       ),
     );
   }
@@ -406,29 +442,49 @@ class _SkillViewNewState extends State<SkillViewNew> {
 
   Widget chip(String value, bool selected) {
     return FilterChip(
-        label: Text(value),
-        labelStyle: TextStyle(
-            color: FlavorConfig.values.buttonTextColor,
-            fontSize: 12.0,
-            fontWeight: FontWeight.bold),
-        selected: selected,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        backgroundColor: FlavorConfig.values.theme.splashColor,
-        onSelected: (isSelected) {
-          setState(() {
-            print(value);
-            print(selectedSkills);
-            if (selectedSkills.contains(value)) {
-              selectedSkills.remove(value);
-            } else {
-              selectedSkills.add(value);
-            }
-          });
-        },
-        avatar: selected ? Icon(Icons.check) : null,
-        selectedColor: Colors.green);
+      label: Text(value),
+      labelStyle: TextStyle(
+        // color: FlavorConfig.values.buttonTextColor,
+        color: selected ? Colors.white : Colors.black,
+        fontSize: 12.0,
+        fontWeight: FontWeight.bold,
+      ),
+      selected: selected,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      // backgroundColor: FlavorConfig.values.theme.splashColor,
+      // backgroundColor: selected ? Color(0x0FF70C493) : Colors.grey[300],
+      backgroundColor: Colors.grey[300],
+      onSelected: (isSelected) {
+        setState(() {
+          print(value);
+          print(selectedSkills);
+          if (selectedSkills.contains(value)) {
+            selectedSkills.remove(value);
+          } else {
+            selectedSkills.add(value);
+          }
+        });
+      },
+      showCheckmark: false,
+      avatar: selected
+          ? Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Color(0xFFFFFFFF),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.check,
+                  color: Color(0xFFF70C493),
+                  size: 18,
+                ),
+              ),
+            )
+          : null,
+      selectedColor: Color(0x0FF70C493),
+    );
   }
 
   Color getTextColor(Color materialColor) {

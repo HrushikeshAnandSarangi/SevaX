@@ -11,9 +11,10 @@ import 'package:share/share.dart';
 import 'TimebankCodeModel.dart';
 
 class InviteMembers extends StatefulWidget {
+  final String communityId;
   final String timebankId;
 
-  InviteMembers(this.timebankId);
+  InviteMembers(this.timebankId, this.communityId);
 
   @override
   State<StatefulWidget> createState() => InviteMembersState(timebankId);
@@ -27,14 +28,14 @@ class InviteMembersState extends State<InviteMembers> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title: Text(
-            FlavorConfig.values.timebankName == "Yang 2020"
-                ? "Yang Gang Codes"
-                : "Timebank codes",
-            style: TextStyle(
-              color: Colors.black,
-            )),
+          FlavorConfig.values.timebankName == "Yang 2020"
+              ? "Yang Gang Codes"
+              : "Timebank codes",
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
       ),
       body: Column(
         children: <Widget>[
@@ -123,7 +124,7 @@ class InviteMembersState extends State<InviteMembers> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.black,
+        foregroundColor: Colors.white,
         icon: Icon(Icons.add),
         label: Text("Generate Code"),
         onPressed: () {
@@ -200,6 +201,7 @@ class InviteMembersState extends State<InviteMembers> {
                   timebankCode: timebankCode,
                   timebankId: timebankId,
                   validUpto: oneDayFromToday,
+                  communityId: widget.communityId,
                 );
                 Navigator.of(context).pop("completed");
               },
@@ -216,13 +218,18 @@ class InviteMembersState extends State<InviteMembers> {
     return base64Url.encode(values).substring(0, 6).toLowerCase();
   }
 
-  void registerTimebankCode(
-      {String timebankId, String timebankCode, int validUpto}) {
+  void registerTimebankCode({
+    String timebankId,
+    String timebankCode,
+    int validUpto,
+    String communityId,
+  }) {
     Firestore.instance.collection("timebankCodes").add({
       "timebankId": timebankId,
       "timebankCode": timebankCode,
       "validUpto": validUpto,
-      "createdOn": DateTime.now().millisecondsSinceEpoch
+      "createdOn": DateTime.now().millisecondsSinceEpoch,
+      "communityId": communityId,
     }).then((doc) {
       // task completed
     });

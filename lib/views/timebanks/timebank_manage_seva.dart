@@ -91,6 +91,7 @@ class ManageTimebankSeva extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => InviteMembers(
               timebankModel.id,
+              timebankModel.communityId,
             ),
           ),
         );

@@ -107,6 +107,7 @@ class UserModelController {
     this.loggedinuser = userdata;
   }
 }
+
 class UserBloc {
   final _repository = Repository();
 
@@ -120,9 +121,8 @@ class UserBloc {
     userc.updateLoggedInUserDetails(userdata);
     _userController.add(userc);
   }
-
-
 }
+
 class CommunityCreateEditBloc {
   final _repository = Repository();
   final _createEditCommunity = BehaviorSubject<CommunityCreateEditController>();
@@ -137,12 +137,13 @@ class CommunityCreateEditBloc {
     var community = this._createEditCommunity.value;
     var communityid = userBloc.getLoggedInUser;
 
-    var timebanks = await _repository
-        .getSubTimebanksForUser(SevaCore.of(context).loggedInUser.currentCommunity);
+    var timebanks = await _repository.getSubTimebanksForUser(
+        SevaCore.of(context).loggedInUser.currentCommunity);
     //  var timebanks = await _repository.getSubTimebanksForUser(community.loggedinuser.currentCommunity,context);
     community.timebanks = timebanks;
     _createEditCommunity.add(community);
-    }
+  }
+
   onChange(community) {
     _createEditCommunity.add(community);
   }
@@ -162,8 +163,6 @@ class CommunityCreateEditBloc {
     community.selectCommunity(currentCommunity);
     _createEditCommunity.add(community);
   }
-
-
 
   getCommunityPrimaryTimebank() async {
     var community = this._createEditCommunity.value;
@@ -194,18 +193,26 @@ class CommunityCreateEditBloc {
         this._createEditCommunity.value.loggedinuser, tm.id, communitytemp.id);
   }
 
-  Future VerifyTimebankWithCode(String code, func) async {
+  Future VerifyTimebankWithCode(
+    String code,
+    func,
+    String communnityId,
+  ) async {
     // get the timebanks with the code.
     Firestore.instance
         .collection("timebankCodes")
         .where("timebankCode", isEqualTo: code)
+        .where("communityId", isEqualTo: communnityId)
         .getDocuments()
         .then((QuerySnapshot snapshot) async {
       if (snapshot.documents.length > 0) {
+
         // timabnk code exists , check its validity
+
         snapshot.documents.forEach((f) async {
+
           if (DateTime.now().millisecondsSinceEpoch > f.data['validUpto']) {
-            await func("Invalid");
+            await func("code_expired");
           } else {
             //code matche and is alive
             // add to usersOnBoarded

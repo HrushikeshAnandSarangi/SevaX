@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
@@ -169,6 +170,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.initState();
 
     dataList.add(EntityModel(entityType: EntityType.general));
+
+    if (FlavorConfig.appFlavor == Flavor.APP) {
+      fetchCurrentlocation();
+    }
 //    ApiManager.getTimeBanksForUser(userEmail: globals.email)
 //        .then((List<TimebankModel> timeBankModelList) {
 //      setState(() {
@@ -667,5 +672,23 @@ class NewsCreateFormState extends State<NewsCreateForm> {
         }
       }
     }
+  }
+
+
+  void fetchCurrentlocation() {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
   }
 }

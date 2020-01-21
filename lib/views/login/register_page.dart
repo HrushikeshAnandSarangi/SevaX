@@ -61,15 +61,15 @@ class _RegisterPageState extends State<RegisterPage>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-          centerTitle: true,
-          elevation: 0.5,
-          backgroundColor: Color(0xFFFFFFFF),
-          leading: BackButton(color: Colors.black54),
-          title: new Text('Your details',
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500))),
+        centerTitle: true,
+        elevation: 0.5,
+        title: new Text(
+          'Your details',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(FocusNode());
@@ -93,6 +93,7 @@ class _RegisterPageState extends State<RegisterPage>
                             _formFields,
                             SizedBox(height: 16),
                             registerButton,
+                            SizedBox(height: 16),
                             signUpWithGoogle
                           ],
                         ))))
@@ -300,101 +301,108 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get registerButton {
     return SizedBox(
-        height: 70,
-        width: 220,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: RaisedButton(
-            onPressed: isLoading
-                ? null
-                : () async {
-                    isLoading = true;
-                    if (selectedImage == null) {
-                      if (!_formKey.currentState.validate()) {
-                        isLoading = false;
-                        return;
-                      }
-                      showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (BuildContext viewContext) {
-                          // return object of type Dialog
-                          return WillPopScope(
-                            onWillPop: () {},
-                            child: AlertDialog(
-                              title: Text('Add Photo?'),
-                              content: Text('Do you want to add profile pic?'),
-                              actions: <Widget>[
-                                FlatButton(
-                                  child: Text(
-                                    'Skip and register',
-                                    style: TextStyle(
-                                      fontSize: dialogButtonSize,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    Navigator.pop(viewContext);
-                                    if (!_formKey.currentState.validate()) {
-                                      isLoading = false;
-                                      return;
-                                    }
-                                    _formKey.currentState.save();
-                                    await createUser();
-                                    isLoading = false;
-                                  },
+      height: 39,
+      width: 134,
+      child: RaisedButton(
+        onPressed: isLoading
+            ? null
+            : () async {
+                isLoading = true;
+                if (selectedImage == null) {
+                  if (!_formKey.currentState.validate()) {
+                    isLoading = false;
+                    return;
+                  }
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext viewContext) {
+                      // return object of type Dialog
+                      return WillPopScope(
+                        onWillPop: () {},
+                        child: AlertDialog(
+                          title: Text('Add Photo?'),
+                          content: Text('Do you want to add profile pic?'),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text(
+                                'Skip and register',
+                                style: TextStyle(
+                                  fontSize: dialogButtonSize,
                                 ),
-                                FlatButton(
-                                  child: Text(
-                                    'Add Photo',
-                                    style: TextStyle(
-                                      fontSize: dialogButtonSize,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(viewContext);
-                                    imagePicker.showDialog(context);
-                                    isLoading = false;
-                                    return;
-                                  },
-                                ),
-                              ],
+                              ),
+                              onPressed: () async {
+                                Navigator.pop(viewContext);
+                                if (!_formKey.currentState.validate()) {
+                                  isLoading = false;
+                                  return;
+                                }
+                                _formKey.currentState.save();
+                                await createUser();
+                                isLoading = false;
+                              },
                             ),
-                          );
-                        },
+                            FlatButton(
+                              child: Text(
+                                'Add Photo',
+                                style: TextStyle(
+                                  fontSize: dialogButtonSize,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(viewContext);
+                                imagePicker.showDialog(context);
+                                isLoading = false;
+                                return;
+                              },
+                            ),
+                          ],
+                        ),
                       );
-                    } else {
-                      if (!_formKey.currentState.validate()) {
-                        isLoading = false;
-                        return;
-                      }
-                      _formKey.currentState.save();
-                      await createUser();
-                      isLoading = false;
-                    }
-                  },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                if (isLoading)
-                  SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: Theme(
-                      data: ThemeData(accentColor: Colors.white),
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Get Started'),
-                ),
-              ],
-            ),
-            color: Theme.of(context).accentColor,
-            textColor: FlavorConfig.values.buttonTextColor,
-            shape: StadiumBorder(),
+                    },
+                  );
+                } else {
+                  if (!_formKey.currentState.validate()) {
+                    isLoading = false;
+                    return;
+                  }
+                  _formKey.currentState.save();
+                  await createUser();
+                  isLoading = false;
+                }
+              },
+        child: Text(
+          'Sign Up',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            // fontSize: 16,
           ),
-        ));
+        ),
+
+        // child: Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: <Widget>[
+        //     if (isLoading)
+        //       SizedBox(
+        //         height: 18,
+        //         width: 18,
+        //         child: Theme(
+        //           data: ThemeData(accentColor: Colors.white),
+        //           child: CircularProgressIndicator(strokeWidth: 2),
+        //         ),
+        //       ),
+        //     Padding(
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: Text('Sign Up'),
+        //     ),
+        //   ],
+        // ),)
+
+        color: Theme.of(context).primaryColor,
+        shape: StadiumBorder(),
+      ),
+    );
   }
 
   bool isValidEmail(String email) {
@@ -591,11 +599,12 @@ class _RegisterPageState extends State<RegisterPage>
     if (userModel == null) {
       return;
     }
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => DefaultSplashView.SplashView(),
-      ),
-    );
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => DefaultSplashView.SplashView(),
+        ),
+        (Route<dynamic> route) => false);
   }
 
   void handlePlatformException(PlatformException error) {

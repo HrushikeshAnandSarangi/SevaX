@@ -113,9 +113,8 @@ Widget getTimebanks(BuildContext context, String isFrom) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => InviteMembers(
-                          timebank.id,
-                        ),
+                        builder: (context) =>
+                            InviteMembers(timebank.id, timebank.communityId),
                       ),
                     );
                   } else {

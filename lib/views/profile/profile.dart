@@ -296,7 +296,7 @@ class _ProfilePageState extends State<ProfilePage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                              'Select a community',
+                              'Select a timebank',
                               style: TextStyle(fontSize: 18),
                             ),
                             IconButton(
@@ -344,7 +344,8 @@ class _ProfilePageState extends State<ProfilePage>
                                 return Column(children: snapshot.data);
 
                               if (snapshot.hasError)
-                                return Center(child: Padding(
+                                return Center(
+                                    child: Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: Text(snapshot.error),
                                 ));
@@ -1019,7 +1020,7 @@ class _ProfilePageState extends State<ProfilePage>
   //       Navigator.of(context).push(
   //         MaterialPageRoute(
   //          builder: (context) {
-              //             return EditInterests("");
+  //             return EditInterests("");
   //           },
   //         ),
   //       );
