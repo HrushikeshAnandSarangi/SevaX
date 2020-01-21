@@ -34,22 +34,14 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
         title: Container(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Request Status',
-              style: TextStyle(color: Colors.black),
-            ),
-          ],
+            child: Text(
+          'Request Status',
+          style: TextStyle(fontSize: 18),
         )),
         bottom: TabBar(
           indicatorColor: Colors.black,
-          labelColor: Colors.black,
+          labelColor: Colors.white,
           tabs: [
             Tab(child: Text('Pending requests')),
             Tab(child: Text('Approved members')),
@@ -70,9 +62,12 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
   }
 }
 
+
+
 class TimebankRequests extends StatefulWidget {
   final RequestModel requestModel;
   TimebankRequests({this.requestModel});
+
 
   @override
   State<StatefulWidget> createState() {

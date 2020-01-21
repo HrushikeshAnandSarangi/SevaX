@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
@@ -25,7 +26,7 @@ class CreateOffer extends StatelessWidget {
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           'Create volunteer offer',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         centerTitle: false,
       ),
@@ -69,6 +70,9 @@ class MyCustomFormState extends State<MyCustomForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.timebankId = _selectedTimebankId;
+    if (FlavorConfig.appFlavor == Flavor.APP) {
+      fetchCurrentlocation();
+    }
   }
 
   void _writeToDB() async {
@@ -193,10 +197,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Center(
                     child: Container(
-                      height: 50,
                       child: RaisedButton(
-                        shape: StadiumBorder(),
-                        color: Theme.of(context).accentColor,
+                        // shape: StadiumBorder(),
+                        // color: Theme.of(context).accentColor,
                         onPressed: () {
                           //if (location != null) {
                           if (_formKey.currentState.validate()) {
@@ -216,11 +219,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                         },
                         child: Text(
                           '  Create volunteer offer  ',
-                          style: TextStyle(
-                            color: FlavorConfig.values.buttonTextColor,
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style: Theme.of(context).primaryTextTheme.button,
                         ),
                         textColor: Colors.white,
                       ),
@@ -243,6 +242,23 @@ class MyCustomFormState extends State<MyCustomForm> {
     log('_getLocation: $address');
     setState(() {
       this.selectedAddress = address;
+    });
+  }
+
+  void fetchCurrentlocation() {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
     });
   }
 }

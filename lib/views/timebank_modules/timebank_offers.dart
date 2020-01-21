@@ -199,7 +199,7 @@ class OffersState extends State<OffersModule> {
               Container(
                 width: 120,
                 child: CupertinoSegmentedControl<int>(
-                  selectedColor: Color.fromARGB(255, 4, 47, 110),
+                  selectedColor: Theme.of(context).primaryColor,
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
                   //selectedColor: Colors.deepOrange,
@@ -337,6 +337,9 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+              
+              print("============== $consolidatedList");
+
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -372,7 +375,9 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-              // return Text('sample');
+              
+
+
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -411,6 +416,9 @@ class OfferListItems extends StatelessWidget {
                 );
               }
               return getOfferWidget(consolidatedList[index]);
+
+
+
             }
             // children: consolidatedList.map((OfferModelList offerModel) {
             //   return getOfferWidget(offerModel);
@@ -434,8 +442,8 @@ class OfferListItems extends StatelessWidget {
         var isMyContent =
             (offerModelList as OfferTitle).groupTitle.contains("My");
         return Container(
-          height: isMyContent ? 0 : 15,
-          margin: isMyContent ? EdgeInsets.all(0) : EdgeInsets.all(12),
+          height: isMyContent ? 18 : 18,
+          margin: isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(12),
           child: Text(
             GroupOfferCommons.getGroupTitleForOffer(
                 groupKey: (offerModelList as OfferTitle).groupTitle),
@@ -630,7 +638,7 @@ class NearOfferListItems extends StatelessWidget {
               }
               return Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       OfferModel offer = offersList[index];
@@ -705,10 +713,10 @@ class NearOfferListItems extends StatelessWidget {
 
   Widget getOfferWidget(OfferModel model) {
     return Container(
-      decoration: containerDecoration,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      // decoration: containerDecoration,
+      // margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Card(
-        elevation: 0,
+        elevation: 2,
         child: InkWell(
           onTap: () {
             Navigator.push(
@@ -881,11 +889,9 @@ class OfferCardViewState extends State<OfferCardView> {
                 )
               : Offstage()
         ],
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
         title: Text(
           "Offer Details",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         elevation: 0.5,
       ),
@@ -991,7 +997,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                       subtitle: FutureBuilder<String>(
                                         future: _getLocation(
                                           widget.offerModel.location.latitude,
-                                          widget.offerModel.location.latitude,
+                                          widget.offerModel.location.longitude,
                                         ),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasError) {
@@ -1289,7 +1295,9 @@ class OfferCardViewState extends State<OfferCardView> {
                   ),
                   onPressed: () async {
                     if (widget.timebankModel != null &&
-                        widget.timebankModel.protected) {
+                        widget.timebankModel.protected &&
+                        !(widget.timebankModel.admins.contains(
+                            SevaCore.of(context).loggedInUser.sevaUserID))) {
                       _showProtectedTimebankMessage();
                       return;
                     }

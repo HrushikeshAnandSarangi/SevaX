@@ -63,26 +63,17 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     return MaterialApp(
       theme: FlavorConfig.values.theme,
       home: Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             automaticallyImplyLeading: widget.keepOnBackPress,
-            leading: widget.keepOnBackPress
-                ? BackButton(
-                    color: Colors.black54,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                : null,
             elevation: 0.5,
-            backgroundColor: Color(0xFFFFFFFF),
             title: Text(
-              'Find your community',
+              'Find your Timebank',
               style: TextStyle(
-                color: Colors.black54,
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
+                fontSize: 18,
               ),
             ),
+            centerTitle: true,
           ),
           body: SearchTeams()),
     );
@@ -96,7 +87,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          'Look for existing communities to join',
+          'Look for existing timebanks to join',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -125,59 +116,69 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: 'Type your community name. Ex: Alaska (min 5 char)',
+              hintText: 'Type your timebank name. Ex: Alaska (min 5 char)',
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         buildList(),
         // This container holds the align
-        CreateCommunity(),
+        createCommunity(),
       ]),
     );
   }
 
-  Widget CreateCommunity() {
+  Widget createCommunity() {
     return Container(
-        // This align moves the children to the bottom
-        child: Align(
-            alignment: FractionalOffset.bottomCenter,
-            // This container holds all the children that will be aligned
-            // on the bottom and should not scroll with the above ListView
-            child: Container(
-                height: 100,
-                width: 200,
-                child: Column(
-                  children: <Widget>[
-                    Text('Or'),
-                    RaisedButton(
-                      onPressed: () {
-                        createEditCommunityBloc.updateUserDetails(
-                            SevaCore.of(context).loggedInUser);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context1) => SevaCore(
-                                    loggedInUser:
-                                        SevaCore.of(context).loggedInUser,
-                                    child: CreateEditCommunityView(
-                                      timebankId:
-                                          FlavorConfig.values.timebankId,
-                                    ))));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: Text('Create your Community'),
-                          ),
-                        ],
+      // This align moves the children to the bottom
+      child: Align(
+        alignment: FractionalOffset.bottomCenter,
+        // This container holds all the children that will be aligned
+        // on the bottom and should not scroll with the above ListView
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                width: 134,
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Next',
+                    style: Theme.of(context).primaryTextTheme.button,
+                  ),
+                  // color: Theme.of(context).accentColor,
+                  // textColor: FlavorConfig.values.buttonTextColor,
+                  // shape: StadiumBorder(),
+                ),
+              ),
+              SizedBox(height: 5),
+              Text('Or'),
+              FlatButton(
+                child: Text(
+                  'Create your timebank',
+                  style: TextStyle(
+                    color: Theme.of(context).accentColor,
+                  ),
+                ),
+                onPressed: () {
+                  createEditCommunityBloc
+                      .updateUserDetails(SevaCore.of(context).loggedInUser);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context1) => SevaCore(
+                        loggedInUser: SevaCore.of(context).loggedInUser,
+                        child: CreateEditCommunityView(
+                          timebankId: FlavorConfig.values.timebankId,
+                        ),
                       ),
-                      color: Theme.of(context).accentColor,
-                      textColor: FlavorConfig.values.buttonTextColor,
-                      shape: StadiumBorder(),
-                    )
-                  ],
-                ))));
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildList() {
@@ -205,19 +206,21 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                               // subtitle: Text("Created by " +
                               //     snapshot.data.communities[index].created_by),
                               subtitle: FutureBuilder(
-                                future: getUserForId(sevaUserId:snapshot.data.communities[index].created_by),
-                                builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+                                future: getUserForId(
+                                    sevaUserId: snapshot
+                                        .data.communities[index].created_by),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<UserModel> snapshot) {
                                   if (snapshot.hasError) {
                                     return Text(
                                       "Not found",
                                     );
-                                  }
-                                  else if(snapshot.connectionState==ConnectionState.waiting){
+                                  } else if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return Text("...");
-                                  }
-                                  else if (snapshot.hasData) {
+                                  } else if (snapshot.hasData) {
                                     return Text(
-                                      "Created by "+snapshot.data.fullname,
+                                      "Created by " + snapshot.data.fullname,
                                     );
                                   } else {
                                     return Text(

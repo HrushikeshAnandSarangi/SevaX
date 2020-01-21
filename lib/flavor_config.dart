@@ -41,15 +41,25 @@ class FlavorConfig {
             appBarTheme: AppBarTheme(
               brightness: Brightness.light,
               // color: Color.fromARGB(255, 255, 166, 35),
-              color: Colors.black,
-              iconTheme: IconThemeData(color: Colors.black),
+              color: Color(0x0FF766FE0),
+              // color: Colors.black,
+
+              textTheme: TextTheme(
+                title: TextStyle(color: Colors.white),
+              ),
+
+              iconTheme: IconThemeData(
+                color: Colors.white,
+              ),
+              // iconTheme: IconThemeData(color: Colors.white),
               elevation: 0.7,
-              actionsIconTheme: IconThemeData(color: Colors.black),
+              actionsIconTheme: IconThemeData(color: Colors.white),
             ),
             brightness: Brightness.light,
             primarySwatch: Colors.green,
             // primaryColor: Color.fromARGB(255, 255, 166, 35),
-            primaryColor: Colors.white,
+            primaryColor: Color(0x0FF766FE0),
+
             accentColor: Color.fromARGB(255, 255, 166, 35),
             secondaryHeaderColor: Colors.white,
             indicatorColor: Colors.amberAccent[100],
@@ -76,6 +86,19 @@ class FlavorConfig {
                   color: Colors.black,
                   style: BorderStyle.solid,
                 ),
+              ),
+            ),
+            buttonTheme: ButtonThemeData(
+              buttonColor: Color(0x0FF766FE0),
+              textTheme: ButtonTextTheme.primary,
+              height: 39,
+              shape: StadiumBorder(),
+            ),
+
+            primaryTextTheme: TextTheme(
+              button: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
               ),
             ),
           ),

@@ -81,13 +81,14 @@ class GroupRequestCommons {
   }
 
   static String getGroupTitle({String groupKey}) {
-
     switch (groupKey) {
       case "MyPost":
         return "My Requests";
 
       case "Others":
-        return FlavorConfig.appFlavor == Flavor.APP ? "Timebank Requests" : "Yang Gang Requests";
+        return FlavorConfig.appFlavor == Flavor.APP
+            ? "Group Requests"
+            : "Yang Gang Requests";
 
       default:
         return "Others";
@@ -134,6 +135,8 @@ class GroupOfferCommons {
 
     List<OfferModelList> consolidatedList = List();
 
+    hashedList.keys.toList()..sort();
+
     hashedList.forEach((k, v) {
       consolidatedList.add(OfferTitle.create(groupTitle: k));
       for (var req in v) {
@@ -146,6 +149,8 @@ class GroupOfferCommons {
   static HashMap<String, List<OfferModel>> getListHashed(
       {List<OfferModel> offerModelList, String sevaUserId}) {
     HashMap<String, List<OfferModel>> hashMap = new HashMap();
+
+    // offerModelList.sort();
 
     for (var offer in offerModelList) {
       if (offer.sevaUserId == sevaUserId) {
@@ -169,6 +174,8 @@ class GroupOfferCommons {
       }
     }
 
+    hashMap.keys.toList()..sort();
+
     return hashMap;
   }
 
@@ -178,8 +185,8 @@ class GroupOfferCommons {
         return "My Offers";
 
       case "Others":
-        return "${FlavorConfig.values.timebankTitle} Offers";
-
+        // return "${FlavorConfig.values.timebankTitle} Offers";
+        return 'Group Offers';
       default:
         return "Others";
     }

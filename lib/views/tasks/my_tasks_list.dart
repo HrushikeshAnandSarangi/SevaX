@@ -329,11 +329,9 @@ class TaskCardViewState extends State<TaskCardView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           requestModel.title,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
       ),
       body: GestureDetector(
@@ -487,16 +485,15 @@ class TaskCardViewState extends State<TaskCardView> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 20),
                     Container(
+                      alignment: Alignment.center,
                       padding: EdgeInsets.all(8.0),
                       child: RaisedButton(
-                        color: Theme.of(context).accentColor,
                         onPressed: checkForReview,
                         child: Text(
                           'Completed',
-                          style: TextStyle(
-                            color: FlavorConfig.values.buttonTextColor,
-                          ),
+                          style: Theme.of(context).primaryTextTheme.button,
                         ),
                       ),
                     )

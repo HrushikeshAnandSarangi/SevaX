@@ -15,6 +15,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_request_details.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
@@ -61,6 +62,7 @@ class RequestsState extends State<RequestsModule> {
     _setORValue();
     timebankId = widget.timebankModel.id;
     print("----------->>>$timebankId");
+    
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 10),
       child: Column(
@@ -241,7 +243,7 @@ class RequestsState extends State<RequestsModule> {
                 Container(
                   width: 120,
                   child: CupertinoSegmentedControl<int>(
-                    selectedColor: Color.fromARGB(255, 4, 47, 110),
+                    selectedColor: Theme.of(context).primaryColor,
                     children: logoWidgets,
 
                     padding: EdgeInsets.only(left: 5.0, right: 5.0),
@@ -1059,7 +1061,7 @@ class RequestListItems extends StatelessWidget {
         var isMyContent = (model as GroupTitle).groupTitle.contains("My");
 
         return Container(
-          height: !isMyContent ? 15 : 0,
+          height: !isMyContent ? 18 : 0,
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
           child: Text(
             GroupRequestCommons.getGroupTitle(
@@ -1093,7 +1095,7 @@ class RequestListItems extends StatelessWidget {
               parentContext,
               MaterialPageRoute(
                 builder: (context) =>
-                    TimeBankRequestDetails(requestItem: model),
+                    RequestTabHolder(requestModel: model,),
               ),
             );
           },

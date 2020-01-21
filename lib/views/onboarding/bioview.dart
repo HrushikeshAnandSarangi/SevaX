@@ -19,6 +19,10 @@ class BioView extends StatefulWidget {
 
 class _BioViewState extends State<BioView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final OutlineInputBorder textFieldBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(8),
+    borderSide: BorderSide(color: Color(0x0FFC7C7CC)),
+  );
   String bio = '';
 
   @override
@@ -35,77 +39,101 @@ class _BioViewState extends State<BioView> {
           appBar: AppBar(
             automaticallyImplyLeading: false,
             elevation: 0.5,
-            backgroundColor: Color(0xFFFFFFFF),
-            leading: BackButton(color: Colors.black54),
             title: Text(
               'Bio',
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500),
+              style: TextStyle(fontSize: 18),
             ),
+            centerTitle: true,
           ),
-          body: Container(
-            padding: EdgeInsets.only(top: 20.0, left: 16.0, right: 25.0),
-            child: ListView(children: <Widget>[
-              Padding(
-                  padding: const EdgeInsets.only(left: 0.0, top: 0.0, bottom: 10.0),
-                  child: Text(
-                    'Share with the community about you that highlights what makes you special',
-                    style: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
-                  )),
-              Form(
-                key: _formKey,
-                child: TextFormField(
-                  style: TextStyle(fontSize: 16.0, color: Colors.black87),
-                  decoration: InputDecoration(
-                    hintText: 'What would you like to tell about you?',
-                    border: InputBorder.none,
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  textCapitalization: TextCapitalization.sentences,
-                  minLines: 6,
-                  maxLines: 50,
-                  validator: (value) {
-                    if (value.trim().isEmpty) {
-                      return 'Its easy, please fill few words about you.';
-                    }
-                    this.bio = value;
-                  },
-                ),
-              )
-            ]),
-          ),
-          bottomNavigationBar: ButtonBar(
+          body: Column(
             children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 25.0, left: 25.0, right: 25.0),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 0.0, top: 0.0, bottom: 10.0),
+                      child: Text(
+                        'Tell us a litte about yourself, list your skills, interests and what you would like to give back to the community.',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          TextFormField(
+                            style: TextStyle(
+                                fontSize: 16.0, color: Colors.black87),
+                            decoration: InputDecoration(
+                              fillColor: Colors.grey[300],
+                              filled: true,
+                              hintText:
+                                  'What would you like to tell about you?',
+                              border: textFieldBorder,
+                              enabledBorder: textFieldBorder,
+                              focusedBorder: textFieldBorder,
+                            ),
+                            keyboardType: TextInputType.multiline,
+                            textCapitalization: TextCapitalization.sentences,
+                            minLines: 6,
+                            maxLines: 50,
+                            maxLength: 150,
+                            validator: (value) {
+                              if (value.trim().isEmpty) {
+                                return 'Its easy, please fill few words about you.';
+                              }
+                              if (value.length < 50)
+                                return '* min 50 characters';
+                              this.bio = value;
+                            },
+                          ),
+                          // Text(
+                          //   '*min 100 characters',
+                          //   style: TextStyle(color: Colors.red),
+                          // )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Spacer(),
+              SizedBox(
+                width: 134,
+                child: RaisedButton(
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      widget.onSave(bio);
+                    }
+                  },
+                  child: Text(
+                    'Next',
+                    style: Theme.of(context).primaryTextTheme.button,
+                  ),
+                  // color: Theme.of(context).accentColor,
+                  // textColor: FlavorConfig.values.buttonTextColor,
+                  // shape: StadiumBorder(),
+                ),
+              ),
               FlatButton(
                 onPressed: () {
                   widget.onSkipped();
                 },
-                child: Text('Skip'),
-              ),
-              RaisedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    widget.onSave(bio);
-                  }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Text('Next'),
-                    ),
-                  ],
+                child: Text(
+                  'Skip',
+                  style: TextStyle(color: Theme.of(context).accentColor),
                 ),
-                color: Theme.of(context).accentColor,
-                textColor: FlavorConfig.values.buttonTextColor,
-                shape: StadiumBorder(),
               ),
+              SizedBox(height: 20),
             ],
           ),
         ),
