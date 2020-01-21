@@ -157,8 +157,7 @@ class _RegisterPageState extends State<RegisterPage>
                   height: 150.0,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(
-                              'https://cdn.dribbble.com/users/2060373/screenshots/5676655/2_2x.jpg'),
+                          image: NetworkImage(defaultCameraImageURL),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [

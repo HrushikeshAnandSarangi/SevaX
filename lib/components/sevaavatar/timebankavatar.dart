@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/views/core.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 
@@ -85,7 +86,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   @override
   Widget build(BuildContext context) {
     // _getAvatarURL();
-    var widthOfAvtar = FlavorConfig.appFlavor == Flavor.APP? 150.0 : 40.0;
+    var widthOfAvtar = FlavorConfig.appFlavor == Flavor.APP ? 150.0 : 40.0;
     return Container(
       child: GestureDetector(
         onTap: () => imagePicker.showDialog(context),
@@ -113,32 +114,28 @@ class _TimebankAvatarState extends State<TimebankAvatar>
       ),
     );
   }
-  Widget get defaultAvtarWidget{
-    return FlavorConfig.appFlavor == Flavor.APP ? sevaXdeafaultImage : humanityFirstdefaultImage;
+
+  Widget get defaultAvtarWidget {
+    return FlavorConfig.appFlavor == Flavor.APP
+        ? sevaXdeafaultImage
+        : humanityFirstdefaultImage;
   }
 
-  Widget get humanityFirstdefaultImage{
+  Widget get humanityFirstdefaultImage {
     return Container(
-        child: CircleAvatar(
-          radius: 40.0,
-          backgroundImage:
-          AssetImage('lib/assets/images/genericlogo.png'),
-        ),
-      );
+      child: CircleAvatar(
+        radius: 40.0,
+        backgroundImage: AssetImage('lib/assets/images/genericlogo.png'),
+      ),
+    );
   }
 
   Widget get sevaXdeafaultImage {
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(
-                    'https://cdn.dribbble.com/users/2060373/screenshots/5676655/2_2x.jpg'),
-                fit: BoxFit.cover),
+                image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
             borderRadius: BorderRadius.all(Radius.circular(75.0)),
-            boxShadow: [
-              BoxShadow(blurRadius: 7.0, color: Colors.black12)
-            ]
-        )
-    );
+            boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));
   }
 }
