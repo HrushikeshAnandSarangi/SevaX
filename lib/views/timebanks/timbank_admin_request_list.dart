@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -486,27 +487,36 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     user.fullname = user.fullname == null ? defaultUsername : user.fullname;
     var item = Padding(
         padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                CircleAvatar(
-                  backgroundImage: NetworkImage(user.photoURL),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Text(
-                    user.fullname,
-                    style: TextStyle(
-                      fontSize: 17,
+        child: InkWell(
+          onTap: () {
+            print('tapped');
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ProfileViewer(
+                      userEmail: user.email,
+                    )));
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(user.photoURL),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Text(
+                      user.fullname,
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            getUserWidgetButton(user, context, model, isAdmin),
-          ],
+                ],
+              ),
+              getUserWidgetButton(user, context, model, isAdmin),
+            ],
+          ),
         ));
     return Container(
       decoration: BoxDecoration(
@@ -796,12 +806,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         builder: (context) => SelectMembersInGroup(
           timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
           userSelected:
-          selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
+              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
           userEmail: SevaCore.of(context).loggedInUser.email,
         ),
       ),
     );
-
   }
 
   Widget getDataCard({
