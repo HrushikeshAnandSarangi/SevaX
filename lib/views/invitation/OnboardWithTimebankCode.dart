@@ -251,7 +251,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                           // usually buttons at the bottom of the dialog
                           new FlatButton(
                             child: new Text(
-                              "Send Join Request",
+                              "Request invite",
                               style: TextStyle(
                                 color: Theme.of(context).accentColor,
                                 fontSize: dialogButtonSize,
