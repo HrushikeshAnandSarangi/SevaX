@@ -500,8 +500,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
+                  Hero(
+                    tag: user.email,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoURL),
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10, right: 10),

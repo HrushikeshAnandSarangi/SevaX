@@ -82,15 +82,34 @@ class ProfileViewerState extends State<ProfileViewer> {
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 25),
-                      height: 100,
+                      height: 120,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           ProfileImage(
                             image: snapshot.data['photourl'],
+                            tag: widget.userEmail,
                           ),
                           SizedBox(width: 20),
-                          ProfileHeader(name: snapshot.data['fullname']),
+                          ProfileHeader(
+                            rating: '4.5',
+                            name: snapshot.data['fullname'],
+                            email: snapshot.data['email'],
+                            isBlocked: widget.isBlocked,
+                            message: widget.userEmail == loggedInEmail ||
+                                    widget.isBlocked
+                                ? null
+                                : () => onMessageClick(loggedInEmail),
+                            block: widget.userEmail == loggedInEmail
+                                ? null
+                                : onBlockClick,
+                            report: widget.userEmail == loggedInEmail
+                                ? null
+                                : () => onReportClick(
+                                      userData: userData,
+                                      userId: snapshot.data['sevauserid'],
+                                    ),
+                          ),
                         ],
                       ),
                     ),
@@ -101,9 +120,8 @@ class ProfileViewerState extends State<ProfileViewer> {
                         vertical: 20,
                       ),
                       child: UserProfileDetails(
-                        title: 'Android Developer',
-                        details:
-                            'I have 7+ years of experience in software development,particularly around web and mobile technologies.Strength include ios etc',
+                        title: 'About ${snapshot.data['fullname']}',
+                        details: snapshot.data['bio'],
                       ),
                     ),
 
@@ -142,76 +160,76 @@ class ProfileViewerState extends State<ProfileViewer> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 25,
-                        vertical: 20,
-                      ),
-                      child: Container(
-                        width: 170,
-                        child: Column(
-                          children: <Widget>[
-                            OutlineButton(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).accentColor,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.forum,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  Text(' Messages'),
-                                ],
-                              ),
-                              onPressed: widget.userEmail == loggedInEmail ||
-                                      widget.isBlocked
-                                  ? null
-                                  : () => onMessageClick(loggedInEmail),
-                            ),
-                            SizedBox(height: 10),
-                            OutlineButton(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).accentColor,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.block,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  Text(widget.isBlocked ? 'Unblock' : 'Block'),
-                                ],
-                              ),
-                              onPressed: widget.userEmail == loggedInEmail
-                                  ? null
-                                  : onBlockClick,
-                            ),
-                            SizedBox(height: 10),
-                            OutlineButton(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).accentColor,
-                              ),
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.flag,
-                                    color: Theme.of(context).accentColor,
-                                  ),
-                                  Text(' Report Member')
-                                ],
-                              ),
-                              onPressed: widget.userEmail == loggedInEmail
-                                  ? null
-                                  : () => onReportClick(
-                                        userData: userData,
-                                        userId: snapshot.data['sevauserid'],
-                                      ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(
+                    //     horizontal: 25,
+                    //     vertical: 20,
+                    //   ),
+                    //   child: Container(
+                    //     width: 170,
+                    //     child: Column(
+                    //       children: <Widget>[
+                    //         OutlineButton(
+                    //           borderSide: BorderSide(
+                    //             color: Theme.of(context).accentColor,
+                    //           ),
+                    //           child: Row(
+                    //             children: <Widget>[
+                    //               Icon(
+                    //                 Icons.forum,
+                    //                 color: Theme.of(context).accentColor,
+                    //               ),
+                    //               Text(' Messages'),
+                    //             ],
+                    //           ),
+                    //           onPressed: widget.userEmail == loggedInEmail ||
+                    //                   widget.isBlocked
+                    //               ? null
+                    //               : () => onMessageClick(loggedInEmail),
+                    //         ),
+                    //         SizedBox(height: 10),
+                    //         OutlineButton(
+                    //           borderSide: BorderSide(
+                    //             color: Theme.of(context).accentColor,
+                    //           ),
+                    //           child: Row(
+                    //             children: <Widget>[
+                    //               Icon(
+                    //                 Icons.block,
+                    //                 color: Theme.of(context).accentColor,
+                    //               ),
+                    //               Text(widget.isBlocked ? 'Unblock' : 'Block'),
+                    //             ],
+                    //           ),
+                    //           onPressed: widget.userEmail == loggedInEmail
+                    //               ? null
+                    //               : onBlockClick,
+                    //         ),
+                    //         SizedBox(height: 10),
+                    //         OutlineButton(
+                    //           borderSide: BorderSide(
+                    //             color: Theme.of(context).accentColor,
+                    //           ),
+                    //           child: Row(
+                    //             children: <Widget>[
+                    //               Icon(
+                    //                 Icons.flag,
+                    //                 color: Theme.of(context).accentColor,
+                    //               ),
+                    //               Text(' Report Member')
+                    //             ],
+                    //           ),
+                    //           onPressed: widget.userEmail == loggedInEmail
+                    //               ? null
+                    //               : () => onReportClick(
+                    //                     userData: userData,
+                    //                     userId: snapshot.data['sevauserid'],
+                    //                   ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     // Container(
                     //   height: 110.0,
                     //   child: Column(
@@ -838,7 +856,14 @@ class UserProfileDetails extends StatefulWidget {
 
 class _UserProfileDetailsState extends State<UserProfileDetails> {
   final int maxLength = 100;
-  bool viewFullDetails = false;
+  bool viewFullDetails = true;
+
+  @override
+  void initState() {
+    viewFullDetails = widget.details.length <= maxLength;
+    // if (widget.details.length <= maxLength) viewFullDetails = true;
+    super.initState();
+  }
 
   viewMore() {
     setState(() {
@@ -864,9 +889,11 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
             style: TextStyle(color: Colors.black),
             children: <TextSpan>[
               TextSpan(
-                text: viewFullDetails && widget.details.length > maxLength
+                // text: widget.details,
+                text: viewFullDetails
                     ? widget.details
                     : widget.details.substring(0, maxLength),
+
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               // TextSpan(text: ' ...'),
@@ -887,9 +914,22 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
 class ProfileHeader extends StatelessWidget {
   final String name;
+  final String email;
+  final String rating;
+  final Function message;
+  final Function block;
+  final Function report;
+  final bool isBlocked;
+
   const ProfileHeader({
     Key key,
     this.name,
+    this.email,
+    this.rating,
+    this.message,
+    this.block,
+    this.report,
+    this.isBlocked,
   }) : super(key: key);
 
   @override
@@ -898,53 +938,114 @@ class ProfileHeader extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            SizedBox(width: 5),
-            Icon(
-              Icons.local_activity,
-              color: Colors.blue,
-            ),
-            Text(
-              '95%',
-              style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+        StreamBuilder(
+          stream: Firestore.instance
+              .collection("reviews")
+              .where("reviewed", isEqualTo: email)
+              .snapshots(),
+          builder: (context, AsyncSnapshot snapshot) {
+            double r = 0;
+            if (snapshot.data != null) {
+              snapshot.data.documents.forEach((data) {
+                r += double.parse((data['ratings']));
+              });
+            }
+
+            return Container(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 8),
+                  Text(
+                    r != null
+                        ? r > 0
+                            ? '${(r / snapshot.data.documents.length).toStringAsFixed(1)}'
+                            : 'No ratings yet'
+                        : 'Loading',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  r > 0
+                      ? Icon(
+                          Icons.star,
+                          color: Colors.blue,
+                        )
+                      : Container(),
+                ],
               ),
-            ),
-          ],
+            );
+          },
         ),
         Padding(
           padding: const EdgeInsets.only(
             left: 8,
             top: 4,
-            bottom: 6,
           ),
-          child: Text(
-            '$name',
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 16,
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '$name',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                TextSpan(
+                  text: '\n$email',
+                  style: TextStyle(color: Colors.grey),
+                )
+              ],
             ),
           ),
         ),
         Row(
           children: <Widget>[
-            Icon(Icons.location_on, color: Colors.grey),
-            RichText(
-                text: TextSpan(children: <TextSpan>[
-              TextSpan(
-                text: 'Norway',
-                style: TextStyle(color: Colors.black),
+            IconButton(
+              icon: Icon(
+                Icons.message,
               ),
-              TextSpan(
-                text: ' 10:25am',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ])),
+              onPressed: message,
+              tooltip: 'Message',
+              color: Theme.of(context).accentColor,
+            ),
+            IconButton(
+              icon: Icon(Icons.block),
+              onPressed: block,
+              tooltip: isBlocked ? 'Unblock' : 'Block',
+              color: Theme.of(context).accentColor,
+            ),
+            IconButton(
+              icon: Icon(Icons.flag),
+              onPressed: report,
+              tooltip: 'Report member',
+              color: Theme.of(context).accentColor,
+            ),
           ],
         )
+        // Text(
+        //   '$email',
+        //   style: TextStyle(color: Colors.grey),
+        // )
+        // Row(
+        //   children: <Widget>[
+        //     Icon(Icons.location_on, color: Colors.grey),
+        //     RichText(
+        //         text: TextSpan(children: <TextSpan>[
+        //       TextSpan(
+        //         text: 'Norway',
+        //         style: TextStyle(color: Colors.black),
+        //       ),
+        //       TextSpan(
+        //         text: ' 10:25am',
+        //         style: TextStyle(color: Colors.grey),
+        //       ),
+        //     ])),
+        //   ],
+        // )
       ],
     );
   }
@@ -952,37 +1053,23 @@ class ProfileHeader extends StatelessWidget {
 
 class ProfileImage extends StatelessWidget {
   final String image;
+  final String tag;
   const ProfileImage({
     Key key,
     this.image,
+    this.tag,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        CircleAvatar(
-          backgroundImage: NetworkImage(
-            image ?? '',
-          ),
-          minRadius: 50.0,
+    return Hero(
+      tag: tag,
+      child: CircleAvatar(
+        backgroundImage: NetworkImage(
+          image ?? '',
         ),
-        Positioned(
-          bottom: 5,
-          right: 0,
-          child: Container(
-            padding: EdgeInsets.all(2.5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: CircleAvatar(
-              backgroundColor: Colors.green,
-              radius: 10,
-            ),
-          ),
-        )
-      ],
+        minRadius: 60.0,
+      ),
     );
   }
 }
