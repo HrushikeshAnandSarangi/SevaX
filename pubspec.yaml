@@ -76,6 +76,7 @@ dependencies:
   sliding_up_panel: ^0.3.6
   cached_network_image: ^2.0.0
   curved_navigation_bar: ^0.3.1
+  smooth_star_rating: 1.0.4+2
 
 
 

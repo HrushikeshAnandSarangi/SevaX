@@ -30,7 +30,7 @@ class SearchManager {
   }) async* {
     print("searchForUser :: ---------------");
 //    sevaxuser
-    String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -78,7 +78,7 @@ class SearchManager {
   }) async* {
 
     print("searchForUser :: ---------------");
-    String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -92,7 +92,7 @@ class SearchManager {
               {
                 "multi_match": {
                   "query": "$queryString",
-                  "fields": ["email", "fullname"],
+                  "fields": ["email", "fullname", "bio"],
                   "type": "phrase_prefix"
                 }
               },
@@ -118,7 +118,7 @@ class SearchManager {
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {
-    String url = 'http://35.243.165.111//elasticsearch/newsfeed/news/_search';
+    String url = 'http://35.227.18.55//elasticsearch/newsfeed/news/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -194,7 +194,7 @@ class SearchManager {
   static Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
-    String url = 'http://35.243.165.111//elasticsearch/offers/offer/_search';
+    String url = 'http://35.227.18.55//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
         "query": {

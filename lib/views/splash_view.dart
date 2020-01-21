@@ -30,6 +30,7 @@ import 'package:sevaexchange/views/home_dashboard.dart';
 
 import 'home_page_router.dart';
 import 'onboarding/skillsview.dart';
+import 'request_invite_user_card.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -560,6 +561,7 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);
+//      await _navigateToxxxview();
     }
 
     // _navigateToCoreView(loggedInUser);
@@ -808,6 +810,14 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
+   void _navigateToxxxview() {
+     Navigator.of(context).push(
+       MaterialPageRoute(
+         builder: (context) =>  RequestInviteUserCard(),
+
+       ),
+     );
+   }
 
   Future<void> _precacheImage() async {
     return await precacheImage(
