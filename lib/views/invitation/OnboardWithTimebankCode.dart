@@ -190,7 +190,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               ),
               FlatButton(
                 child: Text(
-                  'Request Join Link',
+                  'Request invite',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).accentColor,
