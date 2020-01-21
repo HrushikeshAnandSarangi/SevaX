@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
+import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 // import 'package:timezone/browser.dart';
 
@@ -59,20 +60,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
         .contains(SevaCore.of(context).loggedInUser.email);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.5,
-        automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        backgroundColor: Colors.white,
-        title: Text(
-          "Request Details",
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-      ),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -85,6 +73,17 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    Center(
+                      child: Text(
+                        "Request Details",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
                     Text(
                       widget.requestItem.title,
                       style: TextStyle(
@@ -269,6 +268,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                   style: TextStyle(fontSize: 16),
                 ),
               ),
+
               getBottombar()
             ],
           ),

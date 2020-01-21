@@ -78,7 +78,7 @@ class SearchManager {
   }) async* {
 
     print("searchForUser :: ---------------");
-    String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -108,6 +108,7 @@ class SearchManager {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       UserModel user = UserModel.fromMap(sourceMap);
+
       if(validItems.contains(user.sevaUserID)){
         userList.add(user);
       }
@@ -118,7 +119,7 @@ class SearchManager {
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {
-    String url = 'http://35.243.165.111//elasticsearch/newsfeed/news/_search';
+    String url = 'http://35.227.18.55//elasticsearch/newsfeed/news/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -194,7 +195,7 @@ class SearchManager {
   static Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
-    String url = 'http://35.243.165.111//elasticsearch/offers/offer/_search';
+    String url = 'http://35.227.18.55//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -233,7 +234,7 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url = 'http://35.243.165.111/elasticsearch/requests/request/_search';
+    String url = 'http://35.227.18.55//elasticsearch/requests/request/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -281,7 +282,7 @@ class SearchManager {
     print("Hitting - " + url);
 
     String username = 'user';
-    String password = 'CiN36UNixjyq';
+    String password = 'CiN36UNixJyq';
     log(
       json.encode(
         {

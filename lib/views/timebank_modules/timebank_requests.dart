@@ -15,6 +15,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_request_details.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
@@ -1093,7 +1094,7 @@ class RequestListItems extends StatelessWidget {
               parentContext,
               MaterialPageRoute(
                 builder: (context) =>
-                    TimeBankRequestDetails(requestItem: model),
+                    RequestTabHolder(requestModel: model,),
               ),
             );
           },

@@ -287,9 +287,10 @@ Widget createNormalUserTabBar(
               timebankModel: timebankModel,
               email: SevaCore.of(context).loggedInUser.email,
             ),
-            TimeBankAboutView.of(
-              timebankModel: timebankModel,
-              email: SevaCore.of(context).loggedInUser.email,
+            TimebankRequestAdminPage(
+              isUserAdmin: false,
+              timebankId: timebankModel.id,
+              userEmail: SevaCore.of(context).loggedInUser.email,
             ),
           ],
         )),
@@ -407,7 +408,6 @@ class DiscussionListState extends State<DiscussionList> {
                       borderRadius: new BorderRadius.circular(10.7),
                       color: Colors.grey[200],
                     ),
-
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(' Start a new discussion....',
