@@ -22,11 +22,9 @@ class UpdateOffer extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        // iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           "Update volunteer offer",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         centerTitle: false,
       ),
@@ -240,11 +238,8 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
                 padding: const EdgeInsets.symmetric(vertical: 30.0),
                 child: Center(
                   child: Container(
-                    width: 200,
-                    height: 50,
+                    width: 220,
                     child: RaisedButton(
-                      shape: StadiumBorder(),
-                      color: Theme.of(context).accentColor,
                       onPressed: () {
                         if (location != null) {
                           if (_formKey.currentState.validate()) {
@@ -264,11 +259,7 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
                       },
                       child: Text(
                         'Update Volunteer Offer'.padLeft(10).padRight(10),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: FlavorConfig.values.buttonTextColor,
-                        ),
+                        style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ),
                   ),

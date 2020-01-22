@@ -39,11 +39,9 @@ class _EditRequestState extends State<EditRequest> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           "Edit Campign Request",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         centerTitle: false,
       ),
@@ -383,10 +381,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 child: Center(
                   child: Container(
                     width: 250,
-                    height: 50,
                     child: RaisedButton(
-                      shape: StadiumBorder(),
-                      color: Theme.of(context).accentColor,
                       onPressed: () async {
                         if (location != null) {
                           widget.requestModel.requestStart =
@@ -435,11 +430,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                       },
                       child: Text(
                         "Update Campign Request".padLeft(10).padRight(10),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: FlavorConfig.values.buttonTextColor,
-                        ),
+                        style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ),
                   ),
