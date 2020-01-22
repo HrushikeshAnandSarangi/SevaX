@@ -895,14 +895,13 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
                 text: viewFullDetails
                     ? widget.details
                     : widget.details.substring(0, maxLength),
-
                 style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
               // TextSpan(text: ' ...'),
               TextSpan(
                 text: widget.details.length > maxLength
                     ? viewFullDetails ? '  Less' : '  More'
-                    : '',
+                    : 'Bio not updated yet!',
                 style: TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()..onTap = viewMore,
               ),
