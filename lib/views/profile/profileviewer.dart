@@ -82,13 +82,14 @@ class ProfileViewerState extends State<ProfileViewer> {
                     ),
                     Container(
                       padding: const EdgeInsets.only(left: 25),
-                      height: 120,
+                      height: 100,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           ProfileImage(
                             image: snapshot.data['photourl'],
                             tag: widget.userEmail,
+                            radius: 50,
                           ),
                           SizedBox(width: 20),
                           ProfileHeader(
@@ -964,7 +965,7 @@ class ProfileHeader extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.blue,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: r > 0 ? 16 : 14,
                     ),
                   ),
                   r > 0
@@ -981,7 +982,7 @@ class ProfileHeader extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
             left: 8,
-            top: 4,
+            top: 2,
           ),
           child: RichText(
             text: TextSpan(
@@ -990,41 +991,44 @@ class ProfileHeader extends StatelessWidget {
                   text: '$name',
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
-                    fontSize: 16,
+                    fontSize: 18,
                     color: Colors.black,
                   ),
                 ),
-                TextSpan(
-                  text: '\n$email',
-                  style: TextStyle(color: Colors.grey),
-                )
+                // TextSpan(
+                //   text: '\n$email',
+                //   style: TextStyle(color: Colors.grey),
+                // )
               ],
             ),
           ),
         ),
-        Row(
-          children: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.message,
+        Container(
+          height: 25,
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.message,
+                ),
+                onPressed: message,
+                tooltip: 'Message',
+                color: Theme.of(context).accentColor,
               ),
-              onPressed: message,
-              tooltip: 'Message',
-              color: Theme.of(context).accentColor,
-            ),
-            IconButton(
-              icon: Icon(Icons.block),
-              onPressed: block,
-              tooltip: isBlocked ? 'Unblock' : 'Block',
-              color: Theme.of(context).accentColor,
-            ),
-            IconButton(
-              icon: Icon(Icons.flag),
-              onPressed: report,
-              tooltip: 'Report member',
-              color: Theme.of(context).accentColor,
-            ),
-          ],
+              IconButton(
+                icon: Icon(Icons.block),
+                onPressed: block,
+                tooltip: isBlocked ? 'Unblock' : 'Block',
+                color: Theme.of(context).accentColor,
+              ),
+              IconButton(
+                icon: Icon(Icons.flag),
+                onPressed: report,
+                tooltip: 'Report member',
+                color: Theme.of(context).accentColor,
+              ),
+            ],
+          ),
         )
         // Text(
         //   '$email',
@@ -1053,11 +1057,13 @@ class ProfileHeader extends StatelessWidget {
 
 class ProfileImage extends StatelessWidget {
   final String image;
+  final double radius;
   final String tag;
   const ProfileImage({
     Key key,
     this.image,
     this.tag,
+    this.radius,
   }) : super(key: key);
 
   @override
@@ -1068,7 +1074,7 @@ class ProfileImage extends StatelessWidget {
         backgroundImage: NetworkImage(
           image ?? '',
         ),
-        minRadius: 60.0,
+        minRadius: radius,
       ),
     );
   }
@@ -1459,7 +1465,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
             padding: const EdgeInsets.symmetric(
               horizontal: 20,
             ),
-            color: Color(0xFFFa3ebff),
+            color: Color(0xFFFa3ebff).withOpacity(0.3),
             alignment: Alignment.center,
             child: Text(
               data[index],
