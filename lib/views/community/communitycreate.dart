@@ -721,6 +721,9 @@ class CreateEditCommunityViewFormState
 //          validator: (value) {
 //            return value.isEmpty ? 'Field cannot be left blank' : null;
 //          },
+          // onSaved: (value) {
+
+          // },
           focusNode: additionalNotesFocus,
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
@@ -800,9 +803,9 @@ class CreateEditCommunityViewFormState
           initialValue: controller.community.billing_address.companyname != null
               ? controller.community.billing_address.companyname
               : '',
-          validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
-          },
+          // validator: (value) {
+          //   return value.isEmpty ? 'Field cannot be left blank' : null;
+          // },
           focusNode: companyNameFocus,
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
