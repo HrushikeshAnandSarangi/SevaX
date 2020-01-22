@@ -314,6 +314,8 @@ class CreateEditCommunityViewFormState
                         alignment: Alignment.center,
                         child: RaisedButton(
                           onPressed: () async {
+                            // show a dialog
+
                             print(_formKey.currentState.validate());
 
                             if (_formKey.currentState.validate()) {
@@ -329,6 +331,8 @@ class CreateEditCommunityViewFormState
                                         'Community logo is mandatory';
                                   });
                                 } else {
+                                  showProgressDialog();
+
                                   setState(() {
                                     this.communityImageError = '';
                                   });
@@ -384,18 +388,7 @@ class CreateEditCommunityViewFormState
                                         snapshot.data.community.id;
                                   });
 
-                                  // Navigator.of(context).pushReplacement(
-                                  //   MaterialPageRoute(
-                                  //     builder: (context1) => SevaCore(
-                                  //       loggedInUser:
-                                  //           SevaCore.of(context).loggedInUser,
-                                  //       child: HomePageRouter(
-                                  //           // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
-                                  //           ),
-                                  //     ),
-                                  //   ),
-                                  // );
-
+                                  Navigator.pop(dialogContext);
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
                                         builder: (context1) => SevaCore(
@@ -442,6 +435,20 @@ class CreateEditCommunityViewFormState
     return SingleChildScrollView(
       child: contain,
     );
+  }
+
+  BuildContext dialogContext;
+  void showProgressDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text('Creating timebank'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   Widget headingText(String name) {
@@ -514,7 +521,7 @@ class CreateEditCommunityViewFormState
         ' Find your timebank',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.blue,
+          color: Colors.black,
         ),
       ),
     );
@@ -689,7 +696,7 @@ class CreateEditCommunityViewFormState
           focusNode: pincodeFocus,
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
-            fieldTitle: "Pincode",
+            fieldTitle: "ZIP Code",
           ),
         ),
       );

@@ -392,7 +392,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating feed'),
+            title: Text('Creating request'),
             content: LinearProgressIndicator(),
           );
         });

@@ -369,7 +369,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                               ),
                               TextSpan(
-                                text: 'Discover Teams',
+                                text: 'Discover Timebanks',
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold,
