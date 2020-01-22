@@ -122,7 +122,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       ),
                       child: UserProfileDetails(
                         title: 'About ${snapshot.data['fullname']}',
-                        details: snapshot.data['bio'],
+                        details: snapshot.data['bio']??'',
                       ),
                     ),
 
@@ -861,7 +861,8 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   @override
   void initState() {
-    viewFullDetails = widget.details.length <= maxLength;
+    viewFullDetails =
+        widget.details != null ? widget.details.length <= maxLength : false;
     // if (widget.details.length <= maxLength) viewFullDetails = true;
     super.initState();
   }
