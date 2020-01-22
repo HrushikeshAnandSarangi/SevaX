@@ -30,7 +30,7 @@ class SearchManager {
   }) async* {
     print("searchForUser :: ---------------");
 //    sevaxuser
-    String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -92,7 +92,7 @@ class SearchManager {
               {
                 "multi_match": {
                   "query": "$queryString",
-                  "fields": ["email", "fullname"],
+                  "fields": ["email", "fullname", "bio"],
                   "type": "phrase_prefix"
                 }
               },
