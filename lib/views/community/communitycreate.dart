@@ -711,9 +711,9 @@ class CreateEditCommunityViewFormState
               controller.community.billing_address.additionalnotes != null
                   ? controller.community.billing_address.additionalnotes
                   : '',
-          validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
-          },
+//          validator: (value) {
+//            return value.isEmpty ? 'Field cannot be left blank' : null;
+//          },
           focusNode: additionalNotesFocus,
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
