@@ -41,11 +41,11 @@ var validItems;
         margin: EdgeInsets.only(top: 20, right: 15),
         width: 60.0,
         height: 60.0,
-        decoration: new BoxDecoration(
+        decoration:  BoxDecoration(
             shape: BoxShape.circle,
-            image: new DecorationImage(
+            image:  DecorationImage(
                 fit: BoxFit.fill,
-                image: new NetworkImage(
+                image:  NetworkImage(
                     "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg")
             )
         ));
@@ -55,7 +55,7 @@ var validItems;
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
-        height: 250,
+        height: 220,
         width: 500,
         decoration: new BoxDecoration(
           color: Colors.white,
@@ -133,32 +133,35 @@ var validItems;
               ),
               Expanded(
                 child: Text(
-                  "Tony Stark Tony StarkTony StarkTony StarkTony StarkTony Stark",
+                  "Bio",
+                  maxLines: 3,
                   style: TextStyle(color: Colors.black, fontSize: 12,),),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.all(8),
-                    height: 33,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        new BoxShadow(
-                          color: Colors.grey,
-                          offset: new Offset(20.0, 10.0),
-                        )
-                      ],
-                    ),
+
+                  /*  decoration: BoxDecoration(
+
+                        boxShadow: [BoxShadow(
+                            color: Colors.indigo[50],
+                            blurRadius: 1,
+                            offset: Offset(0.0, 0.50)
+                        )]
+                    ),*/
+                    height: 40,
+
+                    padding: EdgeInsets.only(bottom: 10),
                     child: RaisedButton(
                       shape: StadiumBorder(),
                       color: Colors.indigo,
                       textColor: Colors.white,
+                      elevation: 5,
                       onPressed: () {},
                       child: const Text(
                           'Invited',
-                          style: TextStyle(fontSize: 16)
+                          style: TextStyle(fontSize: 14)
                       ),
                     ),
                   ),
@@ -171,23 +174,6 @@ var validItems;
     );
   }
 
-  Widget getEmptyWidget(String title, String notFoundValue) {
-    return Center(
-      child: Text(
-        notFoundValue,
-        overflow: TextOverflow.ellipsis,
-        style: sectionHeadingStyle,
-      ),
-    );
-  }
-
-  TextStyle get sectionHeadingStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 12.5,
-      color: Colors.black,
-    );
-  }
 
   TextStyle get sectionTextStyle {
     return TextStyle(
@@ -196,4 +182,29 @@ var validItems;
       color: Colors.grey,
     );
   }
+}
+TextStyle get sectionTextStyle {
+  return TextStyle(
+    fontWeight: FontWeight.w600,
+    fontSize: 11,
+    color: Colors.grey,
+  );
+
+}
+Widget getEmptyWidget(String title, String notFoundValue) {
+  return Center(
+    child: Text(
+      notFoundValue,
+      overflow: TextOverflow.ellipsis,
+      style: sectionHeadingStyle,
+    ),
+  );
+}
+
+TextStyle get sectionHeadingStyle {
+  return TextStyle(
+    fontWeight: FontWeight.w600,
+    fontSize: 12.5,
+    color: Colors.black,
+  );
 }

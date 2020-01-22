@@ -47,23 +47,21 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           );
         }
         List<UserModel> userList = snapshot.data;
-        /*if (userList.length == 0) {
+        if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
-        }*/
+        }
         return ListView.builder(
-          //itemCount: userList.length + 1,
-          itemCount: 10,
+          itemCount: userList.length,
 
 
           itemBuilder: (context, index) {
-            /*if (index == 0) {
+            if (index == 0) {
               return Container(
                 padding: EdgeInsets.only(left: 8, top: 16),
                 child: Text('Users', style: sectionTextStyle),
               );
-            }*/
-            // UserModel user = userList.elementAt(index - 1);
-             UserModel user ;
+            }
+            UserModel user = userList.elementAt(index);
             return RequestCardWidget(userModel: user,);
           },
         );

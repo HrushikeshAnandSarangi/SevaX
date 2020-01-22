@@ -5,6 +5,20 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
+
+import '../../flavor_config.dart';
+import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
 
@@ -23,6 +37,26 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   var approvedMembers =[];
   HashMap<String, AcceptorItem> filteredList =HashMap();
 
+  Future<dynamic> getUserForId({@required String sevaUserId}) async {
+    assert(sevaUserId != null && sevaUserId.isNotEmpty,
+    "Seva UserId cannot be null or empty");
+
+    UserModel userModel;
+    await Firestore.instance
+        .collection('users')
+        .where('sevauserid', isEqualTo: sevaUserId)
+        .getDocuments()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+        //print('user data ${userModel}');
+        userModel = UserModel.fromMap(documentSnapshot.data);
+        //print('logg user ${userModel.email}');
+      });
+    });
+
+    return userModel;
+  }
+
   Future<dynamic> getUserDetails({String memberEmail}) async {
     var user = await Firestore.instance
         .collection("users")
@@ -35,20 +69,599 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
   @override
   Widget build(BuildContext context) {
+
+    var futures = <Future>[];
+    futures.clear();
+    widget.requestModel.acceptors.forEach((memberEmail) {
+      futures.add(getUserDetails(memberEmail: memberEmail));
+    });
+      //futures.add(getUserDetails(memberEmail: 'burhan@uipep.com'));
     acceptors=widget.requestModel.acceptors;
     approvedMembers=widget.requestModel.approvedUsers;
 
-   /* acceptors.map(f){
 
-    }
+   /* acceptors.map((f){
+      filteredList[f]=AcceptorItem(approved: false,sevaUserID: f);
+    });
 
-    approvedMembers.map(f){
+    approvedMembers.map((f){
+      filteredList[f]=AcceptorItem(approved: true,sevaUserID: f);
+    });
 
-    }*/
+    filteredList.map((k, v){
 
-    return Container();
+        futures.add(getUserForId(sevaUserId: k));
+    });*/
+    return FutureBuilder(
+        future: Future.wait(futures),
+        builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.data.length == 0) {
+            return Center(
+              child: Text('No pending requests'),
+            );
+          }
+
+/*
+          for ( var i = 0; i < snapshot.data.length; i++ ){
+
+          }*/
+          var snap = snapshot.data.map((f) {
+
+
+
+            return UserModel.fromDynamic(f);
+          }).toList();
+
+          snap.sort((a, b) =>
+              a.fullname.toLowerCase().compareTo(b.fullname.toLowerCase()));
+
+          return ListView(
+            children: <Widget>[
+
+              ...snap.map((userModel) {
+                // return Text(f['fullname']);
+
+                return makeUserWidget(userModel,context);/*Container(
+                  margin: EdgeInsets.all(2),
+                  decoration: notificationDecoration,
+                  child: ListTile(
+                    title: Text(userModel.fullname),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                    subtitle: Text(
+                      'Pending approval',
+                      style: TextStyle(color: Colors.red),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                    onTap: () {
+                      showDialogForApprovalOfRequest(
+                          context: context,
+                          userModel: userModel,
+                          requestModel: widget.requestModel,
+                          notificationId: "sampleID")
+                          .then((onValue) {
+                        setState(() {});
+                        print("Action completed");
+                      });
+                      //set the state
+                    },
+                  ),
+                );*/
+              }).toList()
+            ],
+          );
+        });
+
+
+  }
+  Widget makeUserWidget(UserModel userModel, BuildContext context) {
+    return Container(
+        margin: EdgeInsets.fromLTRB(35, 20, 30, 10),
+        child: Stack(
+            children: <Widget>[
+              getUserCard(userModel,context: context),
+              getUserThumbnail(userModel.photoURL),
+            ]
+        )
+    );
+  }
+
+  Widget getUserThumbnail(String photoURL) {
+    return Container(
+        margin: EdgeInsets.only(top: 20, right: 15),
+        width: 60.0,
+        height: 60.0,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image:  DecorationImage(
+                fit: BoxFit.fill,
+                image:  NetworkImage(
+                    photoURL ?? "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg")
+            )
+        ));
+  }
+
+  Widget getUserCard(UserModel userModel, {BuildContext context}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30),
+      child: Container(
+        height: 220,
+        width: 500,
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: new BorderRadius.circular(8.0),
+          boxShadow: <BoxShadow>[
+            new BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0,
+              offset: new Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 40, right: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Text(userModel.fullname, style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),),
+                  ),
+//              Spacer(),
+                  Icon(
+                    Icons.chat_bubble,
+                    color: Colors.blueGrey,
+                    size: 35,),
+                ],
+              ),
+              SmoothStarRating(
+                  allowHalfRating: true,
+                  onRatingChanged: (v) {
+//                    rating = v;
+//                    setState(() {});
+                  },
+                  starCount: 5,
+                  rating: 3.5,
+                  size: 20.0,
+                  filledIconData: Icons.star,
+                  halfFilledIconData: Icons.star_half,
+                  defaultIconData: Icons.star_border,
+                  color: Colors.orangeAccent,
+                  borderColor: Colors.orangeAccent,
+                  spacing: 1.0
+              ),
+              SizedBox(
+                  height: 10
+              ),
+              Expanded(
+                child: Text(
+                  userModel.bio ?? "",
+                  style: TextStyle(color: Colors.black, fontSize: 12,),),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+
+                    /*  decoration: BoxDecoration(
+
+                        boxShadow: [BoxShadow(
+                            color: Colors.indigo[50],
+                            blurRadius: 1,
+                            offset: Offset(0.0, 0.50)
+                        )]
+                    ),*/
+                    height: 40,
+
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: RaisedButton(
+                      shape: StadiumBorder(),
+                      color: Colors.indigo,
+                      textColor: Colors.white,
+                      elevation: 5,
+                      onPressed: () {
+                        showDialogForApprovalOfRequest(
+                            context: context,
+                            userModel: userModel,
+                            requestModel: widget.requestModel,
+                            notificationId: "sampleID")
+                            .then((onValue) {
+                          setState(() {});
+                          print("Action completed");
+                        });
+                      },
+                      child: const Text(
+                          'Approve',
+                          style: TextStyle(fontSize: 12)
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 10,),
+                  Container(
+
+                    /*  decoration: BoxDecoration(
+
+                        boxShadow: [BoxShadow(
+                            color: Colors.indigo[50],
+                            blurRadius: 1,
+                            offset: Offset(0.0, 0.50)
+                        )]
+                    ),*/
+                    height: 40,
+
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: RaisedButton(
+                      shape: StadiumBorder(),
+                      color: Colors.redAccent,
+                      textColor: Colors.white,
+                      elevation: 5,
+                      onPressed: () {},
+                      child: const Text(
+                          'Reject',
+                          style: TextStyle(fontSize: 12)
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getEmptyWidget(String title, String notFoundValue) {
+    return Center(
+      child: Text(
+        notFoundValue,
+        overflow: TextOverflow.ellipsis,
+        style: sectionHeadingStyle,
+      ),
+    );
+  }
+
+  TextStyle get sectionHeadingStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 12.5,
+      color: Colors.black,
+    );
+  }
+
+  TextStyle get sectionTextStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 11,
+      color: Colors.grey,
+    );
+  }
+// crate dialog for approval or rejection
+  Future showDialogForApprovalOfRequest({
+    BuildContext context,
+    UserModel userModel,
+    RequestModel requestModel,
+    String notificationId,
+  }) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _getCloseButton(viewContext),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname == null
+                          ? "Anonymous"
+                          : userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(
+                      userModel.email == null
+                          ? "User email not updated"
+                          : userModel.email,
+                    ),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "About ${userModel.fullname}",
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      userModel.bio == null
+                          ? "Bio not yet updated"
+                          : userModel.bio,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                        "By approving, ${userModel.fullname} will be added to the event.",
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.center),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          'Decline',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () async {
+                          // request declined
+
+                          declineRequestedMember(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel);
+
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          'Approve',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: () async {
+                          // Once approved
+                          approveMemberForVolunteerRequest(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+  void declineRequestedMember({
+    RequestModel model,
+    UserModel user,
+    String notificationId,
+  }) {
+    List<String> acceptedUsers = model.acceptors;
+    Set<String> usersSet = acceptedUsers.toSet();
+
+    usersSet.remove(user.email);
+    model.acceptors = usersSet.toList();
+
+    rejectAcceptRequest(
+      requestModel: model,
+      rejectedUserId: user.sevaUserID,
+      notificationId: notificationId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    );
+  }
+
+  void approveMemberForVolunteerRequest({
+    RequestModel model,
+    UserModel user,
+    String notificationId,
+  }) {
+    List<String> approvedUsers = model.approvedUsers;
+    Set<String> usersSet = approvedUsers.toSet();
+
+    usersSet.add(user.email);
+    model.approvedUsers = usersSet.toList();
+
+    if (model.numberOfApprovals <= model.approvedUsers.length)
+      model.accepted = true;
+    approveAcceptRequest(
+      requestModel: model,
+      approvedUserId: user.sevaUserID,
+      notificationId: notificationId,
+      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+    );
+  }
+
+  Widget _getCloseButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        alignment: FractionalOffset.topRight,
+        child: Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'lib/assets/images/close.png',
+              ),
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  Decoration get notificationDecoration => ShapeDecoration(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    color: Colors.white,
+    shadows: shadowList,
+  );
+
+  List<BoxShadow> get shadowList => [shadow];
+
+  BoxShadow get shadow {
+    return BoxShadow(
+      color: Colors.black.withAlpha(10),
+      spreadRadius: 2,
+      blurRadius: 3,
+    );
+  }
+
+  Widget get notificationShimmer {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Shimmer.fromColors(
+        child: Container(
+          decoration: ShapeDecoration(
+            color: Colors.white.withAlpha(80),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: ListTile(
+            title: Container(height: 10, color: Colors.white),
+            subtitle: Container(height: 10, color: Colors.white),
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+            ),
+          ),
+        ),
+        baseColor: Colors.black.withAlpha(50),
+        highlightColor: Colors.white.withAlpha(50),
+      ),
+    );
   }
 }
+
+Future<List<UserModel>> getRequestStatus({
+  @required String requestId,
+}) async {
+  Firestore.instance.collection('requests').document(requestId).get().then(
+        (requestDetails) async {
+      var futures = <Future>[];
+      RequestModel model = RequestModel.fromMap(
+        requestDetails.data,
+      );
+
+      model.approvedUsers.forEach((membersId) {
+        futures.add(
+          Firestore.instance
+              .collection("users")
+              .document(membersId)
+              .get()
+              .then((onValue) {
+            return onValue;
+          }),
+        );
+      });
+
+      return Future.wait(futures).then((onValue) {
+        for (int i = 0; i < model.approvedUsers.length; i++) {
+          var user = UserModel.fromDynamic(onValue[i]);
+          usersRequested.add(user);
+        }
+        return usersRequested;
+      });
+    },
+  );
+}
+
+Future<RequestModel> getRequestData({
+  @required String requestId,
+}) async {
+  Firestore.instance.collection('requests').document(requestId).get().then(
+        (requestDetails) async {
+      var futures = <Future>[];
+      RequestModel model = RequestModel.fromMap(
+        requestDetails.data,
+      );
+
+      return model;
+
+      model.approvedUsers.forEach((membersId) {
+        futures.add(
+          Firestore.instance
+              .collection("users")
+              .document(membersId)
+              .get()
+              .then((onValue) {
+            return onValue;
+          }),
+        );
+      });
+
+      return Future.wait(futures).then((onValue) {
+        for (int i = 0; i < model.approvedUsers.length; i++) {
+          var user = UserModel.fromDynamic(onValue[i]);
+          usersRequested.add(user);
+        }
+        return usersRequested;
+      });
+    },
+  );
+}
+
+List<UserModel> usersRequested = List();
+
 
 
 class AcceptorItem {

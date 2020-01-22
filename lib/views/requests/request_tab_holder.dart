@@ -30,13 +30,11 @@ class RequestTabHolder extends StatelessWidget {
                 child: TabBarView(
                   children: <Widget>[
                     Container(
-                      color: Colors.red,
 
                       child: TimeBankRequestDetails(requestItem: requestModel),
 
                     ),
                     Container(
-                      color: Colors.purple,
                       child: RequestUsersTabsViewHolder.of(requestItem: requestModel,)
                     ),
                     Container(
