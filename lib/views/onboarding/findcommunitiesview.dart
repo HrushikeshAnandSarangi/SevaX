@@ -181,12 +181,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     );
   }
 
+
   Widget buildList() {
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
         stream: communityBloc.allCommunities,
         builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
           if (snapshot.hasData) {
+
             if (snapshot.data != null && snapshot.data.loading) {
               return Expanded(
                   child: Center(child: CircularProgressIndicator()));
@@ -276,6 +278,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             }
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
+          }else if(snapshot.data==null){
+            return Expanded(
+              child: Center(
+                child: Text('No Timebank found'),
+              ),
+            );
           }
           return Expanded(
             child: Text(""),
