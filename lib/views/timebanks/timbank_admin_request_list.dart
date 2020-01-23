@@ -470,7 +470,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
           String email = user.email.toString().trim();
           print("Admin:$email");
           _adminEmails.add(email);
-          _admins.add(getUserWidget(user, context, timebankModel, true));
+          _admins.add(getUserWidget(user, context, timebankModel, true, false));
         });
         setState(() {});
       });
@@ -482,6 +482,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     BuildContext context,
     TimebankModel model,
     bool isAdmin,
+    bool isPromoteBottonVisible
   ) {
     user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
     user.fullname = user.fullname == null ? defaultUsername : user.fullname;
@@ -495,29 +496,32 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                       userEmail: user.email,
                     )));
           },
+
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Hero(
-                    tag: user.email,
-                    child: CircleAvatar(
+              Expanded(
+                child: Row(
+                  children: <Widget>[
+                    CircleAvatar(
                       backgroundImage: NetworkImage(user.photoURL),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Text(
-                      user.fullname,
-                      style: TextStyle(
-                        fontSize: 17,
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Text(
+                          user.fullname,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 17,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              getUserWidgetButton(user, context, model, isAdmin),
+              getUserWidgetButton(user, context, model, isAdmin, isPromoteBottonVisible),
             ],
           ),
         ));
@@ -540,6 +544,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     BuildContext context,
     TimebankModel model,
     bool isAdmin,
+    bool isPromoteBottonVisible,
   ) {
     print(
         "SevaCore.of(context).loggedInUser.sevaUserID:${SevaCore.of(context).loggedInUser.sevaUserID}");
@@ -550,6 +555,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         ? Offstage()
         : Row(
             children: <Widget>[
+              if(isPromoteBottonVisible)
+              Padding(
+                padding: EdgeInsets.only(left: 2, right: 2),
+                child: CustomRaisedButton(
+                  action: Actions.Promote,
+                  onTap: () {
+                    if (isAdmin) {
+                      List<String> admins =
+                          timebankModel.admins.map((s) => s).toList();
+                      admins.add(user.sevaUserID);
+                      _updateTimebank(timebankModel, admins: admins);
+                    }
+                  },
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.only(left: 2, right: 2),
                 child: CustomRaisedButton(
@@ -557,12 +577,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                   onTap: () {
                     if (isAdmin) {
                       List<String> admins =
-                          timebankModel.admins.map((s) => s).toList();
+                      timebankModel.admins.map((s) => s).toList();
                       admins.remove(user.sevaUserID);
                       _updateTimebank(timebankModel, admins: admins);
                     } else {
                       List<String> members =
-                          timebankModel.members.map((s) => s).toList();
+                      timebankModel.members.map((s) => s).toList();
                       members.remove(user.sevaUserID);
                       _updateTimebank(timebankModel, members: members);
                     }
@@ -609,7 +629,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 //              child: getUserWidget(user, context, timebankModel),
 //            );
             _coordinators
-                .add(getUserWidget(user, context, timebankModel, true));
+                .add(getUserWidget(user, context, timebankModel, true, false));
           }
         });
         setState(() {});
@@ -667,7 +687,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
             if (widget.listOfMembers != null &&
                 widget.listOfMembers.containsKey(member)) {
               return getUserWidget(
-                  widget.listOfMembers[member], context, timebankModel, false);
+                  widget.listOfMembers[member], context, timebankModel, false, true);
             }
             return FutureBuilder<UserModel>(
               future: FirestoreManager.getUserForId(sevaUserId: member),
@@ -678,7 +698,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                 }
                 UserModel user = snapshot.data;
                 widget.listOfMembers[user.sevaUserID] = user;
-                return getUserWidget(user, context, timebankModel, false);
+                return getUserWidget(user, context, timebankModel, false, true);
               },
             );
           }).toList();
@@ -735,7 +755,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                 return shimmerWidget;
               }
               UserModel user = snapshot.data;
-              return getUserWidget(user, context, model, true);
+              return getUserWidget(user, context, model, true, false);
             },
           );
         }).toList(),
@@ -882,6 +902,7 @@ enum Actions {
   Approve,
   Reject,
   Remove,
+  Promote,
 }
 
 class CustomRaisedButton extends StatelessWidget {
@@ -897,7 +918,7 @@ class CustomRaisedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RaisedButton(
       padding: EdgeInsets.all(0),
-      color: action == Actions.Approve ? null : Colors.red,
+      color: (action == Actions.Approve || action == Actions.Promote) ? null : Colors.red,
       child: Text(
         action.toString().split('.')[1],
         style: TextStyle(fontSize: 12),
