@@ -1,4 +1,5 @@
 // import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -85,17 +86,8 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Center(
-                      child: Text(
-                        "Request Details",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20,),
+
+                    SizedBox(height: 10,),
                     Text(
                       widget.requestItem.title,
                       style: TextStyle(
@@ -122,34 +114,50 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(
-                        DateFormat('EEEEEEE, MMMM dd h:mm a').format(
+                        DateFormat('h:mm a').format(
                           getDateTimeAccToUserTimezone(
                               dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                  widget.requestItem.requestEnd),
+                                  widget.requestItem.requestStart),
                               timezoneAbb:
                                   SevaCore.of(context).loggedInUser.timezone),
-                        ),
+                        ) +' - ' + DateFormat('h:mm a').format(
+                        getDateTimeAccToUserTimezone(
+                            dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                widget.requestItem.requestEnd),
+                            timezoneAbb:
+                            SevaCore.of(context).loggedInUser.timezone),
+                      ),
                         style: subTitleStyle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       trailing: Container(
-                        height: 30,
-                        width: 80,
-                        child: widget.applied
-                            ? FlatButton(
+                        height: 25,
+                        width: 72,
+                        child: isApplied ?
+                        FlatButton(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 color: Color.fromRGBO(44, 64, 140, 1),
                                 child: Text(
+
                                   'Edit',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Colors.white,fontSize: 12),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  MaterialPageRoute(
+                                    builder: (context) => EditRequest(
+                                      timebankId: SevaCore.of(context)
+                                          .loggedInUser
+                                          .currentTimebank,
+                                      requestModel: widget.requestItem,
+                                    ),
+                                  );
+                                },
                               )
-                            : Container(),
-                      ),
+                           : Container(),
+                      )
                     ),
                     CustomListTile(
                       leading: Icon(
@@ -263,6 +271,8 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     );
                   }),
               SizedBox(height: 10),
+
+
               // NetworkImage(
               //   imageUrl:
               //       'https://technext.github.io/Evento/images/demo/bg-slide-01.jpg',
@@ -280,7 +290,16 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                   style: TextStyle(fontSize: 16),
                 ),
               ),
+              CachedNetworkImage(
+                  imageUrl: widget.requestItem.photoUrl,
+                  errorWidget: (context,url,error) =>
+                      Container(),
+                  placeholder: (context,url){
+                    return Center(child: CircularProgressIndicator());
+                  }
 
+              ),
+              SizedBox(height: 10,),
               getBottombar()
             ],
           ),
@@ -293,6 +312,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
     var user = await Firestore.instance
         .collection("users")
         .document(memberEmail)
+        
         .get();
 
     return user.data;

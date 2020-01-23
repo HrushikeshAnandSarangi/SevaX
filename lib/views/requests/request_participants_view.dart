@@ -4,6 +4,7 @@ import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -33,29 +34,12 @@ class RequestParticipantsView extends StatefulWidget {
 
 class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
-  var acceptors =[];
-  var approvedMembers =[];
+  List<String> acceptors;
+  List<String> approvedMembers;
+  List<String> newList;
   HashMap<String, AcceptorItem> filteredList =HashMap();
 
-  Future<dynamic> getUserForId({@required String sevaUserId}) async {
-    assert(sevaUserId != null && sevaUserId.isNotEmpty,
-    "Seva UserId cannot be null or empty");
-
-    UserModel userModel;
-    await Firestore.instance
-        .collection('users')
-        .where('sevauserid', isEqualTo: sevaUserId)
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-        //print('user data ${userModel}');
-        userModel = UserModel.fromMap(documentSnapshot.data);
-        //print('logg user ${userModel.email}');
-      });
-    });
-
-    return userModel;
-  }
+ // LinkedHashSet filteredList =  LinkedHashSet<String>();
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
     var user = await Firestore.instance
@@ -72,25 +56,46 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
     var futures = <Future>[];
     futures.clear();
-    widget.requestModel.acceptors.forEach((memberEmail) {
+   /* widget.requestModel.acceptors.forEach((memberEmail) {
       futures.add(getUserDetails(memberEmail: memberEmail));
-    });
-      //futures.add(getUserDetails(memberEmail: 'burhan@uipep.com'));
+    });*/
+
+
     acceptors=widget.requestModel.acceptors;
     approvedMembers=widget.requestModel.approvedUsers;
 
+    newList=acceptors +approvedMembers;
 
-   /* acceptors.map((f){
-      filteredList[f]=AcceptorItem(approved: false,sevaUserID: f);
+    List<String> result = LinkedHashSet<String>.from(newList).toList();
+
+    print('fhsfhsgj ${result.toString()}');
+
+    result.forEach((email){
+      futures.add(getUserDetails(memberEmail: email));
+    });
+
+   // acceptors.addAll(widget.requestModel.acceptors);
+   // approvedMembers.addAll(widget.requestModel.approvedUsers);
+
+/*
+    filteredList.add(acceptors);
+    filteredList.add(approvedMembers);*/
+
+/*
+    acceptors.map((f){
+      filteredList[f]=AcceptorItem(approved: false,email: f);
     });
 
     approvedMembers.map((f){
-      filteredList[f]=AcceptorItem(approved: true,sevaUserID: f);
+      filteredList[f]=AcceptorItem(approved: true,email: f);
     });
+
+    print('filtered ${filteredList}');
+
 
     filteredList.map((k, v){
 
-        futures.add(getUserForId(sevaUserId: k));
+        futures.add(getUserDetails(memberEmail: k));
     });*/
     return FutureBuilder(
         future: Future.wait(futures),
@@ -665,10 +670,10 @@ List<UserModel> usersRequested = List();
 
 
 class AcceptorItem {
-  final String sevaUserID;
+  final String email;
   final bool approved;
 
-  AcceptorItem({this.sevaUserID, this.approved});
+  AcceptorItem({this.email, this.approved});
 
 
 }
