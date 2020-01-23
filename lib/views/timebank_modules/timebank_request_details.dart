@@ -134,7 +134,9 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                       trailing: Container(
                         height: 25,
                         width: 72,
-                        child: isApplied ?
+                        child: widget.requestItem.sevaUserId ==
+                            SevaCore.of(context).loggedInUser.sevaUserID
+                            ?
                         FlatButton(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
@@ -193,6 +195,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     ),
                     CustomListTile(
                       // contentPadding: EdgeInsets.all(0),
+
                       leading: Icon(
                         Icons.person,
                         color: Colors.grey,
@@ -290,7 +293,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                   style: TextStyle(fontSize: 16),
                 ),
               ),
-              CachedNetworkImage(
+              /*CachedNetworkImage(
                   imageUrl: widget.requestItem.photoUrl,
                   errorWidget: (context,url,error) =>
                       Container(),
@@ -298,9 +301,10 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     return Center(child: CircularProgressIndicator());
                   }
 
-              ),
+              ),*/
               SizedBox(height: 10,),
-              getBottombar()
+              getBottombar(),
+              SizedBox(height: 10,)
             ],
           ),
         ),
@@ -351,30 +355,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    widget.requestItem.sevaUserId ==
-                            SevaCore.of(context).loggedInUser.sevaUserID
-                        ? TextSpan(
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                            text: '\nEdit request',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditRequest(
-                                      timebankId: SevaCore.of(context)
-                                          .loggedInUser
-                                          .currentTimebank,
-                                      requestModel: widget.requestItem,
-                                    ),
-                                  ),
-                                );
-                              },
-                          )
-                        : TextSpan(),
+
                   ],
                 ),
               ),
