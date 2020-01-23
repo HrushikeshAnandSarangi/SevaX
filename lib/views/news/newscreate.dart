@@ -39,15 +39,12 @@ class NewsCreate extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             "Create feed",
-            // style: TextStyle(color: Colors.white),
+            style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
           actions: <Widget>[
-
             //  OutlineButton(
             //         //color: Colors.indigo,
             //         onPressed: () {
@@ -216,289 +213,273 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     textStyle = Theme.of(context).textTheme.title;
     // Build a Form widget using the formKey we created above
     return Form(
-        key: formKey,
-        child: FadeAnimation(
-          1.5,
-          Container(
-            // margin: EdgeInsets.all(10),
-            // padding: EdgeInsets.all(10.0),
-            child: SingleChildScrollView(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    // Container(
-                    //   alignment: Alignment(1.0, 0),
-                    //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
-                    //   child:
-                    //   RaisedButton(
-                    //     shape: StadiumBorder(),
-                    //     color: Colors.indigoAccent,
-                    //     onPressed: () {
-                    //       // Validate will return true if the form is valid, or false if
-                    //       // the form is invalid.
+      key: formKey,
+      child: FadeAnimation(
+        1.5,
+        Container(
+          // margin: EdgeInsets.all(10),
+          // padding: EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Container(
+                  //   alignment: Alignment(1.0, 0),
+                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
+                  //   child:
+                  //   RaisedButton(
+                  //     shape: StadiumBorder(),
+                  //     color: Colors.indigoAccent,
+                  //     onPressed: () {
+                  //       // Validate will return true if the form is valid, or false if
+                  //       // the form is invalid.
 
-                    //       if (formKey.currentState.validate()) {
-                    //         // If the form is valid, we want to show a Snackbar
-                    //         Scaffold.of(context).showSnackBar(
-                    //             SnackBar(content: Text('Creating Post')));
-                    //         writeToDB();
-                    //       }
-                    //     },
-                    //     child: Text(
-                    //       'Save News Post',
-                    //       style: TextStyle(color: Colors.white),
-                    //     ),
-                    //   ),
-                    // ),
+                  //       if (formKey.currentState.validate()) {
+                  //         // If the form is valid, we want to show a Snackbar
+                  //         Scaffold.of(context).showSnackBar(
+                  //             SnackBar(content: Text('Creating Post')));
+                  //         writeToDB();
+                  //       }
+                  //     },
+                  //     child: Text(
+                  //       'Save News Post',
+                  //       style: TextStyle(color: Colors.white),
+                  //     ),
+                  //   ),
+                  // ),
 
 //              entityDropdown,
 
-                    Text(""),
-                    Container(
-                      margin: EdgeInsets.all(20),
-                      child: Column(
-                        children: <Widget>[
-                          // Padding(
-                          //   padding: EdgeInsets.only(bottom: 20.0),
-                          //   child: TextFormField(
-                          //     decoration: InputDecoration(
-                          //       hintText: 'Your feed title',
-                          //       labelText: '+ Feed Title',
-                          //       border: OutlineInputBorder(
-                          //         borderRadius: const BorderRadius.all(
-                          //           const Radius.circular(10.0),
-                          //         ),
-                          //         borderSide: new BorderSide(
-                          //           color: Colors.black,
-                          //           width: 0.5,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     keyboardType: TextInputType.text,
-                          //     //style: textStyle,
-                          //     validator: (value) {
-                          //       if (value.isEmpty) {
-                          //         return 'Please enter the Post Title';
-                          //       }
-                          //       newsObject.title = value;
-                          //     },
-                          //   ),
-                          // ),
+                  Text(""),
+                  Container(
+                    margin: EdgeInsets.all(20),
+                    child: Column(
+                      children: <Widget>[
+                        // Padding(
+                        //   padding: EdgeInsets.only(bottom: 20.0),
+                        //   child: TextFormField(
+                        //     decoration: InputDecoration(
+                        //       hintText: 'Your feed title',
+                        //       labelText: '+ Feed Title',
+                        //       border: OutlineInputBorder(
+                        //         borderRadius: const BorderRadius.all(
+                        //           const Radius.circular(10.0),
+                        //         ),
+                        //         borderSide: new BorderSide(
+                        //           color: Colors.black,
+                        //           width: 0.5,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //     keyboardType: TextInputType.text,
+                        //     //style: textStyle,
+                        //     validator: (value) {
+                        //       if (value.isEmpty) {
+                        //         return 'Please enter the Post Title';
+                        //       }
+                        //       newsObject.title = value;
+                        //     },
+                        //   ),
+                        // ),
 
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 0.0),
-                            child: TextFormField(
-                              controller: subheadingController,
-                              autofocus: true,
-                              textAlign: TextAlign.start,
-                              decoration: InputDecoration(
-                                labelStyle: prefix0.TextStyle(
-                                  color: Colors.black
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 0.0),
+                          child: TextFormField(
+                            controller: subheadingController,
+                            autofocus: true,
+                            textAlign: TextAlign.start,
+                            decoration: InputDecoration(
+                              labelStyle:
+                                  prefix0.TextStyle(color: Colors.black),
+                              alignLabelWithHint: false,
+                              hintText: 'Text, URL and Hashtags ',
+                              labelText: 'What would you like to share',
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(0.0),
                                 ),
-                                alignLabelWithHint: false,
-                                hintText: 'Text, URL and Hashtags ',
-                                labelText: 'What would you like to share',
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(0.0),
-                                  ),
-                                  borderSide: new BorderSide(
-                                    color: Colors.black,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: const BorderRadius.all(
-                                    const Radius.circular(0.0),
-                                  ),
-                                  borderSide: new BorderSide(
-                                    color: Colors.black,
-                                    width: 0.5,
-                                  ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
                                 ),
                               ),
-                              keyboardType: TextInputType.text,
-                              maxLines: 5,
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please enter some text';
-                                }
-                                newsObject.subheading = value;
-                                // print("object");
-                              },
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(0.0),
+                                ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
                             ),
-                          ),
-                          Text(""),
-                          // TextFormField(
-                          //   decoration: InputDecoration(
-                          //     hintText: 'Your news and any #hashtags',
-                          //     labelText: 'Photo Credits',
-                          //     border: OutlineInputBorder(
-                          //       borderRadius: const BorderRadius.all(
-                          //         const Radius.circular(10.0),
-                          //       ),
-                          //       borderSide: new BorderSide(
-                          //         color: Colors.black,
-                          //         width: 0.5,
-                          //       ),
-                          //     ),
-                          //   ),
-                          //   keyboardType: TextInputType.multiline,
-                          //   //style: textStyle,
-                          //   maxLines: null,
-                          //   validator: (value) {
-                          //     if (value.isEmpty) {
-                          //       return 'Please enter some text';
-                          //     }
-                          //     newsObject.description = value;
-                          //   },
-                          // ),
-                        ],
-                      ),
-                    ),
-
-                    // Text(""),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 0),
-                      child: Center(
-                        child: NewsImage(
-                          photoCredits: "",
-                          geoFirePointLocation: location,
-                          geoFirePointLocationCallback:
-                              (geoLocationPointSelected) {
-                            location = geoLocationPointSelected;
-                          },
-                          onCreditsEntered: (photoCreditsFromNews) {
-                            print("" + photoCredits);
-                            photoCredits = photoCreditsFromNews;
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Row(
-                //   children: <Widget>[
-                //     Container(
-                //       margin: EdgeInsets.only(left: 20),
-                //       child: FlatButton.icon(
-                //         icon: Icon(Icons.add_location),
-                //         label: Text(''),
-                //         // label: Text(
-                //         //   selectedAddress == null || selectedAddress.isEmpty
-                //         //       // adasdasd
-                //         //       ? 'Add Location'
-                //         //       : selectedAddress,
-                //         //   overflow: TextOverflow.ellipsis,
-                //         // ),
-                //         color: Colors.grey[200],
-                //         onPressed: () {
-                //           Navigator.push(
-                //             context,
-                //             MaterialPageRoute<GeoFirePoint>(
-                //               builder: (context) => LocationPicker(
-                //                 selectedLocation: location,
-                //               ),
-                //             ),
-                //           ).then((point) {
-                //             if (point != null) location = point;
-                //             _getLocation();
-                //           });
-                //         },
-                //       ),
-                //     ),
-                //     Container(
-                //       margin: EdgeInsets.only(left: 20),
-                //       child: FlatButton.icon(
-                //         icon: Icon(Icons.image),
-                //         label: Text(''),
-                //         // label: Text(
-                //         //   selectedAddress == null || selectedAddress.isEmpty
-                //         //       // adasdasd
-                //         //       ? 'Add Location'
-                //         //       : selectedAddress,
-                //         //   overflow: TextOverflow.ellipsis,
-                //         // ),
-                //         color: Colors.grey[200],
-                //         onPressed: () {
-                //           //call gallery
-
-                //           // newsImageInstance.imagePicker.showDialog(context);
-                //         },
-                //       ),
-                //     ),
-                //   ],
-                // ),
-
-                Container(
-                  margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  alignment: Alignment(0, 1),
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: RaisedButton(
-                    shape: StadiumBorder(),
-                    color: Theme.of(context).accentColor,
-                    onPressed: () async {
-                      if (location != null) {
-                        if (formKey.currentState.validate()) {
-                          // If the form is valid, we want to show a Snackbar
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (createDialogContext) {
-                                dialogContext = createDialogContext;
-                                return AlertDialog(
-                                  title: Text('Creating feed'),
-                                  content: LinearProgressIndicator(),
-                                );
-                              });
-                          scrapeURLFromSubheading(subheadingController.text);
-                          scrapeHashTagsFromSubHeadings(
-                              subheadingController.text);
-
-                          if (newsObject.urlsFromPost.length > 0) {
-                            await scrapeURLDetails(subheadingController.text);
-                          }
-
-                          writeToDB();
-                        }
-                      } else {
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Location not added'),
-                          ),
-                        );
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.attachment,
-                          size: 24.0,
-                          color: FlavorConfig.values.buttonTextColor,
-                        ),
-                        Text(' '),
-                        Text(
-                          'Create feed',
-                          style: TextStyle(
-                            color: FlavorConfig.values.buttonTextColor,
+                            keyboardType: TextInputType.text,
+                            maxLines: 5,
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+                              newsObject.subheading = value;
+                              // print("object");
+                            },
                           ),
                         ),
+                        Text(""),
+                        // TextFormField(
+                        //   decoration: InputDecoration(
+                        //     hintText: 'Your news and any #hashtags',
+                        //     labelText: 'Photo Credits',
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: const BorderRadius.all(
+                        //         const Radius.circular(10.0),
+                        //       ),
+                        //       borderSide: new BorderSide(
+                        //         color: Colors.black,
+                        //         width: 0.5,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   keyboardType: TextInputType.multiline,
+                        //   //style: textStyle,
+                        //   maxLines: null,
+                        //   validator: (value) {
+                        //     if (value.isEmpty) {
+                        //       return 'Please enter some text';
+                        //     }
+                        //     newsObject.description = value;
+                        //   },
+                        // ),
                       ],
                     ),
                   ),
+
+                  // Text(""),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0),
+                    child: Center(
+                      child: NewsImage(
+                        photoCredits: "",
+                        geoFirePointLocation: location,
+                        geoFirePointLocationCallback:
+                            (geoLocationPointSelected) {
+                          location = geoLocationPointSelected;
+                        },
+                        onCreditsEntered: (photoCreditsFromNews) {
+                          print("" + photoCredits);
+                          photoCredits = photoCreditsFromNews;
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              // Row(
+              //   children: <Widget>[
+              //     Container(
+              //       margin: EdgeInsets.only(left: 20),
+              //       child: FlatButton.icon(
+              //         icon: Icon(Icons.add_location),
+              //         label: Text(''),
+              //         // label: Text(
+              //         //   selectedAddress == null || selectedAddress.isEmpty
+              //         //       // adasdasd
+              //         //       ? 'Add Location'
+              //         //       : selectedAddress,
+              //         //   overflow: TextOverflow.ellipsis,
+              //         // ),
+              //         color: Colors.grey[200],
+              //         onPressed: () {
+              //           Navigator.push(
+              //             context,
+              //             MaterialPageRoute<GeoFirePoint>(
+              //               builder: (context) => LocationPicker(
+              //                 selectedLocation: location,
+              //               ),
+              //             ),
+              //           ).then((point) {
+              //             if (point != null) location = point;
+              //             _getLocation();
+              //           });
+              //         },
+              //       ),
+              //     ),
+              //     Container(
+              //       margin: EdgeInsets.only(left: 20),
+              //       child: FlatButton.icon(
+              //         icon: Icon(Icons.image),
+              //         label: Text(''),
+              //         // label: Text(
+              //         //   selectedAddress == null || selectedAddress.isEmpty
+              //         //       // adasdasd
+              //         //       ? 'Add Location'
+              //         //       : selectedAddress,
+              //         //   overflow: TextOverflow.ellipsis,
+              //         // ),
+              //         color: Colors.grey[200],
+              //         onPressed: () {
+              //           //call gallery
+
+              //           // newsImageInstance.imagePicker.showDialog(context);
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
+
+              Container(
+                width: 150,
+                alignment: Alignment(0, 1),
+                padding: const EdgeInsets.only(top: 10.0),
+                child: RaisedButton(
+                  onPressed: () async {
+                    if (location != null) {
+                      if (formKey.currentState.validate()) {
+                        // If the form is valid, we want to show a Snackbar
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (createDialogContext) {
+                              dialogContext = createDialogContext;
+                              return AlertDialog(
+                                title: Text('Creating feed'),
+                                content: LinearProgressIndicator(),
+                              );
+                            });
+                        scrapeURLFromSubheading(subheadingController.text);
+                        scrapeHashTagsFromSubHeadings(
+                            subheadingController.text);
+
+                        if (newsObject.urlsFromPost.length > 0) {
+                          await scrapeURLDetails(subheadingController.text);
+                        }
+
+                        writeToDB();
+                      }
+                    } else {
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Location not added'),
+                        ),
+                      );
+                    }
+                  },
+                  child: Text(
+                    'Create feed',
+                    style: Theme.of(context).primaryTextTheme.button,
+                  ),
                 ),
-                // Text(sevaUserID),
-              ],
-            )),
-          ),
+              ),
+              // Text(sevaUserID),
+            ],
+          )),
         ),
+      ),
     );
   }
 
@@ -673,7 +654,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       }
     }
   }
-
 
   void fetchCurrentlocation() {
     Location().getLocation().then((onValue) {

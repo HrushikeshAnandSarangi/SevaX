@@ -4,6 +4,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 
 class UserProfileBloc {
@@ -27,8 +28,8 @@ class UserProfileBloc {
             CommunityCard(
               selected: userModel.currentCommunity == value.documentID,
               community: CommunityModel(value.data),
-              onTap: () =>
-                  setDefaultCommunity(userModel.email, value.documentID),
+              onTap: () => setDefaultCommunity(
+                  userModel.email, value.documentID, context),
             ),
           );
           _communities.add(community);
@@ -39,12 +40,15 @@ class UserProfileBloc {
     });
   }
 
-  void setDefaultCommunity(String email, String communityId) {
+  void setDefaultCommunity(
+      String email, String communityId, BuildContext context) {
     Firestore.instance
         .collection('users')
         .document(email)
         .updateData({"currentCommunity": communityId}).then((onValue) {
       //TODO navigate to community page
+      SevaCore.of(context).loggedInUser.currentCommunity = communityId;
+      print(SevaCore.of(context).loggedInUser.currentCommunity);
       // print(onValue.data);
     });
   }
