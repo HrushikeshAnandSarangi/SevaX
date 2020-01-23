@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class SearchManager {
   static final String _baseUrl = 'http://api.sevaexchange.com:9200';
@@ -72,13 +73,114 @@ class SearchManager {
     yield userList;
   }
 
+
+  static Stream<List<CommunityModel>> searchCommunity({
+    @required queryString,
+  }) async* {
+
+    print("searchForUser :: ---------------");
+    String url = 'http://35.227.18.55//elasticsearch/sevaxcommunities/sevaxcommunity/_search';
+    dynamic body = json.encode(
+        {
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "multi_match": {
+                    "query": queryString,
+                    "fields": [
+                    // "billing_address",
+                      "name"
+                  // "primary_email"
+                    ],
+                    "type": "phrase_prefix"
+                  }
+                }
+              ]
+            }
+          },
+          "sort": {
+            "name.keyword": {
+              "order": "asc"
+            }
+          }
+        }
+    );
+    List<Map<String, dynamic>> hitList =
+    await _makeElasticSearchPostRequest(url, body);
+    List<CommunityModel> communityList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var community = CommunityModel(sourceMap);
+      // print("community data ${community.name}");
+
+      communityList.add(community);
+
+      //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
+      //communityList.add(communityModel);
+
+    });
+    yield communityList;
+  }
+
+
+  static Stream<List<TimebankModel>> searchTimeBank({
+    @required queryString,
+  }) async* {
+
+    print("searchForUser :: ---------------");
+    String url = 'http://35.227.18.55//elasticsearch/sevaxcommunities/sevaxcommunity/_search';
+    dynamic body = json.encode(
+        {
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "multi_match": {
+                    "query": queryString,
+                    "fields": [
+                      "billing_address",
+                      "name",
+                      "primary_email"
+                    ],
+                    "type": "phrase_prefix"
+                  }
+                }
+              ]
+            }
+          },
+          "sort": {
+            "name.keyword": {
+              "order": "asc"
+            }
+          }
+        }
+    );
+    List<Map<String, dynamic>> hitList =
+    await _makeElasticSearchPostRequest(url, body);
+    List<TimebankModel> timeBankList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var timeBank = TimebankModel.fromMap(sourceMap);
+      // print("community data ${community.name}");
+
+      timeBankList.add(timeBank);
+
+      //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
+      //communityList.add(communityModel);
+
+    });
+    yield timeBankList;
+  }
+
+
   static Stream<List<UserModel>> searchForUserWithTimebankId({
     @required queryString,
     @required List<String> validItems,
   }) async* {
 
     print("searchForUser :: ---------------");
-    String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -118,7 +220,7 @@ class SearchManager {
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {
-    String url = 'http://35.243.165.111//elasticsearch/newsfeed/news/_search';
+    String url = 'http://35.227.18.55//elasticsearch/newsfeed/news/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -159,6 +261,8 @@ class SearchManager {
     yield newsList;
   }
 
+
+
   static Stream<List<TimebankModel>> searchForTimebank({
     @required queryString,
   }) async* {
@@ -174,6 +278,8 @@ class SearchManager {
     });
     yield timebankList;
   }
+
+
 
   static Stream<List<CampaignModel>> searchForCampaign({
     @required queryString,
@@ -194,7 +300,7 @@ class SearchManager {
   static Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
-    String url = 'http://35.243.165.111//elasticsearch/offers/offer/_search';
+    String url = 'http://35.227.18.55//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -233,7 +339,7 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url = 'http://35.243.165.111/elasticsearch/requests/request/_search';
+    String url = 'http://35.227.18.55/elasticsearch/requests/request/_search';
     dynamic body = json.encode(
       {
         "query": {
