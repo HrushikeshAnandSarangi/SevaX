@@ -225,29 +225,25 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadItems() async {
     if (adminsNotLoaded) {
-      loadNextAdmins().then((onValue) {
-        adminsNotLoaded = false;
-        if (_coordinators.length == 0 && FlavorConfig.appFlavor == Flavor.APP) {
-          loadNextCoordinators().then((onValue) {
-            if (_members.length == 0) {
-              loadNextMembers().then((onValue) {
-                if (widget.isUserAdmin) {
-                  getFutureTimebankJoinRequest(timebankID: widget.timebankId)
-                      .then((newList) {
-                    if (newList != null && newList.length > 0) {
-                      loadAllRequest(newList);
-                    }
-                  });
-                }
-              });
-            }
-          });
-        } else {
-          if (_members.length == 0) {
-            loadNextMembers();
+      _admins = [];
+      _adminEmails = [];
+      await loadNextAdmins();
+      adminsNotLoaded = false;
+      _coordinators = [];
+      if (FlavorConfig.appFlavor == Flavor.APP) {
+        await loadNextCoordinators();
+      }
+      _members = [];
+      await loadNextMembers();
+
+      if (widget.isUserAdmin) {
+        getFutureTimebankJoinRequest(timebankID: widget.timebankId)
+            .then((newList) {
+          if (newList != null && newList.length > 0) {
+            loadAllRequest(newList);
           }
-        }
-      });
+        });
+      }
     }
   }
 
@@ -477,13 +473,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     }
   }
 
-  Widget getUserWidget(
-    UserModel user,
-    BuildContext context,
-    TimebankModel model,
-    bool isAdmin,
-    bool isPromoteBottonVisible
-  ) {
+  Widget getUserWidget(UserModel user, BuildContext context,
+      TimebankModel model, bool isAdmin, bool isPromoteBottonVisible) {
     user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
     user.fullname = user.fullname == null ? defaultUsername : user.fullname;
     var item = Padding(
@@ -496,7 +487,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                       userEmail: user.email,
                     )));
           },
-
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -521,7 +511,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                   ],
                 ),
               ),
-              getUserWidgetButton(user, context, model, isAdmin, isPromoteBottonVisible),
+              getUserWidgetButton(
+                  user, context, model, isAdmin, isPromoteBottonVisible),
             ],
           ),
         ));
@@ -555,21 +546,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         ? Offstage()
         : Row(
             children: <Widget>[
-              if(isPromoteBottonVisible)
-              Padding(
-                padding: EdgeInsets.only(left: 2, right: 2),
-                child: CustomRaisedButton(
-                  action: Actions.Promote,
-                  onTap: () {
-                    if (isAdmin) {
-                      List<String> admins =
-                          timebankModel.admins.map((s) => s).toList();
-                      admins.add(user.sevaUserID);
-                      _updateTimebank(timebankModel, admins: admins);
-                    }
-                  },
+              if (isPromoteBottonVisible)
+                Padding(
+                  padding: EdgeInsets.only(left: 2, right: 2),
+                  child: CustomRaisedButton(
+                    action: Actions.Promote,
+                    onTap: () {
+                      if (isAdmin) {
+                        List<String> admins =
+                            timebankModel.admins.map((s) => s).toList();
+                        admins.add(user.sevaUserID);
+                        _updateTimebank(timebankModel, admins: admins);
+                      }
+                    },
+                  ),
                 ),
-              ),
               Padding(
                 padding: EdgeInsets.only(left: 2, right: 2),
                 child: CustomRaisedButton(
@@ -577,12 +568,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                   onTap: () {
                     if (isAdmin) {
                       List<String> admins =
-                      timebankModel.admins.map((s) => s).toList();
+                          timebankModel.admins.map((s) => s).toList();
                       admins.remove(user.sevaUserID);
                       _updateTimebank(timebankModel, admins: admins);
                     } else {
                       List<String> members =
-                      timebankModel.members.map((s) => s).toList();
+                          timebankModel.members.map((s) => s).toList();
                       members.remove(user.sevaUserID);
                       _updateTimebank(timebankModel, members: members);
                     }
@@ -686,8 +677,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
             var member = memberObject.sevaUserID;
             if (widget.listOfMembers != null &&
                 widget.listOfMembers.containsKey(member)) {
-              return getUserWidget(
-                  widget.listOfMembers[member], context, timebankModel, false, true);
+              return getUserWidget(widget.listOfMembers[member], context,
+                  timebankModel, false, true);
             }
             return FutureBuilder<UserModel>(
               future: FirestoreManager.getUserForId(sevaUserId: member),
@@ -918,7 +909,9 @@ class CustomRaisedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RaisedButton(
       padding: EdgeInsets.all(0),
-      color: (action == Actions.Approve || action == Actions.Promote) ? null : Colors.red,
+      color: (action == Actions.Approve || action == Actions.Promote)
+          ? null
+          : Colors.red,
       child: Text(
         action.toString().split('.')[1],
         style: TextStyle(fontSize: 12),
