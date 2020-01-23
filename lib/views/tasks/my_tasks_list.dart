@@ -11,13 +11,11 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/qna-module/ReviewLandingPage.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../flavor_config.dart';
 import 'completed_list.dart';
 import 'notAccepted_tasks.dart';
 
@@ -167,7 +165,66 @@ class MyTasksList extends StatelessWidget {
                 ),
                 shadows: shadowList,
               ),
-              child: ListTile(
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return TaskCardView(
+                          requestModel: model,
+                          userTimezone: userTimezone,
+                        );
+                      },
+                    ),
+                  );
+                },
+                //   child: Container(
+                //     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                //     child: Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: <Widget>[
+                //         Text(
+                //           getTime(
+                //             model.requestStart,
+                //             userTimezone,
+                //           ),
+                //           style: TextStyle(
+                //             color: Color(0xFFFb57b59),
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //         SizedBox(height: 3),
+                //         Text(
+                //           model.title,
+                //           style: TextStyle(
+                //             fontSize: 16,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //         SizedBox(height: 3),
+                //         Text(
+                //           user.fullname,
+                //           style: TextStyle(fontSize: 14),
+                //         ),
+                //         SizedBox(height: 3),
+                //         Text(
+                //           getTimeFormattedString(
+                //             model.requestStart,
+                //             userTimezone,
+                //           ),
+                //           style: TextStyle(
+                //             color: Color(0xFFFb57b59),
+                //             fontSize: 14,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
+                child: ListTile(
                   title: Text(
                     model.title,
                     style: TextStyle(fontWeight: FontWeight.bold),
@@ -215,10 +272,22 @@ class MyTasksList extends StatelessWidget {
                         },
                       ),
                     );
-                  }),
+                  },
+                ),
+              ),
             ),
           );
         });
+  }
+
+  String getTime(int timeInMilliseconds, String timezoneAbb) {
+    DateTime datetime = DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds);
+    DateTime localtime = getDateTimeAccToUserTimezone(
+        dateTime: datetime, timezoneAbb: timezoneAbb);
+    String from = DateFormat.jm().format(
+      localtime,
+    );
+    return from;
   }
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {

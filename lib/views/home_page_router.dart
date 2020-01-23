@@ -74,7 +74,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                 index: selected,
                 backgroundColor: Colors.transparent,
                 buttonBackgroundColor: Colors.orange,
-                height: 60,
+                height: 65,
                 items: List.generate(
                   5,
                   (index) => CustomBottomNavigationItem(
@@ -110,13 +110,14 @@ class CustomBottomNavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   statusBarBrightness: Brightness.light,
-  //   statusBarColor: Color(0x0FF766FE0),
-  // ));
+    //   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarBrightness: Brightness.light,
+    //   statusBarColor: Color(0x0FF766FE0),
+    // ));
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
+      
       children: <Widget>[
         selected ? Container() : SizedBox(height: 8),
         Container(
