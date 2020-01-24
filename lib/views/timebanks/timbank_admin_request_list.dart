@@ -49,6 +49,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   var _membersWidgets = List<Widget>();
   var _requestsWidgets = List<Widget>();
   var _adminEmails = List<String>();
+  var isProgressBarActive = false;
+  var debounceValue = Debouncer(milliseconds: 500);
 
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
@@ -97,6 +99,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   }
 
   Widget getTimebackList(BuildContext context, String timebankId) {
+    if (isProgressBarActive) {
+      return AlertDialog(
+        title: Text('Updating Users'),
+        content: LinearProgressIndicator(),
+      );
+    }
     if (timebankModel.id != "") {
       return getDataScrollView(
         context,
@@ -316,7 +324,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                         padding: EdgeInsets.only(left: 2, right: 2),
                         child: CustomRaisedButton(
                           action: Actions.Approve,
+                          debouncer: debounceValue,
                           onTap: () async {
+                            setState(() {
+                              isProgressBarActive = true;
+                            });
                             List<String> members = timebankModel.members;
                             Set<String> usersSet = members.toSet();
                             usersSet.add(joinRequestModel.userId);
@@ -332,7 +344,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                         padding: EdgeInsets.only(left: 2, right: 2),
                         child: CustomRaisedButton(
                           action: Actions.Reject,
+                          debouncer: debounceValue,
                           onTap: () async {
+                            setState(() {
+                              isProgressBarActive = true;
+                            });
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = false;
                             createJoinRequest(model: joinRequestModel)
@@ -385,7 +401,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   void resetAndLoad() async {
     resetVariables();
     await loadItems();
-    setState(() {});
+    setState(() {
+      isProgressBarActive = false;
+    });
   }
 
   List<Widget> getContent(BuildContext context, TimebankModel model) {
@@ -451,7 +469,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     if (timebankModel.admins == null) {
       timebankModel.admins = List<String>();
     }
-    print(timebankModel.admins);
     var adminUserModel = await FirestoreManager.getUserForUserModels(
         admins: timebankModel.admins);
     _adminsWidgets = [];
@@ -460,7 +477,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     SplayTreeMap<String, dynamic>.from(adminUserModel, (a, b) => a.compareTo(b))
         .forEach((key, user) {
       String email = user.email.toString().trim();
-      print("Admin:$email");
       _adminEmails.add(email);
       _adminsWidgets
           .add(getUserWidget(user, context, timebankModel, true, false));
@@ -476,7 +492,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         padding: EdgeInsets.all(10),
         child: InkWell(
           onTap: () {
-            print('tapped');
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => ProfileViewer(
                       userEmail: user.email,
@@ -532,9 +547,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     bool isAdmin,
     bool isPromoteBottonVisible,
   ) {
-    print(
-        "SevaCore.of(context).loggedInUser.sevaUserID:${SevaCore.of(context).loggedInUser.sevaUserID}");
-    print("user.sevaUserID:${user.sevaUserID}");
+//    print(
+//        "SevaCore.of(context).loggedInUser.sevaUserID:${SevaCore.of(context).loggedInUser.sevaUserID}");
+//    print("user.sevaUserID:${user.sevaUserID}");
 
     return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
             !widget.isUserAdmin
@@ -545,8 +560,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                 Padding(
                   padding: EdgeInsets.only(left: 2, right: 2),
                   child: CustomRaisedButton(
+                    debouncer: debounceValue,
                     action: Actions.Promote,
-                    onTap: () {
+                    onTap: () async {
+                      setState(() {
+                        isProgressBarActive = true;
+                      });
                       List<String> admins =
                           timebankModel.admins.map((s) => s).toList();
                       admins.add(user.sevaUserID);
@@ -557,8 +576,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
               Padding(
                 padding: EdgeInsets.only(left: 2, right: 2),
                 child: CustomRaisedButton(
+                  debouncer: debounceValue,
                   action: Actions.Remove,
-                  onTap: () {
+                  onTap: () async {
+                    setState(() {
+                      isProgressBarActive = true;
+                    });
                     if (isAdmin) {
                       List<String> admins =
                           timebankModel.admins.map((s) => s).toList();
@@ -660,7 +683,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
               var email = userModelList[i].email.trim();
               if (emailIndexMap[userModelList[i].email] == null &&
                   !_adminEmails.contains(email)) {
-                print("Member email found:$email");
+//                print("Member email found:$email");
                 // Filtering duplicates
                 _membersWidgets.add(addItems[i]);
                 indexToModelMap[lastIndex] = userModelList[i];
@@ -854,15 +877,34 @@ enum Actions {
   Promote,
 }
 
+class Debouncer {
+  final int milliseconds;
+  VoidCallback action;
+  Timer _timer;
+
+  Debouncer({this.milliseconds});
+
+  run(VoidCallback action) {
+    if (_timer != null) {
+      _timer.cancel();
+    }
+
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
+}
+
 class CustomRaisedButton extends StatelessWidget {
   final Actions action;
   final Function onTap;
+  final Debouncer debouncer;
 
   const CustomRaisedButton({
     Key key,
     this.onTap,
     this.action,
+    this.debouncer,
   }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
@@ -874,7 +916,9 @@ class CustomRaisedButton extends StatelessWidget {
         action.toString().split('.')[1],
         style: TextStyle(fontSize: 12),
       ),
-      onPressed: onTap,
+      onPressed: () {
+        debouncer.run(() => onTap());
+      },
     );
   }
 }
