@@ -23,12 +23,14 @@ import 'edit_timebank_view.dart';*/
 
 class OnBoardWithTimebank extends StatefulWidget {
   final CommunityModel communityModel;
+  final String sevaUserId;
 
-  OnBoardWithTimebank({this.communityModel});
+  OnBoardWithTimebank({this.communityModel,this.sevaUserId});
 
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
 }
+enum CompareToTimeBank { JOINED, REQUESTED, REJECTED, JOIN }
 
 class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   // TRUE: register page, FALSE: login page
@@ -40,6 +42,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 //  JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
+  bool isDataLoaded = false;
+
+  List<JoinRequestModel> _joinRequestModelList;
+
   String loggedInUser;
   final formkey = GlobalKey<FormState>();
 
@@ -48,8 +54,35 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
   void initState() {
     super.initState();
-    createEditCommunityBloc.getCommunityPrimaryTimebank();
+
   }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    getRequestList();
+
+  }
+  void getRequestList() async {
+    createEditCommunityBloc.getCommunityPrimaryTimebank();
+
+    _joinRequestModelList =
+    await getFutureUserRequest(userID: widget.sevaUserId);
+    isDataLoaded = true;
+   // setState(() {});
+
+    //print('User request ${}');
+
+    // print('User request ${newList}');
+  }
+/*
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    createEditCommunityBloc.dispose();
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +99,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(child: timebankStreamBuilder(context)),
+        child: isDataLoaded ?
+        Container(child:
+        timebankStreamBuilder(context),
+        ):Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
     // child: Column(
@@ -100,6 +138,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       CommunityCreateEditController communityCreateEditSnapshot) {
     this.timebankModel = communityCreateEditSnapshot.timebank;
     // globals.timebankAvatarURL = timebankModel.photoUrl;
+    CompareToTimeBank requestStatus;
+    requestStatus=compareTimeBanks(_joinRequestModelList, timebankModel);
+
     return Container(
       height: MediaQuery.of(context).size.height - 90,
       child: Column(
@@ -179,140 +220,152 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ),
                 ],
               ),
-              Text(
-                'If you dont have a code, Click',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
+               requestStatus == CompareToTimeBank.JOIN ? Column(
+                 children: <Widget>[
+                   Text(
+                    'If you dont have a code, Click',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
               FlatButton(
-                child: Text(
-                  'Request Join Link',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                    fontSize: 17,
-                  ),
-                ),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext dialogContext) {
-                      // return object of type Dialog
-                      return AlertDialog(
-                        title: new Text(
-                            "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
-                        content: Form(
-                          key: formkey,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              hintText: 'Reason',
-                              labelText: 'Reason',
-                              // labelStyle: textStyle,
-                              // labelStyle: textStyle,
-                              // labelText: 'Description',
-                              border: OutlineInputBorder(
-                                borderRadius: const BorderRadius.all(
-                                  const Radius.circular(20.0),
+                    child: Text(
+                      'Request Join Link',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        fontSize: 17,
+                      ),
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext dialogContext) {
+                          // return object of type Dialog
+                          return AlertDialog(
+                            title: new Text(
+                                "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
+                            content: Form(
+                              key: formkey,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: 'Reason',
+                                  labelText: 'Reason',
+                                  // labelStyle: textStyle,
+                                  // labelStyle: textStyle,
+                                  // labelText: 'Description',
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(20.0),
+                                    ),
+                                    borderSide: new BorderSide(
+                                      color: Colors.black,
+                                      width: 1.0,
+                                    ),
+                                  ),
                                 ),
-                                borderSide: new BorderSide(
-                                  color: Colors.black,
-                                  width: 1.0,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 1,
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please enter some text';
+                                  }
+                                  joinRequestModel.reason = value;
+                                },
+                              ),
+                            ),
+                            actions: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
                                 ),
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop();
+                                },
                               ),
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 1,
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter some text';
-                              }
-                              joinRequestModel.reason = value;
-                            },
-                          ),
-                        ),
-                        actions: <Widget>[
-                          new FlatButton(
-                            child: new Text(
-                              "Cancel",
-                              style: TextStyle(
-                                fontSize: dialogButtonSize,
+                              // usually buttons at the bottom of the dialog
+                              new FlatButton(
+                                child: new Text(
+                                  "Send Join Request",
+                                  style: TextStyle(
+                                    color: Theme.of(context).accentColor,
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  print("Timebank Model $timebankModel");
+                                  joinRequestModel.userId =
+                                      communityCreateEditSnapshot
+                                          .loggedinuser.sevaUserID;
+                                  joinRequestModel.timestamp =
+                                      DateTime.now().millisecondsSinceEpoch;
+
+                                  joinRequestModel.entityId = timebankModel.id;
+                                  joinRequestModel.entityType = EntityType.Timebank;
+                                  joinRequestModel.accepted = false;
+
+                                  if (formkey.currentState.validate()) {
+                                    await createJoinRequest(
+                                        model: joinRequestModel);
+
+                                    JoinRequestNotificationModel joinReqModel =
+                                        JoinRequestNotificationModel(
+                                            timebankId: timebankModel.id,
+                                            timebankTitle: timebankModel.name);
+                                    NotificationsModel notification =
+                                        NotificationsModel(
+                                      id: utils.Utils.getUuid(),
+                                      targetUserId: timebankModel.creatorId,
+                                      senderUserId: communityCreateEditSnapshot
+                                          .loggedinuser.sevaUserID,
+                                      type: prefix0.NotificationType.JoinRequest,
+                                      data: joinReqModel.toMap(),
+                                    );
+
+                                    notification.timebankId =
+                                        FlavorConfig.values.timebankId;
+
+                                    UserModel timebankCreator =
+                                        await FirestoreManager.getUserForId(
+                                            sevaUserId: timebankModel.creatorId);
+
+                                    await Firestore.instance
+                                        .collection('users')
+                                        .document(timebankCreator.email)
+                                        .collection("notifications")
+                                        .document(notification.id)
+                                        .setData(notification.toMap());
+                                    Navigator.of(dialogContext).pop();
+                                    Navigator.of(context).pop();
+
+                                    return;
+                                  }
+                                },
                               ),
-                            ),
-                            onPressed: () {
-                              Navigator.of(dialogContext).pop();
-                            },
-                          ),
-                          // usually buttons at the bottom of the dialog
-                          new FlatButton(
-                            child: new Text(
-                              "Send Join Request",
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontSize: dialogButtonSize,
-                              ),
-                            ),
-                            onPressed: () async {
-                              print("Timebank Model $timebankModel");
-                              joinRequestModel.userId =
-                                  communityCreateEditSnapshot
-                                      .loggedinuser.sevaUserID;
-                              joinRequestModel.timestamp =
-                                  DateTime.now().millisecondsSinceEpoch;
-
-                              joinRequestModel.entityId = timebankModel.id;
-                              joinRequestModel.entityType = EntityType.Timebank;
-                              joinRequestModel.accepted = null;
-
-                              if (formkey.currentState.validate()) {
-                                await createJoinRequest(
-                                    model: joinRequestModel);
-
-                                JoinRequestNotificationModel joinReqModel =
-                                    JoinRequestNotificationModel(
-                                        timebankId: timebankModel.id,
-                                        timebankTitle: timebankModel.name);
-                                NotificationsModel notification =
-                                    NotificationsModel(
-                                  id: utils.Utils.getUuid(),
-                                  targetUserId: timebankModel.creatorId,
-                                  senderUserId: communityCreateEditSnapshot
-                                      .loggedinuser.sevaUserID,
-                                  type: prefix0.NotificationType.JoinRequest,
-                                  data: joinReqModel.toMap(),
-                                );
-
-                                notification.timebankId =
-                                    FlavorConfig.values.timebankId;
-
-                                UserModel timebankCreator =
-                                    await FirestoreManager.getUserForId(
-                                        sevaUserId: timebankModel.creatorId);
-
-                                await Firestore.instance
-                                    .collection('users')
-                                    .document(timebankCreator.email)
-                                    .collection("notifications")
-                                    .document(notification.id)
-                                    .setData(notification.toMap());
-                                Navigator.of(dialogContext).pop();
-                                Navigator.of(context).pop();
-
-                                return;
-                              }
-                            },
-                          ),
-                        ],
+                            ],
+                          );
+                        },
                       );
                     },
-                  );
-                },
               ),
+                 ],
+               ):Text(
+    'You already requested to this TimeBank. Please wait untill request is accepted',
+    textAlign: TextAlign.center,
+    style: TextStyle(
+    color: Colors.black54,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    ),
+    ),
             ],
           ),
           Spacer(
@@ -514,6 +567,40 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         );
       },
     );
+  }
+
+  CompareToTimeBank compareTimeBanks(
+      List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
+    // CompareToTimeBank status;
+    print("inside compareTimeBanks " + joinRequestModels.length.toString());
+    for (int i = 0; i < joinRequestModels.length; i++) {
+      JoinRequestModel requestModel = joinRequestModels[i];
+
+      if (requestModel.entityId == timeBank.id &&
+          joinRequestModels[i].accepted == true) {
+        return CompareToTimeBank.JOINED;
+      } else if (timeBank.admins
+          .contains(widget.sevaUserId)) {
+        return CompareToTimeBank.JOINED;
+      } else if (timeBank.coordinators
+          .contains(widget.sevaUserId)) {
+        return CompareToTimeBank.JOINED;
+      } else if (timeBank.members
+          .contains(widget.sevaUserId)) {
+        return CompareToTimeBank.JOINED;
+      }
+      else if (requestModel.entityId == timeBank.id &&
+          requestModel.operationTaken == false) {
+        return CompareToTimeBank.REQUESTED;
+      } else if (requestModel.entityId == timeBank.id &&
+          requestModel.operationTaken == true &&
+          requestModel.accepted == false) {
+        return CompareToTimeBank.REJECTED;
+      } else {
+        return CompareToTimeBank.JOIN;
+      }
+    }
+    return CompareToTimeBank.JOIN;
   }
 }
 

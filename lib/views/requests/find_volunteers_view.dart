@@ -216,7 +216,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
-        height: 250,
+        height: 200,
         width: 500,
         decoration: new BoxDecoration(
           color: Colors.white,
@@ -270,7 +270,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
                   ),
                 ],
               ),
-              SmoothStarRating(
+             /* SmoothStarRating(
                   allowHalfRating: true,
                   onRatingChanged: (v) {
 //                    rating = v;
@@ -288,7 +288,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
               ),
               SizedBox(
                   height:10
-              ),
+              ),*/
               Expanded(
                 child: Text("Tony Stark Tony StarkTony StarkTony StarkTony StarkTony Stark", style: TextStyle(color: Colors.black, fontSize: 12,),),
               ),

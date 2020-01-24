@@ -60,9 +60,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: FlavorConfig.values.theme,
-      home: Scaffold(
+    return  Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: AppBar(
             automaticallyImplyLeading: widget.keepOnBackPress,
@@ -75,7 +73,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             ),
             centerTitle: true,
           ),
-          body: SearchTeams()),
+          body: SearchTeams(),
     );
   }
 
@@ -249,7 +247,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                           MaterialPageRoute(
                                             builder: (contexts) =>
                                                 OnBoardWithTimebank(
-                                              communityModel: communityModel,
+                                              communityModel: communityModel,sevaUserId: SevaCore.of(context)
+                                                    .loggedInUser.sevaUserID
                                             ),
                                           ),
                                         );

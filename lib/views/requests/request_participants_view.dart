@@ -39,6 +39,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   List<String> newList;
   HashMap<String, AcceptorItem> filteredList =HashMap();
 
+  static const String ACCEPTED = "Accepted";
+  static const String APPROVED = "Approved";
+
  // LinkedHashSet filteredList =  LinkedHashSet<String>();
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
@@ -61,10 +64,10 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     });*/
 
 
-    acceptors=widget.requestModel.acceptors;
-    approvedMembers=widget.requestModel.approvedUsers;
+    acceptors = widget.requestModel.acceptors;
+    approvedMembers = widget.requestModel.approvedUsers;
 
-    newList=acceptors +approvedMembers;
+    newList = acceptors + approvedMembers;
 
     List<String> result = LinkedHashSet<String>.from(newList).toList();
 
@@ -134,7 +137,10 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               ...snap.map((userModel) {
                 // return Text(f['fullname']);
 
-                return makeUserWidget(userModel,context);/*Container(
+                UserRequestStatusType status;
+                status=getUserRequestStatusType(userModel.email, widget.requestModel);
+
+                return makeUserWidget(userModel,context,status);/*Container(
                   margin: EdgeInsets.all(2),
                   decoration: notificationDecoration,
                   child: ListTile(
@@ -169,12 +175,12 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
 
   }
-  Widget makeUserWidget(UserModel userModel, BuildContext context) {
+  Widget makeUserWidget(UserModel userModel, BuildContext context, UserRequestStatusType status) {
     return Container(
         margin: EdgeInsets.fromLTRB(35, 20, 30, 10),
         child: Stack(
             children: <Widget>[
-              getUserCard(userModel,context: context),
+              getUserCard(userModel,context: context,statusType: status),
               getUserThumbnail(userModel.photoURL),
             ]
         )
@@ -196,11 +202,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         ));
   }
 
-  Widget getUserCard(UserModel userModel, {BuildContext context}) {
+  Widget getUserCard(UserModel userModel, {BuildContext context,UserRequestStatusType statusType}) {
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
-        height: 220,
+        height: 200,
         width: 500,
         decoration: new BoxDecoration(
           color: Colors.white,
@@ -239,7 +245,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     size: 35,),
                 ],
               ),
-              SmoothStarRating(
+              /*SmoothStarRating(
                   allowHalfRating: true,
                   onRatingChanged: (v) {
 //                    rating = v;
@@ -257,13 +263,13 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               ),
               SizedBox(
                   height: 10
-              ),
+              ),*/
               Expanded(
                 child: Text(
                   userModel.bio ?? "",
                   style: TextStyle(color: Colors.black, fontSize: 12,),),
               ),
-              Row(
+              statusType==UserRequestStatusType.ACCEPTED ? Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Container(
@@ -328,6 +334,41 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                       ),
                     ),
                   ),
+
+                ],
+              ):Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+
+                    /*  decoration: BoxDecoration(
+
+                        boxShadow: [BoxShadow(
+                            color: Colors.indigo[50],
+                            blurRadius: 1,
+                            offset: Offset(0.0, 0.50)
+                        )]
+                    ),*/
+                    height: 40,
+
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: RaisedButton(
+                      shape: StadiumBorder(),
+                      color: Colors.indigo,
+                      textColor: Colors.white,
+                      elevation: 5,
+                      onPressed: () {
+                        print("approved");
+
+                      },
+                      child: const Text(
+                          'Approved',
+                          style: TextStyle(fontSize: 12)
+                      ),
+                    ),
+                  ),
+
+
 
                 ],
               ),
@@ -595,6 +636,19 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       ),
     );
   }
+
+  String getUserRequestTypeTitle(){
+    return "";
+  }
+
+  UserRequestStatusType getUserRequestStatusType(String sevaUserEmail, RequestModel requestModel){
+
+    if(requestModel.acceptors.contains(sevaUserEmail)){
+     return UserRequestStatusType.ACCEPTED;
+    }else if(requestModel.approvedUsers.contains(sevaUserEmail)){
+     return UserRequestStatusType.APPROVED;
+    }
+  }
 }
 
 Future<List<UserModel>> getRequestStatus({
@@ -665,6 +719,7 @@ Future<RequestModel> getRequestData({
   );
 }
 
+
 List<UserModel> usersRequested = List();
 
 
@@ -677,3 +732,5 @@ class AcceptorItem {
 
 
 }
+
+enum UserRequestStatusType{ACCEPTED,APPROVED}

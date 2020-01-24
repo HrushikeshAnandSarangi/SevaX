@@ -55,7 +55,7 @@ var validItems;
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
-        height: 220,
+        height: 200,
         width: 500,
         decoration: new BoxDecoration(
           color: Colors.white,
@@ -112,7 +112,7 @@ var validItems;
                   ),
                 ],
               ),
-              SmoothStarRating(
+             /* SmoothStarRating(
                   allowHalfRating: true,
                   onRatingChanged: (v) {
 //                    rating = v;
@@ -130,7 +130,7 @@ var validItems;
               ),
               SizedBox(
                   height: 10
-              ),
+              ),*/
               Expanded(
                 child: Text(
                   "Bio",
