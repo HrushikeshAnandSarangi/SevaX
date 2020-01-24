@@ -8,6 +8,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -43,11 +44,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   var _lastReached = false;
   var adminsNotLoaded = true;
   var timebankModel = TimebankModel({});
-  var _admins = List<Widget>();
-  var _coordinators = List<Widget>();
-  var _members = List<Widget>();
-  var _requests = List<Widget>();
+  var _adminsWidgets = List<Widget>();
+  var _coordinatorsWidgets = List<Widget>();
+  var _membersWidgets = List<Widget>();
+  var _requestsWidgets = List<Widget>();
   var _adminEmails = List<String>();
+
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
   HashMap<String, bool> adminToModelMap = HashMap();
@@ -225,31 +227,26 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadItems() async {
     if (adminsNotLoaded) {
-      _admins = [];
-      _adminEmails = [];
-      await loadNextAdmins();
       adminsNotLoaded = false;
-      _coordinators = [];
-      if (FlavorConfig.appFlavor == Flavor.APP) {
-        await loadNextCoordinators();
-      }
-      _members = [];
-      await loadNextMembers();
-
       if (widget.isUserAdmin) {
-        getFutureTimebankJoinRequest(timebankID: widget.timebankId)
-            .then((newList) {
-          if (newList != null && newList.length > 0) {
-            loadAllRequest(newList);
-          }
-        });
+        var newList =
+            await getFutureTimebankJoinRequest(timebankID: widget.timebankId);
+        if (newList != null && newList.length > 0) {
+          loadAllRequest(newList);
+        }
       }
+      await loadAdmins();
+      if (FlavorConfig.appFlavor == Flavor.APP) {
+        await loadCoordinators();
+      }
+      await loadNextMembers();
+      setState(() {});
     }
   }
 
-  Future loadAllRequest(List<JoinRequestModel> modelItemList) {
-    _requests = [];
-    _requests.add(getSectionTitle(context, 'Requests'));
+  Future loadAllRequest(List<JoinRequestModel> modelItemList) async {
+    _requestsWidgets = [];
+    _requestsWidgets.add(getSectionTitle(context, 'Requests'));
     for (var i = 0; i < modelItemList.length; i++) {
       if (modelItemList[i].operationTaken) {
         continue;
@@ -271,11 +268,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
               user, context, timebankModel, requestModelItem);
         },
       );
-      _requests.add(userWidget);
+      _requestsWidgets.add(userWidget);
     }
     ;
-    if (_requests.length == 1) {
-      _requests = [];
+    if (_requestsWidgets.length == 1) {
+      _requestsWidgets = [];
     }
     setState(() {});
   }
@@ -374,22 +371,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     _isLoading = false;
     _lastReached = false;
     adminsNotLoaded = true;
-    _admins = [];
-    _members = [];
+    _adminsWidgets = [];
+    _membersWidgets = [];
     _adminEmails = [];
-    _requests = [];
-    _coordinators = [];
+    _requestsWidgets = [];
+    _coordinatorsWidgets = [];
     emailIndexMap = HashMap();
     indexToModelMap = HashMap();
     adminToModelMap = HashMap();
     nullCount = 0;
   }
 
-  void resetAndLoad() {
+  void resetAndLoad() async {
     resetVariables();
-    loadItems().then((onValue) {
-      setState(() {});
-    });
+    await loadItems();
+    setState(() {});
   }
 
   List<Widget> getContent(BuildContext context, TimebankModel model) {
@@ -402,12 +398,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
-    _avtars.addAll(_admins);
+    _avtars.addAll(_adminsWidgets);
     if (FlavorConfig.appFlavor == Flavor.APP) {
-      _avtars.addAll(_coordinators);
+      _avtars.addAll(_coordinatorsWidgets);
     }
-    _avtars.addAll(_requests);
-    _avtars.addAll(_members);
+    _avtars.addAll(_requestsWidgets);
+    _avtars.addAll(_membersWidgets);
     return _avtars;
   }
 
@@ -451,26 +447,25 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     return _avtars.length;
   }
 
-  Future loadNextAdmins() async {
+  Future loadAdmins() async {
     if (timebankModel.admins == null) {
       timebankModel.admins = List<String>();
     }
-    if (timebankModel.admins.length != 0) {
-      FirestoreManager.getUserForUserModels(admins: timebankModel.admins)
-          .then((onValue) {
-        _admins = [];
-        _adminEmails = [];
-        _admins.add(getSectionTitle(context, 'Admins & Organizers'));
-        SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
-            .forEach((key, user) {
-          String email = user.email.toString().trim();
-          print("Admin:$email");
-          _adminEmails.add(email);
-          _admins.add(getUserWidget(user, context, timebankModel, true, false));
-        });
-        setState(() {});
-      });
-    }
+    print(timebankModel.admins);
+    var adminUserModel = await FirestoreManager.getUserForUserModels(
+        admins: timebankModel.admins);
+    _adminsWidgets = [];
+    _adminEmails = [];
+    _adminsWidgets.add(getSectionTitle(context, 'Admins & Organizers'));
+    SplayTreeMap<String, dynamic>.from(adminUserModel, (a, b) => a.compareTo(b))
+        .forEach((key, user) {
+      String email = user.email.toString().trim();
+      print("Admin:$email");
+      _adminEmails.add(email);
+      _adminsWidgets
+          .add(getUserWidget(user, context, timebankModel, true, false));
+    });
+//    setState(() {});
   }
 
   Widget getUserWidget(UserModel user, BuildContext context,
@@ -552,12 +547,10 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                   child: CustomRaisedButton(
                     action: Actions.Promote,
                     onTap: () {
-                      if (isAdmin) {
-                        List<String> admins =
-                            timebankModel.admins.map((s) => s).toList();
-                        admins.add(user.sevaUserID);
-                        _updateTimebank(timebankModel, admins: admins);
-                      }
+                      List<String> admins =
+                          timebankModel.admins.map((s) => s).toList();
+                      admins.add(user.sevaUserID);
+                      _updateTimebank(timebankModel, admins: admins);
                     },
                   ),
                 ),
@@ -584,7 +577,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
           );
   }
 
-  Future loadNextCoordinators() async {
+  Future loadCoordinators() async {
     if (timebankModel.admins == null) {
       timebankModel.coordinators = List<String>();
     }
@@ -593,137 +586,102 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         SevaCore.of(context).loggedInUser.sevaUserID,
       );
 
-      FirestoreManager.getUserForUserModels(admins: timebankModel.admins)
-          .then((onValue) {
-        _admins = [];
-        _adminEmails = [];
-        _admins.add(getSectionTitle(context, 'Coordinators'));
-        SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
-            .forEach((key, user) {
-          _adminEmails.add(user.email);
-          if (isCoordinator) {
-//            var widget =  Slidable(
-//              delegate: SlidableDrawerDelegate(),
-//              actions: <Widget>[
-//                IconSlideAction(
-//                  icon: Icons.close,
-//                  color: Colors.red,
-//                  caption: 'Remove',
-//                  onTap: () {
-//                    List<String> coordinators =
-//                    user.coordinators.map((s) => s).toList();
-//                    coordinators.remove(user.sevaUserID);
-//                    updateTimebank(user, coordinators: coordinators);
-//                  },
-//                ),
-//              ],
-//              child: getUserWidget(user, context, timebankModel),
-//            );
-            _coordinators
-                .add(getUserWidget(user, context, timebankModel, true, false));
-          }
-        });
-        setState(() {});
+      var onValue = await FirestoreManager.getUserForUserModels(
+          admins: timebankModel.admins);
+      _adminsWidgets = [];
+      _adminEmails = [];
+      _adminsWidgets.add(getSectionTitle(context, 'Coordinators'));
+      SplayTreeMap<String, dynamic>.from(onValue, (a, b) => a.compareTo(b))
+          .forEach((key, user) {
+        _adminEmails.add(user.email);
+        if (isCoordinator) {
+          _coordinatorsWidgets
+              .add(getUserWidget(user, context, timebankModel, true, false));
+        }
       });
+      setState(() {});
     }
   }
 
   Future loadNextMembers() async {
-    if (_members.length == 0) {
-//      var addMember = GestureDetector(
-//        child: Row(
-//          children: <Widget>[
-//            getSectionTitle(context, 'Members'),
-//            CircleAvatar(
-//              backgroundColor: Colors.white,
-//              radius: 10,
-//              child: Image.asset("lib/assets/images/add.png"),
-//            ),
-//          ],
-//        ),
-//        onTap: (){
-//          addVolunteers();
-//        },
-//      );
-//      _members.add(addMember);
-      _members.add(getSectionTitle(context, 'Members'));
+    if (_membersWidgets.length == 0) {
+      _membersWidgets.add(getSectionTitle(context, 'Members'));
     }
     if (!_isLoading && !_lastReached) {
       _isLoading = true;
-      FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
-              widget.timebankId, _pageIndex, widget.userEmail)
-          .then((onValue) {
-        var userModelList = onValue.userModelList;
-        if (userModelList == null || userModelList.length == 0) {
-          nullCount++;
-          _isLoading = false;
-          _pageIndex = _pageIndex + 1;
-          if (nullCount < 3) {
-            loadNextMembers();
-          } else {
-            setState(() {
-              if (_members.length == 1) {
-                _members.add(emptyCard);
-              }
-              _lastReached = true;
-            });
-          }
+      UserModelListMoreStatus onValue =
+          await FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
+              widget.timebankId, _pageIndex, widget.userEmail);
+      var userModelList = onValue.userModelList;
+      if (userModelList == null || userModelList.length == 0) {
+        nullCount++;
+        _isLoading = false;
+        _pageIndex = _pageIndex + 1;
+        if (nullCount < 3) {
+          loadNextMembers();
         } else {
-          nullCount = 0;
-          var addItems = userModelList.map((memberObject) {
-            if (_adminEmails.contains(memberObject.email.trim())) {
-              return Offstage();
-            }
-            var member = memberObject.sevaUserID;
-            if (widget.listOfMembers != null &&
-                widget.listOfMembers.containsKey(member)) {
-              return getUserWidget(widget.listOfMembers[member], context,
-                  timebankModel, false, true);
-            }
-            return FutureBuilder<UserModel>(
-              future: FirestoreManager.getUserForId(sevaUserId: member),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) return Text(snapshot.error.toString());
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return shimmerWidget;
-                }
-                UserModel user = snapshot.data;
-                widget.listOfMembers[user.sevaUserID] = user;
-                return getUserWidget(user, context, timebankModel, false, true);
-              },
-            );
-          }).toList();
-          if (addItems.length > 0) {
-            var lastIndex = _members.length;
-            setState(() {
-              var iterationCount = 0;
-              for (int i = 0; i < addItems.length; i++) {
-                var email = userModelList[i].email.trim();
-                if (emailIndexMap[userModelList[i].email] == null &&
-                    !_adminEmails.contains(email)) {
-                  print("Member email found:$email");
-                  // Filtering duplicates
-                  _members.add(addItems[i]);
-                  indexToModelMap[lastIndex] = userModelList[i];
-                  emailIndexMap[email] = lastIndex++;
-                  iterationCount++;
-                }
-              }
-              _indexSoFar = _indexSoFar + iterationCount;
-              _pageIndex = _pageIndex + 1;
-            });
-          }
-          _isLoading = false;
-        }
-        if (onValue.lastPage == true) {
           setState(() {
-            if (_members.length == 1) {
-              _members.add(emptyCard);
+            if (_membersWidgets.length == 1) {
+              _membersWidgets.add(emptyCard);
             }
-            _lastReached = onValue.lastPage;
+            _lastReached = true;
           });
         }
-      });
+      } else {
+        nullCount = 0;
+        var addItems = userModelList.map((memberObject) {
+          if (_adminEmails.contains(memberObject.email.trim())) {
+            return Offstage();
+          }
+          var member = memberObject.sevaUserID;
+          if (widget.listOfMembers != null &&
+              widget.listOfMembers.containsKey(member)) {
+            return getUserWidget(widget.listOfMembers[member], context,
+                timebankModel, false, true);
+          }
+          return FutureBuilder<UserModel>(
+            future: FirestoreManager.getUserForId(sevaUserId: member),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return Text(snapshot.error.toString());
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return shimmerWidget;
+              }
+              UserModel user = snapshot.data;
+              widget.listOfMembers[user.sevaUserID] = user;
+              return getUserWidget(user, context, timebankModel, false, true);
+            },
+          );
+        }).toList();
+        if (addItems.length > 0) {
+          var lastIndex = _membersWidgets.length;
+          setState(() {
+            var iterationCount = 0;
+            for (int i = 0; i < addItems.length; i++) {
+              var email = userModelList[i].email.trim();
+              if (emailIndexMap[userModelList[i].email] == null &&
+                  !_adminEmails.contains(email)) {
+                print("Member email found:$email");
+                // Filtering duplicates
+                _membersWidgets.add(addItems[i]);
+                indexToModelMap[lastIndex] = userModelList[i];
+                emailIndexMap[email] = lastIndex++;
+                iterationCount++;
+              }
+            }
+            _indexSoFar = _indexSoFar + iterationCount;
+            _pageIndex = _pageIndex + 1;
+          });
+        }
+        _isLoading = false;
+      }
+      if (onValue.lastPage == true) {
+        setState(() {
+          if (_membersWidgets.length == 1) {
+            _membersWidgets.add(emptyCard);
+          }
+          _lastReached = onValue.lastPage;
+        });
+      }
     }
   }
 
