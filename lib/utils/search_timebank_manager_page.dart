@@ -388,19 +388,19 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
     );
   }
 
-  TextStyle get sectionHeadingStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 12.5,
-      color: Colors.black,
-    );
-  }
+    TextStyle get sectionHeadingStyle {
+      return TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 12.5,
+        color: Colors.black,
+      );
+    }
 
-  TextStyle get sectionTextStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 11,
-      color: Colors.grey,
-    );
-  }
+    TextStyle get sectionTextStyle {
+      return TextStyle(
+        fontWeight: FontWeight.w600,
+        fontSize: 11,
+        color: Colors.grey,
+      );
+    }
 }

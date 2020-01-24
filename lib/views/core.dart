@@ -52,7 +52,7 @@ class SevaCore extends InheritedWidget {
   }
 
   static SevaCore of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(SevaCore) as SevaCore;
+    return context.dependOnInheritedWidgetOfExactType();
   }
 
 //  Future<bool> check() async {
@@ -695,7 +695,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => HomeDashBoard() /*NewsCreate(
+                  builder: (context) =>
+                      HomeDashBoard() /*NewsCreate(
                   timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                 ),*/
                   ),
@@ -1260,7 +1261,7 @@ class _SevaCoreViewState extends State<SevaCoreView>
                                 SevaCore.of(context)
                                     .loggedInUser
                                     .timebankIdForYangGangAdmin,
-                                    SevaCore.of(context)
+                                SevaCore.of(context)
                                     .loggedInUser
                                     .currentCommunity,
                               ),

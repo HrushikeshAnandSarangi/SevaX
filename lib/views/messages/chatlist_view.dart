@@ -544,6 +544,7 @@ class _ChatListViewState extends State<ChatListView> {
 
   Future<void> _ackAlert(
       String email, ChatModel chatModel, BuildContext context) {
+    print("Hello alert");
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -570,7 +571,7 @@ class _ChatListViewState extends State<ChatListView> {
                   fontSize: dialogButtonSize,
                 ),
               ),
-              onPressed: () {
+              onPressed: () async {
                 var participants = [];
                 participants.add(chatModel.user1);
                 participants.add(chatModel.user2);
@@ -584,7 +585,8 @@ class _ChatListViewState extends State<ChatListView> {
                 unreadCount = chatModel.unreadStatus;
                 unreadCount[email] = 0;
 
-                Firestore.instance
+                Navigator.of(context).pop();
+                await Firestore.instance
                     .collection("chatsnew")
                     .document(messageId)
                     .updateData({
@@ -592,27 +594,21 @@ class _ChatListViewState extends State<ChatListView> {
                   'softDeletedBy': FieldValue.arrayUnion(
                     [email],
                   )
-                }).then((onValue) {
-                  chatModel.deletedBy[email] =
+                });
+                chatModel.deletedBy[email] =
                       DateTime.now().millisecondsSinceEpoch;
 
-                  Firestore.instance
+                await Firestore.instance
                       .collection("chatsnew")
                       .document(messageId)
                       .updateData({
                     'deletedBy': chatModel.deletedBy,
-                  }).then((onValue) {});
-                });
+                  });
 
                 setState(() {
                   print("Update and remove the object from list");
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text("${chatModel.messagTitleUserName} Removed")));
-                  // chatModel = chatModel;
                 });
 
-                Navigator.of(context).pop();
               },
             ),
           ],

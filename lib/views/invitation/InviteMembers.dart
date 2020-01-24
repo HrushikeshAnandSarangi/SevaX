@@ -97,8 +97,7 @@ class InviteMembersState extends State<InviteMembers> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Share.share(
-                                          "Hello Fellow Yang Gang \nPlease join me on the Humanity First App by using the code \"${timebankCode.timebankCode}\" In case you don't have the app installed already, you can install it from the Google Play Store at  https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst&hl=en  or in the App Store at https://apps.apple.com/us/app/humanity-first-app-official/id1466915003 Looking forward to growing the Yang Gang movement with you!");
+                                      Share.share(shareText(timebankCode));
                                     },
                                     child: Container(
                                       margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -132,6 +131,18 @@ class InviteMembersState extends State<InviteMembers> {
         },
       ),
     );
+  }
+
+  String shareText(TimebankCodeModel timebankCode) {
+    var text = "";
+    if (FlavorConfig.appFlavor == Flavor.APP) {
+      text =
+          "Please join me on the SevaX by using the code \"${timebankCode.timebankCode}\"";
+    } else {
+      text =
+          "Hello Fellow Yang Gang \nPlease join me on the Humanity First App by using the code \"${timebankCode.timebankCode}\" In case you don't have the app installed already, you can install it from the Google Play Store at  https://play.google.com/store/apps/details?id=com.sevaexchange.humanityfirst&hl=en  or in the App Store at https://apps.apple.com/us/app/humanity-first-app-official/id1466915003 Looking forward to growing the Yang Gang movement with you!";
+    }
+    return text;
   }
 
   Stream<List<TimebankCodeModel>> getTimebankCodes({

@@ -31,6 +31,7 @@ dependencies:
   image_cropper: 1.0.0
   flutter_datetime_picker: 1.1.4
   numberpicker: 1.0.0
+  firebase_crashlytics: ^0.1.2+4
   firebase_analytics: ^3.0.1
   image: 2.1.4
   flutter_slidable: 0.4.9

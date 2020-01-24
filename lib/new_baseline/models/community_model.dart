@@ -1,4 +1,4 @@
-import 'package:sevaexchange/models/models.dart';
+ import 'package:sevaexchange/models/models.dart';
 
 class BillingAddress {
   String companyname;

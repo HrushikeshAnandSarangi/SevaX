@@ -1,5 +1,6 @@
 //import 'dart:ffi';
 
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,7 +35,6 @@ class NotificationsView extends State<NotificationViewHolder> {
     String email = SevaCore.of(context).loggedInUser.email;
 
     String communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-    print("$communityId <<<<---------------------------------------------------------------------");
 
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(
@@ -2181,3 +2181,49 @@ class NotificationsView extends State<NotificationViewHolder> {
 //        : '$hours Hours and ${minutes == 1 ? '$minutes Minute' : '$minutes Minutes'}';
 //  }
 //}
+
+
+// class AceeptorItem {
+//   final String sevaUserID;
+//   final bool approved;
+
+//   AceeptorItem({this.sevaUserID, this.approved})
+  
+// }
+
+
+// class GetList {
+
+
+
+
+// void build(BuildContext context ){
+
+//   var acceptors = [];
+//   var approvedMembers = [];
+
+//   HashMap<String, AceeptorItem> consildatedList = HashMap();
+
+//   acceptors.map((f){
+//     consildatedList[f] = AceeptorItem(approved: false, sevaUserID: f);
+//   });
+
+
+// approvedMembers.map((f){
+//     consildatedList[f] = AceeptorItem(approved: true, sevaUserID: f);
+//   });
+  
+
+
+//   Requedtmodel midel=consildatedList[imdex].approved
+
+
+
+// }
+
+
+
+
+
+
+

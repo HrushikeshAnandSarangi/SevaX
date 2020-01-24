@@ -157,8 +157,7 @@ class _RegisterPageState extends State<RegisterPage>
                   height: 150.0,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                          image: NetworkImage(
-                              'https://cdn.dribbble.com/users/2060373/screenshots/5676655/2_2x.jpg'),
+                          image: NetworkImage(defaultCameraImageURL),
                           fit: BoxFit.cover),
                       borderRadius: BorderRadius.all(Radius.circular(75.0)),
                       boxShadow: [
@@ -405,6 +404,21 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
+  BuildContext dialogContext;
+
+  void showDialogForAccountCreation() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text('Creating account'),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+
   bool isValidEmail(String email) {
     RegExp regex =
         RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
@@ -412,6 +426,8 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Future createUser() async {
+    showDialogForAccountCreation();
+
     log('Called createUser');
     Auth auth = AuthProvider.of(context).auth;
     try {
@@ -427,6 +443,8 @@ class _RegisterPageState extends State<RegisterPage>
         user.photoURL = defaultUserImageURL;
       }
       await FirestoreManager.updateUser(user: user);
+
+      Navigator.pop(dialogContext);
       Navigator.pop(context, user);
       // Navigator.popUntil(context, (r) => r.isFirst);
     } on PlatformException catch (error) {

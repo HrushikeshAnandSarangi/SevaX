@@ -38,13 +38,11 @@ class _CreateRequestState extends State<CreateRequest> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          // iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? "Create Yang Gang Request"
                 : "Create Campaign Request",
-            // style: TextStyle(color: Colors.white),
+            style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
         ),
@@ -364,19 +362,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   padding: const EdgeInsets.symmetric(vertical: 30.0),
                   child: Center(
                     child: Container(
-                      width: 170,
-                      height: 50,
+                      // width: 150,
                       child: RaisedButton(
-                        shape: StadiumBorder(),
-                        color: Theme.of(context).accentColor,
                         onPressed: createRequest,
                         child: Text(
                           "Create Request".padLeft(10).padRight(10),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: FlavorConfig.values.buttonTextColor,
-                          ),
+                          style: Theme.of(context).primaryTextTheme.button,
                         ),
                       ),
                     ),
@@ -401,7 +392,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating feed'),
+            title: Text('Creating request'),
             content: LinearProgressIndicator(),
           );
         });

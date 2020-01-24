@@ -9,7 +9,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
-import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
@@ -255,7 +254,6 @@ class _MyHomePageState extends State<MyHomePage>
                   itemCount: timebankList.length,
                   itemBuilder: (context, index) {
                     TimebankModel timebank = timebankList.elementAt(index);
-
                     return makeItem(timebank);
                   },
                   shrinkWrap: true,

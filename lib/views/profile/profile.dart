@@ -369,7 +369,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                               ),
                               TextSpan(
-                                text: 'Discover Teams',
+                                text: 'Discover Timebanks',
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold,
@@ -382,7 +382,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return FindCommunitiesView(
-                                            keepOnBackPress: true,
+                                            keepOnBackPress: true,loggedInUser: SevaCore.of(context).loggedInUser,
                                           );
                                         },
                                       ),

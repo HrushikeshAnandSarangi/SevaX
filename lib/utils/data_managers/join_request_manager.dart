@@ -60,14 +60,14 @@ Future<List<JoinRequestModel>> getFutureUserRequest({
      // .where('entity_type',isEqualTo: 'TimeBank')
       .where('user_id', isEqualTo: userID);
   QuerySnapshot snapshot = await query.getDocuments();
- print('ghghgh ${snapshot.documents}');
+  //print('ghghgh ${snapshot.documents}');
   if(snapshot.documents == null) {
     return [];
   }
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
-    print('hghghg ${model.userId}');
+  //  print('hghghg ${model.userId}');
 
     if(model.userId == userID){
       requestList.add(model);

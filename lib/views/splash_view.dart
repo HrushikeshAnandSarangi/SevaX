@@ -170,7 +170,7 @@ class _SplashViewState extends State<SplashView> {
                   padding: const EdgeInsets.only(top: 32.0),
                   child: Text(
                     loadingMessage,
-                    style: TextStyle(color: Theme.of(context).primaryColor),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               Container(
@@ -776,7 +776,7 @@ class _SplashViewState extends State<SplashView> {
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
           child: FindCommunitiesView(
-            keepOnBackPress: false,
+            keepOnBackPress: false,loggedInUser: loggedInUser,
           ),
         ),
       ),

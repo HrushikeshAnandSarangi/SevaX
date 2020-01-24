@@ -16,7 +16,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 class TimeBankAboutView extends StatefulWidget {
   final TimebankModel timebankModel;
   final String email;
-  final userId;
+  final String userId;
   TimeBankAboutView.of({this.timebankModel, this.email, this.userId});
 
   @override

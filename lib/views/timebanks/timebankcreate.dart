@@ -645,7 +645,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 'Invite members +',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+                  color: Colors.black,
                 ),
               ),
             ))

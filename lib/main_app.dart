@@ -5,7 +5,8 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'dart:async';
 import 'models/news_model.dart';
 
 void main() {
@@ -43,7 +44,12 @@ void main() {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
-      runApp(MainApplication());
+
+      Crashlytics.instance.enableInDevMode = true;
+      FlutterError.onError = Crashlytics.instance.recordFlutterError;
+      runZoned(() {
+        runApp(MainApplication());
+      }, onError: Crashlytics.instance.recordError);
     },
   );
 }
