@@ -254,7 +254,6 @@ class _MyHomePageState extends State<MyHomePage>
                   itemCount: timebankList.length,
                   itemBuilder: (context, index) {
                     TimebankModel timebank = timebankList.elementAt(index);
-
                     return makeItem(timebank);
                   },
                   shrinkWrap: true,

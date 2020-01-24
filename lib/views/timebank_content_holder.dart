@@ -5,13 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
@@ -20,12 +17,8 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/timebanks/edit_super_admins_view.dart';
-import 'package:sevaexchange/views/timebanks/edit_timebank_view.dart';
-import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
-import 'package:sevaexchange/views/timebanks/timebank_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -33,6 +26,7 @@ import 'package:sevaexchange/widgets/colored_tabbar.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
+import '../utils/string_extensions.dart';
 import 'core.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
@@ -130,7 +124,10 @@ Widget createAdminTabBar(
       appBar: AppBar(
         elevation: 0.5,
         centerTitle: true,
-        title: Text(timebankModel.name, style: TextStyle(fontSize: 18)),
+        title: Text(
+          timebankModel.name,
+          style: TextStyle(fontSize: 18),
+        ),
         // bottom: TabBar(
         //   labelColor: Colors.black,
         //   indicatorColor: Colors.black,
