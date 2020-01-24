@@ -334,7 +334,7 @@ class CustomBottomNavigationItem extends StatelessWidget {
         selected
             ? Container()
             : Text(
-                'Chats',
+                'Messages',
                 style: TextStyle(color: Colors.grey, fontSize: 12),
               ),
       ],
