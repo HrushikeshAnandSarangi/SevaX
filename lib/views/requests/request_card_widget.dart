@@ -140,17 +140,20 @@ var validItems;
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.all(8),
-                    height: 33,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        new BoxShadow(
-                          color: Colors.grey,
-                          offset: new Offset(20.0, 10.0),
-                        )
-                      ],
-                    ),
+                    padding: EdgeInsets.only(top:2,bottom: 10),
+                    height: 35,
+                    width: 90,
+//                    decoration: BoxDecoration(
+//                      borderRadius: new BorderRadius.circular(5.0) ,
+//                      boxShadow: [
+//                        new BoxShadow(
+//                          blurRadius: 2,
+//                          spreadRadius: 2,
+//                          color: Colors.grey,
+//                          offset: new Offset(4.0, 7.0),
+//                        )
+//                      ],
+//                    ),
                     child: RaisedButton(
                       shape: StadiumBorder(),
                       color: Colors.indigo,
@@ -158,7 +161,7 @@ var validItems;
                       onPressed: () {},
                       child: const Text(
                           'Invited',
-                          style: TextStyle(fontSize: 16)
+                          style: TextStyle(fontSize: 14),
                       ),
                     ),
                   ),
