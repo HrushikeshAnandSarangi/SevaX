@@ -29,7 +29,7 @@
 .pub/
 /build/
 **/i18n.dart
-
+.flutter-plugins-dependencies
 # Android related
 **/android/**/gradle-wrapper.jar
 **/android/.gradle

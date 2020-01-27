@@ -1,24 +1,22 @@
-import 'dart:developer';
 import 'dart:io';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sevaexchange/auth/auth.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
-import 'package:sevaexchange/main.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/profile/edit_skills.dart';
+import 'package:sevaexchange/views/onboarding/interests_view.dart';
+import 'package:sevaexchange/views/onboarding/skills_view.dart';
 
 import '../core.dart';
-import 'edit_interests.dart';
 
 class EditProfilePage extends StatefulWidget {
   UserModel userModel;
@@ -33,6 +31,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     with ImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final _firestore = Firestore.instance;
 
   bool _shouldObscure = true;
   bool _isLoading = false;
@@ -386,13 +385,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                 ),
                 onTap: () {
                   print('interests clicked');
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EditInterests();
-                      },
-                    ),
-                  );
+                  _navigateToInterestsView(usermodel);
                 },
               ),
               GestureDetector(
@@ -424,14 +417,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return EditSkills();
-                      },
-                    ),
-                  );
-                  print('Skills clicked');
+                  _navigateToSkillsView(usermodel);
                 },
               ),
               SizedBox(height: 30),
@@ -456,6 +442,50 @@ class _EditProfilePageState extends State<EditProfilePage>
             ],
           ),
         ));
+  }
+
+  Future _navigateToInterestsView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => InterestViewNew(
+          userModel: loggedInUser,
+          onSelectedInterests: (interests) {
+            Navigator.pop(context);
+            loggedInUser.interests = interests;
+            updateUserData(loggedInUser);
+          },
+          onSkipped: () {
+            Navigator.pop(context);
+            loggedInUser.interests = [];
+            updateUserData(loggedInUser);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future _navigateToSkillsView(UserModel loggedInUser) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SkillViewNew(
+          userModel: loggedInUser,
+          onSelectedSkills: (skills) {
+            Navigator.pop(context);
+            loggedInUser.skills = skills;
+            updateUserData(loggedInUser);
+          },
+          onSkipped: () {
+            Navigator.pop(context);
+            loggedInUser.skills = [];
+            updateUserData(loggedInUser);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future updateUserData(UserModel user) async {
+    await FirestoreManager.updateUser(user: user);
   }
 
   Future updateProfilePic() async {
