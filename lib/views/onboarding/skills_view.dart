@@ -5,8 +5,8 @@ import 'package:sevaexchange/models/user_model.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
 
-
 class SkillViewNew extends StatefulWidget {
+  final bool automaticallyImplyLeading;
   final UserModel userModel;
   final VoidCallback onSkipped;
   final StringListCallback onSelectedSkills;
@@ -15,6 +15,7 @@ class SkillViewNew extends StatefulWidget {
     @required this.onSelectedSkills,
     @required this.onSkipped,
     this.userModel,
+    this.automaticallyImplyLeading = true,
   });
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
@@ -58,7 +59,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
           'Skills',
           style: TextStyle(

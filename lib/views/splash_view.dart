@@ -17,6 +17,7 @@ import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
+
 import 'home_page_router.dart';
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
@@ -650,6 +651,7 @@ class _SplashViewState extends State<SplashView> {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
+          automaticallyImplyLeading: false,
           userModel: loggedInUser,
           onSelectedSkills: (skills) {
             Navigator.pop(context);
@@ -734,6 +736,7 @@ class _SplashViewState extends State<SplashView> {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
+          automaticallyImplyLeading: false,
           userModel: loggedInUser,
           onSelectedInterests: (interests) {
             Navigator.pop(context);

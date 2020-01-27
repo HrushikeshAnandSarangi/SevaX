@@ -2,17 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
+
 typedef StringListCallback = void Function(List<String> skills);
 
 class InterestViewNew extends StatefulWidget {
   final UserModel userModel;
   final VoidCallback onSkipped;
   final StringListCallback onSelectedInterests;
+  final bool automaticallyImplyLeading;
 
   InterestViewNew({
     @required this.onSelectedInterests,
     @required this.onSkipped,
-    this.userModel,
+    this.userModel, this.automaticallyImplyLeading = true,
   });
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
@@ -20,7 +22,7 @@ class InterestViewNew extends StatefulWidget {
 
 class _InterestViewNewState extends State<InterestViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
-  
+
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
 
@@ -45,7 +47,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
           'Interests',
           style: TextStyle(
