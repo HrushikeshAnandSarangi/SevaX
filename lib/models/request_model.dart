@@ -22,6 +22,7 @@ class RequestModel extends DataModel {
   String timebankId;
   int numberOfApprovals;
   List<String> approvedUsers;
+  List<String> invitedUsers;
   GeoFirePoint location;
   String root_timebank_id;
   Color color;
@@ -46,6 +47,7 @@ class RequestModel extends DataModel {
     this.rejectedReason,
     this.timebankId,
     this.approvedUsers = const [],
+    this.invitedUsers = const [],
     this.numberOfApprovals = 1,
     this.location,
     this.root_timebank_id,
@@ -80,6 +82,10 @@ class RequestModel extends DataModel {
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
       this.acceptors = acceptorList;
+    }
+    if (map.containsKey('invitedUsers')) {
+      List<String> invitedUsersList = List.castFrom(map['invitedUsers']);
+      this.invitedUsers = invitedUsersList;
     }
     if (map.containsKey('durationofrequest')) {
       this.durationOfRequest = map['durationofrequest'];
@@ -158,6 +164,10 @@ class RequestModel extends DataModel {
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
       this.acceptors = acceptorList;
+    }
+    if (map.containsKey('invitedUsers')) {
+      List<String> invitedUsersList = List.castFrom(map['invitedUsers']);
+      this.invitedUsers = invitedUsersList;
     }
     if (map.containsKey('durationofrequest')) {
       this.durationOfRequest = map['durationofrequest'];
@@ -240,6 +250,9 @@ class RequestModel extends DataModel {
     if (this.acceptors != null) {
       object['acceptors'] = this.acceptors;
     }
+    if (this.invitedUsers != null) {
+      object['invitedUsers'] = this.invitedUsers;
+    }
     if (this.durationOfRequest != null) {
       object['durationofrequest'] = this.durationOfRequest;
     }
@@ -291,6 +304,6 @@ class RequestModel extends DataModel {
   @override
   String toString() {
     // TODO: implement toString
-    return "$approvedUsers $acceptors ";
+    return "$approvedUsers $acceptors $invitedUsers";
   }
 }
