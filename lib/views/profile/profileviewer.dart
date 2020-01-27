@@ -861,6 +861,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
 
   @override
   void initState() {
+    
     viewFullDetails =
         widget.details != null ? widget.details.length <= maxLength : false;
     // if (widget.details.length <= maxLength) viewFullDetails = true;
@@ -901,7 +902,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
               TextSpan(
                 text: widget.details.length > maxLength
                     ? viewFullDetails ? '  Less' : '  More'
-                    : 'Bio not updated yet!',
+                    : '',
                 style: TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()..onTap = viewMore,
               ),

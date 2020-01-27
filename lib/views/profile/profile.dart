@@ -1,51 +1,24 @@
-import 'dart:core';
 import 'dart:async';
 import 'dart:core' as prefix0;
-import 'dart:math';
+import 'dart:core';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/auth/auth_router.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/profile/edit_bio.dart';
-import 'package:sevaexchange/views/profile/edit_interests.dart';
-import 'package:sevaexchange/views/profile/edit_skills.dart';
-import 'package:sevaexchange/views/profile/reported_users.dart';
-import 'package:sevaexchange/views/profile/review_earnings.dart';
-import 'package:sevaexchange/views/tasks/completed_list.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
-import 'dart:math';
-import 'dart:async';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_request_details.dart';
 
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
-import 'package:sevaexchange/views/timebanks/timebank_request_list.dart';
-import 'package:sevaexchange/views/transaction_history.dart';
-import 'package:tree_view/tree_view.dart';
-
-import '../timebank_content_holder.dart';
-import 'edit_name.dart';
 import 'edit_profile.dart';
 import 'timezone.dart';
 
@@ -360,10 +333,11 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         SizedBox(height: 10),
                         RichText(
+                          textAlign: TextAlign.center,
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: 'or ',
+                                text: 'or \n\n',
                                 style: TextStyle(
                                   color: Colors.black,
                                 ),
