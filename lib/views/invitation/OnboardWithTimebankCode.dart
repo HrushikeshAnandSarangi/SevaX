@@ -58,33 +58,31 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   bool hasError = false;
   String errorMessage1 = '';
   GlobalKey _scaffold = GlobalKey();
+  BuildContext dialogLoadingContext;
 
   void initState() {
     super.initState();
     createEditCommunityBloc.getCommunityPrimaryTimebank();
 
-   // getRequestList();
+    getRequestList();
 
   }
- /* void getRequestList() async {
+  void getRequestList() async {
 
     _joinRequestModelList =
-    await getFutureUserRequest(userID: widget.sevauserId);
+    await getFutureUserTimeBankRequest(userID: widget.sevauserId,primaryTimebank: widget.communityModel.primary_timebank);
  //   print("sevauser id ${_joinRequestModelList[0].entityId}");
  //   print("sevauser community ${widget.communityModel.id}");
 
     isDataLoaded = true;
-    createEditCommunityBloc.getCommunityPrimaryTimebank();
 
     setState(() {});
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
-    //return isDataLoaded ?
-
-
-    return Scaffold(
+    return isDataLoaded ?
+    Scaffold(
       key: _scaffold,
       appBar: AppBar(
         centerTitle: true,
@@ -100,21 +98,22 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       body: SingleChildScrollView(
         child: Container(child: timebankStreamBuilder(context)),
       ),
-    );
+    )
 
-        /*:Scaffold(
+        :Scaffold(
       body: Center(
         child: CircularProgressIndicator(),
       ),
-    );*/
+    );
 
 
 
-    // child: Column(
-    //     children: <Widget>[]))));
+
   }
 
+
   Widget timebankStreamBuilder(context) {
+
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
@@ -141,8 +140,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       CommunityCreateEditController communityCreateEditSnapshot, BuildContext context) {
     this.timebankModel = communityCreateEditSnapshot.timebank;
     // globals.timebankAvatarURL = timebankModel.photoUrl;
-   // CompareToTimeBank requestStatus;
-    //requestStatus=compareTimeBanks(_joinRequestModelList, timebankModel,SevaCore.of(context).loggedInUser.sevaUserID);
+    CompareToTimeBank requestStatus;
+    requestStatus=compareTimeBanks(_joinRequestModelList, timebankModel,SevaCore.of(context).loggedInUser.sevaUserID);
 
     return  Container(
       height: MediaQuery.of(context).size.height - 90,
@@ -223,7 +222,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ),
                 ],
               ),
-               //requestStatus == CompareToTimeBank.JOIN ?
+               requestStatus == CompareToTimeBank.JOIN ?
                Column(
                  children: <Widget>[
                    Text(
@@ -248,10 +247,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     ),
                     onPressed: () {
                         myDialog(context,communityCreateEditSnapshot);
+
                     },
               ),
                  ],
-               )/*
+               )
                    :Text(
     'You already requested to this TimeBank. Please wait untill request is accepted',
     textAlign: TextAlign.center,
@@ -260,7 +260,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     fontSize: 16,
     fontWeight: FontWeight.w500,
     ),
-    ),*/
+    ),
             ],
           ),
           Spacer(
@@ -384,6 +384,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 ),
               ),
               onPressed: () async {
+                Navigator.of(dialogContext).pop();
+
+                showProgressDialog();
+
                 print("Timebank Model $timebankModel");
                 joinRequestModel.userId =
                     communityCreateEditSnapshot
@@ -426,7 +430,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       .collection("notifications")
                       .document(notification.id)
                       .setData(notification.toMap());
-                  Navigator.of(dialogContext).pop();
+
+
+                  if(dialogLoadingContext != null){
+                    Navigator.pop(dialogLoadingContext);
+                  }
                   Navigator.of(context).pop();
 
                   return;
@@ -583,7 +591,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
 
-      if (requestModel.entityId == timeBank.id &&
+      /*if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {
         return CompareToTimeBank.JOINED;
       } else if (timeBank.admins
@@ -595,8 +603,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       } else if (timeBank.members
           .contains(sevaUserId)) {
         return CompareToTimeBank.JOINED;
-      }
-      else if (requestModel.entityId == timeBank.id &&
+      }*/
+
+       if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
 
@@ -612,6 +621,19 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       }
     }
     return CompareToTimeBank.JOIN;
+  }
+
+  void showProgressDialog() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogLoadingContext = createDialogContext;
+          return AlertDialog(
+            title: Text('Creating Request'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 }
 

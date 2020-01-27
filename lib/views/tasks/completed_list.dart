@@ -22,6 +22,7 @@ class CompletedListPage extends StatelessWidget {
   }
 }
 
+
 // TODO: Fix the hacks
 
 class CompletedList extends StatefulWidget {
