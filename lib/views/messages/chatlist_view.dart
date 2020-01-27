@@ -53,6 +53,7 @@ class _ChatListViewState extends State<ChatListView> {
           email: SevaCore.of(context).loggedInUser.email,
           blockedBy: blockedByMembers,
           blockedMembers: blockedMembers,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (BuildContext context,
             AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
@@ -64,8 +65,6 @@ class _ChatListViewState extends State<ChatListView> {
           if (chatListSnapshot.hasError) {
             return new Text('Error: ${chatListSnapshot.error}');
           }
-
-          print("data Updated <><><><><><><><<><><<><><><");
           // setState(() {
 
           // });
@@ -590,19 +589,18 @@ class _ChatListViewState extends State<ChatListView> {
                   )
                 });
                 chatModel.deletedBy[email] =
-                      DateTime.now().millisecondsSinceEpoch;
+                    DateTime.now().millisecondsSinceEpoch;
 
                 await Firestore.instance
-                      .collection("chatsnew")
-                      .document(messageId)
-                      .updateData({
-                    'deletedBy': chatModel.deletedBy,
-                  });
+                    .collection("chatsnew")
+                    .document(messageId)
+                    .updateData({
+                  'deletedBy': chatModel.deletedBy,
+                });
 
                 setState(() {
                   print("Update and remove the object from list");
                 });
-
               },
             ),
           ],

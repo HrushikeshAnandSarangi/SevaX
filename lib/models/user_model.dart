@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:location/location.dart';
 import 'package:sevaexchange/models/models.dart';
 
@@ -25,7 +27,7 @@ class UserModel extends DataModel {
   String lat_lng;
 
   int notificationsRead;
-
+  Map<dynamic, dynamic> notificationsReadCount;
   String root_timebank_id;
 
   //AvailabilityModel availability;
@@ -73,7 +75,7 @@ class UserModel extends DataModel {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
-   UserModel.fromMap(Map<String, dynamic> map) {
+  UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
     }
@@ -178,6 +180,20 @@ class UserModel extends DataModel {
     }
     if (map.containsKey('currentCommunity')) {
       this.currentCommunity = map['currentCommunity'];
+    }
+
+    if (map.containsKey('notificationsReadCount') &&
+        map['notificationsReadCount'] != null) {
+      try {
+        Map<dynamic, dynamic> deletedByMap = map['notificationsReadCount'];
+        this.notificationsReadCount = deletedByMap;
+      } catch (e) {
+        this.notificationsReadCount = HashMap();
+      }
+    } else {
+      // print("Chat has not been deleted yet");
+
+      notificationsReadCount = HashMap();
     }
   }
 
