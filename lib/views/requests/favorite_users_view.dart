@@ -5,18 +5,22 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-class BookmarkedUsers extends StatefulWidget {
+class FavoriteUsers extends StatefulWidget {
 
+  final String timebankId;
+
+
+  FavoriteUsers({@required this.timebankId});
 
   @override
- _BookmarkedUsersState createState() {
+  _FavoriteUsersState createState() {
     // TODO: implement createState
-    return _BookmarkedUsersState();
+    return _FavoriteUsersState();
   }
 
 }
 
-class _BookmarkedUsersState extends State<BookmarkedUsers> {
+class _FavoriteUsersState extends State<FavoriteUsers> {
 
   var validItems;
 
@@ -44,23 +48,23 @@ class _BookmarkedUsersState extends State<BookmarkedUsers> {
           );
         }
         List<UserModel> userList = snapshot.data;
-        /*if (userList.length == 0) {
+        if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
-        }*/
+        }
         return ListView.builder(
-          //itemCount: userList.length + 1,
-          itemCount: 10,
+          itemCount: userList.length,
+          //itemCount: 10,
 
 
           itemBuilder: (context, index) {
-            /*if (index == 0) {
+            if (index == 0) {
               return Container(
                 padding: EdgeInsets.only(left: 8, top: 16),
                 child: Text('Users', style: sectionTextStyle),
               );
-            }*/
-            // UserModel user = userList.elementAt(index - 1);
-            return RequestCardWidget();
+            }
+             UserModel user = userList.elementAt(index);
+            return RequestCardWidget(userModel: user,);
           },
         );
       },

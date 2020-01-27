@@ -810,14 +810,7 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
-   void _navigateToxxxview() {
-     Navigator.of(context).push(
-       MaterialPageRoute(
-         builder: (context) =>  RequestInviteUserCard(),
 
-       ),
-     );
-   }
 
   Future<void> _precacheImage() async {
     return await precacheImage(

@@ -12,6 +12,7 @@ import 'package:sevaexchange/models/user_model.dart';
 
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 import '../search_view.dart';
@@ -165,23 +166,23 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           );
         }
         List<UserModel> userList = snapshot.data;
-        /*if (userList.length == 0) {
+        if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
-        }*/
+        }
         return ListView.builder(
-          //itemCount: userList.length + 1,
-          itemCount: 10,
+          itemCount: userList.length,
+          //itemCount: 10,
 
 
           itemBuilder: (context, index) {
-            /*if (index == 0) {
+            if (index == 0) {
               return Container(
                 padding: EdgeInsets.only(left: 8, top: 16),
                 child: Text('Users', style: sectionTextStyle),
               );
-            }*/
-           // UserModel user = userList.elementAt(index - 1);
-            return makeUserWidget();
+            }
+           UserModel user = userList.elementAt(index);
+            return RequestCardWidget(userModel: user,);
           },
         );
       },
@@ -216,6 +217,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         ));
   }
   Widget getUserCard({BuildContext context}) {
+    bool isBookmarked;
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
@@ -299,17 +301,27 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.only(bottom: 5),
-                    height: 33,
-                    width: 80,
+
+                    /*  decoration: BoxDecoration(
+
+                        boxShadow: [BoxShadow(
+                            color: Colors.indigo[50],
+                            blurRadius: 1,
+                            offset: Offset(0.0, 0.50)
+                        )]
+                    ),*/
+                    height: 40,
+
+                    padding: EdgeInsets.only(bottom: 10),
                     child: RaisedButton(
                       shape: StadiumBorder(),
                       color: Colors.indigo,
                       textColor: Colors.white,
+                      elevation: 5,
                       onPressed: () {},
                       child: const Text(
                           'Invite',
-                          style: TextStyle(fontSize: 16)
+                          style: TextStyle(fontSize: 14)
                       ),
                     ),
                   ),
