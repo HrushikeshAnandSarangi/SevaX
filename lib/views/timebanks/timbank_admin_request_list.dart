@@ -628,7 +628,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
-      _membersWidgets.add(getSectionTitle(context, 'Members'));
+      var gesture = GestureDetector(
+        child: getSectionTitle(context, 'Members +'),
+        onTap: () async {},
+      );
+      _membersWidgets.add(gesture);
     }
     if (!_isLoading && !_lastReached) {
       _isLoading = true;
