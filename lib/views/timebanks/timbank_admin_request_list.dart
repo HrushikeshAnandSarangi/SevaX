@@ -22,7 +22,7 @@ class TimebankRequestAdminPage extends StatefulWidget {
   final String timebankId;
   final String userEmail;
   final bool isUserAdmin;
-  HashMap<String, UserModel> listOfMembers = HashMap();
+  var listOfMembers = HashMap<String, UserModel>();
 
   TimebankRequestAdminPage(
       {@required this.isUserAdmin,
@@ -56,7 +56,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   HashMap<int, UserModel> indexToModelMap = HashMap();
   HashMap<String, bool> adminToModelMap = HashMap();
   Map onActivityResult;
-  var selectedUsers = HashMap();
+  var selectedUsers = HashMap<String, UserModel>();
   var nullCount = 0;
 
   @override
@@ -630,7 +630,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     if (_membersWidgets.length == 0) {
       var gesture = GestureDetector(
         child: getSectionTitle(context, 'Members +'),
-        onTap: () async {},
+        onTap: () async {
+          addVolunteers();
+        },
       );
       _membersWidgets.add(gesture);
     }
@@ -709,6 +711,42 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
           _lastReached = onValue.lastPage;
         });
       }
+    }
+  }
+
+  void addVolunteers() async {
+    print(
+        " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
+
+    onActivityResult = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SelectMembersInGroup(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          userSelected:
+              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
+          userEmail: SevaCore.of(context).loggedInUser.email,
+          listOfalreadyExistingMembers: timebankModel.members,
+        ),
+      ),
+    );
+
+    if (onActivityResult != null &&
+        onActivityResult.containsKey("membersSelected")) {
+      selectedUsers = onActivityResult['membersSelected'];
+      print("Data is present Selected users ${selectedUsers.length}");
+      if (selectedUsers != null && selectedUsers.length > 0) {
+        setState(() {
+          isProgressBarActive = true;
+        });
+        List<String> members = timebankModel.members.map((s) => s).toList();
+        selectedUsers.forEach((name, model) {
+          members.add(model.sevaUserID);
+        });
+        _updateTimebank(timebankModel, members: members);
+      }
+    } else {
+      print("No users where selected");
+      //no users where selected
     }
   }
 
@@ -795,19 +833,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void addVolunteers() async {
-    onActivityResult = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SelectMembersInGroup(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-          userSelected:
-              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
-          userEmail: SevaCore.of(context).loggedInUser.email,
-        ),
       ),
     );
   }

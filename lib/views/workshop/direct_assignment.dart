@@ -1,30 +1,33 @@
 import 'dart:collection';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import 'dart:ui';
+import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
 
 class SelectMembersInGroup extends StatefulWidget {
   String timebankId;
   String userEmail;
-  HashMap<String, UserModel> userSelected;
-  HashMap<String, UserModel> listOfMembers = HashMap();
+  List<String> listOfAlreadyExistingMembers = [];
+  var userSelected = HashMap<String, UserModel>();
+  var listOfMembers = HashMap<String, UserModel>();
 
-  SelectMembersInGroup(
-      {String timebankId,
-      HashMap<String, UserModel> userSelected,
-      String userEmail}) {
+  SelectMembersInGroup({
+    String timebankId,
+    HashMap<String, UserModel> userSelected,
+    String userEmail,
+    List<String> listOfalreadyExistingMembers,
+  }) {
     this.timebankId = timebankId;
     this.userSelected = userSelected;
     this.userEmail = userEmail;
+    this.listOfAlreadyExistingMembers = listOfalreadyExistingMembers;
   }
 
   @override
@@ -88,7 +91,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
         title: Text(
-          
           "Select volunteers",
           style: TextStyle(color: Colors.black),
         ),
@@ -96,6 +98,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         actions: <Widget>[
           GestureDetector(
             onTap: () {
+//              widget.onTap();
               Navigator.of(context)
                   .pop({'membersSelected': widget.userSelected});
             },
@@ -104,7 +107,7 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               alignment: Alignment.center,
               height: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.only(right:8.0),
+                padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
                   "Save",
                   style: prefix0.TextStyle(color: Colors.black),
@@ -114,7 +117,6 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           ),
         ],
       ),
-
       body: getList(
         timebankId: FlavorConfig.values.timebankName == "Yang 2020"
             ? FlavorConfig.values.timebankId
@@ -186,6 +188,17 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     return getUserWidget(user, context);
   }
 
+  bool checkAlreadyExistingMembersContains(String sevaId) {
+    if (FlavorConfig.values.timebankName != "Yang 2020") {
+      for (var i = 0; i < widget.listOfAlreadyExistingMembers.length; i++) {
+        if (sevaId.trim() == widget.listOfAlreadyExistingMembers[i].trim()) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   Future loadNextBatchItems() async {
     if (!_isLoading && !_lastReached && nullcount < 3) {
       _isLoading = true;
@@ -227,7 +240,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
             setState(() {
               var iterationCount = 0;
               for (int i = 0; i < addItems.length; i++) {
-                if (emailIndexMap[userModelList[i].email] == null) {
+                if (emailIndexMap[userModelList[i].email] == null &&
+                    checkAlreadyExistingMembersContains(
+                        userModelList[i].sevaUserID.trim())) {
                   // Filtering duplicates
                   _avtars.add(addItems[i]);
                   indexToModelMap[lastIndex] = userModelList[i];
@@ -245,6 +260,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
           setState(() {
             _lastReached = onValue.lastPage;
           });
+        } else if (_avtars.length < 20) {
+          loadNextBatchItems();
         }
       });
     } else {
