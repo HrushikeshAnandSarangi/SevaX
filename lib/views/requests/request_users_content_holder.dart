@@ -72,9 +72,9 @@ class TabarView extends StatelessWidget {
           body: TabBarView(
             children: [
               FindVolunteersView(timebankId: requestItem.timebankId,requestModel: requestItem,),
-              InvitedUsersView(timebankId: requestItem.timebankId),
-              FavoriteUsers(timebankId: requestItem.timebankId),
-              PastHiredUsersView(timebankId: requestItem.timebankId),
+              InvitedUsersView(timebankId: requestItem.timebankId, requestModel: requestItem,),
+              FavoriteUsers(timebankId: requestItem.timebankId, requestModel: requestItem,),
+              PastHiredUsersView(timebankId: requestItem.timebankId, requestModel: requestItem,),
             ],
           ),
         ),

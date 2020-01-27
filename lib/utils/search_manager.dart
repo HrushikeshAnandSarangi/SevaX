@@ -28,7 +28,6 @@ class SearchManager {
   static Stream<List<UserModel>> searchForUser({
     @required queryString,
   }) async* {
-    print("searchForUser :: ---------------");
 //    sevaxuser
     String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
     dynamic body = json.encode(
@@ -78,7 +77,7 @@ class SearchManager {
   }) async* {
 
     print("searchForUser :: ---------------");
-    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -104,14 +103,17 @@ class SearchManager {
     );
     List<Map<String, dynamic>> hitList =
     await _makeElasticSearchPostRequest(url, body);
+
+    log("loggg - "+validItems.toString());
+
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       UserModel user = UserModel.fromMap(sourceMap);
 
-      if(validItems.contains(user.sevaUserID)){
+//      if(validItems.contains(user.sevaUserID)){
         userList.add(user);
-      }
+//      }
     });
     yield userList;
   }
@@ -297,12 +299,15 @@ class SearchManager {
       "Accept": "application/json",
       "Content-Type": "application/json"
     });
-    log(response.body);
-    print("Reuqest Response --> ${response.body}");
+
+//    print("Reuqest Response --> ${response.body}");
 
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
+    print("Reuqest Response --> $hitList");
+//    log(response.body);
+//    log("loggg - "+hitList.toString());
     return hitList;
   }
 

@@ -1,13 +1,16 @@
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class RequestCardWidget extends StatefulWidget {
 
   final UserModel userModel;
+  final RequestModel requestModel;
 
-  RequestCardWidget({@required this.userModel});
+  RequestCardWidget({@required this.userModel, @required this.requestModel});
 
   @override
   _RequestCardWidgetState createState() => _RequestCardWidgetState();
@@ -15,8 +18,8 @@ class RequestCardWidget extends StatefulWidget {
 
 class _RequestCardWidgetState extends State<RequestCardWidget> {
 
-bool isBookMarked = false;
-var validItems;
+  bool isBookMarked = false;
+  var validItems;
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +46,27 @@ var validItems;
         height: 60.0,
         decoration:  BoxDecoration(
             shape: BoxShape.circle,
+
+
+
             image:  DecorationImage(
                 fit: BoxFit.fill,
                 image:  NetworkImage(
-                    "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg")
+                    widget.userModel.photoURL)
             )
         ));
   }
 
   Widget getUserCard({BuildContext context}) {
+    bool shouldInvite = true;
+    if(widget.requestModel.invitedUsers.contains(widget.userModel.sevaUserID) ||
+        widget.requestModel.acceptors.contains(widget.userModel.sevaUserID) ||
+        widget.requestModel.approvedUsers.contains(widget.userModel.sevaUserID)){
+
+
+      shouldInvite = false;
+    }
+
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
@@ -82,7 +97,7 @@ var validItems;
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    child: Text("Tony Stark", style: TextStyle(
+                    child: Text(widget.userModel.email, style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.bold),),
@@ -112,36 +127,36 @@ var validItems;
                   ),
                 ],
               ),
-              SmoothStarRating(
-                  allowHalfRating: true,
-                  onRatingChanged: (v) {
-//                    rating = v;
-//                    setState(() {});
-                  },
-                  starCount: 5,
-                  rating: 3.5,
-                  size: 20.0,
-                  filledIconData: Icons.star,
-                  halfFilledIconData: Icons.star_half,
-                  defaultIconData: Icons.star_border,
-                  color: Colors.orangeAccent,
-                  borderColor: Colors.orangeAccent,
-                  spacing: 1.0
-              ),
+//              SmoothStarRating(
+//                  allowHalfRating: true,
+//                  onRatingChanged: (v) {
+////                    rating = v;
+////                    setState(() {});
+//                  },
+//                  starCount: 5,
+//                  rating: 3.5,
+//                  size: 20.0,
+//                  filledIconData: Icons.star,
+//                  halfFilledIconData: Icons.star_half,
+//                  defaultIconData: Icons.star_border,
+//                  color: Colors.orangeAccent,
+//                  borderColor: Colors.orangeAccent,
+//                  spacing: 1.0
+//              ),
               SizedBox(
                   height: 10
               ),
               Expanded(
                 child: Text(
-                  "Bio",
+                  widget.userModel.bio,
                   maxLines: 3,
                   style: TextStyle(color: Colors.black, fontSize: 12,),),
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Container(
-
                   /*  decoration: BoxDecoration(
 
                         boxShadow: [BoxShadow(
@@ -151,18 +166,17 @@ var validItems;
                         )]
                     ),*/
                     height: 40,
-
                     padding: EdgeInsets.only(bottom: 10),
                     child: RaisedButton(
                       shape: StadiumBorder(),
                       color: Colors.indigo,
                       textColor: Colors.white,
                       elevation: 5,
-                      onPressed: () {},
-                      child: const Text(
-                          'Invited',
+                      onPressed: !shouldInvite ? null : () {},
+                      child: Text(
+                          'Invite',
                           style: TextStyle(fontSize: 14)
-                      ),
+                      )
                     ),
                   ),
                 ],
@@ -183,14 +197,13 @@ var validItems;
     );
   }
 }
-TextStyle get sectionTextStyle {
-  return TextStyle(
-    fontWeight: FontWeight.w600,
-    fontSize: 11,
-    color: Colors.grey,
-  );
-
-}
+  TextStyle get sectionTextStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 11,
+      color: Colors.grey,
+    );
+  }
 Widget getEmptyWidget(String title, String notFoundValue) {
   return Center(
     child: Text(

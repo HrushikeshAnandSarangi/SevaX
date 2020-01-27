@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
@@ -9,8 +10,9 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 class InvitedUsersView extends StatefulWidget{
 
   final String timebankId;
+  final RequestModel requestModel;
 
-  InvitedUsersView({@required this.timebankId});
+  InvitedUsersView({@required this.timebankId, this.requestModel});
 
   @override
   _InvitedUsersViewState createState() {
@@ -56,9 +58,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
           return getEmptyWidget('Users', 'No user found');
         }
         return ListView.builder(
-          //itemCount: userList.length + 1,
           itemCount: userList.length,
-
 
           itemBuilder: (context, index) {
             if (index == 0) {
@@ -67,9 +67,15 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
                 child: Text('Users', style: sectionTextStyle),
               );
             }
-             UserModel user = userList.elementAt(index);
+            UserModel user = userList.elementAt(index);
+            if(widget.requestModel.invitedUsers.contains(user.sevaUserID) ||
+                widget.requestModel.acceptors.contains(user.sevaUserID) ||
+                widget.requestModel.approvedUsers.contains(user.sevaUserID)){
+              return RequestCardWidget(userModel: user,);
+            }
+            return Container();
             //UserModel user;
-            return RequestCardWidget(userModel: user,);
+
           },
         );
       },
