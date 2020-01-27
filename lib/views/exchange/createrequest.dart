@@ -469,6 +469,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 timebankId: widget.loggedInUser.currentTimebank,
                 userEmail: widget.loggedInUser.email,
                 userSelected: selectedUsers,
+                listOfalreadyExistingMembers: [],
               ),
             ),
           );
