@@ -630,9 +630,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     if (_membersWidgets.length == 0) {
       var gesture = GestureDetector(
         child: getSectionTitle(context, 'Members +'),
-        onTap: () async{
-
-        },
+        onTap: () async {},
       );
       _membersWidgets.add(gesture);
     }
