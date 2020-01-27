@@ -1,193 +1,20 @@
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/models/user_model.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
 
-class InterestViewNew extends StatefulWidget {
-  final VoidCallback onSkipped;
-  final StringListCallback onSelectedInterests;
-  final StringListCallback onSelectedSkills;
-
-  InterestViewNew({
-    @required this.onSelectedInterests,
-    @required this.onSelectedSkills,
-    @required this.onSkipped,
-  });
-  @override
-  _InterestViewNewState createState() => _InterestViewNewState();
-}
-
-class _InterestViewNewState extends State<InterestViewNew> {
-  SuggestionsBoxController controller = SuggestionsBoxController();
-  GlobalKey<AutoCompleteTextFieldState> key = new GlobalKey();
-  bool autovalidate = false;
-  List<String> suggestionText = [];
-  List<String> suggestionID = [];
-  List<String> selectedInterests = [];
-  List<String> selectedID = [];
-
-  @override
-  void initState() {
-    Firestore.instance
-        .collection('interests')
-        .getDocuments()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.documents.forEach((DocumentSnapshot data) {
-        suggestionText.add(data['name']);
-        suggestionID.add(data.documentID);
-      });
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Interests',
-          style: TextStyle(
-            fontSize: 18,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 20),
-            Text(
-              'We would like to personalize the experience based on your interests.',
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
-            ),
-            SizedBox(height: 20),
-            TypeAheadField<String>(
-              suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                // color: Colors.red,
-                borderRadius: BorderRadius.circular(8),
-                // shape: RoundedRectangleBorder(),
-              ),
-              textFieldConfiguration: TextFieldConfiguration(
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  suffixIcon: Icon(Icons.search),
-                ),
-              ),
-              suggestionsBoxController: controller,
-              suggestionsCallback: (pattern) async {
-                List<String> dataCopy = List.from(suggestionText);
-                dataCopy.retainWhere(
-                    (s) => s.toLowerCase().contains(pattern.toLowerCase()));
-                return await Future.value(dataCopy);
-              },
-              itemBuilder: (context, suggestion) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    suggestion,
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                );
-              },
-              noItemsFoundBuilder: (context) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'No data Found',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                );
-              },
-              onSuggestionSelected: (suggestion) {
-                if (!selectedInterests.contains(suggestion)) {
-                  controller.close();
-                  selectedInterests.add(suggestion);
-                  selectedID.add(
-                    suggestionID[suggestionText.indexOf(suggestion)],
-                  );
-                  setState(() {});
-                }
-              },
-            ),
-            SizedBox(height: 20),
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Wrap(
-                  children: selectedInterests
-                      .map(
-                        (data) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Chip(
-                            label: Text(data),
-                            onDeleted: () {
-                              selectedInterests.remove(data);
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
-            Spacer(),
-            SizedBox(
-              width: 134,
-              child: RaisedButton(
-                onPressed: () {
-                  widget.onSelectedInterests(selectedID);
-                },
-                child: Text(
-                  'Next',
-                  style: Theme.of(context).primaryTextTheme.button,
-                ),
-              ),
-            ),
-            FlatButton(
-              onPressed: () {
-                widget.onSkipped();
-              },
-              child: Text(
-                'Skip',
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            ),
-            SizedBox(height: 20),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class SkillViewNew extends StatefulWidget {
+  final UserModel userModel;
   final VoidCallback onSkipped;
   final StringListCallback onSelectedSkills;
 
   SkillViewNew({
     @required this.onSelectedSkills,
     @required this.onSkipped,
+    this.userModel,
   });
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
@@ -195,23 +22,34 @@ class SkillViewNew extends StatefulWidget {
 
 class _SkillViewNewState extends State<SkillViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
-  GlobalKey<AutoCompleteTextFieldState> key = new GlobalKey();
   bool autovalidate = false;
-  List<String> suggestionText = [];
-  List<String> suggestionID = [];
-  List<String> selectedSkills = [];
-  List<String> selectedID = [];
-
+  // List<String> suggestionText = [];
+  // List<String> suggestionID = [];
+  // List<String> selectedSkills = [];
+  // List<String> selectedID = [];
+  Map<String, dynamic> skills = {};
+  // Map<String, dynamic> ids = {};
+  Map<String, dynamic> _selectedSkills = {};
+  // List<Widget> selectedChips = [];
   @override
   void initState() {
+    print(widget.userModel.skills);
     Firestore.instance
         .collection('skills')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
       querySnapshot.documents.forEach((DocumentSnapshot data) {
-        suggestionText.add(data['name']);
-        suggestionID.add(data.documentID);
+        // suggestionText.add(data['name']);
+        // suggestionID.add(data.documentID);
+        skills[data.documentID] = data['name'];
+        // ids[data['name']] = data.documentID;
       });
+      widget.userModel.skills.forEach((id) {
+        _selectedSkills[id] = skills[id];
+        // selectedChips.add(buildChip(id: id, value: skills[id]));
+      });
+
+      setState(() {});
     });
     super.initState();
   }
@@ -266,7 +104,8 @@ class _SkillViewNewState extends State<SkillViewNew> {
               ),
               suggestionsBoxController: controller,
               suggestionsCallback: (pattern) async {
-                List<String> dataCopy = List.from(suggestionText);
+                List<String> dataCopy = [];
+                skills.forEach((id, skill) => dataCopy.add(skill));
                 dataCopy.retainWhere(
                     (s) => s.toLowerCase().contains(pattern.toLowerCase()));
                 return await Future.value(dataCopy);
@@ -292,12 +131,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 );
               },
               onSuggestionSelected: (suggestion) {
-                if (!selectedSkills.contains(suggestion)) {
+                if (!_selectedSkills.containsValue(suggestion)) {
                   controller.close();
-                  selectedSkills.add(suggestion);
-                  selectedID.add(
-                    suggestionID[suggestionText.indexOf(suggestion)],
-                  );
+                  String id =
+                      skills.keys.firstWhere((k) => skills[k] == suggestion);
+                  _selectedSkills[id] = suggestion;
+                  // selectedChips.add(buildChip(id: id, value: suggestion));
                   setState(() {});
                 }
               },
@@ -307,19 +146,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
               shrinkWrap: true,
               children: <Widget>[
                 Wrap(
-                  children: selectedSkills
-                      .map(
-                        (data) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Chip(
-                            label: Text(data),
-                            onDeleted: () {
-                              selectedSkills.remove(data);
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      )
+                  children: _selectedSkills.values
+                      .toList()
+                      .map((value) => buildChip(value))
                       .toList(),
                 ),
               ],
@@ -329,28 +158,47 @@ class _SkillViewNewState extends State<SkillViewNew> {
               width: 134,
               child: RaisedButton(
                 onPressed: () {
+                  List<String> selectedID = [];
+                  _selectedSkills.forEach((id, _) => selectedID.add(id));
+                  print(selectedID);
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  'Next',
+                  widget.userModel.skills == null ? 'Next' : 'Update',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-            FlatButton(
-              onPressed: () {
-                widget.onSkipped();
-              },
-              child: Text(
-                'Skip',
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            ),
+            widget.userModel.skills == null
+                ? FlatButton(
+                    onPressed: () {
+                      widget.onSkipped();
+                    },
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      ),
+                    ),
+                  )
+                : Container(),
             SizedBox(height: 20),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding buildChip(value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: Chip(
+        label: Text(value),
+        onDeleted: () {
+          String id = skills.keys.firstWhere((k) => skills[k] == value);
+          _selectedSkills.remove(id);
+          setState(() {});
+        },
       ),
     );
   }

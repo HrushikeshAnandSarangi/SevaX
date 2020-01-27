@@ -1,0 +1,188 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/models/user_model.dart';
+typedef StringListCallback = void Function(List<String> skills);
+
+class InterestViewNew extends StatefulWidget {
+  final UserModel userModel;
+  final VoidCallback onSkipped;
+  final StringListCallback onSelectedInterests;
+
+  InterestViewNew({
+    @required this.onSelectedInterests,
+    @required this.onSkipped,
+    this.userModel,
+  });
+  @override
+  _InterestViewNewState createState() => _InterestViewNewState();
+}
+
+class _InterestViewNewState extends State<InterestViewNew> {
+  SuggestionsBoxController controller = SuggestionsBoxController();
+  
+  Map<String, dynamic> interests = {};
+  Map<String, dynamic> _selectedInterests = {};
+
+  @override
+  void initState() {
+    Firestore.instance
+        .collection('interests')
+        .getDocuments()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.documents.forEach((DocumentSnapshot data) {
+        interests[data.documentID] = data['name'];
+      });
+      widget.userModel.interests.forEach((id) {
+        _selectedInterests[id] = interests[id];
+      });
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Interests',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 20),
+            Text(
+              'We would like to personalize the experience based on your interests.',
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500),
+            ),
+            SizedBox(height: 20),
+            TypeAheadField<String>(
+              suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              textFieldConfiguration: TextFieldConfiguration(
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  suffixIcon: Icon(Icons.search),
+                ),
+              ),
+              suggestionsBoxController: controller,
+              suggestionsCallback: (pattern) async {
+                List<String> dataCopy = [];
+                interests.forEach((k, v) => dataCopy.add(v));
+                print(dataCopy);
+                dataCopy.retainWhere(
+                    (s) => s.toLowerCase().contains(pattern.toLowerCase()));
+                return await Future.value(dataCopy);
+              },
+              itemBuilder: (context, suggestion) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    suggestion,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                );
+              },
+              noItemsFoundBuilder: (context) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'No data Found',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                );
+              },
+              onSuggestionSelected: (suggestion) {
+                if (!_selectedInterests.containsValue(suggestion)) {
+                  controller.close();
+                  String id = interests.keys
+                      .firstWhere((k) => interests[k] == suggestion);
+                  _selectedInterests[id] = suggestion;
+
+                  setState(() {});
+                }
+              },
+            ),
+            SizedBox(height: 20),
+            ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Wrap(
+                    children: _selectedInterests.values
+                        .toList()
+                        .map((value) => buildChip(value))
+                        .toList()),
+              ],
+            ),
+            Spacer(),
+            SizedBox(
+              width: 134,
+              child: RaisedButton(
+                onPressed: () {
+                  List<String> selectedID = [];
+                  _selectedInterests.forEach((id, value) => selectedID.add(id));
+                  widget.onSelectedInterests(selectedID);
+                },
+                child: Text(
+                  widget.userModel.interests == null ? 'Next' : 'Update',
+                  style: Theme.of(context).primaryTextTheme.button,
+                ),
+              ),
+            ),
+            widget.userModel.interests == null
+                ? FlatButton(
+                    onPressed: () {
+                      widget.onSkipped();
+                    },
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                      ),
+                    ),
+                  )
+                : Container(),
+            SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Padding buildChip(value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: Chip(
+        label: Text(value),
+        onDeleted: () {
+          String id = interests.keys.firstWhere((k) => interests[k] == value);
+          _selectedInterests.remove(id);
+          setState(() {});
+        },
+      ),
+    );
+  }
+}

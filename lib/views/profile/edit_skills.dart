@@ -9,6 +9,9 @@ import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
 
+@deprecated
+
+///use interests view new ////
 class EditSkills extends StatefulWidget {
   @override
   _EditSkillsState createState() => _EditSkillsState();

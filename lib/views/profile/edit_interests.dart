@@ -1,3 +1,4 @@
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import '../../flavor_config.dart';
 import '../core.dart';
 
+@deprecated
+///use interests view new ////
 class EditInterests extends StatefulWidget {
   @override
   _EditInterestsState createState() => _EditInterestsState();
