@@ -155,7 +155,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     TimebankModel timebank = timebankList.elementAt(index);
                     CompareToTimeBank status;
 
-                    if (_joinRequestModels.length != 0) {
+                    if (_joinRequestModels != null) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
                     } else if (timebank.admins

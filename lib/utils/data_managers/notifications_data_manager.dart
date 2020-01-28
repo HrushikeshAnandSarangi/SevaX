@@ -193,6 +193,7 @@ Stream<List<NotificationsModel>> getNotifications({
             notifications.add(model);
         });
         notificationSink.add(notifications);
+        print("${notifications.length}----------------------------------------");
       },
     ),
   );

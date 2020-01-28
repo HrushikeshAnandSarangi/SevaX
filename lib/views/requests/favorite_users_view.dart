@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
@@ -8,9 +9,10 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 class FavoriteUsers extends StatefulWidget {
 
   final String timebankId;
+  final RequestModel requestModel;
 
 
-  FavoriteUsers({@required this.timebankId});
+  FavoriteUsers({@required this.timebankId, this.requestModel});
 
   @override
   _FavoriteUsersState createState() {
@@ -70,6 +72,31 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
       },
     );
   }
+  Widget getEmptyWidget(String title, String notFoundValue) {
+    return Center(
+      child: Text(
+        notFoundValue,
+        overflow: TextOverflow.ellipsis,
+        style: sectionHeadingStyle,
+      ),
+    );
+  }
 
 
+  TextStyle get sectionHeadingStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 12.5,
+      color: Colors.black,
+    );
+  }
+
+  TextStyle get sectionTextStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 11,
+      color: Colors.grey,
+    );
+  }
 }
+

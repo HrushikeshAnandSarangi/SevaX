@@ -2,13 +2,14 @@
 
 import 'dart:async';
 import 'dart:collection';
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -35,6 +36,8 @@ class _FindVolunteersViewState extends State<FindVolunteersView>{
 
   final searchOnChange = new BehaviorSubject<String>();
   var validItems = List<String>();
+
+  TimebankModel timebankModel;
   @override
   void initState() {
     super.initState();
@@ -44,6 +47,12 @@ class _FindVolunteersViewState extends State<FindVolunteersView>{
       setState(() {
         validItems = onValue;
       });
+    });
+
+    FirestoreManager.getTimeBankForId(
+      timebankId: widget.timebankId
+    ).then((onValue){
+      timebankModel=onValue;
     });
 
 
@@ -96,7 +105,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView>{
               ),
             ),
             Expanded(
-              child: UserResultViewElastic(searchTextController, widget.timebankId, validItems),
+              child: UserResultViewElastic(searchTextController, widget.timebankId, validItems, widget.requestModel, timebankModel),
             ),
           ],
         ),
@@ -108,9 +117,11 @@ class UserResultViewElastic extends StatefulWidget {
   final TextEditingController controller;
   final String timebankId;
   final List<String> validItems;
+  final RequestModel requestModel;
+  final TimebankModel timebankModel;
 
   UserResultViewElastic(this.controller, this.timebankId,
-      this.validItems,);
+      this.validItems,this.requestModel, this.timebankModel);
 
   @override
   _UserResultViewElasticState createState() {
@@ -150,7 +161,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       stream: SearchManager.searchForUserWithTimebankId(
           queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
-        print('$snapshot');
+        print("users snapshot is ---${snapshot.data}");
 
         //print('find ${snapshot.data}');
         if (snapshot.hasError) {
@@ -165,24 +176,24 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             ),
           );
         }
+
         List<UserModel> userList = snapshot.data;
         if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
         }
         return ListView.builder(
           itemCount: userList.length,
-          //itemCount: 10,
-
-
           itemBuilder: (context, index) {
-            if (index == 0) {
-              return Container(
-                padding: EdgeInsets.only(left: 8, top: 16),
-                child: Text('Users', style: sectionTextStyle),
-              );
-            }
+            log(userList.length.toString());
+//            if (index == 0) {
+//              Container(
+//                padding: EdgeInsets.only(left: 8, top: 16),
+//                child: Text('Users', style: sectionTextStyle),
+//              );
+//            }
            UserModel user = userList.elementAt(index);
-            return RequestCardWidget(userModel: user,);
+
+            return RequestCardWidget(userModel: user,requestModel: widget.requestModel,timebankModel: widget.timebankModel,);
           },
         );
       },

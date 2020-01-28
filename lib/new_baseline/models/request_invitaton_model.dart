@@ -62,8 +62,6 @@ class RequestInvitationModel extends DataModel{
       this.requestId = map['requestId'];
         }
 
-
-
     }
 
 }
