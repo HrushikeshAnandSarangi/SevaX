@@ -26,7 +26,6 @@ import 'package:sevaexchange/widgets/colored_tabbar.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
-import '../utils/string_extensions.dart';
 import 'core.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
@@ -188,9 +187,12 @@ Widget createAdminTabBar(
             height: MediaQuery.of(context).size.height - 137,
             child: TabBarView(
               children: [
-                DiscussionList(
-                  timebankId: timebankId,
+                Container(
+                  color: Colors.red,
                 ),
+                // DiscussionList(
+                //   timebankId: timebankId,
+                // ),
                 RequestsModule.of(
                   timebankId: timebankId,
                   timebankModel: timebankModel,

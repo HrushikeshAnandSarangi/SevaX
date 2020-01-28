@@ -1,6 +1,5 @@
 //import 'dart:ffi';
 
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,7 +18,6 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
@@ -57,7 +55,8 @@ class NotificationsView extends State<NotificationViewHolder> {
         SevaCore.of(context).loggedInUser.notificationsRead =
             notifications.length;
 
-        print("Unread notifications ${SevaCore.of(context).loggedInUser.notificationsRead}");
+        print(
+            "Unread notifications ${SevaCore.of(context).loggedInUser.notificationsRead}");
 
         if (notifications.length == 0) {
           return Center(
@@ -71,7 +70,6 @@ class NotificationsView extends State<NotificationViewHolder> {
             NotificationsModel notification = notifications.elementAt(index);
             print("----Notification widgets ${notification}");
 //            print("Notification data ${notification.type}");
-
 
             switch (notification.type) {
               case NotificationType.RequestAccept:
@@ -246,19 +244,18 @@ class NotificationsView extends State<NotificationViewHolder> {
                 //     'Acceptance Request ' + acceptedOffer.notificationContent);
                 break;
 
-
               case NotificationType.RequestInvite:
                 // TODO: Handle this case.
 
                 print("notification data ${notification.data}");
-                RequestInvitationModel requestInvitationModel = RequestInvitationModel.fromMap(notification.data);
+                RequestInvitationModel requestInvitationModel =
+                    RequestInvitationModel.fromMap(notification.data);
 
-              return  getInvitedRequestsNotificationWidget(
-                requestInvitationModel,
-                notification.id,
-                context,
-
-              );
+                return getInvitedRequestsNotificationWidget(
+                  requestInvitationModel,
+                  notification.id,
+                  context,
+                );
                 break;
             }
           },
@@ -737,7 +734,6 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 
-
   Widget getInvitedRequestsNotificationWidget(
       RequestInvitationModel requestInvitationModel,
       String notificationId,
@@ -759,20 +755,23 @@ class NotificationsView extends State<NotificationViewHolder> {
               title: Text("Join request"),
               leading: requestInvitationModel.timebankImage != null
                   ? CircleAvatar(
-                backgroundImage: NetworkImage(requestInvitationModel.timebankImage),
-              )
+                      backgroundImage:
+                          NetworkImage(requestInvitationModel.timebankImage),
+                    )
                   : Offstage(),
               subtitle: Text(
                   '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view all join request'),
             ),
           ),
           onTap: () {
-            showDialog(context: context,
-            builder: (context){
-              return JoinRejectDialogView(
-                timeBankId: requestInvitationModel.requestId, requestInvitationModel: requestInvitationModel,
-              )
-            });
+          //   showDialog(
+          //       context: context,
+          //       builder: (context) {
+          //         return JoinRejectDialogView(
+          //           timeBankId: requestInvitationModel.requestId,
+          //           requestInvitationModel: requestInvitationModel,
+          //         );
+          //       });
           },
         ));
   }
@@ -2240,20 +2239,15 @@ class NotificationsView extends State<NotificationViewHolder> {
 //  }
 //}
 
-
 // class AceeptorItem {
 //   final String sevaUserID;
 //   final bool approved;
 
 //   AceeptorItem({this.sevaUserID, this.approved})
-  
+
 // }
 
-
 // class GetList {
-
-
-
 
 // void build(BuildContext context ){
 
@@ -2266,22 +2260,10 @@ class NotificationsView extends State<NotificationViewHolder> {
 //     consildatedList[f] = AceeptorItem(approved: false, sevaUserID: f);
 //   });
 
-
 // approvedMembers.map((f){
 //     consildatedList[f] = AceeptorItem(approved: true, sevaUserID: f);
 //   });
-  
-
 
 //   Requedtmodel midel=consildatedList[imdex].approved
 
-
-
 // }
-
-
-
-
-
-
-
