@@ -1,7 +1,5 @@
 import 'dart:collection';
 import 'dart:core';
-import 'dart:core';
-import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -190,12 +188,9 @@ Widget createAdminTabBar(
             height: MediaQuery.of(context).size.height - 137,
             child: TabBarView(
               children: [
-                Container(
-                  color: Colors.red,
+                DiscussionList(
+                  timebankId: timebankId,
                 ),
-                // DiscussionList(
-                //   timebankId: timebankId,
-                // ),
                 RequestsModule.of(
                   timebankId: timebankId,
                   timebankModel: timebankModel,
