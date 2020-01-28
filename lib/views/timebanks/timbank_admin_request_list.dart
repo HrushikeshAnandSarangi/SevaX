@@ -629,7 +629,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
       var gesture = GestureDetector(
-        child: getSectionTitle(context, 'Members +'),
+        child: Row(
+          children: <Widget>[
+            getSectionTitle(context, 'Members '),
+            CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 10,
+              child: Image.asset("lib/assets/images/add.png"),
+            ),
+          ],
+        ),
         onTap: () async {
           addVolunteers();
         },
@@ -827,7 +836,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
           Text(
             title,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 20,
               color: Colors.black,
               fontWeight: FontWeight.w700,
             ),
