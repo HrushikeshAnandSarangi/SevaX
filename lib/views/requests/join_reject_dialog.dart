@@ -1,5 +1,4 @@
-
-
+/*
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -25,7 +24,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
 
   @override
   Widget build(BuildContext context) {
-    return /*AlertDialog(
+    return AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0))),
       content: Form(
@@ -204,5 +203,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
         ),
       ),
     );
-  }*/
+  }
 }
+*/

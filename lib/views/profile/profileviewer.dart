@@ -1,12 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/messages/chatview.dart';
 
 //TODO update bio and remove un-necessary stuff
 
@@ -122,7 +122,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                       ),
                       child: UserProfileDetails(
                         title: 'About ${snapshot.data['fullname']}',
-                        details: snapshot.data['bio']??'',
+                        details: snapshot.data['bio'] ?? '',
                       ),
                     ),
 
@@ -901,7 +901,7 @@ class _UserProfileDetailsState extends State<UserProfileDetails> {
               TextSpan(
                 text: widget.details.length > maxLength
                     ? viewFullDetails ? '  Less' : '  More'
-                    : 'Bio not updated yet!',
+                    : '',
                 style: TextStyle(color: Colors.blue),
                 recognizer: TapGestureRecognizer()..onTap = viewMore,
               ),
@@ -1016,10 +1016,12 @@ class ProfileHeader extends StatelessWidget {
                 color: Theme.of(context).accentColor,
               ),
               IconButton(
-                icon: Icon(Icons.block),
+                icon: Icon(
+                  Icons.block,
+                ),
                 onPressed: block,
                 tooltip: isBlocked ? 'Unblock' : 'Block',
-                color: Theme.of(context).accentColor,
+                color: isBlocked ? Colors.red : Theme.of(context).accentColor,
               ),
               IconButton(
                 icon: Icon(Icons.flag),

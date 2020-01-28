@@ -9,7 +9,6 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/material_app.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -18,7 +17,6 @@ import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/help.dart';
 import 'package:sevaexchange/views/home_dashboard.dart';
-import 'package:sevaexchange/views/home_page_router.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/news/newslistview.dart';
@@ -369,6 +367,9 @@ class _SevaCoreViewState extends State<SevaCoreView>
                         ? SevaCore.of(context).loggedInUser.notificationsRead
                         : 0;
 
+                    print(
+                        "${SevaCore.of(context).loggedInUser.notificationsReadCount}--------------------------------------");
+
                     List<NotificationsModel> notifications = snapshot.data;
 
                     var unreadNotifications = 0;
@@ -465,6 +466,8 @@ class _SevaCoreViewState extends State<SevaCoreView>
                     email: SevaCore.of(context).loggedInUser.email,
                     blockedBy: blockedByMembers,
                     blockedMembers: blockedMembers,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
                   ),
                   builder: (BuildContext context,
                       AsyncSnapshot<List<ChatModel>> chatListSnapshot) {

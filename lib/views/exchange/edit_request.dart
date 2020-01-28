@@ -1,16 +1,14 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -541,6 +539,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                         SevaCore.of(context).loggedInUser.currentTimebank,
                     userSelected: selectedUsers,
                     userEmail: SevaCore.of(context).loggedInUser.email,
+                    listOfalreadyExistingMembers: [],
                   )));
 
           if (onActivityResult != null &&

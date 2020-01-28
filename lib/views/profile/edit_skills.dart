@@ -1,21 +1,21 @@
-
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/skills_interest_data_manager.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
+import 'package:sevaexchange/views/core.dart';
+
 import '../../flavor_config.dart';
 
-class EditSkills extends StatefulWidget {
+@deprecated
 
+///use interests view new ////
+class EditSkills extends StatefulWidget {
   @override
   _EditSkillsState createState() => _EditSkillsState();
 }
-
 
 class _EditSkillsState extends State<EditSkills> {
 //  List<String> skills = const [
@@ -30,25 +30,27 @@ class _EditSkillsState extends State<EditSkills> {
 //    'Baseball',
 //  ];
 
-  List<String> skills = FlavorConfig.values.timebankName == "Yang 2020" ? const [
-    "Data entry",
-    "Research",
-    "Graphic design",
-    "Coding/development",
-    "Photography",
-    "Videography",
-    "Multilingual/translations",
-  ] : [
-    'Curators',
-    'Developers',
-    'Writer',
-    'Advertisers',
-    'Customer',
-    'Sports',
-    'Adventure',
-    'Culture',
-    'Baseball',
-  ];
+  List<String> skills = FlavorConfig.values.timebankName == "Yang 2020"
+      ? const [
+          "Data entry",
+          "Research",
+          "Graphic design",
+          "Coding/development",
+          "Photography",
+          "Videography",
+          "Multilingual/translations",
+        ]
+      : [
+          'Curators',
+          'Developers',
+          'Writer',
+          'Advertisers',
+          'Customer',
+          'Sports',
+          'Adventure',
+          'Culture',
+          'Baseball',
+        ];
   List<MaterialColor> colorList;
   Set<String> selectedSkills = <String>[].toSet();
   @override
@@ -61,8 +63,7 @@ class _EditSkillsState extends State<EditSkills> {
     getSkillsForTimebank(timebankId: FlavorConfig.values.timebankId)
         .then((onValue) {
       setState(() {
-        if (onValue != null && onValue.isNotEmpty)
-          skills = onValue;
+        if (onValue != null && onValue.isNotEmpty) skills = onValue;
       });
       this.selectedSkills = <String>[].toSet();
       this.selectedSkills = SevaCore.of(context).loggedInUser.skills.toSet();
@@ -78,8 +79,8 @@ class _EditSkillsState extends State<EditSkills> {
 
     return Container(
       child:
-      //Column(children: [
-      Padding(
+          //Column(children: [
+          Padding(
         padding: EdgeInsets.all(10.0),
         child: TypeAheadField<String>(
           getImmediateSuggestions: true,
@@ -90,7 +91,7 @@ class _EditSkillsState extends State<EditSkills> {
           suggestionsCallback: (String pattern) async {
             return skills
                 .where((item) =>
-                item.toLowerCase().startsWith(pattern.toLowerCase()))
+                    item.toLowerCase().startsWith(pattern.toLowerCase()))
                 .toList();
           },
           itemBuilder: (context, String suggestion) {
@@ -113,37 +114,59 @@ class _EditSkillsState extends State<EditSkills> {
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Edit Skills',style: TextStyle(color: Colors.white),),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Edit Skills',
+          style: TextStyle(fontSize: 18),
         ),
-        body: ListView(
-          children: <Widget>[
-            ScrollExample(context),
-            list(),
-          ],
+      ),
+      body: ListView(
+        children: <Widget>[
+          ScrollExample(context),
+          list(),
+        ],
+      ),
+      floatingActionButton: Container(
+        width: 134,
+        height: 39,
+        child: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          shape: StadiumBorder(),
+          onPressed: () {
+            SevaCore.of(context).loggedInUser.skills =
+                this.selectedSkills.toList();
+            this.updateUserData();
+          },
+          child: Text(
+            'Update Skills',
+            style: Theme.of(context).primaryTextTheme.button,
+          ),
         ),
-        bottomNavigationBar: ButtonBar(
-          children: <Widget>[
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                SevaCore.of(context).loggedInUser.skills = this.selectedSkills.toList();
-                this.updateUserData();
-              },
-              child: Text(
-                'Update Skills',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
+      ),
+      // bottomNavigationBar: ButtonBar(
+      //   children: <Widget>[
+      //     RaisedButton(
+      //       onPressed: () {
+      //         SevaCore.of(context).loggedInUser.skills =
+      //             this.selectedSkills.toList();
+      //         this.updateUserData();
+      //       },
+      //       child: Text(
+      //         'Update Skills',
+      //         style: Theme.of(context).primaryTextTheme.button,
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
+
   Future updateUserData() async {
     await fireStoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     Navigator.of(context).pop();
   }
+
   Widget list() {
     if (selectedSkills.length > 0) {
       return Padding(
