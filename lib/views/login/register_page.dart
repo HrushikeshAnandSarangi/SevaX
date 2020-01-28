@@ -28,7 +28,8 @@ class _RegisterPageState extends State<RegisterPage>
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  bool _shouldObscure = true;
+  bool _shouldObscurePassword = true;
+  bool _shouldObscureConfirmPassword = true;
   bool _isLoading = false;
 
   String fullName;
@@ -105,10 +106,15 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-  bool get shouldObscure => this._shouldObscure;
+  bool get shouldObscurePassword => this._shouldObscurePassword;
+  bool get shouldObscureConfirmPassword => this._shouldObscureConfirmPassword;
 
-  set shouldObscure(bool shouldObscure) {
-    setState(() => this._shouldObscure = shouldObscure);
+  set shouldObscurePassword(bool shouldObscure) {
+    setState(() => this.shouldObscurePassword = shouldObscure);
+  }
+
+  set shouldObscureConfirmPassword(bool shouldObscure) {
+    setState(() => this.shouldObscureConfirmPassword = shouldObscure);
   }
 
   bool get isLoading => this._isLoading;
@@ -213,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage>
           getFormField(
             shouldRestrictLength: false,
             hint: 'Password',
-            shouldObscure: shouldObscure,
+            shouldObscure: shouldObscurePassword,
             validator: (value) {
               this.password = '';
               if (value.length < 6) {
@@ -225,17 +231,23 @@ class _RegisterPageState extends State<RegisterPage>
             onSave: (value) {
               this.password = value;
             },
-            suffix: GestureDetector(
-              onTap: () => shouldObscure = !shouldObscure,
-              child: shouldObscure
-                  ? Icon(Icons.visibility)
-                  : Icon(Icons.visibility_off),
+            suffix: IconButton(
+              onPressed: () {
+                _shouldObscurePassword = !_shouldObscurePassword;
+                setState(() {});
+              },
+              splashColor: Colors.transparent,
+              icon: Icon(
+                _shouldObscurePassword
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+              ),
             ),
           ),
           getFormField(
             shouldRestrictLength: false,
             hint: 'Confirm Password',
-            shouldObscure: shouldObscure,
+            shouldObscure: shouldObscureConfirmPassword,
             validator: (value) {
               if (value.length < 6) {
                 return 'Password should have atleast 6 characters';
@@ -245,11 +257,17 @@ class _RegisterPageState extends State<RegisterPage>
               }
               return null;
             },
-            suffix: GestureDetector(
-              onTap: () => shouldObscure = !shouldObscure,
-              child: shouldObscure
-                  ? Icon(Icons.visibility)
-                  : Icon(Icons.visibility_off),
+            suffix: IconButton(
+              onPressed: () {
+                _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
+                setState(() {});
+              },
+              splashColor: Colors.transparent,
+              icon: Icon(
+                shouldObscureConfirmPassword
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+              ),
             ),
           ),
         ],
