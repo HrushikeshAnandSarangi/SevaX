@@ -1,27 +1,32 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:core' as prefix0;
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
-
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
-import 'package:sevaexchange/views/splash_view.dart';
 
 /// Create a [chat]
 Future<void> createChat({
   @required ChatModel chat,
+  @required String communityId,
 }) async {
   // log.i('createChat: MessageModel: ${chat.toMap()}');
   chat.rootTimebank = FlavorConfig.values.timebankId;
   return await Firestore.instance
       .collection('chatsnew')
       .document(
-          chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
+        chat.user1 +
+            '*' +
+            chat.user2 +
+            '*' +
+            FlavorConfig.values.timebankId +
+            '*' +
+            communityId,
+      )
       .setData(chat.toMap(), merge: true);
 }
 
@@ -149,9 +154,11 @@ Stream<List<ChatModel>> getChatsforUser({
   @required String email,
   @required List<String> blockedBy,
   @required List<String> blockedMembers,
+  @required String communityId,
 }) async* {
   var data = Firestore.instance
       .collection('chatsnew')
+      // .where('communityId', isEqualTo: communityId)
       .orderBy('timestamp', descending: true)
       .snapshots();
 
@@ -164,7 +171,6 @@ Stream<List<ChatModel>> getChatsforUser({
         snapshot.documents.forEach(
           (documentSnapshot) async {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
-
             if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
                 model.rootTimebank == FlavorConfig.values.timebankId &&
