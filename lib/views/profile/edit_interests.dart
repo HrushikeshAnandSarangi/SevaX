@@ -1,39 +1,44 @@
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/utils/data_managers/skills_interest_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
+
 import '../../flavor_config.dart';
 import '../core.dart';
 
+@deprecated
+///use interests view new ////
 class EditInterests extends StatefulWidget {
   @override
   _EditInterestsState createState() => _EditInterestsState();
 }
 
 class _EditInterestsState extends State<EditInterests> {
-
-  List<String> interests = FlavorConfig.values.timebankName == "Yang 2020" ? const [
-    'Block Walk',
-    'Crowd control',
-    'Cleaning campaign office',
-    'Make calls to voters',
-    'Send texts to voters',
-    "Host a meet and greet",
-    "Canvassing Neighborhoods",
-    "Phone Bank",
-  ] : [
-    'Branding',
-    'Campaigning',
-    'Kids',
-    'Animals',
-    'Music',
-    'Movies',
-    'Adventure',
-    'Culture',
-    'Food',
-  ];
+  List<String> interests = FlavorConfig.values.timebankName == "Yang 2020"
+      ? const [
+          'Block Walk',
+          'Crowd control',
+          'Cleaning campaign office',
+          'Make calls to voters',
+          'Send texts to voters',
+          "Host a meet and greet",
+          "Canvassing Neighborhoods",
+          "Phone Bank",
+        ]
+      : [
+          'Branding',
+          'Campaigning',
+          'Kids',
+          'Animals',
+          'Music',
+          'Movies',
+          'Adventure',
+          'Culture',
+          'Food',
+        ];
 
   List<MaterialColor> colorList;
   Set<String> selectedInterests = <String>[].toSet();
@@ -47,44 +52,65 @@ class _EditInterestsState extends State<EditInterests> {
     colorList.shuffle();
     getInterestsForTimebank(timebankId: FlavorConfig.values.timebankId)
         .then((onValue) {
-          print(onValue);
+      print(onValue);
       setState(() {
         if (onValue != null && onValue.isNotEmpty) {
           interests = onValue;
         } else {
           print(interests);
         }
-
       });
       this.selectedInterests = <String>[].toSet();
-      this.selectedInterests = SevaCore.of(context).loggedInUser.interests.toSet();
+      this.selectedInterests =
+          SevaCore.of(context).loggedInUser.interests.toSet();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Edit Interests',style: TextStyle(color: Colors.white),),
+      appBar: AppBar(
+        title: Text(
+          'Edit Interests',
+          style: TextStyle(fontSize: 18),
         ),
-        body: ListView(
-          children: <Widget>[ScrollExample(context), list()],
+      ),
+      body: ListView(
+        children: <Widget>[ScrollExample(context), list()],
+      ),
+      floatingActionButton: Container(
+        width: 150,
+        height: 39,
+        child: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          shape: StadiumBorder(),
+          onPressed: () {
+            SevaCore.of(context).loggedInUser.interests =
+                this.selectedInterests.toList();
+            this.updateUserData();
+          },
+          child: Text(
+            'Update Interests',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-        bottomNavigationBar: ButtonBar(
-          children: <Widget>[
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                SevaCore.of(context).loggedInUser.interests = this.selectedInterests.toList();
-                this.updateUserData();
-              },
-              child: Text(
-                'Update Interests',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
+      ),
+      // bottomNavigationBar: ButtonBar(
+      //   children: <Widget>[
+      //     RaisedButton(
+      //       color: Theme.of(context).primaryColor,
+      //       onPressed: () {
+      //         SevaCore.of(context).loggedInUser.interests =
+      //             this.selectedInterests.toList();
+      //         this.updateUserData();
+      //       },
+      //       child: Text(
+      //         'Update Interests',
+      //         style: TextStyle(color: Colors.white),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
@@ -119,8 +145,8 @@ class _EditInterestsState extends State<EditInterests> {
 
     return Container(
       child:
-      //Column(children: [
-      Padding(
+          //Column(children: [
+          Padding(
         padding: EdgeInsets.all(10.0),
         child: TypeAheadField<String>(
           getImmediateSuggestions: true,
@@ -131,7 +157,7 @@ class _EditInterestsState extends State<EditInterests> {
           suggestionsCallback: (String pattern) async {
             return interests
                 .where((item) =>
-                item.toLowerCase().startsWith(pattern.toLowerCase()))
+                    item.toLowerCase().startsWith(pattern.toLowerCase()))
                 .toList();
           },
           itemBuilder: (context, String suggestion) {
@@ -156,6 +182,7 @@ class _EditInterestsState extends State<EditInterests> {
     await fireStoreManager.updateUser(user: SevaCore.of(context).loggedInUser);
     Navigator.of(context).pop();
   }
+
   Widget chip(String value, bool selected, Color color) {
     return Container(
       margin: EdgeInsets.all(4),

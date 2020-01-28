@@ -1,11 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:http/http.dart' as http;
 
 import '../../flavor_config.dart';
 
@@ -101,9 +102,8 @@ Future<UserModel> getUserForId({@required String sevaUserId}) async {
       .getDocuments()
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-      //print('user data ${userModel}');
       userModel = UserModel.fromMap(documentSnapshot.data);
-      //print('logg user ${userModel.email}');
+      print('logg user${userModel.email}');
     });
   });
 
@@ -152,10 +152,10 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
     String timebankId, int index, String email) async {
   var storage = 'sevaexchange';
   var saveXLink = '';
-  if(FlavorConfig.values.timebankName == "Yang 2020"){
+  if (FlavorConfig.values.timebankName == "Yang 2020") {
     saveXLink = '';
     storage = 'sevaexchange';
-  }else{
+  } else {
     saveXLink = 'Sevax';
     storage = 'sevaxproject4sevax';
   }
@@ -179,15 +179,15 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
   return UserModelListMoreStatus();
 }
 
-
-Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
-    String timebankId, int index, String email) async {
+Future<UserModelListMoreStatus>
+    getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
+        String timebankId, int index, String email) async {
   var storage = 'sevaexchange';
   var saveXLink = '';
-  if(FlavorConfig.values.timebankName == "Yang 2020"){
+  if (FlavorConfig.values.timebankName == "Yang 2020") {
     saveXLink = '';
     storage = 'sevaexchange';
-  }else{
+  } else {
     saveXLink = 'Sevax';
     storage = 'sevaxproject4sevax';
   }
@@ -214,10 +214,10 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
     String timebankId, int index, String email) async {
   var storage = 'sevaexchange';
   var saveXLink = '';
-  if(FlavorConfig.values.timebankName == "Yang 2020"){
+  if (FlavorConfig.values.timebankName == "Yang 2020") {
     saveXLink = '';
     storage = 'sevaexchange';
-  }else{
+  } else {
     saveXLink = 'Sevax';
     storage = 'sevaxproject4sevax';
   }

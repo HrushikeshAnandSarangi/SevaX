@@ -1,6 +1,5 @@
 //import 'dart:ffi';
 
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,7 +70,6 @@ class NotificationsView extends State<NotificationViewHolder> {
             NotificationsModel notification = notifications.elementAt(index);
             print("----Notification widgets ${notification}");
 //            print("Notification data ${notification.type}");
-
 
             switch (notification.type) {
               case NotificationType.RequestAccept:
@@ -246,12 +244,12 @@ class NotificationsView extends State<NotificationViewHolder> {
                 //     'Acceptance Request ' + acceptedOffer.notificationContent);
                 break;
 
-
               case NotificationType.RequestInvite:
                 // TODO: Handle this case.
 
                 print("notification data ${notification.data}");
-                RequestInvitationModel requestInvitationModel = RequestInvitationModel.fromMap(notification.data);
+                RequestInvitationModel requestInvitationModel =
+                    RequestInvitationModel.fromMap(notification.data);
 
               return  getInvitedRequestsNotificationWidget(
                 requestInvitationModel,
@@ -739,7 +737,6 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 
-
   Widget getInvitedRequestsNotificationWidget(
       RequestInvitationModel requestInvitationModel,
       String notificationId,
@@ -763,8 +760,9 @@ class NotificationsView extends State<NotificationViewHolder> {
               title: Text("Join request"),
               leading: requestInvitationModel.timebankImage != null
                   ? CircleAvatar(
-                backgroundImage: NetworkImage(requestInvitationModel.timebankImage),
-              )
+                      backgroundImage:
+                          NetworkImage(requestInvitationModel.timebankImage),
+                    )
                   : Offstage(),
               subtitle: Text(
                   '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view join request'),

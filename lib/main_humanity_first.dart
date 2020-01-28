@@ -1,19 +1,10 @@
-import 'dart:collection';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/utils/members_of_timebank.dart';
-import 'package:sevaexchange/utils/search_timebank_manager_page.dart';
-import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
-import 'package:sevaexchange/views/admin_viewe_requests.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
-import 'package:sevaexchange/views/workshop/approvedUsers.dart';
-import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 
 void main() {
   FlavorConfig.appFlavor = Flavor.HUMANITY_FIRST;

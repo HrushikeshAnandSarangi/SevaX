@@ -7,30 +7,20 @@ import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
-import 'package:sevaexchange/views/register_location.dart';
-import 'package:sevaexchange/views/onboarding/skillsview.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
-import 'package:sevaexchange/views/home_dashboard.dart';
 
 import 'home_page_router.dart';
-import 'onboarding/skillsview.dart';
-import 'request_invite_user_card.dart';
+import 'onboarding/interests_view.dart';
+import 'onboarding/skills_view.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -95,6 +85,7 @@ class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
   bool mainForced = false;
+  final _firestore = Firestore();
 
   @override
   void didChangeDependencies() {
@@ -661,10 +652,24 @@ class _SplashViewState extends State<SplashView> {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
+          automaticallyImplyLeading: false,
+          userModel: loggedInUser,
           onSelectedSkills: (skills) {
             Navigator.pop(context);
             loggedInUser.skills = skills;
             updateUserData(loggedInUser);
+            // var batch = _firestore.batch();
+            // skills.forEach(
+            //   (id) => batch.updateData(
+            //     _firestore.collection('skills').document(id),
+            //     {
+            //       "users": FieldValue.arrayUnion(
+            //         [loggedInUser.sevaUserID],
+            //       ),
+            //     },
+            //   ),
+            // );
+            // batch.commit();
             loadingMessage = 'Updating skills';
           },
           onSkipped: () {
@@ -732,10 +737,24 @@ class _SplashViewState extends State<SplashView> {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
+          automaticallyImplyLeading: false,
+          userModel: loggedInUser,
           onSelectedInterests: (interests) {
             Navigator.pop(context);
             loggedInUser.interests = interests;
             updateUserData(loggedInUser);
+            //  var batch = _firestore.batch();
+            // interests.forEach(
+            //   (id) => batch.updateData(
+            //     _firestore.collection('interests').document(id),
+            //     {
+            //       "users": FieldValue.arrayUnion(
+            //         [loggedInUser.sevaUserID],
+            //       ),
+            //     },
+            //   ),
+            // );
+            // batch.commit();
             loadingMessage = 'Updating interests';
           },
           onSkipped: () {
@@ -776,7 +795,8 @@ class _SplashViewState extends State<SplashView> {
         builder: (context) => SevaCore(
           loggedInUser: loggedInUser,
           child: FindCommunitiesView(
-            keepOnBackPress: false,loggedInUser: loggedInUser,
+            keepOnBackPress: false,
+            loggedInUser: loggedInUser,
           ),
         ),
       ),
@@ -810,7 +830,6 @@ class _SplashViewState extends State<SplashView> {
       ),
     );
   }
-
 
   Future<void> _precacheImage() async {
     return await precacheImage(
