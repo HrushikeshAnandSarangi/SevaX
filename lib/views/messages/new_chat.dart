@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/views/messages/allmembers.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/views/messages/allmembers.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'chatview.dart';
 
 class NewChat extends StatefulWidget {
@@ -107,14 +107,17 @@ class _ResultViewState extends State<ResultView> {
 
   Widget build(BuildContext context) {
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    var blockedMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
-    var blockedByMembers = List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
+    var blockedMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
+    var blockedByMembers =
+        List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     if (widget.controller.text.trim().isEmpty) {
       return StreamBuilder<List<ChatModel>>(
         stream: getChatsforUser(
           email: SevaCore.of(context).loggedInUser.email,
           blockedBy: blockedByMembers,
-          blockedMembers: blockedMembers
+          blockedMembers: blockedMembers,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder:
             (BuildContext context, AsyncSnapshot<List<ChatModel>> snapshot) {

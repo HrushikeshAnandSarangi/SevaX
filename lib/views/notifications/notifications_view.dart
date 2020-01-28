@@ -764,14 +764,12 @@ class NotificationsView extends State<NotificationViewHolder> {
             ),
           ),
           onTap: () {
-          //   showDialog(
-          //       context: context,
-          //       builder: (context) {
-          //         return JoinRejectDialogView(
-          //           timeBankId: requestInvitationModel.requestId,
-          //           requestInvitationModel: requestInvitationModel,
-          //         );
-          //       });
+//            showDialog(context: context,
+//            builder: (context){
+//              return JoinRejectDialogView(
+//                timeBankId: requestInvitationModel.requestId, requestInvitationModel: requestInvitationModel,
+//              )
+//            });
           },
         ));
   }

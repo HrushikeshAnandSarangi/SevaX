@@ -1,31 +1,25 @@
 import 'dart:collection';
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/message_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/utils/members_of_timebank.dart';
-import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/members_of_timebank.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
-import 'package:intl/intl.dart';
-import 'package:sevaexchange/views/messages/new_chat.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
-import '../core.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
+import '../core.dart';
 import 'list_members_timebank.dart';
-import 'new_select_member.dart';
 
 class ChatListView extends StatefulWidget {
   const ChatListView({Key key}) : super(key: key);
@@ -49,7 +43,7 @@ class _ChatListViewState extends State<ChatListView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Conversations',
+          'Messages',
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: true,
@@ -59,6 +53,7 @@ class _ChatListViewState extends State<ChatListView> {
           email: SevaCore.of(context).loggedInUser.email,
           blockedBy: blockedByMembers,
           blockedMembers: blockedMembers,
+          communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (BuildContext context,
             AsyncSnapshot<List<ChatModel>> chatListSnapshot) {
@@ -70,8 +65,6 @@ class _ChatListViewState extends State<ChatListView> {
           if (chatListSnapshot.hasError) {
             return new Text('Error: ${chatListSnapshot.error}');
           }
-
-          print("data Updated <><><><><><><><<><><<><><><");
           // setState(() {
 
           // });
@@ -107,7 +100,7 @@ class _ChatListViewState extends State<ChatListView> {
           icon: Icon(
             Icons.chat,
           ),
-          label: Text('New Chat'),
+          label: Text('New Message'),
           foregroundColor: FlavorConfig.values.buttonTextColor,
           onPressed: () {
             if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
@@ -596,19 +589,18 @@ class _ChatListViewState extends State<ChatListView> {
                   )
                 });
                 chatModel.deletedBy[email] =
-                      DateTime.now().millisecondsSinceEpoch;
+                    DateTime.now().millisecondsSinceEpoch;
 
                 await Firestore.instance
-                      .collection("chatsnew")
-                      .document(messageId)
-                      .updateData({
-                    'deletedBy': chatModel.deletedBy,
-                  });
+                    .collection("chatsnew")
+                    .document(messageId)
+                    .updateData({
+                  'deletedBy': chatModel.deletedBy,
+                });
 
                 setState(() {
                   print("Update and remove the object from list");
                 });
-
               },
             ),
           ],
