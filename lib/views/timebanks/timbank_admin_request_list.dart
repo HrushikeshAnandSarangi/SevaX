@@ -936,7 +936,7 @@ class CustomRaisedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
+    var btn = RaisedButton(
       padding: EdgeInsets.all(0),
       color: (action == Actions.Approve || action == Actions.Promote)
           ? null
@@ -948,6 +948,11 @@ class CustomRaisedButton extends StatelessWidget {
       onPressed: () {
         debouncer.run(() => onTap());
       },
+    );
+    return Container(
+      width: 70,
+      height: 30,
+      child: btn,
     );
   }
 }
