@@ -1,9 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../core.dart';
 
@@ -11,21 +10,30 @@ class JoinRejectDialogView extends StatefulWidget {
 
   final RequestInvitationModel requestInvitationModel;
   final String timeBankId;
+  final String notificationId;
+  final UserModel userModel;
 
 
-  JoinRejectDialogView({this.requestInvitationModel, this.timeBankId});
+  JoinRejectDialogView({this.requestInvitationModel, this.timeBankId, this.notificationId, this.userModel});
 
   @override
-  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState();
+  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState(requestInvitationModel,timeBankId,notificationId,userModel);
 }
 
 class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
+  final RequestInvitationModel requestInvitationModel;
+  final String timeBankId;
+  final String notificationId;
+  final UserModel userModel;
+
+  _JoinRejectDialogViewState(this.requestInvitationModel, this.timeBankId, this.notificationId, this.userModel);
 
 
+  BuildContext progressContext;
 
   @override
   Widget build(BuildContext context) {
-    return /*AlertDialog(
+    return AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0))),
       content: Form(
@@ -38,7 +46,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(userModel.photoURL),
+                backgroundImage: NetworkImage(requestInvitationModel.timebankImage),
               ),
             ),
             Padding(
@@ -47,9 +55,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                userModel.fullname == null
-                    ? "Anonymous"
-                    : userModel.fullname,
+                requestInvitationModel.requestTitle
+                    ?? "Anonymous",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -59,33 +66,30 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                userModel.email == null
-                    ? "User email not updated"
-                    : userModel.email,
+                    requestInvitationModel.timebankName
+                    ?? "Timebank name not updated",
               ),
             ),
-            if (userModel.bio != null)
-              Padding(
-                padding: EdgeInsets.all(0.0),
-                child: Text(
-                  "About ${userModel.fullname}",
-                  style: TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.bold),
-                ),
-              ),
+//              Padding(
+//                padding: EdgeInsets.all(0.0),
+//                child: Text(
+//                  "About ${requestInvitationModel.}",
+//                  style: TextStyle(
+//                      fontSize: 13, fontWeight: FontWeight.bold),
+//                ),
+//              ),
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                userModel.bio == null
-                    ? "Bio not yet updated"
-                    : userModel.bio,
+                requestInvitationModel.requestDesc
+                    ?? "Description not yet updated",
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             Center(
               child: Text(
-                  "By approving, ${userModel.fullname} will be added to the event.",
+                  "By approving, ${requestInvitationModel.requestTitle} will be added to the tasks.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -104,13 +108,20 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   ),
                   onPressed: () async {
                     // request declined
+                 //   showProgressDialog(context, 'Rejecting Invitation');
 
-                    declineRequestedMember(
-                        model: requestModel,
-                        notificationId: notificationId,
-                        user: userModel);
+                    declineInvitationbRequest(
+                        model: requestInvitationModel,
+                        notificationId: widget.notificationId,
+                        userModel: userModel
+                        );
 
-                    Navigator.pop(viewContext);
+
+                    if(progressContext != null){
+                      Navigator.pop(progressContext);
+                    }
+                    Navigator.of(context).pop();
+
                   },
                 ),
                 Padding(
@@ -122,12 +133,22 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                     style: TextStyle(color: Colors.green),
                   ),
                   onPressed: () async {
-                    // Once approved
-                    approveMemberForVolunteerRequest(
-                        model: requestModel,
-                        notificationId: notificationId,
+                     //Once approved
+
+                   // showProgressDialog(context, 'Accepting Invitation');
+                    approveInvitationForVolunteerRequest(
+                      model: requestInvitationModel,
+                        notificationId: widget.notificationId,
                         user: userModel);
-                    Navigator.pop(viewContext);
+
+
+
+                    if(progressContext != null){
+                      Navigator.pop(progressContext);
+                    }
+
+
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
@@ -137,45 +158,50 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       ),
     );
   }
-
-  void declineRequestedMember({
+  void showProgressDialog(BuildContext context, String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          progressContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+  void declineInvitationbRequest({
     RequestInvitationModel model,
-    UserModel user,
     String notificationId,
+    UserModel userModel,
   }) {
-    List<String> acceptedUsers = model.acceptors;
-    Set<String> usersSet = acceptedUsers.toSet();
-
-    usersSet.remove(user.email);
-    model.acceptors = usersSet.toList();
-
-    rejectAcceptRequest(
-      requestModel: model,
-      rejectedUserId: user.sevaUserID,
+  print('decline data ${
+    model.toString() + notificationId + userModel.toString()
+  }');
+    rejectInviteRequest(
+      requestId: model.requestId,
+      rejectedUserId: userModel.sevaUserID,
       notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
+
+    FirestoreManager.readNotification(notificationId, userModel.email);
+
   }
 
-  void approveMemberForVolunteerRequest({
+  void approveInvitationForVolunteerRequest({
     RequestInvitationModel model,
-    UserModel user,
     String notificationId,
+    UserModel user,
   }) {
-    List<String> approvedUsers = model.approvedUsers;
-    Set<String> usersSet = approvedUsers.toSet();
 
-    usersSet.add(user.email);
-    model.approvedUsers = usersSet.toList();
-
-    if (model.numberOfApprovals <= model.approvedUsers.length)
-      model.accepted = true;
-    approveAcceptRequest(
-      requestModel: model,
-      approvedUserId: user.sevaUserID,
+    acceptInviteRequest(
+      requestId: model.requestId,
+      acceptedUserId: user.sevaUserID,
       notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
+
+    FirestoreManager.readNotification(notificationId, user.email);
+
   }
 
   Widget _getCloseButton(BuildContext context) {
@@ -204,5 +230,5 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
         ),
       ),
     );
-  }*/
+  }
 }

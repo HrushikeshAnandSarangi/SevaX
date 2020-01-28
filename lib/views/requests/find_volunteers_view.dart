@@ -193,7 +193,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
 //            }
            UserModel user = userList.elementAt(index);
 
-            return RequestCardWidget(userModel: user,requestModel: widget.requestModel,timebankModel: widget.timebankModel,);
+            return RequestCardWidget(userModel: user,requestModel: widget.requestModel, timebankModel: widget.timebankModel,);
           },
         );
       },

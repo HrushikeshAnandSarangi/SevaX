@@ -257,6 +257,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                 requestInvitationModel,
                 notification.id,
                 context,
+                notification.timebankId,
+                notification.communityId,
 
               );
                 break;
@@ -741,14 +743,16 @@ class NotificationsView extends State<NotificationViewHolder> {
   Widget getInvitedRequestsNotificationWidget(
       RequestInvitationModel requestInvitationModel,
       String notificationId,
-      BuildContext context) {
+      BuildContext buildContext,
+      String timebankId,
+      String communityId) {
     // assert(user != null);
 
     return Dismissible(
         background: dismissibleBackground,
         key: Key(Utils.getUuid()),
         onDismissed: (direction) {
-          String userEmail = SevaCore.of(context).loggedInUser.email;
+          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
           FirestoreManager.readNotification(notificationId, userEmail);
         },
         child: GestureDetector(
@@ -763,15 +767,15 @@ class NotificationsView extends State<NotificationViewHolder> {
               )
                   : Offstage(),
               subtitle: Text(
-                  '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view all join request'),
+                  '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
             ),
           ),
           onTap: () {
-            showDialog(context: context,
+            showDialog(context: buildContext,
             builder: (context){
               return JoinRejectDialogView(
-                timeBankId: requestInvitationModel.requestId, requestInvitationModel: requestInvitationModel,
-              )
+                requestInvitationModel: requestInvitationModel,timeBankId: timebankId, notificationId: notificationId, userModel: SevaCore.of(buildContext).loggedInUser,
+              );
             });
           },
         ));
@@ -2241,13 +2245,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 //}
 
 
-// class AceeptorItem {
-//   final String sevaUserID;
-//   final bool approved;
 
-//   AceeptorItem({this.sevaUserID, this.approved})
-  
-// }
 
 
 // class GetList {
@@ -2255,29 +2253,6 @@ class NotificationsView extends State<NotificationViewHolder> {
 
 
 
-// void build(BuildContext context ){
-
-//   var acceptors = [];
-//   var approvedMembers = [];
-
-//   HashMap<String, AceeptorItem> consildatedList = HashMap();
-
-//   acceptors.map((f){
-//     consildatedList[f] = AceeptorItem(approved: false, sevaUserID: f);
-//   });
-
-
-// approvedMembers.map((f){
-//     consildatedList[f] = AceeptorItem(approved: true, sevaUserID: f);
-//   });
-  
-
-
-//   Requedtmodel midel=consildatedList[imdex].approved
-
-
-
-// }
 
 
 

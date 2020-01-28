@@ -14,6 +14,8 @@ class UserModel extends DataModel {
   String calendar;
   List<String> membershipTimebanks;
   List<String> membershipCampaigns;
+  List<String> favoriteByTimebank;
+  List<String> favoriteByMember;
   String photoURL;
   String sevaUserID;
 
@@ -53,6 +55,8 @@ class UserModel extends DataModel {
       this.interests,
       this.membershipCampaigns,
       this.membershipTimebanks,
+      this.favoriteByMember,
+      this.favoriteByTimebank,
       this.sevaUserID,
       this.skills,
       this.currentBalance,
@@ -163,6 +167,14 @@ class UserModel extends DataModel {
       List<String> skillsList = List.castFrom(map['skills']);
       this.skills = skillsList;
     }
+    if (map.containsKey('favoriteByMember')) {
+      List<String> favoriteByMemberList = List.castFrom(map['favoriteByMember']);
+      this.favoriteByMember = favoriteByMemberList;
+    }
+    if (map.containsKey('favoriteByTimeBank')) {
+      List<String> favoriteByTimeBankList = List.castFrom(map['favoriteByTimeBank']);
+      this.favoriteByTimebank = favoriteByTimeBankList;
+    }
     if (map.containsKey('currentBalance')) {
       this.currentBalance = map['currentBalance'];
     } else {
@@ -243,6 +255,12 @@ class UserModel extends DataModel {
     if (this.communities != null && this.communities.isNotEmpty) {
       object['communities'] = this.communities;
     }
+    if (this.favoriteByTimebank != null && this.favoriteByTimebank.isNotEmpty) {
+      object['favoriteByTimebank'] = this.favoriteByTimebank;
+    }
+    if (this.favoriteByMember != null && this.favoriteByMember.isNotEmpty) {
+      object['favoriteByMember'] = this.favoriteByMember;
+    }
     if (this.currentCommunity != null) {
       object['currentCommunity'] = this.currentCommunity;
     }
@@ -281,6 +299,8 @@ class UserModel extends DataModel {
       ${this.interests.toString()},
       ${this.membershipCampaigns.toString()},
       ${this.membershipTimebanks.toString()},
+      ${this.favoriteByMember.toString()},
+      ${this.favoriteByTimebank.toString()},
       ${this.sevaUserID.toString()},
       ${this.skills.toString()},
       ${this.currentBalance.toString()},
