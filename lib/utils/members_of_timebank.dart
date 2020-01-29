@@ -1,24 +1,18 @@
 import 'dart:collection';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/messages/chatview.dart';
-import 'package:sevaexchange/views/profile/profile.dart';
-import 'package:sevaexchange/views/search_view.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:shimmer/shimmer.dart';
 
-import 'dart:ui';
-
-import '../flavor_config.dart';
-import 'search_timebank_manager_page.dart';
 import 'data_managers/chat_data_manager.dart';
+import 'search_timebank_manager_page.dart';
 
 // class SevaCore extends InheritedWidget {
 //   UserModel loggedInUser;
@@ -350,7 +344,10 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               ];
               print("Listing users");
               users.sort();
+
               ChatModel model = ChatModel();
+              model.communityId =
+                  SevaCore.of(context).loggedInUser.currentCommunity;
               model.user1 = users[0];
               model.user2 = users[1];
               print("Model1" + model.user1);

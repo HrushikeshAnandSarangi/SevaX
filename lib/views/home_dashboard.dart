@@ -24,7 +24,61 @@ class HomeDashBoard extends StatelessWidget {
       // theme: ThemeData(
       //   primaryColor: Colors.white,
       // ),
-      body: MyHomePage(),
+      // body: MyHomePage(),
+      body: DashboardTabsViewHolder(),
+    );
+  }
+}
+
+class DashboardTabsViewHolder extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body:
+
+          // StreamBuilder(
+          //   stream: getTimebankDetails(),
+          //   builder: (context,  snapshot){
+
+          //   }
+          // );
+
+          DefaultTabController(
+        length: 6,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            bottom: TabBar(
+              indicatorColor: Colors.black,
+              labelColor: Colors.black,
+              isScrollable: true,
+              tabs: [
+                Tab(text: "Alaska Timebank"),
+                Tab(text: "Feeds"),
+                Tab(text: "Requests"),
+                Tab(text: "Offers"),
+                Tab(text: "About"),
+                Tab(text: "Members"),
+              ],
+            ),
+            centerTitle: true,
+            title: Text(
+              'Alaska Timebank',
+              style: TextStyle(color: Colors.black, fontSize: 18),
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              MyHomePage(),
+              Icon(Icons.directions_transit),
+              Icon(Icons.directions_bike),
+              Icon(Icons.directions_car),
+              Icon(Icons.directions_transit),
+              Icon(Icons.directions_bike),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -84,7 +138,8 @@ class _MyHomePageState extends State<MyHomePage>
                           alignment: Alignment.center,
                           onPressed: () {
                             createEditCommunityBloc.updateUserDetails(
-                                SevaCore.of(context).loggedInUser);
+                              SevaCore.of(context).loggedInUser,
+                            );
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -128,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage>
                       padding:
                           const EdgeInsets.only(left: 20, bottom: 10, top: 10),
                       child: Text(
-                        'Your Calender',
+                        'Your Calendar',
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           color: Colors.black,
@@ -163,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ),
               content: Container(
-                height: size.height - 180,
+                height: size.height - 250,
                 // height: size.height - 10,
                 child: MyTaskPage(controller),
               ),
@@ -239,28 +294,43 @@ class _MyHomePageState extends State<MyHomePage>
             return Center(child: CircularProgressIndicator());
           }
           timebankList = snapshot.data;
+
+          // var primaryTImebankId = SevaCore.of(context).loggedInUser.primaryTimebankId;
+          var primaryTImebankId = "2117e3d6-9a05-47b6-8a01-deba98f2cbc3";
+
           timebankList.forEach((t) {
             dropdownList.add(t.id);
           });
 
-          // Navigator.pop(context);
-          print("Length ${dropdownList.length}");
-
-          return FadeAnimation(
+          //the only group is the primary group
+          if (timebankList.length == 1) {
+            return FadeAnimation(
               1.4,
               Container(
-                height: size.height * 0.25,
-                child: ListView.builder(
-                  itemCount: timebankList.length,
-                  itemBuilder: (context, index) {
-                    TimebankModel timebank = timebankList.elementAt(index);
+                  height: size.height * 0.25,
+                  child: Center(
+                    child: Text('No groups place holder'),
+                  )),
+            );
+          }
+
+          return FadeAnimation(
+            1.4,
+            Container(
+              height: size.height * 0.25,
+              child: ListView.builder(
+                itemCount: timebankList.length,
+                itemBuilder: (context, index) {
+                  TimebankModel timebank = timebankList.elementAt(index);
+                  if (timebank.id != primaryTImebankId)
                     return makeItem(timebank);
-                  },
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(left: 12),
-                  scrollDirection: Axis.horizontal,
-                ),
-              ));
+                },
+                shrinkWrap: true,
+                padding: EdgeInsets.only(left: 12),
+                scrollDirection: Axis.horizontal,
+              ),
+            ),
+          );
         });
   }
 }

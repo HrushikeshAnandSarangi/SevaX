@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/flavor_config.dart';
-
 import 'package:sevaexchange/new_baseline/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/message_model.dart';
 

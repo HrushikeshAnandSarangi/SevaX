@@ -264,7 +264,6 @@ class CustomBottomNavigationItem extends StatelessWidget {
             // print(
             // "Refreshed Chat Model list ${chatListSnapshot.data}");
             List<ChatModel> allChalModelList = chatListSnapshot.data;
-
             List<ChatModel> chatModelList = allChalModelList;
 
             var userEmail = SevaCore.of(context).loggedInUser.email;
