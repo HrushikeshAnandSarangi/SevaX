@@ -54,6 +54,7 @@ class _ProfilePageState extends State<ProfilePage>
   bool isAdminOrCoordinator = false;
   bool isVerifyAccountPressed = false;
   bool isUserLoaded = false;
+  bool isCommunityLoaded = false;
   int selected = 0;
 
   UserProfileBloc _profileBloc = UserProfileBloc();
@@ -105,22 +106,11 @@ class _ProfilePageState extends State<ProfilePage>
       _profileBloc.getAllCommunities(context, userModel);
       this.user = userModel;
       setState(() {});
-      // communities = [];
-      // if (user.communities != null) {
-      //   userModel.communities.forEach((id) {
-      //     Firestore.instance
-      //         .collection("communities")
-      //         .document(id)
-      //         .get()
-      //         .then((value) {
-      //       print("-->>  ${value.data}");
-      //       communities.add(CommunityModel(value.data));
-      //     });
-      // });
-      //   } else {
-      //     setState(() {});
-      //   }
-      // });
+    });
+
+    _profileBloc.communityLoaded.listen((value) {
+      isCommunityLoaded = value;
+      setState(() {});
     });
   }
 
@@ -147,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isUserLoaded
+      body: isUserLoaded && isCommunityLoaded
           ? SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -322,11 +312,11 @@ class _ProfilePageState extends State<ProfilePage>
                                   padding: const EdgeInsets.all(12.0),
                                   child: Text(snapshot.error),
                                 ));
-
-                              return Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
+                              return Container(
+                                height: 100,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                               );
                             },
                           ),
@@ -412,7 +402,14 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             )
           : Center(
-              child: CircularProgressIndicator(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(),
+                  SizedBox(height: 5),
+                  Text('Loading ...'),
+                ],
+              ),
             ),
     );
   }

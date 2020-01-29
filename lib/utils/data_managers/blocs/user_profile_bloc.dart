@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/subjects.dart';
@@ -9,8 +11,12 @@ import 'package:sevaexchange/views/profile/profile.dart';
 
 class UserProfileBloc {
   final _communities = BehaviorSubject<List<Widget>>();
+  final _communityLoaded = BehaviorSubject<bool>.seeded(false);
 
   Stream<List<Widget>> get communities => _communities.stream;
+  Stream<bool> get communityLoaded => _communityLoaded.stream;
+
+  StreamSink<bool> get changeCommunity => _communityLoaded.sink;
 
   void getAllCommunities(context, UserModel userModel) async {
     FirestoreManager.getUserForIdStream(
@@ -23,7 +29,7 @@ class UserProfileBloc {
               .collection("communities")
               .document(id)
               .get();
-          print('${value.documentID}   ${userModel.currentCommunity}');
+          print('--->${value.documentID}   ${userModel.currentCommunity}');
           community.add(
             CommunityCard(
               selected: userModel.currentCommunity == value.documentID,
@@ -37,11 +43,16 @@ class UserProfileBloc {
       } else {
         _communities.addError('No Communities');
       }
+      Future.delayed(
+        Duration(milliseconds: 300),
+        () => _communityLoaded.add(true),
+      );
     });
   }
 
   void setDefaultCommunity(
       String email, String communityId, BuildContext context) {
+    _communityLoaded.add(false);
     Firestore.instance
         .collection('users')
         .document(email)
@@ -55,5 +66,6 @@ class UserProfileBloc {
 
   void dispose() {
     _communities.close();
+    _communityLoaded.close();
   }
 }
