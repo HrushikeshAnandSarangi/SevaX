@@ -56,6 +56,9 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
     if(widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)){
       isAdmin =true;
     }
+
+    isBookMarked =widget.isFavorite;
+
     return makeUserWidget(context);
   }
 
@@ -162,12 +165,13 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                     onTap: () {
 
                       if(isBookMarked){
-                        addToFavoriteList(context,userModel,widget.timebankModel);
+                        removeFromFavoriteList(context, userModel, widget.timebankModel);
 
                       }else{
-                        removeFromFavoriteList(context, userModel, widget.timebankModel);
+                        addToFavoriteList(context,userModel,widget.timebankModel);
+
                       }
-                      isBookMarked=!isBookMarked;
+                      isBookMarked =!isBookMarked;
                       setState(() {
 
 
@@ -175,7 +179,7 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                     },
                     child: Row(
                       children: <Widget>[
-                        widget.isFavorite ?
+                        isBookMarked ?
 
                         Icon(
                           Icons.bookmark, color: Colors.redAccent,
