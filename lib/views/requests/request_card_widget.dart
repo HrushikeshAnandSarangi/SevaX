@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
@@ -9,8 +10,8 @@ class RequestCardWidget extends StatefulWidget {
 
   final UserModel userModel;
   final RequestModel requestModel;
-
-  RequestCardWidget({@required this.userModel, @required this.requestModel});
+  final bool cameFromInvitedUsersPage;
+  RequestCardWidget({@required this.userModel, @required this.requestModel, this.cameFromInvitedUsersPage});
 
   @override
   _RequestCardWidgetState createState() => _RequestCardWidgetState();
@@ -20,6 +21,7 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
 
   bool isBookMarked = false;
   var validItems;
+  bool shouldInvite = true;
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +60,14 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   }
 
   Widget getUserCard({BuildContext context}) {
-    bool shouldInvite = true;
-    if(widget.requestModel.invitedUsers.contains(widget.userModel.sevaUserID) ||
-        widget.requestModel.acceptors.contains(widget.userModel.sevaUserID) ||
-        widget.requestModel.approvedUsers.contains(widget.userModel.sevaUserID)){
-
-
+    if (!widget.cameFromInvitedUsersPage) {
+      if(widget.requestModel.invitedUsers.contains(widget.userModel.sevaUserID) ||
+          widget.requestModel.acceptors.contains(widget.userModel.sevaUserID) ||
+          widget.requestModel.approvedUsers.contains(widget.userModel.sevaUserID)){
+      
+        shouldInvite = false;
+      }
+    }else if(widget.cameFromInvitedUsersPage){
       shouldInvite = false;
     }
 
@@ -172,8 +176,19 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                       color: Colors.indigo,
                       textColor: Colors.white,
                       elevation: 5,
-                      onPressed: !shouldInvite ? null : () {},
-                      child: Text(
+                      onPressed: !shouldInvite ? null : () async {
+                       await timeBankBloc.updateInvitedUsersForRequest(widget.requestModel.id, widget.userModel.sevaUserID);
+                       setState(() {
+                         print("inside setstate");
+                         shouldInvite = false;
+                       });
+                       print("inside onpressed");
+                      },
+                      child: !shouldInvite ? Text(
+                          'Invited',
+                          style: TextStyle(fontSize: 14)
+                      )
+                     : Text(
                           'Invite',
                           style: TextStyle(fontSize: 14)
                       )

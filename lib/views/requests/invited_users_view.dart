@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -29,18 +30,18 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    timeBankBloc.setInvitedUsersData(widget.requestModel.id);
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return  StreamBuilder<List<UserModel>>(
-      stream: SearchManager.searchForUserWithTimebankId(
-          queryString: "", validItems: validItems),
-      builder: (context, snapshot) {
-        print('$snapshot');
+    return  StreamBuilder<TimebankController>(
+//      stream: SearchManager.searchForUserWithTimebankId( // TODO : replace function here
+//          queryString: "", validItems: validItems),
+      stream: timeBankBloc.timebankController,
+      builder: (context, AsyncSnapshot<TimebankController> snapshot) {
 
-        //print('find ${snapshot.data}');
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
         }
@@ -53,31 +54,34 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
             ),
           );
         }
-        List<UserModel> userList = snapshot.data;
+        List<UserModel> userList = snapshot.data.invitedUsersForRequest;
         if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
         }
-        return ListView.builder(
-          itemCount: userList.length,
-
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return Container(
-                padding: EdgeInsets.only(left: 8, top: 16),
-                child: Text('Users', style: sectionTextStyle),
-              );
-            }
-            UserModel user = userList.elementAt(index);
-            if(widget.requestModel.invitedUsers.contains(user.sevaUserID) ||
-                widget.requestModel.acceptors.contains(user.sevaUserID) ||
-                widget.requestModel.approvedUsers.contains(user.sevaUserID)){
-              return RequestCardWidget(userModel: user,);
-            }
-            return Container();
-            //UserModel user;
-
-          },
+        return ListView(
+          children: <Widget>[
+            Text('Users'),
+//            ...userList.map((data)=>RequestCardWidget(userModel: data,requestModel: widget.requestModel,cameFromInvitedUsersPage: true,)).toList()
+            ...userList.map((data)=>RequestCardWidget(userModel: data,requestModel: widget.requestModel,cameFromInvitedUsersPage: true,))
+          ],
         );
+//        return ListView.builder(
+//          itemCount: userList.length,
+//
+//          itemBuilder: (context, index) {
+//            if (index == 0) {
+//              Container(
+//                padding: EdgeInsets.only(left: 8, top: 16),
+//                child: Text('Users', style: sectionTextStyle),
+//              );
+//            }
+//            UserModel user = userList.elementAt(index);
+//
+//              return RequestCardWidget(userModel: user,requestModel: widget.requestModel, cameFromInvitedUsersPage: true,);
+//
+//
+//          },
+//        );
       },
     );
   }

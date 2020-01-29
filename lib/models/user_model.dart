@@ -16,7 +16,7 @@ class UserModel extends DataModel {
   List<String> membershipCampaigns;
   String photoURL;
   String sevaUserID;
-
+  List<String> invitedRequests;
   num currentBalance;
   String timezone;
   String otp;
@@ -141,6 +141,10 @@ class UserModel extends DataModel {
     if (map.containsKey('interests')) {
       List<String> interestsList = List.castFrom(map['interests']);
       this.interests = interestsList;
+    }
+    if (map.containsKey('invitedRequests')) {
+      List<String> invitedRequests = List.castFrom(map['invitedRequests']);
+      this.invitedRequests = invitedRequests;
     }
     if (map.containsKey('calendar')) {
       this.calendar = map['calendar'];

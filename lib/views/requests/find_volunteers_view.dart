@@ -144,16 +144,13 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         ),
       );
     } else if (widget.controller.text.trim().length < 3) {
-      print('Search requires minimum 3 characters');
       return getEmptyWidget('Users', 'Search requires minimum 3 characters');
     }
     return StreamBuilder<List<UserModel>>(
       stream: SearchManager.searchForUserWithTimebankId(
           queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
-        print("users snapshot is --- "+'$snapshot');
 
-        //print('find ${snapshot.data}');
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
         }
@@ -183,7 +180,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
 //            }
            UserModel user = userList.elementAt(index);
 
-            return RequestCardWidget(userModel: user,requestModel: widget.requestModel,);
+            return RequestCardWidget(userModel: user,requestModel: widget.requestModel, cameFromInvitedUsersPage: false,);
           },
         );
       },

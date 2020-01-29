@@ -24,8 +24,7 @@ class CommunityFindBloc {
     CommunityListModel communityListModel = CommunityListModel();
     communityListModel.loading = true;
     _communitiesFetcher.sink.add(communityListModel);
-    communityListModel =
-        await _repository.searchCommunityByName(name, communityListModel);
+    communityListModel = await _repository.searchCommunityByName(name, communityListModel);
     communityListModel.loading = false;
     print(communityListModel.communities.length);
     _communitiesFetcher.sink.add(communityListModel);
@@ -122,6 +121,80 @@ class UserBloc {
     _userController.add(userc);
   }
 }
+//
+//class RequestModelController extends RequestModel {
+//  List<UserModel> invitedusersdata = [];
+//  RequestModelController() : super();
+//
+//  setInvitedUsersData(data) {
+//    this.invitedusersdata = data;
+//    // add the data to the invited users;
+//
+//  }
+//}
+
+class TimebankController {
+  TimebankModel selectedtimebank;
+  List<RequestModel> requests = [];
+  RequestModel selectedrequest;
+  List<UserModel> invitedUsersForRequest = [];
+
+  TimebankController() {}
+
+  setRequestList(requests) {
+    this.requests = requests;
+  }
+  setSelectedRequest(RequestModel request) {
+    this.selectedrequest = request;
+  }
+  setSelectedTimebank(timebank) {
+    this.selectedtimebank = timebank;
+  }
+  setInvitedUsersDataForRequest(usersListData) {
+    this.invitedUsersForRequest = usersListData;
+  }
+}
+class TimeBankBloc {
+  final _repository = Repository();
+  final _timebankController = BehaviorSubject<TimebankController>();
+  Observable<TimebankController> get timebankController =>
+      _timebankController.stream;
+
+  TimeBankBloc() {
+    _timebankController.add(TimebankController());
+  }
+
+  updateInvitedUsersForRequest(requestID, sevauserid) async {
+    var result = await _repository.updateInvitedUsersForRequest(requestID, sevauserid);
+    print(result);
+  }
+
+  getSelectedRequestInvitedUsersData(usersids) async {
+    // TODO - get users from request
+      var usersdata = await _repository.getUsersFromRequest(usersids);
+//      _timebankController.value.selectedrequest.setInvitedUsersData(usersdata);
+      _timebankController.add(_timebankController.value);
+  }
+
+  getRequestsFromTimebankId(String timebankId) async {
+    var requests = await _repository.getRequestsFromTimebankId(timebankId);
+    _timebankController.value.setRequestList(requests);
+    _timebankController.add(_timebankController.value);
+  }
+  setSelectedRequest(request) {
+    _timebankController.value.setSelectedRequest(request);
+    _timebankController.add(_timebankController.value);
+  }
+  setSelectedTimeBankDetails(timebank) {
+    _timebankController.value.setSelectedTimebank(timebank);
+    _timebankController.add(_timebankController.value);
+  }
+  setInvitedUsersData(requestID) async {
+    var usersResults = await _repository.getUsersFromRequest(requestID);
+    _timebankController.value.setInvitedUsersDataForRequest(usersResults);
+    _timebankController.add(_timebankController.value);
+  }
+}
 
 class CommunityCreateEditBloc {
   final _repository = Repository();
@@ -186,9 +259,11 @@ class CommunityCreateEditBloc {
   updateUser(timebank) async {
     var tm = TimebankModel(timebank);
     var communitytemp =
-        await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
+    await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
+
     await _repository.updateCommunityWithUserId(communitytemp.id,
         this._createEditCommunity.value.loggedinuser.sevaUserID);
+
     await _repository.updateUserWithTimeBankIdCommunityId(
         this._createEditCommunity.value.loggedinuser, tm.id, communitytemp.id);
   }
@@ -249,6 +324,7 @@ class CommunityCreateEditBloc {
   }
 }
 
+final timeBankBloc = TimeBankBloc();
 final createEditCommunityBloc = CommunityCreateEditBloc();
 final communityBloc = CommunityFindBloc();
 final userBloc = UserBloc();
