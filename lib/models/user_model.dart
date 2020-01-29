@@ -79,6 +79,7 @@ class UserModel extends DataModel {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
 
+
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
@@ -170,11 +171,13 @@ class UserModel extends DataModel {
       this.skills = skillsList;
     }
     if (map.containsKey('favoriteByMember')) {
-      List<String> favoriteByMemberList = List.castFrom(map['favoriteByMember']);
+      List<String> favoriteByMemberList =
+          List.castFrom(map['favoriteByMember']);
       this.favoriteByMember = favoriteByMemberList;
     }
     if (map.containsKey('favoriteByTimeBank')) {
-      List<String> favoriteByTimeBankList = List.castFrom(map['favoriteByTimeBank']);
+      List<String> favoriteByTimeBankList =
+          List.castFrom(map['favoriteByTimeBank']);
       this.favoriteByTimebank = favoriteByTimeBankList;
     }
     if (map.containsKey('currentBalance')) {

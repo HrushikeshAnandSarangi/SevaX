@@ -1,8 +1,10 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
@@ -11,8 +13,9 @@ class InvitedUsersView extends StatefulWidget{
 
   final String timebankId;
   final RequestModel requestModel;
+  final String sevaUserId;
 
-  InvitedUsersView({@required this.timebankId, this.requestModel});
+  InvitedUsersView({@required this.timebankId, this.requestModel, this.sevaUserId});
 
   @override
   _InvitedUsersViewState createState() {
@@ -25,10 +28,65 @@ class InvitedUsersView extends StatefulWidget{
 class _InvitedUsersViewState extends State<InvitedUsersView> {
   bool isBookMarked = false;
   var validItems;
+  bool isAdmin =false;
+  final _firestore = Firestore.instance;
+  List<UserModel> users = [];
+
+  TimeBankModelSingleton timebank = TimeBankModelSingleton();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    if(timebank.model.admins.contains(widget.sevaUserId)){
+      isAdmin =true;
+    }
+
+    if(isAdmin){
+      //   print('admin is true ');
+      _firestore
+          .collection("users")
+          .where(
+        'favoriteByTimebank',
+        arrayContains: timebank.model.id,
+      )
+          .getDocuments()
+          .then(
+            (QuerySnapshot querysnapshot) {
+          querysnapshot.documents.forEach(
+                (DocumentSnapshot user) => users.add(
+              UserModel.fromMap(
+                user.data,
+              ),
+            ),
+          );
+          setState(() {});
+        },
+      );
+    }else{
+      //    print('admin is false ');
+      _firestore
+          .collection("users")
+
+          .where(
+        'favoriteByMember',
+        arrayContains: widget.sevaUserId,
+      )
+          .getDocuments()
+          .then(
+            (QuerySnapshot querysnapshot) {
+          querysnapshot.documents.forEach(
+                (DocumentSnapshot user) => users.add(
+              UserModel.fromMap(
+                user.data,
+              ),
+            ),
+          );
+          setState(() {});
+        },
+      );
+
+    }
   }
 
   @override

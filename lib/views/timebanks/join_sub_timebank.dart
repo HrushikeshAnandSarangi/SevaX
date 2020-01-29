@@ -346,10 +346,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   CompareToTimeBank compareTimeBanks(
       List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
+
     // CompareToTimeBank status;
-    print("inside compareTimeBanks" + joinRequestModels.length.toString());
+   // print("inside compareTimeBanks" + joinRequestModels.length.toString());
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
+      print("inside compareTimeBanks " + requestModel.userId);
 
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {

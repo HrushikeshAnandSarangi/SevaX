@@ -47,7 +47,7 @@ class RequestModel extends DataModel {
     this.rejectedReason,
     this.timebankId,
     this.approvedUsers = const [],
-    this.invitedUsers = const [],
+    this.invitedUsers,
     this.numberOfApprovals = 1,
     this.location,
     this.root_timebank_id,

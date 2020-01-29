@@ -1,14 +1,14 @@
-
-
 import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -21,9 +21,10 @@ import '../search_view.dart';
 class FindVolunteersView extends StatefulWidget{
   final String timebankId;
   final RequestModel requestModel;
+  final String sevaUserId;
 
 
-  FindVolunteersView({this.timebankId,this.requestModel});
+  FindVolunteersView({this.timebankId,this.requestModel, this.sevaUserId});
 
   @override
   _FindVolunteersViewState createState() => _FindVolunteersViewState();
@@ -33,28 +34,87 @@ class FindVolunteersView extends StatefulWidget{
 class _FindVolunteersViewState extends State<FindVolunteersView>{
   final TextEditingController searchTextController =
   new TextEditingController();
+  final _firestore = Firestore.instance;
+  bool isAdmin =false;
+
+
+  TimeBankModelSingleton timebankModel = TimeBankModelSingleton();
 
   final searchOnChange = new BehaviorSubject<String>();
   var validItems = List<String>();
+  List<UserModel> users = [];
 
-  TimebankModel timebankModel;
+
+
   @override
   void initState() {
     super.initState();
+
+
     FirestoreManager.getAllTimebankIdStream(
       timebankId: widget.timebankId,
     ).then((onValue) {
       setState(() {
         validItems = onValue;
+
       });
     });
 
-    FirestoreManager.getTimeBankForId(
-      timebankId: widget.timebankId
-    ).then((onValue){
-      timebankModel=onValue;
-    });
 
+    if(timebankModel.model.admins.contains(widget.sevaUserId)){
+      isAdmin =true;
+
+    }
+
+    if(isAdmin){
+      //   print('admin is true ');
+      _firestore
+          .collection("users")
+          .where(
+        'favoriteByTimebank',
+        arrayContains: widget.timebankId,
+      )
+          .getDocuments()
+          .then(
+            (QuerySnapshot querysnapshot) {
+          querysnapshot.documents.forEach(
+                (DocumentSnapshot user) => users.add(
+              UserModel.fromMap(
+                user.data,
+              ),
+            ),
+          );
+
+
+         // setState(() {});
+        },
+      );
+    }else{
+      //    print('admin is false ');
+      _firestore
+          .collection("users")
+
+          .where(
+        'favoriteByMember',
+        arrayContains: widget.sevaUserId,
+      )
+          .getDocuments()
+          .then(
+            (QuerySnapshot querysnapshot) {
+          querysnapshot.documents.forEach(
+                (DocumentSnapshot user) => users.add(
+              UserModel.fromMap(
+                user.data,
+              ),
+            ),
+          );
+
+
+         // setState(() {});
+        },
+      );
+
+    }
 
   }
   void _search(String queryString) {
@@ -105,7 +165,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView>{
               ),
             ),
             Expanded(
-              child: UserResultViewElastic(searchTextController, widget.timebankId, validItems, widget.requestModel, timebankModel),
+              child: UserResultViewElastic(searchTextController, widget.timebankId, validItems, widget.requestModel, timebankModel.model, users,),
             ),
           ],
         ),
@@ -119,9 +179,10 @@ class UserResultViewElastic extends StatefulWidget {
   final List<String> validItems;
   final RequestModel requestModel;
   final TimebankModel timebankModel;
+  final List<UserModel> favoriteUsers;
 
   UserResultViewElastic(this.controller, this.timebankId,
-      this.validItems,this.requestModel, this.timebankModel);
+      this.validItems,this.requestModel, this.timebankModel, this.favoriteUsers);
 
   @override
   _UserResultViewElasticState createState() {
@@ -137,6 +198,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   }
 
   bool isBookMarked = false;
+
 
   Widget build(BuildContext context) {
     if (widget == null ||
@@ -182,18 +244,42 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           return getEmptyWidget('Users', 'No user found');
         }
         return ListView.builder(
+
+
           itemCount: userList.length,
           itemBuilder: (context, index) {
-            log(userList.length.toString());
-//            if (index == 0) {
-//              Container(
-//                padding: EdgeInsets.only(left: 8, top: 16),
-//                child: Text('Users', style: sectionTextStyle),
-//              );
-//            }
-           UserModel user = userList.elementAt(index);
 
-            return RequestCardWidget(userModel: user,requestModel: widget.requestModel, timebankModel: widget.timebankModel,);
+
+            bool favoriteStatus = false;
+            UserModel user = userList.elementAt(index);
+         // print("ids are  ${widget.favoriteUsers[index].sevaUserID} " + userList[index].sevaUserID);
+
+
+            if (widget.favoriteUsers != null) {
+              for (int i = 0; i < widget.favoriteUsers.length; i++) {
+
+                //  print("ids are  ${userModelList[i].sevaUserID} " + sevaUserId);
+
+                if (widget.favoriteUsers[i].sevaUserID == user.sevaUserID) {
+                  favoriteStatus = true;
+                }
+              }
+
+              return RequestCardWidget(userModel: user,
+                requestModel: widget.requestModel,
+                timebankModel: widget.timebankModel,
+                isFavorite: favoriteStatus,
+              );
+
+            }else{
+              return RequestCardWidget(userModel: user,
+                requestModel: widget.requestModel,
+                timebankModel: widget.timebankModel,
+                isFavorite: false,
+              );
+
+            }
+
           },
         );
       },
@@ -201,149 +287,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   }
 
 
-  Widget makeUserWidget(){
-    return Container(
-        margin: EdgeInsets.fromLTRB(35, 20, 30, 10),
-        child: Stack(
-            children: <Widget>[
-              getUserCard(),
-              getUserThumbnail(),
-            ]
-        )
-    );
-  }
 
-  Widget getUserThumbnail() {
-    return Container(
-        margin: EdgeInsets.only(top:20,right: 15),
-        width: 60.0,
-        height: 60.0,
-        decoration: new BoxDecoration(
-            shape: BoxShape.circle,
-            image: new DecorationImage(
-                fit: BoxFit.fill,
-                image: new NetworkImage(
-                    "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg")
-            )
-        ));
-  }
-  Widget getUserCard({BuildContext context}) {
-    bool isBookmarked;
-    return Padding(
-      padding: const EdgeInsets.only(left: 30),
-      child: Container(
-        height: 200,
-        width: 500,
-        decoration: new BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.rectangle,
-          borderRadius: new BorderRadius.circular(8.0),
-          boxShadow: <BoxShadow>[
-            new BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10.0,
-              offset: new Offset(0.0, 10.0),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 40, right:10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Text("Tony Stark", style: TextStyle(color: Colors.black, fontSize: 18,fontWeight: FontWeight.bold),),
-                  ),
-//              Spacer(),
-                  InkWell(
 
-                    onTap: (){
-                      setState(() {
-                        isBookMarked = !isBookMarked;
-                      });
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        isBookMarked ?
-
-                        Icon(
-                          Icons.bookmark, color: Colors.redAccent,
-                          size: 35,
-                        ): Icon(
-                        Icons.bookmark,
-                        color: Colors.grey,
-                        size: 35,
-                ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-             /* SmoothStarRating(
-                  allowHalfRating: true,
-                  onRatingChanged: (v) {
-//                    rating = v;
-//                    setState(() {});
-                  },
-                  starCount: 5,
-                  rating: 3.5,
-                  size: 20.0,
-                  filledIconData: Icons.star,
-                  halfFilledIconData: Icons.star_half,
-                  defaultIconData: Icons.star_border,
-                  color: Colors.orangeAccent,
-                  borderColor: Colors.orangeAccent,
-                  spacing:1.0
-              ),
-              SizedBox(
-                  height:10
-              ),*/
-              Expanded(
-                child: Text("Tony Stark Tony StarkTony StarkTony StarkTony StarkTony Stark", style: TextStyle(color: Colors.black, fontSize: 12,),),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-
-                    /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
-                    height: 40,
-
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
-                      shape: StadiumBorder(),
-                      color: Colors.indigo,
-                      textColor: Colors.white,
-                      elevation: 5,
-                      onPressed: () {},
-                      child: const Text(
-                          'Invite',
-                          style: TextStyle(fontSize: 14)
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget getEmptyWidget(String title, String notFoundValue) {
     return Center(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_model.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/favorite_users_view.dart';
 import 'package:sevaexchange/views/requests/find_volunteers_view.dart';
 import 'package:sevaexchange/views/requests/invited_users_view.dart';
@@ -38,11 +39,17 @@ class _RequestUsersTabsViewHolderState
 }
 
 class TabarView extends StatelessWidget {
+
+  String sevaUserId;
   final RequestModel requestItem;
   TabarView({this.requestItem});
 
   @override
   Widget build(BuildContext context) {
+
+    sevaUserId=SevaCore
+        .of(context)
+        .loggedInUser.sevaUserID;
     return Scaffold(
       body: DefaultTabController(
         length: 4,
@@ -84,18 +91,22 @@ class TabarView extends StatelessWidget {
               FindVolunteersView(
                 timebankId: requestItem.timebankId,
                 requestModel: requestItem,
+                sevaUserId: sevaUserId,
               ),
               InvitedUsersView(
                 timebankId: requestItem.timebankId,
                 requestModel: requestItem,
+                sevaUserId: sevaUserId,
               ),
               FavoriteUsers(
                 timebankId: requestItem.timebankId,
                 requestModel: requestItem,
+                sevaUserId: sevaUserId,
               ),
               PastHiredUsersView(
                 timebankId: requestItem.timebankId,
                 requestModel: requestItem,
+                sevaUserId: sevaUserId,
               ),
             ],
           ),
