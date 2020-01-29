@@ -629,7 +629,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
       var gesture = GestureDetector(
-        child: getSectionTitle(context, 'Members +'),
+        child: Row(
+          children: <Widget>[
+            getSectionTitle(context, 'Members '),
+            CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 10,
+              child: Image.asset("lib/assets/images/add.png"),
+            ),
+          ],
+        ),
         onTap: () async {
           addVolunteers();
         },
@@ -827,7 +836,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
           Text(
             title,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 20,
               color: Colors.black,
               fontWeight: FontWeight.w700,
             ),
@@ -936,7 +945,7 @@ class CustomRaisedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
+    var btn = RaisedButton(
       padding: EdgeInsets.all(0),
       color: (action == Actions.Approve || action == Actions.Promote)
           ? null
@@ -948,6 +957,11 @@ class CustomRaisedButton extends StatelessWidget {
       onPressed: () {
         debouncer.run(() => onTap());
       },
+    );
+    return Container(
+      width: 70,
+      height: 30,
+      child: btn,
     );
   }
 }

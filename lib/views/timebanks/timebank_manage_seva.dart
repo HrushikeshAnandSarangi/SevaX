@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
@@ -49,7 +48,7 @@ class ManageTimebankSeva extends StatelessWidget {
       child: Text(
         'View requests',
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.blue,
         ),
@@ -74,7 +73,7 @@ class ManageTimebankSeva extends StatelessWidget {
         child: Text(
           'View accepted offers',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.blue,
           ),
@@ -101,7 +100,7 @@ class ManageTimebankSeva extends StatelessWidget {
         child: Text(
           'Invite members via code',
           style: TextStyle(
-            fontSize: 20,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
             color: Colors.blue,
           ),
@@ -115,7 +114,7 @@ class ManageTimebankSeva extends StatelessWidget {
       "Manage ${timebankModel.name}",
       style: TextStyle(
         fontWeight: FontWeight.bold,
-        fontSize: 22,
+        fontSize: 18,
       ),
     );
   }

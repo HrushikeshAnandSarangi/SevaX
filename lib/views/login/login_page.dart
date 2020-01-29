@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sevaexchange/utils/animations/fade_animation.dart';
-import 'package:flutter/gestures.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage();
@@ -59,19 +59,19 @@ class _LoginPageState extends State<LoginPage> {
         fit: StackFit.expand,
         children: <Widget>[
           FadeAnimation(
-              0.4,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 60.0),
-                  ),
-                  Expanded(
-                    child: Container(),
-                  ),
-                  Image.asset("lib/assets/images/image_02.png")
-                ],
-              ),
+            0.4,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 60.0),
+                ),
+                Expanded(
+                  child: Container(),
+                ),
+                Image.asset("lib/assets/images/image_02.png")
+              ],
+            ),
           ),
           SingleChildScrollView(
             child: FadeAnimation(
@@ -494,20 +494,18 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       labelText: 'PASSWORD',
                       labelStyle: textStyle,
-                      suffix: GestureDetector(
-                        onTap: () {
+                      suffix: IconButton(
+                        onPressed: () {
                           setState(() {
                             _shouldObscurePassword = !_shouldObscurePassword;
                           });
                         },
-                        child: Text(
-                          'Show',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: _shouldObscurePassword
-                                ? Colors.black54
-                                : Colors.black,
-                          ),
+                        splashColor: Colors.transparent,
+                        color: Colors.grey,
+                        icon: Icon(
+                          _shouldObscurePassword
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                         ),
                       ),
                     ),
