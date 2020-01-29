@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-
 import 'package:sevaexchange/models/models.dart';
-//import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
@@ -21,7 +19,6 @@ class CompletedListPage extends StatelessWidget {
         body: CompletedList());
   }
 }
-
 
 // TODO: Fix the hacks
 
@@ -47,24 +44,8 @@ class _CompletedListState extends State<CompletedList> {
         if (!mounted) return;
         setState(() {
           requestList = list;
-          // RequestModel modelflag =
-
-          //  requestList.sort((b, a) {
-          //    return a.transactions.timestamp.compareTo(b.transactions.timestamp);
-          //  }
-          //  );
           return requestList;
         });
-        // userList = [];
-        // requestList.forEach(
-        //   (request) async {
-        //     UserModel user = await FirestoreManager.getUserForId(
-        //       sevaUserId: request.sevaUserId,
-        //     );
-        //     if (!mounted) return;
-        //     setState(() => userList.add(user));
-        //   },
-        // );
       },
     );
   }
@@ -78,31 +59,20 @@ class _CompletedListState extends State<CompletedList> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Padding(
-        padding: const EdgeInsets.only(top:58.0),
+        padding: const EdgeInsets.only(top: 58.0),
         child: Text('You have not completed any tasks',
             textAlign: TextAlign.center),
       );
     }
     return ListView.builder(
       physics: NeverScrollableScrollPhysics(),
-
+      itemCount: requestList.length,
       itemBuilder: (context, index) {
         RequestModel model = requestList.elementAt(index);
 
         return Card(
           child: ListTile(
             title: Text(model.title),
-            // leading: () {
-            //   if (index + 1 > userList.length) {
-            //     return CircleAvatar(
-            //       backgroundColor: Colors.grey,
-            //     );
-            //   }
-            //   UserModel user = userList[index];
-            //   return CircleAvatar(
-            //     backgroundImage: NetworkImage(user.photoURL),
-            //   );
-            // }(),
             leading: FutureBuilder(
               future:
                   FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
@@ -114,7 +84,7 @@ class _CompletedListState extends State<CompletedList> {
                   return CircleAvatar();
                 }
                 UserModel user = snapshot.data;
-                if(user==null){
+                if (user == null) {
                   return CircleAvatar(
                     backgroundImage: NetworkImage(defaultUserImageURL),
                   );
@@ -125,9 +95,6 @@ class _CompletedListState extends State<CompletedList> {
               },
             ),
             trailing: () {
-              //   List<TransactionModel> transactions =
-              //         model.transactions.map((t) => t).toList();
-              //  num transaction = transactions.
               TransactionModel transmodel =
                   model.transactions.firstWhere((transaction) {
                 return transaction.to ==
@@ -158,7 +125,7 @@ class _CompletedListState extends State<CompletedList> {
                   return Text('');
                 }
                 UserModel user = snapshot.data;
-                if(user==null){
+                if (user == null) {
                   return Text('');
                 }
                 return Text('${user.fullname}');
@@ -167,7 +134,6 @@ class _CompletedListState extends State<CompletedList> {
           ),
         );
       },
-      itemCount: requestList.length,
     );
   }
 }

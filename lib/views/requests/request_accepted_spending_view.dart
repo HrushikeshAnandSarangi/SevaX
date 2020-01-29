@@ -5,6 +5,9 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+
+import '../core.dart';
 
 class RequestAcceptedSpendingView extends StatefulWidget {
   final RequestModel requestModel;
@@ -16,32 +19,188 @@ class RequestAcceptedSpendingView extends StatefulWidget {
       _RequestAcceptedSpendingState();
 }
 
+enum RequestModelTag { Completed, NotAccepted, Pending }
+
+class RequestModelType {
+  RequestModel requestModel;
+  RequestModelTag type;
+
+  RequestModelType(RequestModel _requestModel, RequestModelTag _type) {
+    requestModel = _requestModel;
+    type = _type;
+  }
+}
+
 class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   List<Widget> _avtars = [];
 
+  List<RequestModel> completedRequestList = [];
+  Stream<List<RequestModel>> completedRequestStream;
+  List<RequestModel> notAcceptedRequestList = [];
+  Stream<List<RequestModel>> notAcceptedRequestStream;
+
+  List<RequestModelType> finalCustomList = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    completedRequestStream = FirestoreManager.getCompletedRequestStream(
+        userEmail: SevaCore.of(context).loggedInUser.email,
+        userId: SevaCore.of(context).loggedInUser.sevaUserID);
+    completedRequestStream.listen(
+      (list) {
+        if (!mounted) return;
+        setState(() {
+          completedRequestList = list;
+          return completedRequestList;
+        });
+      },
+    );
+
+    notAcceptedRequestStream = FirestoreManager.getNotAcceptedRequestStream(
+        userEmail: SevaCore.of(context).loggedInUser.email,
+        userId: SevaCore.of(context).loggedInUser.sevaUserID);
+    notAcceptedRequestStream.listen(
+      (list) {
+        if (!mounted) return;
+        setState(() {
+          notAcceptedRequestList = list;
+          return notAcceptedRequestList;
+        });
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    finalCustomList = [];
+    if (completedRequestList.length > 0) {
+      for (var i = 0; i < completedRequestList.length; i++) {
+        finalCustomList.add(RequestModelType(
+            completedRequestList[i], RequestModelTag.Completed));
+      }
+    }
+    if (notAcceptedRequestList.length > 0) {
+      for (var i = 0; i < notAcceptedRequestList.length; i++) {
+        finalCustomList.add(RequestModelType(
+            notAcceptedRequestList[i], RequestModelTag.NotAccepted));
+      }
+    }
     return listItems;
   }
 
   Widget get listItems {
-    Widget localWidget;
-    if (_avtars.length == 0) {
-      getUserModel();
-      localWidget = Center(
+    Widget body;
+    if (finalCustomList.length == 0) {
+      body = Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      localWidget = ListView.builder(
-          itemCount: _avtars.length,
+      body = ListView.builder(
+          itemCount: finalCustomList.length,
           itemBuilder: (context, index) {
-            return _avtars[index];
+            if (finalCustomList[index].type == RequestModelTag.Completed) {
+              return completedRequestWidget(
+                  finalCustomList[index].requestModel);
+            } else {
+//              return Offstage();
+              return completedRequestWidget(
+                  finalCustomList[index].requestModel);
+            }
           });
     }
     return Scaffold(
-      body: localWidget,
+      body: body,
     );
   }
+
+  Widget completedRequestWidget(RequestModel model) {
+    return Card(
+      child: ListTile(
+        title: Text(model.title),
+        leading: FutureBuilder(
+          future: FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return CircleAvatar();
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircleAvatar();
+            }
+            UserModel user = snapshot.data;
+            if (user == null) {
+              return CircleAvatar(
+                backgroundImage: NetworkImage(defaultUserImageURL),
+              );
+            }
+            return CircleAvatar(
+              backgroundImage: NetworkImage(user.photoURL),
+            );
+          },
+        ),
+        trailing: () {
+          TransactionModel transmodel =
+              model.transactions.firstWhere((transaction) {
+            return transaction.to ==
+                SevaCore.of(context).loggedInUser.sevaUserID;
+          });
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text('${transmodel.credits}'),
+              Text('Yang bucks',
+                  style: TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: -0.2,
+                  )),
+            ],
+          );
+        }(),
+        subtitle: FutureBuilder(
+          future: FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text('');
+            }
+            UserModel user = snapshot.data;
+            if (user == null) {
+              return Text('');
+            }
+            return Text('${user.fullname}');
+          },
+        ),
+      ),
+    );
+  }
+
+//  Widget get listItems {
+//    Widget localWidget;
+//    if (_avtars.length == 0) {
+//      getUserModel();
+//      localWidget = Center(
+//        child: CircularProgressIndicator(),
+//      );
+//    } else {
+//      localWidget = ListView.builder(
+//          itemCount: _avtars.length,
+//          itemBuilder: (context, index) {
+//            return _avtars[index];
+//          });
+//    }
+//    return Scaffold(
+//      body: localWidget,
+//    );
+//  }
 
   Future getUserModel() async {
     var i = 0;
