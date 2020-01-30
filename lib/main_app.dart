@@ -45,11 +45,12 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
 
-      Crashlytics.instance.enableInDevMode = true;
-      FlutterError.onError = Crashlytics.instance.recordFlutterError;
-      runZoned(() {
-        runApp(MainApplication());
-      }, onError: Crashlytics.instance.recordError);
+      // Crashlytics.instance.enableInDevMode = true;
+      // FlutterError.onError = Crashlytics.instance.recordFlutterError;
+      runApp(MainApplication());
+      // runZoned(() {
+        
+      // }, onError: Crashlytics.instance.recordError);
     },
   );
 }

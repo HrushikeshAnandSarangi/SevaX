@@ -41,17 +41,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   }
 
   void getData() async {
-   // print('Admin id  ${widget.timebankModel.admins[0]}');
-
+    // print('Admin id  ${widget.timebankModel.admins[0]}');
+    print('---->><><><><> ${widget.timebankModel.admins[0]}');
     user = await FirestoreManager.getUserForId(
         sevaUserId: widget.timebankModel.admins[0]);
 
-    if(user!=null){
+    if (user != null) {
       isAdminLoaded = true;
     }
-
-
-
 
     if (widget.timebankModel.members.contains(widget.userId)) {
       isUserJoined = true;
@@ -61,7 +58,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
       isDataLoaded = true;
     }
 
-    setState(() {});
+    // setState(() {});
 
     //  print('Time Bank${userModels.userModelList[0].photoURL}');
   }
@@ -88,13 +85,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               child: CachedNetworkImage(
                 imageUrl: widget.timebankModel.photoUrl ?? ' ',
                 fit: BoxFit.cover,
-                errorWidget: (context, url, error) =>
-                Container(
-                  height: 80,
-                  child: Center(
-                    child: Text('No Image Avaialable',textAlign: TextAlign.center,),
-                  )
-                ),
+                errorWidget: (context, url, error) => Container(
+                    height: 80,
+                    child: Center(
+                      child: Text(
+                        'No Image Avaialable',
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
                 placeholder: (conext, url) {
                   return Center(child: CircularProgressIndicator());
                 },
@@ -236,7 +234,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
-                widget.timebankModel.members.length.toString() + ' Volunteers' ?? '0 Volunteers',
+                widget.timebankModel.members.length.toString() +
+                        ' Volunteers' ??
+                    '0 Volunteers',
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 18,
@@ -286,30 +286,32 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                         descTextShowFlag = !descTextShowFlag;
                       });
                     },
-                    child: widget.timebankModel.missionStatement.length > 100 ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        descTextShowFlag
-                            ? Text(
-                                "Read Less",
-                                style: TextStyle(
-                                  fontFamily: 'Europa',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.lightBlueAccent,
-                                ),
-                              )
-                            : Text(
-                                "Read More",
-                                style: TextStyle(
-                                  fontFamily: 'Europa',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.lightBlueAccent,
-                                ),
-                              )
-                      ],
-                    ): Container(),
+                    child: widget.timebankModel.missionStatement.length > 100
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              descTextShowFlag
+                                  ? Text(
+                                      "Read Less",
+                                      style: TextStyle(
+                                        fontFamily: 'Europa',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.lightBlueAccent,
+                                      ),
+                                    )
+                                  : Text(
+                                      "Read More",
+                                      style: TextStyle(
+                                        fontFamily: 'Europa',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.lightBlueAccent,
+                                      ),
+                                    )
+                            ],
+                          )
+                        : Container(),
                   ),
                 ],
               ),
@@ -362,7 +364,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                               child: Text('Admin not Available'),
                             ),
                       Padding(
-                        padding: const EdgeInsets.only(top:8.0),
+                        padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
                             startChat(user.email, widget.email, context);
@@ -390,21 +392,22 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image:
-                                    CachedNetworkImageProvider(user.photoURL ?? 'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
+                                image: CachedNetworkImageProvider(user
+                                        .photoURL ??
+                                    'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
                           ),
-                  )
+                        )
                       : Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image:
-                            CachedNetworkImageProvider('https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
-                      ),
-                  ),
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: CachedNetworkImageProvider(
+                                    'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
+                          ),
+                        ),
                 ],
               ),
             )

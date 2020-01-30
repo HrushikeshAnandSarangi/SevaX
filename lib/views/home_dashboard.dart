@@ -2,10 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/home_page/timebank_feeds.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
+import 'package:sevaexchange/views/timebank_content_holder.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
+import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 
 class HomeDashBoard extends StatelessWidget {
   HomeDashBoard();
@@ -13,50 +18,6 @@ class HomeDashBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: MyHomePage(),
-    );
-  }
-}
-
-class DashboardTabsViewHolder extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: DefaultTabController(
-        length: 6,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            bottom: TabBar(
-              indicatorColor: Colors.black,
-              labelColor: Colors.black,
-              isScrollable: true,
-              tabs: [
-                Tab(text: "Alaska Timebank"),
-                Tab(text: "Feeds"),
-                Tab(text: "Requests"),
-                Tab(text: "Offers"),
-                Tab(text: "About"),
-                Tab(text: "Members"),
-              ],
-            ),
-            centerTitle: true,
-            title: Text(
-              'Alaska Timebank',
-              style: TextStyle(color: Colors.black, fontSize: 18),
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              MyHomePage(),
-              Icon(Icons.directions_transit),
-              Icon(Icons.directions_bike),
-              Icon(Icons.directions_car),
-              Icon(Icons.directions_transit),
-              Icon(Icons.directions_bike),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
@@ -71,9 +32,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   TabController controller;
-
+  TimebankModel primaryTimebank;
   HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
-
   CommunityModel selectedCommunity;
 
   @override
@@ -122,16 +82,18 @@ class _MyHomePageState extends State<MyHomePage>
                         child: DropdownButton<CommunityModel>(
                         value: selectedCommunity,
                         onChanged: (v) {
-                          SevaCore.of(context).loggedInUser.currentCommunity =
-                              v.id;
-                          _homeDashBoardBloc.setDefaultCommunity(
-                            context: context,
-                            community: v,
-                            oldCommunityId: selectedCommunity.id,
-                          );
-                          setState(() {
-                            selectedCommunity = v;
-                          });
+                          if (v.id != selectedCommunity.id) {
+                            SevaCore.of(context).loggedInUser.currentCommunity =
+                                v.id;
+                            _homeDashBoardBloc.setDefaultCommunity(
+                              context: context,
+                              community: v,
+                              oldCommunityId: selectedCommunity.id,
+                            );
+                            setState(() {
+                              selectedCommunity = v;
+                            });
+                          }
                         },
                         items: List.generate(
                           snapshot.data.length,
@@ -166,18 +128,57 @@ class _MyHomePageState extends State<MyHomePage>
               ],
             ),
           ),
-          body: TabBarView(
-            children: <Widget>[
-              TimebankHomePage(
-                selectedCommunity: selectedCommunity,
-              ),
-              TimebankFeeds(),
-              TimebankFeeds(),
-              TimebankFeeds(),
-              TimebankFeeds(),
-              TimebankFeeds(),
-            ],
-          ),
+          body: StreamBuilder<SelectedCommuntityGroup>(
+              stream: _homeDashBoardBloc
+                  .getCurrentGroups(SevaCore.of(context).loggedInUser),
+              builder: (context, snapshot) {
+                if (snapshot.data == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasData && snapshot.data != null) {
+                  snapshot.data.timebanks.forEach((TimebankModel data) {
+                    print(
+                        "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
+                    if (data.id ==
+                        snapshot.data.currentCommunity.primary_timebank) {
+                      primaryTimebank = data;
+                    } else {
+                      primaryTimebank = TimebankModel({});
+                    }
+                  });
+                }
+
+                return TabBarView(
+                  children: <Widget>[
+                    TimebankHomePage(
+                      selectedCommuntityGroup: snapshot.data,
+                    ),
+                    DiscussionList(
+                      timebankId: primaryTimebank.id,
+                    ),
+                    // TimebankFeeds(),
+                    RequestsModule.of(
+                      timebankId: primaryTimebank.id,
+                      timebankModel: primaryTimebank,
+                    ),
+                    OffersModule.of(
+                      timebankId: primaryTimebank.id,
+                      timebankModel: primaryTimebank,
+                    ),
+                    TimeBankAboutView.of(
+                      timebankModel: primaryTimebank,
+                      email: SevaCore.of(context).loggedInUser.email,
+                    ),
+                    TimebankRequestAdminPage(
+                      isUserAdmin: primaryTimebank.admins.contains(
+                        SevaCore.of(context).loggedInUser.sevaUserID,
+                      ),
+                      timebankId: primaryTimebank.id,
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );

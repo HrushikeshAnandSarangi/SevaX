@@ -2,17 +2,33 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
 class HomeDashBoardBloc extends BlocBase {
-  final _communities = PublishSubject<List<CommunityModel>>();
-  final _selectedCommunity = PublishSubject<CommunityModel>();
+  final _communities = BehaviorSubject<List<CommunityModel>>();
+  final _selectedCommunity = BehaviorSubject<CommunityModel>();
 
-  Stream<CommunityModel> get selectedCommunity => _selectedCommunity.stream;
+  Stream<SelectedCommuntityGroup> getCurrentGroups(UserModel user) {
+    return CombineLatestStream.combine2(
+      FirestoreManager.getTimebanksForUserStream(
+        userId: user.sevaUserID,
+        communityId: user.currentCommunity,
+      ),
+      _selectedCommunity.debounceTime(Duration.zero),
+      (x, y) => SelectedCommuntityGroup(timebanks: x, currentCommunity: y),
+    );
+  }
+
+  Stream<CommunityModel> get selectedCommunityStream =>
+      _selectedCommunity.stream;
+
   Stream<List<CommunityModel>> get communities => _communities.stream;
 
   getAllCommunities(UserModel user) async {
@@ -25,6 +41,7 @@ class HomeDashBoardBloc extends BlocBase {
             .get();
         c.add(CommunityModel(value.data));
         if (id == user.currentCommunity) {
+          _selectedCommunity.drain();
           _selectedCommunity.add(CommunityModel(value.data));
         }
         _communities.add(c);
@@ -43,6 +60,7 @@ class HomeDashBoardBloc extends BlocBase {
       "currentCommunity": SevaCore.of(context).loggedInUser.currentCommunity
     }).then((onValue) {
       SevaCore.of(context).loggedInUser.currentCommunity = community.id;
+      _selectedCommunity.drain();
       _selectedCommunity.add(community);
     }).catchError((e) {
       SevaCore.of(context).loggedInUser.currentCommunity = oldCommunityId;
@@ -55,4 +73,11 @@ class HomeDashBoardBloc extends BlocBase {
     _communities.close();
     _selectedCommunity.close();
   }
+}
+
+class SelectedCommuntityGroup {
+  final List<TimebankModel> timebanks;
+  final CommunityModel currentCommunity;
+
+  SelectedCommuntityGroup({this.timebanks, this.currentCommunity});
 }
