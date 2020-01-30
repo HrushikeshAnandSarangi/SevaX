@@ -1,39 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/views/requests/favorite_users_view.dart';
 import 'package:sevaexchange/views/requests/find_volunteers_view.dart';
 import 'package:sevaexchange/views/requests/invited_users_view.dart';
 import 'package:sevaexchange/views/requests/past_hired_users_view.dart';
 
-class RequestUsersTabsViewHolder extends StatelessWidget {
-  //final String timebankId;
- // final TimebankModel timebankModel;
-  //final UserModel loggedInUser;
-
+class RequestUsersTabsViewHolder extends StatefulWidget {
   final RequestModel requestItem;
 
+  RequestUsersTabsViewHolder.of({
+    this.requestItem,
+  });
 
+  @override
+  _RequestUsersTabsViewHolderState createState() =>
+      _RequestUsersTabsViewHolderState();
+}
 
+class _RequestUsersTabsViewHolderState
+    extends State<RequestUsersTabsViewHolder> {
 
-  RequestUsersTabsViewHolder.of({this.requestItem,});
-  //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
+  @override
+  void initState() { 
+    
+    super.initState();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
     return TabarView(
       // loggedInUser: loggedInUser,
-      requestItem: requestItem,
+      requestItem: widget.requestItem,
     );
   }
 }
 
-
 class TabarView extends StatelessWidget {
   final RequestModel requestItem;
-
-
-  //final UserModel loggedInUser;
-  //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
   TabarView({this.requestItem});
 
   @override
@@ -42,44 +47,60 @@ class TabarView extends StatelessWidget {
       body: DefaultTabController(
         length: 4,
         child: Scaffold(
-
           appBar: TabBar(
-              labelColor: Colors.black,
-              indicatorColor: Colors.black,
-              indicatorSize: TabBarIndicatorSize.label,
-              isScrollable: true,
-              tabs: [
-                Tab(
-                  child: Text('Find Volunteers',style: TextStyle(fontWeight: FontWeight.bold),),
-
+            labelColor: Colors.black,
+            indicatorColor: Colors.black,
+            indicatorSize: TabBarIndicatorSize.label,
+            isScrollable: true,
+            tabs: [
+              Tab(
+                child: Text(
+                  'Find Volunteers',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Text('Invited',style: TextStyle(fontWeight: FontWeight.bold),),
-
+              ),
+              Tab(
+                child: Text(
+                  'Invited',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Text('Favourites',style: TextStyle(fontWeight: FontWeight.bold),),
-
+              ),
+              Tab(
+                child: Text(
+                  'Favourites',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                Tab(
-                  child: Text('Past Hired',style: TextStyle(fontWeight: FontWeight.bold),),
-
+              ),
+              Tab(
+                child: Text(
+                  'Past Hired',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-
-              ],
-            ),
-
+              ),
+            ],
+          ),
           body: TabBarView(
             children: [
-              FindVolunteersView(timebankId: requestItem.timebankId,requestModel: requestItem,),
-              InvitedUsersView(timebankId: requestItem.timebankId, requestModel: requestItem,),
-              FavoriteUsers(timebankId: requestItem.timebankId, requestModel: requestItem,),
-              PastHiredUsersView(timebankId: requestItem.timebankId, requestModel: requestItem,),
+              FindVolunteersView(
+                timebankId: requestItem.timebankId,
+                requestModel: requestItem,
+              ),
+              InvitedUsersView(
+                timebankId: requestItem.timebankId,
+                requestModel: requestItem,
+              ),
+              FavoriteUsers(
+                timebankId: requestItem.timebankId,
+                requestModel: requestItem,
+              ),
+              PastHiredUsersView(
+                timebankId: requestItem.timebankId,
+                requestModel: requestItem,
+              ),
             ],
           ),
         ),
       ),
     );
   }
-
 }
