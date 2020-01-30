@@ -11,25 +11,39 @@ import 'package:shimmer/shimmer.dart';
 import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
-  final RequestModel requestModel;
+  RequestModel requestModel;
 
   RequestParticipantsView({@required this.requestModel});
 
   @override
   _RequestParticipantsViewState createState() =>
-      _RequestParticipantsViewState();
+      _RequestParticipantsViewState(requestModel);
 }
 
 class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   List<String> acceptors;
   List<String> approvedMembers;
   List<String> newList;
+  RequestModel requestModel;
   HashMap<String, AcceptorItem> filteredList = HashMap();
+
+  _RequestParticipantsViewState(RequestModel _requestModel) {
+    requestModel = _requestModel;
+  }
 
   static const String ACCEPTED = "Accepted";
   static const String APPROVED = "Approved";
 
-  // LinkedHashSet filteredList =  LinkedHashSet<String>();
+  void setRequestModel() async {
+    requestModel = await getCurrentRequest();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setRequestModel();
+  }
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
     var user = await Firestore.instance
@@ -42,10 +56,28 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
   @override
   Widget build(BuildContext context) {
+    return list;
+  }
+
+  Future<RequestModel> getCurrentRequest() async {
+    if (requestModel == null) {
+      return null;
+    }
+    var snapShot = await Firestore.instance
+        .collection("requests")
+        .document(requestModel.id)
+        .get();
+    RequestModel model = RequestModel.fromMap(
+      snapShot.data,
+    );
+    return model;
+  }
+
+  Widget get list {
     var futures = <Future>[];
     futures.clear();
-    acceptors = widget.requestModel.acceptors;
-    approvedMembers = widget.requestModel.approvedUsers;
+    acceptors = requestModel.acceptors ?? [];
+    approvedMembers = requestModel.approvedUsers ?? [];
     newList = acceptors + approvedMembers;
 
     List<String> result = LinkedHashSet<String>.from(newList).toList();
@@ -69,11 +101,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               child: Text('No pending requests'),
             );
           }
-
-/*
-          for ( var i = 0; i < snapshot.data.length; i++ ){
-
-          }*/
           var snap = snapshot.data.map((f) {
             return UserModel.fromDynamic(f);
           }).toList();
@@ -87,8 +114,8 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 // return Text(f['fullname']);
 
                 UserRequestStatusType status;
-                status = getUserRequestStatusType(
-                    userModel.email, widget.requestModel);
+                status =
+                    getUserRequestStatusType(userModel.email, requestModel);
 
                 return makeUserWidget(userModel, context, status);
               }).toList()
@@ -160,7 +187,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-//              Spacer(),
                   Icon(
                     Icons.chat_bubble,
                     color: Colors.blueGrey,
@@ -168,25 +194,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   ),
                 ],
               ),
-              /*SmoothStarRating(
-                  allowHalfRating: true,
-                  onRatingChanged: (v) {
-//                    rating = v;
-//                    setState(() {});
-                  },
-                  starCount: 5,
-                  rating: 3.5,
-                  size: 20.0,
-                  filledIconData: Icons.star,
-                  halfFilledIconData: Icons.star_half,
-                  defaultIconData: Icons.star_border,
-                  color: Colors.orangeAccent,
-                  borderColor: Colors.orangeAccent,
-                  spacing: 1.0
-              ),
-              SizedBox(
-                  height: 10
-              ),*/
               Expanded(
                 child: Text(
                   userModel.bio ?? "",
@@ -201,14 +208,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Container(
-                          /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
                           height: 40,
                           padding: EdgeInsets.only(bottom: 10),
                           child: RaisedButton(
@@ -220,7 +219,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                               showDialogForApprovalOfRequest(
                                       context: context,
                                       userModel: userModel,
-                                      requestModel: widget.requestModel,
+                                      requestModel: requestModel,
                                       notificationId: "sampleID")
                                   .then((onValue) {
                                 setState(() {});
@@ -235,14 +234,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           width: 10,
                         ),
                         Container(
-                          /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
                           height: 40,
                           padding: EdgeInsets.only(bottom: 10),
                           child: RaisedButton(
@@ -261,14 +252,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Container(
-                          /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
                           height: 40,
                           padding: EdgeInsets.only(bottom: 10),
                           child: RaisedButton(
@@ -279,7 +262,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             onPressed: () {
                               print("approved");
                             },
-                            child: const Text('Approved',
+                            child: Text('Approved',
                                 style: TextStyle(fontSize: 12)),
                           ),
                         ),
@@ -447,7 +430,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     UserModel user,
     String notificationId,
   }) {
-    List<String> acceptedUsers = model.acceptors;
+    List<String> acceptedUsers = model.acceptors ?? [];
     Set<String> usersSet = acceptedUsers.toSet();
 
     usersSet.remove(user.email);
@@ -576,41 +559,6 @@ Future<List<UserModel>> getRequestStatus({
       RequestModel model = RequestModel.fromMap(
         requestDetails.data,
       );
-
-      model.approvedUsers.forEach((membersId) {
-        futures.add(
-          Firestore.instance
-              .collection("users")
-              .document(membersId)
-              .get()
-              .then((onValue) {
-            return onValue;
-          }),
-        );
-      });
-
-      return Future.wait(futures).then((onValue) {
-        for (int i = 0; i < model.approvedUsers.length; i++) {
-          var user = UserModel.fromDynamic(onValue[i]);
-          usersRequested.add(user);
-        }
-        return usersRequested;
-      });
-    },
-  );
-}
-
-Future<RequestModel> getRequestData({
-  @required String requestId,
-}) async {
-  Firestore.instance.collection('requests').document(requestId).get().then(
-    (requestDetails) async {
-      var futures = <Future>[];
-      RequestModel model = RequestModel.fromMap(
-        requestDetails.data,
-      );
-
-      return model;
 
       model.approvedUsers.forEach((membersId) {
         futures.add(

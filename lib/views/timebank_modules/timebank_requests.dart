@@ -62,7 +62,7 @@ class RequestsState extends State<RequestsModule> {
     _setORValue();
     timebankId = widget.timebankModel.id;
     print("----------->>>$timebankId");
-    
+
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 10),
       child: Column(
@@ -699,20 +699,6 @@ class NearRequestListItems extends StatelessWidget {
                         },
                       ),
                     );
-
-                  // Expanded(
-                  //   child: Container(
-                  //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  //     child: ListView(
-                  //       children: requestModelList.map(
-                  //         (RequestModel requestModel) {
-                  //           return getRequestView(
-                  //               requestModel, loggedintimezone);
-                  //         },
-                  //       ).toList(),
-                  //     ),
-                  //   ),
-                  // );
                 }
               },
             );
@@ -1044,13 +1030,7 @@ class RequestListItems extends StatelessWidget {
             userEmail,
           );
         },
-      )
-          // child: ListView(
-          //   children: consolidatedList.map((RequestModelList requestModel) {
-          //     return getRequestView(requestModel, loggedintimezone);
-          //   }).toList(),
-          // ),
-          ),
+      )),
     );
   }
 
@@ -1094,8 +1074,9 @@ class RequestListItems extends StatelessWidget {
             Navigator.push(
               parentContext,
               MaterialPageRoute(
-                builder: (context) =>
-                    RequestTabHolder(requestModel: model,),
+                builder: (context) => RequestTabHolder(
+                  requestModel: model,
+                ),
               ),
             );
           },
