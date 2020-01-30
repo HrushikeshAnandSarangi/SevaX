@@ -23,8 +23,6 @@ class RequestAcceptedTabsViewHolder extends StatelessWidget {
 class TabarView extends StatelessWidget {
   final RequestModel requestItem;
 
-  //final UserModel loggedInUser;
-  //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
   TabarView({this.requestItem});
 
   @override

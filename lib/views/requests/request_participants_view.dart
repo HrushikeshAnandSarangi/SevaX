@@ -203,7 +203,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   ),
                 ),
               ),
-              statusType == UserRequestStatusType.ACCEPTED
+              ifUserIsNotApproved(userModel)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
@@ -215,16 +215,12 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             color: Colors.indigo,
                             textColor: Colors.white,
                             elevation: 5,
-                            onPressed: () {
-                              showDialogForApprovalOfRequest(
-                                      context: context,
-                                      userModel: userModel,
-                                      requestModel: requestModel,
-                                      notificationId: "sampleID")
-                                  .then((onValue) {
-                                setState(() {});
-                                print("Action completed");
-                              });
+                            onPressed: () async {
+                              approveMemberForVolunteerRequest(
+                                  model: requestModel,
+                                  notificationId: "sampleID",
+                                  user: userModel);
+                              print("Action completed");
                             },
                             child: const Text('Approve',
                                 style: TextStyle(fontSize: 12)),
@@ -241,7 +237,12 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             color: Colors.redAccent,
                             textColor: Colors.white,
                             elevation: 5,
-                            onPressed: () {},
+                            onPressed: () async {
+                              declineRequestedMember(
+                                  model: requestModel,
+                                  notificationId: "sampleID",
+                                  user: userModel);
+                            },
                             child: const Text('Reject',
                                 style: TextStyle(fontSize: 12)),
                           ),
@@ -273,6 +274,10 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         ),
       ),
     );
+  }
+
+  bool ifUserIsNotApproved(UserModel user) {
+    return !requestModel.approvedUsers.contains(user.email);
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {
@@ -441,7 +446,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       rejectedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    );
+    ).then((onValue) {
+      setRequestModel();
+    });
   }
 
   void approveMemberForVolunteerRequest({
@@ -462,7 +469,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    );
+    ).then((onValue) {
+      setRequestModel();
+    });
   }
 
   Widget _getCloseButton(BuildContext context) {
