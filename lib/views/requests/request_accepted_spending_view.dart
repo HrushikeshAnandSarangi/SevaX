@@ -19,57 +19,21 @@ class RequestAcceptedSpendingView extends StatefulWidget {
       _RequestAcceptedSpendingState();
 }
 
-enum RequestModelTag { Completed, NotAccepted, Pending }
-
-class RequestModelType {
-  RequestModel requestModel;
-  RequestModelTag type;
-
-  RequestModelType(RequestModel _requestModel, RequestModelTag _type) {
-    requestModel = _requestModel;
-    type = _type;
-  }
-}
+//enum RequestModelTag { Completed, NotAccepted, Pending }
+//
+//class RequestModelType {
+//  RequestModel requestModel;
+//  RequestModelTag type;
+//
+//  RequestModelType(RequestModel _requestModel, RequestModelTag _type) {
+//    requestModel = _requestModel;
+//    type = _type;
+//  }
+//}
 
 class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   List<Widget> _avtars = [];
-
-  List<RequestModel> completedRequestList = [];
-  Stream<List<RequestModel>> completedRequestStream;
-  List<RequestModel> notAcceptedRequestList = [];
-  Stream<List<RequestModel>> notAcceptedRequestStream;
-
-  List<RequestModelType> finalCustomList = [];
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    completedRequestStream = FirestoreManager.getCompletedRequestStream(
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        userId: SevaCore.of(context).loggedInUser.sevaUserID);
-    completedRequestStream.listen(
-      (list) {
-        if (!mounted) return;
-        setState(() {
-          completedRequestList = list;
-          return completedRequestList;
-        });
-      },
-    );
-
-    notAcceptedRequestStream = FirestoreManager.getNotAcceptedRequestStream(
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        userId: SevaCore.of(context).loggedInUser.sevaUserID);
-    notAcceptedRequestStream.listen(
-      (list) {
-        if (!mounted) return;
-        setState(() {
-          notAcceptedRequestList = list;
-          return notAcceptedRequestList;
-        });
-      },
-    );
-  }
+  bool noTransactionAvailable = false;
 
   @override
   void dispose() {
@@ -78,45 +42,28 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   @override
   Widget build(BuildContext context) {
-    finalCustomList = [];
-    if (completedRequestList.length > 0) {
-      for (var i = 0; i < completedRequestList.length; i++) {
-        finalCustomList.add(RequestModelType(
-            completedRequestList[i], RequestModelTag.Completed));
-      }
-    }
-    if (notAcceptedRequestList.length > 0) {
-      for (var i = 0; i < notAcceptedRequestList.length; i++) {
-        finalCustomList.add(RequestModelType(
-            notAcceptedRequestList[i], RequestModelTag.NotAccepted));
-      }
-    }
-    return listItems;
+    return Scaffold(
+      body: listItems,
+    );
+    ;
   }
 
   Widget get listItems {
-    Widget body;
-    if (finalCustomList.length == 0) {
-      body = Center(
+    if (widget.requestModel.transactions == null ||
+        widget.requestModel.transactions.length == 0) {
+      return getTotalSpending("0");
+    } else if (_avtars.length == 0) {
+      getUserModel();
+      return Center(
         child: CircularProgressIndicator(),
       );
     } else {
-      body = ListView.builder(
-          itemCount: finalCustomList.length,
+      return ListView.builder(
+          itemCount: _avtars.length,
           itemBuilder: (context, index) {
-            if (finalCustomList[index].type == RequestModelTag.Completed) {
-              return completedRequestWidget(
-                  finalCustomList[index].requestModel);
-            } else {
-//              return Offstage();
-              return completedRequestWidget(
-                  finalCustomList[index].requestModel);
-            }
+            return _avtars[index];
           });
     }
-    return Scaffold(
-      body: body,
-    );
   }
 
   Widget completedRequestWidget(RequestModel model) {
@@ -183,63 +130,44 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-//  Widget get listItems {
-//    Widget localWidget;
-//    if (_avtars.length == 0) {
-//      getUserModel();
-//      localWidget = Center(
-//        child: CircularProgressIndicator(),
-//      );
-//    } else {
-//      localWidget = ListView.builder(
-//          itemCount: _avtars.length,
-//          itemBuilder: (context, index) {
-//            return _avtars[index];
-//          });
-//    }
-//    return Scaffold(
-//      body: localWidget,
-//    );
-//  }
-
   Future getUserModel() async {
     var i = 0;
     var k = 0;
+    var totalCredits = 0.0;
     List<Widget> _localAvtars = [];
     while (i < widget.requestModel.transactions.length) {
       var transaction = widget.requestModel.transactions[i];
-      if (transaction != null) {
+      if (transaction != null && transaction.to != null) {
         getUserForId(sevaUserId: transaction.to).then((_userModel) {
-          print("Index $k:${_userModel.fullname}");
-          var item = getSpendingResultView(
+          totalCredits = totalCredits + transaction.credits;
+          print("All transactions:$transaction");
+          Widget item = getSpendingResultView(
             context,
             _userModel,
             transaction,
           );
           _localAvtars.add(item);
-          k++;
-          print("Index $k:${_userModel.fullname}");
-          if (k == widget.requestModel.transactions.length) {
-            _avtars.add(getTotalSpending());
+          if (k == widget.requestModel.transactions.length - 1) {
+            _avtars.add(getTotalSpending("$totalCredits"));
             _avtars.addAll(_localAvtars);
             setState(() {});
           }
+          k++;
         });
       } else {
-        k++;
-        if (k == widget.requestModel.transactions.length) {
-          setState(() {
-            if (_avtars.length == 0) {
-              _avtars.add(getTotalSpending());
-            }
-          });
+        _localAvtars.add(Offstage());
+        if (k == widget.requestModel.transactions.length - 1) {
+          _avtars.add(getTotalSpending("$totalCredits"));
+          _avtars.addAll(_localAvtars);
+          setState(() {});
         }
+        k++;
       }
       i++;
     }
   }
 
-  Widget getTotalSpending() {
+  Widget getTotalSpending(String credits) {
     var spendingWidget = Padding(
       padding: const EdgeInsets.only(left: 10),
       child: Column(
@@ -267,7 +195,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                 width: 10,
               ),
               Text(
-                '2,591',
+                credits,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
@@ -292,6 +220,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   Widget getSpendingResultView(BuildContext parentContext, UserModel usermodel,
       TransactionModel transactionModel) {
+    print("Context bcsvdygdsjbd:$parentContext");
     return Container(
       child: Card(
         elevation: 1,
