@@ -12,7 +12,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -42,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
   UserModel user;
   double titleOpacity = 0.0;
-  ScrollController scrollController;
+  // ScrollController scrollController;
   TimebankModel timebankModel;
   FirebaseUser firebaseUser;
 
@@ -57,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage>
   bool isCommunityLoaded = false;
   int selected = 0;
 
-  UserProfileBloc _profileBloc = UserProfileBloc();
+  // UserProfileBloc _profileBloc = UserProfileBloc();
 
   List<CommunityModel> communities = [];
 
@@ -73,11 +72,18 @@ class _ProfilePageState extends State<ProfilePage>
         timebankModel = model;
       });
     });
+
+    Future.delayed(Duration.zero, () {
+      user = SevaCore.of(context).loggedInUser;
+      setState(() {
+        isUserLoaded = true;
+      });
+    });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
 
     // FirestoreManager.getTimeBankForId()
 
@@ -98,29 +104,29 @@ class _ProfilePageState extends State<ProfilePage>
     //   }
     // });
 
-    FirestoreManager.getUserForIdStream(
-      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-    ).listen((UserModel userModel) {
-      if (mounted) isUserLoaded = true;
-      print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
-      _profileBloc.getAllCommunities(context, userModel);
-      this.user = userModel;
-      setState(() {});
-    });
+    // FirestoreManager.getUserForIdStream(
+    //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+    // ).listen((UserModel userModel) {
+    //   if (mounted) isUserLoaded = true;
+    //   print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
+    //   // _profileBloc.getAllCommunities(context, userModel);
+    //   this.user = userModel;
+    //   setState(() {});
+    // });
 
-    _profileBloc.communityLoaded.listen((value) {
-      isCommunityLoaded = value;
-      setState(() {});
-    });
-  }
+    // _profileBloc.communityLoaded.listen((value) {
+    //   isCommunityLoaded = value;
+    //   setState(() {});
+    // });
+  // }
 
-  @override
-  void dispose() {
-    _profileBloc.dispose();
-    appbarAnimationController.dispose();
-    flexibleAnimationController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // _profileBloc.dispose();
+  //   appbarAnimationController.dispose();
+  //   flexibleAnimationController.dispose();
+  //   super.dispose();
+  // }
 
   void navigateToSettings() {
     Navigator.push(
@@ -137,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: isUserLoaded && isCommunityLoaded
+      body: isUserLoaded
           ? SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -279,48 +285,48 @@ class _ProfilePageState extends State<ProfilePage>
                           ],
                         ),
                         SizedBox(height: 10),
-                        Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          // child: ListView.separated(
-                          //   padding: EdgeInsets.all(0),
-                          //   shrinkWrap: true,
-                          //   itemCount: communities.length,
-                          //   physics: NeverScrollableScrollPhysics(),
-                          //   itemBuilder: (context, index) {
-                          //     return CommunityCard(
-                          //       community: communities[index],
-                          //       selected:
-                          //           communities[index].id == user.currentCommunity,
-                          //     );
-                          //   },
-                          //   separatorBuilder: (context, index) {
-                          //     return Divider();
-                          //   },
-                          // ),
-                          child: StreamBuilder<List<Widget>>(
-                            stream: _profileBloc.communities,
-                            builder: (context, snapshot) {
-                              if (snapshot.data != null)
-                                return Column(children: snapshot.data);
+                        // Card(
+                        //   elevation: 2,
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(8),
+                        //   ),
+                        // child: ListView.separated(
+                        //   padding: EdgeInsets.all(0),
+                        //   shrinkWrap: true,
+                        //   itemCount: communities.length,
+                        //   physics: NeverScrollableScrollPhysics(),
+                        //   itemBuilder: (context, index) {
+                        //     return CommunityCard(
+                        //       community: communities[index],
+                        //       selected:
+                        //           communities[index].id == user.currentCommunity,
+                        //     );
+                        //   },
+                        //   separatorBuilder: (context, index) {
+                        //     return Divider();
+                        //   },
+                        // ),
+                        //   child: StreamBuilder<List<Widget>>(
+                        //     stream: _profileBloc.communities,
+                        //     builder: (context, snapshot) {
+                        //       if (snapshot.data != null)
+                        //         return Column(children: snapshot.data);
 
-                              if (snapshot.hasError)
-                                return Center(
-                                    child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(snapshot.error),
-                                ));
-                              return Container(
-                                height: 100,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        //       if (snapshot.hasError)
+                        //         return Center(
+                        //             child: Padding(
+                        //           padding: const EdgeInsets.all(12.0),
+                        //           child: Text(snapshot.error),
+                        //         ));
+                        //       return Container(
+                        //         height: 100,
+                        //         child: Center(
+                        //           child: CircularProgressIndicator(),
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
                         SizedBox(height: 10),
                         RichText(
                           textAlign: TextAlign.center,
