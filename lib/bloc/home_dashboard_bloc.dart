@@ -51,20 +51,27 @@ class HomeDashBoardBloc extends BlocBase {
     }
   }
 
-  void setDefaultCommunity(
-      {CommunityModel community, BuildContext context, oldCommunityId}) {
+  Future<bool> setDefaultCommunity(
+      {CommunityModel community, BuildContext context}) {
+    // Firestore.instance
+    //     .collection('users')
+    //     .document(SevaCore.of(context).loggedInUser.email)
+    //     .updateData({
+    //   "currentCommunity": SevaCore.of(context).loggedInUser.currentCommunity
+    // }).then((onValue) {
+    //   SevaCore.of(context).loggedInUser.currentCommunity = community.id;
+    //   _selectedCommunity.drain();
+    //   _selectedCommunity.add(community);
+    // }).catchError((e) {
+    //   SevaCore.of(context).loggedInUser.currentCommunity = oldCommunityId;
+    // });
     Firestore.instance
         .collection('users')
         .document(SevaCore.of(context).loggedInUser.email)
         .updateData({
       "currentCommunity": SevaCore.of(context).loggedInUser.currentCommunity
-    }).then((onValue) {
-      SevaCore.of(context).loggedInUser.currentCommunity = community.id;
-      _selectedCommunity.drain();
-      _selectedCommunity.add(community);
-    }).catchError((e) {
-      SevaCore.of(context).loggedInUser.currentCommunity = oldCommunityId;
     });
+    return Future.value(true);
   }
 
   void getPrimaryTimebank() {}

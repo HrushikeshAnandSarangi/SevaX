@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/widgets/no_group_placeholder.dart';
 import 'package:sevaexchange/views/home_page/widgets/timebank_card.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 
 class TimebankHomePage extends StatefulWidget {
   final SelectedCommuntityGroup selectedCommuntityGroup;
@@ -54,7 +57,20 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
-                  onPressed: () {},
+                  onPressed: () {
+                    createEditCommunityBloc.updateUserDetails(
+                              SevaCore.of(context).loggedInUser);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TimebankCreate(
+                                timebankId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentTimebank,
+                              ),
+                            ),
+                          );
+                  },
                 ),
               ],
             ),

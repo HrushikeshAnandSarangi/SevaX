@@ -61,6 +61,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   @override
   void initState() {
+    print("----> ${widget.timebankId} | ${widget.isUserAdmin} | ${widget.userEmail}");
     _listController = ScrollController();
     _pageScrollController = ScrollController();
     _pageScrollController.addListener(_scrollListener);

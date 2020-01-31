@@ -6,6 +6,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
+import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
@@ -85,14 +86,28 @@ class _MyHomePageState extends State<MyHomePage>
                           if (v.id != selectedCommunity.id) {
                             SevaCore.of(context).loggedInUser.currentCommunity =
                                 v.id;
-                            _homeDashBoardBloc.setDefaultCommunity(
+                            _homeDashBoardBloc
+                                .setDefaultCommunity(
                               context: context,
                               community: v,
-                              oldCommunityId: selectedCommunity.id,
-                            );
-                            setState(() {
-                              selectedCommunity = v;
+                              //oldCommunityId: selectedCommunity.id,
+                            )
+                                .then((_) {
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity = v.id;
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SwitchTimebank(),
+                                ),
+                              );
                             });
+
+                            // setState(() {
+                            //   selectedCommunity = v;
+                            // });
+
                           }
                         },
                         items: List.generate(
@@ -142,8 +157,6 @@ class _MyHomePageState extends State<MyHomePage>
                     if (data.id ==
                         snapshot.data.currentCommunity.primary_timebank) {
                       primaryTimebank = data;
-                    } else {
-                      primaryTimebank = TimebankModel({});
                     }
                   });
                 }
