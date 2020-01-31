@@ -166,7 +166,7 @@ class TimeBankBloc {
 
   updateInvitedUsersForRequest(requestID, sevauserid) async {
     var result = await _repository.updateInvitedUsersForRequest(requestID, sevauserid);
-    print('request invite -----> ${result}');
+    print('request invite -----> ${result.toString()}');
   }
 
   getSelectedRequestInvitedUsersData(usersids) async {
@@ -193,6 +193,9 @@ class TimeBankBloc {
     var usersResults = await _repository.getUsersFromRequest(requestID);
     _timebankController.value.setInvitedUsersDataForRequest(usersResults);
     _timebankController.add(_timebankController.value);
+  }
+  dispose() {
+    _timebankController.close();
   }
 }
 

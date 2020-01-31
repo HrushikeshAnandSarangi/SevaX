@@ -101,7 +101,7 @@ class TabarView extends StatelessWidget {
               ),
               FavoriteUsers(
                 timebankId: requestItem.timebankId,
-                requestModel: requestItem,
+                requestModelId: requestItem.id,
                 sevaUserId: sevaUserId,
               ),
               PastHiredUsersView(

@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../core.dart';
 
@@ -19,11 +20,11 @@ enum FavoriteUserStatus {LOADING,LOADED,EMPTY}
 
 class FavoriteUsers extends StatefulWidget {
   final String timebankId;
-  final RequestModel requestModel;
+  final String requestModelId;
   final String sevaUserId;
 
 
-  FavoriteUsers({@required this.timebankId, this.requestModel, this.sevaUserId, });
+  FavoriteUsers({@required this.timebankId, this.requestModelId, this.sevaUserId, });
 
   @override
   _FavoriteUsersState createState() => _FavoriteUsersState();
@@ -47,6 +48,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
   List<UserModel> users = [];
   FavoriteUserStatus userStatus = FavoriteUserStatus.LOADING;
   BuildContext dialogLoadingContext;
+   RequestModel requestModel;
 
 
 
@@ -128,6 +130,18 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
     }
   }
 
+
+  Future<void> getRequestModel() async {
+    requestModel = await  FirestoreManager.getRequestFutureById(requestId: widget.requestModelId);
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    getRequestModel();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -142,9 +156,10 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
           itemCount: users.length,
           itemBuilder: (context, index) {
 
+
             return RequestCardWidget(
               userModel: users[index],
-              requestModel: widget.requestModel,
+              requestModel: requestModel,
               timebankModel: timebank.model,
               isFavorite: true,
               cameFromInvitedUsersPage: false,
@@ -153,6 +168,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
         );
     }
   }
+
 
 
 }

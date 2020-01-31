@@ -33,7 +33,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
   var validItems;
   bool isAdmin =false;
   final _firestore = Firestore.instance;
-  List<UserModel> favoriteUsers = [];
+  List<UserModel> favoriteUsers;
   bool shouldInvite = true;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
 
@@ -41,8 +41,10 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     timeBankBloc.setInvitedUsersData(widget.requestModel.id);
+    setState(() {
+
+    });
 
     if(timebank.model.admins.contains(widget.sevaUserId)){
       isAdmin =true;
@@ -59,7 +61,9 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
           .getDocuments()
           .then(
             (QuerySnapshot querysnapshot) {
-          querysnapshot.documents.forEach(
+              if (favoriteUsers == null) favoriteUsers = List();
+
+              querysnapshot.documents.forEach(
                 (DocumentSnapshot user) => favoriteUsers.add(
               UserModel.fromMap(
                 user.data,
@@ -81,18 +85,30 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
           .getDocuments()
           .then(
             (QuerySnapshot querysnapshot) {
-          querysnapshot.documents.forEach(
+              if (favoriteUsers == null) favoriteUsers = List();
+
+              querysnapshot.documents.forEach(
                 (DocumentSnapshot user) => favoriteUsers.add(
               UserModel.fromMap(
                 user.data,
               ),
             ),
           );
-          setState(() {});
+         setState(() {});
         },
       );
 
     }
+
+
+
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    timeBankBloc.dispose();
   }
 
   @override
