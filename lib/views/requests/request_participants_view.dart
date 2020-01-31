@@ -71,7 +71,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
     List<String> result = LinkedHashSet<String>.from(newList).toList();
 
-    print('fhsfhsgj ${result.toString()}');
+  //  print('fhsfhsgj ${result.toString()}');
 
     result.forEach((email){
       futures.add(getUserDetails(memberEmail: email));
@@ -177,7 +177,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   }
   Widget makeUserWidget(UserModel userModel, BuildContext context, UserRequestStatusType status) {
     return Container(
-        margin: EdgeInsets.fromLTRB(35, 20, 30, 10),
+        margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
         child: Stack(
             children: <Widget>[
               getUserCard(userModel,context: context,statusType: status),

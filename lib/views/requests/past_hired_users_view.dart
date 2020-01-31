@@ -28,7 +28,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
   final _firestore = Firestore.instance;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
   List<UserModel> users = [];
-  List<UserModel> favoriteUsers;
+  List<UserModel> favoriteUsers =[];
   bool isAdmin =false;
   PastHiredUserStatus userStatus = PastHiredUserStatus.LOADING;
 
@@ -82,7 +82,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
       _firestore
           .collection("users")
           .where(
-        'favoriteByTimebank',
+        'favoriteByTimeBank',
         arrayContains: timebank.model.id,
       )
           .getDocuments()
@@ -151,7 +151,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           favoriteUsers.forEach((f){
 
             if (f.sevaUserID == user.sevaUserID){
-            //  print("found a match for ${f.fullname}   --  ${user.sevaUserID}");
+              print("found a match for ${f.fullname}   --  ${user.sevaUserID}");
               isfavorite = true;
             }
 
@@ -162,6 +162,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             requestModel: widget.requestModel,
             timebankModel: timebank.model,
             isFavorite: isfavorite,
+            cameFromInvitedUsersPage: false,
           );
 
 
@@ -173,6 +174,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             requestModel: widget.requestModel,
             timebankModel: timebank.model,
             isFavorite: false,
+            cameFromInvitedUsersPage: false,
 
           );
         }

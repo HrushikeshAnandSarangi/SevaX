@@ -196,6 +196,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
 
     acceptInviteRequest(
       requestId: model.requestId,
+      acceptedUserEmail: user.email,
       acceptedUserId: user.sevaUserID,
       notificationId: notificationId,
     );

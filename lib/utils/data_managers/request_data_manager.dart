@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 Location location = new Location();
@@ -404,14 +405,16 @@ Future<void> rejectInviteRequest({
 
 Future<void> acceptInviteRequest({
   @required String requestId,
+  @required String acceptedUserEmail,
   @required String acceptedUserId,
   @required String notificationId,
+
 }) async {
   await Firestore.instance
       .collection('requests')
       .document(requestId)
       .updateData({
-    'approvedUsers' : FieldValue.arrayUnion([acceptedUserId]),
+    'approvedUsers' : FieldValue.arrayUnion([acceptedUserEmail]),
     'invitedUsers' : FieldValue.arrayRemove([acceptedUserId])
   });
 

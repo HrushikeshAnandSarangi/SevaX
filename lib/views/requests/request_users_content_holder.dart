@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/favorite_users_view.dart';
@@ -23,10 +24,10 @@ class _RequestUsersTabsViewHolderState
     extends State<RequestUsersTabsViewHolder> {
 
   @override
-  void initState() { 
-    
+  void initState() {
+
     super.initState();
-    
+
   }
 
   @override
@@ -39,10 +40,10 @@ class _RequestUsersTabsViewHolderState
 }
 
 class TabarView extends StatelessWidget {
-
+  final Function set;
   String sevaUserId;
   final RequestModel requestItem;
-  TabarView({this.requestItem});
+  TabarView({this.requestItem, this.set});
 
   @override
   Widget build(BuildContext context) {

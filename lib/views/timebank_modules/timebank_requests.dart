@@ -9,6 +9,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -16,7 +17,7 @@ import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_request_details.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
 
@@ -39,7 +40,7 @@ class RequestsState extends State<RequestsModule> {
     globals.orCreateSelector = 0;
   }
 
-  RequestsState() {}
+  //RequestsState() {}
 
   bool isNearme = false;
   List<TimebankModel> timebankList = [];
@@ -174,71 +175,66 @@ class RequestsState extends State<RequestsModule> {
                         SevaCore.of(context).loggedInUser.adminOfYanagGangs =
                             adminOfCount;
 
-                        return Expanded(
-                          child: DropdownButton<String>(
-                            value: timebankId,
-                            onChanged: (String newValue) {
-                              if (newValue == "Create Yang Gang") {
-                                {
-                                  this.createSubTimebank(context);
-                                }
-                              } else {
-                                setState(() {
-                                  SevaCore.of(context)
-                                      .loggedInUser
-                                      .currentTimebank = newValue;
-                                  timebankId = newValue;
-                                });
+                        return DropdownButton<String>(
+                          value: timebankId,
+                          onChanged: (String newValue) {
+                            if (newValue == "Create Yang Gang") {
+                              {
+                                this.createSubTimebank(context);
                               }
-                            },
-                            items: dropdownList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              if (value == "Create Yang Gang") {
+                            } else {
+                              setState(() {
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentTimebank = newValue;
+                                timebankId = newValue;
+                              });
+                            }
+                          },
+                          items: dropdownList
+                              .map<DropdownMenuItem<String>>((String value) {
+                            if (value == "Create Yang Gang") {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              );
+                            } else {
+                              if (value == 'All') {
                                 return DropdownMenuItem<String>(
                                   value: value,
-                                  child: Text(
-                                    value,
-                                    style: TextStyle(color: Colors.red),
-                                  ),
+                                  child: Text(value),
                                 );
                               } else {
-                                if (value == 'All') {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                } else {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: FutureBuilder<Object>(
-                                        future:
-                                            FirestoreManager.getTimeBankForId(
-                                                timebankId: value),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.hasError)
-                                            return new Text(
-                                                'Error: ${snapshot.error}');
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return Offstage();
-                                          }
-                                          TimebankModel timebankModel =
-                                              snapshot.data;
-                                          return Text(
-                                            timebankModel.name,
-                                            style: TextStyle(fontSize: 15.0),
-                                          );
-                                        }),
-                                  );
-                                }
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: FutureBuilder<Object>(
+                                      future:
+                                          FirestoreManager.getTimeBankForId(
+                                              timebankId: value),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasError)
+                                          return new Text(
+                                              'Error: ${snapshot.error}');
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Offstage();
+                                        }
+                                        TimebankModel timebankModel =
+                                            snapshot.data;
+                                        return Text(
+                                          timebankModel.name,
+                                          style: TextStyle(fontSize: 15.0),
+                                        );
+                                      }),
+                                );
                               }
-                            }).toList(),
-                          ),
+                            }
+                          }).toList(),
                         );
                       }),
-                ),
-                Expanded(
-                  child: Container(),
                 ),
                 Container(
                   width: 120,
@@ -297,6 +293,7 @@ class RequestsState extends State<RequestsModule> {
               : RequestListItems(
                   parentContext: context,
                   timebankId: timebankId,
+                  timebankModel: widget.timebankModel
                 )
         ],
       ),
@@ -681,23 +678,22 @@ class NearRequestListItems extends StatelessWidget {
                       );
                     }
 
-                    return Expanded(
-                      child: ListView.builder(
-                        itemCount: requestModelList.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index >= requestModelList.length) {
-                            return Container(
-                              width: double.infinity,
-                              height: 65,
-                            );
-                          }
-                          return getRequestView(
-                            requestModelList[index],
-                            loggedintimezone,
-                            context,
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: requestModelList.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index >= requestModelList.length) {
+                          return Container(
+                            width: double.infinity,
+                            height: 65,
                           );
-                        },
-                      ),
+                        }
+                        return getRequestView(
+                          requestModelList[index],
+                          loggedintimezone,
+                          context,
+                        );
+                      },
                     );
 
                   // Expanded(
@@ -757,17 +753,16 @@ class NearRequestListItems extends StatelessWidget {
                       );
                     }
 
-                    return Expanded(
-                      child: Container(
-                        padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                        child: ListView(
-                          children: requestModelList.map(
-                            (RequestModel requestModel) {
-                              return getRequestView(
-                                  requestModel, loggedintimezone, context);
-                            },
-                          ).toList(),
-                        ),
+                    return Container(
+                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: requestModelList.map(
+                          (RequestModel requestModel) {
+                            return getRequestView(
+                                requestModel, loggedintimezone, context);
+                          },
+                        ).toList(),
                       ),
                     );
                 }
@@ -811,7 +806,7 @@ class NearRequestListItems extends StatelessWidget {
               parentContext,
               MaterialPageRoute(
                 builder: (context) =>
-                    TimeBankRequestDetails(requestItem: model),
+                    RequestDetailsAboutPage(requestItem: model),
               ),
             );
           },
@@ -831,33 +826,31 @@ class NearRequestListItems extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        model.title,
-                        style: Theme.of(parentContext).textTheme.subhead,
-                      ),
-                      Text(
-                        model.description,
-                        style: Theme.of(parentContext).textTheme.subtitle,
-                      ),
-                      SizedBox(height: 8),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: <Widget>[
-                          Text(getTimeFormattedString(
-                              model.requestStart, loggedintimezone)),
-                          SizedBox(width: 2),
-                          Icon(Icons.arrow_forward, size: 14),
-                          SizedBox(width: 4),
-                          Text(getTimeFormattedString(
-                              model.requestEnd, loggedintimezone)),
-                        ],
-                      ),
-                    ],
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      model.title,
+                      style: Theme.of(parentContext).textTheme.subhead,
+                    ),
+                    Text(
+                      model.description,
+                      style: Theme.of(parentContext).textTheme.subtitle,
+                    ),
+                    SizedBox(height: 8),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: <Widget>[
+                        Text(getTimeFormattedString(
+                            model.requestStart, loggedintimezone)),
+                        SizedBox(width: 2),
+                        Icon(Icons.arrow_forward, size: 14),
+                        SizedBox(width: 4),
+                        Text(getTimeFormattedString(
+                            model.requestEnd, loggedintimezone)),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -893,16 +886,28 @@ class NearRequestListItems extends StatelessWidget {
   }
 }
 
-class RequestListItems extends StatelessWidget {
+class RequestListItems extends StatefulWidget {
   final String timebankId;
   final BuildContext parentContext;
+  final TimebankModel timebankModel;
 
-  const RequestListItems({Key key, this.timebankId, this.parentContext})
-      : super(key: key);
+  RequestListItems({Key key, this.timebankId, this.parentContext, this.timebankModel});
 
   @override
+  State<StatefulWidget> createState() {
+    return RequestListItemsState();
+  }
+}
+
+class RequestListItemsState extends State<RequestListItems> {
+  @override
+  void initState() {
+    super.initState();
+    timeBankBloc.getRequestsFromTimebankId(widget.timebankId);
+  }
+  @override
   Widget build(BuildContext context) {
-    if (timebankId != 'All') {
+    if (widget.timebankId != 'All') {
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -916,43 +921,37 @@ class RequestListItems extends StatelessWidget {
             UserModel user = snapshot.data;
             String loggedintimezone = user.timezone;
 
-            return StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getRequestListStream(
-                timebankId: timebankId,
-              ),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
-                }
-                switch (requestListSnapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
-                  default:
-                    List<RequestModel> requestModelList =
-                        requestListSnapshot.data;
-                    requestModelList = filterBlockedRequestsContent(
-                        context: context, requestModelList: requestModelList);
+            return StreamBuilder(
+                stream: timeBankBloc.timebankController,
+                builder: (context, AsyncSnapshot<TimebankController> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data != null && snapshot.data.requests.length == 0) {
+                      return CircularProgressIndicator();
+                    } else {
+                      List<RequestModel> requestModelList = snapshot.data.requests;
+                      requestModelList = filterBlockedRequestsContent(
+                          context: context, requestModelList: requestModelList);
 
-                    if (requestModelList.length == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text('No Requests')),
-                      );
+                      if (requestModelList.length == 0) {
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Center(child: Text('No Requests')),
+                        );
+                      }
+                      var consolidatedList =
+                      GroupRequestCommons.groupAndConsolidateRequests(
+                          requestModelList,
+                          SevaCore.of(context).loggedInUser.sevaUserID);
+                      return formatListFrom(
+                          consolidatedList: consolidatedList,
+                          loggedintimezone: loggedintimezone,
+                          userEmail: SevaCore.of(context).loggedInUser.email);
                     }
-
-                    var consolidatedList =
-                        GroupRequestCommons.groupAndConsolidateRequests(
-                            requestModelList,
-                            SevaCore.of(context).loggedInUser.sevaUserID);
-
-                    return formatListFrom(
-                        consolidatedList: consolidatedList,
-                        loggedintimezone: loggedintimezone,
-                        userEmail: SevaCore.of(context).loggedInUser.email);
-                }
-              },
-            );
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error.toString());
+                  }
+                  return Text("");
+                });
           });
     } else {
       return FutureBuilder<Object>(
@@ -1027,31 +1026,30 @@ class RequestListItems extends StatelessWidget {
       {List<RequestModelList> consolidatedList,
       String loggedintimezone,
       String userEmail}) {
-    return Expanded(
-      child: Container(
-          child: ListView.builder(
-        itemCount: consolidatedList.length + 1,
-        itemBuilder: (context, index) {
-          if (index >= consolidatedList.length) {
-            return Container(
-              width: double.infinity,
-              height: 65,
-            );
-          }
-          return getRequestView(
-            consolidatedList[index],
-            loggedintimezone,
-            userEmail,
+    return Container(
+        child: ListView.builder(
+          shrinkWrap: true,
+      itemCount: consolidatedList.length + 1,
+      itemBuilder: (context, index) {
+        if (index >= consolidatedList.length) {
+          return Container(
+            width: double.infinity,
+            height: 65,
           );
-        },
-      )
-          // child: ListView(
-          //   children: consolidatedList.map((RequestModelList requestModel) {
-          //     return getRequestView(requestModel, loggedintimezone);
-          //   }).toList(),
-          // ),
-          ),
-    );
+        }
+        return getRequestView(
+          consolidatedList[index],
+          loggedintimezone,
+          userEmail,
+        );
+      },
+    )
+        // child: ListView(
+        //   children: consolidatedList.map((RequestModelList requestModel) {
+        //     return getRequestView(requestModel, loggedintimezone);
+        //   }).toList(),
+        // ),
+        );
   }
 
   Widget getRequestView(
@@ -1091,11 +1089,13 @@ class RequestListItems extends StatelessWidget {
         elevation: 2,
         child: InkWell(
           onTap: () {
+            timeBankBloc.setSelectedRequest(model);
+            timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
             Navigator.push(
-              parentContext,
+              widget.parentContext,
               MaterialPageRoute(
                 builder: (context) =>
-                    RequestTabHolder(requestModel: model,),
+                    RequestTabHolder(),
               ),
             );
           },
@@ -1109,7 +1109,8 @@ class RequestListItems extends StatelessWidget {
                     height: 45,
                     width: 45,
                     child: FadeInImage.assetNetwork(
-                      placeholder: 'lib/assets/images/profile.png',
+                      placeholder: defaultUserImageURL,
+                    //  placeholder: 'lib/assets/images/profile.png',
                       image: model.photoUrl == null
                           ? defaultUserImageURL
                           : model.photoUrl,
@@ -1117,83 +1118,81 @@ class RequestListItems extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        model.title,
-                        style: Theme.of(parentContext).textTheme.subhead,
-                      ),
-                      Text(
-                        model.description,
-                        style: Theme.of(parentContext).textTheme.subtitle,
-                      ),
-                      SizedBox(height: 8),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: <Widget>[
-                          Text(getTimeFormattedString(
-                              model.requestStart, loggedintimezone)),
-                          SizedBox(width: 2),
-                          Icon(Icons.arrow_forward, size: 14),
-                          SizedBox(width: 4),
-                          Text(
-                            getTimeFormattedString(
-                              model.requestEnd,
-                              loggedintimezone,
-                            ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      model.title,
+                      style: Theme.of(widget.parentContext).textTheme.subhead,
+                    ),
+                    Text(
+                      model.description,
+                      style: Theme.of(widget.parentContext).textTheme.subtitle,
+                    ),
+                    SizedBox(height: 8),
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: <Widget>[
+                        Text(getTimeFormattedString(
+                            model.requestStart, loggedintimezone)),
+                        SizedBox(width: 2),
+                        Icon(Icons.arrow_forward, size: 14),
+                        SizedBox(width: 4),
+                        Text(
+                          getTimeFormattedString(
+                            model.requestEnd,
+                            loggedintimezone,
                           ),
-                        ],
-                      ),
-                      Offstage(
-                        offstage: !model.acceptors.contains(userEmail),
-                        child: Container(
-                            alignment: Alignment.topRight,
-                            margin: EdgeInsets.all(12),
-                            // width: double.infinity,
-                            child: Container(
-                              width: 100,
-                              height: 32,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: EdgeInsets.all(0),
-                                color: Color.fromRGBO(44, 64, 140, 0.7),
-                                child: Row(
-                                  children: <Widget>[
-                                    SizedBox(width: 1),
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromRGBO(44, 64, 140, 1),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Spacer(),
-                                    Text(
-                                      'Applied',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Spacer(
-                                      flex: 2,
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    Offstage(
+                      offstage: !model.acceptors.contains(userEmail),
+                      child: Container(
+                          alignment: Alignment.topRight,
+                          margin: EdgeInsets.all(12),
+                          // width: double.infinity,
+                          child: Container(
+                            width: 100,
+                            height: 32,
+                            child: FlatButton(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                            )),
-                      )
-                    ],
-                  ),
+                              padding: EdgeInsets.all(0),
+                              color: Color.fromRGBO(44, 64, 140, 0.7),
+                              child: Row(
+                                children: <Widget>[
+                                  SizedBox(width: 1),
+                                  Container(
+                                    width: 30,
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(44, 64, 140, 1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Text(
+                                    'Applied',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Spacer(
+                                    flex: 2,
+                                  ),
+                                ],
+                              ),
+                              onPressed: () {},
+                            ),
+                          )),
+                    )
+                  ],
                 ),
               ],
             ),
