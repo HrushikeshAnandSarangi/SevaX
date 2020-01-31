@@ -1,162 +1,64 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
-
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 
-
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-
-class RequestCardWidget extends StatefulWidget {
-
+class RequestCardWidget extends StatelessWidget {
   final UserModel userModel;
   final RequestModel requestModel;
-  final bool cameFromInvitedUsersPage;
   final TimebankModel timebankModel;
   final bool isFavorite;
+  final String reqStatus;
+  final bool isAdmin;
 
-
-  RequestCardWidget({Key key ,
+  const RequestCardWidget({
     @required this.userModel,
     @required this.requestModel,
-    this.timebankModel,
-    this.isFavorite,
-    this.cameFromInvitedUsersPage,});
-
-
-
-
-  @override
-  _RequestCardWidgetState createState() {
-    return _RequestCardWidgetState();
-
-  }
-
-}
-
-
-
-
-enum RequestUserStatus{INVITE, INVITED,APPROVED,REJECTED}
-
-
-
-
-
-class _RequestCardWidgetState extends State<RequestCardWidget> {
-
-  bool isBookMarked = false;
-  var validItems;
-  BuildContext dialogLoadingContext;
-
-  static const String Invite = "Invite";
-  static const String Invited = "Invited";
-  static const String Approved = "Approved";
-  static const String Rejected = "Rejected";
-  bool isAdmin = false;
-
-
-  bool shouldInvite = true;
-  @override
-  void initState() {
-    isBookMarked = widget.isFavorite;
-
-    Future.delayed(Duration.zero,(){
-      if (widget.timebankModel.admins.contains(SevaCore
-          .of(context)
-          .loggedInUser
-          .sevaUserID)) {
-        isAdmin = true;
-      }
-    });
-    super.initState();
-  }
-
-
+    @required this.timebankModel,
+    @required this.isFavorite,
+    @required this.isAdmin,
+    @required this.reqStatus,
+  });
 
   @override
   Widget build(BuildContext context) {
-
-
-
-    return makeUserWidget();
+    return makeUserWidget(context);
   }
 
-
-  Widget makeUserWidget() {
+  Widget makeUserWidget(context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(30, 20, 25, 10),
-
-        child: Stack(
-            children: <Widget>[
-              getUserCard(userModel: widget.userModel, requestModel: widget.requestModel, context: context, ),
-              getUserThumbnail(),
-            ]
-        )
+      margin: EdgeInsets.fromLTRB(30, 20, 25, 10),
+      child: Stack(
+        children: <Widget>[
+          getUserCard(context),
+          getUserThumbnail(),
+        ],
+      ),
     );
   }
 
   Widget getUserThumbnail() {
     return Container(
-        margin: EdgeInsets.only(top: 20, right: 15),
-        width: 60.0,
-        height: 60.0,
-
-        decoration: BoxDecoration(
-            shape: BoxShape.circle,
-
-            image: DecorationImage(
-                fit: BoxFit.fill,
-                image: NetworkImage(
-                    widget.userModel.photoURL)
-            )
-        ));
+      margin: EdgeInsets.only(top: 20, right: 15),
+      width: 60.0,
+      height: 60.0,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: NetworkImage(
+            userModel.photoURL,
+          ),
+        ),
+      ),
+    );
   }
 
-  Widget getUserCard({UserModel userModel, RequestModel requestModel,BuildContext context}) {
-    bool isInvited = false;
-
-    RequestUserStatus status;
-
-    if (widget.cameFromInvitedUsersPage) {
-    //  print('invited true 1');
-
-      status = RequestUserStatus.INVITED;
-      shouldInvite = false;
-      isInvited = true;
-    }else {
-      if (requestModel.invitedUsers.contains(userModel.sevaUserID)) {
-        status = RequestUserStatus.INVITED;
-        shouldInvite = false;
-
-        isInvited = true;
-     //   print('invited true 2');
-
-      }else if (requestModel.acceptors.contains(userModel.email)) {
-        status = RequestUserStatus.INVITED;
-        shouldInvite = false;
-
-        isInvited = true;
-      //  print('invited true 2');
-
-      } else if (requestModel.approvedUsers.contains(
-          userModel.email)) {
-        status = RequestUserStatus.APPROVED;
-        shouldInvite = false;
-
-        isInvited = true;
-//        print('approved true');
-
-      }
-
-    }
-
+  Widget getUserCard(context) {
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
@@ -187,47 +89,47 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    child: Text(userModel.fullname, style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
 //              Spacer(),
                   InkWell(
-
-
                     child: Row(
                       children: <Widget>[
-                        isBookMarked ?
-
-                        Icon(
-                          Icons.bookmark, color: Colors.redAccent,
-                          size: 35,
-                        ) : Icon(
-                          Icons.bookmark,
-                          color: Colors.grey,
-                          size: 35,
-                        ),
+                        isFavorite
+                            ? Icon(
+                                Icons.bookmark,
+                                color: Colors.redAccent,
+                                size: 35,
+                              )
+                            : Icon(
+                                Icons.bookmark,
+                                color: Colors.grey,
+                                size: 35,
+                              ),
                       ],
                     ),
                     onTap: () {
-
-
-
-                      setState(() {
-
-                        if(isBookMarked){
-
-                          removeFromFavoriteList(context, userModel, widget.timebankModel);
-                          isBookMarked = ! isBookMarked;
-
-                        }else{
-                          addToFavoriteList(context,userModel,widget.timebankModel);
-                          isBookMarked = ! isBookMarked;
-                        }
-                      });
-
-
+                      if (isFavorite) {
+                        removeFromFavoriteList(
+                          email: userModel.email,
+                          timeBankId: timebankModel.id,
+                          loggedInUserId:
+                              SevaCore.of(context).loggedInUser.sevaUserID,
+                        );
+                      } else {
+                        addToFavoriteList(
+                          email: userModel.email,
+                          timebankId: timebankModel.id,
+                          loggedInUserId:
+                              SevaCore.of(context).loggedInUser.sevaUserID,
+                        );
+                      }
                     },
                   ),
                 ],
@@ -253,9 +155,13 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
 //              ),
               Expanded(
                 child: Text(
-                  widget.userModel.bio,
+                  userModel.bio,
                   maxLines: 3,
-                  style: TextStyle(color: Colors.black, fontSize: 12,),),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
+                ),
               ),
 
               Row(
@@ -273,34 +179,32 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                     height: 40,
                     padding: EdgeInsets.only(bottom: 10),
                     child: RaisedButton(
-                        shape: StadiumBorder(),
-                        color: Colors.indigo,
-                        textColor: Colors.white,
-                        elevation: 5,
-                        onPressed: isInvited ? null : () async {
-                          await timeBankBloc.updateInvitedUsersForRequest(requestModel.id, userModel.sevaUserID);
-                          showProgressDialog(context);
-                          sendNotification(
-                              context, requestModel, userModel,
-                              widget.timebankModel, status);
-
-
-
-                            setState(() {
-                              status = RequestUserStatus.INVITED;
-
-                              isInvited =true;
-                            });
-
-
-
-
-
-                        },
-                        child: Text(
-                            getRequestUserTitle(status) ?? "",
-                            style: TextStyle(fontSize: 14)
-                        )
+                      shape: StadiumBorder(),
+                      color: Colors.indigo,
+                      textColor: Colors.white,
+                      elevation: 5,
+                      onPressed: reqStatus != 'Invite'
+                          ? null
+                          : () async {
+                              await timeBankBloc.updateInvitedUsersForRequest(
+                                  requestModel.id, userModel.sevaUserID);
+                              //showProgressDialog(context);
+                              sendNotification(
+                                requestModel: requestModel,
+                                userModel: userModel,
+                                timebankModel: timebankModel,
+                                currentCommunity: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity,
+                                sevaUserID: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity,
+                              );
+                            },
+                      child: Text(
+                        reqStatus ?? "",
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ),
                   ),
                 ],
@@ -312,35 +216,29 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
     );
   }
 
-
-
-  Future<void> sendNotification(BuildContext context, RequestModel requestModel,
-      UserModel userModel, TimebankModel timebankModel, RequestUserStatus status,) async {
+  Future<void> sendNotification({
+    RequestModel requestModel,
+    UserModel userModel,
+    String currentCommunity,
+    String sevaUserID,
+    TimebankModel timebankModel,
+  }) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
         timebankImage: timebankModel.photoUrl,
         timebankName: timebankModel.name,
         requestDesc: requestModel.description,
         requestId: requestModel.id,
-        requestTitle: requestModel.title
-    );
+        requestTitle: requestModel.title);
 
-    NotificationsModel notification =
-    NotificationsModel(
+    NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
         timebankId: timebankModel.id,
         data: requestInvitationModel.toMap(),
         isRead: false,
         type: NotificationType.RequestInvite,
-        communityId: SevaCore
-            .of(context)
-            .loggedInUser
-            .currentCommunity,
-        senderUserId: SevaCore
-            .of(context)
-            .loggedInUser
-            .sevaUserID,
-        targetUserId: userModel.sevaUserID
-    );
+        communityId: currentCommunity,
+        senderUserId: sevaUserID,
+        targetUserId: userModel.sevaUserID);
 
     await Firestore.instance
         .collection('users')
@@ -349,78 +247,31 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
         .document(notification.id)
         .setData(notification.toMap());
 
-
-
-
-    if(dialogLoadingContext != null){
-      Navigator.pop(dialogLoadingContext);
-
-    }
-
+    // if (dialogLoadingContext != null) {
+    //   Navigator.pop(dialogLoadingContext);
+    // }
   }
 
-
-  Future<void> addToFavoriteList(BuildContext context, UserModel userModel, TimebankModel timebankModel) async {
-
-      await Firestore.instance
-          .collection('users')
-          .document(userModel.email)
-          .updateData({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember'
-          : FieldValue.arrayUnion([isAdmin ? timebankModel.id : SevaCore.of(context).loggedInUser.sevaUserID])
-          });
-
-
-  }
-
-  Future<void> removeFromFavoriteList(BuildContext context, UserModel userModel, TimebankModel timebankModel) async {
-
-    await Firestore.instance
-        .collection('users')
-        .document(userModel.email)
-        .updateData({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember' :
-    FieldValue.arrayRemove([isAdmin ? timebankModel.id : SevaCore.of(context).loggedInUser.sevaUserID])
+  Future<void> addToFavoriteList(
+      {String email, String loggedInUserId, String timebankId}) async {
+    await Firestore.instance.collection('users').document(email).updateData({
+      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
+          FieldValue.arrayUnion(
+        [isAdmin ? timebankId : loggedInUserId],
+      )
     });
-
-
   }
 
-
-  void showProgressDialog(BuildContext context) {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (createDialogContext) {
-          dialogLoadingContext = createDialogContext;
-          return AlertDialog(
-            title: Text('Sending Invitation'),
-            content: LinearProgressIndicator(),
-          );
-        });
+  Future<void> removeFromFavoriteList(
+      {bool isAdmin,
+      String email,
+      String timeBankId,
+      String loggedInUserId}) async {
+    await Firestore.instance.collection('users').document(email).updateData({
+      isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
+          FieldValue.arrayRemove(
+        [isAdmin ? timeBankId : loggedInUserId],
+      ),
+    });
   }
-
-  String getRequestUserTitle(RequestUserStatus status) {
-    switch (status) {
-      case RequestUserStatus.INVITE:
-        return Invite;
-
-      case RequestUserStatus.INVITED:
-        return Invited;
-
-      case RequestUserStatus.APPROVED:
-        return Approved;
-
-      case RequestUserStatus.REJECTED:
-        return Rejected;
-      default:
-        return Invite;
-    }
-  }
-
-
-
-
-
 }
-
-
-
