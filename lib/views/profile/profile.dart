@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -55,10 +56,12 @@ class _ProfilePageState extends State<ProfilePage>
   bool isVerifyAccountPressed = false;
   bool isUserLoaded = false;
   int selected = 0;
+  double sevaCoins = 0;
 
   UserProfileBloc _profileBloc = UserProfileBloc();
 
   List<CommunityModel> communities = [];
+  Stream<List<RequestModel>> requestStream;
 
   @override
   void initState() {
@@ -78,25 +81,6 @@ class _ProfilePageState extends State<ProfilePage>
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    // FirestoreManager.getTimeBankForId()
-
-    // FirestoreManager.getTimeBankForId(
-    //         timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
-    //     .then((timebank) {
-    //   if (timebank.admins
-    //           .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-    //       timebank.coordinators
-    //           .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-    //     setState(() {
-    //       print("Admin access granted");
-    //       isAdminOrCoordinator = true;
-    //     });
-    //   } else {
-    //     // print("Admin access Revoked");
-    //     // isAdminOrCoordinator = false;
-    //   }
-    // });
-
     FirestoreManager.getUserForIdStream(
       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
     ).listen((UserModel userModel) {
@@ -105,23 +89,37 @@ class _ProfilePageState extends State<ProfilePage>
       _profileBloc.getAllCommunities(context, userModel);
       this.user = userModel;
       setState(() {});
-      // communities = [];
-      // if (user.communities != null) {
-      //   userModel.communities.forEach((id) {
-      //     Firestore.instance
-      //         .collection("communities")
-      //         .document(id)
-      //         .get()
-      //         .then((value) {
-      //       print("-->>  ${value.data}");
-      //       communities.add(CommunityModel(value.data));
-      //     });
-      // });
-      //   } else {
-      //     setState(() {});
-      //   }
-      // });
     });
+
+    requestStream = FirestoreManager.getCompletedRequestStream(
+        userEmail: SevaCore.of(context).loggedInUser.email,
+        userId: SevaCore.of(context).loggedInUser.sevaUserID);
+    requestStream.listen(
+      (list) {
+        if (!mounted) return;
+        List<RequestModel> requestList = [];
+        requestList = list;
+        for (var i = 0; i < requestList.length; i++) {
+          var request = requestList[i];
+          if (request.transactions != null && request.transactions.length > 0) {
+            for (var j = 0; j < request.transactions.length; j++) {
+              var transaction = request.transactions[j];
+              if (transaction.to ==
+                  SevaCore.of(context).loggedInUser.sevaUserID) {
+                sevaCoins = transaction.credits;
+//                  print(
+//                      "Transaction of ${transaction.to} completed:${transaction.credits}");
+//                  print(
+//                      "SevaCore.of(context).loggedInUser.sevaUserID of ${transaction.to} completed:${SevaCore.of(context).loggedInUser.sevaUserID}");
+              }
+            }
+          }
+        }
+        setState(() {
+          return requestList;
+        });
+      },
+    );
   }
 
   @override
@@ -232,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  '${user.currentBalance.toString() ?? '0.0'} Seva Coins',
+                                  '${sevaCoins} Seva Coins',
                                   style: TextStyle(
                                     color: user.currentBalance > 0
                                         ? Colors.blue
@@ -356,7 +354,9 @@ class _ProfilePageState extends State<ProfilePage>
                                       MaterialPageRoute(
                                         builder: (context) {
                                           return FindCommunitiesView(
-                                            keepOnBackPress: true,loggedInUser: SevaCore.of(context).loggedInUser,
+                                            keepOnBackPress: true,
+                                            loggedInUser: SevaCore.of(context)
+                                                .loggedInUser,
                                           );
                                         },
                                       ),

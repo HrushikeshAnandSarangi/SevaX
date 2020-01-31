@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
-//import 'package:sevaexchange/models/transaction_model.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:intl/intl.dart';
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 
 class ReviewEarningsPage extends StatelessWidget {
   @override
@@ -53,24 +51,9 @@ class _ReviewEarningState extends State<ReviewEarning> {
         if (!mounted) return;
         setState(() {
           requestList = list;
-          // RequestModel modelflag =
 
-          //  requestList.sort((b, a) {
-          //    return a.transactions.timestamp.compareTo(b.transactions.timestamp);
-          //  }
-          //  );
           return requestList;
         });
-        // userList = [];
-        // requestList.forEach(
-        //   (request) async {
-        //     UserModel user = await FirestoreManager.getUserForId(
-        //       sevaUserId: request.sevaUserId,
-        //     );
-        //     if (!mounted) return;
-        //     setState(() => userList.add(user));
-        //   },
-        // );
       },
     );
   }
