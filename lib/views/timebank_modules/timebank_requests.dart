@@ -63,7 +63,7 @@ class RequestsState extends State<RequestsModule> {
     _setORValue();
     timebankId = widget.timebankModel.id;
     print("----------->>>$timebankId");
-    
+
     return Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 10),
       child: Column(
@@ -695,20 +695,6 @@ class NearRequestListItems extends StatelessWidget {
                         );
                       },
                     );
-
-                  // Expanded(
-                  //   child: Container(
-                  //     padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  //     child: ListView(
-                  //       children: requestModelList.map(
-                  //         (RequestModel requestModel) {
-                  //           return getRequestView(
-                  //               requestModel, loggedintimezone);
-                  //         },
-                  //       ).toList(),
-                  //     ),
-                  //   ),
-                  // );
                 }
               },
             );
@@ -1026,30 +1012,26 @@ class RequestListItemsState extends State<RequestListItems> {
       {List<RequestModelList> consolidatedList,
       String loggedintimezone,
       String userEmail}) {
-    return Container(
-        child: ListView.builder(
-          shrinkWrap: true,
-      itemCount: consolidatedList.length + 1,
-      itemBuilder: (context, index) {
-        if (index >= consolidatedList.length) {
-          return Container(
-            width: double.infinity,
-            height: 65,
+    return Expanded(
+      child: Container(
+          child: ListView.builder(
+            shrinkWrap: true,
+        itemCount: consolidatedList.length + 1,
+        itemBuilder: (context, index) {
+          if (index >= consolidatedList.length) {
+            return Container(
+              width: double.infinity,
+              height: 65,
+            );
+          }
+          return getRequestView(
+            consolidatedList[index],
+            loggedintimezone,
+            userEmail,
           );
-        }
-        return getRequestView(
-          consolidatedList[index],
-          loggedintimezone,
-          userEmail,
-        );
-      },
-    )
-        // child: ListView(
-        //   children: consolidatedList.map((RequestModelList requestModel) {
-        //     return getRequestView(requestModel, loggedintimezone);
-        //   }).toList(),
-        // ),
-        );
+        },
+      )),
+    );
   }
 
   Widget getRequestView(
@@ -1094,8 +1076,9 @@ class RequestListItemsState extends State<RequestListItems> {
             Navigator.push(
               widget.parentContext,
               MaterialPageRoute(
-                builder: (context) =>
-                    RequestTabHolder(),
+                builder: (context) => RequestTabHolder(
+
+                ),
               ),
             );
           },

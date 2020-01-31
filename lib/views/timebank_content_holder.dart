@@ -165,7 +165,7 @@ Widget createAdminTabBar(
             isScrollable: true,
             tabs: [
               Tab(
-                text: "Discussions",
+                text: "Feeds",
               ),
               Tab(
                 text: "Requests",
@@ -246,7 +246,7 @@ Widget createJoinedUserTabBar(
                 isScrollable: true,
                 tabs: [
                   Tab(
-                    text: "Discussions",
+                    text: "Feeds",
                   ),
                   Tab(
                     text: "Requests",
@@ -379,7 +379,7 @@ class DiscussionListState extends State<DiscussionList> {
                 padding: EdgeInsets.only(left: 10),
               ),
               Text(
-                "Discussions",
+                "Feeds",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
               ),
               Padding(
@@ -454,7 +454,7 @@ class DiscussionListState extends State<DiscussionList> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        ' Start a new discussion....',
+                        ' Start a new feed....',
                         maxLines: 1,
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 16),

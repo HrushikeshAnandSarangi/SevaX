@@ -63,25 +63,31 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   bool shouldInvite = true;
   @override
   void initState() {
-    // TODO: implement initState
+    isBookMarked = widget.isFavorite;
+
+    Future.delayed(Duration.zero,(){
+      if (widget.timebankModel.admins.contains(SevaCore
+          .of(context)
+          .loggedInUser
+          .sevaUserID)) {
+        isAdmin = true;
+      }
+    });
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    if (widget.timebankModel.admins.contains(SevaCore
-        .of(context)
-        .loggedInUser
-        .sevaUserID)) {
-      isAdmin = true;
-    }
 
-    isBookMarked = widget.isFavorite;
-    return makeUserWidget(context);
+
+
+    return makeUserWidget();
   }
 
 
-  Widget makeUserWidget(BuildContext context) {
+  Widget makeUserWidget() {
     return Container(
         margin: EdgeInsets.fromLTRB(30, 20, 25, 10),
 
@@ -207,13 +213,15 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
 
 
                       setState(() {
+
                         if(isBookMarked){
+
                           removeFromFavoriteList(context, userModel, widget.timebankModel);
-                          isBookMarked = false;
+                          isBookMarked = ! isBookMarked;
+
                         }else{
                           addToFavoriteList(context,userModel,widget.timebankModel);
-
-                          isBookMarked = true;
+                          isBookMarked = ! isBookMarked;
                         }
                       });
 

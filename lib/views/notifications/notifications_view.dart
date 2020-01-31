@@ -68,9 +68,6 @@ class NotificationsView extends State<NotificationViewHolder> {
           itemCount: notifications.length,
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);
-            print("----Notification widgets ${notification}");
-//            print("Notification data ${notification.type}");
-
             switch (notification.type) {
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);

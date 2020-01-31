@@ -120,9 +120,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
           return Text(snapshot.error.toString());
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return circularBar;
         }
         TimebankModel timebankModel = snapshot.data;
         return getDataScrollView(
@@ -481,7 +479,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
       _adminsWidgets
           .add(getUserWidget(user, context, timebankModel, true, false));
     });
-//    setState(() {});
   }
 
   Widget getUserWidget(UserModel user, BuildContext context,

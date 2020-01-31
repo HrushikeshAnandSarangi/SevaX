@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:sevaexchange/models/models.dart';
-//import 'package:sevaexchange/models/transaction_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
@@ -26,24 +24,8 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
         if (!mounted) return;
         setState(() {
           requestList = list;
-          // RequestModel modelflag =
-
-          //  requestList.sort((b, a) {
-          //    return a.transactions.timestamp.compareTo(b.transactions.timestamp);
-          //  }
-          //  );
           return requestList;
         });
-        // userList = [];
-        // requestList.forEach(
-        //   (request) async {
-        //     UserModel user = await FirestoreManager.getUserForId(
-        //       sevaUserId: request.sevaUserId,
-        //     );
-        //     if (!mounted) return;
-        //     setState(() => userList.add(user));
-        //   },
-        // );
       },
     );
   }
@@ -57,9 +39,8 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Padding(
-        padding: const EdgeInsets.only(top:58.0),
-        child: Text('There are currenlty none',
-            textAlign: TextAlign.center),
+        padding: const EdgeInsets.only(top: 58.0),
+        child: Text('There are currenlty none', textAlign: TextAlign.center),
       );
     }
     return ListView.builder(
@@ -70,17 +51,6 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
         return Card(
           child: ListTile(
             title: Text(model.title),
-            // leading: () {
-            //   if (index + 1 > userList.length) {
-            //     return CircleAvatar(
-            //       backgroundColor: Colors.grey,
-            //     );
-            //   }
-            //   UserModel user = userList[index];
-            //   return CircleAvatar(
-            //     backgroundImage: NetworkImage(user.photoURL),
-            //   );
-            // }(),
             leading: FutureBuilder(
               future:
                   FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),
@@ -97,7 +67,6 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
                 );
               },
             ),
-
             subtitle: FutureBuilder(
               future:
                   FirestoreManager.getUserForId(sevaUserId: model.sevaUserId),

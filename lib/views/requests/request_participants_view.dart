@@ -1,48 +1,49 @@
-
-
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-import '../../flavor_config.dart';
 import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
-
-  final RequestModel requestModel;
-
+  RequestModel requestModel;
 
   RequestParticipantsView({@required this.requestModel});
 
   @override
-  _RequestParticipantsViewState createState() => _RequestParticipantsViewState();
+  _RequestParticipantsViewState createState() =>
+      _RequestParticipantsViewState(requestModel);
 }
 
 class _RequestParticipantsViewState extends State<RequestParticipantsView> {
-
   List<String> acceptors;
   List<String> approvedMembers;
   List<String> newList;
-  HashMap<String, AcceptorItem> filteredList =HashMap();
+  RequestModel requestModel;
+  HashMap<String, AcceptorItem> filteredList = HashMap();
+
+  _RequestParticipantsViewState(RequestModel _requestModel) {
+    requestModel = _requestModel;
+  }
 
   static const String ACCEPTED = "Accepted";
   static const String APPROVED = "Approved";
 
- // LinkedHashSet filteredList =  LinkedHashSet<String>();
+  void setRequestModel() async {
+    requestModel = await getCurrentRequest();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setRequestModel();
+  }
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
     var user = await Firestore.instance
@@ -53,53 +54,37 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     return user.data;
   }
 
-
   @override
   Widget build(BuildContext context) {
+    return list;
+  }
 
+  Future<RequestModel> getCurrentRequest() async {
+    if (requestModel == null) {
+      return null;
+    }
+    var snapShot = await Firestore.instance
+        .collection("requests")
+        .document(requestModel.id)
+        .get();
+    RequestModel model = RequestModel.fromMap(
+      snapShot.data,
+    );
+    return model;
+  }
+
+  Widget get list {
     var futures = <Future>[];
     futures.clear();
-   /* widget.requestModel.acceptors.forEach((memberEmail) {
-      futures.add(getUserDetails(memberEmail: memberEmail));
-    });*/
-
-
-    acceptors = widget.requestModel.acceptors;
-    approvedMembers = widget.requestModel.approvedUsers;
-
+    acceptors = requestModel.acceptors ?? [];
+    approvedMembers = requestModel.approvedUsers ?? [];
     newList = acceptors + approvedMembers;
 
     List<String> result = LinkedHashSet<String>.from(newList).toList();
 
-  //  print('fhsfhsgj ${result.toString()}');
-
-    result.forEach((email){
+    result.forEach((email) {
       futures.add(getUserDetails(memberEmail: email));
     });
-
-   // acceptors.addAll(widget.requestModel.acceptors);
-   // approvedMembers.addAll(widget.requestModel.approvedUsers);
-
-/*
-    filteredList.add(acceptors);
-    filteredList.add(approvedMembers);*/
-
-/*
-    acceptors.map((f){
-      filteredList[f]=AcceptorItem(approved: false,email: f);
-    });
-
-    approvedMembers.map((f){
-      filteredList[f]=AcceptorItem(approved: true,email: f);
-    });
-
-    print('filtered ${filteredList}');
-
-
-    filteredList.map((k, v){
-
-        futures.add(getUserDetails(memberEmail: k));
-    });*/
     return FutureBuilder(
         future: Future.wait(futures),
         builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -116,15 +101,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               child: Text('No pending requests'),
             );
           }
-
-/*
-          for ( var i = 0; i < snapshot.data.length; i++ ){
-
-          }*/
           var snap = snapshot.data.map((f) {
-
-
-
             return UserModel.fromDynamic(f);
           }).toList();
 
@@ -133,58 +110,27 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
 
           return ListView(
             children: <Widget>[
-
               ...snap.map((userModel) {
                 // return Text(f['fullname']);
 
                 UserRequestStatusType status;
-                status=getUserRequestStatusType(userModel.email, widget.requestModel);
+                status = getUserRequestStatusType(userModel.email, requestModel);
 
-                return makeUserWidget(userModel,context,status);/*Container(
-                  margin: EdgeInsets.all(2),
-                  decoration: notificationDecoration,
-                  child: ListTile(
-                    title: Text(userModel.fullname),
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(userModel.photoURL),
-                    ),
-                    subtitle: Text(
-                      'Pending approval',
-                      style: TextStyle(color: Colors.red),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                    onTap: () {
-                      showDialogForApprovalOfRequest(
-                          context: context,
-                          userModel: userModel,
-                          requestModel: widget.requestModel,
-                          notificationId: "sampleID")
-                          .then((onValue) {
-                        setState(() {});
-                        print("Action completed");
-                      });
-                      //set the state
-                    },
-                  ),
-                );*/
+                return makeUserWidget(userModel, context, status);
               }).toList()
             ],
           );
         });
-
-
   }
-  Widget makeUserWidget(UserModel userModel, BuildContext context, UserRequestStatusType status) {
+
+  Widget makeUserWidget(
+      UserModel userModel, BuildContext context, UserRequestStatusType status) {
     return Container(
         margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
-        child: Stack(
-            children: <Widget>[
-              getUserCard(userModel,context: context,statusType: status),
-              getUserThumbnail(userModel.photoURL),
-            ]
-        )
-    );
+        child: Stack(children: <Widget>[
+          getUserCard(userModel, context: context, statusType: status),
+          getUserThumbnail(userModel.photoURL),
+        ]));
   }
 
   Widget getUserThumbnail(String photoURL) {
@@ -194,15 +140,14 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
         height: 60.0,
         decoration: BoxDecoration(
             shape: BoxShape.circle,
-            image:  DecorationImage(
+            image: DecorationImage(
                 fit: BoxFit.fill,
-                image:  NetworkImage(
-                    photoURL ?? "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg")
-            )
-        ));
+                image: NetworkImage(photoURL ??
+                    "https://www.itl.cat/pngfile/big/43-430987_cute-profile-images-pic-for-whatsapp-for-boys.jpg"))));
   }
 
-  Widget getUserCard(UserModel userModel, {BuildContext context,UserRequestStatusType statusType}) {
+  Widget getUserCard(UserModel userModel,
+      {BuildContext context, UserRequestStatusType statusType}) {
     return Padding(
       padding: const EdgeInsets.only(left: 30),
       child: Container(
@@ -233,150 +178,105 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    child: Text(userModel.fullname, style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
-//              Spacer(),
                   Icon(
                     Icons.chat_bubble,
                     color: Colors.blueGrey,
-                    size: 35,),
+                    size: 35,
+                  ),
                 ],
               ),
-              /*SmoothStarRating(
-                  allowHalfRating: true,
-                  onRatingChanged: (v) {
-//                    rating = v;
-//                    setState(() {});
-                  },
-                  starCount: 5,
-                  rating: 3.5,
-                  size: 20.0,
-                  filledIconData: Icons.star,
-                  halfFilledIconData: Icons.star_half,
-                  defaultIconData: Icons.star_border,
-                  color: Colors.orangeAccent,
-                  borderColor: Colors.orangeAccent,
-                  spacing: 1.0
-              ),
-              SizedBox(
-                  height: 10
-              ),*/
               Expanded(
                 child: Text(
                   userModel.bio ?? "",
-                  style: TextStyle(color: Colors.black, fontSize: 12,),),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12,
+                  ),
+                ),
               ),
-              statusType==UserRequestStatusType.ACCEPTED ? Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-
-                    /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
-                    height: 40,
-
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
-                      shape: StadiumBorder(),
-                      color: Colors.indigo,
-                      textColor: Colors.white,
-                      elevation: 5,
-                      onPressed: () {
-                        showDialogForApprovalOfRequest(
-                            context: context,
-                            userModel: userModel,
-                            requestModel: widget.requestModel,
-                            notificationId: "sampleID")
-                            .then((onValue) {
-                          setState(() {});
-                          print("Action completed");
-                        });
-                      },
-                      child: const Text(
-                          'Approve',
-                          style: TextStyle(fontSize: 12)
-                      ),
+              ifUserIsNotApproved(userModel)
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          height: 40,
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: RaisedButton(
+                            shape: StadiumBorder(),
+                            color: Colors.indigo,
+                            textColor: Colors.white,
+                            elevation: 5,
+                            onPressed: () async {
+                              approveMemberForVolunteerRequest(
+                                  model: requestModel,
+                                  notificationId: "sampleID",
+                                  user: userModel);
+                              print("Action completed");
+                            },
+                            child: const Text('Approve',
+                                style: TextStyle(fontSize: 12)),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 40,
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: RaisedButton(
+                            shape: StadiumBorder(),
+                            color: Colors.redAccent,
+                            textColor: Colors.white,
+                            elevation: 5,
+                            onPressed: () async {
+                              declineRequestedMember(
+                                  model: requestModel,
+                                  notificationId: "sampleID",
+                                  user: userModel);
+                            },
+                            child: const Text('Reject',
+                                style: TextStyle(fontSize: 12)),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          height: 40,
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: RaisedButton(
+                            shape: StadiumBorder(),
+                            color: Colors.indigo,
+                            textColor: Colors.white,
+                            elevation: 5,
+                            onPressed: () {
+                              print("approved");
+                            },
+                            child: Text('Approved',
+                                style: TextStyle(fontSize: 12)),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-
-                  SizedBox(width: 10,),
-                  Container(
-
-                    /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
-                    height: 40,
-
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
-                      shape: StadiumBorder(),
-                      color: Colors.redAccent,
-                      textColor: Colors.white,
-                      elevation: 5,
-                      onPressed: () {},
-                      child: const Text(
-                          'Reject',
-                          style: TextStyle(fontSize: 12)
-                      ),
-                    ),
-                  ),
-
-                ],
-              ):Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-
-                    /*  decoration: BoxDecoration(
-
-                        boxShadow: [BoxShadow(
-                            color: Colors.indigo[50],
-                            blurRadius: 1,
-                            offset: Offset(0.0, 0.50)
-                        )]
-                    ),*/
-                    height: 40,
-
-                    padding: EdgeInsets.only(bottom: 10),
-                    child: RaisedButton(
-                      shape: StadiumBorder(),
-                      color: Colors.indigo,
-                      textColor: Colors.white,
-                      elevation: 5,
-                      onPressed: () {
-                        print("approved");
-
-                      },
-                      child: const Text(
-                          'Approved',
-                          style: TextStyle(fontSize: 12)
-                      ),
-                    ),
-                  ),
-
-
-
-                ],
-              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  bool ifUserIsNotApproved(UserModel user) {
+    return !requestModel.approvedUsers.contains(user.email);
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {
@@ -404,6 +304,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       color: Colors.grey,
     );
   }
+
 // crate dialog for approval or rejection
   Future showDialogForApprovalOfRequest({
     BuildContext context,
@@ -527,12 +428,13 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
           );
         });
   }
+
   void declineRequestedMember({
     RequestModel model,
     UserModel user,
     String notificationId,
   }) {
-    List<String> acceptedUsers = model.acceptors;
+    List<String> acceptedUsers = model.acceptors ?? [];
     Set<String> usersSet = acceptedUsers.toSet();
 
     usersSet.remove(user.email);
@@ -543,7 +445,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       rejectedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    );
+    ).then((onValue) {
+      setRequestModel();
+    });
   }
 
   void approveMemberForVolunteerRequest({
@@ -564,7 +468,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    );
+    ).then((onValue) {
+      setRequestModel();
+    });
   }
 
   Widget _getCloseButton(BuildContext context) {
@@ -594,13 +500,14 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       ),
     );
   }
+
   Decoration get notificationDecoration => ShapeDecoration(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-    color: Colors.white,
-    shadows: shadowList,
-  );
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        color: Colors.white,
+        shadows: shadowList,
+      );
 
   List<BoxShadow> get shadowList => [shadow];
 
@@ -637,16 +544,16 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     );
   }
 
-  String getUserRequestTypeTitle(){
+  String getUserRequestTypeTitle() {
     return "";
   }
 
-  UserRequestStatusType getUserRequestStatusType(String sevaUserEmail, RequestModel requestModel){
-
-    if(requestModel.acceptors.contains(sevaUserEmail)){
-     return UserRequestStatusType.ACCEPTED;
-    }else if(requestModel.approvedUsers.contains(sevaUserEmail)){
-     return UserRequestStatusType.APPROVED;
+  UserRequestStatusType getUserRequestStatusType(
+      String sevaUserEmail, RequestModel requestModel) {
+    if (requestModel.acceptors.contains(sevaUserEmail)) {
+      return UserRequestStatusType.ACCEPTED;
+    } else if (requestModel.approvedUsers.contains(sevaUserEmail)) {
+      return UserRequestStatusType.APPROVED;
     }
   }
 }
@@ -655,7 +562,7 @@ Future<List<UserModel>> getRequestStatus({
   @required String requestId,
 }) async {
   Firestore.instance.collection('requests').document(requestId).get().then(
-        (requestDetails) async {
+    (requestDetails) async {
       var futures = <Future>[];
       RequestModel model = RequestModel.fromMap(
         requestDetails.data,
@@ -683,54 +590,14 @@ Future<List<UserModel>> getRequestStatus({
     },
   );
 }
-
-Future<RequestModel> getRequestData({
-  @required String requestId,
-}) async {
-  Firestore.instance.collection('requests').document(requestId).get().then(
-        (requestDetails) async {
-      var futures = <Future>[];
-      RequestModel model = RequestModel.fromMap(
-        requestDetails.data,
-      );
-
-      return model;
-
-      model.approvedUsers.forEach((membersId) {
-        futures.add(
-          Firestore.instance
-              .collection("users")
-              .document(membersId)
-              .get()
-              .then((onValue) {
-            return onValue;
-          }),
-        );
-      });
-
-      return Future.wait(futures).then((onValue) {
-        for (int i = 0; i < model.approvedUsers.length; i++) {
-          var user = UserModel.fromDynamic(onValue[i]);
-          usersRequested.add(user);
-        }
-        return usersRequested;
-      });
-    },
-  );
-}
-
 
 List<UserModel> usersRequested = List();
-
-
 
 class AcceptorItem {
   final String email;
   final bool approved;
 
   AcceptorItem({this.email, this.approved});
-
-
 }
 
-enum UserRequestStatusType{ACCEPTED,APPROVED}
+enum UserRequestStatusType { ACCEPTED, APPROVED }
