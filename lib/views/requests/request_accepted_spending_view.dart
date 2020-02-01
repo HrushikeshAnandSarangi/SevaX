@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -6,6 +7,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
 
@@ -19,21 +21,58 @@ class RequestAcceptedSpendingView extends StatefulWidget {
       _RequestAcceptedSpendingState();
 }
 
-//enum RequestModelTag { Completed, NotAccepted, Pending }
-//
-//class RequestModelType {
-//  RequestModel requestModel;
-//  RequestModelTag type;
-//
-//  RequestModelType(RequestModel _requestModel, RequestModelTag _type) {
-//    requestModel = _requestModel;
-//    type = _type;
-//  }
-//}
-
 class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   List<Widget> _avtars = [];
   bool noTransactionAvailable = false;
+  List<Widget> _pendingAvtars = [];
+  Stream<List<NotificationsModel>> notificationStream;
+  List<NotificationsModel> pendingRequests = [];
+  bool shouldReload = true;
+
+  Future updatePendingAvtarWidgets() async {
+    shouldReload = false;
+    var notifications = await FirestoreManager.getCompletedNotifications(
+        SevaCore.of(context).loggedInUser.email,
+        SevaCore.of(context).loggedInUser.currentCommunity);
+    pendingRequests = [];
+    _pendingAvtars = [];
+    for (var i = 0; i < notifications.length; i++) {
+      if (notifications[i].type == NotificationType.RequestCompleted) {
+        pendingRequests.add(notifications[i]);
+      }
+    }
+    for (int i = 0; i < pendingRequests.length; i++) {
+      NotificationsModel notification = pendingRequests[i];
+      RequestModel model = RequestModel.fromMap(notification.data);
+      var item = getNotificationRequestCompletedWidget(
+        model,
+        notification.senderUserId,
+        notification.id,
+      );
+      _pendingAvtars.add(item);
+    }
+    setState(() {});
+  }
+
+//  Future setCompletedRequestAvatar() async {
+//    _pendingAvtars = [];
+//    for (int i = 0; i < pendingRequests.length; i++) {
+//      NotificationsModel notification = pendingRequests[i];
+//      RequestModel model = RequestModel.fromMap(notification.data);
+//      var item = getNotificationRequestCompletedWidget(
+//        model,
+//        notification.senderUserId,
+//        notification.id,
+//      );
+//      _pendingAvtars.add(item);
+//    }
+//  }
+
+  @override
+  void initState() {
+    super.initState();
+//    updateStream();
+  }
 
   @override
   void dispose() {
@@ -42,10 +81,20 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   @override
   Widget build(BuildContext context) {
+    if (shouldReload) {
+      updatePendingAvtarWidgets();
+//      .then((onValue) {
+//        shouldReload = false;
+//        setState(() {});
+//      });
+//      setCompletedRequestAvatar().then((onValue) {
+//        shouldReload = false;
+//        setState(() {});
+//      });
+    }
     return Scaffold(
       body: listItems,
     );
-    ;
   }
 
   Widget get listItems {
@@ -287,6 +336,125 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget getNotificationRequestCompletedWidget(
+    RequestModel model,
+    String userId,
+    String notificationId,
+  ) {
+    return StreamBuilder<UserModel>(
+      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return notificationShimmer;
+        }
+        UserModel user = snapshot.data;
+        TransactionModel transactionModel =
+            model.transactions?.firstWhere((transaction) {
+          return transaction.to == userId;
+        });
+        return Slidable(
+            delegate: SlidableBehindDelegate(),
+            actions: <Widget>[],
+            secondaryActions: <Widget>[],
+            child: GestureDetector(
+              onTap: () {
+//                showMemberClaimConfirmation(
+//                    context: context,
+//                    notificationId: notificationId,
+//                    requestModel: model,
+//                    userId: userId,
+//                    userModel: user,
+//                    credits: transactionModel.credits);
+              },
+              child: Container(
+                margin: notificationPadding,
+                decoration: notificationDecoration,
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(user.photoURL),
+                  ),
+                  title: Text(model.title),
+                  subtitle: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '${user.fullname} completed the task in ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        TextSpan(
+                          text: () {
+                            return '${transactionModel.credits} hours';
+                          }(),
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: () {
+                            return ', waiting for your approval.';
+                          }(),
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ));
+      },
+    );
+  }
+
+  EdgeInsets get notificationPadding => EdgeInsets.fromLTRB(5, 5, 5, 0);
+
+  Decoration get notificationDecoration => ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        color: Colors.white,
+        shadows: shadowList,
+      );
+
+  List<BoxShadow> get shadowList => [shadow];
+
+  BoxShadow get shadow {
+    return BoxShadow(
+      color: Colors.black.withAlpha(10),
+      spreadRadius: 2,
+      blurRadius: 3,
+    );
+  }
+
+  Widget get notificationShimmer {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Shimmer.fromColors(
+        child: Container(
+          decoration: ShapeDecoration(
+            color: Colors.white.withAlpha(80),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: ListTile(
+            title: Container(height: 10, color: Colors.white),
+            subtitle: Container(height: 10, color: Colors.white),
+            leading: CircleAvatar(
+              backgroundColor: Colors.white,
+            ),
+          ),
+        ),
+        baseColor: Colors.black.withAlpha(50),
+        highlightColor: Colors.white.withAlpha(50),
       ),
     );
   }

@@ -206,7 +206,7 @@ class SearchManager {
     List<Map<String, dynamic>> hitList =
     await _makeElasticSearchPostRequest(url, body);
 
-    log("loggg - "+validItems.toString());
+  //  log("loggg - "+validItems.toString());
 
     List<UserModel> userList = [];
     hitList.forEach((map) {
@@ -214,6 +214,8 @@ class SearchManager {
       UserModel user = UserModel.fromMap(sourceMap);
 
      if(validItems.contains(user.sevaUserID)){
+
+       print("yeah he is there");
         userList.add(user);
      }
     });
@@ -405,7 +407,7 @@ class SearchManager {
       "Accept": "application/json",
       "Content-Type": "application/json"
     });
-    log(response.body);
+    //log(response.body);
    // print("Reuqest Response --> ${response.body}");
 
 //    print("Reuqest Response --> ${response.body}");
@@ -413,7 +415,7 @@ class SearchManager {
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
-    print("Reuqest Response --> $hitList");
+   // print("Reuqest Response --> $hitList");
 //    log(response.body);
 //    log("loggg - "+hitList.toString());
     return hitList;

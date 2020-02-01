@@ -1,8 +1,10 @@
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -15,21 +17,31 @@ class RequestCardWidget extends StatefulWidget {
 
   final UserModel userModel;
   final RequestModel requestModel;
+  final bool cameFromInvitedUsersPage;
   final TimebankModel timebankModel;
-
-  RequestCardWidget({@required this.userModel, @required this.requestModel, this.timebankModel});
+  final bool isFavorite;
+  RequestCardWidget({Key key ,
+    @required this.userModel,
+    @required this.requestModel,
+    this.timebankModel,
+    this.isFavorite,
+    this.cameFromInvitedUsersPage,});
 
 
 
 
   @override
-  _RequestCardWidgetState createState() => _RequestCardWidgetState();
+  _RequestCardWidgetState createState() {
+    return _RequestCardWidgetState();
+
+  }
+
 }
 
 
 
 
-enum RequestUserStatus{INVITE, INVITED}
+enum RequestUserStatus{INVITE, INVITED,APPROVED,REJECTED}
 
 
 
@@ -41,22 +53,47 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   var validItems;
   BuildContext dialogLoadingContext;
 
-  static const String INVITE = "Invite";
-  static const String INVITED = "Invited";
+  static const String Invite = "Invite";
+  static const String Invited = "Invited";
+  static const String Approved = "Approved";
+  static const String Rejected = "Rejected";
+  bool isAdmin = false;
+
+
+  bool shouldInvite = true;
+  @override
+  void initState() {
+    isBookMarked = widget.isFavorite;
+
+    Future.delayed(Duration.zero,(){
+      if (widget.timebankModel.admins.contains(SevaCore
+          .of(context)
+          .loggedInUser
+          .sevaUserID)) {
+        isAdmin = true;
+      }
+    });
+    super.initState();
+  }
+
 
 
   @override
   Widget build(BuildContext context) {
-    return makeUserWidget(context);
+
+
+
+    return makeUserWidget();
   }
 
 
-  Widget makeUserWidget(BuildContext context) {
+  Widget makeUserWidget() {
     return Container(
-        margin: EdgeInsets.fromLTRB(35, 20, 30, 10),
+        margin: EdgeInsets.fromLTRB(30, 20, 25, 10),
+
         child: Stack(
             children: <Widget>[
-              getUserCard(context: context, requestModel: widget.requestModel, userModel: widget.userModel),
+              getUserCard(userModel: widget.userModel, requestModel: widget.requestModel, context: context, ),
               getUserThumbnail(),
             ]
         )
@@ -81,24 +118,41 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   }
 
   Widget getUserCard({UserModel userModel, RequestModel requestModel,BuildContext context}) {
-    bool shouldInvite = true;
+    bool isInvited = false;
 
     RequestUserStatus status;
 
-    if(requestModel.invitedUsers != null) {
-      if (requestModel.invitedUsers.contains(
-          userModel.sevaUserID)) {
-        status = RequestUserStatus.INVITED;
-        shouldInvite = false;
-      }
-    } else{
-      if (requestModel.acceptors.contains(userModel.sevaUserID) ||
-          requestModel.approvedUsers.contains(
-              userModel.sevaUserID)) {
-        status = RequestUserStatus.INVITED;
+    if (widget.cameFromInvitedUsersPage) {
+    //  print('invited true 1');
 
+      status = RequestUserStatus.INVITED;
+      shouldInvite = false;
+      isInvited = true;
+    }else {
+      if (requestModel.invitedUsers.contains(userModel.sevaUserID)) {
+        status = RequestUserStatus.INVITED;
         shouldInvite = false;
+
+        isInvited = true;
+     //   print('invited true 2');
+
+      }else if (requestModel.acceptors.contains(userModel.email)) {
+        status = RequestUserStatus.INVITED;
+        shouldInvite = false;
+
+        isInvited = true;
+      //  print('invited true 2');
+
+      } else if (requestModel.approvedUsers.contains(
+          userModel.email)) {
+        status = RequestUserStatus.APPROVED;
+        shouldInvite = false;
+
+        isInvited = true;
+//        print('approved true');
+
       }
+
     }
 
     return Padding(
@@ -131,7 +185,7 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    child: Text(widget.userModel.email, style: TextStyle(
+                    child: Text(userModel.fullname, style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
                         fontWeight: FontWeight.bold),),
@@ -139,11 +193,7 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
 //              Spacer(),
                   InkWell(
 
-                    onTap: () {
-                      setState(() {
-                        isBookMarked = !isBookMarked;
-                      });
-                    },
+
                     child: Row(
                       children: <Widget>[
                         isBookMarked ?
@@ -158,6 +208,25 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         ),
                       ],
                     ),
+                    onTap: () {
+
+
+
+                      setState(() {
+
+                        if(isBookMarked){
+
+                          removeFromFavoriteList(context, userModel, widget.timebankModel);
+                          isBookMarked = ! isBookMarked;
+
+                        }else{
+                          addToFavoriteList(context,userModel,widget.timebankModel);
+                          isBookMarked = ! isBookMarked;
+                        }
+                      });
+
+
+                    },
                   ),
                 ],
               ),
@@ -206,14 +275,23 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         color: Colors.indigo,
                         textColor: Colors.white,
                         elevation: 5,
-                        onPressed: !shouldInvite ? null : () {
-
+                        onPressed: isInvited ? null : () async {
+                          await timeBankBloc.updateInvitedUsersForRequest(requestModel.id, userModel.sevaUserID);
                           showProgressDialog(context);
                           sendNotification(
-                              context, widget.requestModel, widget.userModel,
-                              widget.timebankModel, status,(){setState(() {
+                              context, requestModel, userModel,
+                              widget.timebankModel, status);
 
-                              });});
+
+                            setState(() {
+                              status = RequestUserStatus.INVITED;
+
+                              isInvited =true;
+                            });
+
+
+                            print("set state is worked");
+
                         },
                         child: Text(
                             getRequestUserTitle(status) ?? "",
@@ -231,17 +309,9 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
   }
 
 
-  TextStyle get sectionTextStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 11,
-      color: Colors.grey,
-    );
-  }
 
   Future<void> sendNotification(BuildContext context, RequestModel requestModel,
-      UserModel userModel, TimebankModel timebankModel,
-      RequestUserStatus status,Function set) async {
+      UserModel userModel, TimebankModel timebankModel, RequestUserStatus status,) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
         timebankImage: timebankModel.photoUrl,
         timebankName: timebankModel.name,
@@ -275,19 +345,41 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
         .document(notification.id)
         .setData(notification.toMap());
 
-    status = RequestUserStatus.INVITED;
+
+
 
     if(dialogLoadingContext != null){
       Navigator.pop(dialogLoadingContext);
 
     }
-set();
-//    setState(() {
-//      //status = RequestUserStatus.INVITED;
-//
-//      print("success request sent");
-//    });
+
   }
+
+
+  Future<void> addToFavoriteList(BuildContext context, UserModel userModel, TimebankModel timebankModel) async {
+
+      await Firestore.instance
+          .collection('users')
+          .document(userModel.email)
+          .updateData({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember'
+          : FieldValue.arrayUnion([isAdmin ? timebankModel.id : SevaCore.of(context).loggedInUser.sevaUserID])
+          });
+
+
+  }
+
+  Future<void> removeFromFavoriteList(BuildContext context, UserModel userModel, TimebankModel timebankModel) async {
+
+    await Firestore.instance
+        .collection('users')
+        .document(userModel.email)
+        .updateData({ isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember' :
+    FieldValue.arrayRemove([isAdmin ? timebankModel.id : SevaCore.of(context).loggedInUser.sevaUserID])
+    });
+
+
+  }
+
 
   void showProgressDialog(BuildContext context) {
     showDialog(
@@ -305,34 +397,26 @@ set();
   String getRequestUserTitle(RequestUserStatus status) {
     switch (status) {
       case RequestUserStatus.INVITE:
-        return INVITE;
-
+        return Invite;
 
       case RequestUserStatus.INVITED:
-        return INVITED;
+        return Invited;
 
+      case RequestUserStatus.APPROVED:
+        return Approved;
+
+      case RequestUserStatus.REJECTED:
+        return Rejected;
       default:
-        return INVITE;
+        return Invite;
     }
   }
 
 
-  Widget getEmptyWidget(String title, String notFoundValue) {
-    return Center(
-      child: Text(
-        notFoundValue,
-        overflow: TextOverflow.ellipsis,
-        style: sectionHeadingStyle,
-      ),
-    );
-  }
 
-  TextStyle get sectionHeadingStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 12.5,
-      color: Colors.black,
-    );
-  }
+
+
 }
+
+
 

@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,13 +33,9 @@ class NotificationViewHolder extends StatefulWidget {
 class NotificationsView extends State<NotificationViewHolder> {
   @override
   Widget build(BuildContext context) {
-    String email = SevaCore.of(context).loggedInUser.email;
-
-    String communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(
-        userEmail: email,
+        userEmail: SevaCore.of(context).loggedInUser.email,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context_firestore, snapshot) {
@@ -252,6 +249,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                   requestInvitationModel,
                   notification.id,
                   context,
+                  notification.timebankId,
+                  notification.communityId,
                 );
                 break;
             }
@@ -734,14 +733,16 @@ class NotificationsView extends State<NotificationViewHolder> {
   Widget getInvitedRequestsNotificationWidget(
       RequestInvitationModel requestInvitationModel,
       String notificationId,
-      BuildContext context) {
+      BuildContext buildContext,
+      String timebankId,
+      String communityId) {
     // assert(user != null);
 
     return Dismissible(
         background: dismissibleBackground,
         key: Key(Utils.getUuid()),
         onDismissed: (direction) {
-          String userEmail = SevaCore.of(context).loggedInUser.email;
+          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
           FirestoreManager.readNotification(notificationId, userEmail);
         },
         child: GestureDetector(
@@ -757,16 +758,20 @@ class NotificationsView extends State<NotificationViewHolder> {
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view all join request'),
+                  '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
             ),
           ),
           onTap: () {
-//            showDialog(context: context,
-//            builder: (context){
-//              return JoinRejectDialogView(
-//                timeBankId: requestInvitationModel.requestId, requestInvitationModel: requestInvitationModel,
-//              )
-//            });
+            showDialog(
+                context: buildContext,
+                builder: (context) {
+                  return JoinRejectDialogView(
+                    requestInvitationModel: requestInvitationModel,
+                    timeBankId: timebankId,
+                    notificationId: notificationId,
+                    userModel: SevaCore.of(buildContext).loggedInUser,
+                  );
+                });
           },
         ));
   }
@@ -2234,31 +2239,4 @@ class NotificationsView extends State<NotificationViewHolder> {
 //  }
 //}
 
-// class AceeptorItem {
-//   final String sevaUserID;
-//   final bool approved;
-
-//   AceeptorItem({this.sevaUserID, this.approved})
-
-// }
-
 // class GetList {
-
-// void build(BuildContext context ){
-
-//   var acceptors = [];
-//   var approvedMembers = [];
-
-//   HashMap<String, AceeptorItem> consildatedList = HashMap();
-
-//   acceptors.map((f){
-//     consildatedList[f] = AceeptorItem(approved: false, sevaUserID: f);
-//   });
-
-// approvedMembers.map((f){
-//     consildatedList[f] = AceeptorItem(approved: true, sevaUserID: f);
-//   });
-
-//   Requedtmodel midel=consildatedList[imdex].approved
-
-// }

@@ -6,7 +6,6 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -14,19 +13,21 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 // import 'package:timezone/browser.dart';
 
-class TimeBankRequestDetails extends StatefulWidget {
+class RequestDetailsAboutPage extends StatefulWidget {
   final RequestModel requestItem;
   TimebankModel timebankModel;
 
   final bool applied;
-  TimeBankRequestDetails({Key key, this.applied = false, this.requestItem})
+  RequestDetailsAboutPage(
+      {Key key, this.applied = false, this.requestItem, this.timebankModel})
       : super(key: key);
 
   @override
-  _TimeBankRequestDetailsState createState() => _TimeBankRequestDetailsState();
+  _RequestDetailsAboutPageState createState() =>
+      _RequestDetailsAboutPageState();
 }
 
-class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
+class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   // String timeRange = '10:00 AM - 12:00 PM';
   String location = 'Location';
   // String subLocation = '881, 6th Cross Rd, Bengaluru, India';
@@ -47,27 +48,22 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
   @override
   void initState() {
     super.initState();
-
-    getTimeBankForId(timebankId: widget.requestItem.timebankId)
-        .then((timebank) {
-      widget.timebankModel = timebank;
-      if (timebank.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-          timebank.coordinators
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     var futures = <Future>[];
     futures.clear();
-    widget.requestItem.acceptors.forEach((memberEmail) {
-      futures.add(getUserDetails(memberEmail: memberEmail));
-    });
 
-    isApplied = widget.requestItem.acceptors
-        .contains(SevaCore.of(context).loggedInUser.email);
+    if (widget.requestItem.acceptors != null) {
+      widget.requestItem.acceptors.forEach((memberEmail) {
+        futures.add(getUserDetails(memberEmail: memberEmail));
+      });
+      isApplied = widget.requestItem.acceptors
+          .contains(SevaCore.of(context).loggedInUser.email);
+    } else {
+      isApplied = false;
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -136,7 +132,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                         ),
                         trailing: Container(
                           height: 25,
-                          width: 72,
+                          width: 75,
                           child: widget.requestItem.sevaUserId ==
                                   SevaCore.of(context).loggedInUser.sevaUserID
                               ? FlatButton(
@@ -147,7 +143,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                                   child: Text(
                                     'Edit',
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 12),
+                                        color: Colors.white, fontSize: 13),
                                   ),
                                   onPressed: () {
                                     RequestModel _modelItem =

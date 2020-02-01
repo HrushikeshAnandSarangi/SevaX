@@ -114,8 +114,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 // return Text(f['fullname']);
 
                 UserRequestStatusType status;
-                status =
-                    getUserRequestStatusType(userModel.email, requestModel);
+                status = getUserRequestStatusType(userModel.email, requestModel);
 
                 return makeUserWidget(userModel, context, status);
               }).toList()
@@ -127,7 +126,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   Widget makeUserWidget(
       UserModel userModel, BuildContext context, UserRequestStatusType status) {
     return Container(
-        margin: EdgeInsets.fromLTRB(35, 20, 30, 10),
+        margin: EdgeInsets.fromLTRB(30, 20, 30, 10),
         child: Stack(children: <Widget>[
           getUserCard(userModel, context: context, statusType: status),
           getUserThumbnail(userModel.photoURL),
