@@ -40,7 +40,7 @@ class RequestsState extends State<RequestsModule> {
     globals.orCreateSelector = 0;
   }
 
-  //RequestsState() {}
+  RequestsState() {}
 
   bool isNearme = false;
   List<TimebankModel> timebankList = [];
@@ -211,9 +211,8 @@ class RequestsState extends State<RequestsModule> {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: FutureBuilder<Object>(
-                                      future:
-                                          FirestoreManager.getTimeBankForId(
-                                              timebankId: value),
+                                      future: FirestoreManager.getTimeBankForId(
+                                          timebankId: value),
                                       builder: (context, snapshot) {
                                         if (snapshot.hasError)
                                           return new Text(
@@ -293,8 +292,7 @@ class RequestsState extends State<RequestsModule> {
               : RequestListItems(
                   parentContext: context,
                   timebankId: timebankId,
-                  timebankModel: widget.timebankModel
-                )
+                  timebankModel: widget.timebankModel)
         ],
       ),
     );
@@ -877,7 +875,8 @@ class RequestListItems extends StatefulWidget {
   final BuildContext parentContext;
   final TimebankModel timebankModel;
 
-  RequestListItems({Key key, this.timebankId, this.parentContext, this.timebankModel});
+  RequestListItems(
+      {Key key, this.timebankId, this.parentContext, this.timebankModel});
 
   @override
   State<StatefulWidget> createState() {
@@ -891,6 +890,7 @@ class RequestListItemsState extends State<RequestListItems> {
     super.initState();
     timeBankBloc.getRequestsFromTimebankId(widget.timebankId);
   }
+
   @override
   Widget build(BuildContext context) {
     if (widget.timebankId != 'All') {
@@ -911,10 +911,12 @@ class RequestListItemsState extends State<RequestListItems> {
                 stream: timeBankBloc.timebankController,
                 builder: (context, AsyncSnapshot<TimebankController> snapshot) {
                   if (snapshot.hasData) {
-                    if (snapshot.data != null && snapshot.data.requests.length == 0) {
+                    if (snapshot.data != null &&
+                        snapshot.data.requests.length == 0) {
                       return CircularProgressIndicator();
                     } else {
-                      List<RequestModel> requestModelList = snapshot.data.requests;
+                      List<RequestModel> requestModelList =
+                          snapshot.data.requests;
                       requestModelList = filterBlockedRequestsContent(
                           context: context, requestModelList: requestModelList);
 
@@ -925,9 +927,9 @@ class RequestListItemsState extends State<RequestListItems> {
                         );
                       }
                       var consolidatedList =
-                      GroupRequestCommons.groupAndConsolidateRequests(
-                          requestModelList,
-                          SevaCore.of(context).loggedInUser.sevaUserID);
+                          GroupRequestCommons.groupAndConsolidateRequests(
+                              requestModelList,
+                              SevaCore.of(context).loggedInUser.sevaUserID);
                       return formatListFrom(
                           consolidatedList: consolidatedList,
                           loggedintimezone: loggedintimezone,
@@ -1015,7 +1017,7 @@ class RequestListItemsState extends State<RequestListItems> {
     return Expanded(
       child: Container(
           child: ListView.builder(
-            shrinkWrap: true,
+        shrinkWrap: true,
         itemCount: consolidatedList.length + 1,
         itemBuilder: (context, index) {
           if (index >= consolidatedList.length) {
@@ -1076,9 +1078,7 @@ class RequestListItemsState extends State<RequestListItems> {
             Navigator.push(
               widget.parentContext,
               MaterialPageRoute(
-                builder: (context) => RequestTabHolder(
-
-                ),
+                builder: (context) => RequestTabHolder(),
               ),
             );
           },
@@ -1093,7 +1093,7 @@ class RequestListItemsState extends State<RequestListItems> {
                     width: 45,
                     child: FadeInImage.assetNetwork(
                       placeholder: defaultUserImageURL,
-                    //  placeholder: 'lib/assets/images/profile.png',
+                      //  placeholder: 'lib/assets/images/profile.png',
                       image: model.photoUrl == null
                           ? defaultUserImageURL
                           : model.photoUrl,
@@ -1174,7 +1174,7 @@ class RequestListItemsState extends State<RequestListItems> {
                               onPressed: () {},
                             ),
                           )),
-                    )
+                    ),
                   ],
                 ),
               ],

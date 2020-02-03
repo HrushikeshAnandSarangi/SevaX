@@ -33,13 +33,9 @@ class NotificationViewHolder extends StatefulWidget {
 class NotificationsView extends State<NotificationViewHolder> {
   @override
   Widget build(BuildContext context) {
-    String email = SevaCore.of(context).loggedInUser.email;
-
-    String communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(
-        userEmail: email,
+        userEmail: SevaCore.of(context).loggedInUser.email,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context_firestore, snapshot) {
@@ -56,7 +52,8 @@ class NotificationsView extends State<NotificationViewHolder> {
         SevaCore.of(context).loggedInUser.notificationsRead =
             notifications.length;
 
-        print("Unread notifications ${SevaCore.of(context).loggedInUser.notificationsRead}");
+        print(
+            "Unread notifications ${SevaCore.of(context).loggedInUser.notificationsRead}");
 
         if (notifications.length == 0) {
           return Center(
@@ -248,14 +245,13 @@ class NotificationsView extends State<NotificationViewHolder> {
                 RequestInvitationModel requestInvitationModel =
                     RequestInvitationModel.fromMap(notification.data);
 
-              return  getInvitedRequestsNotificationWidget(
-                requestInvitationModel,
-                notification.id,
-                context,
-                notification.timebankId,
-                notification.communityId,
-
-              );
+                return getInvitedRequestsNotificationWidget(
+                  requestInvitationModel,
+                  notification.id,
+                  context,
+                  notification.timebankId,
+                  notification.communityId,
+                );
                 break;
             }
           },
@@ -766,12 +762,16 @@ class NotificationsView extends State<NotificationViewHolder> {
             ),
           ),
           onTap: () {
-            showDialog(context: buildContext,
-            builder: (context){
-              return JoinRejectDialogView(
-                requestInvitationModel: requestInvitationModel,timeBankId: timebankId, notificationId: notificationId, userModel: SevaCore.of(buildContext).loggedInUser,
-              );
-            });
+            showDialog(
+                context: buildContext,
+                builder: (context) {
+                  return JoinRejectDialogView(
+                    requestInvitationModel: requestInvitationModel,
+                    timeBankId: timebankId,
+                    notificationId: notificationId,
+                    userModel: SevaCore.of(buildContext).loggedInUser,
+                  );
+                });
           },
         ));
   }
@@ -2239,19 +2239,4 @@ class NotificationsView extends State<NotificationViewHolder> {
 //  }
 //}
 
-
-
-
-
 // class GetList {
-
-
-
-
-
-
-
-
-
-
-

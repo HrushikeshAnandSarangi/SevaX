@@ -5,9 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -20,11 +18,13 @@ class RequestDetailsAboutPage extends StatefulWidget {
   TimebankModel timebankModel;
 
   final bool applied;
-  RequestDetailsAboutPage({Key key, this.applied = false, this.requestItem, this.timebankModel})
+  RequestDetailsAboutPage(
+      {Key key, this.applied = false, this.requestItem, this.timebankModel})
       : super(key: key);
 
   @override
-  _RequestDetailsAboutPageState createState() => _RequestDetailsAboutPageState();
+  _RequestDetailsAboutPageState createState() =>
+      _RequestDetailsAboutPageState();
 }
 
 class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
@@ -55,18 +55,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     var futures = <Future>[];
     futures.clear();
 
-    if(widget.requestItem.acceptors != null){
+    if (widget.requestItem.acceptors != null) {
       widget.requestItem.acceptors.forEach((memberEmail) {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
       isApplied = widget.requestItem.acceptors
           .contains(SevaCore.of(context).loggedInUser.email);
-    }
-    else{
+    } else {
       isApplied = false;
     }
-
-
 
     return Scaffold(
       body: SafeArea(
@@ -135,7 +132,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         ),
                         trailing: Container(
                           height: 25,
-                          width: 72,
+                          width: 75,
                           child: widget.requestItem.sevaUserId ==
                                   SevaCore.of(context).loggedInUser.sevaUserID
                               ? FlatButton(
