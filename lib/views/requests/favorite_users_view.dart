@@ -65,7 +65,6 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
           return ListView.builder(
-            
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               UserModel user =
@@ -85,7 +84,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
             },
           );
         }
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -28,6 +28,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
   List<UserModel> favoriteUsers;
   bool shouldInvite = true;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
+  RequestModel requestModel;
 
   @override
   void initState() {
@@ -39,6 +40,15 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
     if (timebank.model.admins.contains(widget.sevaUserId)) {
       isAdmin = true;
     }
+
+    _firestore
+        .collection('requests')
+        .document(widget.requestModel.id)
+        .snapshots()
+        .listen((reqModel) {
+      requestModel = RequestModel.fromMap(reqModel.data);
+      setState(() {});
+    });
 
     if (isAdmin) {
       //   print('admin is true ');
@@ -126,17 +136,17 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
             itemCount: userList.length,
             itemBuilder: (context, index) {
               UserModel user = userList[index];
-              List timeBankIds = user.favoriteByTimebank;
-              List memberId = user.favoriteByMember;
+              List<String> timeBankIds = user.favoriteByTimeBank ?? [];
+              List<String> memberId = user.favoriteByMember ?? [];
 
               return RequestCardWidget(
                 isAdmin: isAdmin,
                 userModel: user,
-                requestModel: widget.requestModel,
+                requestModel: requestModel,
                 timebankModel: timebank.model,
                 isFavorite: isAdmin
-                    ? timeBankIds.contains(widget.timebankId)
-                    : memberId.contains(widget.sevaUserId),
+                    ? timeBankIds.contains(widget.timebankId) ?? false
+                    : memberId.contains(widget.sevaUserId) ?? false,
                 reqStatus: 'Invited',
               );
             });
