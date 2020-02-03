@@ -1,20 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
+import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 //import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-enum PastHiredUserStatus {LOADING,LOADED,EMPTY}
+enum PastHiredUserStatus { LOADING, LOADED, EMPTY }
 
 class PastHiredUsersView extends StatefulWidget {
   final String timebankId;
   final RequestModel requestModel;
   final String sevaUserId;
 
-  PastHiredUsersView({@required this.timebankId, this.requestModel, this.sevaUserId});
+  PastHiredUsersView(
+      {@required this.timebankId, this.requestModel, this.sevaUserId});
 
   @override
   _PastHiredUsersViewState createState() {
@@ -22,19 +23,31 @@ class PastHiredUsersView extends StatefulWidget {
   }
 }
 
-enum UserFavoriteStatus {Favorite,NotFavorite}
+enum UserFavoriteStatus { Favorite, NotFavorite }
 
 class _PastHiredUsersViewState extends State<PastHiredUsersView> {
   final _firestore = Firestore.instance;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
   List<UserModel> users = [];
-  List<UserModel> favoriteUsers =[];
-  bool isAdmin =false;
+  List<UserModel> favoriteUsers = [];
+  bool isAdmin = false;
   PastHiredUserStatus userStatus = PastHiredUserStatus.LOADING;
+  RequestModel requestModel;
 
   @override
   void initState() {
     super.initState();
+    if (timebank.model.admins.contains(widget.sevaUserId)) {
+      isAdmin = true;
+    }
+    _firestore
+        .collection('requests')
+        .document(widget.requestModel.id)
+        .snapshots()
+        .listen((reqModel) {
+      requestModel = RequestModel.fromMap(reqModel.data);
+      setState(() {});
+    });
 
     _firestore
         .collection("users")
@@ -52,138 +65,61 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             ),
           ),
         );
-        if(users.isEmpty)
-        {
+        if (users.isEmpty) {
           userStatus = PastHiredUserStatus.EMPTY;
-        }else{
+        } else {
           userStatus = PastHiredUserStatus.LOADED;
         }
 
-        setState(() {
-
-        });
+        setState(() {});
       },
     );
-
-
-
-    if(timebank.model.admins.contains(widget.sevaUserId)){
-      isAdmin =true;
-    }
-
-    print(" ---------called init 1");
-
-
-    if(isAdmin){
-
-      print(" ---------called init A1");
-
-      //   print('admin is true ');
-      _firestore
-          .collection("users")
-          .where(
-        'favoriteByTimeBank',
-        arrayContains: timebank.model.id,
-      )
-          .getDocuments()
-          .then(
-            (QuerySnapshot querysnapshot) {
-
-              print(" ---------called init AF1 ${querysnapshot.documents.length}");
-
-              if (favoriteUsers == null) favoriteUsers = List();
-              querysnapshot.documents.forEach((DocumentSnapshot user) => favoriteUsers.add(UserModel.fromDynamic(user.data)),);
-
-        },
-      );
-    }else{
-
-      print(" ---------called init M1");
-
-      _firestore
-          .collection("users")
-          .where(
-        'favoriteByMember',
-        arrayContains: widget.sevaUserId,
-      )
-          .getDocuments()
-          .then(
-            (QuerySnapshot querysnapshot) {
-              if (favoriteUsers == null) favoriteUsers = List();
-
-              querysnapshot.documents.forEach(
-                (DocumentSnapshot user) => favoriteUsers.add(
-              UserModel.fromMap(
-                user.data,
-              ),
-            ),
-          );
-
-        },
-      );
-
-    }
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-    if (userStatus == PastHiredUserStatus.LOADING) {
-      return Center(child: CircularProgressIndicator());
-    } else if (userStatus == PastHiredUserStatus.EMPTY) {
-      return Center(child: Text('No user found'));
-    } else {
-      return ListView.builder(
-      shrinkWrap: true,
-      itemCount: users.length,
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection("users")
+          .where(
+            'recommendedTimebank',
+            arrayContains: widget.timebankId,
+          )
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              List timeBankIds =
+                  snapshot.data.documents[index].data['favoriteByTimeBank'] ??
+                      [];
+              List memberId =
+                  snapshot.data.documents[index].data['favoriteByMember'] ?? [];
+              UserModel user =
+                  UserModel.fromMap(snapshot.data.documents[index].data);
 
-      itemBuilder: (context, index) {
-
-        bool isfavorite = false;
-
-        UserModel user = users.elementAt(index);
-
-
-        if(favoriteUsers != null){
-
-
-          favoriteUsers.forEach((f){
-
-            if (f.sevaUserID == user.sevaUserID){
-              print("found a match for ${f.fullname}   --  ${user.sevaUserID}");
-              isfavorite = true;
-            }
-
-          });
-
-          return RequestCardWidget(
-            userModel: user,
-            requestModel: widget.requestModel,
-            timebankModel: timebank.model,
-            isFavorite: isfavorite,
-            cameFromInvitedUsersPage: false,
-          );
-
-
-        } else{
-
-
-          return RequestCardWidget(
-            userModel: user,
-            requestModel: widget.requestModel,
-            timebankModel: timebank.model,
-            isFavorite: false,
-            cameFromInvitedUsersPage: false,
-
+              return RequestCardWidget(
+                timebankModel: timebank.model,
+                requestModel: requestModel,
+                userModel: user,
+                isAdmin: isAdmin,
+                isFavorite: isAdmin ?? false
+                    ? timeBankIds.contains(widget.timebankId)
+                    : memberId.contains(widget.sevaUserId),
+                reqStatus: getRequestUserStatus(
+                  requestModel: requestModel,
+                  userId: user.sevaUserID,
+                  email: user.email,
+                ),
+              );
+            },
           );
         }
-          },
-        );
-    }
+        return Center(child: CircularProgressIndicator());
+      },
+    );
   }
-
-
 
   /*Widget getUserWidget(List<UserModel> favoriteUsers, UserModel user){
 
@@ -216,8 +152,5 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
 
   }
 */
-
-
-
 
 }

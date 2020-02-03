@@ -16,7 +16,7 @@ class UserModel extends DataModel {
   String calendar;
   List<String> membershipTimebanks;
   List<String> membershipCampaigns;
-  List<String> favoriteByTimebank;
+  List<String> favoriteByTimeBank;
   List<String> favoriteByMember;
   String photoURL;
   String sevaUserID;
@@ -58,7 +58,7 @@ class UserModel extends DataModel {
       this.membershipCampaigns,
       this.membershipTimebanks,
       this.favoriteByMember,
-      this.favoriteByTimebank,
+      this.favoriteByTimeBank,
       this.sevaUserID,
       this.skills,
       this.currentBalance,
@@ -78,7 +78,6 @@ class UserModel extends DataModel {
       this.communities}) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
-
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -182,7 +181,7 @@ class UserModel extends DataModel {
     if (map.containsKey('favoriteByTimeBank')) {
       List<String> favoriteByTimeBankList =
           List.castFrom(map['favoriteByTimeBank']);
-      this.favoriteByTimebank = favoriteByTimeBankList;
+      this.favoriteByTimeBank = favoriteByTimeBankList;
     }
     if (map.containsKey('currentBalance')) {
       this.currentBalance = map['currentBalance'];
@@ -278,8 +277,8 @@ class UserModel extends DataModel {
     if (this.communities != null && this.communities.isNotEmpty) {
       object['communities'] = this.communities;
     }
-    if (this.favoriteByTimebank != null && this.favoriteByTimebank.isNotEmpty) {
-      object['favoriteByTimebank'] = this.favoriteByTimebank;
+    if (this.favoriteByTimeBank != null && this.favoriteByTimeBank.isNotEmpty) {
+      object['favoriteByTimeBank'] = this.favoriteByTimeBank;
     }
     if (this.favoriteByMember != null && this.favoriteByMember.isNotEmpty) {
       object['favoriteByMember'] = this.favoriteByMember;
@@ -323,7 +322,7 @@ class UserModel extends DataModel {
       ${this.membershipCampaigns.toString()},
       ${this.membershipTimebanks.toString()},
       ${this.favoriteByMember.toString()},
-      ${this.favoriteByTimebank.toString()},
+      ${this.favoriteByTimeBank.toString()},
       ${this.sevaUserID.toString()},
       ${this.skills.toString()},
       ${this.currentBalance.toString()},

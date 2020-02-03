@@ -1,70 +1,93 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
-import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
 
-import '../core.dart';
-
-class InvitedUsersView extends StatefulWidget{
-
+class InvitedUsersView extends StatefulWidget {
   final String timebankId;
   final RequestModel requestModel;
   final String sevaUserId;
 
-  InvitedUsersView({@required this.timebankId, this.requestModel, this.sevaUserId});
+  InvitedUsersView(
+      {@required this.timebankId, this.requestModel, this.sevaUserId});
 
   @override
   _InvitedUsersViewState createState() {
     // TODO: implement createState
     return _InvitedUsersViewState();
   }
-
 }
 
 class _InvitedUsersViewState extends State<InvitedUsersView> {
   var validItems;
-  bool isAdmin =false;
+  bool isAdmin = false;
   final _firestore = Firestore.instance;
   List<UserModel> favoriteUsers;
   bool shouldInvite = true;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
+  RequestModel requestModel;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     timeBankBloc.setInvitedUsersData(widget.requestModel.id);
-    setState(() {
+    setState(() {});
 
-    });
-
-    if(timebank.model.admins.contains(widget.sevaUserId)){
-      isAdmin =true;
+    if (timebank.model.admins.contains(widget.sevaUserId)) {
+      isAdmin = true;
     }
 
-    if(isAdmin){
+    _firestore
+        .collection('requests')
+        .document(widget.requestModel.id)
+        .snapshots()
+        .listen((reqModel) {
+      requestModel = RequestModel.fromMap(reqModel.data);
+      setState(() {});
+    });
+
+    if (isAdmin) {
       //   print('admin is true ');
       _firestore
           .collection("users")
           .where(
-        'favoriteByTimeBank',
-        arrayContains: timebank.model.id,
-      )
+            'favoriteByTimeBank',
+            arrayContains: timebank.model.id,
+          )
           .getDocuments()
           .then(
-            (QuerySnapshot querysnapshot) {
-              if (favoriteUsers == null) favoriteUsers = List();
+        (QuerySnapshot querysnapshot) {
+          if (favoriteUsers == null) favoriteUsers = List();
 
-              querysnapshot.documents.forEach(
-                (DocumentSnapshot user) => favoriteUsers.add(
+          querysnapshot.documents.forEach(
+            (DocumentSnapshot user) => favoriteUsers.add(
+              UserModel.fromMap(
+                user.data,
+              ),
+            ),
+          );
+          // setState(() {});
+        },
+      );
+    } else {
+      //    print('admin is false ');
+      _firestore
+          .collection("users")
+          .where(
+            'favoriteByMember',
+            arrayContains: widget.sevaUserId,
+          )
+          .getDocuments()
+          .then(
+        (QuerySnapshot querysnapshot) {
+          if (favoriteUsers == null) favoriteUsers = List();
+
+          querysnapshot.documents.forEach(
+            (DocumentSnapshot user) => favoriteUsers.add(
               UserModel.fromMap(
                 user.data,
               ),
@@ -73,57 +96,25 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
           setState(() {});
         },
       );
-    }else{
-      //    print('admin is false ');
-      _firestore
-          .collection("users")
-
-          .where(
-        'favoriteByMember',
-        arrayContains: widget.sevaUserId,
-      )
-          .getDocuments()
-          .then(
-            (QuerySnapshot querysnapshot) {
-              if (favoriteUsers == null) favoriteUsers = List();
-
-              querysnapshot.documents.forEach(
-                (DocumentSnapshot user) => favoriteUsers.add(
-              UserModel.fromMap(
-                user.data,
-              ),
-            ),
-          );
-         setState(() {});
-        },
-      );
-
     }
-
-
-
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-    timeBankBloc.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return  StreamBuilder<TimebankController>(
+    return StreamBuilder<TimebankController>(
 //      stream: SearchManager.searchForUserWithTimebankId( // TODO : replace function here
 //          queryString: "", validItems: validItems),
       stream: timeBankBloc.timebankController,
       builder: (context, AsyncSnapshot<TimebankController> snapshot) {
-
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
         }
-
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -136,57 +127,28 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
         }
         List<UserModel> userList = snapshot.data.invitedUsersForRequest;
 
-
         if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
         }
 
-
-
         return ListView.builder(
             shrinkWrap: true,
             itemCount: userList.length,
-            itemBuilder: (context,index){
+            itemBuilder: (context, index) {
+              UserModel user = userList[index];
+              List<String> timeBankIds = user.favoriteByTimeBank ?? [];
+              List<String> memberId = user.favoriteByMember ?? [];
 
-              bool isfavorite = false;
-
-              UserModel user = userList.elementAt(index);
-
-
-              if(favoriteUsers != null){
-
-
-                favoriteUsers.forEach((f){
-
-                  if (f.sevaUserID == user.sevaUserID){
-                    //  print("found a match for ${f.fullname}   --  ${user.sevaUserID}");
-                    isfavorite = true;
-                  }
-
-                });
-
-                return RequestCardWidget(
-                  userModel: user,
-                  requestModel: widget.requestModel,
-                  timebankModel: timebank.model,
-                  isFavorite: isfavorite,
-                  cameFromInvitedUsersPage: true,
-                );
-
-
-              } else{
-
-
-                return RequestCardWidget(
-                  userModel: user,
-                  requestModel: widget.requestModel,
-                  timebankModel: timebank.model,
-                  isFavorite: false,
-                  cameFromInvitedUsersPage: true,
-
-                );
-              }
-
+              return RequestCardWidget(
+                isAdmin: isAdmin,
+                userModel: user,
+                requestModel: requestModel,
+                timebankModel: timebank.model,
+                isFavorite: isAdmin
+                    ? timeBankIds.contains(widget.timebankId) ?? false
+                    : memberId.contains(widget.sevaUserId) ?? false,
+                reqStatus: 'Invited',
+              );
             });
         //return
 
@@ -212,8 +174,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
     );
   }
 
-
- /* Widget makeUserWidget({UserModel  userModel, RequestModel requestModel,BuildContext context}) {
+  /* Widget makeUserWidget({UserModel  userModel, RequestModel requestModel,BuildContext context}) {
 
 
     return Container(
@@ -345,14 +306,14 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Container(
-                    *//*  decoration: BoxDecoration(
+                    */ /*  decoration: BoxDecoration(
 
                         boxShadow: [BoxShadow(
                             color: Colors.indigo[50],
                             blurRadius: 1,
                             offset: Offset(0.0, 0.50)
                         )]
-                    ),*//*
+                    ),*/ /*
                     height: 40,
                     padding: EdgeInsets.only(bottom: 10),
                     child: RaisedButton(
@@ -416,7 +377,6 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
     );
   }
 
-
   TextStyle get sectionHeadingStyle {
     return TextStyle(
       fontWeight: FontWeight.w600,
@@ -432,5 +392,4 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
       color: Colors.grey,
     );
   }
-
 }
