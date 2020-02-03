@@ -4,6 +4,62 @@ import 'package:http/http.dart' show Client, Response;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
+
+class RequestApiProvider {
+  Client client = Client();
+
+  Future<List<UserModel>> getUserFromRequest(String requestID) async {
+    List<UserModel> usersDataList = [];
+    print("uder ${requestID}");
+
+    var query = Firestore.instance
+        .collection('users').where("invitedRequests", arrayContains: requestID);
+
+    QuerySnapshot querySnapshot = await query.getDocuments();
+
+    querySnapshot.documents.forEach((documentSnapshot) {
+
+      UserModel model = UserModel.fromMap(documentSnapshot.data);
+      usersDataList.add(model);
+    });
+    return usersDataList ;
+  }
+
+  Future<List<RequestModel>> getRequestListStream(String timebankId) async {
+    List<RequestModel> requestList = [];
+    var query = timebankId == null || timebankId == 'All'
+        ? Firestore.instance
+        .collection('requests')
+        .where('accepted', isEqualTo: false)
+        : Firestore.instance
+        .collection('requests')
+        .where('timebankId', isEqualTo: timebankId)
+        .where('accepted', isEqualTo: false);
+
+    QuerySnapshot querySnapshot = await query.getDocuments();
+    querySnapshot.documents.forEach((documentSnapshot) {
+      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+      model.id = documentSnapshot.documentID;
+      if (model.approvedUsers.length <= model.numberOfApprovals)
+        requestList.add(model);
+    });
+    return requestList;
+  }
+
+  Future<void> updateInvitedUsersForRequest(String requestID, String sevaUserId) async {
+    List<String> list = List();
+    list.add(sevaUserId);
+
+    await Firestore.instance.collection('requests').document(requestID).updateData({'invitedUsers': FieldValue.arrayUnion([sevaUserId])}).then((onValue) {
+      return "Updated invitedUsers";
+    }).catchError((onError) {
+      return "Error Updating invitedUsers";
+    });
+
+    print('seva ${sevaUserId + requestID}');
+  }
+}
+
 class CommunityApiProvider {
   Client client = Client();
 //  Future<CategoryListModel> fetchCategoryList() async {
@@ -43,7 +99,6 @@ class CommunityApiProvider {
           .then((QuerySnapshot querySnapshot) {
         querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
           var community = CommunityModel(documentSnapshot.data);
-         // print("community data ${community.name}");
 
           communities.add(community);
         });
@@ -107,4 +162,7 @@ class CommunityApiProvider {
       print("Error Updating introduction");
     });
   }
+
+
+
 }

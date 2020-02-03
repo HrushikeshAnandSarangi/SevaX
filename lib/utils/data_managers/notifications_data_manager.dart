@@ -193,6 +193,8 @@ Stream<List<NotificationsModel>> getNotifications({
             notifications.add(model);
         });
         notificationSink.add(notifications);
+        print(
+            "${notifications.length}----------------------------------------");
       },
     ),
   );
@@ -219,4 +221,31 @@ Future<bool> isUnreadNotification(String userEmail) async {
     if (notifications.length > 0) isNotification = true;
   });
   return isNotification;
+}
+
+Future<List<NotificationsModel>> getCompletedNotifications(
+  String userEmail,
+  String communityId,
+) async {
+  List<NotificationsModel> res = [];
+  await Firestore.instance
+      .collection('users')
+      .document(userEmail)
+      .collection('notifications')
+      .where('isRead', isEqualTo: false)
+      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where(
+        'communityId',
+        isEqualTo: communityId,
+      )
+      .getDocuments()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+      NotificationsModel model = NotificationsModel.fromMap(
+        documentSnapshot.data,
+      );
+      if (model.type == NotificationType.RequestCompleted) res.add(model);
+    });
+  });
+  return res;
 }

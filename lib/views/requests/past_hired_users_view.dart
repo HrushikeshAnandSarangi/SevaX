@@ -1,0 +1,156 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
+import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/views/requests/request_card_widget.dart';
+//import 'package:smooth_star_rating/smooth_star_rating.dart';
+
+enum PastHiredUserStatus { LOADING, LOADED, EMPTY }
+
+class PastHiredUsersView extends StatefulWidget {
+  final String timebankId;
+  final RequestModel requestModel;
+  final String sevaUserId;
+
+  PastHiredUsersView(
+      {@required this.timebankId, this.requestModel, this.sevaUserId});
+
+  @override
+  _PastHiredUsersViewState createState() {
+    return _PastHiredUsersViewState();
+  }
+}
+
+enum UserFavoriteStatus { Favorite, NotFavorite }
+
+class _PastHiredUsersViewState extends State<PastHiredUsersView> {
+  final _firestore = Firestore.instance;
+  TimeBankModelSingleton timebank = TimeBankModelSingleton();
+  List<UserModel> users = [];
+  List<UserModel> favoriteUsers = [];
+  bool isAdmin = false;
+  PastHiredUserStatus userStatus = PastHiredUserStatus.LOADING;
+  RequestModel requestModel;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _firestore
+        .collection('requests')
+        .document(widget.requestModel.id)
+        .snapshots()
+        .listen((reqModel) {
+      requestModel = RequestModel.fromMap(reqModel.data);
+      setState(() {});
+    });
+
+    _firestore
+        .collection("users")
+        .where(
+          "recommendedTimebank",
+          arrayContains: widget.timebankId,
+        )
+        .getDocuments()
+        .then(
+      (QuerySnapshot querysnapshot) {
+        querysnapshot.documents.forEach(
+          (DocumentSnapshot user) => users.add(
+            UserModel.fromMap(
+              user.data,
+            ),
+          ),
+        );
+        if (users.isEmpty) {
+          userStatus = PastHiredUserStatus.EMPTY;
+        } else {
+          userStatus = PastHiredUserStatus.LOADED;
+        }
+
+        setState(() {});
+      },
+    );
+
+    if (timebank.model.admins.contains(widget.sevaUserId)) {
+      isAdmin = true;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection("users")
+          .where(
+            'recommendedTimebank',
+            arrayContains: widget.timebankId,
+          )
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            itemBuilder: (context, index) {
+              List timeBankIds =
+                  snapshot.data.documents[index].data['favoriteByTimeBank'];
+              List memberId =
+                  snapshot.data.documents[index].data['favoriteByMember>'];
+              UserModel user =
+                  UserModel.fromMap(snapshot.data.documents[index].data);
+              return RequestCardWidget(
+                timebankModel: timebank.model,
+                requestModel: requestModel,
+                userModel: user,
+                isAdmin: isAdmin,
+                isFavorite: isAdmin
+                    ? timeBankIds.contains(widget.timebankId)
+                    : memberId.contains(widget.sevaUserId),
+                reqStatus: getRequestUserStatus(
+                  requestModel: requestModel,
+                  userId: user.sevaUserID,
+                  email: user.email,
+                ),
+              );
+            },
+          );
+        }
+        return CircularProgressIndicator();
+      },
+    );
+  }
+
+  /*Widget getUserWidget(List<UserModel> favoriteUsers, UserModel user){
+
+
+    if(favoriteUsers != null){
+
+      bool isfavorite =false;
+
+      print(" favorite ids are ${favoriteUsers[0].sevaUserID}");
+
+
+
+      return RequestCardWidget(
+        userModel: user,
+        requestModel: widget.requestModel,
+        timebankModel: timebank.model,
+        isFavorite: true,
+      );
+
+
+    } else{
+      return RequestCardWidget(
+        userModel: user,
+        requestModel: widget.requestModel,
+        timebankModel: timebank.model,
+        isFavorite: false,
+
+      );
+    }
+
+  }
+*/
+
+}

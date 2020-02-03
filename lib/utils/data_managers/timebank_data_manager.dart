@@ -5,13 +5,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/new_baseline/models/offer_model.dart';
-
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/views/exchange/help.dart';
-import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
-import 'package:sevaexchange/views/timebanks/timebank_admin_listview.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
   return await Firestore.instance

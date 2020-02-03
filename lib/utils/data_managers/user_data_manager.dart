@@ -103,8 +103,6 @@ Future<UserModel> getUserForId({@required String sevaUserId}) async {
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       userModel = UserModel.fromMap(documentSnapshot.data);
-//      print('user data ${userModel}');
-//      print('logg user${userModel.email}');
     });
   });
 
@@ -181,7 +179,7 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
 }
 
 Future<UserModelListMoreStatus>
-    getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
+    getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
         String timebankId, int index, String email) async {
   var storage = 'sevaexchange';
   var saveXLink = '';

@@ -1,13 +1,11 @@
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -15,19 +13,21 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 // import 'package:timezone/browser.dart';
 
-class TimeBankRequestDetails extends StatefulWidget {
+class RequestDetailsAboutPage extends StatefulWidget {
   final RequestModel requestItem;
   TimebankModel timebankModel;
 
   final bool applied;
-  TimeBankRequestDetails({Key key, this.applied = false, this.requestItem})
+  RequestDetailsAboutPage(
+      {Key key, this.applied = false, this.requestItem, this.timebankModel})
       : super(key: key);
 
   @override
-  _TimeBankRequestDetailsState createState() => _TimeBankRequestDetailsState();
+  _RequestDetailsAboutPageState createState() =>
+      _RequestDetailsAboutPageState();
 }
 
-class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
+class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   // String timeRange = '10:00 AM - 12:00 PM';
   String location = 'Location';
   // String subLocation = '881, 6th Cross Rd, Bengaluru, India';
@@ -48,39 +48,24 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
   @override
   void initState() {
     super.initState();
-
-    getTimeBankForId(timebankId: widget.requestItem.timebankId)
-        .then((timebank) {
-      widget.timebankModel = timebank;
-      if (timebank.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-          timebank.coordinators
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     var futures = <Future>[];
     futures.clear();
-    widget.requestItem.acceptors.forEach((memberEmail) {
-      futures.add(getUserDetails(memberEmail: memberEmail));
-    });
 
-    isApplied = widget.requestItem.acceptors
-        .contains(SevaCore.of(context).loggedInUser.email);
+    if (widget.requestItem.acceptors != null) {
+      widget.requestItem.acceptors.forEach((memberEmail) {
+        futures.add(getUserDetails(memberEmail: memberEmail));
+      });
+      isApplied = widget.requestItem.acceptors
+          .contains(SevaCore.of(context).loggedInUser.email);
+    } else {
+      isApplied = false;
+    }
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.5,
-        
-        title: Text(
-          "Request Details",
-          style: TextStyle(
-            fontSize: 18,
-          ),
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -93,6 +78,9 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    SizedBox(
+                      height: 10,
+                    ),
                     Text(
                       widget.requestItem.title,
                       style: TextStyle(
@@ -102,52 +90,82 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     ),
                     SizedBox(height: 10),
                     CustomListTile(
-                      leading: Icon(
-                        Icons.access_time,
-                        color: Colors.grey,
-                      ),
-                      title: Text(
-                        DateFormat('EEEEEEE, MMMM dd').format(
-                          getDateTimeAccToUserTimezone(
-                              dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                  widget.requestItem.requestStart),
-                              timezoneAbb:
-                                  SevaCore.of(context).loggedInUser.timezone),
+                        leading: Icon(
+                          Icons.access_time,
+                          color: Colors.grey,
                         ),
-                        style: titleStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(
-                        DateFormat('EEEEEEE, MMMM dd h:mm a').format(
-                          getDateTimeAccToUserTimezone(
-                              dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                  widget.requestItem.requestEnd),
-                              timezoneAbb:
-                                  SevaCore.of(context).loggedInUser.timezone),
+                        title: Text(
+                          DateFormat('EEEEEEE, MMMM dd').format(
+                            getDateTimeAccToUserTimezone(
+                                dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                    widget.requestItem.requestStart),
+                                timezoneAbb:
+                                    SevaCore.of(context).loggedInUser.timezone),
+                          ),
+                          style: titleStyle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        style: subTitleStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: Container(
-                        height: 30,
-                        width: 80,
-                        child: widget.applied
-                            ? FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                color: Color.fromRGBO(44, 64, 140, 1),
-                                child: Text(
-                                  'Edit',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onPressed: () {},
-                              )
-                            : Container(),
-                      ),
-                    ),
+                        subtitle: Text(
+                          DateFormat('h:mm a').format(
+                                getDateTimeAccToUserTimezone(
+                                    dateTime:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            widget.requestItem.requestStart),
+                                    timezoneAbb: SevaCore.of(context)
+                                        .loggedInUser
+                                        .timezone),
+                              ) +
+                              ' - ' +
+                              DateFormat('h:mm a').format(
+                                getDateTimeAccToUserTimezone(
+                                    dateTime:
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            widget.requestItem.requestEnd),
+                                    timezoneAbb: SevaCore.of(context)
+                                        .loggedInUser
+                                        .timezone),
+                              ),
+                          style: subTitleStyle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Container(
+                          height: 25,
+                          width: 75,
+                          child: widget.requestItem.sevaUserId ==
+                                  SevaCore.of(context).loggedInUser.sevaUserID
+                              ? FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  color: Color.fromRGBO(44, 64, 140, 1),
+                                  child: Text(
+                                    'Edit',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 13),
+                                  ),
+                                  onPressed: () {
+                                    RequestModel _modelItem =
+                                        widget.requestItem;
+                                    print("widget.requestItem:$_modelItem");
+                                    print(
+                                        "SevaCore.of(context).loggedInUser.currentTimebank:${SevaCore.of(context).loggedInUser.currentTimebank}");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EditRequest(
+                                          timebankId: SevaCore.of(context)
+                                              .loggedInUser
+                                              .currentTimebank,
+                                          requestModel: widget.requestItem,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Container(),
+                        )),
                     CustomListTile(
                       leading: Icon(
                         Icons.location_on,
@@ -182,6 +200,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     ),
                     CustomListTile(
                       // contentPadding: EdgeInsets.all(0),
+
                       leading: Icon(
                         Icons.person,
                         color: Colors.grey,
@@ -260,6 +279,7 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                     );
                   }),
               SizedBox(height: 10),
+
               // NetworkImage(
               //   imageUrl:
               //       'https://technext.github.io/Evento/images/demo/bg-slide-01.jpg',
@@ -277,7 +297,22 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                   style: TextStyle(fontSize: 16),
                 ),
               ),
-              getBottombar()
+              /*CachedNetworkImage(
+                  imageUrl: widget.requestItem.photoUrl,
+                  errorWidget: (context,url,error) =>
+                      Container(),
+                  placeholder: (context,url){
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+              ),*/
+              SizedBox(
+                height: 10,
+              ),
+              getBottombar(),
+              SizedBox(
+                height: 10,
+              )
             ],
           ),
         ),
@@ -327,30 +362,6 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    widget.requestItem.sevaUserId ==
-                            SevaCore.of(context).loggedInUser.sevaUserID
-                        ? TextSpan(
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                            text: '\nEdit request',
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditRequest(
-                                      timebankId: SevaCore.of(context)
-                                          .loggedInUser
-                                          .currentTimebank,
-                                      requestModel: widget.requestItem,
-                                    ),
-                                  ),
-                                );
-                              },
-                          )
-                        : TextSpan(),
                   ],
                 ),
               ),
@@ -425,7 +436,8 @@ class _TimeBankRequestDetailsState extends State<TimeBankRequestDetails> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Protected Timebank"),
-          content: new Text("You cannot accept requests in a protected timebank"),
+          content:
+              new Text("You cannot accept requests in a protected timebank"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

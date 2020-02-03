@@ -79,6 +79,10 @@ class NotificationsModel extends DataModel {
       if (typeString == 'AcceptedOffer') {
         this.type = NotificationType.AcceptedOffer;
       }
+
+      if (typeString == 'RequestInvite') {
+        this.type = NotificationType.RequestInvite;
+      }
     }
     if (map.containsKey('data')) {
       this.data = Map.castFrom(map['data']);
@@ -138,6 +142,7 @@ class NotificationsModel extends DataModel {
 enum NotificationType {
   RequestAccept,
   RequestApprove,
+  RequestInvite,
   RequestReject,
   RequestCompleted,
   RequestCompletedApproved,

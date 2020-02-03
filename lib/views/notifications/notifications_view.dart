@@ -1,6 +1,5 @@
 //import 'dart:ffi';
 
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -18,6 +18,7 @@ import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,13 +33,9 @@ class NotificationViewHolder extends StatefulWidget {
 class NotificationsView extends State<NotificationViewHolder> {
   @override
   Widget build(BuildContext context) {
-    String email = SevaCore.of(context).loggedInUser.email;
-
-    String communityId = SevaCore.of(context).loggedInUser.currentCommunity;
-
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(
-        userEmail: email,
+        userEmail: SevaCore.of(context).loggedInUser.email,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context_firestore, snapshot) {
@@ -68,8 +65,6 @@ class NotificationsView extends State<NotificationViewHolder> {
           itemCount: notifications.length,
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);
-            print("Notification widgets ${notification.type}");
-
             switch (notification.type) {
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
@@ -241,6 +236,22 @@ class NotificationsView extends State<NotificationViewHolder> {
 
                 // return Text(
                 //     'Acceptance Request ' + acceptedOffer.notificationContent);
+                break;
+
+              case NotificationType.RequestInvite:
+                // TODO: Handle this case.
+
+                print("notification data ${notification.data}");
+                RequestInvitationModel requestInvitationModel =
+                    RequestInvitationModel.fromMap(notification.data);
+
+                return getInvitedRequestsNotificationWidget(
+                  requestInvitationModel,
+                  notification.id,
+                  context,
+                  notification.timebankId,
+                  notification.communityId,
+                );
                 break;
             }
           },
@@ -717,6 +728,52 @@ class NotificationsView extends State<NotificationViewHolder> {
             ));
       },
     );
+  }
+
+  Widget getInvitedRequestsNotificationWidget(
+      RequestInvitationModel requestInvitationModel,
+      String notificationId,
+      BuildContext buildContext,
+      String timebankId,
+      String communityId) {
+    // assert(user != null);
+
+    return Dismissible(
+        background: dismissibleBackground,
+        key: Key(Utils.getUuid()),
+        onDismissed: (direction) {
+          String userEmail = SevaCore.of(buildContext).loggedInUser.email;
+          FirestoreManager.readNotification(notificationId, userEmail);
+        },
+        child: GestureDetector(
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              title: Text("Join request"),
+              leading: requestInvitationModel.timebankImage != null
+                  ? CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(requestInvitationModel.timebankImage),
+                    )
+                  : Offstage(),
+              subtitle: Text(
+                  '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
+            ),
+          ),
+          onTap: () {
+            showDialog(
+                context: buildContext,
+                builder: (context) {
+                  return JoinRejectDialogView(
+                    requestInvitationModel: requestInvitationModel,
+                    timeBankId: timebankId,
+                    notificationId: notificationId,
+                    userModel: SevaCore.of(buildContext).loggedInUser,
+                  );
+                });
+          },
+        ));
   }
 
   void showMemberClaimConfirmation(
@@ -2182,48 +2239,4 @@ class NotificationsView extends State<NotificationViewHolder> {
 //  }
 //}
 
-
-// class AceeptorItem {
-//   final String sevaUserID;
-//   final bool approved;
-
-//   AceeptorItem({this.sevaUserID, this.approved})
-  
-// }
-
-
 // class GetList {
-
-
-
-
-// void build(BuildContext context ){
-
-//   var acceptors = [];
-//   var approvedMembers = [];
-
-//   HashMap<String, AceeptorItem> consildatedList = HashMap();
-
-//   acceptors.map((f){
-//     consildatedList[f] = AceeptorItem(approved: false, sevaUserID: f);
-//   });
-
-
-// approvedMembers.map((f){
-//     consildatedList[f] = AceeptorItem(approved: true, sevaUserID: f);
-//   });
-  
-
-
-//   Requedtmodel midel=consildatedList[imdex].approved
-
-
-
-// }
-
-
-
-
-
-
-

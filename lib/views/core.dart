@@ -50,7 +50,7 @@ class SevaCore extends InheritedWidget {
   }
 
   static SevaCore of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(SevaCore) as SevaCore;
+    return context.dependOnInheritedWidgetOfExactType();
   }
 
 //  Future<bool> check() async {

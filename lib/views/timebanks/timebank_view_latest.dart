@@ -53,7 +53,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
     if (widget.timebankModel.members.contains(widget.userId)) {
       isUserJoined = true;
       userModels = await FirestoreManager
-          .getUsersForAdminsCoordinatorsMembersTimebankIdUmesh(
+          .getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
               widget.timebankModel.id, 1, widget.email);
       isDataLoaded = true;
     }

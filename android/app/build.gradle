@@ -51,13 +51,15 @@ android {
 
     signingConfigs {
         release {
-            
+
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-    //    storeFile file(keystoreProperties['storeFile'])
-//        storePassword keystoreProperties['storePassword']
-            // signingConfig signingConfigs.debug
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+//            signingConfig signingConfigs.debug
         }
+
+
     }
 
     buildTypes {

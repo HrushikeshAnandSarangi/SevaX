@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -55,10 +56,12 @@ class _ProfilePageState extends State<ProfilePage>
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
+  double sevaCoins = 0;
 
   // UserProfileBloc _profileBloc = UserProfileBloc();
 
   List<CommunityModel> communities = [];
+  Stream<List<RequestModel>> requestStream;
 
   @override
   void initState() {
@@ -228,7 +231,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  '${user.currentBalance.toString() ?? '0.0'} Seva Coins',
+                                  '${sevaCoins} Seva Coins',
                                   style: TextStyle(
                                     color: user.currentBalance > 0
                                         ? Colors.blue

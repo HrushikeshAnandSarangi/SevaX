@@ -155,7 +155,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     TimebankModel timebank = timebankList.elementAt(index);
                     CompareToTimeBank status;
 
-                    if (_joinRequestModels.length != 0) {
+                    if (_joinRequestModels != null) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status);
                     } else if (timebank.admins
@@ -346,10 +346,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   CompareToTimeBank compareTimeBanks(
       List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
+
     // CompareToTimeBank status;
-    print("inside compareTimeBanks" + joinRequestModels.length.toString());
+   // print("inside compareTimeBanks" + joinRequestModels.length.toString());
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
+      print("inside compareTimeBanks " + requestModel.userId);
 
       if (requestModel.entityId == timeBank.id &&
           joinRequestModels[i].accepted == true) {

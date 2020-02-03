@@ -4,6 +4,7 @@ import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -36,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage>
   TimebankModel primaryTimebank;
   HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
   CommunityModel selectedCommunity;
+  TimeBankModelSingleton timeBankModelSingleton = TimeBankModelSingleton();
 
   @override
   void initState() {
@@ -157,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage>
                     if (data.id ==
                         snapshot.data.currentCommunity.primary_timebank) {
                       primaryTimebank = data;
+                      timeBankModelSingleton.model = primaryTimebank;
                     }
                   });
                 }

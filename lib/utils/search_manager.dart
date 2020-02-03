@@ -29,9 +29,8 @@ class SearchManager {
   static Stream<List<UserModel>> searchForUser({
     @required queryString,
   }) async* {
-    print("searchForUser :: ---------------");
 //    sevaxuser
-    String url = 'http://35.243.165.111//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -180,7 +179,7 @@ class SearchManager {
   }) async* {
 
     print("searchForUser :: ---------------");
-    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
+    String url = 'http://35.227.18.55//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -194,7 +193,7 @@ class SearchManager {
               {
                 "multi_match": {
                   "query": "$queryString",
-                  "fields": ["email", "fullname"],
+                  "fields": ["email", "fullname", "bio"],
                   "type": "phrase_prefix"
                 }
               },
@@ -206,13 +205,19 @@ class SearchManager {
     );
     List<Map<String, dynamic>> hitList =
     await _makeElasticSearchPostRequest(url, body);
+
+  //  log("loggg - "+validItems.toString());
+
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       UserModel user = UserModel.fromMap(sourceMap);
-      if(validItems.contains(user.sevaUserID)){
+
+     if(validItems.contains(user.sevaUserID)){
+
+       print("yeah he is there");
         userList.add(user);
-      }
+     }
     });
     yield userList;
   }
@@ -339,7 +344,7 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url = 'http://35.227.18.55/elasticsearch/requests/request/_search';
+    String url = 'http://35.227.18.55//elasticsearch/requests/request/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -387,7 +392,7 @@ class SearchManager {
     print("Hitting - " + url);
 
     String username = 'user';
-    String password = 'CiN36UNixjyq';
+    String password = 'CiN36UNixJyq';
     log(
       json.encode(
         {
@@ -402,12 +407,17 @@ class SearchManager {
       "Accept": "application/json",
       "Content-Type": "application/json"
     });
-    log(response.body);
-    print("Reuqest Response --> ${response.body}");
+    //log(response.body);
+   // print("Reuqest Response --> ${response.body}");
+
+//    print("Reuqest Response --> ${response.body}");
 
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
+   // print("Reuqest Response --> $hitList");
+//    log(response.body);
+//    log("loggg - "+hitList.toString());
     return hitList;
   }
 

@@ -121,9 +121,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
           return Text(snapshot.error.toString());
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return circularBar;
         }
         TimebankModel timebankModel = snapshot.data;
         return getDataScrollView(
@@ -482,7 +480,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
       _adminsWidgets
           .add(getUserWidget(user, context, timebankModel, true, false));
     });
-//    setState(() {});
   }
 
   Widget getUserWidget(UserModel user, BuildContext context,
@@ -629,22 +626,28 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
-      var gesture = GestureDetector(
-        child: Row(
-          children: <Widget>[
-            getSectionTitle(context, 'Members '),
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 10,
-              child: Image.asset("lib/assets/images/add.png"),
-            ),
-          ],
-        ),
-        onTap: () async {
-          addVolunteers();
-        },
-      );
-      _membersWidgets.add(gesture);
+      if (widget.isUserAdmin) {
+        var gesture = GestureDetector(
+          child: Row(
+            children: <Widget>[
+              getSectionTitle(context, 'Members '),
+              CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 10,
+                child: Image.asset("lib/assets/images/add.png"),
+              ),
+            ],
+          ),
+          onTap: () async {
+            addVolunteers();
+          },
+        );
+        _membersWidgets.add(gesture);
+      } else {
+        _membersWidgets.add(
+          getSectionTitle(context, 'Members '),
+        );
+      }
     }
     if (!_isLoading && !_lastReached) {
       _isLoading = true;

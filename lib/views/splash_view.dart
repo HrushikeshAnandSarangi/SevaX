@@ -552,6 +552,7 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToFindCommunitiesView(loggedInUser);
     } else {
       _navigateToCoreView(loggedInUser);
+//      await _navigateToxxxview();
     }
 
     // _navigateToCoreView(loggedInUser);
@@ -795,6 +796,7 @@ class _SplashViewState extends State<SplashView> {
           loggedInUser: loggedInUser,
           child: FindCommunitiesView(
             keepOnBackPress: false,
+            loggedInUser: loggedInUser,
           ),
         ),
       ),

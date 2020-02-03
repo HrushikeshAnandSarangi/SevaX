@@ -15,8 +15,10 @@ import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 
 class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
+  final UserModel loggedInUser;
 
-  FindCommunitiesView({@required this.keepOnBackPress});
+  FindCommunitiesView(
+      {@required this.keepOnBackPress, @required this.loggedInUser});
 
   @override
   State<StatefulWidget> createState() {
@@ -24,14 +26,13 @@ class FindCommunitiesView extends StatefulWidget {
   }
 }
 
-enum CompareUserStatus { JOINED, JOIN }
+enum CompareUserStatus { JOINED, REQUESTED, REJECTED, JOIN }
 
 class FindCommunitiesViewState extends State<FindCommunitiesView> {
   final TextEditingController searchTextController =
       new TextEditingController();
   static const String JOIN = "Join";
   static const String JOINED = "Joined";
-
   @override
   void initState() {
     super.initState();
@@ -41,6 +42,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
 
+    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
     Observable(_textUpdates.stream)
         .debounceTime(Duration(milliseconds: 400))
         .forEach((s) {
@@ -68,19 +70,20 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     return MaterialApp(
       theme: FlavorConfig.values.theme,
       home: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: AppBar(
-            automaticallyImplyLeading: widget.keepOnBackPress,
-            elevation: 0.5,
-            title: Text(
-              'Find your Timebank',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          automaticallyImplyLeading: widget.keepOnBackPress,
+          elevation: 0.5,
+          title: Text(
+            'Find your Timebank',
+            style: TextStyle(
+              fontSize: 18,
             ),
-            centerTitle: true,
           ),
-          body: SearchTeams()),
+          centerTitle: true,
+        ),
+        body: SearchTeams(),
+      ),
     );
   }
 
@@ -174,8 +177,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                           itemCount: communityList.length,
                           itemBuilder: (BuildContext context, int index) {
                             CompareUserStatus status;
+
                             status = _compareUserStatus(communityList[index],
-                                SevaCore.of(context).loggedInUser.sevaUserID);
+                                widget.loggedInUser.sevaUserID);
+
                             return ListTile(
                               onTap: goToNext(snapshot.data),
                               title: Text(communityList[index].name,
@@ -231,9 +236,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                                     MaterialPageRoute(
                                                       builder: (contexts) =>
                                                           OnBoardWithTimebank(
-                                                        communityModel:
-                                                            communityModel,
-                                                      ),
+                                                              communityModel:
+                                                                  communityModel,
+                                                              sevauserId: widget
+                                                                  .loggedInUser
+                                                                  .sevaUserID),
                                                     ),
                                                   );
                                                   print(
@@ -292,11 +299,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   CompareUserStatus _compareUserStatus(
-      CommunityModel communityModel, String seveaUserId) {
-    if (communityModel.members.contains(seveaUserId)) {
+    CommunityModel communityModel,
+    String seveaUserId,
+  ) {
+    if (communityModel.members.contains(widget.loggedInUser.sevaUserID)) {
       print('u r joined user');
       return CompareUserStatus.JOINED;
-    } else if (communityModel.admins.contains(seveaUserId)) {
+    } else if (communityModel.admins.contains(widget.loggedInUser.sevaUserID)) {
       print('u rrr joined user');
 
       return CompareUserStatus.JOINED;
@@ -456,7 +465,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                           MaterialPageRoute(
                                             builder: (contexts) =>
                                                 OnBoardWithTimebank(
-                                              communityModel: communityModel,
+                                              communityModel: communityModel,sevaUserId: SevaCore.of(context)
+                                                    .loggedInUser.sevaUserID
                                             ),
                                           ),
                                         );
