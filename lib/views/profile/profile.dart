@@ -19,12 +19,6 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
-import 'package:sevaexchange/views/tasks/completed_list.dart';
-import 'package:sevaexchange/views/timebanks/time_bank_list.dart';
-import 'dart:math';
-import 'dart:async';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -105,6 +99,7 @@ class _ProfilePageState extends State<ProfilePage>
         if (!mounted) return;
         List<RequestModel> requestList = [];
         requestList = list;
+        sevaCoins = 0;
         for (var i = 0; i < requestList.length; i++) {
           var request = requestList[i];
           if (request.transactions != null && request.transactions.length > 0) {
@@ -112,11 +107,7 @@ class _ProfilePageState extends State<ProfilePage>
               var transaction = request.transactions[j];
               if (transaction.to ==
                   SevaCore.of(context).loggedInUser.sevaUserID) {
-                sevaCoins = transaction.credits;
-//                  print(
-//                      "Transaction of ${transaction.to} completed:${transaction.credits}");
-//                  print(
-//                      "SevaCore.of(context).loggedInUser.sevaUserID of ${transaction.to} completed:${SevaCore.of(context).loggedInUser.sevaUserID}");
+                sevaCoins = sevaCoins + transaction.credits;
               }
             }
           }

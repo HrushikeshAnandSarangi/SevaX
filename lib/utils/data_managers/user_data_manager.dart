@@ -103,7 +103,6 @@ Future<UserModel> getUserForId({@required String sevaUserId}) async {
       .then((QuerySnapshot querySnapshot) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       userModel = UserModel.fromMap(documentSnapshot.data);
-//      print('logg user${userModel.email}');
     });
   });
 

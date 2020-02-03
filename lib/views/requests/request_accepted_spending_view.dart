@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
@@ -25,11 +29,61 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   List<Widget> _avtars = [];
   bool noTransactionAvailable = false;
   List<Widget> _pendingAvtars = [];
-  Stream<List<NotificationsModel>> notificationStream;
   List<NotificationsModel> pendingRequests = [];
   bool shouldReload = true;
+  bool isProgressBarActive = false;
 
-  Future updatePendingAvtarWidgets() async {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (isProgressBarActive) {
+      return AlertDialog(
+        title: Text('Updating Users'),
+        content: LinearProgressIndicator(),
+      );
+    }
+    if (shouldReload) {
+      _updatePendingAvtarWidgets();
+    }
+    return Scaffold(
+      body: listItems,
+    );
+  }
+
+  Widget get listItems {
+    if (_avtars.length == 0) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return ListView.builder(
+        itemCount: _avtars.length,
+        itemBuilder: (context, index) {
+          return _avtars[index];
+        });
+  }
+
+  void reset() {
+    _avtars = [];
+    _pendingAvtars = [];
+    pendingRequests = [];
+    shouldReload = true;
+    noTransactionAvailable = false;
+    setState(() {
+      isProgressBarActive = false;
+    });
+  }
+
+  Future _updatePendingAvtarWidgets() async {
     shouldReload = false;
     var notifications = await FirestoreManager.getCompletedNotifications(
         SevaCore.of(context).loggedInUser.email,
@@ -41,78 +95,19 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         pendingRequests.add(notifications[i]);
       }
     }
+    _pendingAvtars = [];
     for (int i = 0; i < pendingRequests.length; i++) {
       NotificationsModel notification = pendingRequests[i];
       RequestModel model = RequestModel.fromMap(notification.data);
-      var item = getNotificationRequestCompletedWidget(
+      Widget item = await getNotificationRequestCompletedWidget(
         model,
         notification.senderUserId,
         notification.id,
       );
       _pendingAvtars.add(item);
     }
+    await getUserModel();
     setState(() {});
-  }
-
-//  Future setCompletedRequestAvatar() async {
-//    _pendingAvtars = [];
-//    for (int i = 0; i < pendingRequests.length; i++) {
-//      NotificationsModel notification = pendingRequests[i];
-//      RequestModel model = RequestModel.fromMap(notification.data);
-//      var item = getNotificationRequestCompletedWidget(
-//        model,
-//        notification.senderUserId,
-//        notification.id,
-//      );
-//      _pendingAvtars.add(item);
-//    }
-//  }
-
-  @override
-  void initState() {
-    super.initState();
-//    updateStream();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (shouldReload) {
-      updatePendingAvtarWidgets();
-//      .then((onValue) {
-//        shouldReload = false;
-//        setState(() {});
-//      });
-//      setCompletedRequestAvatar().then((onValue) {
-//        shouldReload = false;
-//        setState(() {});
-//      });
-    }
-    return Scaffold(
-      body: listItems,
-    );
-  }
-
-  Widget get listItems {
-    if (widget.requestModel.transactions == null ||
-        widget.requestModel.transactions.length == 0) {
-      return getTotalSpending("0");
-    } else if (_avtars.length == 0) {
-      getUserModel();
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      return ListView.builder(
-          itemCount: _avtars.length,
-          itemBuilder: (context, index) {
-            return _avtars[index];
-          });
-    }
   }
 
   Widget completedRequestWidget(RequestModel model) {
@@ -183,6 +178,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     var i = 0;
     var k = 0;
     var totalCredits = 0.0;
+    _avtars = [];
     List<Widget> _localAvtars = [];
     while (i < widget.requestModel.transactions.length) {
       var transaction = widget.requestModel.transactions[i];
@@ -198,6 +194,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
           _localAvtars.add(item);
           if (k == widget.requestModel.transactions.length - 1) {
             _avtars.add(getTotalSpending("$totalCredits"));
+            _avtars.addAll(_pendingAvtars);
             _avtars.addAll(_localAvtars);
             setState(() {});
           }
@@ -207,6 +204,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         _localAvtars.add(Offstage());
         if (k == widget.requestModel.transactions.length - 1) {
           _avtars.add(getTotalSpending("$totalCredits"));
+          _avtars.addAll(_pendingAvtars);
           _avtars.addAll(_localAvtars);
           setState(() {});
         }
@@ -340,77 +338,396 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-  Widget getNotificationRequestCompletedWidget(
+  Future<Widget> getNotificationRequestCompletedWidget(
     RequestModel model,
     String userId,
     String notificationId,
-  ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-        UserModel user = snapshot.data;
-        TransactionModel transactionModel =
-            model.transactions?.firstWhere((transaction) {
-          return transaction.to == userId;
-        });
-        return Slidable(
-            delegate: SlidableBehindDelegate(),
-            actions: <Widget>[],
-            secondaryActions: <Widget>[],
-            child: GestureDetector(
-              onTap: () {
-//                showMemberClaimConfirmation(
-//                    context: context,
-//                    notificationId: notificationId,
-//                    requestModel: model,
-//                    userId: userId,
-//                    userModel: user,
-//                    credits: transactionModel.credits);
-              },
-              child: Container(
-                margin: notificationPadding,
-                decoration: notificationDecoration,
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL),
-                  ),
-                  title: Text(model.title),
-                  subtitle: RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '${user.fullname} completed the task in ',
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        TextSpan(
-                          text: () {
-                            return '${transactionModel.credits} hours';
-                          }(),
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        TextSpan(
-                          text: () {
-                            return ', waiting for your approval.';
-                          }(),
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        )
-                      ],
+  ) async {
+    UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
+    if (user == null || user.sevaUserID == null) return Offstage();
+    TransactionModel transactionModel =
+        model.transactions?.firstWhere((transaction) {
+      return transaction.to == userId;
+    });
+
+    return Slidable(
+        delegate: SlidableBehindDelegate(),
+        actions: <Widget>[],
+        secondaryActions: <Widget>[],
+        child: GestureDetector(
+          onTap: () {
+            showMemberClaimConfirmation(
+                context: context,
+                notificationId: notificationId,
+                requestModel: model,
+                userId: userId,
+                userModel: user,
+                credits: transactionModel.credits);
+          },
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(user.photoURL),
+              ),
+              title: Text(model.title),
+              subtitle: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${user.fullname} completed the task in ',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
+                    TextSpan(
+                      text: () {
+                        return '${transactionModel.credits} hours';
+                      }(),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text: () {
+                        return ', waiting for your approval.';
+                      }(),
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    )
+                  ],
                 ),
               ),
-            ));
+            ),
+          ),
+        ));
+  }
+
+  void showMemberClaimConfirmation(
+      {BuildContext context,
+      UserModel userModel,
+      RequestModel requestModel,
+      String notificationId,
+      String userId,
+      double credits}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(25.0))),
+            content: Form(
+              //key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _getCloseButton(viewContext),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(userModel.email),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "About ${userModel.fullname}",
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                    child: Text(
+//                      userModel.bio == null
+//                          ? "Bio not yet updated"
+//                          : userModel.bio,
+//                      maxLines: 5,
+//                      overflow: TextOverflow.ellipsis,
+//                    ),
+//                  ),
+                  getBio(userModel),
+                  Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          "By approving, you accept that ${userModel.fullname} has worked for $credits hours",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      )),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Text(
+                          'Reject',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () async {
+                          // reject the claim
+                          setState(() {
+                            isProgressBarActive = true;
+                          });
+                          await rejectMemberClaimForEvent(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                      ),
+                      RaisedButton(
+                        child: Text(
+                          'Approve',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                        onPressed: () async {
+                          // Once approved take for feeddback
+                          setState(() {
+                            isProgressBarActive = true;
+                          });
+                          approveMemberClaim(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId);
+
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future rejectMemberClaimForEvent(
+      {RequestModel model,
+      String userId,
+      BuildContext context,
+      UserModel user,
+      String notificationId}) async {
+    List<TransactionModel> transactions =
+        model.transactions.map((t) => t).toList();
+    transactions.removeWhere((t) => t.to == userId);
+
+    model.transactions = transactions.map((t) {
+      return t;
+    }).toList();
+    await FirestoreManager.rejectRequestCompletion(
+      model: model,
+      userId: userId,
+      communityid: SevaCore.of(context).loggedInUser.currentCommunity,
+    );
+    // creating chat
+    String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+    List users = [user.email, loggedInEmail];
+    users.sort();
+    ChatModel chatModel = ChatModel();
+    chatModel.user1 = users[0];
+    chatModel.user2 = users[1];
+
+    await createChat(chat: chatModel);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => ChatView(
+                useremail: user.email,
+                chatModel: chatModel,
+                isFromRejectCompletion: true,
+              )),
+    );
+
+    await FirestoreManager.readNotification(
+        notificationId, SevaCore.of(context).loggedInUser.email);
+    reset();
+  }
+
+  Widget getBio(UserModel userModel) {
+    if (userModel.bio != null) {
+      if (userModel.bio.length < 100) {
+        return Center(
+          child: Text(userModel.bio),
+        );
+      }
+      return Container(
+        height: 100,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(
+            userModel.bio,
+            maxLines: null,
+            overflow: null,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text("Bio not yet updated"),
+    );
+  }
+
+  Future approveMemberClaim({
+    String userId,
+    UserModel user,
+    BuildContext context,
+    RequestModel model,
+    String notificationId,
+  }) async {
+    //request for feedback;
+    await checkForFeedback(
+        userId: userId,
+        user: user,
+        context: context,
+        model: model,
+        notificationId: notificationId,
+        sevaCore: SevaCore.of(context));
+    reset();
+  }
+
+  Future checkForFeedback(
+      {String userId,
+      UserModel user,
+      RequestModel model,
+      String notificationId,
+      BuildContext context,
+      SevaCore sevaCore}) async {
+    Map results = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context) {
+        return ReviewFeedback.forVolunteer(
+          forVolunteer: true,
+        );
       },
+    ));
+
+    if (results != null && results.containsKey('selection')) {
+      onActivityResult(
+        sevaCore: sevaCore,
+        requestModel: model,
+        userId: userId,
+        notificationId: notificationId,
+        context: context,
+        reviewer: model.email,
+        reviewed: user.email,
+        requestId: model.id,
+        results: results,
+      );
+    } else {}
+  }
+
+  void onActivityResult(
+      {SevaCore sevaCore,
+      RequestModel requestModel,
+      String userId,
+      String notificationId,
+      BuildContext context,
+      Map results,
+      String reviewer,
+      String reviewed,
+      String requestId}) {
+    // adds review to firestore
+    Firestore.instance.collection("reviews").add({
+      "reviewer": reviewer,
+      "reviewed": reviewed,
+      "ratings": results['selection'],
+      "requestId": requestId,
+      "comments": (results['didComment'] ? results['comment'] : "No comments")
+    });
+    approveTransaction(requestModel, userId, notificationId, sevaCore);
+  }
+
+  void approveTransaction(RequestModel model, String userId,
+      String notificationId, SevaCore sevaCore) {
+    List<TransactionModel> transactions =
+        model.transactions.map((t) => t).toList();
+
+    model.transactions = transactions.map((t) {
+      if (t.to == userId && t.from == sevaCore.loggedInUser.sevaUserID) {
+        TransactionModel editedTransaction = t;
+        editedTransaction.isApproved = true;
+        return editedTransaction;
+      }
+      return t;
+    }).toList();
+
+    if (model.transactions.where((model) => model.isApproved).length ==
+        model.numberOfApprovals) {}
+
+    FirestoreManager.approveRequestCompletion(
+      model: model,
+      userId: userId,
+      communityId: sevaCore.loggedInUser.currentCommunity,
+    );
+
+    FirestoreManager.readNotification(
+        notificationId, sevaCore.loggedInUser.email);
+  }
+
+  Widget _getCloseButton(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Container(
+        alignment: FractionalOffset.topRight,
+        child: Container(
+          width: 20,
+          height: 20,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'lib/assets/images/close.png',
+              ),
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 

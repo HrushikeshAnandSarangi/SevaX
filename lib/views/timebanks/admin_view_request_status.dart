@@ -1,16 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
-import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../flavor_config.dart';
 import '../core.dart';
 
 class ViewRequestStatus extends StatefulWidget {
@@ -62,12 +56,9 @@ class ViewRequestStatusState extends State<ViewRequestStatus>
   }
 }
 
-
-
 class TimebankRequests extends StatefulWidget {
   final RequestModel requestModel;
   TimebankRequests({this.requestModel});
-
 
   @override
   State<StatefulWidget> createState() {
@@ -114,14 +105,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
             );
           }
 
-
-          for ( var i = 0; i < snapshot.data.length; i++ ){
-
-          }
           var snap = snapshot.data.map((f) {
-
-
-
             return UserModel.fromDynamic(f);
           }).toList();
 
@@ -445,28 +429,7 @@ Future<RequestModel> getRequestData({
       RequestModel model = RequestModel.fromMap(
         requestDetails.data,
       );
-
       return model;
-
-      model.approvedUsers.forEach((membersId) {
-        futures.add(
-          Firestore.instance
-              .collection("users")
-              .document(membersId)
-              .get()
-              .then((onValue) {
-            return onValue;
-          }),
-        );
-      });
-
-      return Future.wait(futures).then((onValue) {
-        for (int i = 0; i < model.approvedUsers.length; i++) {
-          var user = UserModel.fromDynamic(onValue[i]);
-          usersRequested.add(user);
-        }
-        return usersRequested;
-      });
     },
   );
 }
@@ -796,7 +759,6 @@ class CampaignRequests extends StatelessWidget {
   CampaignRequests({this.parentContext});
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Center(
       child: Text('Coming soon'),
     );
