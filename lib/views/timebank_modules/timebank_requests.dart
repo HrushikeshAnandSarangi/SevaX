@@ -288,6 +288,7 @@ class RequestsState extends State<RequestsModule> {
               ? NearRequestListItems(
                   parentContext: context,
                   timebankId: timebankId,
+                  timebankModel: widget.timebankModel,
                 )
               : RequestListItems(
                   parentContext: context,
@@ -630,9 +631,14 @@ class _RequestCardViewState extends State<RequestCardView> {
 class NearRequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+  final TimebankModel timebankModel;
 
-  const NearRequestListItems({Key key, this.timebankId, this.parentContext})
-      : super(key: key);
+  const NearRequestListItems({
+    Key key,
+    this.timebankId,
+    this.parentContext,
+    this.timebankModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -786,13 +792,25 @@ class NearRequestListItems extends StatelessWidget {
         elevation: 0,
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              parentContext,
-              MaterialPageRoute(
-                builder: (context) =>
-                    RequestDetailsAboutPage(requestItem: model),
-              ),
-            );
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(),
+                ),
+              );
+            } else {
+              Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                      requestItem: model, timebankModel: timebankModel),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -1075,12 +1093,26 @@ class RequestListItemsState extends State<RequestListItems> {
           onTap: () {
             timeBankBloc.setSelectedRequest(model);
             timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
-            Navigator.push(
-              widget.parentContext,
-              MaterialPageRoute(
-                builder: (context) => RequestTabHolder(),
-              ),
-            );
+
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              Navigator.push(
+                widget.parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(),
+                ),
+              );
+            } else {
+              Navigator.push(
+                widget.parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                      requestItem: model, timebankModel: widget.timebankModel),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
