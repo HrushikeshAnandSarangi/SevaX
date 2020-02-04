@@ -10,7 +10,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 Location location = new Location();
@@ -206,25 +205,6 @@ Future<void> acceptRequest({
         notificationsModel: model,
       );
   }
-  // if (fromOffer) {
-  //   NotificationsModel model = NotificationsModel(
-  //     targetUserId: requestModel.sevaUserId,
-  //     data: requestModel.toMap(),
-  //     type: NotificationType.RequestAccept,
-  //     id: utils.Utils.getUuid(),
-  //     isRead: false,
-  //     senderUserId: senderUserId,
-  //   );
-
-  //   if (isWithdrawal)
-  //     await utils.withdrawAcceptRequestNotification(
-  //       notificationsModel: model,
-  //     );
-  //   else
-  //     await utils.createAcceptRequestNotification(
-  //       notificationsModel: model,
-  //     );
-  // }
 }
 
 Future<void> requestComplete({
@@ -398,9 +378,8 @@ Future<void> rejectInviteRequest({
       .collection('requests')
       .document(requestId)
       .updateData({
-    'invitedUsers' : FieldValue.arrayRemove([rejectedUserId])
+    'invitedUsers': FieldValue.arrayRemove([rejectedUserId])
   });
-
 }
 
 Future<void> acceptInviteRequest({
@@ -408,18 +387,15 @@ Future<void> acceptInviteRequest({
   @required String acceptedUserEmail,
   @required String acceptedUserId,
   @required String notificationId,
-
 }) async {
   await Firestore.instance
       .collection('requests')
       .document(requestId)
       .updateData({
-    'approvedUsers' : FieldValue.arrayUnion([acceptedUserEmail]),
-    'invitedUsers' : FieldValue.arrayRemove([acceptedUserId])
+    'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+    'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
   });
-
 }
-
 
 Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   @required String userEmail,
