@@ -248,7 +248,7 @@ class RequestCardWidget extends StatelessWidget {
         .setData(notification.toMap());
 
     // if (dialogLoadingContext != null) {
-    //   Navigator.pop(dialogLoadingContext);
+    //  Navigator.pop(dialogLoadingContext);
     // }
   }
 

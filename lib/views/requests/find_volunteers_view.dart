@@ -39,7 +39,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
     super.initState();
 
     FirestoreManager.getAllTimebankIdStream(
-      timebankId: widget.timebankId,
+      timebankId: timebankModel.model.id,
     ).then((onValue) {
       setState(() {
         validItems = onValue;
@@ -51,7 +51,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
     }
 
     // if (isAdmin) {
-    //   //   print('admin is true ');
     //   _firestore
     //       .collection("users")
     //       .where(
@@ -196,6 +195,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   @override
   void initState() {
     super.initState();
+
     if (widget.timebankModel.admins.contains(widget.sevaUserId)) {
       isAdmin = true;
     }
@@ -231,7 +231,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       stream: SearchManager.searchForUserWithTimebankId(
           queryString: widget.controller.text, validItems: widget.validItems),
       builder: (context, snapshot) {
-        print("users snapshot is --- " + '$snapshot');
+        //  print("users snapshot is --- " + '$snapshot');
 
         if (snapshot.hasError) {
           Text(snapshot.error.toString());
@@ -253,10 +253,20 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         return ListView.builder(
           itemCount: userList.length,
           itemBuilder: (context, index) {
-            UserModel user = userList.elementAt(index);
-            List timeBankIds = user.favoriteByTimebank ?? [];
+            UserModel user = userList[index];
+            List timeBankIds = user.favoriteByTimeBank ?? [];
             List memberId = user.favoriteByMember ?? [];
-            // print("ids are  ${widget.favoriteUsers[index].sevaUserID} " + userList[index].sevaUserID);
+
+            print(
+                "${user.email} " + " timebank id  ${user.favoriteByTimeBank}");
+
+            if (timeBankIds.contains(widget.timebankModel.id)) {
+              print("true  ${widget.timebankModel.id}");
+            } else {
+              print("false  ${widget.timebankModel.id}");
+            }
+//            print("fav mem  ${user.favoriteByMember} " +
+//                'fav tb ${user.favoriteByTimebank}');
 
             return RequestCardWidget(
               userModel: user,
@@ -264,7 +274,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
               timebankModel: widget.timebankModel,
               isAdmin: isAdmin,
               isFavorite: isAdmin
-                  ? timeBankIds.contains(widget.timebankId)
+                  ? timeBankIds.contains(widget.timebankModel.id)
                   : memberId.contains(widget.sevaUserId),
               reqStatus: getRequestUserStatus(
                 requestModel: requestModel,

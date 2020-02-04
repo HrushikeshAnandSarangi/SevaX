@@ -37,7 +37,9 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
   @override
   void initState() {
     super.initState();
-
+    if (timebank.model.admins.contains(widget.sevaUserId)) {
+      isAdmin = true;
+    }
     _firestore
         .collection('requests')
         .document(widget.requestModel.id)
@@ -72,10 +74,6 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
         setState(() {});
       },
     );
-
-    if (timebank.model.admins.contains(widget.sevaUserId)) {
-      isAdmin = true;
-    }
   }
 
   @override
@@ -94,17 +92,19 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             itemCount: snapshot.data.documents.length,
             itemBuilder: (context, index) {
               List timeBankIds =
-                  snapshot.data.documents[index].data['favoriteByTimeBank'];
+                  snapshot.data.documents[index].data['favoriteByTimeBank'] ??
+                      [];
               List memberId =
-                  snapshot.data.documents[index].data['favoriteByMember>'];
+                  snapshot.data.documents[index].data['favoriteByMember'] ?? [];
               UserModel user =
                   UserModel.fromMap(snapshot.data.documents[index].data);
+
               return RequestCardWidget(
                 timebankModel: timebank.model,
                 requestModel: requestModel,
                 userModel: user,
                 isAdmin: isAdmin,
-                isFavorite: isAdmin
+                isFavorite: isAdmin ?? false
                     ? timeBankIds.contains(widget.timebankId)
                     : memberId.contains(widget.sevaUserId),
                 reqStatus: getRequestUserStatus(
@@ -116,7 +116,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             },
           );
         }
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       },
     );
   }
