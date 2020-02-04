@@ -12,30 +12,25 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 /// Create a [chat]
 Future<void> createChat({
   @required ChatModel chat,
-  @required String communityId,
 }) async {
+//tested and working for multiple communities
+  // prefix0.print("${chat.communityId}-------------------------------------------------------------------");
   // log.i('createChat: MessageModel: ${chat.toMap()}');
   chat.rootTimebank = FlavorConfig.values.timebankId;
   return await Firestore.instance
       .collection('chatsnew')
       .document(
-        chat.user1 +
-            '*' +
-            chat.user2 +
-            '*' +
-            FlavorConfig.values.timebankId +
-            '*' +
-            communityId,
-      )
+          "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
       .setData(chat.toMap(), merge: true);
 }
 
+//tested and working for multiple communities
 /// Update a [chat]
 Future<void> updateChat({@required ChatModel chat, String email}) async {
   return await Firestore.instance
       .collection('chatsnew')
       .document(
-          chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId)
+          "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
       .updateData({
     'softDeletedBy': chat.softDeletedBy,
     'user1': chat.user1,
@@ -46,12 +41,12 @@ Future<void> updateChat({@required ChatModel chat, String email}) async {
   });
 }
 
+@Deprecated("Feature not implemmented yet")
 Future<void> updateReadStatus(ChatModel chat, String email) async {
   return await Firestore.instance
       .collection("chatsnew")
       .document(
-        chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId,
-      )
+          "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
       .get()
       .then((messageModel) {
     ChatModel chatModel = ChatModel.fromMap(messageModel.data);
@@ -61,6 +56,7 @@ Future<void> updateReadStatus(ChatModel chat, String email) async {
   });
 }
 
+//tested and working
 /// Update a [chat]
 Future<void> updateMessagingReadStatus({
   @required ChatModel chat,
@@ -70,8 +66,7 @@ Future<void> updateMessagingReadStatus({
   await Firestore.instance
       .collection("chatsnew")
       .document(
-        chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId,
-      )
+          "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
       .get()
       .then((messageModel) {
     ChatModel chatModel = ChatModel.fromMap(messageModel.data);
@@ -89,15 +84,13 @@ Future<void> updateMessagingReadStatus({
     //
     return Firestore.instance
         .collection('chatsnew')
-        .document(chat.user1 +
-            '*' +
-            chat.user2 +
-            '*' +
-            FlavorConfig.values.timebankId)
+        .document(
+            "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
         .updateData({'unread_status': unreadStatus});
   });
 }
 
+// updating chatcommunity Id
 /// Update a [chat]
 Future<void> updateMessagingReadStatusForMe({
   @required ChatModel chat,
@@ -107,8 +100,7 @@ Future<void> updateMessagingReadStatusForMe({
   await Firestore.instance
       .collection("chatsnew")
       .document(
-        chat.user1 + '*' + chat.user2 + '*' + FlavorConfig.values.timebankId,
-      )
+          "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
       .get()
       .then((messageModel) {
     ChatModel chatModel = ChatModel.fromMap(messageModel.data);
@@ -121,11 +113,8 @@ Future<void> updateMessagingReadStatusForMe({
 
     return Firestore.instance
         .collection('chatsnew')
-        .document(chat.user1 +
-            '*' +
-            chat.user2 +
-            '*' +
-            FlavorConfig.values.timebankId)
+        .document(
+            "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
         .updateData({'unread_status': unreadStatus});
   });
 }
@@ -136,14 +125,11 @@ Future<void> createmessage({
   @required MessageModel messagemodel,
 }) async {
   // log.i(
-  //'createmessage: ChatModel: ${chatmodel.toMap()} \n MessageModel: ${messagemodel.toMap()}');
+  var docId =
+      "${chatmodel.user1}*${chatmodel.user2}*${FlavorConfig.values.timebankId}*${chatmodel.communityId}";
   return await Firestore.instance
       .collection('chatsnew')
-      .document(chatmodel.user1 +
-          '*' +
-          chatmodel.user2 +
-          '*' +
-          FlavorConfig.values.timebankId)
+      .document(docId)
       .collection('messages')
       .document()
       .setData(messagemodel.toMap());
@@ -156,6 +142,8 @@ Stream<List<ChatModel>> getChatsforUser({
   @required List<String> blockedMembers,
   @required String communityId,
 }) async* {
+  prefix0.print("Community id is here ---> $communityId");
+
   var data = Firestore.instance
       .collection('chatsnew')
       // .where('communityId', isEqualTo: communityId)
@@ -168,9 +156,13 @@ Stream<List<ChatModel>> getChatsforUser({
         var futures = <Future>[];
         List<ChatModel> chatlist = [];
         chatlist.clear();
+        print("Length is here : ---> ${snapshot.documents.length}");
         snapshot.documents.forEach(
           (documentSnapshot) async {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
+            if (model.communityId != communityId)
+            return;
+            
             if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
                 model.rootTimebank == FlavorConfig.values.timebankId &&
@@ -239,11 +231,8 @@ Stream<List<MessageModel>> getMessagesforChat({
   print('getMessagesforChat: chatModel: $chatModel');
   var data = Firestore.instance
       .collection('chatsnew')
-      .document(chatModel.user1 +
-          '*' +
-          chatModel.user2 +
-          '*' +
-          FlavorConfig.values.timebankId)
+      .document(
+          "${chatModel.user1}*${chatModel.user2}*${FlavorConfig.values.timebankId}*${chatModel.communityId}")
       .collection('messages')
       .snapshots();
 

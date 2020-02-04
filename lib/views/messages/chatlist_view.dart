@@ -241,6 +241,7 @@ class _ChatListViewState extends State<ChatListView> {
           SevaCore.of(context).loggedInUser.email,
           chatModel,
           context,
+          SevaCore.of(context).loggedInUser.currentCommunity,
         );
         // Then show a snackbar.
       },
@@ -335,13 +336,17 @@ class _ChatListViewState extends State<ChatListView> {
                               child: GestureDetector(
                                 child: IconButton(
                                   icon: Image.asset(
-                                      'lib/assets/images/recycle-bin.png'),
+                                    'lib/assets/images/recycle-bin.png',
+                                  ),
                                   iconSize: 30,
                                   onPressed: () {
                                     _ackAlert(
                                       SevaCore.of(context).loggedInUser.email,
                                       chatModel,
                                       context,
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .currentCommunity,
                                     );
                                   },
                                 ),
@@ -535,8 +540,8 @@ class _ChatListViewState extends State<ChatListView> {
     }
   }
 
-  Future<void> _ackAlert(
-      String email, ChatModel chatModel, BuildContext context) {
+  Future<void> _ackAlert(String email, ChatModel chatModel,
+      BuildContext context, String communityId) {
     print("Hello alert");
     return showDialog<void>(
       context: context,
@@ -572,7 +577,7 @@ class _ChatListViewState extends State<ChatListView> {
                 participants.sort();
 
                 var messageId =
-                    "${participants[0]}*${participants[1]}*${FlavorConfig.values.timebankId}";
+                    "${participants[0]}*${participants[1]}*${FlavorConfig.values.timebankId}*$communityId";
 
                 Map<dynamic, dynamic> unreadCount = HashMap();
                 unreadCount = chatModel.unreadStatus;

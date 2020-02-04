@@ -553,8 +553,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     chatModel.user2 = users[1];
 
     await createChat(
-        chat: chatModel,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity);
+      chat: chatModel,
+//        communityId: SevaCore.of(context).loggedInUser.currentCommunity
+    );
 
     setState(() {
       isProgressBarActive = false;
@@ -648,25 +649,48 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     } else {}
   }
 
-  void onActivityResult(
-      {SevaCore sevaCore,
-      RequestModel requestModel,
-      String userId,
-      String notificationId,
-      BuildContext context,
-      Map results,
-      String reviewer,
-      String reviewed,
-      String requestId}) {
+  Future updateUserData(String reviewerEmail, String reviewedEmail) async {
+    var user2 =
+        await FirestoreManager.getUserForEmail(emailAddress: reviewedEmail);
+    var user1 =
+        await FirestoreManager.getUserForEmail(emailAddress: reviewerEmail);
+    if (user1.pastHires == null) {
+      user1.pastHires = List<String>();
+    }
+    var hired = user2.sevaUserID.trim();
+    if (!user1.pastHires.contains(hired)) {
+      var reportedUsersList = List<String>();
+      for (var i = 0; i < user1.pastHires.length; i++) {
+        reportedUsersList.add(user1.pastHires[i]);
+      }
+      reportedUsersList.add(hired);
+      user1.pastHires = reportedUsersList;
+      await FirestoreManager.updateUser(user: user1);
+    }
+  }
+
+  Future onActivityResult({
+    SevaCore sevaCore,
+    RequestModel requestModel,
+    String userId,
+    String notificationId,
+    BuildContext context,
+    Map results,
+    String reviewer,
+    String reviewed,
+    String requestId,
+    UserModel user,
+  }) async {
     // adds review to firestore
-    Firestore.instance.collection("reviews").add({
+    await Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],
       "requestId": requestId,
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
-    approveTransaction(requestModel, userId, notificationId, sevaCore);
+    await updateUserData(reviewer, reviewed);
+    await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
   Future approveTransaction(RequestModel model, String userId,
