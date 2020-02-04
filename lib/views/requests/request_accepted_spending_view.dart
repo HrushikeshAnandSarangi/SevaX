@@ -576,7 +576,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               )),
     );
 
-    await FirestoreManager.readNotification(
+    await FirestoreManager.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
     reset();
   }
@@ -699,7 +699,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    FirestoreManager.readNotification(
+    FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
   }
 

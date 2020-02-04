@@ -263,10 +263,7 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> removeFromFavoriteList(
-      {bool isAdmin,
-      String email,
-      String timeBankId,
-      String loggedInUserId}) async {
+      {String email, String timeBankId, String loggedInUserId}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayRemove(
