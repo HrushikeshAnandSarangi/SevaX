@@ -160,9 +160,8 @@ Stream<List<ChatModel>> getChatsforUser({
         snapshot.documents.forEach(
           (documentSnapshot) async {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);
-            if (model.communityId != communityId)
-            return;
-            
+            if (model.communityId != communityId) return;
+
             if ((model.user1 == email || model.user2 == email) &&
                 model.lastMessage != null &&
                 model.rootTimebank == FlavorConfig.values.timebankId &&
@@ -174,6 +173,100 @@ Stream<List<ChatModel>> getChatsforUser({
               }
               if (model.user2 == email) {
                 futures.add(getUserInfo(model.user1));
+              }
+
+              chatlist.add(model);
+            }
+
+            // email = "anitha.beberg@gmail.com";
+            // if ((model.user1 == "anitha.beberg@gmail.com" ||
+            //         model.user2 == "anitha.beberg@gmail.com") &&
+            //     model.lastMessage != null &&
+            //     model.rootTimebank == FlavorConfig.values.timebankId) {
+            //   if (model.user1 == email) {
+            //     futures.add(getUserInfo(model.user2));
+            //   }
+            //   if (model.user2 == email) {
+            //     futures.add(getUserInfo(model.user1));
+            //   }
+            //   chatlist.add(model);
+            // }
+          },
+        );
+        await Future.wait(futures).then((onValue) {
+          var i = 0;
+          while (i < chatlist.length) {
+            ///checking if this is a timebank data or user data
+
+            if (onValue[i]['address'] != null) {
+              // var sevaUserId = onValue[i]['sevauserid'];
+              chatlist[i].messagTitleUserName = onValue[i]['name'];
+              chatlist[i].photoURL = onValue[i]['photo_url'];
+              chatlist[i].isBlocked = false;
+            } else {
+              ///User Data
+              var sevaUserId = onValue[i]['sevauserid'];
+              chatlist[i].messagTitleUserName = onValue[i]['fullname'];
+              chatlist[i].photoURL = onValue[i]['photourl'];
+              chatlist[i].isBlocked = (blockedBy.contains(sevaUserId) ||
+                  blockedMembers.contains(sevaUserId));
+            }
+            i++;
+
+            ///timebank Data
+
+          }
+          chatSink.add(chatlist);
+        });
+      },
+    ),
+  );
+}
+
+//Get chats for a user
+Stream<List<ChatModel>> getChatsForTimebank({
+  @required String timebankId,
+  @required String communityId,
+}) async* {
+  prefix0.print("Community id is here ---> $communityId");
+
+  var data = Firestore.instance
+      .collection('chatsnew')
+      .orderBy('timestamp', descending: true)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<ChatModel>>.fromHandlers(
+      handleData: (snapshot, chatSink) async {
+        var futures = <Future>[];
+        List<ChatModel> chatlist = [];
+        chatlist.clear();
+        snapshot.documents.forEach(
+          (documentSnapshot) async {
+            ChatModel model = ChatModel.fromMap(documentSnapshot.data);
+            if (model.communityId != communityId) return;
+
+            if ((model.user1 == timebankId || model.user2 == timebankId) &&
+                model.lastMessage != null &&
+                model.rootTimebank == FlavorConfig.values.timebankId &&
+                !model.softDeletedBy.contains(
+                  timebankId,
+                )) {
+              if (model.user1 == timebankId) {
+                ///checking if the second person is a timebank
+                if (isValidEmail(model.user1)) {
+                  futures.add(getUserInfo(model.user2));
+                } else {
+                  futures.add(getUserInfo(model.user2));
+                }
+              }
+              if (model.user2 == timebankId) {
+                ///checking if the second person is a timebank
+                if (isValidEmail(model.user1)) {
+                  futures.add(getUserInfo(model.user1));
+                } else {
+                  futures.add(getUserInfo(model.user1));
+                }
               }
               chatlist.add(model);
             }
@@ -196,13 +289,14 @@ Stream<List<ChatModel>> getChatsforUser({
         await Future.wait(futures).then((onValue) {
           var i = 0;
           while (i < chatlist.length) {
-            var sevaUserId = onValue[i]['sevauserid'];
+            // var sevaUserId = onValue[i]['sevauserid'];
 
             chatlist[i].messagTitleUserName = onValue[i]['fullname'];
             chatlist[i].photoURL = onValue[i]['photourl'];
 
-            chatlist[i].isBlocked = (blockedBy.contains(sevaUserId) ||
-                blockedMembers.contains(sevaUserId));
+            // chatlist[i].isBlocked = (blockedBy.contains(sevaUserId) ||
+            //     blockedMembers.contains(sevaUserId));
+            chatlist[i].isBlocked = false;
             i++;
           }
           chatSink.add(chatlist);
@@ -214,12 +308,18 @@ Stream<List<ChatModel>> getChatsforUser({
 
 Future<DocumentSnapshot> getUserInfo(String userEmail) {
   return Firestore.instance
-      .collection("users")
+      .collection(isValidEmail(userEmail) ? "users" : "timebanknew")
       .document(userEmail)
       .get()
       .then((onValue) {
     return onValue;
   });
+}
+
+bool isValidEmail(String email) {
+  return RegExp(
+          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+      .hasMatch(email);
 }
 
 //Get Messages for a chat
@@ -243,7 +343,6 @@ Stream<List<MessageModel>> getMessagesforChat({
         snapshot.documents.forEach(
           (documentSnapshot) {
             MessageModel model = MessageModel.fromMap(documentSnapshot.data);
-
             messagelist.add(model);
             messagelist.sort((m1, m2) {
               return m1.timestamp.compareTo(m2.timestamp);

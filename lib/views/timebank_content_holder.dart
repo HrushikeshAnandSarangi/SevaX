@@ -1,7 +1,5 @@
 import 'dart:collection';
 import 'dart:core';
-import 'dart:core';
-import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,6 +28,7 @@ import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
 import 'core.dart';
+import 'messages/timebank_chats.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
@@ -121,7 +120,7 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 6,
+    length: 7,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -184,6 +183,9 @@ Widget createAdminTabBar(
               Tab(
                 text: "Manage",
               ),
+              Tab(
+                text: "Messages",
+              ),
             ],
           ),
           Container(
@@ -213,7 +215,8 @@ Widget createAdminTabBar(
                 ),
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
-                )
+                ),
+                TimebankChatListView(),
               ],
             ),
           ),
@@ -229,7 +232,7 @@ Widget createJoinedUserTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 5,
+    length: 6,
     child: Scaffold(
         appBar: AppBar(
             elevation: 0.5,
@@ -262,6 +265,9 @@ Widget createJoinedUserTabBar(
                   Tab(
                     text: "Members",
                   ),
+                  Tab(
+                    text: "Messages",
+                  ),
                 ],
               ),
             )),
@@ -289,6 +295,7 @@ Widget createJoinedUserTabBar(
               timebankId: timebankModel.id,
               userEmail: SevaCore.of(context).loggedInUser.email,
             ),
+            TimebankChatListView(),
           ],
         )),
   );

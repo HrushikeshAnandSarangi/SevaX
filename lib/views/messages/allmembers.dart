@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
     as prefix0;
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/views/messages/new_chat.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'chatview.dart';
 
 class AllMembersChat extends StatefulWidget {
