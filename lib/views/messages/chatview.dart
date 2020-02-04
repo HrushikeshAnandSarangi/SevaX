@@ -207,7 +207,8 @@ class _ChatViewState extends State<ChatView> {
                     }
 
                     var email = SevaCore.of(context).loggedInUser.email;
-
+                    widget.chatModel.communityId =
+                        SevaCore.of(context).loggedInUser.currentCommunity;
                     updateMessagingReadStatusForMe(
                       chat: widget.chatModel,
                       email: email,
@@ -268,8 +269,14 @@ class _ChatViewState extends State<ChatView> {
                       // This statment clears the soft delete parameter and message becomes visible to both the parties
                       widget.chatModel.softDeletedBy = [];
 
+                      widget.chatModel.communityId =
+                          SevaCore.of(context).loggedInUser.currentCommunity;
+
                       String loggedInEmailId =
                           SevaCore.of(context).loggedInUser.email;
+
+                      widget.chatModel.communityId =
+                          SevaCore.of(context).loggedInUser.currentCommunity;
 
                       messageModel.fromId = loggedInEmailId;
                       messageModel.toId = widget.useremail;

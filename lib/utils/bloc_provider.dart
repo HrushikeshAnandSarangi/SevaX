@@ -15,7 +15,7 @@ class BlocProvider<T extends BlocBase> extends StatefulWidget {
   State<StatefulWidget> createState() => _BlocProviderState<dynamic>();
 
   static T of<T extends BlocBase>(BuildContext context) {
-    final BlocProvider<T> provider = context.findAncestorRenderObjectOfType();
+    final BlocProvider<T> provider = context.findAncestorWidgetOfExactType();
     return provider?.bloc;
   }
 

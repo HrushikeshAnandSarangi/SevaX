@@ -63,7 +63,8 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
               modelList.add(model);
           },
         );
-        modelList.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        modelList.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         timebankSink.add(modelList);
       },
     ),
@@ -205,6 +206,7 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
 /// Get a Timebank data as a Stream
 Stream<TimebankModel> getTimebankModelStream(
     {@required String timebankId}) async* {
+  print('---->>> $timebankId');
   var data = Firestore.instance
       .collection('timebanknew')
       .document(timebankId)

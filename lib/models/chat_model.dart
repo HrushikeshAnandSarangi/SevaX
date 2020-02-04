@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:ffi';
 
 import 'package:sevaexchange/models/data_model.dart';
 
@@ -18,6 +17,7 @@ class ChatModel extends DataModel {
   List<String> softDeletedBy;
 
   bool isBlocked = false;
+  String communityId;
 
   ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
 
@@ -80,6 +80,10 @@ class ChatModel extends DataModel {
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
     }
+
+    if (map.containsKey('communityId')) {
+      this.communityId = map['communityId'];
+    }
   }
 
   @override
@@ -109,6 +113,8 @@ class ChatModel extends DataModel {
     map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
 
     map['unread_status'] = this.unreadStatus;
+
+    map['communityId'] = this.communityId;
 
     return map;
   }
