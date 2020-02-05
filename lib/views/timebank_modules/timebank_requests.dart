@@ -287,6 +287,7 @@ class RequestsState extends State<RequestsModule> {
               ? NearRequestListItems(
                   parentContext: context,
                   timebankId: timebankId,
+                  timebankModel: widget.timebankModel,
                 )
               : RequestListItems(
                   parentContext: context,
@@ -629,14 +630,19 @@ class _RequestCardViewState extends State<RequestCardView> {
 class NearRequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+  final TimebankModel timebankModel;
 
-  const NearRequestListItems({Key key, this.timebankId, this.parentContext})
-      : super(key: key);
+  const NearRequestListItems({
+    Key key,
+    this.timebankId,
+    this.parentContext,
+    this.timebankModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (timebankId != 'All') {
-      print("ifff "+timebankId);
+      print("ifff " + timebankId);
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -786,13 +792,25 @@ class NearRequestListItems extends StatelessWidget {
         elevation: 0,
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              parentContext,
-              MaterialPageRoute(
-                builder: (context) =>
-                    RequestDetailsAboutPage(requestItem: model),
-              ),
-            );
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(),
+                ),
+              );
+            } else {
+              Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                      requestItem: model, timebankModel: timebankModel),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -906,31 +924,38 @@ class RequestListItemsState extends State<RequestListItems> {
               return Center(child: CircularProgressIndicator());
             }
             UserModel user = snapshot.data;
+
             String loggedintimezone = user.timezone;
 
             return StreamBuilder(
                 stream: timeBankBloc.timebankController,
                 builder: (context, AsyncSnapshot<TimebankController> snapshot) {
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
                   if (snapshot.hasData) {
-                      List<RequestModel> requestModelList =
-                          snapshot.data.requests;
-                      requestModelList = filterBlockedRequestsContent(
-                          context: context, requestModelList: requestModelList);
+                    List<RequestModel> requestModelList =
+                        snapshot.data.requests;
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
 
-                      if (requestModelList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(child: Text('No Requests')),
-                        );
-                      }
-                      var consolidatedList =
-                          GroupRequestCommons.groupAndConsolidateRequests(
-                              requestModelList,
-                              SevaCore.of(context).loggedInUser.sevaUserID);
-                      return formatListFrom(
-                          consolidatedList: consolidatedList,
-                          loggedintimezone: loggedintimezone,
-                          userEmail: SevaCore.of(context).loggedInUser.email);
+                    if (requestModelList.length == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: Text('No Requests')),
+                      );
+                    }
+                    var consolidatedList =
+                        GroupRequestCommons.groupAndConsolidateRequests(
+                            requestModelList,
+                            SevaCore.of(context).loggedInUser.sevaUserID);
+                    return formatListFrom(
+                        consolidatedList: consolidatedList,
+                        loggedintimezone: loggedintimezone,
+                        userEmail: SevaCore.of(context).loggedInUser.email);
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
@@ -986,7 +1011,6 @@ class RequestListItemsState extends State<RequestListItems> {
           });
     }
   }
-
 
   List<RequestModel> filterBlockedRequestsContent({
     List<RequestModel> requestModelList,
@@ -1073,12 +1097,26 @@ class RequestListItemsState extends State<RequestListItems> {
           onTap: () {
             timeBankBloc.setSelectedRequest(model);
             timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
-            Navigator.push(
-              widget.parentContext,
-              MaterialPageRoute(
-                builder: (context) => RequestTabHolder(),
-              ),
-            );
+
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              Navigator.push(
+                widget.parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(),
+                ),
+              );
+            } else {
+              Navigator.push(
+                widget.parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                      requestItem: model, timebankModel: widget.timebankModel),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

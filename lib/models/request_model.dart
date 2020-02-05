@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:flutter/material.dart';
 
 class RequestModel extends DataModel {
   String id;
@@ -79,13 +79,13 @@ class RequestModel extends DataModel {
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
       this.acceptors = acceptorList;
-    }else{
+    } else {
       this.acceptors = [];
     }
     if (map.containsKey('invitedUsers')) {
       List<String> invitedUsersList = List.castFrom(map['invitedUsers']);
       this.invitedUsers = invitedUsersList;
-    }else{
+    } else {
       this.invitedUsers = [];
     }
     if (map.containsKey('durationofrequest')) {
@@ -304,7 +304,6 @@ class RequestModel extends DataModel {
 
   @override
   String toString() {
-    // TODO: implement toString
-    return "$approvedUsers $acceptors $invitedUsers";
+    return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
 }
