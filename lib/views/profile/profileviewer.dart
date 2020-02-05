@@ -131,13 +131,35 @@ class ProfileViewerState extends State<ProfileViewer> {
                       skills: snapshot.data['skills'],
                       interests: snapshot.data['interests'],
                     ),
-
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 25, vertical: 20),
-                      child: JobsCounter(
-                        jobs: 32,
-                        hours: 1300,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                      child: StreamBuilder<List<RequestModel>>(
+                        stream: FirestoreManager.getCompletedRequestStream(
+                            userEmail: widget.userEmail,
+                            userId: widget.userModel.sevaUserID),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          List<RequestModel> requestList = snapshot.data;
+                          int toltalHoursWorked = 0;
+
+                          toltalHoursWorked = getTotalWorkedHours(requestList);
+                          print(
+                              "req_lenght ${requestList.length} + $toltalHoursWorked");
+
+                          return JobsCounter(
+                            jobs: requestList.length,
+                            hours: toltalHoursWorked,
+                          );
+                        },
                       ),
                     ),
 
@@ -162,42 +184,7 @@ class ProfileViewerState extends State<ProfileViewer> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                      child: Text(
-                        'Completed Jobs',
-                        style: TextStyle(
-                            fontSize: 16.0, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                      ),
-                      child: StreamBuilder<List<RequestModel>>(
-                        stream: FirestoreManager.getCompletedRequestStream(
-                            userEmail: widget.userEmail,
-                            userId: widget.userModel.sevaUserID),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          }
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          List<RequestModel> requestList = snapshot.data;
 
-                          return CompletedList(
-                            requestList: requestList,
-                            userModel: widget.userModel,
-                          );
-                        },
-                      ),
-                    ),
                     // Padding(
                     //   padding: EdgeInsets.symmetric(
                     //     horizontal: 25,
@@ -780,6 +767,20 @@ class ProfileViewerState extends State<ProfileViewer> {
       },
     );
   }
+
+  int getTotalWorkedHours(List<RequestModel> requestList) {
+    int toltalHoursWorked;
+    requestList.forEach((requestModel) {
+      TransactionModel transmodel =
+          requestModel.transactions.firstWhere((transaction) {
+        return transaction.to == widget.userModel.sevaUserID;
+      });
+      if (transmodel != null && transmodel.credits != null) {
+        toltalHoursWorked += transmodel.credits;
+      }
+    });
+    return toltalHoursWorked;
+  }
 }
 
 class JobsCounter extends StatelessWidget {
@@ -828,6 +829,7 @@ class JobsCounter extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: RichText(
+                textAlign: TextAlign.center,
                 text: TextSpan(
                   children: [
                     TextSpan(
@@ -858,10 +860,11 @@ class JobsCounter extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 20.0),
               child: RichText(
+                textAlign: TextAlign.center,
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: '$hours\n',
+                      text: hours == null ? '0\n' : '$hours\n' ?? '0\n',
                       style: title,
                     ),
                     TextSpan(
