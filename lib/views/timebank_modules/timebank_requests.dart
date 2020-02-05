@@ -923,36 +923,38 @@ class RequestListItemsState extends State<RequestListItems> {
               return Center(child: CircularProgressIndicator());
             }
             UserModel user = snapshot.data;
+
             String loggedintimezone = user.timezone;
 
             return StreamBuilder(
                 stream: timeBankBloc.timebankController,
                 builder: (context, AsyncSnapshot<TimebankController> snapshot) {
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
                   if (snapshot.hasData) {
-                    if (snapshot.data != null &&
-                        snapshot.data.requests.length == 0) {
-                      return CircularProgressIndicator();
-                    } else {
-                      List<RequestModel> requestModelList =
-                          snapshot.data.requests;
-                      requestModelList = filterBlockedRequestsContent(
-                          context: context, requestModelList: requestModelList);
+                    List<RequestModel> requestModelList =
+                        snapshot.data.requests;
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
 
-                      if (requestModelList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(child: Text('No Requests')),
-                        );
-                      }
-                      var consolidatedList =
-                          GroupRequestCommons.groupAndConsolidateRequests(
-                              requestModelList,
-                              SevaCore.of(context).loggedInUser.sevaUserID);
-                      return formatListFrom(
-                          consolidatedList: consolidatedList,
-                          loggedintimezone: loggedintimezone,
-                          userEmail: SevaCore.of(context).loggedInUser.email);
+                    if (requestModelList.length == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: Text('No Requests')),
+                      );
                     }
+                    var consolidatedList =
+                        GroupRequestCommons.groupAndConsolidateRequests(
+                            requestModelList,
+                            SevaCore.of(context).loggedInUser.sevaUserID);
+                    return formatListFrom(
+                        consolidatedList: consolidatedList,
+                        loggedintimezone: loggedintimezone,
+                        userEmail: SevaCore.of(context).loggedInUser.email);
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
