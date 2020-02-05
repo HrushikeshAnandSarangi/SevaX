@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -354,6 +355,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                             joinRequestModel.accepted = true;
                             await createJoinRequest(model: joinRequestModel);
                             await _updateTimebank(timebankModel, admins: null);
+                            await _updatecommunity(timebankModel.communityId,
+                                joinRequestModel.userId, user);
                           },
                         ),
                       ),
@@ -924,9 +927,27 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     if (members != null) {
       model.members = members;
     }
-    await FirestoreManager.updateTimebank(timebankModel: model).then((onValue) {
-      resetAndLoad();
+    await FirestoreManager.updateTimebank(timebankModel: model)
+        .then((onValue) {});
+  }
+
+  Future _updatecommunity(
+      String communityId, String userId, UserModel user) async {
+    await Firestore.instance
+        .collection("communities")
+        .document(communityId)
+        .updateData({
+      'members': FieldValue.arrayUnion([userId])
     });
+
+    await Firestore.instance
+        .collection("users")
+        .document(user.email)
+        .updateData({
+      'communities': FieldValue.arrayUnion([communityId]),
+    });
+
+    resetAndLoad();
   }
 }
 
