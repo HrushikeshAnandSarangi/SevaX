@@ -5,6 +5,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 
@@ -159,6 +160,42 @@ class ProfileViewerState extends State<ProfileViewer> {
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                      child: Text(
+                        'Completed Jobs',
+                        style: TextStyle(
+                            fontSize: 16.0, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      child: StreamBuilder<List<RequestModel>>(
+                        stream: FirestoreManager.getCompletedRequestStream(
+                            userEmail: widget.userEmail,
+                            userId: widget.userModel.sevaUserID),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                          List<RequestModel> requestList = snapshot.data;
+
+                          return CompletedList(
+                            requestList: requestList,
+                            userModel: widget.userModel,
+                          );
+                        },
                       ),
                     ),
                     // Padding(
@@ -1052,6 +1089,74 @@ class ProfileHeader extends StatelessWidget {
         //     ])),
         //   ],
         // )
+      ],
+    );
+  }
+}
+
+class CompletedList extends StatelessWidget {
+  final List<RequestModel> requestList;
+
+  //List<UserModel> userList = [];
+
+  final UserModel userModel;
+
+  CompletedList(
+      {this.requestList,
+      this.userModel}); //  requestStream = FirestoreManager.getCompletedRequestStream(
+
+  @override
+  Widget build(BuildContext context) {
+    if (requestList.length == 0) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Center(
+          child: Text(userModel.fullname + ' not completed any tasks',
+              textAlign: TextAlign.center),
+        ),
+      );
+    }
+    return Column(
+      children: <Widget>[
+        ListView.builder(
+          padding: EdgeInsets.all(0),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: requestList.length,
+          itemBuilder: (context, index) {
+            RequestModel model = requestList.elementAt(index);
+
+            return Card(
+              child: ListTile(
+                title: Text(model.title),
+                leading: CircleAvatar(
+                  backgroundImage:
+                      NetworkImage(userModel.photoURL ?? defaultUserImageURL),
+                ),
+                trailing: () {
+                  TransactionModel transmodel =
+                      model.transactions.firstWhere((transaction) {
+                    return transaction.to == userModel.sevaUserID;
+                  });
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text('${transmodel.credits}'),
+                      Text('Yang bucks',
+                          style: TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.2,
+                          )),
+                    ],
+                  );
+                }(),
+                subtitle: Text('${userModel.fullname}'),
+              ),
+            );
+          },
+        ),
       ],
     );
   }

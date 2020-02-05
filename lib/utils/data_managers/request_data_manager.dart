@@ -496,15 +496,19 @@ Stream<List<RequestModel>> getCompletedRequestStream({
         List<RequestModel> requestList = [];
         snapshot.documents.forEach((document) {
           RequestModel model = RequestModel.fromMap(document.data);
+
           model.id = document.documentID;
           bool isRequestCompleted = false;
+
           model.transactions?.forEach((transaction) {
             if (transaction.isApproved && transaction.to == userId)
               isRequestCompleted = true;
           });
+
           if (isRequestCompleted) requestList.add(model);
         });
         requestSink.add(requestList);
+        //  print("request model --- ${requestList.toString()}");
       },
     ),
   );
