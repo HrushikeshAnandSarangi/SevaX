@@ -6,19 +6,37 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 
+Future<bool> fetchProtectedStatus(String timebankId) async {
+  DocumentSnapshot timebank = await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .get();
+  return timebank.data['protected'];
+}
+
+//Fetch timebank from timebank id
 Future<void> createAcceptRequestNotification({
   NotificationsModel notificationsModel,
 }) async {
   UserModel user =
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
-  notificationsModel.timebankId = FlavorConfig.values.timebankId;
 
-  Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(notificationsModel.id)
-      .setData(notificationsModel.toMap());
+  bool isTimeBankNotification =
+      await fetchProtectedStatus(notificationsModel.timebankId);
+
+  isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(notificationsModel.timebankId)
+          .collection('notifications')
+          .document(notificationsModel.id)
+          .setData(notificationsModel.toMap())
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(notificationsModel.id)
+          .setData(notificationsModel.toMap());
 }
 
 Future<void> withdrawAcceptRequestNotification({
@@ -36,23 +54,44 @@ Future<void> withdrawAcceptRequestNotification({
   acceptorList.add(senderUser.email);
 
   dataMap['acceptors'] = acceptorList;
-
-  QuerySnapshot data = await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .where('data', isEqualTo: dataMap)
-      .getDocuments();
+  bool isTimeBankNotification =
+      await fetchProtectedStatus(notificationsModel.timebankId);
+  QuerySnapshot data = isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(notificationsModel.timebankId)
+          .collection('notifications')
+          .where('data', isEqualTo: dataMap)
+          .getDocuments()
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .where('data', isEqualTo: dataMap)
+          .getDocuments();
   //error: The name 'dynamic' isn't a type so it can't be used as a type argument. (non_type_as_type_argument at [sevaexchange] lib/utils/search_manager.dart:21)
 
-  data.documents.forEach((document) {
-    Firestore.instance
-        .collection('users')
-        .document(user.email)
-        .collection('notifications')
-        .document(document.documentID)
-        .delete();
-  });
+  isTimeBankNotification
+      ? data.documents.forEach(
+          (document) {
+            Firestore.instance
+                .collection('timebanknew')
+                .document(notificationsModel.timebankId)
+                .collection('notifications')
+                .document(document.documentID)
+                .delete();
+          },
+        )
+      : data.documents.forEach(
+          (document) {
+            Firestore.instance
+                .collection('users')
+                .document(user.email)
+                .collection('notifications')
+                .document(document.documentID)
+                .delete();
+          },
+        );
 }
 
 Future<void> removeAcceptRequestNotification({
@@ -60,12 +99,20 @@ Future<void> removeAcceptRequestNotification({
   String notificationId,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.senderUserId);
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(notificationId)
-      .delete();
+  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(notificationId)
+          .delete()
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(notificationId)
+          .delete();
 }
 
 Future<void> createRequestApprovalNotification({
@@ -74,86 +121,143 @@ Future<void> createRequestApprovalNotification({
   UserModel user = await getUserForId(
     sevaUserId: model.targetUserId,
   );
-  model.timebankId = FlavorConfig.values.timebankId;
 
-  Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  isTimeBankNotification
+      ? Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap())
+      : Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap());
 }
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  model.timebankId = FlavorConfig.values.timebankId;
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap(), merge: true);
+
+  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap(), merge: true)
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap(), merge: true);
 }
 
 Future<void> createTaskCompletedApprovedNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  model.timebankId = FlavorConfig.values.timebankId;
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+
+  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap())
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap());
 }
 
 Future<void> createTransactionNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  model.timebankId = FlavorConfig.values.timebankId;
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+
+  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap())
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap());
 }
 
 Future<void> offerAcceptNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  model.timebankId = FlavorConfig.values.timebankId;
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+
+  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap())
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap());
 }
 
 Future<void> offerRejectNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  model.timebankId = FlavorConfig.values.timebankId;
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap());
+
+  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  isTimeBankNotification
+      ? await Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap())
+      : await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap());
 }
 
-Future<void> readNotification(
-  String notificationId,
-  String userEmail,
-) async {
+Future<void> readUserNotification(
+    String notificationId, String userEmail) async {
   await Firestore.instance
       .collection('users')
       .document(userEmail)
+      .collection('notifications')
+      .document(notificationId)
+      .updateData({
+    'isRead': true,
+  });
+}
+
+Future<void> readTimeBankNotification(
+    String notificationId, String timebankId) async {
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
       .collection('notifications')
       .document(notificationId)
       .updateData({
@@ -248,4 +352,41 @@ Future<List<NotificationsModel>> getCompletedNotifications(
     });
   });
   return res;
+}
+
+Stream<List<NotificationsModel>> getCompletedNotificationsStream(
+  String userEmail,
+  String communityId,
+) async* {
+  var data = Firestore.instance
+      .collection('users')
+      .document(userEmail)
+      .collection('notifications')
+      .where('isRead', isEqualTo: false)
+      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where(
+        'communityId',
+        isEqualTo: communityId,
+      )
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
+      handleData: (querySnapshot, notificationSink) {
+        List<NotificationsModel> notifications = [];
+
+        querySnapshot.documents.forEach((documentSnapshot) {
+          NotificationsModel model = NotificationsModel.fromMap(
+            documentSnapshot.data,
+          );
+          if (model.type != NotificationType.RequestCompleted) {
+            notifications.add(model);
+          }
+        });
+        notificationSink.add(notifications);
+        print(
+            "${notifications.length}----------------------------------------");
+      },
+    ),
+  );
 }

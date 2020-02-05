@@ -184,7 +184,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       notificationId: notificationId,
     );
 
-    FirestoreManager.readNotification(notificationId, userModel.email);
+    FirestoreManager.readUserNotification(notificationId, userModel.email);
 
   }
 
@@ -201,7 +201,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       notificationId: notificationId,
     );
 
-    FirestoreManager.readNotification(notificationId, user.email);
+    FirestoreManager.readUserNotification(notificationId, user.email);
 
   }
 

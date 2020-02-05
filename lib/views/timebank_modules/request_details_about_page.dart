@@ -15,7 +15,7 @@ import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
 class RequestDetailsAboutPage extends StatefulWidget {
   final RequestModel requestItem;
-  TimebankModel timebankModel;
+  final TimebankModel timebankModel;
 
   final bool applied;
   RequestDetailsAboutPage(
@@ -191,7 +191,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             return Text("Resolving location...");
                           }
                           return Text(
-                            snapshot.data,
+                            snapshot.data ?? '',
                             style: subTitleStyle,
                             maxLines: 1,
                           );
@@ -406,18 +406,19 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     ],
                   ),
                   onPressed: () {
-                    if (widget.timebankModel.protected) {
-                      if (widget.timebankModel.admins.contains(
-                          SevaCore.of(context).loggedInUser.sevaUserID)) {
-                        applyAction();
-                      } else {
-                        //show dialog
-                        _showProtectedTimebankMessage();
-                        print("not authorized");
-                      }
-                    } else {
-                      applyAction();
-                    }
+                    applyAction();
+                    // if (widget.timebankModel.protected) {
+                    //   if (widget.timebankModel.admins.contains(
+                    //       SevaCore.of(context).loggedInUser.sevaUserID)) {
+                    //     applyAction();
+                    //   } else {
+                    //     //show dialog
+                    //     _showProtectedTimebankMessage();
+                    //     print("not authorized");
+                    //   }
+                    // } else {
+                    //   applyAction();
+                    // }
                   },
                 ),
               ),

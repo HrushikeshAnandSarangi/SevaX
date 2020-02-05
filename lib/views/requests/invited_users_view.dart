@@ -16,7 +16,7 @@ class InvitedUsersView extends StatefulWidget {
 
   @override
   _InvitedUsersViewState createState() {
-    // TODO: implement createState
+    
     return _InvitedUsersViewState();
   }
 }
@@ -32,7 +32,6 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     timeBankBloc.setInvitedUsersData(widget.requestModel.id);
     setState(() {});

@@ -16,9 +16,7 @@ import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/home_dashboard.dart';
-import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 
-import '../core.dart';
 import '../timebank_content_holder.dart';
 
 class JoinSubTimeBankView extends StatefulWidget {
