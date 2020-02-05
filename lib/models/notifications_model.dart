@@ -18,7 +18,7 @@ class NotificationsModel extends DataModel {
     this.targetUserId,
     this.isRead = false,
     this.senderUserId,
-    this.timebankId,
+    @required this.timebankId,
     @required this.communityId,
   });
 

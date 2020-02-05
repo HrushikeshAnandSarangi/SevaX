@@ -572,7 +572,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               )),
     );
 
-    await FirestoreManager.readNotification(
+    await FirestoreManager.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
   }
 
@@ -716,7 +716,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    await FirestoreManager.readNotification(
+    await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
     setState(() {
       isProgressBarActive = false;
