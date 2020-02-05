@@ -5,8 +5,7 @@ import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'dart:async';
+
 import 'models/news_model.dart';
 
 void main() {
@@ -44,18 +43,20 @@ void main() {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
-
       // Crashlytics.instance.enableInDevMode = true;
       // FlutterError.onError = Crashlytics.instance.recordFlutterError;
       runApp(MainApplication());
       // runZoned(() {
-        
+
       // }, onError: Crashlytics.instance.recordError);
     },
   );
 }
 
 class MainApplication extends StatelessWidget {
+  final bool skipToHomePage;
+
+  const MainApplication({Key key, this.skipToHomePage = false }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     NewsModel news;
@@ -68,7 +69,7 @@ class MainApplication extends StatelessWidget {
         // home: RequestStatusView(
         //   requestId: "anitha.beberg@gmail.com*1573268670404",
         // ),
-        home: SplashView(),
+        home: SplashView(skipToHomePage: skipToHomePage,),
       ),
     );
   }

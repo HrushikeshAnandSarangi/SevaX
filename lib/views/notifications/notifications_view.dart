@@ -246,7 +246,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                 print("notification data ${notification.data}");
                 RequestInvitationModel requestInvitationModel =
                     RequestInvitationModel.fromMap(notification.data);
-
                 return getInvitedRequestsNotificationWidget(
                   requestInvitationModel,
                   notification.id,

@@ -172,7 +172,7 @@ class TimeBankBloc {
   getSelectedRequestInvitedUsersData(usersids) async {
     // TODO - get users from request
       var usersdata = await _repository.getUsersFromRequest(usersids);
-//      _timebankController.value.selectedrequest.setInvitedUsersData(usersdata);
+      _timebankController.value.setInvitedUsersDataForRequest(usersdata);
       _timebankController.add(_timebankController.value);
   }
 

@@ -77,6 +77,9 @@ class UserData {
 }
 
 class SplashView extends StatefulWidget {
+  final bool skipToHomePage;
+
+  const SplashView({Key key, this.skipToHomePage = false}) : super(key: key);
   @override
   _SplashViewState createState() => _SplashViewState();
 }
@@ -86,6 +89,12 @@ class _SplashViewState extends State<SplashView> {
   bool _initialized = false;
   bool mainForced = false;
   final _firestore = Firestore();
+
+  @override
+  void initState() {
+    print('------>> skip to homepage = ${widget.skipToHomePage}');
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -529,6 +538,10 @@ class _SplashViewState extends State<SplashView> {
     // if (!loggedInUser.completedIntro) {
     //   await _navogateToIntro(loggedInUser);
     // }
+    if (widget.skipToHomePage) {
+      print('Navigating to home page');
+      _navigateToCoreView(loggedInUser);
+    }
 
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
