@@ -274,8 +274,8 @@ class _ChatListViewState extends State<ChatListView> {
                 children: <Widget>[
                   ClipOval(
                     child: Container(
-                      height: 45,
-                      width: 45,
+                      height: 55,
+                      width: 55,
                       child: FadeInImage.assetNetwork(
                         placeholder: 'lib/assets/images/profile.png',
                         image: chatModel.photoURL == null
@@ -289,6 +289,13 @@ class _ChatListViewState extends State<ChatListView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Text(
+                          "Timebank",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.green,
+                          ),
+                        ),
                         Text(
                           chatModel.messagTitleUserName == null
                               ? 'Not added '
