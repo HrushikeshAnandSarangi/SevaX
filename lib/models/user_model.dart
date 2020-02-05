@@ -44,6 +44,7 @@ class UserModel extends DataModel {
   bool acceptedEULA = false;
   bool completedIntro = false;
 
+  List<String> pastHires = [];
   List<String> reportedUsers = [];
   List<String> blockedBy = [];
   List<String> blockedMembers = [];
@@ -72,6 +73,7 @@ class UserModel extends DataModel {
       this.blockedMembers,
       this.acceptedEULA,
       this.completedIntro,
+      this.pastHires,
       this.blockedBy,
       this.currentPosition,
       this.currentCommunity,
@@ -86,6 +88,12 @@ class UserModel extends DataModel {
     if (map.containsKey('reportedUsers')) {
       List<String> reportedUsersList = List.castFrom(map['reportedUsers']);
       this.reportedUsers = reportedUsersList;
+    }
+    if (map.containsKey('past_hires')) {
+      List<String> pasthires = List.castFrom(map['past_hires']);
+      this.pastHires = pasthires;
+    } else {
+      this.pastHires = [];
     }
 
     if (map.containsKey('acceptedEULA')) {
@@ -308,6 +316,11 @@ class UserModel extends DataModel {
       this.notificationsRead = 0;
     }
 
+    if (this.pastHires != null && this.pastHires.isNotEmpty) {
+      object['past_hires'] = this.pastHires;
+    } else {
+      object['past_hires'] = [];
+    }
     return object;
   }
 

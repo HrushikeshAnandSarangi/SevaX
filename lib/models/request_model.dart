@@ -83,6 +83,8 @@ class RequestModel extends DataModel {
     if (map.containsKey('invitedUsers')) {
       List<String> invitedUsersList = List.castFrom(map['invitedUsers']);
       this.invitedUsers = invitedUsersList;
+    }else{
+      this.invitedUsers = [];
     }
     if (map.containsKey('durationofrequest')) {
       this.durationOfRequest = map['durationofrequest'];

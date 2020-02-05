@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
+    as FirestoreRequestManager;
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -34,15 +36,14 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   static const String ACCEPTED = "Accepted";
   static const String APPROVED = "Approved";
 
-  void setRequestModel() async {
-    requestModel = await getCurrentRequest();
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
-    setRequestModel();
+    FirestoreRequestManager.getRequestStreamById(requestId: requestModel.id)
+        .listen((_requestModel) {
+      requestModel = _requestModel;
+      setState(() {});
+    });
   }
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
@@ -57,20 +58,6 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
   @override
   Widget build(BuildContext context) {
     return list;
-  }
-
-  Future<RequestModel> getCurrentRequest() async {
-    if (requestModel == null) {
-      return null;
-    }
-    var snapShot = await Firestore.instance
-        .collection("requests")
-        .document(requestModel.id)
-        .get();
-    RequestModel model = RequestModel.fromMap(
-      snapShot.data,
-    );
-    return model;
   }
 
   Widget get list {
@@ -114,7 +101,8 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                 // return Text(f['fullname']);
 
                 UserRequestStatusType status;
-                status = getUserRequestStatusType(userModel.email, requestModel);
+                status =
+                    getUserRequestStatusType(userModel.email, requestModel);
 
                 return makeUserWidget(userModel, context, status);
               }).toList()
@@ -445,9 +433,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       rejectedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    ).then((onValue) {
-      setRequestModel();
-    });
+    );
   }
 
   void approveMemberForVolunteerRequest({
@@ -468,9 +454,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    ).then((onValue) {
-      setRequestModel();
-    });
+    );
   }
 
   Widget _getCloseButton(BuildContext context) {

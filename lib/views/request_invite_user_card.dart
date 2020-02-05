@@ -20,6 +20,7 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
           ])),
     );
   }
+
   Widget getUserThumbnail() {
     return Container(
         margin: EdgeInsets.only(top: 20, right: 15),
@@ -77,18 +78,12 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
                       !bookMarked ? Icons.bookmark_border : Icons.bookmark,
                       color: Colors.redAccent,
                     ),
-                    onTap: (){
+                    onTap: () {
                       bookMarked = !bookMarked;
                       print(bookMarked);
                       setState(() {});
                     },
                   ),
-//              Spacer(),
-//                IconButton(
-//                  icon:,
-//                  color: Colors.redAccent,
-//                  size: 35,
-//                ),
                 ],
               ),
               SmoothStarRating(
@@ -128,7 +123,8 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
                       color: Colors.blue,
                       textColor: Colors.white,
                       onPressed: () {},
-                      child: const Text('Invite', style: TextStyle(fontSize: 16)),
+                      child:
+                          const Text('Invite', style: TextStyle(fontSize: 16)),
                     ),
                   ),
                 ],
@@ -139,6 +135,4 @@ class _RequestInviteUserCardState extends State<RequestInviteUserCard> {
       ),
     );
   }
-
 }
-

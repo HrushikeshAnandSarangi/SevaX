@@ -149,21 +149,22 @@ class _MyHomePageState extends State<MyHomePage>
               stream: _homeDashBoardBloc
                   .getCurrentGroups(SevaCore.of(context).loggedInUser),
               builder: (context, snapshot) {
-                if (snapshot.data == null) {
+                if (snapshot.data == null || !snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasData && snapshot.data != null) {
+                  print("asd"+snapshot.data.timebanks.length.toString());
                   snapshot.data.timebanks.forEach((TimebankModel data) {
-                    print(
-                        "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
+
+                    print("timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
                     if (data.id ==
                         snapshot.data.currentCommunity.primary_timebank) {
+                      print("inside if" + data.toString());
                       primaryTimebank = data;
                       timeBankModelSingleton.model = primaryTimebank;
                     }
                   });
                 }
-
                 return TabBarView(
                   children: <Widget>[
                     TimebankHomePage(
