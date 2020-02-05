@@ -151,7 +151,6 @@ class RequestsState extends State<RequestsModule> {
                         }
                         timebankList = snapshot.data;
                         List<String> dropdownList = [];
-
                         int adminOfCount = 0;
                         if (FlavorConfig.values.timebankName == "Yang 2020") {
                           dropdownList.add("Create Yang Gang");
@@ -643,6 +642,7 @@ class NearRequestListItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (timebankId != 'All') {
+      print("ifff " + timebankId);
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),

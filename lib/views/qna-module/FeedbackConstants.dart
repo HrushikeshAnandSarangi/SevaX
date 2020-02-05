@@ -38,7 +38,7 @@ class FeedbackConstants {
     {
       FEEDBACK_TITLE: "How would you rate your experience with this volunteer?",
       ANSWERS: [
-        {ANSWER_TEXT: "Excellent", SCORE: 6},
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
         {ANSWER_TEXT: "Good", SCORE: 4},
         {ANSWER_TEXT: "Okay", SCORE: 3},
         {ANSWER_TEXT: "Not so good", SCORE: 2},
