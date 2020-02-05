@@ -74,6 +74,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         appBar: AppBar(
           automaticallyImplyLeading: widget.keepOnBackPress,
           elevation: 0.5,
+          leading: BackButton(),
           title: Text(
             'Find your Timebank',
             style: TextStyle(
@@ -303,14 +304,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     String seveaUserId,
   ) {
     if (communityModel.members.contains(widget.loggedInUser.sevaUserID)) {
-      print('u r joined user');
+      //  print('u r joined user');
       return CompareUserStatus.JOINED;
     } else if (communityModel.admins.contains(widget.loggedInUser.sevaUserID)) {
-      print('u rrr joined user');
+      //   print('u rrr joined user');
 
       return CompareUserStatus.JOINED;
     } else {
-      print('u r not joined user');
+      // print('u r not joined user');
 
       return CompareUserStatus.JOIN;
     }
