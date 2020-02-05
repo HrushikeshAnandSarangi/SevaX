@@ -6,6 +6,10 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
+    as RequestNotificationManager;
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
+    as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -22,7 +26,7 @@ class RequestAcceptedSpendingView extends StatefulWidget {
 
   @override
   _RequestAcceptedSpendingState createState() =>
-      _RequestAcceptedSpendingState();
+      _RequestAcceptedSpendingState(requestModel);
 }
 
 class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
@@ -30,20 +34,24 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   bool noTransactionAvailable = false;
   List<Widget> _pendingAvtars = [];
   List<NotificationsModel> pendingRequests = [];
-  bool shouldReload = true;
-  bool isProgressBarActive = false;
-  bool isRemoving = false;
+  RequestModel requestModel;
+//  bool shouldReload = true;
+//  bool isProgressBarActive = false;
+//  bool isRemoving = false;
+
+  _RequestAcceptedSpendingState(RequestModel _requestModel) {
+    requestModel = _requestModel;
+  }
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      FirestoreManager.getCompletedNotificationsStream(
-              SevaCore.of(context).loggedInUser.email,
-              SevaCore.of(context).loggedInUser.currentCommunity)
-          .listen((_completedNotifications) {
-        pendingRequests = _completedNotifications;
-        setState(() {});
+      RequestManager.getRequestStreamById(requestId: requestModel.id)
+          .listen((_requestModel) {
+        requestModel = _requestModel;
+        reset();
+//        setState(() {});
       });
     });
   }
@@ -55,26 +63,26 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   @override
   Widget build(BuildContext context) {
-    if (isProgressBarActive) {
-      return AlertDialog(
-        title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
-        content: LinearProgressIndicator(),
-      );
-    }
-    if (shouldReload) {
-      _updatePendingAvtarWidgets();
-    }
+//    if (isProgressBarActive) {
+//      return AlertDialog(
+//        title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
+//        content: LinearProgressIndicator(),
+//      );
+//    }
+//    if (shouldReload) {
+//      _updatePendingAvtarWidgets();
+//    }
     return Scaffold(
       body: listItems,
     );
   }
 
   Widget get listItems {
-//    if (_avtars.length == 0) {
-//      return Center(
-//        child: CircularProgressIndicator(),
-//      );
-//    }
+    if (_avtars.length == 0) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return ListView.builder(
         itemCount: _avtars.length,
         itemBuilder: (context, index) {
@@ -85,11 +93,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   void reset() {
     _avtars = [];
     _pendingAvtars = [];
-//    pendingRequests = [];
-    shouldReload = true;
+//    shouldReload = true;
     noTransactionAvailable = false;
+    _updatePendingAvtarWidgets();
 //    setState(() {
-//      isProgressBarActive = false;
+////      isProgressBarActive = false;
 //    });
   }
 
@@ -105,19 +113,19 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 //        pendingRequests.add(notifications[i]);
 //      }
 //    }
-    _pendingAvtars = [];
-    for (int i = 0; i < pendingRequests.length; i++) {
-      NotificationsModel notification = pendingRequests[i];
-      RequestModel model = RequestModel.fromMap(notification.data);
-      Widget item = await getNotificationRequestCompletedWidget(
-        model,
-        notification.senderUserId,
-        notification.id,
-      );
-      _pendingAvtars.add(item);
-    }
+//    _pendingAvtars = [];
+//    for (int i = 0; i < pendingRequests.length; i++) {
+//      NotificationsModel notification = pendingRequests[i];
+//      RequestModel model = RequestModel.fromMap(notification.data);
+//      Widget item = await getNotificationRequestCompletedWidget(
+//        model,
+//        notification.senderUserId,
+//        notification.id,
+//      );
+//      _pendingAvtars.add(item);
+//    }
     await getUserModel();
-    setState(() {});
+//    setState(() {});
   }
 
   Widget completedRequestWidget(RequestModel model) {
@@ -188,22 +196,32 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     var totalCredits = 0.0;
     _avtars = [];
     List<Widget> _localAvtars = [];
-    if (widget.requestModel.transactions != null) {
-      for (var i = 0; i < widget.requestModel.transactions.length; i++) {
-        var transaction = widget.requestModel.transactions[i];
+    if (requestModel.transactions != null) {
+      for (var i = 0; i < requestModel.transactions.length; i++) {
+        var transaction = requestModel.transactions[i];
         if (transaction != null && transaction.to != null) {
+          Widget item = Offstage();
           var _userModel = await getUserForId(sevaUserId: transaction.to);
-          totalCredits = totalCredits + transaction.credits;
-          print("All transactions:$transaction");
-          Widget item = getSpendingResultView(
-            context,
-            _userModel,
-            transaction,
-          );
+          if (transaction.isApproved) {
+            totalCredits = totalCredits + transaction.credits;
+            item = getCompletedResultView(
+              context,
+              _userModel,
+              transaction,
+            );
+          } else {
+//            totalCredits = totalCredits + transaction.credits;
+            item = getPendingResultView(
+              context,
+              _userModel,
+              transaction,
+            );
+          }
           _localAvtars.add(item);
         }
       }
     }
+    totalCredits = num.parse(totalCredits.toStringAsFixed(2));
     _avtars.add(getTotalSpending("$totalCredits"));
     _avtars.addAll(_pendingAvtars);
     _avtars.addAll(_localAvtars);
@@ -261,9 +279,17 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-  Widget getSpendingResultView(BuildContext parentContext, UserModel usermodel,
+  String formattedDate(UserModel user) {
+    return DateFormat('MMMM dd, yyyy @ h:mm a').format(
+      getDateTimeAccToUserTimezone(
+          dateTime: DateTime.fromMillisecondsSinceEpoch(
+              widget.requestModel.postTimestamp),
+          timezoneAbb: user.timezone),
+    );
+  }
+
+  Widget getCompletedResultView(BuildContext parentContext, UserModel usermodel,
       TransactionModel transactionModel) {
-    print("Context bcsvdygdsjbd:$parentContext");
     return Container(
       child: Card(
         elevation: 1,
@@ -294,11 +320,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       style: Theme.of(parentContext).textTheme.subhead,
                     ),
                     Text(
-                      DateFormat('MMMM dd, yyyy @ h:mm a').format(
-                        getDateTimeAccToUserTimezone(
-                            dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                widget.requestModel.postTimestamp),
-                            timezoneAbb: usermodel.timezone),
+                      formattedDate(
+                        usermodel,
                       ),
                       style:
                           TextStyle(color: Colors.grey, fontFamily: 'Europa'),
@@ -334,21 +357,69 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
+  Widget getPendingResultView(BuildContext parentContext, UserModel user,
+      TransactionModel transactionModel) {
+    if (user == null || user.sevaUserID == null) return Offstage();
+    return Slidable(
+        delegate: SlidableBehindDelegate(),
+        actions: <Widget>[],
+        secondaryActions: <Widget>[],
+        child: GestureDetector(
+          onTap: () async {
+            var notificationId =
+                await RequestNotificationManager.getNotificationId(
+                    user, requestModel);
+            showMemberClaimConfirmation(
+                context: context,
+                notificationId: notificationId,
+                requestModel: requestModel,
+                userId: user.sevaUserID,
+                userModel: user,
+                credits: transactionModel.credits);
+          },
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(user.photoURL),
+              ),
+              title: Text(user.fullname),
+              subtitle: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: formattedDate(
+                        user,
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
+  }
+
   Future<Widget> getNotificationRequestCompletedWidget(
     RequestModel model,
     String userId,
     String notificationId,
   ) async {
-    UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
-    if (user == null || user.sevaUserID == null || model.transactions == null)
-      return Offstage();
-    TransactionModel transactionModel =
-        model.transactions?.firstWhere((transaction) {
-      return transaction.to == userId;
-    });
+    TransactionModel transactionModel = null;
+    for (int i = 0; i < model.transactions.length; i++) {
+      if (model.transactions[i].to == userId) {
+        transactionModel = model.transactions[i];
+      }
+    }
     if (transactionModel == null) {
       return Offstage();
     }
+    UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
+    if (user == null || user.sevaUserID == null) return Offstage();
     return Slidable(
         delegate: SlidableBehindDelegate(),
         actions: <Widget>[],
@@ -404,13 +475,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         ));
   }
 
-  void showMemberClaimConfirmation(
+  Future<Widget> showMemberClaimConfirmation(
       {BuildContext context,
       UserModel userModel,
       RequestModel requestModel,
       String notificationId,
       String userId,
-      double credits}) {
+      num credits}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -494,10 +565,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         onPressed: () async {
                           // reject the claim
                           Navigator.pop(viewContext);
-                          setState(() {
-                            isRemoving = true;
-                            isProgressBarActive = true;
-                          });
+//                          setState(() {
+//                            isRemoving = true;
+//                            isProgressBarActive = true;
+//                          });
                           await rejectMemberClaimForEvent(
                               context: context,
                               model: requestModel,
@@ -517,10 +588,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         onPressed: () async {
                           // Once approved take for feeddback
                           Navigator.pop(viewContext);
-                          setState(() {
-                            isProgressBarActive = true;
-                            isRemoving = false;
-                          });
+//                          setState(() {
+//                            isProgressBarActive = true;
+//                            isRemoving = false;
+//                          });
                           approveMemberClaim(
                               context: context,
                               model: requestModel,
@@ -569,9 +640,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 //        communityId: SevaCore.of(context).loggedInUser.currentCommunity
     );
 
-    setState(() {
-      isProgressBarActive = false;
-    });
+//    setState(() {
+//      isProgressBarActive = false;
+//    });
     Navigator.pop(context);
 
     Navigator.push(
@@ -730,9 +801,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
-    setState(() {
-      isProgressBarActive = false;
-    });
+//    setState(() {
+//      isProgressBarActive = false;
+//    });
     Navigator.pop(context);
   }
 
