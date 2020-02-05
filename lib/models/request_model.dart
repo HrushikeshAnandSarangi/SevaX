@@ -79,6 +79,8 @@ class RequestModel extends DataModel {
     if (map.containsKey('acceptors')) {
       List<String> acceptorList = List.castFrom(map['acceptors']);
       this.acceptors = acceptorList;
+    }else{
+      this.acceptors = [];
     }
     if (map.containsKey('invitedUsers')) {
       List<String> invitedUsersList = List.castFrom(map['invitedUsers']);

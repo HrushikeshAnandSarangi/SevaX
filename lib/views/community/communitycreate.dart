@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -16,10 +15,10 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/home_page_router.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import '../../main_app.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -392,10 +391,8 @@ class CreateEditCommunityViewFormState
                                   _billingInformationKey.currentState.reset();
                                   Navigator.of(context).pushAndRemoveUntil(
                                       MaterialPageRoute(
-                                        builder: (context1) => SevaCore(
-                                          loggedInUser:
-                                              SevaCore.of(context).loggedInUser,
-                                          child: HomePageRouter(),
+                                        builder: (context1) => MainApplication(
+                                          skipToHomePage: true,
                                         ),
                                       ),
                                       (Route<dynamic> route) => false);
