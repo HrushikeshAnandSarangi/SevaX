@@ -94,6 +94,33 @@ Future<void> withdrawAcceptRequestNotification({
         );
 }
 
+Future<String> getNotificationId(
+  UserModel user,
+  RequestModel request,
+) async {
+  var notifications = await Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .collection('notifications')
+      .getDocuments();
+
+  var result = "";
+  for (var i = 0; i < notifications.documents.length; i++) {
+    var onValue = notifications.documents[i];
+    var notification = NotificationsModel.fromMap(onValue.data);
+    if (notification != null) {
+      RequestModel _requestModel = RequestModel.fromMap(notification.data);
+      if (_requestModel != null) {
+        if (_requestModel.id == request.id) {
+          result = notification.id;
+          break;
+        }
+      }
+    }
+  }
+  return result;
+}
+
 Future<void> removeAcceptRequestNotification({
   NotificationsModel model,
   String notificationId,
@@ -379,7 +406,7 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
           NotificationsModel model = NotificationsModel.fromMap(
             documentSnapshot.data,
           );
-          if (model.type != NotificationType.RequestCompleted) {
+          if (model.type == NotificationType.RequestCompletedApproved) {
             notifications.add(model);
           }
         });
