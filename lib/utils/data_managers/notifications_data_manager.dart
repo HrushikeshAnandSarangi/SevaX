@@ -25,13 +25,13 @@ Future<void> createAcceptRequestNotification({
       await fetchProtectedStatus(notificationsModel.timebankId);
 
   isTimeBankNotification
-      ?await Firestore.instance
+      ? await Firestore.instance
           .collection('timebanknew')
           .document(notificationsModel.timebankId)
           .collection('notifications')
           .document(notificationsModel.id)
           .setData(notificationsModel.toMap())
-      :await Firestore.instance
+      : await Firestore.instance
           .collection('users')
           .document(user.email)
           .collection('notifications')
@@ -121,7 +121,6 @@ Future<void> createRequestApprovalNotification({
   UserModel user = await getUserForId(
     sevaUserId: model.targetUserId,
   );
-  
 
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
@@ -141,7 +140,7 @@ Future<void> createRequestApprovalNotification({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  
+
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
       ? await Firestore.instance
@@ -162,7 +161,7 @@ Future<void> createTaskCompletedApprovedNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  
+
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
       ? await Firestore.instance
@@ -183,7 +182,7 @@ Future<void> createTransactionNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  
+
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
       ? await Firestore.instance
@@ -204,7 +203,7 @@ Future<void> offerAcceptNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  
+
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
       ? await Firestore.instance
@@ -225,7 +224,7 @@ Future<void> offerRejectNotification({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-  
+
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
   isTimeBankNotification
       ? await Firestore.instance
@@ -353,4 +352,41 @@ Future<List<NotificationsModel>> getCompletedNotifications(
     });
   });
   return res;
+}
+
+Stream<List<NotificationsModel>> getCompletedNotificationsStream(
+  String userEmail,
+  String communityId,
+) async* {
+  var data = Firestore.instance
+      .collection('users')
+      .document(userEmail)
+      .collection('notifications')
+      .where('isRead', isEqualTo: false)
+      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .where(
+        'communityId',
+        isEqualTo: communityId,
+      )
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
+      handleData: (querySnapshot, notificationSink) {
+        List<NotificationsModel> notifications = [];
+
+        querySnapshot.documents.forEach((documentSnapshot) {
+          NotificationsModel model = NotificationsModel.fromMap(
+            documentSnapshot.data,
+          );
+          if (model.type != NotificationType.RequestCompleted) {
+            notifications.add(model);
+          }
+        });
+        notificationSink.add(notifications);
+        print(
+            "${notifications.length}----------------------------------------");
+      },
+    ),
+  );
 }

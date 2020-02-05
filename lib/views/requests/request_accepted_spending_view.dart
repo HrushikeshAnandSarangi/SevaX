@@ -37,6 +37,15 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getCompletedNotificationsStream(
+              SevaCore.of(context).loggedInUser.email,
+              SevaCore.of(context).loggedInUser.currentCommunity)
+          .listen((_completedNotifications) {
+        pendingRequests = _completedNotifications;
+        setState(() {});
+      });
+    });
   }
 
   @override
@@ -61,11 +70,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   }
 
   Widget get listItems {
-    if (_avtars.length == 0) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
+//    if (_avtars.length == 0) {
+//      return Center(
+//        child: CircularProgressIndicator(),
+//      );
+//    }
     return ListView.builder(
         itemCount: _avtars.length,
         itemBuilder: (context, index) {
@@ -76,7 +85,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   void reset() {
     _avtars = [];
     _pendingAvtars = [];
-    pendingRequests = [];
+//    pendingRequests = [];
     shouldReload = true;
     noTransactionAvailable = false;
 //    setState(() {
@@ -85,17 +94,17 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   }
 
   Future _updatePendingAvtarWidgets() async {
-    shouldReload = false;
-    var notifications = await FirestoreManager.getCompletedNotifications(
-        SevaCore.of(context).loggedInUser.email,
-        SevaCore.of(context).loggedInUser.currentCommunity);
-    pendingRequests = [];
-    _pendingAvtars = [];
-    for (var i = 0; i < notifications.length; i++) {
-      if (notifications[i].type == NotificationType.RequestCompleted) {
-        pendingRequests.add(notifications[i]);
-      }
-    }
+//    shouldReload = false;
+//    var notifications = await FirestoreManager.getCompletedNotifications(
+//        SevaCore.of(context).loggedInUser.email,
+//        SevaCore.of(context).loggedInUser.currentCommunity);
+//    pendingRequests = [];
+//    _pendingAvtars = [];
+//    for (var i = 0; i < notifications.length; i++) {
+//      if (notifications[i].type == NotificationType.RequestCompleted) {
+//        pendingRequests.add(notifications[i]);
+//      }
+//    }
     _pendingAvtars = [];
     for (int i = 0; i < pendingRequests.length; i++) {
       NotificationsModel notification = pendingRequests[i];
@@ -331,12 +340,15 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     String notificationId,
   ) async {
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
-    if (user == null || user.sevaUserID == null) return Offstage();
+    if (user == null || user.sevaUserID == null || model.transactions == null)
+      return Offstage();
     TransactionModel transactionModel =
         model.transactions?.firstWhere((transaction) {
       return transaction.to == userId;
     });
-
+    if (transactionModel == null) {
+      return Offstage();
+    }
     return Slidable(
         delegate: SlidableBehindDelegate(),
         actions: <Widget>[],
@@ -547,7 +559,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     // creating chat
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     List users = [user.email, loggedInEmail];
-//    users.sort();
+    users.sort();
     ChatModel chatModel = ChatModel();
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
