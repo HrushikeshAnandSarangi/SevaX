@@ -40,8 +40,6 @@ class RequestsState extends State<RequestsModule> {
     globals.orCreateSelector = 0;
   }
 
-  RequestsState() {}
-
   bool isNearme = false;
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
@@ -151,7 +149,6 @@ class RequestsState extends State<RequestsModule> {
                         }
                         timebankList = snapshot.data;
                         List<String> dropdownList = [];
-
                         int adminOfCount = 0;
                         if (FlavorConfig.values.timebankName == "Yang 2020") {
                           dropdownList.add("Create Yang Gang");
@@ -288,6 +285,7 @@ class RequestsState extends State<RequestsModule> {
               ? NearRequestListItems(
                   parentContext: context,
                   timebankId: timebankId,
+                  timebankModel: widget.timebankModel,
                 )
               : RequestListItems(
                   parentContext: context,
@@ -630,130 +628,197 @@ class _RequestCardViewState extends State<RequestCardView> {
 class NearRequestListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
+  final TimebankModel timebankModel;
 
-  const NearRequestListItems({Key key, this.timebankId, this.parentContext})
-      : super(key: key);
+  const NearRequestListItems({
+    Key key,
+    this.timebankId,
+    this.parentContext,
+    this.timebankModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (timebankId != 'All') {
-      return FutureBuilder<Object>(
-          future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            UserModel user = snapshot.data;
-            String loggedintimezone = user.timezone;
+    return FutureBuilder<Object>(
+        future: FirestoreManager.getUserForId(
+            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return new Text('Error: ${snapshot.error}');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          UserModel user = snapshot.data;
+          String loggedintimezone = user.timezone;
+          return StreamBuilder<List<RequestModel>>(
+            stream: timebankId != 'All'
+                ? FirestoreManager.getNearRequestListStream(
+                    timebankId: timebankId)
+                : FirestoreManager.getNearRequestListStream(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+              if (requestListSnapshot.hasError) {
+                return new Text('Error: ${requestListSnapshot.error}');
+              }
+              switch (requestListSnapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return Center(child: CircularProgressIndicator());
+                default:
+                  List<RequestModel> requestModelList =
+                      requestListSnapshot.data;
 
-            return StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getNearRequestListStream(
-                timebankId: timebankId,
-              ),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
-                }
-                switch (requestListSnapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
-                  default:
-                    List<RequestModel> requestModelList =
-                        requestListSnapshot.data;
+                  requestModelList = filterBlockedRequestsContent(
+                      context: context, requestModelList: requestModelList);
 
-                    requestModelList = filterBlockedRequestsContent(
-                        context: context, requestModelList: requestModelList);
+                  if (requestModelList.length == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(child: Text('No Requests')),
+                    );
+                  }
 
-                    if (requestModelList.length == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text('No Requests')),
-                      );
-                    }
-
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: requestModelList.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index >= requestModelList.length) {
-                          return Container(
-                            width: double.infinity,
-                            height: 65,
-                          );
-                        }
-                        return getRequestView(
-                          requestModelList[index],
-                          loggedintimezone,
-                          context,
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: requestModelList.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index >= requestModelList.length) {
+                        return Container(
+                          width: double.infinity,
+                          height: 65,
                         );
-                      },
-                    );
-                }
-              },
-            );
-          });
-    } else {
-      return FutureBuilder<Object>(
-          future: FirestoreManager.getUserForId(
-              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return new Text('Error: ${snapshot.error}');
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            UserModel user = snapshot.data;
-            String loggedintimezone = user.timezone;
-
-            return StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getNearRequestListStream(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
-                }
-                switch (requestListSnapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return Center(child: CircularProgressIndicator());
-                  //filter
-
-                  default:
-                    List<RequestModel> requestModelList =
-                        requestListSnapshot.data;
-
-                    requestModelList = filterBlockedRequestsContent(
-                        context: context, requestModelList: requestModelList);
-
-                    if (requestModelList.length == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(child: Text('No Requests')),
+                      }
+                      return getRequestView(
+                        requestModelList[index],
+                        loggedintimezone,
+                        context,
                       );
-                    }
+                    },
+                  );
+              }
+            },
+          );
+        });
 
-                    return Container(
-                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: requestModelList.map(
-                          (RequestModel requestModel) {
-                            return getRequestView(
-                                requestModel, loggedintimezone, context);
-                          },
-                        ).toList(),
-                      ),
-                    );
-                }
-              },
-            );
-          });
-    }
+//    if (timebankId != 'All') {
+//      print("ifff " + timebankId);
+//      return FutureBuilder<Object>(
+//          future: FirestoreManager.getUserForId(
+//              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+//          builder: (context, snapshot) {
+//            if (snapshot.hasError) {
+//              return new Text('Error: ${snapshot.error}');
+//            }
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Center(child: CircularProgressIndicator());
+//            }
+//            UserModel user = snapshot.data;
+//            String loggedintimezone = user.timezone;
+//
+//            return StreamBuilder<List<RequestModel>>(
+//              stream: FirestoreManager.getNearRequestListStream(
+//                timebankId: timebankId,
+//              ),
+//              builder: (BuildContext context,
+//                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+//                if (requestListSnapshot.hasError) {
+//                  return new Text('Error: ${requestListSnapshot.error}');
+//                }
+//                switch (requestListSnapshot.connectionState) {
+//                  case ConnectionState.waiting:
+//                    return Center(child: CircularProgressIndicator());
+//                  default:
+//                    List<RequestModel> requestModelList =
+//                        requestListSnapshot.data;
+//
+//                    requestModelList = filterBlockedRequestsContent(
+//                        context: context, requestModelList: requestModelList);
+//
+//                    if (requestModelList.length == 0) {
+//                      return Padding(
+//                        padding: const EdgeInsets.all(16.0),
+//                        child: Center(child: Text('No Requests')),
+//                      );
+//                    }
+//
+//                    return ListView.builder(
+//                      shrinkWrap: true,
+//                      itemCount: requestModelList.length + 1,
+//                      itemBuilder: (context, index) {
+//                        if (index >= requestModelList.length) {
+//                          return Container(
+//                            width: double.infinity,
+//                            height: 65,
+//                          );
+//                        }
+//                        return getRequestView(
+//                          requestModelList[index],
+//                          loggedintimezone,
+//                          context,
+//                        );
+//                      },
+//                    );
+//                }
+//              },
+//            );
+//          });
+//    } else {
+//      return FutureBuilder<Object>(
+//          future: FirestoreManager.getUserForId(
+//              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+//          builder: (context, snapshot) {
+//            if (snapshot.hasError) {
+//              return new Text('Error: ${snapshot.error}');
+//            }
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Center(child: CircularProgressIndicator());
+//            }
+//            UserModel user = snapshot.data;
+//            String loggedintimezone = user.timezone;
+//
+//            return StreamBuilder<List<RequestModel>>(
+//              stream: FirestoreManager.getNearRequestListStream(),
+//              builder: (BuildContext context,
+//                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+//                if (requestListSnapshot.hasError) {
+//                  return new Text('Error: ${requestListSnapshot.error}');
+//                }
+//                switch (requestListSnapshot.connectionState) {
+//                  case ConnectionState.waiting:
+//                    return Center(child: CircularProgressIndicator());
+//                  //filter
+//
+//                  default:
+//                    List<RequestModel> requestModelList =
+//                        requestListSnapshot.data;
+//
+//                    requestModelList = filterBlockedRequestsContent(
+//                        context: context, requestModelList: requestModelList);
+//
+//                    if (requestModelList.length == 0) {
+//                      return Padding(
+//                        padding: const EdgeInsets.all(16.0),
+//                        child: Center(child: Text('No Requests')),
+//                      );
+//                    }
+//
+//                    return Container(
+//                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
+//                      child: ListView(
+//                        shrinkWrap: true,
+//                        children: requestModelList.map(
+//                          (RequestModel requestModel) {
+//                            return getRequestView(
+//                                requestModel, loggedintimezone, context);
+//                          },
+//                        ).toList(),
+//                      ),
+//                    );
+//                }
+//              },
+//            );
+//          });
+//    }
   }
 
   List<RequestModel> filterBlockedRequestsContent(
@@ -786,13 +851,25 @@ class NearRequestListItems extends StatelessWidget {
         elevation: 0,
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              parentContext,
-              MaterialPageRoute(
-                builder: (context) =>
-                    RequestDetailsAboutPage(requestItem: model),
-              ),
-            );
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(),
+                ),
+              );
+            } else {
+              Navigator.push(
+                parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                      requestItem: model, timebankModel: timebankModel),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -905,36 +982,38 @@ class RequestListItemsState extends State<RequestListItems> {
               return Center(child: CircularProgressIndicator());
             }
             UserModel user = snapshot.data;
+
             String loggedintimezone = user.timezone;
 
             return StreamBuilder(
                 stream: timeBankBloc.timebankController,
                 builder: (context, AsyncSnapshot<TimebankController> snapshot) {
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
                   if (snapshot.hasData) {
-                    if (snapshot.data != null &&
-                        snapshot.data.requests.length == 0) {
-                      return CircularProgressIndicator();
-                    } else {
-                      List<RequestModel> requestModelList =
-                          snapshot.data.requests;
-                      requestModelList = filterBlockedRequestsContent(
-                          context: context, requestModelList: requestModelList);
+                    List<RequestModel> requestModelList =
+                        snapshot.data.requests;
+                    requestModelList = filterBlockedRequestsContent(
+                        context: context, requestModelList: requestModelList);
 
-                      if (requestModelList.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Center(child: Text('No Requests')),
-                        );
-                      }
-                      var consolidatedList =
-                          GroupRequestCommons.groupAndConsolidateRequests(
-                              requestModelList,
-                              SevaCore.of(context).loggedInUser.sevaUserID);
-                      return formatListFrom(
-                          consolidatedList: consolidatedList,
-                          loggedintimezone: loggedintimezone,
-                          userEmail: SevaCore.of(context).loggedInUser.email);
+                    if (requestModelList.length == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(child: Text('No Requests')),
+                      );
                     }
+                    var consolidatedList =
+                        GroupRequestCommons.groupAndConsolidateRequests(
+                            requestModelList,
+                            SevaCore.of(context).loggedInUser.sevaUserID);
+                    return formatListFrom(
+                        consolidatedList: consolidatedList,
+                        loggedintimezone: loggedintimezone,
+                        userEmail: SevaCore.of(context).loggedInUser.email);
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
@@ -1075,12 +1154,26 @@ class RequestListItemsState extends State<RequestListItems> {
           onTap: () {
             timeBankBloc.setSelectedRequest(model);
             timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
-            Navigator.push(
-              widget.parentContext,
-              MaterialPageRoute(
-                builder: (context) => RequestTabHolder(),
-              ),
-            );
+
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              Navigator.push(
+                widget.parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(),
+                ),
+              );
+            } else {
+              Navigator.push(
+                widget.parentContext,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                      requestItem: model, timebankModel: widget.timebankModel),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

@@ -12,6 +12,8 @@ import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
+import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
+import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 
 class HomeDashBoard extends StatelessWidget {
@@ -31,23 +33,37 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-    with SingleTickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   TabController controller;
+  TabController _timebankController;
   TimebankModel primaryTimebank;
   HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
   CommunityModel selectedCommunity;
   TimeBankModelSingleton timeBankModelSingleton = TimeBankModelSingleton();
+  List<Tab> tabs = [];
+  List<Widget> pages = [];
+  bool isAdmin = false;
 
   @override
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
+    _timebankController =
+        TabController(initialIndex: 0, length: 6, vsync: this);
+    tabs = [
+      Tab(
+          text:
+              "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
+      Tab(text: "Feeds"),
+      Tab(text: "Requests"),
+      Tab(text: "Offers"),
+      Tab(text: "About"),
+      Tab(text: "Members")
+    ];
     super.initState();
-    Future.delayed(
-      Duration.zero,
-      () => _homeDashBoardBloc
-          .getAllCommunities(SevaCore.of(context).loggedInUser),
-    );
+    Future.delayed(Duration.zero, () {
+      print('---->${SevaCore.of(context).loggedInUser.currentCommunity}');
+      _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
+    });
   }
 
   @override
@@ -69,133 +85,146 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     return BlocProvider(
       bloc: _homeDashBoardBloc,
-      child: DefaultTabController(
-        length: 6,
-        child: Scaffold(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
           backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            centerTitle: true,
-            title: StreamBuilder<List<CommunityModel>>(
-              stream: _homeDashBoardBloc.communities,
-              builder: (context, snapshot) {
-                setCurrentCommunity(snapshot.data);
-                return snapshot.data != null
-                    ? DropdownButtonHideUnderline(
-                        child: DropdownButton<CommunityModel>(
-                        value: selectedCommunity,
-                        onChanged: (v) {
-                          if (v.id != selectedCommunity.id) {
+          centerTitle: true,
+          title: StreamBuilder<List<CommunityModel>>(
+            stream: _homeDashBoardBloc.communities,
+            builder: (context, snapshot) {
+              setCurrentCommunity(snapshot.data);
+              return snapshot.data != null
+                  ? DropdownButtonHideUnderline(
+                      child: DropdownButton<CommunityModel>(
+                      value: selectedCommunity,
+                      onChanged: (v) {
+                        if (v.id != selectedCommunity.id) {
+                          SevaCore.of(context).loggedInUser.currentCommunity =
+                              v.id;
+                          _homeDashBoardBloc
+                              .setDefaultCommunity(
+                            context: context,
+                            community: v,
+                            //oldCommunityId: selectedCommunity.id,
+                          )
+                              .then((_) {
                             SevaCore.of(context).loggedInUser.currentCommunity =
                                 v.id;
-                            _homeDashBoardBloc
-                                .setDefaultCommunity(
-                              context: context,
-                              community: v,
-                              //oldCommunityId: selectedCommunity.id,
-                            )
-                                .then((_) {
-                              SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity = v.id;
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SwitchTimebank(),
-                                ),
-                              );
-                            });
-
-                            // setState(() {
-                            //   selectedCommunity = v;
-                            // });
-
-                          }
-                        },
-                        items: List.generate(
-                          snapshot.data.length,
-                          (index) => DropdownMenuItem(
-                            value: snapshot.data[index],
-                            child: Text(
-                              snapshot.data[index].name[0].toUpperCase() +
-                                  snapshot.data[index].name
-                                      .substring(1)
-                                      .toLowerCase(),
-                              style: TextStyle(fontSize: 18),
-                            ),
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SwitchTimebank(),
+                              ),
+                            );
+                          });
+                        }
+                      },
+                      items: List.generate(
+                        snapshot.data.length,
+                        (index) => DropdownMenuItem(
+                          value: snapshot.data[index],
+                          child: Text(
+                            snapshot.data[index].name[0].toUpperCase() +
+                                snapshot.data[index].name
+                                    .substring(1)
+                                    .toLowerCase(),
+                            style: TextStyle(fontSize: 18),
                           ),
                         ),
-                      ))
-                    : Container();
-              },
-            ),
-            bottom: TabBar(
-              indicatorColor: Colors.black,
-              labelColor: Colors.black,
-              isScrollable: true,
-              tabs: [
-                Tab(
-                    text:
-                        "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
-                Tab(text: "Feeds"),
-                Tab(text: "Requests"),
-                Tab(text: "Offers"),
-                Tab(text: "About"),
-                Tab(text: "Members"),
-              ],
+                      ),
+                    ))
+                  : Text('Loading');
+            },
             ),
           ),
           body: StreamBuilder<SelectedCommuntityGroup>(
               stream: _homeDashBoardBloc
                   .getCurrentGroups(SevaCore.of(context).loggedInUser),
               builder: (context, snapshot) {
-                if (snapshot.data == null) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (snapshot.hasData && snapshot.data != null) {
+                if (snapshot.data == null || !snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasData && snapshot.data != null) {
+                print("asd"+snapshot.data.timebanks.length.toString());
                   snapshot.data.timebanks.forEach((TimebankModel data) {
-                    print(
-                        "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
+
+                    print("timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
                     if (data.id ==
                         snapshot.data.currentCommunity.primary_timebank) {
+                      print("inside if" + data.toString());
                       primaryTimebank = data;
                       timeBankModelSingleton.model = primaryTimebank;
                     }
-                  });
-                }
-
-                return TabBarView(
-                  children: <Widget>[
-                    TimebankHomePage(
-                      selectedCommuntityGroup: snapshot.data,
-                    ),
-                    DiscussionList(
-                      timebankId: primaryTimebank.id,
-                    ),
-                    // TimebankFeeds(),
-                    RequestsModule.of(
-                      timebankId: primaryTimebank.id,
-                      timebankModel: primaryTimebank,
-                    ),
-                    OffersModule.of(
-                      timebankId: primaryTimebank.id,
-                      timebankModel: primaryTimebank,
-                    ),
-                    TimeBankAboutView.of(
-                      timebankModel: primaryTimebank,
-                      email: SevaCore.of(context).loggedInUser.email,
-                    ),
-                    TimebankRequestAdminPage(
-                      isUserAdmin: primaryTimebank.admins.contains(
-                        SevaCore.of(context).loggedInUser.sevaUserID,
-                      ),
-                      timebankId: primaryTimebank.id,
-                      userEmail: SevaCore.of(context).loggedInUser.email,
-                    ),
-                  ],
+                  },
                 );
-              }),
-        ),
+
+                if (primaryTimebank != null &&
+                    primaryTimebank.admins.contains(
+                        SevaCore.of(context).loggedInUser.sevaUserID) &&
+                    tabs.length == 6) {
+                  isAdmin = true;
+                  _timebankController = TabController(length: 8, vsync: this);
+                  tabs.add(Tab(text: 'Notifications'));
+                  tabs.add(Tab(text: 'Manage'));
+                }
+  }
+
+              return Column(
+                children: <Widget>[
+                  TabBar(
+                    controller: _timebankController,
+                    indicatorColor: Colors.black,
+                    labelColor: Colors.black,
+                    isScrollable: true,
+                    tabs: tabs,
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _timebankController,
+                      children: <Widget>[
+                        TimebankHomePage(
+                          selectedCommuntityGroup: snapshot.data,
+                        ),
+                        DiscussionList(
+                          timebankId: primaryTimebank.id,
+                        ),
+                        // TimebankFeeds(),
+                        RequestsModule.of(
+                          timebankId: primaryTimebank.id,
+                          timebankModel: primaryTimebank,
+                        ),
+                        OffersModule.of(
+                          timebankId: primaryTimebank.id,
+                          timebankModel: primaryTimebank,
+                        ),
+                        TimeBankAboutView.of(
+                          timebankModel: primaryTimebank,
+                          email: SevaCore.of(context).loggedInUser.email,
+                        ),
+                        TimebankRequestAdminPage(
+                          isUserAdmin: primaryTimebank.admins.contains(
+                            SevaCore.of(context).loggedInUser.sevaUserID,
+                          ),
+                          timebankId: primaryTimebank.id,
+                          userEmail: SevaCore.of(context).loggedInUser.email,
+                        ),
+                        ...isAdmin
+                            ? [
+                                TimeBankNotificationView(
+                                  timebankId: primaryTimebank.id,
+                                ),
+                                ManageTimebankSeva.of(
+                                  timebankModel: primaryTimebank,
+                                ),
+                              ]
+                            : []
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
       ),
     );
   }

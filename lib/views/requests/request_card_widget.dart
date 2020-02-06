@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -14,6 +15,7 @@ class RequestCardWidget extends StatelessWidget {
   final bool isFavorite;
   final String reqStatus;
   final bool isAdmin;
+  final Function refresh;
 
   const RequestCardWidget({
     @required this.userModel,
@@ -22,6 +24,7 @@ class RequestCardWidget extends StatelessWidget {
     @required this.isFavorite,
     @required this.isAdmin,
     @required this.reqStatus,
+    this.refresh,
   });
 
   @override
@@ -50,7 +53,7 @@ class RequestCardWidget extends StatelessWidget {
         shape: BoxShape.circle,
         image: DecorationImage(
           fit: BoxFit.fill,
-          image: NetworkImage(
+          image: CachedNetworkImageProvider(
             userModel.photoURL,
           ),
         ),
@@ -130,6 +133,7 @@ class RequestCardWidget extends StatelessWidget {
                               SevaCore.of(context).loggedInUser.sevaUserID,
                         );
                       }
+                      refresh();
                     },
                   ),
                 ],
@@ -263,10 +267,7 @@ class RequestCardWidget extends StatelessWidget {
   }
 
   Future<void> removeFromFavoriteList(
-      {bool isAdmin,
-      String email,
-      String timeBankId,
-      String loggedInUserId}) async {
+      {String email, String timeBankId, String loggedInUserId}) async {
     await Firestore.instance.collection('users').document(email).updateData({
       isAdmin ? 'favoriteByTimeBank' : 'favoriteByMember':
           FieldValue.arrayRemove(

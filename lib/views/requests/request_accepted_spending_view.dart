@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
+    as RequestNotificationManager;
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
+    as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -22,7 +27,7 @@ class RequestAcceptedSpendingView extends StatefulWidget {
 
   @override
   _RequestAcceptedSpendingState createState() =>
-      _RequestAcceptedSpendingState();
+      _RequestAcceptedSpendingState(requestModel);
 }
 
 class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
@@ -30,13 +35,25 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   bool noTransactionAvailable = false;
   List<Widget> _pendingAvtars = [];
   List<NotificationsModel> pendingRequests = [];
-  bool shouldReload = true;
+  RequestModel requestModel;
+//  bool shouldReload = true;
   bool isProgressBarActive = false;
   bool isRemoving = false;
+
+  _RequestAcceptedSpendingState(RequestModel _requestModel) {
+    requestModel = _requestModel;
+  }
 
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration.zero, () {
+      RequestManager.getRequestStreamById(requestId: requestModel.id)
+          .listen((_requestModel) {
+        requestModel = _requestModel;
+        reset();
+      });
+    });
   }
 
   @override
@@ -51,9 +68,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
         content: LinearProgressIndicator(),
       );
-    }
-    if (shouldReload) {
-      _updatePendingAvtarWidgets();
     }
     return Scaffold(
       body: listItems,
@@ -76,39 +90,38 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   void reset() {
     _avtars = [];
     _pendingAvtars = [];
-    pendingRequests = [];
-    shouldReload = true;
     noTransactionAvailable = false;
-//    setState(() {
-//      isProgressBarActive = false;
-//    });
+    _updatePendingAvtarWidgets();
+    setState(() {
+      isProgressBarActive = false;
+    });
   }
 
   Future _updatePendingAvtarWidgets() async {
-    shouldReload = false;
-    var notifications = await FirestoreManager.getCompletedNotifications(
-        SevaCore.of(context).loggedInUser.email,
-        SevaCore.of(context).loggedInUser.currentCommunity);
-    pendingRequests = [];
-    _pendingAvtars = [];
-    for (var i = 0; i < notifications.length; i++) {
-      if (notifications[i].type == NotificationType.RequestCompleted) {
-        pendingRequests.add(notifications[i]);
-      }
-    }
-    _pendingAvtars = [];
-    for (int i = 0; i < pendingRequests.length; i++) {
-      NotificationsModel notification = pendingRequests[i];
-      RequestModel model = RequestModel.fromMap(notification.data);
-      Widget item = await getNotificationRequestCompletedWidget(
-        model,
-        notification.senderUserId,
-        notification.id,
-      );
-      _pendingAvtars.add(item);
-    }
+//    shouldReload = false;
+//    var notifications = await FirestoreManager.getCompletedNotifications(
+//        SevaCore.of(context).loggedInUser.email,
+//        SevaCore.of(context).loggedInUser.currentCommunity);
+//    pendingRequests = [];
+//    _pendingAvtars = [];
+//    for (var i = 0; i < notifications.length; i++) {
+//      if (notifications[i].type == NotificationType.RequestCompleted) {
+//        pendingRequests.add(notifications[i]);
+//      }
+//    }
+//    _pendingAvtars = [];
+//    for (int i = 0; i < pendingRequests.length; i++) {
+//      NotificationsModel notification = pendingRequests[i];
+//      RequestModel model = RequestModel.fromMap(notification.data);
+//      Widget item = await getNotificationRequestCompletedWidget(
+//        model,
+//        notification.senderUserId,
+//        notification.id,
+//      );
+//      _pendingAvtars.add(item);
+//    }
     await getUserModel();
-    setState(() {});
+//    setState(() {});
   }
 
   Widget completedRequestWidget(RequestModel model) {
@@ -179,22 +192,32 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     var totalCredits = 0.0;
     _avtars = [];
     List<Widget> _localAvtars = [];
-    if (widget.requestModel.transactions != null) {
-      for (var i = 0; i < widget.requestModel.transactions.length; i++) {
-        var transaction = widget.requestModel.transactions[i];
+    if (requestModel.transactions != null) {
+      for (var i = 0; i < requestModel.transactions.length; i++) {
+        var transaction = requestModel.transactions[i];
         if (transaction != null && transaction.to != null) {
+          Widget item = Offstage();
           var _userModel = await getUserForId(sevaUserId: transaction.to);
-          totalCredits = totalCredits + transaction.credits;
-          print("All transactions:$transaction");
-          Widget item = getSpendingResultView(
-            context,
-            _userModel,
-            transaction,
-          );
+          if (transaction.isApproved) {
+            totalCredits = totalCredits + transaction.credits;
+            item = getCompletedResultView(
+              context,
+              _userModel,
+              transaction,
+            );
+          } else {
+//            totalCredits = totalCredits + transaction.credits;
+            item = getPendingResultView(
+              context,
+              _userModel,
+              transaction,
+            );
+          }
           _localAvtars.add(item);
         }
       }
     }
+    totalCredits = num.parse(totalCredits.toStringAsFixed(2));
     _avtars.add(getTotalSpending("$totalCredits"));
     _avtars.addAll(_pendingAvtars);
     _avtars.addAll(_localAvtars);
@@ -252,9 +275,17 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-  Widget getSpendingResultView(BuildContext parentContext, UserModel usermodel,
+  String formattedDate(UserModel user) {
+    return DateFormat('MMMM dd, yyyy @ h:mm a').format(
+      getDateTimeAccToUserTimezone(
+          dateTime: DateTime.fromMillisecondsSinceEpoch(
+              widget.requestModel.postTimestamp),
+          timezoneAbb: user.timezone),
+    );
+  }
+
+  Widget getCompletedResultView(BuildContext parentContext, UserModel usermodel,
       TransactionModel transactionModel) {
-    print("Context bcsvdygdsjbd:$parentContext");
     return Container(
       child: Card(
         elevation: 1,
@@ -285,11 +316,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       style: Theme.of(parentContext).textTheme.subhead,
                     ),
                     Text(
-                      DateFormat('MMMM dd, yyyy @ h:mm a').format(
-                        getDateTimeAccToUserTimezone(
-                            dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                widget.requestModel.postTimestamp),
-                            timezoneAbb: usermodel.timezone),
+                      formattedDate(
+                        usermodel,
                       ),
                       style:
                           TextStyle(color: Colors.grey, fontFamily: 'Europa'),
@@ -325,18 +353,99 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
+  Widget getPendingResultView(BuildContext parentContext, UserModel user,
+      TransactionModel transactionModel) {
+    if (user == null || user.sevaUserID == null) return Offstage();
+    return Slidable(
+        delegate: SlidableBehindDelegate(),
+        actions: <Widget>[],
+        secondaryActions: <Widget>[],
+        child: GestureDetector(
+          onTap: () async {
+            setState(() {
+              isProgressBarActive = true;
+            });
+            var notificationId =
+                await RequestNotificationManager.getNotificationId(
+                    user, requestModel);
+
+            setState(() {
+              isProgressBarActive = false;
+            });
+            showMemberClaimConfirmation(
+                context: context,
+                notificationId: notificationId,
+                requestModel: requestModel,
+                userId: user.sevaUserID,
+                userModel: user,
+                credits: transactionModel.credits);
+          },
+          child: Container(
+            margin: notificationPadding,
+            decoration: notificationDecoration,
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(user.photoURL),
+              ),
+              title: Text(user.fullname),
+              subtitle: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: formattedDate(
+                        user,
+                      ),
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              trailing: Container(
+                height: 40,
+                padding: EdgeInsets.only(bottom: 10),
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: Colors.indigo,
+                  textColor: Colors.white,
+                  elevation: 5,
+                  onPressed: () async {
+                    var notificationId =
+                        await RequestNotificationManager.getNotificationId(
+                            user, requestModel);
+                    showMemberClaimConfirmation(
+                        context: context,
+                        notificationId: notificationId,
+                        requestModel: requestModel,
+                        userId: user.sevaUserID,
+                        userModel: user,
+                        credits: transactionModel.credits);
+                  },
+                  child: Text('Pending', style: TextStyle(fontSize: 12)),
+                ),
+              ),
+            ),
+          ),
+        ));
+  }
+
   Future<Widget> getNotificationRequestCompletedWidget(
     RequestModel model,
     String userId,
     String notificationId,
   ) async {
+    TransactionModel transactionModel = null;
+    for (int i = 0; i < model.transactions.length; i++) {
+      if (model.transactions[i].to == userId) {
+        transactionModel = model.transactions[i];
+      }
+    }
+    if (transactionModel == null) {
+      return Offstage();
+    }
     UserModel user = await FirestoreManager.getUserForId(sevaUserId: userId);
     if (user == null || user.sevaUserID == null) return Offstage();
-    TransactionModel transactionModel =
-        model.transactions?.firstWhere((transaction) {
-      return transaction.to == userId;
-    });
-
     return Slidable(
         delegate: SlidableBehindDelegate(),
         actions: <Widget>[],
@@ -392,13 +501,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         ));
   }
 
-  void showMemberClaimConfirmation(
+  Future<Widget> showMemberClaimConfirmation(
       {BuildContext context,
       UserModel userModel,
       RequestModel requestModel,
       String notificationId,
       String userId,
-      double credits}) {
+      num credits}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -444,16 +553,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   getBio(userModel),
                   Padding(
                       padding: EdgeInsets.all(8.0),
@@ -487,11 +586,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             isProgressBarActive = true;
                           });
                           await rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                            context: context,
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            userId: userId,
+                            credits: credits,
+                          );
                         },
                       ),
                       Padding(
@@ -510,11 +611,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             isRemoving = false;
                           });
                           approveMemberClaim(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                            context: context,
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            userId: userId,
+                            credits: credits,
+                          );
                         },
                       ),
                     ],
@@ -531,7 +634,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       String userId,
       BuildContext context,
       UserModel user,
-      String notificationId}) async {
+      String notificationId,
+      num credits}) async {
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -547,14 +651,26 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     // creating chat
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     List users = [user.email, loggedInEmail];
-//    users.sort();
+    users.sort();
     ChatModel chatModel = ChatModel();
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
 
+    var claimedRequestStatus = ClaimedRequestStatusModel(
+      isAccepted: false,
+      adminEmail: SevaCore.of(context).loggedInUser.email,
+      requesterEmail: user.email,
+      id: model.id,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      credits: credits,
+    );
+    await FirestoreManager.saveRequestFinalAction(
+      model: claimedRequestStatus,
+    );
     await createChat(
-        chat: chatModel,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity);
+      chat: chatModel,
+//        communityId: SevaCore.of(context).loggedInUser.currentCommunity
+    );
 
     setState(() {
       isProgressBarActive = false;
@@ -571,7 +687,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
               )),
     );
 
-    await FirestoreManager.readNotification(
+    await FirestoreManager.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
   }
 
@@ -601,21 +717,23 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-  Future approveMemberClaim({
-    String userId,
-    UserModel user,
-    BuildContext context,
-    RequestModel model,
-    String notificationId,
-  }) async {
+  Future approveMemberClaim(
+      {String userId,
+      UserModel user,
+      BuildContext context,
+      RequestModel model,
+      String notificationId,
+      num credits}) async {
     //request for feedback;
     await checkForFeedback(
-        userId: userId,
-        user: user,
-        context: context,
-        model: model,
-        notificationId: notificationId,
-        sevaCore: SevaCore.of(context));
+      userId: userId,
+      user: user,
+      context: context,
+      model: model,
+      notificationId: notificationId,
+      sevaCore: SevaCore.of(context),
+      credits: credits,
+    );
   }
 
   Future checkForFeedback(
@@ -624,7 +742,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       RequestModel model,
       String notificationId,
       BuildContext context,
-      SevaCore sevaCore}) async {
+      SevaCore sevaCore,
+      num credits}) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
         return ReviewFeedback.forVolunteer(
@@ -644,11 +763,32 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         reviewed: user.email,
         requestId: model.id,
         results: results,
+        credits: credits,
       );
     } else {}
   }
 
-  void onActivityResult(
+  Future updateUserData(String reviewerEmail, String reviewedEmail) async {
+    var user2 =
+        await FirestoreManager.getUserForEmail(emailAddress: reviewedEmail);
+    var user1 =
+        await FirestoreManager.getUserForEmail(emailAddress: reviewerEmail);
+    if (user1.pastHires == null) {
+      user1.pastHires = List<String>();
+    }
+    var hired = user2.sevaUserID.trim();
+    if (!user1.pastHires.contains(hired)) {
+      var reportedUsersList = List<String>();
+      for (var i = 0; i < user1.pastHires.length; i++) {
+        reportedUsersList.add(user1.pastHires[i]);
+      }
+      reportedUsersList.add(hired);
+      user1.pastHires = reportedUsersList;
+      await FirestoreManager.updateUser(user: user1);
+    }
+  }
+
+  Future onActivityResult(
       {SevaCore sevaCore,
       RequestModel requestModel,
       String userId,
@@ -657,16 +797,29 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       Map results,
       String reviewer,
       String reviewed,
-      String requestId}) {
+      String requestId,
+      UserModel user,
+      num credits}) async {
     // adds review to firestore
-    Firestore.instance.collection("reviews").add({
+    await Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],
       "requestId": requestId,
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
-    approveTransaction(requestModel, userId, notificationId, sevaCore);
+    await updateUserData(reviewer, reviewed);
+    var claimedRequestStatus = ClaimedRequestStatusModel(
+        isAccepted: true,
+        adminEmail: sevaCore.loggedInUser.email,
+        requesterEmail: reviewed,
+        id: requestId,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        credits: credits);
+    await FirestoreManager.saveRequestFinalAction(
+      model: claimedRequestStatus,
+    );
+    await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
   Future approveTransaction(RequestModel model, String userId,
@@ -692,7 +845,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    await FirestoreManager.readNotification(
+    await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
     setState(() {
       isProgressBarActive = false;

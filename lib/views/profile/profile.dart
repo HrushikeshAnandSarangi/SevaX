@@ -374,6 +374,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 builder: (context) {
                                   return FindCommunitiesView(
                                     keepOnBackPress: true,
+                                    loggedInUser: user,
                                   );
                                 },
                               ),

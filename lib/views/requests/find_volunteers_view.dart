@@ -32,7 +32,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
 
   final searchOnChange = new BehaviorSubject<String>();
   var validItems = List<String>();
-  List<UserModel> users = [];
 
   @override
   void initState() {
@@ -148,7 +147,6 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                 validItems,
                 widget.requestModel.id,
                 timebankModel.model,
-                users,
                 widget.sevaUserId),
           ),
         ],
@@ -164,16 +162,9 @@ class UserResultViewElastic extends StatefulWidget {
   final String requestModelId;
   final String sevaUserId;
   final TimebankModel timebankModel;
-  final List<UserModel> favoriteUsers;
 
-  UserResultViewElastic(
-      this.controller,
-      this.timebankId,
-      this.validItems,
-      this.requestModelId,
-      this.timebankModel,
-      this.favoriteUsers,
-      this.sevaUserId);
+  UserResultViewElastic(this.controller, this.timebankId, this.validItems,
+      this.requestModelId, this.timebankModel, this.sevaUserId);
 
   @override
   _UserResultViewElasticState createState() {
@@ -191,20 +182,21 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
 
   bool isAdmin = false;
   RequestModel requestModel;
-  bool isBookMarked = false;
+
   @override
   void initState() {
     super.initState();
-
     if (widget.timebankModel.admins.contains(widget.sevaUserId)) {
       isAdmin = true;
     }
+
     _firestore
         .collection('requests')
         .document(widget.requestModelId)
         .snapshots()
         .listen((reqModel) {
       requestModel = RequestModel.fromMap(reqModel.data);
+
       setState(() {});
     });
   }
@@ -216,6 +208,10 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       return Container();
     }
 
+    return buildWidget();
+  }
+
+  Widget buildWidget() {
     if (widget.controller.text.trim().isEmpty) {
       return Center(
         child: ClipOval(
@@ -247,6 +243,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         }
 
         List<UserModel> userList = snapshot.data;
+
         if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
         }
@@ -254,25 +251,17 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           itemCount: userList.length,
           itemBuilder: (context, index) {
             UserModel user = userList[index];
-            List timeBankIds = user.favoriteByTimeBank ?? [];
-            List memberId = user.favoriteByMember ?? [];
-
-            print(
-                "${user.email} " + " timebank id  ${user.favoriteByTimeBank}");
-
-            if (timeBankIds.contains(widget.timebankModel.id)) {
-              print("true  ${widget.timebankModel.id}");
-            } else {
-              print("false  ${widget.timebankModel.id}");
-            }
-//            print("fav mem  ${user.favoriteByMember} " +
-//                'fav tb ${user.favoriteByTimebank}');
+            // List<String> timeBankIds = user.favoriteByTimeBank ?? [];
+            List<String> timeBankIds =
+                snapshot.data[index].favoriteByTimeBank ?? [];
+            List<String> memberId = user.favoriteByMember ?? [];
 
             return RequestCardWidget(
               userModel: user,
               requestModel: requestModel,
               timebankModel: widget.timebankModel,
               isAdmin: isAdmin,
+              refresh: refresh,
               isFavorite: isAdmin
                   ? timeBankIds.contains(widget.timebankModel.id)
                   : memberId.contains(widget.sevaUserId),
@@ -286,6 +275,12 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         );
       },
     );
+  }
+
+  refresh() {
+    setState(() {
+      buildWidget();
+    });
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {

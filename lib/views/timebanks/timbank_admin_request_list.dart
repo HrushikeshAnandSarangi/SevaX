@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -21,7 +22,7 @@ import 'edit_super_admins_view.dart';
 class TimebankRequestAdminPage extends StatefulWidget {
   final String timebankId;
   final String userEmail;
-  final bool isUserAdmin;
+  bool isUserAdmin;
   var listOfMembers = HashMap<String, UserModel>();
 
   TimebankRequestAdminPage(
@@ -51,6 +52,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   var _adminEmails = List<String>();
   var isProgressBarActive = false;
   var debounceValue = Debouncer(milliseconds: 500);
+  var isUserAdmin = false;
 
   HashMap<String, int> emailIndexMap = HashMap();
   HashMap<int, UserModel> indexToModelMap = HashMap();
@@ -61,7 +63,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   @override
   void initState() {
-    print("----> ${widget.timebankId} | ${widget.isUserAdmin} | ${widget.userEmail}");
+    print("----> ${widget.timebankId} | ${isUserAdmin} | ${widget.userEmail}");
     _listController = ScrollController();
     _pageScrollController = ScrollController();
     _pageScrollController.addListener(_scrollListener);
@@ -84,6 +86,23 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
         loadNextMembers();
       }
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    FirestoreManager.getTimebankModelStream(
+      timebankId: widget.timebankId,
+    ).listen((_timebankModel) {
+      bool status = _timebankModel.admins
+          .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+      if (status != isUserAdmin) {
+        isUserAdmin = status;
+        setState(() {
+          resetAndLoad();
+        });
+      }
+    });
   }
 
   @override
@@ -235,7 +254,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
   Future loadItems() async {
     if (adminsNotLoaded) {
       adminsNotLoaded = false;
-      if (widget.isUserAdmin) {
+      if (isUserAdmin) {
         var newList =
             await getFutureTimebankJoinRequest(timebankID: widget.timebankId);
         if (newList != null && newList.length > 0) {
@@ -258,9 +277,9 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
       if (modelItemList[i].operationTaken) {
         continue;
       }
-      var userWidget = FutureBuilder<UserModel>(
-        future:
-            FirestoreManager.getUserForId(sevaUserId: modelItemList[i].userId),
+      var userWidget = StreamBuilder<UserModel>(
+        stream: FirestoreManager.getUserForIdStream(
+            sevaUserId: modelItemList[i].userId),
         builder: (context, snapshot) {
           var requestModelItem = modelItemList[i];
           if (snapshot.hasError) return Text(snapshot.error.toString());
@@ -316,7 +335,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                 ],
               ),
             ),
-            widget.isUserAdmin
+            isUserAdmin
                 ? Row(
                     children: <Widget>[
                       Padding(
@@ -336,6 +355,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
                             joinRequestModel.accepted = true;
                             await createJoinRequest(model: joinRequestModel);
                             await _updateTimebank(timebankModel, admins: null);
+                            await _updatecommunity(timebankModel.communityId,
+                                joinRequestModel.userId, user);
                           },
                         ),
                       ),
@@ -550,7 +571,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 //    print("user.sevaUserID:${user.sevaUserID}");
 
     return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-            !widget.isUserAdmin
+            !isUserAdmin
         ? Offstage()
         : Row(
             children: <Widget>[
@@ -626,7 +647,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
-      if (widget.isUserAdmin) {
+      if (isUserAdmin) {
         var gesture = GestureDetector(
           child: Row(
             children: <Widget>[
@@ -906,9 +927,27 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
     if (members != null) {
       model.members = members;
     }
-    await FirestoreManager.updateTimebank(timebankModel: model).then((onValue) {
-      resetAndLoad();
+    await FirestoreManager.updateTimebank(timebankModel: model)
+        .then((onValue) {});
+  }
+
+  Future _updatecommunity(
+      String communityId, String userId, UserModel user) async {
+    await Firestore.instance
+        .collection("communities")
+        .document(communityId)
+        .updateData({
+      'members': FieldValue.arrayUnion([userId])
     });
+
+    await Firestore.instance
+        .collection("users")
+        .document(user.email)
+        .updateData({
+      'communities': FieldValue.arrayUnion([communityId]),
+    });
+
+    resetAndLoad();
   }
 }
 

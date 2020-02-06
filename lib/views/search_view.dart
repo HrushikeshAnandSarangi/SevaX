@@ -4,10 +4,11 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
-import 'package:sevaexchange/views/exchange/help.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 
 import 'core.dart';
 

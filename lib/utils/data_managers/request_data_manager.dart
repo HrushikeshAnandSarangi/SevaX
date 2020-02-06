@@ -157,6 +157,7 @@ Future<void> sendOfferRequest({
   @required String communityId,
 }) async {
   NotificationsModel model = NotificationsModel(
+    timebankId: offerModel.timebankId,
       targetUserId: offerModel.sevaUserId,
       data: offerModel.toMap(),
       type: NotificationType.OfferAccept,
@@ -172,6 +173,7 @@ Future<void> sendOfferRequest({
 Future<void> acceptRequest({
   @required RequestModel requestModel,
   @required String senderUserId,
+  
   bool isWithdrawal = false,
   bool fromOffer = false,
   @required String communityId,
@@ -185,6 +187,7 @@ Future<void> acceptRequest({
 
   if (!fromOffer) {
     NotificationsModel model = NotificationsModel(
+      timebankId: requestModel.timebankId,
       targetUserId: requestModel.sevaUserId,
       data: requestModel.toMap(),
       type: NotificationType.RequestAccept,
@@ -227,6 +230,7 @@ Future<void> rejectRequestCompletion({
       .setData(model.toMap(), merge: true);
 
   NotificationsModel notification = NotificationsModel(
+    timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: userId,
     senderUserId: model.sevaUserId,
@@ -250,6 +254,7 @@ Future<void> approveRequestCompletion({
   UserModel user = await utils.getUserForId(sevaUserId: userId);
 
   NotificationsModel notification = NotificationsModel(
+    timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: userId,
     senderUserId: model.sevaUserId,
@@ -268,6 +273,7 @@ Future<void> approveRequestCompletion({
             {'currentBalance': FieldValue.increment(-(transactionvalue))});
 
     NotificationsModel debitnotification = NotificationsModel(
+      timebankId: model.timebankId,
       id: utils.Utils.getUuid(),
       targetUserId: model.sevaUserId,
       senderUserId: userId,
@@ -293,6 +299,7 @@ Future<void> approveRequestCompletion({
       .document(user.email)
       .updateData({'currentBalance': FieldValue.increment(transactionvalue)});
   NotificationsModel creditnotification = NotificationsModel(
+    timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: userId,
     senderUserId: model.sevaUserId,
@@ -327,6 +334,7 @@ Future<void> approveAcceptRequest({
       .updateData(requestModel.toMap());
 
   NotificationsModel model = NotificationsModel(
+    timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: approvedUserId,
     communityId: communityId,
@@ -354,6 +362,7 @@ Future<void> rejectAcceptRequest({
       .updateData(requestModel.toMap());
 
   NotificationsModel model = NotificationsModel(
+    timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: rejectedUserId,
     senderUserId: requestModel.sevaUserId,
@@ -496,15 +505,19 @@ Stream<List<RequestModel>> getCompletedRequestStream({
         List<RequestModel> requestList = [];
         snapshot.documents.forEach((document) {
           RequestModel model = RequestModel.fromMap(document.data);
+
           model.id = document.documentID;
           bool isRequestCompleted = false;
+
           model.transactions?.forEach((transaction) {
             if (transaction.isApproved && transaction.to == userId)
               isRequestCompleted = true;
           });
+
           if (isRequestCompleted) requestList.add(model);
         });
         requestSink.add(requestList);
+        //  print("request model --- ${requestList.toString()}");
       },
     ),
   );

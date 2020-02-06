@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/base/base_service.dart';
-
 import 'package:sevaexchange/models/timebank_model.dart';
 
 class TimebanksService extends BaseService {
@@ -51,8 +51,7 @@ class TimebanksService extends BaseService {
           List<TimebankModel> modelList = [];
           snapshot.documents.forEach(
             (documentSnapshot) {
-              TimebankModel model =
-                  TimebankModel(documentSnapshot.data);
+              TimebankModel model = TimebankModel(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
               modelList.add(model);
             },

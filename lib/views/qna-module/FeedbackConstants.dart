@@ -48,7 +48,7 @@ class FeedbackConstants {
     {
       FEEDBACK_TITLE: "Did the volunteer show up on time?",
       ANSWERS: [
-        {ANSWER_TEXT: "On time", SCORE: 5},
+        {ANSWER_TEXT: "On time", SCORE: 3},
         {ANSWER_TEXT: "A bit late", SCORE: 4},
         {ANSWER_TEXT: "Kept me waiting", SCORE: 3},
         {ANSWER_TEXT: "Didn't show up", SCORE: 2}
@@ -58,7 +58,7 @@ class FeedbackConstants {
       FEEDBACK_TITLE:
           "Would you like to recommend working with this volunteer again?",
       "answers": [
-        {ANSWER_TEXT: "Yes, I would", SCORE: 5},
+        {ANSWER_TEXT: "Yes, I would", SCORE: 3},
         {ANSWER_TEXT: "No, i would not", SCORE: 2},
       ]
     },
@@ -66,7 +66,7 @@ class FeedbackConstants {
       FEEDBACK_TITLE:
           "How skillful was this volunteer for this particular service?",
       "answers": [
-        {ANSWER_TEXT: "Highly skilled", SCORE: 5},
+        {ANSWER_TEXT: "Highly skilled", SCORE: 3},
         {ANSWER_TEXT: "Average", SCORE: 3},
         {ANSWER_TEXT: "Not skilled at all", SCORE: 1},
       ]

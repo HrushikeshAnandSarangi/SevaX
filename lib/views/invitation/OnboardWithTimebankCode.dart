@@ -30,13 +30,13 @@ class OnBoardWithTimebank extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
 }
+
 enum CompareToTimeBank { JOINED, REQUESTED, REJECTED, JOIN }
 
 class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   // TRUE: register page, FALSE: login page
   TextEditingController controller = TextEditingController();
   TimebankModel timebankModel;
-
 
   static const String JOIN = "Join";
   static const String JOINED = "Joined";
@@ -45,7 +45,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   bool isDataLoaded = false;
 
   List<JoinRequestModel> _joinRequestModelList;
-
 
   //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
@@ -65,14 +64,14 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     createEditCommunityBloc.getCommunityPrimaryTimebank();
 
     getRequestList();
-
   }
-  void getRequestList() async {
 
-    _joinRequestModelList =
-    await getFutureUserTimeBankRequest(userID: widget.sevauserId,primaryTimebank: widget.communityModel.primary_timebank);
- //   print("sevauser id ${_joinRequestModelList[0].entityId}");
- //   print("sevauser community ${widget.communityModel.id}");
+  void getRequestList() async {
+    _joinRequestModelList = await getFutureUserTimeBankRequest(
+        userID: widget.sevauserId,
+        primaryTimebank: widget.communityModel.primary_timebank);
+    //   print("sevauser id ${_joinRequestModelList[0].entityId}");
+    //   print("sevauser community ${widget.communityModel.id}");
 
     isDataLoaded = true;
 
@@ -81,39 +80,32 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
   @override
   Widget build(BuildContext context) {
-    return isDataLoaded ?
-    Scaffold(
-      key: _scaffold,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          'Join Timebank',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 18,
-            // fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Container(child: timebankStreamBuilder(context)),
-      ),
-    )
-
-        :Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-
-
-
-
+    return isDataLoaded
+        ? Scaffold(
+            key: _scaffold,
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(
+                'Join Timebank',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  // fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            body: SingleChildScrollView(
+              child: Container(child: timebankStreamBuilder(context)),
+            ),
+          )
+        : Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
   }
 
-
   Widget timebankStreamBuilder(context) {
-
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
@@ -127,7 +119,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   child: Center(child: CircularProgressIndicator()));
             } else {
               return timebankStreamBuilderJoin(
-                  communityCreateEditSnapshot.data,context);
+                  communityCreateEditSnapshot.data, context);
             }
           } else if (communityCreateEditSnapshot.hasError) {
             return Text(communityCreateEditSnapshot.error.toString());
@@ -137,13 +129,15 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   }
 
   Widget timebankStreamBuilderJoin(
-      CommunityCreateEditController communityCreateEditSnapshot, BuildContext context) {
+      CommunityCreateEditController communityCreateEditSnapshot,
+      BuildContext context) {
     this.timebankModel = communityCreateEditSnapshot.timebank;
     // globals.timebankAvatarURL = timebankModel.photoUrl;
     CompareToTimeBank requestStatus;
-    requestStatus=compareTimeBanks(_joinRequestModelList, timebankModel,SevaCore.of(context).loggedInUser.sevaUserID);
+    requestStatus = compareTimeBanks(_joinRequestModelList, timebankModel,
+        SevaCore.of(context).loggedInUser.sevaUserID);
 
-    return  Container(
+    return Container(
       height: MediaQuery.of(context).size.height - 90,
       child: Column(
         //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,45 +216,44 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ),
                 ],
               ),
-               requestStatus == CompareToTimeBank.JOIN ?
-               Column(
-                 children: <Widget>[
-                   Text(
-                    'If you dont have a code, Click',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              FlatButton(
-                    child: Text(
-                      'Request Invite',
+              requestStatus == CompareToTimeBank.JOIN
+                  ? Column(
+                      children: <Widget>[
+                        Text(
+                          'If you dont have a code, Click',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        FlatButton(
+                          child: Text(
+                            'Request Invite',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              fontSize: 17,
+                            ),
+                          ),
+                          onPressed: () {
+                            myDialog(context, communityCreateEditSnapshot);
+                          },
+                        ),
+                      ],
+                    )
+                  : Text(
+                      'You already requested to this TimeBank. Please wait untill request is accepted',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                        fontSize: 17,
+                        color: Colors.black54,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onPressed: () {
-                        myDialog(context,communityCreateEditSnapshot);
-
-                    },
-              ),
-                 ],
-               )
-                   :Text(
-    'You already requested to this TimeBank. Please wait untill request is accepted',
-    textAlign: TextAlign.center,
-    style: TextStyle(
-    color: Colors.black54,
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-    ),
-    ),
             ],
           ),
           Spacer(
@@ -325,7 +318,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       ),
     );
   }
-  Future<AlertDialog> myDialog(BuildContext context, CommunityCreateEditController communityCreateEditSnapshot) {
+
+  Future<AlertDialog> myDialog(BuildContext context,
+      CommunityCreateEditController communityCreateEditSnapshot) {
     showDialog<AlertDialog>(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -371,7 +366,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 ),
               ),
               onPressed: () {
-                Navigator.of(dialogContext,rootNavigator: true).pop();
+                Navigator.of(dialogContext, rootNavigator: true).pop();
               },
             ),
             // usually buttons at the bottom of the dialog
@@ -390,8 +385,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
                 print("Timebank Model $timebankModel");
                 joinRequestModel.userId =
-                    communityCreateEditSnapshot
-                        .loggedinuser.sevaUserID;
+                    communityCreateEditSnapshot.loggedinuser.sevaUserID;
                 joinRequestModel.timestamp =
                     DateTime.now().millisecondsSinceEpoch;
 
@@ -400,29 +394,27 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 joinRequestModel.accepted = false;
 
                 if (formkey.currentState.validate()) {
-                  await createJoinRequest(
-                      model: joinRequestModel);
+                  await createJoinRequest(model: joinRequestModel);
 
                   JoinRequestNotificationModel joinReqModel =
-                  JoinRequestNotificationModel(
-                      timebankId: timebankModel.id,
-                      timebankTitle: timebankModel.name);
-                  NotificationsModel notification =
-                  NotificationsModel(
+                      JoinRequestNotificationModel(
+                          timebankId: timebankModel.id,
+                          timebankTitle: timebankModel.name);
+                  NotificationsModel notification = NotificationsModel(
+                    timebankId: timebankModel.id,
                     id: utils.Utils.getUuid(),
                     targetUserId: timebankModel.creatorId,
-                    senderUserId: communityCreateEditSnapshot
-                        .loggedinuser.sevaUserID,
+                    senderUserId:
+                        communityCreateEditSnapshot.loggedinuser.sevaUserID,
                     type: prefix0.NotificationType.JoinRequest,
                     data: joinReqModel.toMap(),
                   );
 
-                  notification.timebankId =
-                      FlavorConfig.values.timebankId;
+                  notification.timebankId = FlavorConfig.values.timebankId;
 
                   UserModel timebankCreator =
-                  await FirestoreManager.getUserForId(
-                      sevaUserId: timebankModel.creatorId);
+                      await FirestoreManager.getUserForId(
+                          sevaUserId: timebankModel.creatorId);
 
                   await Firestore.instance
                       .collection('users')
@@ -431,8 +423,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       .document(notification.id)
                       .setData(notification.toMap());
 
-
-                  if(dialogLoadingContext != null){
+                  if (dialogLoadingContext != null) {
                     Navigator.pop(dialogLoadingContext);
                   }
                   Navigator.of(context).pop();
@@ -446,6 +437,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       },
     );
   }
+
   void _checkFields() {
     if (controller.text.length == 6) {
       var response;
@@ -584,8 +576,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     );
   }
 
-  CompareToTimeBank compareTimeBanks(
-      List<JoinRequestModel> joinRequestModels, TimebankModel timeBank,String sevaUserId) {
+  CompareToTimeBank compareTimeBanks(List<JoinRequestModel> joinRequestModels,
+      TimebankModel timeBank, String sevaUserId) {
     // CompareToTimeBank status;
     print("inside compareTimeBanks " + joinRequestModels.length.toString());
     for (int i = 0; i < joinRequestModels.length; i++) {
@@ -605,17 +597,13 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         return CompareToTimeBank.JOINED;
       }*/
 
-       if (requestModel.entityId == timeBank.id &&
+      if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == false) {
         return CompareToTimeBank.REQUESTED;
-
-
       } else if (requestModel.entityId == timeBank.id &&
           requestModel.operationTaken == true &&
           requestModel.accepted == false) {
         return CompareToTimeBank.REJECTED;
-
-
       } else {
         return CompareToTimeBank.JOIN;
       }

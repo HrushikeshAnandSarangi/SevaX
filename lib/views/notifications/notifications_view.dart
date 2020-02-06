@@ -61,6 +61,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           );
         }
         return ListView.builder(
+          shrinkWrap: true,
           padding: EdgeInsets.only(bottom: 20),
           itemCount: notifications.length,
           itemBuilder: (context, index) {
@@ -214,6 +215,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 break;
               case NotificationType.OfferReject:
                 // TODO: Handle this case.
+                return Container(width: 50, height: 50, color: Colors.red);
                 break;
               case NotificationType.AcceptedOffer:
                 print("Offere accepted");
@@ -244,7 +246,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                 print("notification data ${notification.data}");
                 RequestInvitationModel requestInvitationModel =
                     RequestInvitationModel.fromMap(notification.data);
-
                 return getInvitedRequestsNotificationWidget(
                   requestInvitationModel,
                   notification.id,
@@ -254,6 +255,11 @@ class NotificationsView extends State<NotificationViewHolder> {
                 );
                 break;
             }
+            return Container(
+              color: Colors.yellow,
+              width: 50,
+              height: 30,
+            );
           },
         );
       },
@@ -277,7 +283,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               key: Key(Utils.getUuid()),
               background: dismissibleBackground,
               onDismissed: (direction) {
-                FirestoreManager.readNotification(
+                FirestoreManager.readUserNotification(
                   notificationId,
                   SevaCore.of(context).loggedInUser.email,
                 );
@@ -349,7 +355,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             key: Key(Utils.getUuid()),
             background: dismissibleBackground,
             onDismissed: (direction) {
-              FirestoreManager.readNotification(
+              FirestoreManager.readUserNotification(
                 notificationId,
                 SevaCore.of(context).loggedInUser.email,
               );
@@ -413,7 +419,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           key: Key(Utils.getUuid()),
           background: dismissibleBackground,
           onDismissed: (direction) {
-            FirestoreManager.readNotification(
+            FirestoreManager.readUserNotification(
               notificationId,
               SevaCore.of(context).loggedInUser.email,
             );
@@ -510,7 +516,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               OfferModel _offer =
                                   OfferModel.fromMap(_notification.data);
                               if (_offer.id == offermodel.id) {
-                                FirestoreManager.readNotification(
+                                FirestoreManager.readUserNotification(
                                     _notification.id, loggedinUser.email);
                               }
                             });
@@ -601,7 +607,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    FirestoreManager.readNotification(
+    FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
   }
 
@@ -743,7 +749,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         key: Key(Utils.getUuid()),
         onDismissed: (direction) {
           String userEmail = SevaCore.of(buildContext).loggedInUser.email;
-          FirestoreManager.readNotification(notificationId, userEmail);
+          FirestoreManager.readUserNotification(notificationId, userEmail);
         },
         child: GestureDetector(
           child: Container(
@@ -984,7 +990,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               )),
     );
 
-    FirestoreManager.readNotification(
+    FirestoreManager.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
   }
 
@@ -1000,7 +1006,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         key: Key(Utils.getUuid()),
         onDismissed: (direction) {
           String userEmail = SevaCore.of(context).loggedInUser.email;
-          FirestoreManager.readNotification(notificationId, userEmail);
+          FirestoreManager.readUserNotification(notificationId, userEmail);
         },
         child: GestureDetector(
           child: Container(
@@ -1036,7 +1042,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         key: Key(Utils.getUuid()),
         onDismissed: (direction) {
           String userEmail = SevaCore.of(context).loggedInUser.email;
-          FirestoreManager.readNotification(notificationId, userEmail);
+          FirestoreManager.readUserNotification(notificationId, userEmail);
         },
         child: GestureDetector(
           child: Container(
@@ -1065,7 +1071,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       key: Key(Utils.getUuid()),
       onDismissed: (direction) {
         String userEmail = SevaCore.of(context).loggedInUser.email;
-        FirestoreManager.readNotification(notificationId, userEmail);
+        FirestoreManager.readUserNotification(notificationId, userEmail);
       },
       child: Container(
         margin: notificationPadding,
@@ -1109,7 +1115,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       key: Key(Utils.getUuid()),
       onDismissed: (direction) {
         String userEmail = SevaCore.of(context).loggedInUser.email;
-        FirestoreManager.readNotification(notificationId, userEmail);
+        FirestoreManager.readUserNotification(notificationId, userEmail);
       },
       child: Container(
         margin: notificationPadding,
@@ -1166,7 +1172,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           key: Key(Utils.getUuid()),
           onDismissed: (direction) {
             String userEmail = SevaCore.of(context).loggedInUser.email;
-            FirestoreManager.readNotification(notificationId, userEmail);
+            FirestoreManager.readUserNotification(notificationId, userEmail);
           },
           child: Container(
             margin: notificationPadding,
