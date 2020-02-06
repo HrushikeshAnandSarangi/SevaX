@@ -658,6 +658,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     var claimedRequestStatus = ClaimedRequestStatusModel(
       isAccepted: false,
+      adminEmail: SevaCore.of(context).loggedInUser.email,
       requesterEmail: user.email,
       id: model.id,
       timestamp: DateTime.now().millisecondsSinceEpoch,
@@ -810,6 +811,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(
         isAccepted: true,
+        adminEmail: sevaCore.loggedInUser.email,
         requesterEmail: reviewed,
         id: requestId,
         timestamp: DateTime.now().millisecondsSinceEpoch,
