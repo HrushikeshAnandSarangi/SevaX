@@ -1,22 +1,24 @@
-import '../core.dart';
-import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/models/request_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/models/claimedRequestStatus.dart';
-import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
+    as RequestNotificationManager;
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
+    as RequestManager;
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart' as RequestManager;
-import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'  as RequestNotificationManager;
+import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:shimmer/shimmer.dart';
 
+import '../core.dart';
 
 class RequestAcceptedSpendingView extends StatefulWidget {
   final RequestModel requestModel;
