@@ -658,8 +658,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     var claimedRequestStatus = ClaimedRequestStatusModel(
       isAccepted: false,
-      requesterID: user.email,
-      requestID: model.id,
+      requesterEmail: user.email,
+      id: model.id,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       credits: credits,
     );
@@ -810,8 +810,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(
         isAccepted: true,
-        requesterID: reviewed,
-        requestID: requestId,
+        requesterEmail: reviewed,
+        id: requestId,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         credits: credits);
     await FirestoreManager.saveRequestFinalAction(

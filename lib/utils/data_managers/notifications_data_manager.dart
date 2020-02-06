@@ -231,12 +231,12 @@ Future saveRequestFinalAction({ClaimedRequestStatusModel model}) async {
   try {
     await Firestore.instance
         .collection('claimedRequestStatus')
-        .document(model.requestID)
+        .document(model.id)
         .updateData({model.timestamp.toString(): model.toMap()});
   } on Exception catch (exception) {
     await Firestore.instance
         .collection('claimedRequestStatus')
-        .document(model.requestID)
+        .document(model.id)
         .setData({model.timestamp.toString(): model.toMap()});
   }
 }
