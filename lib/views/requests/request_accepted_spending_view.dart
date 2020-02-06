@@ -1,23 +1,22 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:intl/intl.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'
-    as RequestNotificationManager;
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
-    as RequestManager;
-import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/messages/chatview.dart';
-import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
-import 'package:shimmer/shimmer.dart';
-
 import '../core.dart';
+import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/models.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/models/request_model.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/models/claimedRequestStatus.dart';
+import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart' as RequestManager;
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart'  as RequestNotificationManager;
+
 
 class RequestAcceptedSpendingView extends StatefulWidget {
   final RequestModel requestModel;
@@ -36,8 +35,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   List<NotificationsModel> pendingRequests = [];
   RequestModel requestModel;
 //  bool shouldReload = true;
-//  bool isProgressBarActive = false;
-//  bool isRemoving = false;
+  bool isProgressBarActive = false;
+  bool isRemoving = false;
 
   _RequestAcceptedSpendingState(RequestModel _requestModel) {
     requestModel = _requestModel;
@@ -51,7 +50,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
           .listen((_requestModel) {
         requestModel = _requestModel;
         reset();
-//        setState(() {});
       });
     });
   }
@@ -63,15 +61,12 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   @override
   Widget build(BuildContext context) {
-//    if (isProgressBarActive) {
-//      return AlertDialog(
-//        title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
-//        content: LinearProgressIndicator(),
-//      );
-//    }
-//    if (shouldReload) {
-//      _updatePendingAvtarWidgets();
-//    }
+    if (isProgressBarActive) {
+      return AlertDialog(
+        title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
+        content: LinearProgressIndicator(),
+      );
+    }
     return Scaffold(
       body: listItems,
     );
@@ -93,12 +88,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   void reset() {
     _avtars = [];
     _pendingAvtars = [];
-//    shouldReload = true;
     noTransactionAvailable = false;
     _updatePendingAvtarWidgets();
-//    setState(() {
-////      isProgressBarActive = false;
-//    });
+    setState(() {
+      isProgressBarActive = false;
+    });
   }
 
   Future _updatePendingAvtarWidgets() async {
@@ -399,6 +393,29 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                   ],
                 ),
               ),
+              trailing: Container(
+                height: 40,
+                padding: EdgeInsets.only(bottom: 10),
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: Colors.indigo,
+                  textColor: Colors.white,
+                  elevation: 5,
+                  onPressed: () async {
+                    var notificationId =
+                        await RequestNotificationManager.getNotificationId(
+                            user, requestModel);
+                    showMemberClaimConfirmation(
+                        context: context,
+                        notificationId: notificationId,
+                        requestModel: requestModel,
+                        userId: user.sevaUserID,
+                        userModel: user,
+                        credits: transactionModel.credits);
+                  },
+                  child: Text('Pending', style: TextStyle(fontSize: 12)),
+                ),
+              ),
             ),
           ),
         ));
@@ -565,10 +582,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         onPressed: () async {
                           // reject the claim
                           Navigator.pop(viewContext);
-//                          setState(() {
-//                            isRemoving = true;
-//                            isProgressBarActive = true;
-//                          });
+                          setState(() {
+                            isRemoving = true;
+                            isProgressBarActive = true;
+                          });
                           await rejectMemberClaimForEvent(
                               context: context,
                               model: requestModel,
@@ -588,10 +605,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         onPressed: () async {
                           // Once approved take for feeddback
                           Navigator.pop(viewContext);
-//                          setState(() {
-//                            isProgressBarActive = true;
-//                            isRemoving = false;
-//                          });
+                          setState(() {
+                            isProgressBarActive = true;
+                            isRemoving = false;
+                          });
                           approveMemberClaim(
                               context: context,
                               model: requestModel,
@@ -635,14 +652,23 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
 
+    var claimedRequestStatus = ClaimedRequestStatusModel(
+      isAccepted: false,
+      requesterID: user.email,
+      requestID: model.id,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+    );
+    await FirestoreManager.saveRequestFinalAction(
+      model: claimedRequestStatus,
+    );
     await createChat(
       chat: chatModel,
 //        communityId: SevaCore.of(context).loggedInUser.currentCommunity
     );
 
-//    setState(() {
-//      isProgressBarActive = false;
-//    });
+    setState(() {
+      isProgressBarActive = false;
+    });
     Navigator.pop(context);
 
     Navigator.push(
@@ -773,6 +799,15 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
     await updateUserData(reviewer, reviewed);
+    var claimedRequestStatus = ClaimedRequestStatusModel(
+      isAccepted: true,
+      requesterID: reviewed,
+      requestID: requestId,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+    );
+    await FirestoreManager.saveRequestFinalAction(
+      model: claimedRequestStatus,
+    );
     await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
@@ -801,9 +836,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
-//    setState(() {
-//      isProgressBarActive = false;
-//    });
+    setState(() {
+      isProgressBarActive = false;
+    });
     Navigator.pop(context);
   }
 

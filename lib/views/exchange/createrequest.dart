@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
@@ -320,16 +320,20 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'No. of approvals',
-                    hintStyle: textStyle,
-                    // labelText: 'No. of volunteers',
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) => value.isEmpty
-                      ? 'Please enter the number of volunteers needed'
-                      : null,
-                ),
+                    decoration: InputDecoration(
+                      hintText: 'No. of approvals',
+                      hintStyle: textStyle,
+                      // labelText: 'No. of volunteers',
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter the number of volunteers needed';
+                      } else {
+                        requestModel.numberOfApprovals = int.parse(value);
+                        return null;
+                      }
+                    }),
                 SizedBox(height: 20),
                 if (FlavorConfig.appFlavor != Flavor.APP)
                   addVolunteersForAdmin(),
@@ -384,8 +388,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
-    // if (location != null) {
-
     showDialog(
         barrierDismissible: false,
         context: context,
