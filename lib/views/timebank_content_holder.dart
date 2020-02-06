@@ -31,7 +31,7 @@ import 'core.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
-  final TimebankModel timebankModel;
+  TimebankModel timebankModel;
   //final UserModel loggedInUser;
 
   // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
@@ -54,7 +54,7 @@ enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
 
 class TabarView extends StatelessWidget {
   final String timebankId;
-  final TimebankModel timebankModel;
+  TimebankModel timebankModel;
 
   //final UserModel loggedInUser;
   //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
@@ -62,16 +62,33 @@ class TabarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: getUserRole(
-        determineUserRoleInAbout(
-          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-          timeBankModel: timebankModel,
-        ),
-        context,
-        timebankModel,
-        timebankId,
+    var body = StreamBuilder<TimebankModel>(
+      stream: FirestoreManager.getTimebankModelStream(
+        timebankId: timebankId,
       ),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text(snapshot.error.toString());
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        this.timebankModel = snapshot.data;
+        return getUserRole(
+          determineUserRoleInAbout(
+            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+            timeBankModel: timebankModel,
+          ),
+          context,
+          timebankModel,
+          timebankId,
+        );
+      },
+    );
+    return Scaffold(
+      body: body,
     );
   }
 }
@@ -128,32 +145,6 @@ Widget createAdminTabBar(
           timebankModel.name,
           style: TextStyle(fontSize: 18),
         ),
-        // bottom: TabBar(
-        //   labelColor: Colors.black,
-        //   indicatorColor: Colors.black,
-        //   indicatorSize: TabBarIndicatorSize.label,
-        //   isScrollable: true,
-        //   tabs: [
-        //     Tab(
-        //       text: "Discussions",
-        //     ),
-        //     Tab(
-        //       text: "Requests",
-        //     ),
-        //     Tab(
-        //       text: "Offers",
-        //     ),
-        //     Tab(
-        //       text: "About",
-        //     ),
-        //     Tab(
-        //       text: "Members",
-        //     ),
-        //     Tab(
-        //       text: "Manage",
-        //     ),
-        //   ],
-        // ),
       ),
       body: Column(
         children: <Widget>[

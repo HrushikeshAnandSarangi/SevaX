@@ -151,7 +151,6 @@ class RequestsState extends State<RequestsModule> {
                         }
                         timebankList = snapshot.data;
                         List<String> dropdownList = [];
-
                         int adminOfCount = 0;
                         if (FlavorConfig.values.timebankName == "Yang 2020") {
                           dropdownList.add("Create Yang Gang");
@@ -637,6 +636,7 @@ class NearRequestListItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (timebankId != 'All') {
+      print("ifff "+timebankId);
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -894,6 +894,7 @@ class RequestListItemsState extends State<RequestListItems> {
   @override
   Widget build(BuildContext context) {
     if (widget.timebankId != 'All') {
+      print("if");
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -911,10 +912,6 @@ class RequestListItemsState extends State<RequestListItems> {
                 stream: timeBankBloc.timebankController,
                 builder: (context, AsyncSnapshot<TimebankController> snapshot) {
                   if (snapshot.hasData) {
-                    if (snapshot.data != null &&
-                        snapshot.data.requests.length == 0) {
-                      return CircularProgressIndicator();
-                    } else {
                       List<RequestModel> requestModelList =
                           snapshot.data.requests;
                       requestModelList = filterBlockedRequestsContent(
@@ -934,7 +931,6 @@ class RequestListItemsState extends State<RequestListItems> {
                           consolidatedList: consolidatedList,
                           loggedintimezone: loggedintimezone,
                           userEmail: SevaCore.of(context).loggedInUser.email);
-                    }
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
@@ -942,6 +938,7 @@ class RequestListItemsState extends State<RequestListItems> {
                 });
           });
     } else {
+      print("else");
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -989,6 +986,7 @@ class RequestListItemsState extends State<RequestListItems> {
           });
     }
   }
+
 
   List<RequestModel> filterBlockedRequestsContent({
     List<RequestModel> requestModelList,

@@ -208,25 +208,6 @@ Future<void> acceptRequest({
         notificationsModel: model,
       );
   }
-  // if (fromOffer) {
-  //   NotificationsModel model = NotificationsModel(
-  //     targetUserId: requestModel.sevaUserId,
-  //     data: requestModel.toMap(),
-  //     type: NotificationType.RequestAccept,
-  //     id: utils.Utils.getUuid(),
-  //     isRead: false,
-  //     senderUserId: senderUserId,
-  //   );
-
-  //   if (isWithdrawal)
-  //     await utils.withdrawAcceptRequestNotification(
-  //       notificationsModel: model,
-  //     );
-  //   else
-  //     await utils.createAcceptRequestNotification(
-  //       notificationsModel: model,
-  //     );
-  // }
 }
 
 Future<void> requestComplete({

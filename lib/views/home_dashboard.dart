@@ -136,22 +136,23 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     ))
                   : Text('Loading');
             },
+            ),
           ),
-        ),
-        body: StreamBuilder<SelectedCommuntityGroup>(
-            stream: _homeDashBoardBloc
-                .getCurrentGroups(SevaCore.of(context).loggedInUser),
-            builder: (context, snapshot) {
-              if (snapshot.data == null) {
+          body: StreamBuilder<SelectedCommuntityGroup>(
+              stream: _homeDashBoardBloc
+                  .getCurrentGroups(SevaCore.of(context).loggedInUser),
+              builder: (context, snapshot) {
+                if (snapshot.data == null || !snapshot.hasData) {
                 return Center(child: CircularProgressIndicator());
               }
               if (snapshot.hasData && snapshot.data != null) {
-                snapshot.data.timebanks.forEach(
-                  (TimebankModel data) {
-                    print(
-                        "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
+                print("asd"+snapshot.data.timebanks.length.toString());
+                  snapshot.data.timebanks.forEach((TimebankModel data) {
+
+                    print("timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
                     if (data.id ==
                         snapshot.data.currentCommunity.primary_timebank) {
+                      print("inside if" + data.toString());
                       primaryTimebank = data;
                       timeBankModelSingleton.model = primaryTimebank;
                     }
@@ -167,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   tabs.add(Tab(text: 'Notifications'));
                   tabs.add(Tab(text: 'Manage'));
                 }
-              }
+  }
 
               return Column(
                 children: <Widget>[

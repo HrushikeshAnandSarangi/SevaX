@@ -32,6 +32,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   List<NotificationsModel> pendingRequests = [];
   bool shouldReload = true;
   bool isProgressBarActive = false;
+  bool isRemoving = false;
 
   @override
   void initState() {
@@ -47,7 +48,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   Widget build(BuildContext context) {
     if (isProgressBarActive) {
       return AlertDialog(
-        title: Text('Updating Users'),
+        title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
         content: LinearProgressIndicator(),
       );
     }
@@ -78,9 +79,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     pendingRequests = [];
     shouldReload = true;
     noTransactionAvailable = false;
-    setState(() {
-      isProgressBarActive = false;
-    });
+//    setState(() {
+//      isProgressBarActive = false;
+//    });
   }
 
   Future _updatePendingAvtarWidgets() async {
@@ -175,15 +176,14 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   }
 
   Future getUserModel() async {
-    var i = 0;
-    var k = 0;
     var totalCredits = 0.0;
     _avtars = [];
     List<Widget> _localAvtars = [];
-    while (i < widget.requestModel.transactions.length) {
-      var transaction = widget.requestModel.transactions[i];
-      if (transaction != null && transaction.to != null) {
-        getUserForId(sevaUserId: transaction.to).then((_userModel) {
+    if (widget.requestModel.transactions != null) {
+      for (var i = 0; i < widget.requestModel.transactions.length; i++) {
+        var transaction = widget.requestModel.transactions[i];
+        if (transaction != null && transaction.to != null) {
+          var _userModel = await getUserForId(sevaUserId: transaction.to);
           totalCredits = totalCredits + transaction.credits;
           print("All transactions:$transaction");
           Widget item = getSpendingResultView(
@@ -192,26 +192,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             transaction,
           );
           _localAvtars.add(item);
-          if (k == widget.requestModel.transactions.length - 1) {
-            _avtars.add(getTotalSpending("$totalCredits"));
-            _avtars.addAll(_pendingAvtars);
-            _avtars.addAll(_localAvtars);
-            setState(() {});
-          }
-          k++;
-        });
-      } else {
-        _localAvtars.add(Offstage());
-        if (k == widget.requestModel.transactions.length - 1) {
-          _avtars.add(getTotalSpending("$totalCredits"));
-          _avtars.addAll(_pendingAvtars);
-          _avtars.addAll(_localAvtars);
-          setState(() {});
         }
-        k++;
       }
-      i++;
     }
+    _avtars.add(getTotalSpending("$totalCredits"));
+    _avtars.addAll(_pendingAvtars);
+    _avtars.addAll(_localAvtars);
+    setState(() {});
   }
 
   Widget getTotalSpending(String credits) {
@@ -494,7 +481,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         ),
                         onPressed: () async {
                           // reject the claim
+                          Navigator.pop(viewContext);
                           setState(() {
+                            isRemoving = true;
                             isProgressBarActive = true;
                           });
                           await rejectMemberClaimForEvent(
@@ -503,7 +492,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                               notificationId: notificationId,
                               user: userModel,
                               userId: userId);
-                          Navigator.pop(viewContext);
                         },
                       ),
                       Padding(
@@ -516,8 +504,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         ),
                         onPressed: () async {
                           // Once approved take for feeddback
+                          Navigator.pop(viewContext);
                           setState(() {
                             isProgressBarActive = true;
+                            isRemoving = false;
                           });
                           approveMemberClaim(
                               context: context,
@@ -525,8 +515,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                               notificationId: notificationId,
                               user: userModel,
                               userId: userId);
-
-                          Navigator.pop(viewContext);
                         },
                       ),
                     ],
@@ -559,12 +547,20 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     // creating chat
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     List users = [user.email, loggedInEmail];
-    users.sort();
+//    users.sort();
     ChatModel chatModel = ChatModel();
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
 
-    await createChat(chat: chatModel);
+    await createChat(
+      chat: chatModel,
+//        communityId: SevaCore.of(context).loggedInUser.currentCommunity
+    );
+
+    setState(() {
+      isProgressBarActive = false;
+    });
+    Navigator.pop(context);
 
     Navigator.push(
       context,
@@ -578,7 +574,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     await FirestoreManager.readUserNotification(
         notificationId, SevaCore.of(context).loggedInUser.email);
-    reset();
   }
 
   Widget getBio(UserModel userModel) {
@@ -622,7 +617,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         model: model,
         notificationId: notificationId,
         sevaCore: SevaCore.of(context));
-    reset();
   }
 
   Future checkForFeedback(
@@ -655,29 +649,52 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     } else {}
   }
 
-  void onActivityResult(
-      {SevaCore sevaCore,
-      RequestModel requestModel,
-      String userId,
-      String notificationId,
-      BuildContext context,
-      Map results,
-      String reviewer,
-      String reviewed,
-      String requestId}) {
+  Future updateUserData(String reviewerEmail, String reviewedEmail) async {
+    var user2 =
+        await FirestoreManager.getUserForEmail(emailAddress: reviewedEmail);
+    var user1 =
+        await FirestoreManager.getUserForEmail(emailAddress: reviewerEmail);
+    if (user1.pastHires == null) {
+      user1.pastHires = List<String>();
+    }
+    var hired = user2.sevaUserID.trim();
+    if (!user1.pastHires.contains(hired)) {
+      var reportedUsersList = List<String>();
+      for (var i = 0; i < user1.pastHires.length; i++) {
+        reportedUsersList.add(user1.pastHires[i]);
+      }
+      reportedUsersList.add(hired);
+      user1.pastHires = reportedUsersList;
+      await FirestoreManager.updateUser(user: user1);
+    }
+  }
+
+  Future onActivityResult({
+    SevaCore sevaCore,
+    RequestModel requestModel,
+    String userId,
+    String notificationId,
+    BuildContext context,
+    Map results,
+    String reviewer,
+    String reviewed,
+    String requestId,
+    UserModel user,
+  }) async {
     // adds review to firestore
-    Firestore.instance.collection("reviews").add({
+    await Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
       "reviewed": reviewed,
       "ratings": results['selection'],
       "requestId": requestId,
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
-    approveTransaction(requestModel, userId, notificationId, sevaCore);
+    await updateUserData(reviewer, reviewed);
+    await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
-  void approveTransaction(RequestModel model, String userId,
-      String notificationId, SevaCore sevaCore) {
+  Future approveTransaction(RequestModel model, String userId,
+      String notificationId, SevaCore sevaCore) async {
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
 
@@ -693,14 +710,18 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     if (model.transactions.where((model) => model.isApproved).length ==
         model.numberOfApprovals) {}
 
-    FirestoreManager.approveRequestCompletion(
+    await FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    FirestoreManager.readUserNotification(
+    await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
+    setState(() {
+      isProgressBarActive = false;
+    });
+    Navigator.pop(context);
   }
 
   Widget _getCloseButton(BuildContext context) {

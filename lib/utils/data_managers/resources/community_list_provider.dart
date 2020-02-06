@@ -31,17 +31,22 @@ class RequestApiProvider {
         ? Firestore.instance
         .collection('requests')
         .where('accepted', isEqualTo: false)
+    .orderBy("posttimestamp", descending: true)
         : Firestore.instance
         .collection('requests')
         .where('timebankId', isEqualTo: timebankId)
-        .where('accepted', isEqualTo: false);
+        .where('accepted', isEqualTo: false)
+        .orderBy("posttimestamp", descending: true);
 
     QuerySnapshot querySnapshot = await query.getDocuments();
+    print("comm list provider");
     querySnapshot.documents.forEach((documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.id = documentSnapshot.documentID;
-      if (model.approvedUsers.length <= model.numberOfApprovals)
+      print("model is : "+model.id);
+      if (model.approvedUsers.length <= model.numberOfApprovals){
         requestList.add(model);
+      }
     });
     return requestList;
   }
