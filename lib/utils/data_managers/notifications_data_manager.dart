@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
 
@@ -224,6 +225,20 @@ Future<void> createTransactionNotification({
           .collection('notifications')
           .document(model.id)
           .setData(model.toMap());
+}
+
+Future saveRequestFinalAction({ClaimedRequestStatusModel model}) async {
+  try {
+    await Firestore.instance
+        .collection('claimedRequestStatus')
+        .document(model.id)
+        .updateData({model.timestamp.toString(): model.toMap()});
+  } on Exception catch (exception) {
+    await Firestore.instance
+        .collection('claimedRequestStatus')
+        .document(model.id)
+        .setData({model.timestamp.toString(): model.toMap()});
+  }
 }
 
 Future<void> offerAcceptNotification({

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/claimedRequestStatus.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
@@ -36,8 +37,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   List<NotificationsModel> pendingRequests = [];
   RequestModel requestModel;
 //  bool shouldReload = true;
-//  bool isProgressBarActive = false;
-//  bool isRemoving = false;
+  bool isProgressBarActive = false;
+  bool isRemoving = false;
 
   _RequestAcceptedSpendingState(RequestModel _requestModel) {
     requestModel = _requestModel;
@@ -51,7 +52,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
           .listen((_requestModel) {
         requestModel = _requestModel;
         reset();
-//        setState(() {});
       });
     });
   }
@@ -63,15 +63,12 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   @override
   Widget build(BuildContext context) {
-//    if (isProgressBarActive) {
-//      return AlertDialog(
-//        title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
-//        content: LinearProgressIndicator(),
-//      );
-//    }
-//    if (shouldReload) {
-//      _updatePendingAvtarWidgets();
-//    }
+    if (isProgressBarActive) {
+      return AlertDialog(
+        title: Text(isRemoving ? 'Redirecting to messages' : 'Completing task'),
+        content: LinearProgressIndicator(),
+      );
+    }
     return Scaffold(
       body: listItems,
     );
@@ -93,12 +90,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
   void reset() {
     _avtars = [];
     _pendingAvtars = [];
-//    shouldReload = true;
     noTransactionAvailable = false;
     _updatePendingAvtarWidgets();
-//    setState(() {
-////      isProgressBarActive = false;
-//    });
+    setState(() {
+      isProgressBarActive = false;
+    });
   }
 
   Future _updatePendingAvtarWidgets() async {
@@ -366,9 +362,16 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         secondaryActions: <Widget>[],
         child: GestureDetector(
           onTap: () async {
+            setState(() {
+              isProgressBarActive = true;
+            });
             var notificationId =
                 await RequestNotificationManager.getNotificationId(
                     user, requestModel);
+
+            setState(() {
+              isProgressBarActive = false;
+            });
             showMemberClaimConfirmation(
                 context: context,
                 notificationId: notificationId,
@@ -397,6 +400,29 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              trailing: Container(
+                height: 40,
+                padding: EdgeInsets.only(bottom: 10),
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: Colors.indigo,
+                  textColor: Colors.white,
+                  elevation: 5,
+                  onPressed: () async {
+                    var notificationId =
+                        await RequestNotificationManager.getNotificationId(
+                            user, requestModel);
+                    showMemberClaimConfirmation(
+                        context: context,
+                        notificationId: notificationId,
+                        requestModel: requestModel,
+                        userId: user.sevaUserID,
+                        userModel: user,
+                        credits: transactionModel.credits);
+                  },
+                  child: Text('Pending', style: TextStyle(fontSize: 12)),
                 ),
               ),
             ),
@@ -527,16 +553,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   getBio(userModel),
                   Padding(
                       padding: EdgeInsets.all(8.0),
@@ -565,16 +581,18 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         onPressed: () async {
                           // reject the claim
                           Navigator.pop(viewContext);
-//                          setState(() {
-//                            isRemoving = true;
-//                            isProgressBarActive = true;
-//                          });
+                          setState(() {
+                            isRemoving = true;
+                            isProgressBarActive = true;
+                          });
                           await rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                            context: context,
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            userId: userId,
+                            credits: credits,
+                          );
                         },
                       ),
                       Padding(
@@ -588,16 +606,18 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         onPressed: () async {
                           // Once approved take for feeddback
                           Navigator.pop(viewContext);
-//                          setState(() {
-//                            isProgressBarActive = true;
-//                            isRemoving = false;
-//                          });
+                          setState(() {
+                            isProgressBarActive = true;
+                            isRemoving = false;
+                          });
                           approveMemberClaim(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                            context: context,
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            userId: userId,
+                            credits: credits,
+                          );
                         },
                       ),
                     ],
@@ -614,7 +634,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       String userId,
       BuildContext context,
       UserModel user,
-      String notificationId}) async {
+      String notificationId,
+      num credits}) async {
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -635,14 +656,25 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
 
+    var claimedRequestStatus = ClaimedRequestStatusModel(
+      isAccepted: false,
+      adminEmail: SevaCore.of(context).loggedInUser.email,
+      requesterEmail: user.email,
+      id: model.id,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      credits: credits,
+    );
+    await FirestoreManager.saveRequestFinalAction(
+      model: claimedRequestStatus,
+    );
     await createChat(
       chat: chatModel,
 //        communityId: SevaCore.of(context).loggedInUser.currentCommunity
     );
 
-//    setState(() {
-//      isProgressBarActive = false;
-//    });
+    setState(() {
+      isProgressBarActive = false;
+    });
     Navigator.pop(context);
 
     Navigator.push(
@@ -685,21 +717,23 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-  Future approveMemberClaim({
-    String userId,
-    UserModel user,
-    BuildContext context,
-    RequestModel model,
-    String notificationId,
-  }) async {
+  Future approveMemberClaim(
+      {String userId,
+      UserModel user,
+      BuildContext context,
+      RequestModel model,
+      String notificationId,
+      num credits}) async {
     //request for feedback;
     await checkForFeedback(
-        userId: userId,
-        user: user,
-        context: context,
-        model: model,
-        notificationId: notificationId,
-        sevaCore: SevaCore.of(context));
+      userId: userId,
+      user: user,
+      context: context,
+      model: model,
+      notificationId: notificationId,
+      sevaCore: SevaCore.of(context),
+      credits: credits,
+    );
   }
 
   Future checkForFeedback(
@@ -708,7 +742,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       RequestModel model,
       String notificationId,
       BuildContext context,
-      SevaCore sevaCore}) async {
+      SevaCore sevaCore,
+      num credits}) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
         return ReviewFeedback.forVolunteer(
@@ -728,6 +763,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         reviewed: user.email,
         requestId: model.id,
         results: results,
+        credits: credits,
       );
     } else {}
   }
@@ -752,18 +788,18 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     }
   }
 
-  Future onActivityResult({
-    SevaCore sevaCore,
-    RequestModel requestModel,
-    String userId,
-    String notificationId,
-    BuildContext context,
-    Map results,
-    String reviewer,
-    String reviewed,
-    String requestId,
-    UserModel user,
-  }) async {
+  Future onActivityResult(
+      {SevaCore sevaCore,
+      RequestModel requestModel,
+      String userId,
+      String notificationId,
+      BuildContext context,
+      Map results,
+      String reviewer,
+      String reviewed,
+      String requestId,
+      UserModel user,
+      num credits}) async {
     // adds review to firestore
     await Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
@@ -773,6 +809,16 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       "comments": (results['didComment'] ? results['comment'] : "No comments")
     });
     await updateUserData(reviewer, reviewed);
+    var claimedRequestStatus = ClaimedRequestStatusModel(
+        isAccepted: true,
+        adminEmail: sevaCore.loggedInUser.email,
+        requesterEmail: reviewed,
+        id: requestId,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        credits: credits);
+    await FirestoreManager.saveRequestFinalAction(
+      model: claimedRequestStatus,
+    );
     await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
@@ -801,9 +847,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
-//    setState(() {
-//      isProgressBarActive = false;
-//    });
+    setState(() {
+      isProgressBarActive = false;
+    });
     Navigator.pop(context);
   }
 
