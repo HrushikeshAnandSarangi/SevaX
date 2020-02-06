@@ -362,9 +362,16 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         secondaryActions: <Widget>[],
         child: GestureDetector(
           onTap: () async {
+            setState(() {
+              isProgressBarActive = true;
+            });
             var notificationId =
                 await RequestNotificationManager.getNotificationId(
                     user, requestModel);
+
+            setState(() {
+              isProgressBarActive = false;
+            });
             showMemberClaimConfirmation(
                 context: context,
                 notificationId: notificationId,
@@ -546,16 +553,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   getBio(userModel),
                   Padding(
                       padding: EdgeInsets.all(8.0),
