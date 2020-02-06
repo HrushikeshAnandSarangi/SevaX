@@ -5,8 +5,13 @@ class ClaimedRequestStatusModel extends DataModel {
   String requesterID;
   String requestID;
   num timestamp;
+  num credits;
   ClaimedRequestStatusModel(
-      {this.isAccepted, this.requesterID, this.requestID, this.timestamp});
+      {this.isAccepted,
+      this.requesterID,
+      this.requestID,
+      this.timestamp,
+      this.credits});
 
   ClaimedRequestStatusModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('isAccepted')) {
@@ -23,6 +28,10 @@ class ClaimedRequestStatusModel extends DataModel {
 
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
+    }
+
+    if (map.containsKey('credits')) {
+      this.credits = map['credits'];
     }
   }
 
@@ -49,6 +58,11 @@ class ClaimedRequestStatusModel extends DataModel {
     if (this.timestamp != null) {
       map['timestamp'] = this.timestamp;
     }
+
+    if (this.credits != null) {
+      map['credits'] = this.credits;
+    }
+
     return map;
   }
 }

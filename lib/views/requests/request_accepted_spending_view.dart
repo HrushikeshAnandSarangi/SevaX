@@ -589,11 +589,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             isProgressBarActive = true;
                           });
                           await rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                            context: context,
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            userId: userId,
+                            credits: credits,
+                          );
                         },
                       ),
                       Padding(
@@ -612,11 +614,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             isRemoving = false;
                           });
                           approveMemberClaim(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                            context: context,
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel,
+                            userId: userId,
+                            credits: credits,
+                          );
                         },
                       ),
                     ],
@@ -633,7 +637,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       String userId,
       BuildContext context,
       UserModel user,
-      String notificationId}) async {
+      String notificationId,
+      num credits}) async {
     List<TransactionModel> transactions =
         model.transactions.map((t) => t).toList();
     transactions.removeWhere((t) => t.to == userId);
@@ -659,6 +664,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       requesterID: user.email,
       requestID: model.id,
       timestamp: DateTime.now().millisecondsSinceEpoch,
+      credits: credits,
     );
     await FirestoreManager.saveRequestFinalAction(
       model: claimedRequestStatus,
@@ -713,21 +719,23 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
   }
 
-  Future approveMemberClaim({
-    String userId,
-    UserModel user,
-    BuildContext context,
-    RequestModel model,
-    String notificationId,
-  }) async {
+  Future approveMemberClaim(
+      {String userId,
+      UserModel user,
+      BuildContext context,
+      RequestModel model,
+      String notificationId,
+      num credits}) async {
     //request for feedback;
     await checkForFeedback(
-        userId: userId,
-        user: user,
-        context: context,
-        model: model,
-        notificationId: notificationId,
-        sevaCore: SevaCore.of(context));
+      userId: userId,
+      user: user,
+      context: context,
+      model: model,
+      notificationId: notificationId,
+      sevaCore: SevaCore.of(context),
+      credits: credits,
+    );
   }
 
   Future checkForFeedback(
@@ -736,7 +744,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       RequestModel model,
       String notificationId,
       BuildContext context,
-      SevaCore sevaCore}) async {
+      SevaCore sevaCore,
+      num credits}) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
         return ReviewFeedback.forVolunteer(
@@ -756,6 +765,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         reviewed: user.email,
         requestId: model.id,
         results: results,
+        credits: credits,
       );
     } else {}
   }
@@ -780,18 +790,18 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     }
   }
 
-  Future onActivityResult({
-    SevaCore sevaCore,
-    RequestModel requestModel,
-    String userId,
-    String notificationId,
-    BuildContext context,
-    Map results,
-    String reviewer,
-    String reviewed,
-    String requestId,
-    UserModel user,
-  }) async {
+  Future onActivityResult(
+      {SevaCore sevaCore,
+      RequestModel requestModel,
+      String userId,
+      String notificationId,
+      BuildContext context,
+      Map results,
+      String reviewer,
+      String reviewed,
+      String requestId,
+      UserModel user,
+      num credits}) async {
     // adds review to firestore
     await Firestore.instance.collection("reviews").add({
       "reviewer": reviewer,
@@ -802,11 +812,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     });
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(
-      isAccepted: true,
-      requesterID: reviewed,
-      requestID: requestId,
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-    );
+        isAccepted: true,
+        requesterID: reviewed,
+        requestID: requestId,
+        timestamp: DateTime.now().millisecondsSinceEpoch,
+        credits: credits);
     await FirestoreManager.saveRequestFinalAction(
       model: claimedRequestStatus,
     );
