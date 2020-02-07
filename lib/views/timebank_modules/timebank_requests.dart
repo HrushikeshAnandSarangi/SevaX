@@ -531,7 +531,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                               widget.requestItem.acceptors.contains(
                                       SevaCore.of(context).loggedInUser.email)
                                   ? 'Withdraw Request'
-                                  : 'Accept Request',
+                                  : 'Acxcept Request',
                               style: TextStyle(
                                 color: FlavorConfig.values.buttonTextColor,
                               ),
