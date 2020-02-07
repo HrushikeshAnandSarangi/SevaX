@@ -143,7 +143,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
                   child: Text(
-                    "Join the group to contribute to the timebank for the change",
+                    "Join the group to contribute to the TimeBank for the change",
                   ),
                 ),
                 ListView.separated(

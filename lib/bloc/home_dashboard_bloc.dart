@@ -32,6 +32,7 @@ class HomeDashBoardBloc extends BlocBase {
   Stream<List<CommunityModel>> get communities => _communities.stream;
 
   getAllCommunities(UserModel user) async {
+
     List<CommunityModel> c = [];
     if (user.communities != null) {
       user.communities.forEach((id) async {
