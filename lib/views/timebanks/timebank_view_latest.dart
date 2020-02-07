@@ -131,7 +131,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 15,
             ),
             widget.timebankModel.members.contains(
               SevaCore.of(context).loggedInUser.sevaUserID,
@@ -238,7 +238,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                     '0 Volunteers',
                 style: TextStyle(
                   fontFamily: 'Europa',
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -249,9 +249,15 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                 widget.timebankModel.address ?? '',
                 style: TextStyle(
                   fontFamily: 'Europa',
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.grey,
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Divider(
+                color: Colors.black12,
               ),
             ),
             Padding(
@@ -267,7 +273,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0,0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -317,9 +323,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
             ),
 
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Divider(
-                color: Colors.grey,
+                color: Colors.black12,
               ),
             ),
             Padding(
