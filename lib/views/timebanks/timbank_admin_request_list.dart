@@ -1,3 +1,5 @@
+//TODO use  the updated code after fixing bugs which is commeneted
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
@@ -34,7 +36,8 @@ class TimebankRequestAdminPage extends StatefulWidget {
   _TimebankAdminPageState createState() => _TimebankAdminPageState();
 }
 
-class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
+class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
+    with AutomaticKeepAliveClientMixin {
   ScrollController _listController;
   ScrollController _pageScrollController;
   var _indexSoFar = 0;
@@ -63,12 +66,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage> {
 
   @override
   void initState() {
-    print("----> ${widget.timebankId} | ${isUserAdmin} | ${widget.userEmail}");
+    print(
+        "----> ${widget.timebankId} | ${widget.isUserAdmin} | ${widget.userEmail}");
     _listController = ScrollController();
     _pageScrollController = ScrollController();
     _pageScrollController.addListener(_scrollListener);
     super.initState();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void dispose() {

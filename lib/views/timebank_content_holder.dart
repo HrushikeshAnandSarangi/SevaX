@@ -20,10 +20,10 @@ import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
+import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:sevaexchange/widgets/colored_tabbar.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
@@ -136,7 +136,7 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 6,
+    length: 7,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -171,6 +171,9 @@ Widget createAdminTabBar(
                 text: "Members",
               ),
               Tab(
+                text: "Notifications",
+              ),
+              Tab(
                 text: "Manage",
               ),
             ],
@@ -200,9 +203,12 @@ Widget createAdminTabBar(
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
+                TimeBankNotificationView(
+                  timebankId: timebankModel.id,
+                ),
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
-                )
+                ),
               ],
             ),
           ),
@@ -221,62 +227,93 @@ Widget createJoinedUserTabBar(
     length: 5,
     child: Scaffold(
         appBar: AppBar(
-            elevation: 0.5,
-            // backgroundColor: Colors.white,
-            title: Text(
-              timebankModel.name,
-              style: TextStyle(fontSize: 18),
+          elevation: 0.5,
+          // backgroundColor: Colors.white,
+          title: Text(
+            timebankModel.name,
+            style: TextStyle(fontSize: 18),
+          ),
+          // bottom: ColoredTabBar(
+          //   color: Colors.white,
+          //   tabBar: TabBar(
+          //     labelColor: Theme.of(context).primaryColor,
+          //     unselectedLabelColor: Colors.grey,
+          //     indicatorColor: Color(0xFFF766FE0),
+          //     indicatorSize: TabBarIndicatorSize.label,
+          //     isScrollable: true,
+          //     tabs: [
+          //       Tab(
+          //         text: "Feeds",
+          //       ),
+          //       Tab(
+          //         text: "Requests",
+          //       ),
+          //       Tab(
+          //         text: "Offers",
+          //       ),
+          //       Tab(
+          //         text: "About",
+          //       ),
+          //       Tab(
+          //         text: "Members",
+          //       ),
+          //     ],
+          //   ),
+          // ),
+        ),
+        body: Column(
+          children: <Widget>[
+            TabBar(
+              labelColor: Theme.of(context).primaryColor,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: Color(0xFFF766FE0),
+              indicatorSize: TabBarIndicatorSize.label,
+              isScrollable: true,
+              tabs: [
+                Tab(
+                  text: "Feeds",
+                ),
+                Tab(
+                  text: "Requests",
+                ),
+                Tab(
+                  text: "Offers",
+                ),
+                Tab(
+                  text: "About",
+                ),
+                Tab(
+                  text: "Members",
+                ),
+              ],
             ),
-            bottom: ColoredTabBar(
-              color: Colors.white,
-              tabBar: TabBar(
-                labelColor: Theme.of(context).primaryColor,
-                unselectedLabelColor: Colors.grey,
-                indicatorColor: Color(0xFFF766FE0),
-                indicatorSize: TabBarIndicatorSize.label,
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                    text: "Feeds",
+            Expanded(
+              child: TabBarView(
+                children: [
+                  DiscussionList(
+                    timebankId: timebankId,
                   ),
-                  Tab(
-                    text: "Requests",
+                  RequestsModule.of(
+                    timebankId: timebankId,
+                    timebankModel: timebankModel,
                   ),
-                  Tab(
-                    text: "Offers",
+                  OffersModule.of(
+                    timebankId: timebankId,
+                    timebankModel: timebankModel,
                   ),
-                  Tab(
-                    text: "About",
+                  TimeBankAboutView.of(
+                    timebankModel: timebankModel,
+                    email: SevaCore.of(context).loggedInUser.email,
                   ),
-                  Tab(
-                    text: "Members",
+                  TimebankRequestAdminPage(
+                    isUserAdmin: timebankModel.admins.contains(
+                      SevaCore.of(context).loggedInUser.sevaUserID,
+                    ),
+                    timebankId: timebankModel.id,
+                    userEmail: SevaCore.of(context).loggedInUser.email,
                   ),
                 ],
               ),
-            )),
-        body: TabBarView(
-          children: [
-            DiscussionList(
-              timebankId: timebankId,
-            ),
-            RequestsModule.of(
-              timebankId: timebankId,
-              timebankModel: timebankModel,
-            ),
-            OffersModule.of(
-              timebankId: timebankId,
-              timebankModel: timebankModel,
-            ),
-            TimeBankAboutView.of(
-              timebankModel: timebankModel,
-              email: SevaCore.of(context).loggedInUser.email,
-            ),
-            TimebankRequestAdminPage(
-              isUserAdmin: timebankModel.admins.contains(
-                SevaCore.of(context).loggedInUser.sevaUserID,
-              ),
-              timebankId: timebankModel.id,
-              userEmail: SevaCore.of(context).loggedInUser.email,
             ),
           ],
         )),
