@@ -361,6 +361,13 @@ Future<bool> isUnreadNotification(String userEmail) async {
   });
   return isNotification;
 }
+Future updateNotificationStatusByAdmin(
+    notificationType,
+    timebankId,
+    userModel
+) async {
+
+}
 
 Future<List<NotificationsModel>> getCompletedNotifications(
   String userEmail,
@@ -425,3 +432,4 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
     ),
   );
 }
+
