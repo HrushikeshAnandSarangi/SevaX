@@ -3,14 +3,15 @@ import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+
 import '../resources/repository.dart';
-import 'package:rxdart/rxdart.dart';
 
 class CommunityFindBloc {
   final _repository = Repository();
@@ -24,7 +25,8 @@ class CommunityFindBloc {
     CommunityListModel communityListModel = CommunityListModel();
     communityListModel.loading = true;
     _communitiesFetcher.sink.add(communityListModel);
-    communityListModel = await _repository.searchCommunityByName(name, communityListModel);
+    communityListModel =
+        await _repository.searchCommunityByName(name, communityListModel);
     communityListModel.loading = false;
     print(communityListModel.communities.length);
     _communitiesFetcher.sink.add(communityListModel);
@@ -144,16 +146,20 @@ class TimebankController {
   setRequestList(requests) {
     this.requests = requests;
   }
+
   setSelectedRequest(RequestModel request) {
     this.selectedrequest = request;
   }
+
   setSelectedTimebank(timebank) {
     this.selectedtimebank = timebank;
   }
+
   setInvitedUsersDataForRequest(usersListData) {
     this.invitedUsersForRequest = usersListData;
   }
 }
+
 class TimeBankBloc {
   final _repository = Repository();
   final _timebankController = BehaviorSubject<TimebankController>();
@@ -165,15 +171,16 @@ class TimeBankBloc {
   }
 
   updateInvitedUsersForRequest(requestID, sevauserid) async {
-    var result = await _repository.updateInvitedUsersForRequest(requestID, sevauserid);
+    var result =
+        await _repository.updateInvitedUsersForRequest(requestID, sevauserid);
     print('request invite -----> ${result.toString()}');
   }
 
   getSelectedRequestInvitedUsersData(usersids) async {
     // TODO - get users from request
-      var usersdata = await _repository.getUsersFromRequest(usersids);
-      _timebankController.value.setInvitedUsersDataForRequest(usersdata);
-      _timebankController.add(_timebankController.value);
+    var usersdata = await _repository.getUsersFromRequest(usersids);
+    _timebankController.value.setInvitedUsersDataForRequest(usersdata);
+    _timebankController.add(_timebankController.value);
   }
 
   getRequestsFromTimebankId(String timebankId) async {
@@ -181,19 +188,23 @@ class TimeBankBloc {
     _timebankController.value.setRequestList(requests);
     _timebankController.add(_timebankController.value);
   }
+
   setSelectedRequest(request) {
     _timebankController.value.setSelectedRequest(request);
     _timebankController.add(_timebankController.value);
   }
+
   setSelectedTimeBankDetails(timebank) {
     _timebankController.value.setSelectedTimebank(timebank);
     _timebankController.add(_timebankController.value);
   }
+
   setInvitedUsersData(requestID) async {
     var usersResults = await _repository.getUsersFromRequest(requestID);
     _timebankController.value.setInvitedUsersDataForRequest(usersResults);
     _timebankController.add(_timebankController.value);
   }
+
   dispose() {
     _timebankController.close();
   }
@@ -262,7 +273,7 @@ class CommunityCreateEditBloc {
   updateUser(timebank) async {
     var tm = TimebankModel(timebank);
     var communitytemp =
-    await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
+        await _repository.getCommunityDetailsByCommunityIdrepo(tm.communityId);
 
     await _repository.updateCommunityWithUserId(communitytemp.id,
         this._createEditCommunity.value.loggedinuser.sevaUserID);
@@ -284,11 +295,9 @@ class CommunityCreateEditBloc {
         .getDocuments()
         .then((QuerySnapshot snapshot) async {
       if (snapshot.documents.length > 0) {
-
         // timabnk code exists , check its validity
 
         snapshot.documents.forEach((f) async {
-
           if (DateTime.now().millisecondsSinceEpoch > f.data['validUpto']) {
             await func("code_expired");
           } else {
