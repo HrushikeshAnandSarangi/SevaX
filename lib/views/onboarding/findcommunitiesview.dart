@@ -72,11 +72,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          automaticallyImplyLeading: widget.keepOnBackPress,
+          // automaticallyImplyLeading: widget.keepOnBackPress,
+          automaticallyImplyLeading: false,
           elevation: 0.5,
-          leading: BackButton(
-            onPressed: () => Navigator.pop(context),
-          ),
+          // leading: BackButton(
+          //   onPressed: () => Navigator.pop(context),
+          // ),
           title: Text(
             'Find your Timebank',
             style: TextStyle(

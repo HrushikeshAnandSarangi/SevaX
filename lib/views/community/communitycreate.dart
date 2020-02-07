@@ -31,7 +31,7 @@ class CreateEditCommunityView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text(
           title,
           style: TextStyle(
