@@ -473,13 +473,6 @@ class _LoginPageState extends State<LoginPage> {
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black54),
                       ),
-                      suffix: IconButton(
-                        onPressed: null,
-                        icon: Icon(
-                          Icons.email,
-                          color: Colors.white,
-                        ),
-                      ),
                       labelText: 'EMAIL',
                       labelStyle: textStyle,
                     ),
@@ -498,20 +491,17 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       labelText: 'PASSWORD',
                       labelStyle: textStyle,
-                      suffix: IconButton(
-                        onPressed: () {
-                          setState(() {
+                        suffix:   GestureDetector(
+                          onTap: () {
                             _shouldObscurePassword = !_shouldObscurePassword;
-                          });
-                        },
-                        splashColor: Colors.transparent,
-                        color: Colors.grey,
-                        icon: Icon(
-                          _shouldObscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                      ),
+                            setState(() {});
+                          },
+                          child: Icon(
+                            _shouldObscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                        )
                     ),
                   ),
                   SizedBox(height: 22),

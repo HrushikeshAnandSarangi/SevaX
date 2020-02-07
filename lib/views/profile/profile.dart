@@ -59,7 +59,6 @@ class _ProfilePageState extends State<ProfilePage>
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
-  double sevaCoins = 5;
   double sevaCoinsValue = 0.0;
 
   UserProfileBloc _profileBloc = UserProfileBloc();
@@ -95,9 +94,6 @@ class _ProfilePageState extends State<ProfilePage>
               if (transaction.isApproved && transaction.to == SevaCore.of(context).loggedInUser.sevaUserID)
                 sevaCoinsValue += transaction.credits;
             });
-          });
-          setState(() {
-            sevaCoins = sevaCoinsValue;
           });
         },
       );
@@ -251,7 +247,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  '${sevaCoins} Seva Coins',
+                                  '${sevaCoinsValue} Seva Coins',
                                   style: TextStyle(
                                     color: user.currentBalance > 0
                                         ? Colors.blue
