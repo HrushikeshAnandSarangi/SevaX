@@ -1,5 +1,5 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 // import 'package:business/main.dart';
 
 class DateTimeSelector extends StatelessWidget {
@@ -40,7 +40,7 @@ class DateTimeSelector extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.0,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xff999999),
+                        color: title == 'End' ? Colors.red : Colors.green,
                       ),
                     ),
                     SizedBox(
@@ -72,7 +72,7 @@ class DateTimeSelector extends StatelessWidget {
         'date & time',
         style: TextStyle(
           color: Color(0xff999999),
-          fontSize: 15.0,
+          fontSize: 14.0,
           fontWeight: FontWeight.bold,
         ),
       );
@@ -80,8 +80,8 @@ class DateTimeSelector extends StatelessWidget {
       String _forDate = new DateFormat('dd MMM yyyy, hh:mm a').format(_date);
       return Text(_forDate,
           style: TextStyle(
-            color: Color(0xff6c63ff),
-            fontSize: 15.0,
+            color: title == 'End' ? Colors.red : Colors.green,
+            fontSize: 14.0,
             fontWeight: FontWeight.bold,
           ));
     }

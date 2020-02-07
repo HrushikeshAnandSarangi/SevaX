@@ -33,14 +33,14 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
             title: Text(
               toolbarTitle,
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             automaticallyImplyLeading: false,
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.black,
+                color: Colors.white,
               ),
               onPressed: () => {
                 //  Navigator.popUntil(
@@ -76,7 +76,10 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           alignment: Alignment.centerLeft,
           child: Text(
             getQuestions()[questionIndex][FeedbackConstants.FEEDBACK_TITLE],
-            style: TextStyle(fontSize: 19, letterSpacing: 2),
+            style: TextStyle(
+              fontSize: 19,
+              letterSpacing: 2,
+            ),
           ),
         ),
         ...(getQuestions()[questionIndex][FeedbackConstants.ANSWERS] as List)
@@ -85,9 +88,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
             margin: EdgeInsets.all(10),
             width: double.infinity,
             child: RaisedButton(
+              shape: StadiumBorder(),
+              color: Color(0x0FF766FE0),
               child: Text(
                 answerModel[FeedbackConstants.ANSWER_TEXT],
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
               onPressed: () {
                 makeSelection(answerModel[FeedbackConstants.SCORE]);
@@ -147,7 +153,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 Container(
                   width: double.infinity,
                   child: RaisedButton(
-                    child: Text("Submit"),
+                    shape: StadiumBorder(),
+                    color: Color(0x0FF766FE0),
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(color: Colors.white),
+                    ),
                     onPressed: () {
                       setState(() {
                         if (FlavorConfig.appFlavor == Flavor.APP) {

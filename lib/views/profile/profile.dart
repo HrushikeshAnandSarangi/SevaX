@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage>
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
-  double sevaCoins = 0.0;
+  double sevaCoins = 5;
   double sevaCoinsValue = 0.0;
 
   // UserProfileBloc _profileBloc = UserProfileBloc();
@@ -100,8 +100,6 @@ class _ProfilePageState extends State<ProfilePage>
         },
       );
     });
-
-
   }
 
   // @override

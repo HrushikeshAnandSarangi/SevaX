@@ -442,10 +442,19 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     String notificationId,
   }) {
     List<String> approvedUsers = model.approvedUsers;
-    Set<String> usersSet = approvedUsers.toSet();
+    List<String> initialAccpetors = model.acceptors;
+    List<String> accpetors = [];
+    for (var i = 0; i < initialAccpetors.length; i++) {
+      if (initialAccpetors[i].trim() != user.email.trim()) {
+        accpetors.add(initialAccpetors[i].trim());
+      }
+    }
+    Set<String> acceptedSet = approvedUsers.toSet();
+    Set<String> acceptorsSet = accpetors.toSet();
 
-    usersSet.add(user.email);
-    model.approvedUsers = usersSet.toList();
+    acceptedSet.add(user.email);
+    model.approvedUsers = acceptedSet.toList();
+    model.acceptors = acceptorsSet.toList();
 
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;

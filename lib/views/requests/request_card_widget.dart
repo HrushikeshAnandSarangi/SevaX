@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -7,6 +8,8 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 
+import '../../flavor_config.dart';
+
 class RequestCardWidget extends StatelessWidget {
   final UserModel userModel;
   final RequestModel requestModel;
@@ -14,6 +17,7 @@ class RequestCardWidget extends StatelessWidget {
   final bool isFavorite;
   final String reqStatus;
   final bool isAdmin;
+  final Function refresh;
 
   const RequestCardWidget({
     @required this.userModel,
@@ -22,6 +26,7 @@ class RequestCardWidget extends StatelessWidget {
     @required this.isFavorite,
     @required this.isAdmin,
     @required this.reqStatus,
+    this.refresh,
   });
 
   @override
@@ -50,7 +55,7 @@ class RequestCardWidget extends StatelessWidget {
         shape: BoxShape.circle,
         image: DecorationImage(
           fit: BoxFit.fill,
-          image: NetworkImage(
+          image: CachedNetworkImageProvider(
             userModel.photoURL,
           ),
         ),
@@ -121,14 +126,14 @@ class RequestCardWidget extends StatelessWidget {
                           timeBankId: timebankModel.id,
                           loggedInUserId:
                               SevaCore.of(context).loggedInUser.sevaUserID,
-                        );
+                        ).then((_) => refresh());
                       } else {
                         addToFavoriteList(
                           email: userModel.email,
                           timebankId: timebankModel.id,
                           loggedInUserId:
                               SevaCore.of(context).loggedInUser.sevaUserID,
-                        );
+                        ).then((_) => refresh());
                       }
                     },
                   ),
@@ -198,7 +203,7 @@ class RequestCardWidget extends StatelessWidget {
                                     .currentCommunity,
                                 sevaUserID: SevaCore.of(context)
                                     .loggedInUser
-                                    .currentCommunity,
+                                    .sevaUserID,
                               );
                             },
                       child: Text(
@@ -232,7 +237,7 @@ class RequestCardWidget extends StatelessWidget {
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
-        timebankId: timebankModel.id,
+        timebankId: FlavorConfig.values.timebankId,
         data: requestInvitationModel.toMap(),
         isRead: false,
         type: NotificationType.RequestInvite,

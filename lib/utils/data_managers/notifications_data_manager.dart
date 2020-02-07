@@ -228,10 +228,17 @@ Future<void> createTransactionNotification({
 }
 
 Future saveRequestFinalAction({ClaimedRequestStatusModel model}) async {
-  await Firestore.instance
-      .collection('claimedRequestStatus')
-      .document(model.requestID)
-      .updateData({model.timestamp.toString(): model.toMap()});
+  try {
+    await Firestore.instance
+        .collection('claimedRequestStatus')
+        .document(model.id)
+        .updateData({model.timestamp.toString(): model.toMap()});
+  } on Exception catch (exception) {
+    await Firestore.instance
+        .collection('claimedRequestStatus')
+        .document(model.id)
+        .setData({model.timestamp.toString(): model.toMap()});
+  }
 }
 
 Future<void> offerAcceptNotification({
@@ -304,6 +311,10 @@ Stream<List<NotificationsModel>> getNotifications({
   String userEmail,
   @required String communityId,
 }) async* {
+  print("userEmail "+userEmail);
+  print("timebankId "+FlavorConfig.values.timebankId);
+  print("communityId "+communityId);
+
   var data = Firestore.instance
       .collection('users')
       .document(userEmail)
@@ -319,6 +330,7 @@ Stream<List<NotificationsModel>> getNotifications({
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
       handleData: (querySnapshot, notificationSink) {
+
         List<NotificationsModel> notifications = [];
 
         querySnapshot.documents.forEach((documentSnapshot) {
