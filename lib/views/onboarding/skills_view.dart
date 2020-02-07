@@ -46,11 +46,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
         skills[data.documentID] = data['name'];
         // ids[data['name']] = data.documentID;
       });
-      widget.userModel.skills.forEach((id) {
-        _selectedSkills[id] = skills[id];
-        // selectedChips.add(buildChip(id: id, value: skills[id]));
-      });
-
+      if (widget.userModel.skills.length > 0) {
+        widget.userModel.skills.forEach((id) {
+          _selectedSkills[id] = skills[id];
+          // selectedChips.add(buildChip(id: id, value: skills[id]));
+        });
+      }
       setState(() {});
     });
     super.initState();

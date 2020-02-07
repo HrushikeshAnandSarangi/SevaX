@@ -847,9 +847,7 @@ class RequestListItemsState extends State<RequestListItems> {
               return Center(child: CircularProgressIndicator());
             }
             UserModel user = snapshot.data;
-
             String loggedintimezone = user.timezone;
-
             return StreamBuilder(
                 stream: timeBankBloc.timebankController,
                 builder: (context, AsyncSnapshot<TimebankController> snapshot) {
