@@ -246,12 +246,7 @@ class RequestsState extends State<RequestsModule> {
                       print(val);
                       if (val != sharedValue) {
                         setState(() {
-                          if (isNearme == true)
-                            isNearme = false;
-                          else
-                            isNearme = true;
-                        });
-                        setState(() {
+                          isNearme = !isNearme;
                           sharedValue = val;
                         });
                       }
