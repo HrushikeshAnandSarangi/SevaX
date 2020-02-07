@@ -110,8 +110,6 @@ class UserModelController {
 }
 
 class UserBloc {
-  final _repository = Repository();
-
   final _userController = BehaviorSubject<UserModelController>();
   Observable<UserModelController> get getLoggedInUser => _userController.stream;
   UserBloc() {
@@ -123,17 +121,6 @@ class UserBloc {
     _userController.add(userc);
   }
 }
-//
-//class RequestModelController extends RequestModel {
-//  List<UserModel> invitedusersdata = [];
-//  RequestModelController() : super();
-//
-//  setInvitedUsersData(data) {
-//    this.invitedusersdata = data;
-//    // add the data to the invited users;
-//
-//  }
-//}
 
 class TimebankController {
   TimebankModel selectedtimebank;
