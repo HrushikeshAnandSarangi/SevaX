@@ -173,7 +173,6 @@ Future<void> sendOfferRequest({
 Future<void> acceptRequest({
   @required RequestModel requestModel,
   @required String senderUserId,
-  
   bool isWithdrawal = false,
   bool fromOffer = false,
   @required String communityId,
@@ -246,6 +245,21 @@ Future<void> approveRequestCompletion({
   @required String userId,
   @required String communityId,
 }) async {
+  if (model.transactions == null) {
+    model.accepted = false;
+  } else {
+    var approvalCount = 0;
+    for (var i = 0; i < model.transactions.length; i++) {
+      if (model.transactions[i].isApproved) {
+        approvalCount++;
+      }
+    }
+    if (approvalCount < model.numberOfApprovals) {
+      model.accepted = false;
+    } else {
+      model.accepted = true;
+    }
+  }
   await Firestore.instance
       .collection('requests')
       .document(model.id)
