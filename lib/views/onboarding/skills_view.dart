@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/widgets/custom_chip.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
 
@@ -91,16 +92,20 @@ class _SkillViewNewState extends State<SkillViewNew> {
               textFieldConfiguration: TextFieldConfiguration(
                 decoration: InputDecoration(
                   hintText: 'Search',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderSide: new BorderSide(color: Colors.white),
+                    borderRadius: new BorderRadius.circular(25.7),
                   ),
-                  suffixIcon: Icon(Icons.search),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: new BorderRadius.circular(25.7)),
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
               suggestionsBoxController: controller,
@@ -147,9 +152,21 @@ class _SkillViewNewState extends State<SkillViewNew> {
               shrinkWrap: true,
               children: <Widget>[
                 Wrap(
+                  runSpacing: 5.0,
+                  spacing: 5.0,
                   children: _selectedSkills.values
                       .toList()
-                      .map((value) => buildChip(value))
+                      .map(
+                        (value) => CustomChip(
+                          title: value,
+                          onDelete: () {
+                            String id = skills.keys
+                                .firstWhere((k) => skills[k] == value);
+                            _selectedSkills.remove(id);
+                            setState(() {});
+                          },
+                        ),
+                      )
                       .toList(),
                 ),
               ],
@@ -190,20 +207,27 @@ class _SkillViewNewState extends State<SkillViewNew> {
     );
   }
 
-  Padding buildChip(value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: Chip(
-        label: Text(value),
-        onDeleted: () {
-          String id = skills.keys.firstWhere((k) => skills[k] == value);
-          _selectedSkills.remove(id);
-          setState(() {});
-        },
-      ),
-    );
-  }
+  // Padding buildChip(value) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5),
+  //     child: CustomChip(
+  //       title: value,
+  //       onDelete: () {
+  //         String id = skills.keys.firstWhere((k) => skills[k] == value);
+  //         _selectedSkills.remove(id);
+  //       },
+  //     ),
+  //     // child: Chip(
+  //   label: Text(value),
+  //   onDeleted: () {
+  //     String id = skills.keys.firstWhere((k) => skills[k] == value);
+  //     _selectedSkills.remove(id);
+  //     setState(() {});
+  //   },
+  // ),
+  // );
 }
+// }
 
 // const List<String> _defaultTools = <String>[
 //   'Curators',
@@ -1000,3 +1024,48 @@ class _SkillViewNewState extends State<SkillViewNew> {
 //   });
 //   _setPreferencesSkip(context);
 // }
+
+// class CustomFilterChip extends StatelessWidget {
+//   final String title;
+//   final Function delete;
+//   final bool selected;
+
+//   const CustomFilterChip({Key key, this.title, this.delete, this.selected})
+//       : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return FilterChip(
+//       label: Text(title),
+//       labelStyle: TextStyle(
+//         color: Colors.white,
+//         fontSize: 12.0,
+//         fontWeight: FontWeight.bold,
+//       ),
+//       selected: selected,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(30.0),
+//       ),
+//       backgroundColor: Colors.grey[300],
+//       showCheckmark: false,
+//       avatar: Container(
+//         decoration: BoxDecoration(
+//           shape: BoxShape.circle,
+//           color: Color(0xFFFFFFFF),
+//         ),
+//         child: Center(
+//           child: Icon(
+//             Icons.check,
+//             color: Color(0xFFF70C493),
+//             size: 18,
+//           ),
+//         ),
+//       ),
+//       selectedColor: Color(0x0FF70C493),
+//       onSelected: (bool value) {
+//         delete();
+//       },
+//     );
+//   }
+// }
+

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/widgets/custom_chip.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
 
@@ -14,7 +15,8 @@ class InterestViewNew extends StatefulWidget {
   InterestViewNew({
     @required this.onSelectedInterests,
     @required this.onSkipped,
-    this.userModel, this.automaticallyImplyLeading = true,
+    this.userModel,
+    this.automaticallyImplyLeading = true,
   });
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
@@ -76,16 +78,20 @@ class _InterestViewNewState extends State<InterestViewNew> {
               textFieldConfiguration: TextFieldConfiguration(
                 decoration: InputDecoration(
                   hintText: 'Search',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderSide: new BorderSide(color: Colors.white),
+                    borderRadius: new BorderRadius.circular(25.7),
                   ),
-                  suffixIcon: Icon(Icons.search),
+                  enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: new BorderRadius.circular(25.7)),
+                  contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
               suggestionsBoxController: controller,
@@ -133,10 +139,23 @@ class _InterestViewNewState extends State<InterestViewNew> {
               shrinkWrap: true,
               children: <Widget>[
                 Wrap(
-                    children: _selectedInterests.values
-                        .toList()
-                        .map((value) => buildChip(value))
-                        .toList()),
+                  runSpacing: 5.0,
+                  spacing: 5.0,
+                  children: _selectedInterests.values
+                      .toList()
+                      .map(
+                        (value) => CustomChip(
+                          title: value,
+                          onDelete: () {
+                            String id = interests.keys
+                                .firstWhere((k) => interests[k] == value);
+                            _selectedInterests.remove(id);
+                            setState(() {});
+                          },
+                        ),
+                      )
+                      .toList(),
+                ),
               ],
             ),
             Spacer(),
@@ -174,17 +193,17 @@ class _InterestViewNewState extends State<InterestViewNew> {
     );
   }
 
-  Padding buildChip(value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: Chip(
-        label: Text(value),
-        onDeleted: () {
-          String id = interests.keys.firstWhere((k) => interests[k] == value);
-          _selectedInterests.remove(id);
-          setState(() {});
-        },
-      ),
-    );
-  }
+  // Padding buildChip(value) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 5.0),
+  //     child: Chip(
+  //       label: Text(value),
+  //       onDeleted: () {
+  //         String id = interests.keys.firstWhere((k) => interests[k] == value);
+  //         _selectedInterests.remove(id);
+  //         setState(() {});
+  //       },
+  //     ),
+  //   );
+  // }
 }
