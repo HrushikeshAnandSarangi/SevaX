@@ -64,7 +64,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
           children: <Widget>[
             SizedBox(height: 20),
             Text(
-              'We would like to personalize the experience based on your interests.',
+              'What are some of your interests and passions that you would be willing to share with your community?',
               style: TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
@@ -118,7 +118,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'No data Found',
+                    'No matching interests found',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 );

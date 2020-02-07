@@ -343,7 +343,7 @@ class ViewRequestsForAdmin extends StatelessWidget {
       return Scaffold(
           appBar: AppBar(
             title: Text(
-              "Select request",
+              "Select Request",
               style: TextStyle(
                 fontSize: 18,
               ),

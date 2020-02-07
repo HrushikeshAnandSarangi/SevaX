@@ -14,6 +14,7 @@ class ManageTimebankSeva extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         margin: EdgeInsets.all(10),
         child: Column(
@@ -48,7 +49,7 @@ class ManageTimebankSeva extends StatelessWidget {
       child: Text(
         'View requests',
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.bold,
           color: Colors.blue,
         ),
@@ -73,7 +74,7 @@ class ManageTimebankSeva extends StatelessWidget {
         child: Text(
           'View accepted offers',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.blue,
           ),
@@ -100,7 +101,7 @@ class ManageTimebankSeva extends StatelessWidget {
         child: Text(
           'Invite members via code',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: Colors.blue,
           ),
@@ -113,8 +114,9 @@ class ManageTimebankSeva extends StatelessWidget {
     return Text(
       "Manage ${timebankModel.name}",
       style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 18,
+        fontSize: 20,
+        color: Colors.black,
+        fontWeight: FontWeight.w700,
       ),
     );
   }

@@ -45,7 +45,7 @@ class UserProfileBloc {
       }
       Future.delayed(
         Duration(milliseconds: 300),
-        () => _communityLoaded.add(true),
+            () => _communityLoaded.add(true),
       );
     });
   }

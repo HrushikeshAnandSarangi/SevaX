@@ -157,7 +157,7 @@ Future<void> sendOfferRequest({
   @required String communityId,
 }) async {
   NotificationsModel model = NotificationsModel(
-    timebankId: offerModel.timebankId,
+      timebankId: offerModel.timebankId,
       targetUserId: offerModel.sevaUserId,
       data: offerModel.toMap(),
       type: NotificationType.OfferAccept,
@@ -245,21 +245,15 @@ Future<void> approveRequestCompletion({
   @required String userId,
   @required String communityId,
 }) async {
-  if (model.transactions == null) {
-    model.accepted = false;
-  } else {
-    var approvalCount = 0;
+  var approvalCount = 0;
+  if (model.transactions != null) {
     for (var i = 0; i < model.transactions.length; i++) {
       if (model.transactions[i].isApproved) {
         approvalCount++;
       }
     }
-    if (approvalCount < model.numberOfApprovals) {
-      model.accepted = false;
-    } else {
-      model.accepted = true;
-    }
   }
+  model.accepted = approvalCount >= model.numberOfApprovals;
   await Firestore.instance
       .collection('requests')
       .document(model.id)
@@ -342,6 +336,15 @@ Future<void> approveAcceptRequest({
   @required String notificationId,
   @required String communityId,
 }) async {
+  var approvalCount = 0;
+  if (requestModel.transactions != null) {
+    for (var i = 0; i < requestModel.transactions.length; i++) {
+      if (requestModel.transactions[i].isApproved) {
+        approvalCount++;
+      }
+    }
+  }
+  requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
   await Firestore.instance
       .collection('requests')
       .document(requestModel.id)
@@ -508,8 +511,8 @@ Stream<List<RequestModel>> getCompletedRequestStream({
       // .where('transactions.to', isEqualTo: userId)
       // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
       //.where('transactions', arrayContains: true)
-      .where('approvedUsers', arrayContains: userEmail)
       .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+      .where('approvedUsers', arrayContains: userEmail)
       // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 

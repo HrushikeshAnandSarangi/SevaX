@@ -9,6 +9,8 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 
+import '../../flavor_config.dart';
+
 class RequestCardWidget extends StatelessWidget {
   final UserModel userModel;
   final RequestModel requestModel;
@@ -202,7 +204,7 @@ class RequestCardWidget extends StatelessWidget {
                                     .currentCommunity,
                                 sevaUserID: SevaCore.of(context)
                                     .loggedInUser
-                                    .currentCommunity,
+                                    .sevaUserID,
                               );
                             },
                       child: Text(

@@ -76,7 +76,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           children: <Widget>[
             SizedBox(height: 20),
             Text(
-              'Lets get to know more, Which skills do you know more',
+              'What skills are you good at that you\'d like to share with your community?',
               style: TextStyle(
                   color: Colors.black54,
                   fontSize: 16,
@@ -132,7 +132,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'No data Found',
+                    'No matching skills found',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 );
