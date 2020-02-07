@@ -48,11 +48,11 @@ class _ProfilePageState extends State<ProfilePage>
   TimebankModel timebankModel;
   FirebaseUser firebaseUser;
 
-  double appbarScale = 0.9;
-  double flexibleScale = 1.0;
+  // double appbarScale = 0.9;
+  // double flexibleScale = 1.0;
 
-  AnimationController appbarAnimationController;
-  AnimationController flexibleAnimationController;
+  // AnimationController appbarAnimationController;
+  // AnimationController flexibleAnimationController;
   bool isAdminOrCoordinator = false;
   bool isVerifyAccountPressed = false;
   bool isUserLoaded = false;
@@ -84,15 +84,14 @@ class _ProfilePageState extends State<ProfilePage>
         isUserLoaded = true;
       });
     });
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+    _profileBloc.communityLoaded.listen((value) {
+      isCommunityLoaded = value;
+      setState(() {});
+    });
 
-    // FirestoreManager.getTimeBankForId()
-
-    FirestoreManager.getTimeBankForId(
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getTimeBankForId(
             timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
         .then((timebank) {
       if (timebank.admins
@@ -118,18 +117,19 @@ class _ProfilePageState extends State<ProfilePage>
       this.user = userModel;
       setState(() {});
     });
-
-    _profileBloc.communityLoaded.listen((value) {
-      isCommunityLoaded = value;
-      setState(() {});
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
   void dispose() {
     _profileBloc.dispose();
-    appbarAnimationController.dispose();
-    flexibleAnimationController.dispose();
+    // appbarAnimationController.dispose();
+    // flexibleAnimationController.dispose();
     super.dispose();
   }
 
