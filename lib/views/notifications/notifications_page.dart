@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/views/notifications/notifications_view.dart';
 
 class NotificationsPage extends StatelessWidget {
+  final String timebankId;
+  NotificationsPage({this.timebankId});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +15,7 @@ class NotificationsPage extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: NotificationViewHolder(),
+      body: NotificationViewHolder(timebankId: timebankId),
     );
   }
 }

@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart'
     as prefix0;
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/views/messages/new_chat.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../core.dart';
-import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'chatview.dart';
 
 class AllMembersChat extends StatefulWidget {
   bool isShare;
   NewsModel news;
+  final String timebankId;
 
-  AllMembersChat(this.isShare, this.news);
+  AllMembersChat({this.isShare, this.news, this.timebankId});
 
   @override
   AllMembersChatState createState() => AllMembersChatState();
@@ -87,7 +87,12 @@ class AllMembersChatState extends State<AllMembersChat>
         children: <Widget>[
           Expanded(
             child: ResultView(
-                () {}(), searchTextController, widget.isShare, widget.news),
+              () {}(),
+              searchTextController,
+              widget.isShare,
+              widget.news,
+              widget.timebankId,
+            ),
           ),
         ],
       ),
@@ -100,8 +105,15 @@ class ResultView extends StatefulWidget {
   final TextEditingController controller;
   bool isShare;
   NewsModel news;
+  final String timebankId;
 
-  ResultView(this.type, this.controller, this.isShare, this.news);
+  ResultView(
+    this.type,
+    this.controller,
+    this.isShare,
+    this.news,
+    this.timebankId,
+  );
 
   @override
   _ResultViewState createState() => _ResultViewState();
@@ -189,6 +201,7 @@ class _ResultViewState extends State<ResultView> {
                         ChatModel model = ChatModel();
                         model.user1 = users[0];
                         model.user2 = users[1];
+                        model.timebankId = widget.timebankId;
                         createChat(chat: model).then(
                           (_) {
                             Navigator.push(
@@ -303,8 +316,6 @@ class _ResultViewState extends State<ResultView> {
 //      return Offstage();
 //    });
 
-
-
     return StreamBuilder<Object>(
         stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
         builder: (context, snapshot) {
@@ -325,6 +336,7 @@ class _ResultViewState extends State<ResultView> {
                       ChatModel model = ChatModel();
                       model.user1 = users[0];
                       model.user2 = users[1];
+                      model.timebankId = widget.timebankId;
                       createChat(chat: model).then(
                         (_) {
                           Navigator.push(

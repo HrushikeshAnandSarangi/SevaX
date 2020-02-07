@@ -9,6 +9,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
@@ -28,17 +29,21 @@ import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
 import 'core.dart';
+import 'messages/timebank_chats.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
+<<<<<<< HEAD
   TimebankModel timebankModel;
   //final UserModel loggedInUser;
 
   // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
   //final UserModel loggedInUser;
 
+=======
+  final TimebankModel timebankModel;
+>>>>>>> origin/signin_stable
   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
-  //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +181,10 @@ Widget createAdminTabBar(
               Tab(
                 text: "Manage",
               ),
+              getMessagingTab(
+                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                timebankId: timebankId,
+              ),
             ],
           ),
           Container(
@@ -209,6 +218,10 @@ Widget createAdminTabBar(
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
                 ),
+<<<<<<< HEAD
+=======
+                TimebankChatListView(),
+>>>>>>> origin/signin_stable
               ],
             ),
           ),
@@ -218,13 +231,76 @@ Widget createAdminTabBar(
   );
 }
 
+Widget get gettingMessages {
+  return Icon(Icons.message);
+}
+
+Widget unreadMessages(int unreadCount) {
+  return Stack(
+    children: <Widget>[
+      Icon(Icons.message),
+      unreadCount > 0 ? badge(unreadCount) : Offstage(),
+    ],
+  );
+}
+
+Widget badge(int count) => Positioned(
+      right: 0,
+      top: 0,
+      child: new Container(
+        padding: EdgeInsets.all(1),
+        decoration: new BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(7.5),
+        ),
+        constraints: BoxConstraints(
+          minWidth: 15,
+          minHeight: 15,
+        ),
+        child: Text(
+          count.toString(),
+          style: new TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+Widget getMessagingTab({String timebankId, String communityId}) {
+  return StreamBuilder<List<ChatModel>>(
+    stream: getChatsForTimebank(
+      timebankId: timebankId,
+      communityId: communityId,
+    ),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Tab(
+          icon: gettingMessages,
+        );
+      }
+      var unreadCount = 0;
+      snapshot.data.forEach((model) {
+        model.unreadStatus.containsKey(timebankId)
+            ? unreadCount += model.unreadStatus[timebankId]
+            : print("not found");
+      });
+
+      return Tab(
+        icon: unreadMessages(unreadCount),
+      );
+    },
+  );
+}
+
 Widget createJoinedUserTabBar(
   BuildContext context,
   TimebankModel timebankModel,
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 5,
+    length: 6,
     child: Scaffold(
         appBar: AppBar(
           elevation: 0.5,
@@ -312,8 +388,14 @@ Widget createJoinedUserTabBar(
                     timebankId: timebankModel.id,
                     userEmail: SevaCore.of(context).loggedInUser.email,
                   ),
+                  Tab(
+                    text: "Messages",
+                  ),
                 ],
               ),
+            ),
+            TimebankChatListView(
+              timebankId: timebankId,
             ),
           ],
         )),

@@ -86,6 +86,33 @@ class _ChatViewState extends State<ChatView> {
     super.initState();
   }
 
+  Widget appBar({String imageUrl, String appbarTitle}) {
+    return Row(
+      children: <Widget>[
+        Container(
+          height: 36,
+          width: 36,
+          decoration: ShapeDecoration(
+            shape: CircleBorder(
+              side: BorderSide(
+                color: Colors.white,
+                width: 1,
+              ),
+            ),
+            image: DecorationImage(
+              image: NetworkImage(imageUrl),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+        ),
+        Text(appbarTitle,
+            style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,63 +143,56 @@ class _ChatViewState extends State<ChatView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FutureBuilder<Object>(
-                future: FirestoreManager.getUserForEmail(
-                    emailAddress: widget.useremail),
+                future: isValidEmail(widget.useremail)
+                    ? FirestoreManager.getUserForEmail(
+                        emailAddress: widget.useremail)
+                    : FirestoreManager.getTimeBankForId(
+                        timebankId: widget.useremail),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.error}');
+                    return new Text('Error');
                   }
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center();
                   }
+
+                  if (!isValidEmail(widget.useremail)) {
+                    TimebankModel timebankModel = snapshot.data;
+                    return appBar(
+                        appbarTitle: timebankModel.name,
+                        imageUrl: timebankModel.photoUrl);
+                  }
+
                   partnerUser = snapshot.data;
                   print("Blah blah blah Blocked:${partnerUser.sevaUserID}");
-                  return Row(
-                    children: <Widget>[
-                      Container(
-                        height: 36,
-                        width: 36,
-                        decoration: ShapeDecoration(
-                          shape: CircleBorder(
-                            side: BorderSide(
-                              color: Colors.white,
-                              width: 1,
-                            ),
-                          ),
-                          image: DecorationImage(
-                            image: NetworkImage(partnerUser.photoURL),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      ),
-                      Text('${partnerUser.fullname.split(" ")[0]}',
-                          style: TextStyle(fontSize: 18),
-                          overflow: TextOverflow.ellipsis),
-                    ],
-                  );
+                  return appBar(
+                      appbarTitle: partnerUser.fullname,
+                      imageUrl: partnerUser.photoURL);
                 }),
             Divider(),
-            RaisedButton(
-              color: Color(0xffb71c1c),
-              child: Container(
-                child: Text(
-                  'Block',
-                  style: TextStyle(color: Colors.white),
+            Offstage(
+              offstage: !isValidEmail(widget.chatModel.user1) ||
+                  !isValidEmail(widget.chatModel.user2),
+              child: RaisedButton(
+                color: Color(0xffb71c1c),
+                child: Container(
+                  child: Text(
+                    'Block',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
+                onPressed: () {
+                  blockMemberDialogView(
+                    context,
+                  ).then((result) {
+                    print("result " + result);
+                    if (result == 'BLOCK') {
+                      blockMember();
+                      Navigator.pop(context);
+                    }
+                  });
+                },
               ),
-              onPressed: () {
-                blockMemberDialogView(
-                  context,
-                ).then((result) {
-                  print("result " + result);
-                  if (result == 'BLOCK') {
-                    blockMember();
-                    Navigator.pop(context);
-                  }
-                });
-              },
             ),
           ],
         ),
@@ -463,6 +483,12 @@ class _ChatViewState extends State<ChatView> {
         );
       },
     );
+  }
+
+  bool isValidEmail(String email) {
+    RegExp regex =
+        RegExp(r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)');
+    return regex.hasMatch(email);
   }
 
   void blockMember() {

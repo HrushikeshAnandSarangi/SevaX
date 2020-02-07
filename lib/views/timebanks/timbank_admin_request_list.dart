@@ -502,6 +502,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => ProfileViewer(
+                      timebankId: widget.timebankId,
                       userEmail: user.email,
                     )));
           },

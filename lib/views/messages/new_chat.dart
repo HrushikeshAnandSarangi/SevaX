@@ -12,8 +12,9 @@ import 'chatview.dart';
 class NewChat extends StatefulWidget {
   bool isShare;
   NewsModel news;
+  final String timebankId;
 
-  NewChat(this.isShare, this.news);
+  NewChat(this.isShare, this.news, this.timebankId);
 
   @override
   NewChatState createState() => NewChatState();
@@ -78,7 +79,12 @@ class NewChatState extends State<NewChat> with TickerProviderStateMixin {
         children: <Widget>[
           Expanded(
             child: ResultView(
-                () {}(), searchTextController, widget.isShare, widget.news),
+              () {}(),
+              searchTextController,
+              widget.isShare,
+              widget.news,
+              widget.timebankId,
+            ),
           ),
         ],
       ),
@@ -91,8 +97,10 @@ class ResultView extends StatefulWidget {
   final TextEditingController controller;
   bool isShare;
   NewsModel news;
+  String timebankId;
 
-  ResultView(this.type, this.controller, this.isShare, this.news);
+  ResultView(
+      this.type, this.controller, this.isShare, this.news, this.timebankId);
 
   @override
   _ResultViewState createState() => _ResultViewState();
@@ -153,8 +161,12 @@ class _ResultViewState extends State<ResultView> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AllMembersChat(
-                                    widget.isShare, widget.news)),
+                              builder: (context) => AllMembersChat(
+                                isShare: widget.isShare,
+                                news: widget.news,
+                                timebankId: widget.timebankId,
+                              ),
+                            ),
                           );
                         },
                         child: Text(
@@ -209,6 +221,7 @@ class _ResultViewState extends State<ResultView> {
                         ChatModel model = ChatModel();
                         model.user1 = users[0];
                         model.user2 = users[1];
+                        model.timebankId = widget.timebankId;
                         createChat(chat: model).then(
                           (_) {
                             Navigator.push(
