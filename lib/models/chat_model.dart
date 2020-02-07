@@ -8,6 +8,7 @@ class ChatModel extends DataModel {
   String lastMessage;
   String rootTimebank;
   int timestamp;
+  String timebankId;
 
   String messagTitleUserName;
   String photoURL;
@@ -19,7 +20,13 @@ class ChatModel extends DataModel {
   bool isBlocked = false;
   String communityId;
 
-  ChatModel({this.user1, this.user2, this.lastMessage, this.rootTimebank});
+  ChatModel({
+    this.user1,
+    this.user2,
+    this.lastMessage,
+    this.rootTimebank,
+    this.timebankId,
+  });
 
   ChatModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('softDeletedBy')) {
@@ -84,6 +91,10 @@ class ChatModel extends DataModel {
     if (map.containsKey('communityId')) {
       this.communityId = map['communityId'];
     }
+
+    if (map.containsKey('timebankId')) {
+      this.timebankId = map['timebankId'];
+    }
   }
 
   @override
@@ -110,6 +121,10 @@ class ChatModel extends DataModel {
       map['deletedBy'] = this.deletedBy;
     }
 
+    if (this.timebankId != null) {
+      map['timebankId'] = timebankId;
+    }
+    
     map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
 
     map['unread_status'] = this.unreadStatus;
@@ -122,6 +137,6 @@ class ChatModel extends DataModel {
   @override
   String toString() {
     // TODO: implement toString
-    return "messageTitle = ${this.messagTitleUserName} messagePhoto : ${this.photoURL} User 1 :  ${this.user1}  -- User 2 : ${this.user2} -- lastMessage ${this.lastMessage}  -- ${this.rootTimebank} deletedBy -> $deletedBy";
+    return "messageTitle = ${this.messagTitleUserName} messagePhoto : ${this.photoURL} User 1 :  ${this.user1}  -- User 2 : ${this.user2} -- lastMessage ${this.lastMessage}  -- ${this.rootTimebank} deletedBy -> $deletedBy --communityId $communityId";
   }
 }

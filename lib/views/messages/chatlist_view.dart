@@ -289,24 +289,48 @@ class _ChatListViewState extends State<ChatListView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          "Timebank",
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.green,
+                        Offstage(
+                          offstage: isValidEmail(chatModel.user1) &&
+                              isValidEmail(chatModel.user2),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(3)),
+                            padding: EdgeInsets.only(
+                                left: 5, right: 5, top: 2, bottom: 2),
+                            // color: Colors.green,
+                            child: Text(
+                              "Timebank",
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
-                        Text(
-                          chatModel.messagTitleUserName == null
-                              ? 'Not added '
-                              : chatModel.messagTitleUserName,
-                          style: Theme.of(parentContext).textTheme.subhead,
+                        Container(
+                          margin: EdgeInsets.only(
+                            left: 3,
+                            top: isValidEmail(chatModel.user1) &&
+                                    isValidEmail(chatModel.user2)
+                                ? 5
+                                : 0,
+                          ),
+                          child: Text(
+                            chatModel.messagTitleUserName == null
+                                ? 'Not added '
+                                : chatModel.messagTitleUserName,
+                            style: Theme.of(parentContext).textTheme.subhead,
+                          ),
                         ),
-                        Text(
-                          lastmessage,
-                          style: TextStyle(color: Colors.grey),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                        Container(
+                          margin: EdgeInsets.only(left: 3),
+                          child: Text(
+                            lastmessage,
+                            style: TextStyle(color: Colors.grey),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
                         ),
                       ],
                     ),

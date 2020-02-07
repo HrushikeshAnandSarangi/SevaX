@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/messages/chatview_admin.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -22,7 +23,8 @@ import '../core.dart';
 import 'list_members_timebank.dart';
 
 class TimebankChatListView extends StatefulWidget {
-  const TimebankChatListView({Key key}) : super(key: key);
+  final String timebankId;
+  TimebankChatListView({this.timebankId});
 
   @override
   _ChatListViewState createState() => _ChatListViewState();
@@ -50,7 +52,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
       // ),
       body: StreamBuilder<List<ChatModel>>(
         stream: getChatsForTimebank(
-          timebankId: "9ecec05e-71fd-456e-9f6d-35798f41bdf5",
+          timebankId: widget.timebankId,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (BuildContext context,
@@ -221,6 +223,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
 
   Widget getMessageListView(ChatModel chatModel, BuildContext parentContext) {
     // print("------------------------->" + chatModel.toString());
+
     String lastmessage;
     if (chatModel.lastMessage == null) {
       lastmessage = '';
@@ -255,11 +258,10 @@ class _ChatListViewState extends State<TimebankChatListView> {
               Navigator.push(
                 parentContext,
                 MaterialPageRoute(
-                  builder: (context) => ChatView(
-                    useremail: SevaCore.of(context).loggedInUser.email ==
-                            chatModel.user1
-                        ? chatModel.user2
-                        : chatModel.user1,
+                  builder: (context) => AdminChatView(
+                    useremail: isValidEmail(chatModel.user1)
+                        ? chatModel.user1
+                        : chatModel.user2,
                     chatModel: chatModel,
                   ),
                 ),
@@ -322,7 +324,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
                           Text(
                             chatModel.unreadStatus != null &&
                                     chatModel.unreadStatus.containsKey(
-                                      userEmail,
+                                      widget.timebankId,
                                     )
                                 ? "${chatModel.unreadStatus[userEmail] == 0 ? '' : chatModel.unreadStatus[userEmail]}"
                                 : '',

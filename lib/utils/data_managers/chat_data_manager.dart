@@ -17,6 +17,10 @@ Future<void> createChat({
   // prefix0.print("${chat.communityId}-------------------------------------------------------------------");
   // log.i('createChat: MessageModel: ${chat.toMap()}');
   chat.rootTimebank = FlavorConfig.values.timebankId;
+  print("creating a new chat for ${chat}");
+
+
+
   return await Firestore.instance
       .collection('chatsnew')
       .document(
@@ -156,7 +160,6 @@ Stream<List<ChatModel>> getChatsforUser({
         var futures = <Future>[];
         List<ChatModel> chatlist = [];
         chatlist.clear();
-        print("Length is here : ---> ${snapshot.documents.length}");
         snapshot.documents.forEach(
           (documentSnapshot) async {
             ChatModel model = ChatModel.fromMap(documentSnapshot.data);

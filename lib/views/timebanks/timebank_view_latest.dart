@@ -41,17 +41,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   }
 
   void getData() async {
-   // print('Admin id  ${widget.timebankModel.admins[0]}');
+    // print('Admin id  ${widget.timebankModel.admins[0]}');
 
     user = await FirestoreManager.getUserForId(
         sevaUserId: widget.timebankModel.admins[0]);
 
-    if(user!=null){
+    if (user != null) {
       isAdminLoaded = true;
     }
-
-
-
 
     if (widget.timebankModel.members.contains(widget.userId)) {
       isUserJoined = true;
@@ -69,9 +66,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   @override
   Widget build(BuildContext context) {
     var futures = <Future>[];
-
-    print("--------------------------->$isUserJoined");
-
     widget.timebankModel.members.forEach((member) {
       futures.add(getUserForId(sevaUserId: member));
     });
@@ -88,13 +82,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
               child: CachedNetworkImage(
                 imageUrl: widget.timebankModel.photoUrl ?? ' ',
                 fit: BoxFit.cover,
-                errorWidget: (context, url, error) =>
-                Container(
-                  height: 80,
-                  child: Center(
-                    child: Text('No Image Avaialable',textAlign: TextAlign.center,),
-                  )
-                ),
+                errorWidget: (context, url, error) => Container(
+                    height: 80,
+                    child: Center(
+                      child: Text(
+                        'No Image Avaialable',
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
                 placeholder: (conext, url) {
                   return Center(child: CircularProgressIndicator());
                 },
@@ -236,7 +231,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
             Padding(
               padding: const EdgeInsets.only(top: 10.0, left: 20),
               child: Text(
-                widget.timebankModel.members.length.toString() + ' Volunteers' ?? '0 Volunteers',
+                widget.timebankModel.members.length.toString() +
+                        ' Volunteers' ??
+                    '0 Volunteers',
                 style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 18,
@@ -286,34 +283,37 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                         descTextShowFlag = !descTextShowFlag;
                       });
                     },
-                    child: widget.timebankModel.missionStatement.length > 100 ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        descTextShowFlag
-                            ? Text(
-                                "Read Less",
-                                style: TextStyle(
-                                  fontFamily: 'Europa',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.lightBlueAccent,
-                                ),
-                              )
-                            : Text(
-                                "Read More",
-                                style: TextStyle(
-                                  fontFamily: 'Europa',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.lightBlueAccent,
-                                ),
-                              )
-                      ],
-                    ): Container(),
+                    child: widget.timebankModel.missionStatement.length > 100
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              descTextShowFlag
+                                  ? Text(
+                                      "Read Less",
+                                      style: TextStyle(
+                                        fontFamily: 'Europa',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.lightBlueAccent,
+                                      ),
+                                    )
+                                  : Text(
+                                      "Read More",
+                                      style: TextStyle(
+                                        fontFamily: 'Europa',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.lightBlueAccent,
+                                      ),
+                                    )
+                            ],
+                          )
+                        : Container(),
                   ),
                 ],
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Divider(
@@ -332,6 +332,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                 ),
               ),
             ),
+
+            // print(widget.timebankModel.id);
+
+            // burhan@uipep.com*9ecec05e-71fd-456e-9f6d-35798f41bdf5*73d0de2c-198b-4788-be64-a804700a88a4*4b75347e-56ec-4d62-8ce7-374c5cd84e5f
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Row(
@@ -362,10 +367,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                               child: Text('Admin not Available'),
                             ),
                       Padding(
-                        padding: const EdgeInsets.only(top:8.0),
+                        padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            startChat(user.email, widget.email, context);
+                            startChat(widget.timebankModel.id, widget.email,
+                                context, widget.timebankModel.id);
                           },
                           child: Text(
                             'Message',
@@ -390,21 +396,22 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                             shape: BoxShape.circle,
                             image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image:
-                                    CachedNetworkImageProvider(user.photoURL ?? 'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
+                                image: CachedNetworkImageProvider(user
+                                        .photoURL ??
+                                    'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
                           ),
-                  )
+                        )
                       : Container(
-                      height: 60,
-                      width: 60,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image:
-                            CachedNetworkImageProvider('https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
-                      ),
-                  ),
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: CachedNetworkImageProvider(
+                                    'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png')),
+                          ),
+                        ),
                 ],
               ),
             )
@@ -415,8 +422,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
   }
 }
 
+var timeStamp = DateTime.now().millisecondsSinceEpoch;
+
 void startChat(
-    String email, String loggedUserEmail, BuildContext context) async {
+  String email,
+  String loggedUserEmail,
+  BuildContext context,
+  String timbebankId,
+) async {
   if (email == loggedUserEmail) {
     return null;
   } else {
@@ -424,9 +437,10 @@ void startChat(
     print("Listing users");
     users.sort();
     ChatModel model = ChatModel();
+    model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     model.user1 = users[0];
     model.user2 = users[1];
-    print("Model1" + model.user1);
+    model.timebankId = timbebankId;
     print("Model2" + model.user2);
 
     await createChat(chat: model).then(
@@ -441,8 +455,7 @@ void startChat(
               chatModel: model,
               isFromShare: false,
               news: NewsModel(),
-              isFromNewChat:
-                  IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
+              isFromNewChat: IsFromNewChat(true, timeStamp),
             ),
           ),
         );

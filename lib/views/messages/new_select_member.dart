@@ -1,4 +1,4 @@
-import 'dart:ui' as prefix0;
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +7,8 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import 'dart:ui';
+import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
 import 'chatview.dart';
@@ -171,6 +169,7 @@ class _SelectMembersView extends StatelessWidget {
           ChatModel model = ChatModel();
           model.user1 = users[0];
           model.user2 = users[1];
+          model.timebankId = timebankId;
           print("Model1" + model.user1);
           print("Model2" + model.user2);
 
