@@ -205,10 +205,6 @@ class _RegisterPageState extends State<RegisterPage>
             validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
             capitalization: TextCapitalization.words,
             onSave: (value) => this.fullName = value,
-            suffix: IconButton(
-              icon: Icon(Icons.person, color: Colors.white),
-              onPressed: null,
-            ),
           ),
           getFormField(
             shouldRestrictLength: false,
@@ -219,10 +215,6 @@ class _RegisterPageState extends State<RegisterPage>
               }
               return null;
             },
-            suffix: IconButton(
-              icon: Icon(Icons.email, color: Colors.white),
-              onPressed: null,
-            ),
             capitalization: TextCapitalization.none,
             onSave: (value) => this.email = value.trim(),
           ),
@@ -243,18 +235,17 @@ class _RegisterPageState extends State<RegisterPage>
             },
             suffix: Container(
               height: 30,
-              child: IconButton(
-                onPressed: () {
+              child:  GestureDetector(
+                onTap: () {
                   _shouldObscurePassword = !_shouldObscurePassword;
                   setState(() {});
                 },
-                splashColor: Colors.transparent,
-                icon: Icon(
+                child: Icon(
                   _shouldObscurePassword
                       ? Icons.visibility_off
                       : Icons.visibility,
                 ),
-              ),
+              )
             ),
           ),
           getFormField(
@@ -270,19 +261,21 @@ class _RegisterPageState extends State<RegisterPage>
               }
               return null;
             },
-            suffix: IconButton(
-              onPressed: () {
-                _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
-                setState(() {});
-              },
-              splashColor: Colors.transparent,
-              icon: Icon(
-                shouldObscureConfirmPassword
-                    ? Icons.visibility_off
-                    : Icons.visibility,
-              ),
+            suffix: Container(
+                height: 30,
+                child:  GestureDetector(
+                  onTap: () {
+                    _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
+                    setState(() {});
+                  },
+                  child: Icon(
+                    shouldObscureConfirmPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                )
             ),
-          ),
+          )
         ],
       ),
     );
