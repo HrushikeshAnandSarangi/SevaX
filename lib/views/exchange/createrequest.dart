@@ -41,7 +41,7 @@ class _CreateRequestState extends State<CreateRequest> {
           title: Text(
             FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? "Create Yang Gang Request"
-                : "Create Campaign Request",
+                : "Create your request",
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -147,7 +147,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang gang request title"
-                      : "Campaign request title",
+                      : "Request title",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -286,7 +286,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang Gang Request description"
-                      : "Campaign request description",
+                      : "Request description",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

@@ -16,7 +16,6 @@ class InvitedUsersView extends StatefulWidget {
 
   @override
   _InvitedUsersViewState createState() {
-    
     return _InvitedUsersViewState();
   }
 }
@@ -49,53 +48,72 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
       setState(() {});
     });
 
-    if (isAdmin) {
-      //   print('admin is true ');
-      _firestore
-          .collection("users")
-          .where(
-            'favoriteByTimeBank',
-            arrayContains: timebank.model.id,
-          )
-          .getDocuments()
-          .then(
-        (QuerySnapshot querysnapshot) {
-          if (favoriteUsers == null) favoriteUsers = List();
+//    _firestore
+//        .collection('users')
+//        .where(isAdmin ? "favoriteByTimeBank" : "favoriteByMember",
+//            arrayContains: isAdmin ? widget.timebankId : widget.sevaUserId)
+//        .snapshots()
+//        .listen((usermodelList) {
+//      usermodelList.documents.forEach((usermodel) {
+//        favoriteUsers.add(UserModel.fromMap(usermodel.data));
+//      });
+//    });
 
-          querysnapshot.documents.forEach(
-            (DocumentSnapshot user) => favoriteUsers.add(
-              UserModel.fromMap(
-                user.data,
-              ),
-            ),
-          );
-          // setState(() {});
-        },
-      );
-    } else {
-      //    print('admin is false ');
-      _firestore
-          .collection("users")
-          .where(
-            'favoriteByMember',
-            arrayContains: widget.sevaUserId,
-          )
-          .getDocuments()
-          .then(
-        (QuerySnapshot querysnapshot) {
-          if (favoriteUsers == null) favoriteUsers = List();
+//    if (isAdmin) {
+//      //   print('admin is true ');
+//      _firestore
+//          .collection("users")
+//          .where(
+//            'favoriteByTimeBank',
+//            arrayContains: timebank.model.id,
+//          )
+//          .getDocuments()
+//          .then(
+//        (QuerySnapshot querysnapshot) {
+//          if (favoriteUsers == null) favoriteUsers = List();
+//
+//          querysnapshot.documents.forEach(
+//            (DocumentSnapshot user) => favoriteUsers.add(
+//              UserModel.fromMap(
+//                user.data,
+//              ),
+//            ),
+//          );
+//          // setState(() {});
+//        },
+//      );
+//    } else {
+//      //    print('admin is false ');
+//      _firestore
+//          .collection("users")
+//          .where(
+//            'favoriteByMember',
+//            arrayContains: widget.sevaUserId,
+//          )
+//          .getDocuments()
+//          .then(
+//        (QuerySnapshot querysnapshot) {
+//          if (favoriteUsers == null) favoriteUsers = List();
+//
+//          querysnapshot.documents.forEach(
+//            (DocumentSnapshot user) => favoriteUsers.add(
+//              UserModel.fromMap(
+//                user.data,
+//              ),
+//            ),
+//          );
+//          setState(() {});
+//        },
+//      );
+//    }
+  }
 
-          querysnapshot.documents.forEach(
-            (DocumentSnapshot user) => favoriteUsers.add(
-              UserModel.fromMap(
-                user.data,
-              ),
-            ),
-          );
-          setState(() {});
-        },
-      );
-    }
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    // timeBankBloc.setInvitedUsersData(widget.requestModel.id);
+    print("did change called");
+    super.didChangeDependencies();
   }
 
   @override
@@ -135,6 +153,7 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
             itemCount: userList.length,
             itemBuilder: (context, index) {
               UserModel user = userList[index];
+
               List<String> timeBankIds = user.favoriteByTimeBank ?? [];
               List<String> memberId = user.favoriteByMember ?? [];
 
@@ -143,9 +162,10 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
                 userModel: user,
                 requestModel: requestModel,
                 timebankModel: timebank.model,
+                refresh: refresh,
                 isFavorite: isAdmin
-                    ? timeBankIds.contains(widget.timebankId) ?? false
-                    : memberId.contains(widget.sevaUserId) ?? false,
+                    ? timeBankIds.contains(widget.timebankId)
+                    : memberId.contains(widget.sevaUserId),
                 reqStatus: 'Invited',
               );
             });
@@ -171,6 +191,14 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
         );*/
       },
     );
+  }
+
+  refresh() {
+    setState(() {
+      timeBankBloc.setInvitedUsersData(widget.requestModel.id);
+
+      print("invied page refreshed");
+    });
   }
 
   /* Widget makeUserWidget({UserModel  userModel, RequestModel requestModel,BuildContext context}) {

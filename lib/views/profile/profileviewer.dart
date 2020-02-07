@@ -148,16 +148,15 @@ class ProfileViewerState extends State<ProfileViewer> {
                               child: CircularProgressIndicator(),
                             );
                           }
+
                           List<RequestModel> requestList = snapshot.data;
-                          int toltalHoursWorked = 0;
+                          double toltalHoursWorked = 0;
 
                           toltalHoursWorked = getTotalWorkedHours(requestList);
-                          print(
-                              "req_lenght ${requestList.length} + $toltalHoursWorked");
 
                           return JobsCounter(
                             jobs: requestList.length,
-                            hours: toltalHoursWorked,
+                            hours: toltalHoursWorked.toInt(),
                           );
                         },
                       ),
@@ -768,15 +767,15 @@ class ProfileViewerState extends State<ProfileViewer> {
     );
   }
 
-  int getTotalWorkedHours(List<RequestModel> requestList) {
-    int toltalHoursWorked;
+  double getTotalWorkedHours(List<RequestModel> requestList) {
+    double toltalHoursWorked = 0;
     requestList.forEach((requestModel) {
       TransactionModel transmodel =
           requestModel.transactions.firstWhere((transaction) {
         return transaction.to == widget.userModel.sevaUserID;
       });
       if (transmodel != null && transmodel.credits != null) {
-        toltalHoursWorked += transmodel.credits;
+        toltalHoursWorked = toltalHoursWorked + transmodel.credits;
       }
     });
     return toltalHoursWorked;

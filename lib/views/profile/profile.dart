@@ -56,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage>
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
-  double sevaCoins = 0;
+  double sevaCoins = 5;
 
   // UserProfileBloc _profileBloc = UserProfileBloc();
 

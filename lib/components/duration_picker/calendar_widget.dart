@@ -2,10 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/utils/utils.dart';
-import 'calendar_picker.dart';
-import 'time_picker_widget.dart';
 
-import 'date_time_selector_widget.dart';
+import 'calendar_picker.dart';
 
 class CalendarWidget extends StatefulWidget {
   final DateTime dateTime;
@@ -35,6 +33,7 @@ class CalendarWidgetState extends State<CalendarWidget> {
   final GlobalKey<CalendarPickerState> _calendarState = GlobalKey();
   DateTime startDate;
   DateTime endDate;
+  SelectionType selectionType;
 
   @override
   void initState() {
@@ -85,10 +84,11 @@ class CalendarWidgetState extends State<CalendarWidget> {
                           switch (widget.selectionType) {
                             case SelectionType.START_DATE:
                               if (isPastDay(dayNumber)) return false;
-                              if (getSelectedDate(dayNumber).isAfter(endDate))
-                                return false;
+//                              if (getSelectedDate(dayNumber).isAfter(endDate))
+//                                return false;
                               setState(() {
                                 startDate = getSelectedDate(dayNumber);
+                                endDate = startDate;
                                 widget
                                     .onDateSelected(getSelectedDate(dayNumber));
                               });
@@ -174,9 +174,8 @@ class CalendarWidgetState extends State<CalendarWidget> {
               : '${dayNumber - _beginMonthPadding}',
           style: TextStyle(
               color: <Color>() {
-                if (isInSelectedRange(dayNumber)) return Colors.blue;
-                if (isCurrentDay(dayNumber))
-                  return Colors.black;
+                if (isInSelectedRange(dayNumber)) return Colors.white;
+                if (isCurrentDay(dayNumber)) return Colors.black;
                 if (isPastDay(dayNumber)) return Colors.grey;
                 return Colors.black;
               }(),

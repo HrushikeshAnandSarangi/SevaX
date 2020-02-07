@@ -2,14 +2,17 @@ import 'package:sevaexchange/models/data_model.dart';
 
 class ClaimedRequestStatusModel extends DataModel {
   bool isAccepted;
-  String requesterID;
-  String requestID;
+  String id;
   num timestamp;
   num credits;
+  String requesterEmail;
+  String adminEmail;
+
   ClaimedRequestStatusModel(
       {this.isAccepted,
-      this.requesterID,
-      this.requestID,
+      this.requesterEmail,
+      this.adminEmail,
+      this.id,
       this.timestamp,
       this.credits});
 
@@ -18,12 +21,16 @@ class ClaimedRequestStatusModel extends DataModel {
       this.isAccepted = map['isAccepted'];
     }
 
-    if (map.containsKey('requesterID')) {
-      this.requesterID = map['requesterID'];
+    if (map.containsKey('requester_email')) {
+      this.requesterEmail = map['requester_email'];
     }
 
-    if (map.containsKey('requestID')) {
-      this.requestID = map['requestID'];
+    if (map.containsKey('admin_email')) {
+      this.adminEmail = map['admin_email'];
+    }
+
+    if (map.containsKey('id')) {
+      this.id = map['id'];
     }
 
     if (map.containsKey('timestamp')) {
@@ -43,16 +50,16 @@ class ClaimedRequestStatusModel extends DataModel {
       map['isAccepted'] = this.isAccepted;
     }
 
-    if (this.requesterID != null) {
-      map['requesterID'] = this.requesterID;
+    if (this.requesterEmail != null) {
+      map['requester_email'] = this.requesterEmail;
     }
 
-    if (this.requestID != null) {
-      map['requestID'] = this.requestID;
+    if (this.adminEmail != null) {
+      map['admin_email'] = this.adminEmail;
     }
 
-    if (this.timestamp != null) {
-      map['timestamp'] = this.timestamp;
+    if (this.id != null) {
+      map['id'] = this.id;
     }
 
     if (this.timestamp != null) {
