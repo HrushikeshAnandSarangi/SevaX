@@ -159,7 +159,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   decoration: InputDecoration(
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
-                        : "Ex: Pets -in-town, Citizen collab",
+                        : "Ex: Small carpentry work...",
                   ),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,

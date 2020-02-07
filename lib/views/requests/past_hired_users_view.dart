@@ -104,6 +104,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
                 requestModel: requestModel,
                 userModel: user,
                 isAdmin: isAdmin,
+                refresh: refresh,
                 isFavorite: isAdmin ?? false
                     ? timeBankIds.contains(widget.timebankId)
                     : memberId.contains(widget.sevaUserId),
@@ -121,6 +122,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
     );
   }
 
+  refresh() {}
   /*Widget getUserWidget(List<UserModel> favoriteUsers, UserModel user){
 
 

@@ -75,6 +75,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
                 userModel: user,
                 isFavorite: true,
                 isAdmin: isAdmin,
+                refresh: refresh,
                 reqStatus: getRequestUserStatus(
                   requestModel: requestModel,
                   userId: user.sevaUserID,
@@ -88,6 +89,8 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
       },
     );
   }
+
+  refresh() {}
 
   @override
   dispose() {

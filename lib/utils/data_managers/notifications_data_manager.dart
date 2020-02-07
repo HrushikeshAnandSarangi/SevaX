@@ -228,10 +228,17 @@ Future<void> createTransactionNotification({
 }
 
 Future saveRequestFinalAction({ClaimedRequestStatusModel model}) async {
-  await Firestore.instance
-      .collection('claimedRequestStatus')
-      .document(model.requestID)
-      .updateData({model.timestamp.toString(): model.toMap()});
+  try {
+    await Firestore.instance
+        .collection('claimedRequestStatus')
+        .document(model.id)
+        .updateData({model.timestamp.toString(): model.toMap()});
+  } on Exception catch (exception) {
+    await Firestore.instance
+        .collection('claimedRequestStatus')
+        .document(model.id)
+        .setData({model.timestamp.toString(): model.toMap()});
+  }
 }
 
 Future<void> offerAcceptNotification({

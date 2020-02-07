@@ -2,10 +2,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'time_picker_widget.dart';
+
 import 'calendar_widget.dart';
 import 'date_time_selector_widget.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'time_picker_widget.dart';
 
 class CalendarPicker extends StatefulWidget {
   final String title;
@@ -29,9 +29,13 @@ class CalendarPickerState extends State<CalendarPicker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(
+          color: Colors.black,
+        ),
         title: Text(
           widget.title,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontFamily: 'Europa'),
         ),
         centerTitle: false,
         backgroundColor: Colors.white,
@@ -83,7 +87,10 @@ class CalendarPickerState extends State<CalendarPicker> {
                   color: Color(0xfff2f2f2),
                   child: Text(
                     'Time',
-                    // style: sectionLabelTextStyle,
+                    style: TextStyle(
+                        fontFamily: 'Europa',
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 SizedBox(
@@ -134,7 +141,7 @@ class CalendarPickerState extends State<CalendarPicker> {
 
 Widget getBottomButton(BuildContext context, VoidCallback onTap, String title) {
   return Material(
-    color: Colors.black,
+    color: Theme.of(context).primaryColor,
     child: InkWell(
       onTap: onTap,
       child: SafeArea(

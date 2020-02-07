@@ -192,6 +192,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   bool isAdmin = false;
   RequestModel requestModel;
   bool isBookMarked = false;
+
   @override
   void initState() {
     super.initState();
@@ -199,6 +200,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
     if (widget.timebankModel.admins.contains(widget.sevaUserId)) {
       isAdmin = true;
     }
+
     _firestore
         .collection('requests')
         .document(widget.requestModelId)
@@ -216,6 +218,10 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
       return Container();
     }
 
+    return buildWidget();
+  }
+
+  Widget buildWidget() {
     if (widget.controller.text.trim().isEmpty) {
       return Center(
         child: ClipOval(
@@ -247,6 +253,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         }
 
         List<UserModel> userList = snapshot.data;
+
         if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
         }
@@ -254,25 +261,20 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
           itemCount: userList.length,
           itemBuilder: (context, index) {
             UserModel user = userList[index];
-            List timeBankIds = user.favoriteByTimeBank ?? [];
-            List memberId = user.favoriteByMember ?? [];
+            // List<String> timeBankIds = user.favoriteByTimeBank ?? [];
+            List<String> timeBankIds =
+                snapshot.data[index].favoriteByTimeBank ?? [];
+            List<String> memberId = user.favoriteByMember ?? [];
 
-            print(
-                "${user.email} " + " timebank id  ${user.favoriteByTimeBank}");
-
-            if (timeBankIds.contains(widget.timebankModel.id)) {
-              print("true  ${widget.timebankModel.id}");
-            } else {
-              print("false  ${widget.timebankModel.id}");
-            }
-//            print("fav mem  ${user.favoriteByMember} " +
-//                'fav tb ${user.favoriteByTimebank}');
+            //      print("fav mem  ${memberId} " + 'fav tb ${timeBankIds}');
+            //    print("is Admin  ${widget.timebankModel.id} + ${timeBankIds}");
 
             return RequestCardWidget(
               userModel: user,
               requestModel: requestModel,
               timebankModel: widget.timebankModel,
               isAdmin: isAdmin,
+              refresh: refresh,
               isFavorite: isAdmin
                   ? timeBankIds.contains(widget.timebankModel.id)
                   : memberId.contains(widget.sevaUserId),
@@ -286,6 +288,12 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         );
       },
     );
+  }
+
+  refresh() {
+    setState(() {
+      buildWidget();
+    });
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {

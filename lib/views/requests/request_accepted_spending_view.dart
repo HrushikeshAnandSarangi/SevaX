@@ -362,9 +362,16 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         secondaryActions: <Widget>[],
         child: GestureDetector(
           onTap: () async {
+            setState(() {
+              isProgressBarActive = true;
+            });
             var notificationId =
                 await RequestNotificationManager.getNotificationId(
                     user, requestModel);
+
+            setState(() {
+              isProgressBarActive = false;
+            });
             showMemberClaimConfirmation(
                 context: context,
                 notificationId: notificationId,
@@ -546,16 +553,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   getBio(userModel),
                   Padding(
                       padding: EdgeInsets.all(8.0),
@@ -661,8 +658,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     var claimedRequestStatus = ClaimedRequestStatusModel(
       isAccepted: false,
-      requesterID: user.email,
-      requestID: model.id,
+      adminEmail: SevaCore.of(context).loggedInUser.email,
+      requesterEmail: user.email,
+      id: model.id,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       credits: credits,
     );
@@ -813,8 +811,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await updateUserData(reviewer, reviewed);
     var claimedRequestStatus = ClaimedRequestStatusModel(
         isAccepted: true,
-        requesterID: reviewed,
-        requestID: requestId,
+        adminEmail: sevaCore.loggedInUser.email,
+        requesterEmail: reviewed,
+        id: requestId,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         credits: credits);
     await FirestoreManager.saveRequestFinalAction(
