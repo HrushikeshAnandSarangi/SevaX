@@ -337,7 +337,7 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-              
+
               print("============== $consolidatedList");
 
               return formatListOffer(consolidatedList: consolidatedList);
@@ -375,8 +375,6 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-              
-
 
               return formatListOffer(consolidatedList: consolidatedList);
           }
@@ -416,9 +414,6 @@ class OfferListItems extends StatelessWidget {
                 );
               }
               return getOfferWidget(consolidatedList[index]);
-
-
-
             }
             // children: consolidatedList.map((OfferModelList offerModel) {
             //   return getOfferWidget(offerModel);
@@ -1164,6 +1159,7 @@ class OfferCardViewState extends State<OfferCardView> {
       'acceptorSevaId': SevaCore.of(context).loggedInUser.sevaUserID,
       'timebankId': FlavorConfig.values.timebankId,
       'sevaUserId': offerModel.sevaUserId,
+      'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
     };
 
     setState(() {
