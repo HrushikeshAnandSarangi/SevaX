@@ -56,7 +56,8 @@ void main() {
 class MainApplication extends StatelessWidget {
   final bool skipToHomePage;
 
-  const MainApplication({Key key, this.skipToHomePage = false }) : super(key: key);
+  const MainApplication({Key key, this.skipToHomePage = false})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     NewsModel news;
@@ -69,7 +70,17 @@ class MainApplication extends StatelessWidget {
         // home: RequestStatusView(
         //   requestId: "anitha.beberg@gmail.com*1573268670404",
         // ),
-        home: SplashView(skipToHomePage: skipToHomePage,),
+        builder: (context, child) {
+          return GestureDetector(
+            child: child,
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+          );
+        },
+        home: SplashView(
+          skipToHomePage: skipToHomePage,
+        ),
       ),
     );
   }
