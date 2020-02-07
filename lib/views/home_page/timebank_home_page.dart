@@ -20,7 +20,7 @@ class TimebankHomePage extends StatefulWidget {
 }
 
 class _TimebankHomePageState extends State<TimebankHomePage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   HomeDashBoardBloc _homeDashBoardBloc;
   TabController controller;
   @override
@@ -58,18 +58,17 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
                   onPressed: () {
-                    createEditCommunityBloc.updateUserDetails(
-                              SevaCore.of(context).loggedInUser);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TimebankCreate(
-                                timebankId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentTimebank,
-                              ),
-                            ),
-                          );
+                    createEditCommunityBloc
+                        .updateUserDetails(SevaCore.of(context).loggedInUser);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TimebankCreate(
+                          timebankId:
+                              SevaCore.of(context).loggedInUser.currentTimebank,
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],
@@ -151,4 +150,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
