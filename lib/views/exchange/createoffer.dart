@@ -119,7 +119,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                   // style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(hintText: 'Offer title'),
+                  decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
                   keyboardType: TextInputType.text,
                   // style: finalStyle,
                   style: subTitleStyle,
