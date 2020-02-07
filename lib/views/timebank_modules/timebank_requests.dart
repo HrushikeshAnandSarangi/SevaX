@@ -69,8 +69,6 @@ class RequestsState extends State<RequestsModule> {
           Offstage(
             offstage: false,
             child: Row(
-              // crossAxisAlignment: CrossAxisAlignment.end,
-              // mainAxisAlignment: MainAxisAlignment.,
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
@@ -80,7 +78,6 @@ class RequestsState extends State<RequestsModule> {
                     children: <Widget>[
                       Text(
                         'My Requests',
-                        // FlavorConfig.values.timebankTitle,
                         style: (TextStyle(fontWeight: FontWeight.w500)),
                       ),
                       GestureDetector(
@@ -93,11 +90,7 @@ class RequestsState extends State<RequestsModule> {
                           ),
                         ),
                         onTap: () {
-                          //Create a new request
-
                           if (widget.timebankModel.protected) {
-                            //show dialog its a protcted timebank
-
                             if (widget.timebankModel.admins.contains(
                                 SevaCore.of(context).loggedInUser.sevaUserID)) {
                               Navigator.push(
@@ -110,7 +103,6 @@ class RequestsState extends State<RequestsModule> {
                               );
                               return;
                             }
-
                             _showProtectedTimebankMessage();
                           } else {
                             Navigator.push(
@@ -122,8 +114,6 @@ class RequestsState extends State<RequestsModule> {
                               ),
                             );
                           }
-
-                          print("Create a new request");
                         },
                       ),
                     ],
@@ -165,13 +155,11 @@ class RequestsState extends State<RequestsModule> {
                                 .timebankIdForYangGangAdmin = t.id;
                           }
                         });
-
                         SevaCore.of(context)
                             .loggedInUser
                             .associatedWithTimebanks = dropdownList.length;
                         SevaCore.of(context).loggedInUser.adminOfYanagGangs =
                             adminOfCount;
-
                         return DropdownButton<String>(
                           value: timebankId,
                           onChanged: (String newValue) {
@@ -240,7 +228,6 @@ class RequestsState extends State<RequestsModule> {
                     children: logoWidgets,
 
                     padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    //selectedColor: Colors.deepOrange,
                     groupValue: sharedValue,
                     onValueChanged: (int val) {
                       print(val);
@@ -254,19 +241,6 @@ class RequestsState extends State<RequestsModule> {
                     //groupValue: sharedValue,
                   ),
                 ),
-                //  RaisedButton(
-                //    onPressed: () {
-                //      setState(() {
-                //        if (isNearme == true)
-                //          isNearme = false;
-                //        else
-                //          isNearme = true;
-                //      });
-                //    },
-                //    child: isNearme == false ? Text('Near Me') : Text('All'),
-                //    color: Theme.of(context).accentColor,
-                //    textColor: Colors.white,
-                //  ),
                 Padding(
                   padding: EdgeInsets.only(right: 5),
                 ),
@@ -855,7 +829,7 @@ class RequestListItemsState extends State<RequestListItems> {
   @override
   void initState() {
     super.initState();
-    timeBankBloc.getRequestsFromTimebankId(widget.timebankId);
+    timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
   }
 
   @override
@@ -921,9 +895,6 @@ class RequestListItemsState extends State<RequestListItems> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
-            // UserModel user = snapshot.data;
-            // String loggedintimezone = user.timezone;
-
             return StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getAllRequestListStream(),
               builder: (BuildContext context,

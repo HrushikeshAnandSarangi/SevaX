@@ -189,6 +189,13 @@ class TimeBankBloc {
     _timebankController.add(_timebankController.value);
   }
 
+  getRequestsStreamFromTimebankId(String timebankId) async {
+    _repository.getRequestsStreamFromTimebankId(timebankId).listen((requests) {
+      _timebankController.value.setRequestList(requests);
+      _timebankController.add(_timebankController.value);
+    });
+  }
+
   setSelectedRequest(request) {
     _timebankController.value.setSelectedRequest(request);
     _timebankController.add(_timebankController.value);
