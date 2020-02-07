@@ -34,6 +34,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
   bool isDataLoaded = false;
   bool isAdminLoaded = false;
   bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -41,9 +42,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
   }
 
 
-
   @override
   void getData() async {
+   // print('Admin id  ${widget.timebankModel.admins[0]}');
 
     user = await FirestoreManager.getUserForId(
         sevaUserId: widget.timebankModel.admins[0]);

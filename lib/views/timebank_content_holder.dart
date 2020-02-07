@@ -880,18 +880,7 @@ class DiscussionListState extends State<DiscussionList> {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(0.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(25),
-                offset: Offset(0, 0),
-                spreadRadius: 8,
-                blurRadius: 10,
-              ),
-            ]),
+        margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
         child: Stack(
           children: <Widget>[
             Column(
@@ -907,7 +896,7 @@ class DiscussionListState extends State<DiscussionList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0, top: 5),
+                      padding: const EdgeInsets.only(left: 12.0, top: 15, bottom: 15),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -945,6 +934,7 @@ class DiscussionListState extends State<DiscussionList> {
                                         : news.subheading.trim(),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 7,
+                                    style: TextStyle(fontSize: 16.0),
                                   ),
                                 ),
                               ],
@@ -1054,15 +1044,15 @@ class DiscussionListState extends State<DiscussionList> {
                                 ),
                                 Container(
                                   width:
-                                      MediaQuery.of(context).size.width - 113,
+                                      MediaQuery.of(context).size.width - 125,
                                   margin: EdgeInsets.only(left: 5, right: 40),
                                   child: Text(
                                     news.placeAddress == null
-                                        ? "Av of the Americas/W 41 St, New York"
+                                        ? ""
                                         : news.placeAddress.trim(),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    // style: TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 12.0),
                                   ),
                                 ),
                               ],
@@ -1317,21 +1307,13 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                   ],
                 ),
+                Divider(
+                    color: Colors.black38
+                ),
               ],
-            ),
-            // !isFromMessage
-            //     ? Positioned(
-            //         bottom: 8,
-            //         right: 8,
-            //         child: Material(
-            //           color: Colors.white.withAlpha(100),
-            //           shape: CircleBorder(),
-            //           child:
-            //         ),
-            //       )
-            // : Center(),
-          ],
-        ),
+            )
+          ]
+        )
       ),
     );
   }
