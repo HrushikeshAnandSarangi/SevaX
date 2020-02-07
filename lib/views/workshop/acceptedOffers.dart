@@ -1,22 +1,10 @@
-import 'dart:ui' as prefix0;
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/exchange/createrequest.dart';
-import 'package:sevaexchange/views/exchange/help.dart';
-import 'package:sevaexchange/views/exchange/select_request_view.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:sevaexchange/views/core.dart';
-
 import 'dart:ui';
 
-import '../../flavor_config.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 
 class AcceptedOffers extends StatefulWidget {
   final String timebankId;
@@ -82,7 +70,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
           );
         } else {
           return Center(
-            child: Text("No Offers accepted Yet"),
+            child: Text("No offer accepted"),
           );
         }
       },
