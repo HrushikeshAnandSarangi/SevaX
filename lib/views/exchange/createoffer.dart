@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-
-import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -25,7 +21,7 @@ class CreateOffer extends StatelessWidget {
         // iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
-          'Create volunteer offer',
+          'Create Offer',
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: false,
@@ -96,11 +92,15 @@ class MyCustomFormState extends State<MyCustomForm> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.title;
-    TextStyle finalStyle = TextStyle(
-      fontSize: 18,
-      color: textStyle.color,
-      decoration: textStyle.decoration,
+    TextStyle titleStyle = TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      fontFamily: 'Europa',
+      color: Colors.grey,
+    );
+    TextStyle subTitleStyle = TextStyle(
+      fontSize: 14,
+      color: titleStyle.color,
     );
     // Build a Form widget using the _formKey we created above
     return Padding(
@@ -108,20 +108,21 @@ class MyCustomFormState extends State<MyCustomForm> {
       child: Form(
         key: _formKey,
         child: Container(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(15.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   'Title',
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  style: titleStyle,
+                  // style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 TextFormField(
-                  decoration:
-                      InputDecoration(hintText: 'Volunteer offer title'),
+                  decoration: InputDecoration(hintText: 'Offer title'),
                   keyboardType: TextInputType.text,
-                  style: finalStyle,
+                  // style: finalStyle,
+                  style: subTitleStyle,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter the subject of your Offer';
@@ -131,11 +132,12 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  'Volunteer offer description',
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  'Offer description',
+                  style: titleStyle,
                 ),
                 TextFormField(
                   maxLength: 500,
+                  style: subTitleStyle,
                   decoration: InputDecoration(
                     hintText: 'Your offer and any #hashtags',
                   ),
@@ -150,13 +152,14 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
                 SizedBox(height: 20),
                 Text('Availability',
-                    style: TextStyle(color: Colors.grey, fontSize: 14)),
+                    style: titleStyle),
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Describe My Availability',
+                    hintText: 'Describe my availability',
                   ),
                   keyboardType: TextInputType.multiline,
                   maxLength: 100,
+                  style: subTitleStyle,
                   maxLines: null,
                   validator: (value) {
                     if (value.isEmpty) {
@@ -218,7 +221,7 @@ class MyCustomFormState extends State<MyCustomForm> {
 //                      }
                         },
                         child: Text(
-                          '  Create volunteer offer  ',
+                          '  Create Offer  ',
                           style: Theme.of(context).primaryTextTheme.button,
                         ),
                         textColor: Colors.white,

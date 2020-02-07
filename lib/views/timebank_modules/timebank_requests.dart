@@ -232,6 +232,9 @@ class RequestsState extends State<RequestsModule> {
                         );
                       }),
                 ),
+                Expanded(
+                  child: Container(),
+                ),
                 Container(
                   width: 120,
                   child: CupertinoSegmentedControl<int>(

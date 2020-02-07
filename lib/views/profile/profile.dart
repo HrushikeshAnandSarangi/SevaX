@@ -305,7 +305,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
-                                      'Create Timebank',
+                                      'Create TimeBank',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
@@ -389,7 +389,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
-                                      'Discover Timebanks',
+                                      'Discover TimeBanks',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
