@@ -2250,9 +2250,6 @@ class NotificationsView extends State<NotificationViewHolder> {
 //  }
 //}
 
-<<<<<<< HEAD
-// class GetList {
-=======
 // class AceeptorItem {
 //   final String sevaUserID;
 //   final bool approved;
@@ -2281,4 +2278,3 @@ class NotificationsView extends State<NotificationViewHolder> {
 //   Requedtmodel midel=consildatedList[imdex].approved
 
 // }
->>>>>>> origin/signin_stable

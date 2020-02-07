@@ -33,16 +33,7 @@ import 'messages/timebank_chats.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
-<<<<<<< HEAD
-  TimebankModel timebankModel;
-  //final UserModel loggedInUser;
-
-  // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
-  //final UserModel loggedInUser;
-
-=======
   final TimebankModel timebankModel;
->>>>>>> origin/signin_stable
   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
 
   @override
@@ -218,10 +209,7 @@ Widget createAdminTabBar(
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
                 ),
-<<<<<<< HEAD
-=======
                 TimebankChatListView(),
->>>>>>> origin/signin_stable
               ],
             ),
           ),
@@ -361,6 +349,9 @@ Widget createJoinedUserTabBar(
                 Tab(
                   text: "Members",
                 ),
+                Tab(
+                  text: "Messages",
+                )
               ],
             ),
             Expanded(
@@ -388,9 +379,9 @@ Widget createJoinedUserTabBar(
                     timebankId: timebankModel.id,
                     userEmail: SevaCore.of(context).loggedInUser.email,
                   ),
-                  Tab(
-                    text: "Messages",
-                  ),
+                  TimebankChatListView(
+                    timebankId: timebankId,
+                  )
                 ],
               ),
             ),

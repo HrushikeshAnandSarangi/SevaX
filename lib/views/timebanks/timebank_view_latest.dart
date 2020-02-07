@@ -49,8 +49,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
 >>>>>>> origin/signin_stable
 
   void getData() async {
-    // print('Admin id  ${widget.timebankModel.admins[0]}');
-    print('---->><><><><> ${widget.timebankModel.admins[0]}');
+   // print('Admin id  ${widget.timebankModel.admins[0]}');
+
     user = await FirestoreManager.getUserForId(
         sevaUserId: widget.timebankModel.admins[0]);
 
