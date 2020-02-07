@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
@@ -106,14 +107,14 @@ class RequestCardWidget extends StatelessWidget {
                       children: <Widget>[
                         isFavorite
                             ? Icon(
-                                Icons.bookmark,
-                                color: Colors.redAccent,
-                                size: 35,
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 30,
                               )
                             : Icon(
-                                Icons.bookmark,
+                                Icons.favorite,
                                 color: Colors.grey,
-                                size: 35,
+                                size: 30,
                               ),
                       ],
                     ),
@@ -235,7 +236,7 @@ class RequestCardWidget extends StatelessWidget {
 
     NotificationsModel notification = NotificationsModel(
         id: utils.Utils.getUuid(),
-        timebankId: timebankModel.id,
+        timebankId: FlavorConfig.values.timebankId,
         data: requestInvitationModel.toMap(),
         isRead: false,
         type: NotificationType.RequestInvite,
