@@ -1060,81 +1060,88 @@ class RequestListItemsState extends State<RequestListItems> {
                   ),
                 ),
                 SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      model.title,
-                      style: Theme.of(widget.parentContext).textTheme.subhead,
-                    ),
-                    Text(
-                      model.description,
-                      style: Theme.of(widget.parentContext).textTheme.subtitle,
-                    ),
-                    SizedBox(height: 8),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        Text(getTimeFormattedString(
-                            model.requestStart, loggedintimezone)),
-                        SizedBox(width: 2),
-                        Icon(Icons.arrow_forward, size: 14),
-                        SizedBox(width: 4),
-                        Text(
-                          getTimeFormattedString(
-                            model.requestEnd,
-                            loggedintimezone,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Offstage(
-                      offstage: !model.acceptors.contains(userEmail),
-                      child: Container(
-                          alignment: Alignment.topRight,
-                          margin: EdgeInsets.all(12),
-                          // width: double.infinity,
-                          child: Container(
-                            width: 100,
-                            height: 32,
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: EdgeInsets.all(0),
-                              color: Color.fromRGBO(44, 64, 140, 0.7),
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(width: 1),
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(44, 64, 140, 1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    'Applied',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Spacer(
-                                    flex: 2,
-                                  ),
-                                ],
-                              ),
-                              onPressed: () {},
+                Container(
+                  width: MediaQuery.of(context).size.width - 110,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        model.title,
+                        style: Theme.of(widget.parentContext).textTheme.subhead,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        model.description,
+                        style:
+                            Theme.of(widget.parentContext).textTheme.subtitle,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                      ),
+                      SizedBox(height: 8),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text(getTimeFormattedString(
+                              model.requestStart, loggedintimezone)),
+                          SizedBox(width: 2),
+                          Icon(Icons.arrow_forward, size: 14),
+                          SizedBox(width: 4),
+                          Text(
+                            getTimeFormattedString(
+                              model.requestEnd,
+                              loggedintimezone,
                             ),
-                          )),
-                    ),
-                  ],
+                          ),
+                        ],
+                      ),
+                      Offstage(
+                        offstage: !model.acceptors.contains(userEmail),
+                        child: Container(
+                            alignment: Alignment.topRight,
+                            margin: EdgeInsets.all(12),
+                            // width: double.infinity,
+                            child: Container(
+                              width: 100,
+                              height: 32,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: EdgeInsets.all(0),
+                                color: Color.fromRGBO(44, 64, 140, 0.7),
+                                child: Row(
+                                  children: <Widget>[
+                                    SizedBox(width: 1),
+                                    Container(
+                                      width: 30,
+                                      height: 30,
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(44, 64, 140, 1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Spacer(
+                                      flex: 2,
+                                    ),
+                                  ],
+                                ),
+                                onPressed: () {},
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
