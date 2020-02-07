@@ -48,6 +48,17 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
       setState(() {});
     });
 
+//    _firestore
+//        .collection('users')
+//        .where(isAdmin ? "favoriteByTimeBank" : "favoriteByMember",
+//            arrayContains: isAdmin ? widget.timebankId : widget.sevaUserId)
+//        .snapshots()
+//        .listen((usermodelList) {
+//      usermodelList.documents.forEach((usermodel) {
+//        favoriteUsers.add(UserModel.fromMap(usermodel.data));
+//      });
+//    });
+
 //    if (isAdmin) {
 //      //   print('admin is true ');
 //      _firestore
