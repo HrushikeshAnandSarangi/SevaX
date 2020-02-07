@@ -232,7 +232,9 @@ class RequestsState extends State<RequestsModule> {
                         );
                       }),
                 ),
-                Spacer(),
+                Expanded(
+                  child: Container(),
+                ),
                 Container(
                   width: 120,
                   child: CupertinoSegmentedControl<int>(
@@ -246,7 +248,12 @@ class RequestsState extends State<RequestsModule> {
                       print(val);
                       if (val != sharedValue) {
                         setState(() {
-                          isNearme = !isNearme;
+                          if (isNearme == true)
+                            isNearme = false;
+                          else
+                            isNearme = true;
+                        });
+                        setState(() {
                           sharedValue = val;
                         });
                       }
@@ -651,7 +658,7 @@ class NearRequestListItems extends StatelessWidget {
             stream: timebankId != 'All'
                 ? FirestoreManager.getNearRequestListStream(
                     timebankId: timebankId)
-                : FirestoreManager.getAllRequestListStream(),
+                : FirestoreManager.getNearRequestListStream(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
               if (requestListSnapshot.hasError) {
@@ -663,8 +670,7 @@ class NearRequestListItems extends StatelessWidget {
                 default:
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
-                  print(
-                      "request data ${requestModelList.toString()} ${requestModelList.length}");
+
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
 
@@ -679,8 +685,7 @@ class NearRequestListItems extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: requestModelList.length + 1,
                     itemBuilder: (context, index) {
-                      if (index >= requestModelList.length ||
-                          requestTaskCompleted(requestModelList[index])) {
+                      if (index >= requestModelList.length) {
                         return Container(
                           width: double.infinity,
                           height: 65,
@@ -697,19 +702,126 @@ class NearRequestListItems extends StatelessWidget {
             },
           );
         });
-  }
 
-  bool requestTaskCompleted(RequestModel request) {
-    if (request.transactions == null) {
-      return false;
-    }
-    var count = 0;
-    for (var i = 0; i < request.transactions.length; i++) {
-      if (request.transactions[i].isApproved) {
-        count++;
-      }
-    }
-    return count >= request.numberOfApprovals;
+//    if (timebankId != 'All') {
+//      print("ifff " + timebankId);
+//      return FutureBuilder<Object>(
+//          future: FirestoreManager.getUserForId(
+//              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+//          builder: (context, snapshot) {
+//            if (snapshot.hasError) {
+//              return new Text('Error: ${snapshot.error}');
+//            }
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Center(child: CircularProgressIndicator());
+//            }
+//            UserModel user = snapshot.data;
+//            String loggedintimezone = user.timezone;
+//
+//            return StreamBuilder<List<RequestModel>>(
+//              stream: FirestoreManager.getNearRequestListStream(
+//                timebankId: timebankId,
+//              ),
+//              builder: (BuildContext context,
+//                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+//                if (requestListSnapshot.hasError) {
+//                  return new Text('Error: ${requestListSnapshot.error}');
+//                }
+//                switch (requestListSnapshot.connectionState) {
+//                  case ConnectionState.waiting:
+//                    return Center(child: CircularProgressIndicator());
+//                  default:
+//                    List<RequestModel> requestModelList =
+//                        requestListSnapshot.data;
+//
+//                    requestModelList = filterBlockedRequestsContent(
+//                        context: context, requestModelList: requestModelList);
+//
+//                    if (requestModelList.length == 0) {
+//                      return Padding(
+//                        padding: const EdgeInsets.all(16.0),
+//                        child: Center(child: Text('No Requests')),
+//                      );
+//                    }
+//
+//                    return ListView.builder(
+//                      shrinkWrap: true,
+//                      itemCount: requestModelList.length + 1,
+//                      itemBuilder: (context, index) {
+//                        if (index >= requestModelList.length) {
+//                          return Container(
+//                            width: double.infinity,
+//                            height: 65,
+//                          );
+//                        }
+//                        return getRequestView(
+//                          requestModelList[index],
+//                          loggedintimezone,
+//                          context,
+//                        );
+//                      },
+//                    );
+//                }
+//              },
+//            );
+//          });
+//    } else {
+//      return FutureBuilder<Object>(
+//          future: FirestoreManager.getUserForId(
+//              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+//          builder: (context, snapshot) {
+//            if (snapshot.hasError) {
+//              return new Text('Error: ${snapshot.error}');
+//            }
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Center(child: CircularProgressIndicator());
+//            }
+//            UserModel user = snapshot.data;
+//            String loggedintimezone = user.timezone;
+//
+//            return StreamBuilder<List<RequestModel>>(
+//              stream: FirestoreManager.getNearRequestListStream(),
+//              builder: (BuildContext context,
+//                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+//                if (requestListSnapshot.hasError) {
+//                  return new Text('Error: ${requestListSnapshot.error}');
+//                }
+//                switch (requestListSnapshot.connectionState) {
+//                  case ConnectionState.waiting:
+//                    return Center(child: CircularProgressIndicator());
+//                  //filter
+//
+//                  default:
+//                    List<RequestModel> requestModelList =
+//                        requestListSnapshot.data;
+//
+//                    requestModelList = filterBlockedRequestsContent(
+//                        context: context, requestModelList: requestModelList);
+//
+//                    if (requestModelList.length == 0) {
+//                      return Padding(
+//                        padding: const EdgeInsets.all(16.0),
+//                        child: Center(child: Text('No Requests')),
+//                      );
+//                    }
+//
+//                    return Container(
+//                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
+//                      child: ListView(
+//                        shrinkWrap: true,
+//                        children: requestModelList.map(
+//                          (RequestModel requestModel) {
+//                            return getRequestView(
+//                                requestModel, loggedintimezone, context);
+//                          },
+//                        ).toList(),
+//                      ),
+//                    );
+//                }
+//              },
+//            );
+//          });
+//    }
   }
 
   List<RequestModel> filterBlockedRequestsContent(
@@ -862,6 +974,7 @@ class RequestListItemsState extends State<RequestListItems> {
   @override
   Widget build(BuildContext context) {
     if (widget.timebankId != 'All') {
+      print("if");
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -888,9 +1001,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   if (snapshot.hasData) {
                     List<RequestModel> requestModelList =
                         snapshot.data.requests;
-                    print(
-                        "request data ${requestModelList.length} ${requestModelList.toString()} ");
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -915,6 +1025,7 @@ class RequestListItemsState extends State<RequestListItems> {
                 });
           });
     } else {
+      print("else");
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -941,9 +1052,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-
-                    print(
-                        "request data ${requestModelList.length}   ${requestModelList.toString()} ");
 
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
@@ -1003,9 +1111,9 @@ class RequestListItemsState extends State<RequestListItems> {
             );
           }
           return getRequestView(
-            model: consolidatedList[index],
-            loggedintimezone: loggedintimezone,
-            userEmail: userEmail,
+            consolidatedList[index],
+            loggedintimezone,
+            userEmail,
           );
         },
       )),
@@ -1013,7 +1121,7 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   Widget getRequestView(
-      {RequestModelList model, String loggedintimezone, String userEmail}) {
+      RequestModelList model, String loggedintimezone, String userEmail) {
     switch (model.getType()) {
       case RequestModelList.TITLE:
         var isMyContent = (model as GroupTitle).groupTitle.contains("My");
@@ -1028,7 +1136,7 @@ class RequestListItemsState extends State<RequestListItems> {
         );
 
       case RequestModelList.REQUEST:
-        return getRequestListViewHolder(
+        return getRequestListViewHoldder(
           model: (model as RequestItem).requestModel,
           loggedintimezone: loggedintimezone,
           userEmail: userEmail,
@@ -1039,7 +1147,7 @@ class RequestListItemsState extends State<RequestListItems> {
     }
   }
 
-  Widget getRequestListViewHolder(
+  Widget getRequestListViewHoldder(
       {RequestModel model, String loggedintimezone, String userEmail}) {
     return Container(
       decoration: containerDecorationR,

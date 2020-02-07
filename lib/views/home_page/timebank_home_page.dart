@@ -87,7 +87,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
-              'Your Calender',
+              'Your Calendar',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,

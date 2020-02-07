@@ -27,7 +27,7 @@ class CreateEditCommunityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Create your Timebank';
+    var title = 'Create TimeBank';
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -140,7 +140,7 @@ class CreateEditCommunityViewFormState
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
-                      'Timebank is where you can collaborate with your organization',
+                      'TimeBank is where you can collaborate with your organization',
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -152,7 +152,7 @@ class CreateEditCommunityViewFormState
                           TimebankAvatar(),
                           Text(''),
                           Text(
-                            'Timebank Logo',
+                            'TimeBank Logo',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.grey,
@@ -168,7 +168,7 @@ class CreateEditCommunityViewFormState
                       ),
                     ),
                   ),
-                  headingText('Name your timebank'),
+                  headingText('Name your TimeBank'),
                   TextFormField(
                     onChanged: (value) {
                       enteredName = value;
@@ -182,9 +182,9 @@ class CreateEditCommunityViewFormState
                     onSaved: (value) => enteredName = value,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Timebank name cannot be empty';
+                        return 'TimeBank name cannot be empty';
                       } else if (communityFound) {
-                        return 'Timebank name already exist';
+                        return 'TimeBank name already exist';
                       } else {
                         enteredName = value;
                         snapshot.data.community.updateValueByKey('name', value);
@@ -197,14 +197,14 @@ class CreateEditCommunityViewFormState
                   headingText('About'),
                   TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Ex: A bit more about your timebank',
+                      hintText: 'Ex: A bit more about your TimeBank',
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
                     initialValue: snapshot.data.timebank.missionStatement,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Tell us more about your timebank.';
+                        return 'Tell us more about your TimeBank.';
                       }
                       snapshot.data.timebank
                           .updateValueByKey('missionStatement', value);
@@ -214,7 +214,7 @@ class CreateEditCommunityViewFormState
                   ),
                   Row(
                     children: <Widget>[
-                      headingText('Protected Timebank'),
+                      headingText('Protected TimeBank'),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -233,15 +233,15 @@ class CreateEditCommunityViewFormState
                     ],
                   ),
                   Text(
-                    'With protected timebank, user to user transactions are disabled.',
+                    'With protected TimeBank, user to user transactions are disabled.',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
                     ),
                   ),
-                  headingText('Your timebank location.'),
+                  headingText('Your TimeBank location.'),
                   Text(
-                    'Timebank location will help your members to locate',
+                    'TimeBank location will help your members to locate',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -296,7 +296,7 @@ class CreateEditCommunityViewFormState
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Looking for existing timebank',
+                            'Looking for existing TimeBank',
                             style: TextStyle(
                               color: Colors.grey,
                             ),
@@ -443,7 +443,7 @@ class CreateEditCommunityViewFormState
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating timebank'),
+            title: Text('Creating TimeBank'),
             content: LinearProgressIndicator(),
           );
         });
@@ -517,7 +517,7 @@ class CreateEditCommunityViewFormState
     return GestureDetector(
       onTap: () {},
       child: Text(
-        ' Find your timebank',
+        ' Find your TimeBank',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -770,9 +770,6 @@ class CreateEditCommunityViewFormState
               controller.community.billing_address
                   .updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
-            },
-            validator: (value) {
-              return value.isEmpty ? 'Field cannot be left blank' : null;
             },
             focusNode: focusNodes[3],
             textInputAction: TextInputAction.next,

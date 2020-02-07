@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     tabs = [
       Tab(
           text:
-              "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
+              "${selectedCommunity != null ? selectedCommunity.name : ''} TimeBank"),
       Tab(text: "Feeds"),
       Tab(text: "Requests"),
       Tab(text: "Offers"),

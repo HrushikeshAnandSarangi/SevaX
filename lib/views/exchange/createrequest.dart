@@ -41,7 +41,7 @@ class _CreateRequestState extends State<CreateRequest> {
           title: Text(
             FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? "Create Yang Gang Request"
-                : "Create your request",
+                : "Create Request",
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -173,7 +173,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 30),
                 OfferDurationWidget(
-                  title: ' Request Duration',
+                  title: ' Request duration',
                   //startTime: CalendarWidgetState.startDate,
                   //endTime: CalendarWidgetState.endDate
                 ),
@@ -296,7 +296,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Your Campaign Request \nand any #hashtags',
+                    hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
                   keyboardType: TextInputType.multiline,
@@ -394,7 +394,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating request'),
+            title: Text('Creating Request..'),
             content: LinearProgressIndicator(),
           );
         });
