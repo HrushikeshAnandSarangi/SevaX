@@ -861,7 +861,7 @@ class NearRequestListItems extends StatelessWidget {
               Navigator.push(
                 parentContext,
                 MaterialPageRoute(
-                  builder: (context) => RequestTabHolder(),
+                  builder: (context) => RequestTabHolder(isAdmin: true),
                 ),
               );
             } else {
@@ -869,7 +869,7 @@ class NearRequestListItems extends StatelessWidget {
                 parentContext,
                 MaterialPageRoute(
                   builder: (context) => RequestDetailsAboutPage(
-                      requestItem: model, timebankModel: timebankModel),
+                      requestItem: model, timebankModel: timebankModel, isAdmin: false),
                 ),
               );
             }
@@ -955,8 +955,10 @@ class RequestListItems extends StatefulWidget {
   final BuildContext parentContext;
   final TimebankModel timebankModel;
 
+  bool isAdmin;
+
   RequestListItems(
-      {Key key, this.timebankId, this.parentContext, this.timebankModel});
+      {Key key, this.timebankId, this.parentContext, this.timebankModel, this.isAdmin});
 
   @override
   State<StatefulWidget> createState() {
@@ -1136,7 +1138,7 @@ class RequestListItemsState extends State<RequestListItems> {
         );
 
       case RequestModelList.REQUEST:
-        return getRequestListViewHoldder(
+        return getRequestListViewHolder(
           model: (model as RequestItem).requestModel,
           loggedintimezone: loggedintimezone,
           userEmail: userEmail,
@@ -1147,7 +1149,7 @@ class RequestListItemsState extends State<RequestListItems> {
     }
   }
 
-  Widget getRequestListViewHoldder(
+  Widget getRequestListViewHolder(
       {RequestModel model, String loggedintimezone, String userEmail}) {
     return Container(
       decoration: containerDecorationR,
@@ -1159,6 +1161,8 @@ class RequestListItemsState extends State<RequestListItems> {
           onTap: () {
             timeBankBloc.setSelectedRequest(model);
             timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
+            widget.isAdmin = model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ? true : false ;
+            timeBankBloc.setIsAdmin(widget.isAdmin);
 
             if (model.sevaUserId ==
                     SevaCore.of(context).loggedInUser.sevaUserID ||
@@ -1167,7 +1171,7 @@ class RequestListItemsState extends State<RequestListItems> {
               Navigator.push(
                 widget.parentContext,
                 MaterialPageRoute(
-                  builder: (context) => RequestTabHolder(),
+                  builder: (context) => RequestTabHolder(isAdmin: widget.isAdmin,),
                 ),
               );
             } else {
@@ -1175,7 +1179,7 @@ class RequestListItemsState extends State<RequestListItems> {
                 widget.parentContext,
                 MaterialPageRoute(
                   builder: (context) => RequestDetailsAboutPage(
-                      requestItem: model, timebankModel: widget.timebankModel),
+                      requestItem: model, timebankModel: widget.timebankModel, isAdmin: widget.isAdmin),
                 ),
               );
             }

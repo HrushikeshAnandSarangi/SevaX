@@ -138,6 +138,7 @@ class TimebankController {
   List<RequestModel> requests = [];
   RequestModel selectedrequest;
   List<UserModel> invitedUsersForRequest = [];
+  bool isAdmin = false;
 
   TimebankController() {}
 
@@ -152,6 +153,9 @@ class TimebankController {
   }
   setInvitedUsersDataForRequest(usersListData) {
     this.invitedUsersForRequest = usersListData;
+  }
+  setIsAdmin(isAdminStatus){
+    this.isAdmin = isAdminStatus;
   }
 }
 class TimeBankBloc {
@@ -169,6 +173,11 @@ class TimeBankBloc {
     print('request invite -----> ${result.toString()}');
   }
 
+  setIsAdmin(isAdminStatus) {
+    _timebankController.value.setIsAdmin(isAdminStatus);
+    _timebankController.add(_timebankController.value);
+
+  }
   getSelectedRequestInvitedUsersData(usersids) async {
     // TODO - get users from request
       var usersdata = await _repository.getUsersFromRequest(usersids);
