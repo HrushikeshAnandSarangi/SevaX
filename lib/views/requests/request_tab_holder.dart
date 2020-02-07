@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
 import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 class RequestTabHolder extends StatelessWidget {
-
-  RequestTabHolder();
+  bool isAdmin;
+  RequestTabHolder({this.isAdmin});
   final List<String> titles = ['About', 'Search', 'Accepted'];
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class RequestTabHolder extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -57,7 +58,7 @@ class RequestTabHolder extends StatelessWidget {
                         child: TabBarView(
                           children: <Widget>[
                             Container(
-                              child: RequestDetailsAboutPage(requestItem: requestModel, timebankModel: timebank),
+                              child: RequestDetailsAboutPage(requestItem: requestModel, timebankModel: timebank, isAdmin: isAdmin),
                             ),
                             Container(
                                 child: RequestUsersTabsViewHolder.of(requestItem: requestModel,),
