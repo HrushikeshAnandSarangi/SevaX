@@ -494,8 +494,8 @@ Stream<List<RequestModel>> getCompletedRequestStream({
       // .where('transactions.to', isEqualTo: userId)
       // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
       //.where('transactions', arrayContains: true)
-      .where('approvedUsers', arrayContains: userEmail)
       .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+      .where('approvedUsers', arrayContains: userEmail)
       // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
