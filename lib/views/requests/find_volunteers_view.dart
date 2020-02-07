@@ -32,6 +32,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
 
   final searchOnChange = new BehaviorSubject<String>();
   var validItems = List<String>();
+  List<UserModel> users = [];
 
   @override
   void initState() {
@@ -147,6 +148,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
                 validItems,
                 widget.requestModel.id,
                 timebankModel.model,
+                users,
                 widget.sevaUserId),
           ),
         ],
@@ -162,9 +164,16 @@ class UserResultViewElastic extends StatefulWidget {
   final String requestModelId;
   final String sevaUserId;
   final TimebankModel timebankModel;
+  final List<UserModel> favoriteUsers;
 
-  UserResultViewElastic(this.controller, this.timebankId, this.validItems,
-      this.requestModelId, this.timebankModel, this.sevaUserId);
+  UserResultViewElastic(
+      this.controller,
+      this.timebankId,
+      this.validItems,
+      this.requestModelId,
+      this.timebankModel,
+      this.favoriteUsers,
+      this.sevaUserId);
 
   @override
   _UserResultViewElasticState createState() {
@@ -182,10 +191,12 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
 
   bool isAdmin = false;
   RequestModel requestModel;
+  bool isBookMarked = false;
 
   @override
   void initState() {
     super.initState();
+
     if (widget.timebankModel.admins.contains(widget.sevaUserId)) {
       isAdmin = true;
     }
@@ -196,7 +207,6 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         .snapshots()
         .listen((reqModel) {
       requestModel = RequestModel.fromMap(reqModel.data);
-
       setState(() {});
     });
   }
@@ -255,6 +265,9 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             List<String> timeBankIds =
                 snapshot.data[index].favoriteByTimeBank ?? [];
             List<String> memberId = user.favoriteByMember ?? [];
+
+            //      print("fav mem  ${memberId} " + 'fav tb ${timeBankIds}');
+            //    print("is Admin  ${widget.timebankModel.id} + ${timeBankIds}");
 
             return RequestCardWidget(
               userModel: user,

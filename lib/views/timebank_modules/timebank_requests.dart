@@ -667,7 +667,8 @@ class NearRequestListItems extends StatelessWidget {
                 default:
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
-
+                  print(
+                      "request data ${requestModelList.toString()} ${requestModelList.length}");
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
 
@@ -997,6 +998,9 @@ class RequestListItemsState extends State<RequestListItems> {
                   if (snapshot.hasData) {
                     List<RequestModel> requestModelList =
                         snapshot.data.requests;
+                    print(
+                        "request data ${requestModelList.length} ${requestModelList.toString()} ");
+
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -1047,6 +1051,9 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
+
+                    print(
+                        "request data ${requestModelList.length}   ${requestModelList.toString()} ");
 
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);

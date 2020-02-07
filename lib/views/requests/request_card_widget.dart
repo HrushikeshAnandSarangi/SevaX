@@ -124,16 +124,15 @@ class RequestCardWidget extends StatelessWidget {
                           timeBankId: timebankModel.id,
                           loggedInUserId:
                               SevaCore.of(context).loggedInUser.sevaUserID,
-                        );
+                        ).then((_) => refresh());
                       } else {
                         addToFavoriteList(
                           email: userModel.email,
                           timebankId: timebankModel.id,
                           loggedInUserId:
                               SevaCore.of(context).loggedInUser.sevaUserID,
-                        );
+                        ).then((_) => refresh());
                       }
-                      refresh();
                     },
                   ),
                 ],
