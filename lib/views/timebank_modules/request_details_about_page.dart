@@ -324,7 +324,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     return Container(
       color: Colors.grey[300],
       child: Padding(
-        padding: const EdgeInsets.only(top: 30.0, left: 20, bottom: 20),
+        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -354,6 +354,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               offstage: widget.requestItem.sevaUserId ==
                   SevaCore.of(context).loggedInUser.sevaUserID,
               child: Container(
+                margin: EdgeInsets.only(right: 5),
                 width: 100,
                 height: 32,
                 child: FlatButton(
