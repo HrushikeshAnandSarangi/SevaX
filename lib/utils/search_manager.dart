@@ -191,7 +191,6 @@ class SearchManager {
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      print("stve ------>${sourceMap}");
       UserModel user = UserModel.fromMap(sourceMap);
 
       if (validItems.contains(user.sevaUserID)) {
@@ -382,15 +381,15 @@ class SearchManager {
       "Accept": "application/json",
       "Content-Type": "application/json"
     });
-    log(response.body);
-    print("Reuqest Response --> ${response.body}");
+    //log(response.body);
+    // print("Reuqest Response --> ${response.body}");
 
-    //  print("Reuqest Response --> ${response.body}");
+//    print("Reuqest Response --> ${response.body}");
 
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
-    print("Reuqest Response --> $hitList");
+    // print("Reuqest Response --> $hitList");
 //    log(response.body);
 //    log("loggg - "+hitList.toString());
     return hitList;

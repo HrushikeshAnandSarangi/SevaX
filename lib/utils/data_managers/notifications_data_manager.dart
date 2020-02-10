@@ -330,7 +330,6 @@ Stream<List<NotificationsModel>> getNotifications({
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
       handleData: (querySnapshot, notificationSink) {
-
         List<NotificationsModel> notifications = [];
 
         querySnapshot.documents.forEach((documentSnapshot) {
@@ -372,13 +371,6 @@ Future<bool> isUnreadNotification(String userEmail) async {
     if (notifications.length > 0) isNotification = true;
   });
   return isNotification;
-}
-Future updateNotificationStatusByAdmin(
-    notificationType,
-    timebankId,
-    userModel
-) async {
-
 }
 
 Future<List<NotificationsModel>> getCompletedNotifications(
