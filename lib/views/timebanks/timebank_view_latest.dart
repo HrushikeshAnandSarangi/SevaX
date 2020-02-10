@@ -370,8 +370,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            startChat(widget.timebankModel.id, widget.email,
-                                context, widget.timebankModel.id);
+                            if (widget.timebankModel.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                              _showAdminMessage();
+                            } else {
+                              startChat(widget.timebankModel.id, widget.email,
+                                  context, widget.timebankModel.id);
+                            }
                           },
                           child: Text(
                             'Message',
@@ -418,6 +423,26 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showAdminMessage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Admins cannot create message"),
+          // content: new Text("Khud he ko message kyu kar rha hai?"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

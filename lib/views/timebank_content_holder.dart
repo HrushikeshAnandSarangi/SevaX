@@ -120,6 +120,7 @@ Widget createAdminTabBar(
       appBar: AppBar(
         elevation: 0.5,
         centerTitle: true,
+
         title: Text(
           timebankModel.name,
           style: TextStyle(fontSize: 18),
@@ -212,7 +213,9 @@ Widget createAdminTabBar(
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
                 ),
-                TimebankChatListView(),
+                TimebankChatListView(
+                  timebankId: timebankId,
+                ),
               ],
             ),
           ),

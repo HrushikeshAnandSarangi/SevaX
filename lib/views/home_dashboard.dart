@@ -7,6 +7,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/timebank_feeds.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
 
+import 'messages/timebank_chats.dart';
+
 class HomeDashBoard extends StatelessWidget {
   HomeDashBoard();
   @override
@@ -107,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage>
     return BlocProvider(
       bloc: _homeDashBoardBloc,
       child: DefaultTabController(
-        length: 6,
+        length: 7,
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -138,10 +140,7 @@ class _MyHomePageState extends State<MyHomePage>
                           (index) => DropdownMenuItem(
                             value: snapshot.data[index],
                             child: Text(
-                              snapshot.data[index].name[0].toUpperCase() +
-                                  snapshot.data[index].name
-                                      .substring(1)
-                                      .toLowerCase(),
+                              snapshot.data[index].name,
                               style: TextStyle(fontSize: 18),
                             ),
                           ),
@@ -163,6 +162,7 @@ class _MyHomePageState extends State<MyHomePage>
                 Tab(text: "Offers"),
                 Tab(text: "About"),
                 Tab(text: "Members"),
+                Tab(text: "Messages"),
               ],
             ),
           ),
@@ -176,6 +176,9 @@ class _MyHomePageState extends State<MyHomePage>
               TimebankFeeds(),
               TimebankFeeds(),
               TimebankFeeds(),
+              TimebankChatListView(
+                timebankId: "9ecec05e-71fd-456e-9f6d-35798f41bdf5",
+              ),
             ],
           ),
         ),

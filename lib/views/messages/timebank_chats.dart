@@ -75,7 +75,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
                 child: CircularProgressIndicator(),
               );
             default:
-              // print("Chat Model list ${chatListSnapshot.data}");
+              print("Chat Model list ${chatListSnapshot.data}");
               List<ChatModel> allChalModelList = chatListSnapshot.data;
 
               List<ChatModel> chatModelList = allChalModelList;
@@ -255,6 +255,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
           child: InkWell(
             onTap: () {
               print("Getting intp existing chat");
+              // FirestoreManager.
               Navigator.push(
                 parentContext,
                 MaterialPageRoute(
