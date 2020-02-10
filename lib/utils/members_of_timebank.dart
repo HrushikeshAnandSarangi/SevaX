@@ -350,6 +350,7 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
                   SevaCore.of(context).loggedInUser.currentCommunity;
               model.user1 = users[0];
               model.user2 = users[1];
+              model.timebankId = timebankModel.id;
               print("Model1" + model.user1);
               print("Model2" + model.user2);
 
@@ -391,6 +392,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               ChatModel model = ChatModel();
               model.user1 = users[0];
               model.user2 = users[1];
+              model.timebankId = timebankModel.id;
+
               print("Model1" + model.user1);
               print("Model2" + model.user2);
 

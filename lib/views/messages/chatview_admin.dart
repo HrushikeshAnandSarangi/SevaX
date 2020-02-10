@@ -11,17 +11,12 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
-class IsFromNewChat {
-  bool isFromNewChat = false;
-  int newChatTimeStamp;
-  IsFromNewChat(this.isFromNewChat, this.newChatTimeStamp);
-}
-
-class ChatView extends StatefulWidget {
+class AdminChatView extends StatefulWidget {
   final String useremail;
   final ChatModel chatModel;
   bool isFromRejectCompletion;
@@ -29,7 +24,7 @@ class ChatView extends StatefulWidget {
   NewsModel news;
   IsFromNewChat isFromNewChat;
 
-  ChatView({
+  AdminChatView({
     Key key,
     this.useremail,
     this.chatModel,
@@ -40,10 +35,10 @@ class ChatView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ChatViewState createState() => _ChatViewState();
+  AdminChatViewState createState() => AdminChatViewState();
 }
 
-class _ChatViewState extends State<ChatView> {
+class AdminChatViewState extends State<AdminChatView> {
   //UserModel user;
   UserModel loggedInUser;
   UserModel partnerUser;
@@ -359,18 +354,18 @@ class _ChatViewState extends State<ChatView> {
             NewsModel news = snapshot.data;
 
             return Container(
-              padding: messageModel.fromId == loggedinEmail
+              padding: isValidEmail(messageModel.toId)
                   ? EdgeInsets.fromLTRB(
                       MediaQuery.of(context).size.width / 10, 5, 0, 5)
                   : EdgeInsets.fromLTRB(
                       0, 5, MediaQuery.of(context).size.width / 10, 5),
-              alignment: messageModel.fromId == loggedinEmail
+              alignment: isValidEmail(messageModel.toId)
                   ? Alignment.topRight
                   : Alignment.topLeft,
               child: Wrap(
                 children: <Widget>[
                   Container(
-                    decoration: messageModel.fromId == loggedinEmail
+                    decoration: isValidEmail(messageModel.toId)
                         ? myBoxDecorationsend()
                         : myBoxDecorationreceive(),
                     padding: messageModel.fromId == loggedinEmail &&
@@ -406,46 +401,46 @@ class _ChatViewState extends State<ChatView> {
             );
           });
     } else
-      return Container(
-        padding: messageModel.fromId == loggedinEmail
-            ? EdgeInsets.fromLTRB(
-                MediaQuery.of(context).size.width / 10, 5, 0, 5)
-            : EdgeInsets.fromLTRB(
-                0, 5, MediaQuery.of(context).size.width / 10, 5),
-        alignment: messageModel.fromId == loggedinEmail
-            ? Alignment.topRight
-            : Alignment.topLeft,
-        child: Wrap(
-          children: <Widget>[
-            Container(
-              decoration: messageModel.fromId == loggedinEmail
-                  ? myBoxDecorationsend()
-                  : myBoxDecorationreceive(),
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: Column(
-                crossAxisAlignment: messageModel.fromId != loggedinEmail
-                    ? CrossAxisAlignment.start
-                    : CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    messageModel.message,
-                    style: TextStyle(fontWeight: FontWeight.w500),
+      print("_______${messageModel.fromId}  ${messageModel.toId}");
+    return Container(
+      padding: isValidEmail(messageModel.toId)
+          ? EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 10, 5, 0, 5)
+          : EdgeInsets.fromLTRB(
+              0, 5, MediaQuery.of(context).size.width / 10, 5),
+      alignment: isValidEmail(messageModel.toId)
+          ? Alignment.topRight
+          : Alignment.topLeft,
+      child: Wrap(
+        children: <Widget>[
+          Container(
+            decoration: isValidEmail(messageModel.toId)
+                ? myBoxDecorationsend()
+                : myBoxDecorationreceive(),
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+            child: Column(
+              crossAxisAlignment: isValidEmail(messageModel.toId)
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  messageModel.message,
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  DateFormat('hh:mm a MMMM dd').format(
+                    getDateTimeAccToUserTimezone(
+                        dateTime: DateTime.fromMillisecondsSinceEpoch(
+                            messageModel.timestamp),
+                        timezoneAbb: loggedInUser.timezone),
                   ),
-                  Text(
-                    DateFormat('hh:mm a MMMM dd').format(
-                      getDateTimeAccToUserTimezone(
-                          dateTime: DateTime.fromMillisecondsSinceEpoch(
-                              messageModel.timestamp),
-                          timezoneAbb: loggedInUser.timezone),
-                    ),
-                    style: TextStyle(fontSize: 10, color: Colors.grey[700]),
-                  ),
-                ],
-              ),
+                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 
   Future<String> blockMemberDialogView(BuildContext viewContext) async {

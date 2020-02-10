@@ -12,10 +12,11 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 
 class ProfileViewer extends StatefulWidget {
   final String userEmail;
+  final String timebankId;
   UserModel userModel;
   bool isBlocked = false;
 
-  ProfileViewer({this.userEmail});
+  ProfileViewer({this.userEmail, @required this.timebankId});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,6 +27,8 @@ class ProfileViewer extends StatefulWidget {
 class ProfileViewerState extends State<ProfileViewer> {
   @override
   Widget build(BuildContext context) {
+    print("**********************${widget.timebankId}");
+
     String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     UserModel userData = SevaCore.of(context).loggedInUser;
 
@@ -100,7 +103,9 @@ class ProfileViewerState extends State<ProfileViewer> {
                             message: widget.userEmail == loggedInEmail ||
                                     widget.isBlocked
                                 ? null
-                                : () => onMessageClick(loggedInEmail),
+                                : () => onMessageClick(
+                                      loggedInEmail,
+                                    ),
                             block: widget.userEmail == loggedInEmail
                                 ? null
                                 : onBlockClick,
@@ -546,6 +551,10 @@ class ProfileViewerState extends State<ProfileViewer> {
     ChatModel model = ChatModel();
     model.user1 = users[0];
     model.user2 = users[1];
+    model.timebankId = widget.timebankId;
+
+    print("_+_+_+_+_+++++++++++++${model.timebankId}");
+    // model.communityId =
     createChat(chat: model);
     Navigator.push(
       context,

@@ -1,6 +1,5 @@
 //import 'dart:ffi';
 
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,6 +22,10 @@ import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NotificationViewHolder extends StatefulWidget {
+  final String timebankId;
+
+  NotificationViewHolder({this.timebankId});
+
   @override
   State<StatefulWidget> createState() {
     return NotificationsView();
@@ -914,7 +917,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     ChatModel chatModel = ChatModel();
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
-
+    chatModel.timebankId = widget.timebankId;
     createChat(chat: chatModel);
 
     Navigator.push(
@@ -1127,6 +1130,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 ChatModel chatModel = ChatModel();
                 chatModel.user1 = users[0];
                 chatModel.user2 = users[1];
+                chatModel.timebankId = widget.timebankId;
 
                 createChat(chat: chatModel);
                 Navigator.push(
@@ -2182,20 +2186,15 @@ class NotificationsView extends State<NotificationViewHolder> {
 //  }
 //}
 
-
 // class AceeptorItem {
 //   final String sevaUserID;
 //   final bool approved;
 
 //   AceeptorItem({this.sevaUserID, this.approved})
-  
+
 // }
 
-
 // class GetList {
-
-
-
 
 // void build(BuildContext context ){
 
@@ -2208,22 +2207,10 @@ class NotificationsView extends State<NotificationViewHolder> {
 //     consildatedList[f] = AceeptorItem(approved: false, sevaUserID: f);
 //   });
 
-
 // approvedMembers.map((f){
 //     consildatedList[f] = AceeptorItem(approved: true, sevaUserID: f);
 //   });
-  
-
 
 //   Requedtmodel midel=consildatedList[imdex].approved
 
-
-
 // }
-
-
-
-
-
-
-

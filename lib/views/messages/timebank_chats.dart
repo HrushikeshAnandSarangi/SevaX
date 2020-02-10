@@ -14,6 +14,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/messages/chatview_admin.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
@@ -21,14 +22,15 @@ import 'package:timeago/timeago.dart' as timeAgo;
 import '../core.dart';
 import 'list_members_timebank.dart';
 
-class ChatListView extends StatefulWidget {
-  const ChatListView({Key key}) : super(key: key);
+class TimebankChatListView extends StatefulWidget {
+  final String timebankId;
+  TimebankChatListView({this.timebankId});
 
   @override
   _ChatListViewState createState() => _ChatListViewState();
 }
 
-class _ChatListViewState extends State<ChatListView> {
+class _ChatListViewState extends State<TimebankChatListView> {
   // final BuildContext parentContext;
   // _ChatListViewState(this.parentContext);
 
@@ -40,19 +42,17 @@ class _ChatListViewState extends State<ChatListView> {
     var blockedByMembers =
         List<String>.from(SevaCore.of(context).loggedInUser.blockedBy);
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Messages',
-          style: TextStyle(fontSize: 18),
-        ),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   title: Text(
+      //     'Messages',
+      //     style: TextStyle(fontSize: 18),
+      //   ),
+      //   centerTitle: true,
+      // ),
       body: StreamBuilder<List<ChatModel>>(
-        stream: getChatsforUser(
-          email: SevaCore.of(context).loggedInUser.email,
-          blockedBy: blockedByMembers,
-          blockedMembers: blockedMembers,
+        stream: getChatsForTimebank(
+          timebankId: widget.timebankId,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
         ),
         builder: (BuildContext context,
@@ -65,8 +65,8 @@ class _ChatListViewState extends State<ChatListView> {
           if (chatListSnapshot.hasError) {
             return new Text('Error: ${chatListSnapshot.error}');
           }
-          // setState(() {
 
+          // setState(() {
           // });
 
           switch (chatListSnapshot.connectionState) {
@@ -223,6 +223,7 @@ class _ChatListViewState extends State<ChatListView> {
 
   Widget getMessageListView(ChatModel chatModel, BuildContext parentContext) {
     // print("------------------------->" + chatModel.toString());
+
     String lastmessage;
     if (chatModel.lastMessage == null) {
       lastmessage = '';
@@ -257,11 +258,10 @@ class _ChatListViewState extends State<ChatListView> {
               Navigator.push(
                 parentContext,
                 MaterialPageRoute(
-                  builder: (context) => ChatView(
-                    useremail: SevaCore.of(context).loggedInUser.email ==
-                            chatModel.user1
-                        ? chatModel.user2
-                        : chatModel.user1,
+                  builder: (context) => AdminChatView(
+                    useremail: isValidEmail(chatModel.user1)
+                        ? chatModel.user1
+                        : chatModel.user2,
                     chatModel: chatModel,
                   ),
                 ),
@@ -274,8 +274,8 @@ class _ChatListViewState extends State<ChatListView> {
                 children: <Widget>[
                   ClipOval(
                     child: Container(
-                      height: 55,
-                      width: 55,
+                      height: 45,
+                      width: 45,
                       child: FadeInImage.assetNetwork(
                         placeholder: 'lib/assets/images/profile.png',
                         image: chatModel.photoURL == null
@@ -289,48 +289,17 @@ class _ChatListViewState extends State<ChatListView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Offstage(
-                          offstage: isValidEmail(chatModel.user1) &&
-                              isValidEmail(chatModel.user2),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(3)),
-                            padding: EdgeInsets.only(
-                                left: 5, right: 5, top: 2, bottom: 2),
-                            // color: Colors.green,
-                            child: Text(
-                              "Timebank",
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                        Text(
+                          chatModel.messagTitleUserName == null
+                              ? 'Not added '
+                              : chatModel.messagTitleUserName,
+                          style: Theme.of(parentContext).textTheme.subhead,
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            left: 3,
-                            top: isValidEmail(chatModel.user1) &&
-                                    isValidEmail(chatModel.user2)
-                                ? 5
-                                : 0,
-                          ),
-                          child: Text(
-                            chatModel.messagTitleUserName == null
-                                ? 'Not added '
-                                : chatModel.messagTitleUserName,
-                            style: Theme.of(parentContext).textTheme.subhead,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 3),
-                          child: Text(
-                            lastmessage,
-                            style: TextStyle(color: Colors.grey),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
+                        Text(
+                          lastmessage,
+                          style: TextStyle(color: Colors.grey),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ],
                     ),
@@ -355,7 +324,7 @@ class _ChatListViewState extends State<ChatListView> {
                           Text(
                             chatModel.unreadStatus != null &&
                                     chatModel.unreadStatus.containsKey(
-                                      userEmail,
+                                      widget.timebankId,
                                     )
                                 ? "${chatModel.unreadStatus[userEmail] == 0 ? '' : chatModel.unreadStatus[userEmail]}"
                                 : '',
