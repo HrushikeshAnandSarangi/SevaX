@@ -16,11 +16,15 @@ import 'package:sevaexchange/widgets/custom_list_tile.dart';
 class RequestDetailsAboutPage extends StatefulWidget {
   final RequestModel requestItem;
   final TimebankModel timebankModel;
-
   final bool applied;
-  RequestDetailsAboutPage(
-      {Key key, this.applied = false, this.requestItem, this.timebankModel})
-      : super(key: key);
+  final bool isAdmin;
+  RequestDetailsAboutPage({
+    Key key,
+    this.applied = false,
+    this.requestItem,
+    this.timebankModel,
+    this.isAdmin,
+  }) : super(key: key);
 
   @override
   _RequestDetailsAboutPageState createState() =>
@@ -44,7 +48,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     fontSize: 14,
     color: Colors.grey,
   );
-
+  bool isAdmin = false;
   @override
   void initState() {
     super.initState();
@@ -64,8 +68,30 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     } else {
       isApplied = false;
     }
-
+    if (widget.requestItem.sevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID ||
+        widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      isAdmin = true;
+    }
     return Scaffold(
+      appBar: !isAdmin
+          ? AppBar(
+              backgroundColor: Colors.white,
+              leading: BackButton(
+                color: Colors.black,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              centerTitle: true,
+              title: Text(
+                "Request details",
+                style: TextStyle(
+                    fontFamily: "Europa", fontSize: 20, color: Colors.black),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -322,7 +348,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   bool isApplied = false;
   Widget getBottombar() {
     return Container(
-      color: Colors.grey[300],
+      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+      ]),
       child: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
         child: Row(

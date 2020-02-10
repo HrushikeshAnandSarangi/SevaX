@@ -33,7 +33,7 @@ class InviteMembersState extends State<InviteMembers> {
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
               ? "Yang Gang Codes"
-              : "Timebank codes",
+              : "TimeBank Codes",
           style: TextStyle(
             fontSize: 18,
           ),
@@ -63,7 +63,7 @@ class InviteMembersState extends State<InviteMembers> {
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text('No codes genrated yet.'),
+                      child: Text('No codes generated yet.'),
                     ),
                   );
                 }

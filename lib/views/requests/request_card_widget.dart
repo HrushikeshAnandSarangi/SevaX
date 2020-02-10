@@ -8,6 +8,8 @@ import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import '../../flavor_config.dart';
+
 class RequestCardWidget extends StatelessWidget {
   final UserModel userModel;
   final RequestModel requestModel;

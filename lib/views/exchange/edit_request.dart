@@ -8,7 +8,6 @@ import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -39,7 +38,7 @@ class _EditRequestState extends State<EditRequest> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          "Edit Campign Request",
+          "Edit Request",
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: false,
@@ -139,7 +138,7 @@ class RequestEditFormState extends State<RequestEditForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Campign request title',
+                'Request title',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -164,7 +163,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               ),
               Text(' '),
               OfferDurationWidget(
-                  title: ' Request Duration*',
+                  title: ' Request duration*',
                   startTime: startDate,
                   endTime: endDate),
               SizedBox(height: 8),
@@ -276,7 +275,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 padding: EdgeInsets.all(10.0),
               ),
               Text(
-                'Campign request description',
+                'Request description',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -287,7 +286,7 @@ class RequestEditFormState extends State<RequestEditForm> {
               TextFormField(
                 initialValue: widget.requestModel.description,
                 decoration: InputDecoration(
-                  hintText: 'Your Campign Request \nand any #hashtags',
+                  hintText: 'Your Request \nand any #hashtags',
                   hintStyle: hintTextStyle,
                 ),
                 keyboardType: TextInputType.multiline,
@@ -428,7 +427,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                         }
                       },
                       child: Text(
-                        "Update Campign Request".padLeft(10).padRight(10),
+                        "Update Request".padLeft(10).padRight(10),
                         style: Theme.of(context).primaryTextTheme.button,
                       ),
                     ),

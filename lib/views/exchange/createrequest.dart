@@ -41,7 +41,7 @@ class _CreateRequestState extends State<CreateRequest> {
           title: Text(
             FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? "Create Yang Gang Request"
-                : "Create your request",
+                : "Create Request",
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -159,7 +159,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   decoration: InputDecoration(
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
-                        : "Ex: Pets -in-town, Citizen collab",
+                        : "Ex: Small carpentry work...",
                   ),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,
@@ -173,7 +173,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 30),
                 OfferDurationWidget(
-                  title: ' Request Duration',
+                  title: ' Request duration',
                   //startTime: CalendarWidgetState.startDate,
                   //endTime: CalendarWidgetState.endDate
                 ),
@@ -296,7 +296,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Your Campaign Request \nand any #hashtags',
+                    hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
                   keyboardType: TextInputType.multiline,
@@ -394,7 +394,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating request'),
+            title: Text('Creating Request..'),
             content: LinearProgressIndicator(),
           );
         });
@@ -411,11 +411,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.approvedUsers = arrayOfSelectedMembers;
     //adding some members for humanity first
     if (_formKey.currentState.validate()) {
-      await _writeToDB();
       print("Select Members");
       if (widget.isOfferRequest == true && widget.userModel != null) {
-        print("Adding from selected members-------------");
+        if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
+        requestModel.approvedUsers.add(widget.userModel.email);
+      }
 
+      await _writeToDB();
+
+      if (widget.isOfferRequest == true && widget.userModel != null) {
+        print(
+            "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         // OfferModel offer = widget.offer;
         // Set<String> offerRequestList = () {
         //   if (offer.requestList == null) return [];
@@ -428,11 +434,15 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         // sendOfferRequest(
         //     offerModel: widget.offer,
         //     requestSevaID: requestModel.sevaUserId);
-        Navigator.pop(context);
+
+        // Navigator.pop(dialogContext);
+        // Navigator.pop(context);
+        Navigator.pop(dialogContext);
+        Navigator.pop(context, {'response': 'ACCEPTED'});
+      } else {
+        Navigator.pop(dialogContext);
         Navigator.pop(context);
       }
-      Navigator.pop(dialogContext);
-      Navigator.pop(context);
     }
   }
 

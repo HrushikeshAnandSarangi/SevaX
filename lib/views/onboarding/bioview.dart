@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../flavor_config.dart';
-
 typedef StringCallback = void Function(String bio);
 
 class BioView extends StatefulWidget {
@@ -56,7 +54,7 @@ class _BioViewState extends State<BioView> {
                       padding: const EdgeInsets.only(
                           left: 0.0, top: 0.0, bottom: 10.0),
                       child: Text(
-                        'Tell us a litte about yourself, list your skills, interests and what you would like to give back to the community.',
+                        'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 14,
@@ -77,7 +75,7 @@ class _BioViewState extends State<BioView> {
                               fillColor: Colors.grey[300],
                               filled: true,
                               hintText:
-                                  'What would you like to tell about you?',
+                                  'Tell us a little about yourself.',
                               border: textFieldBorder,
                               enabledBorder: textFieldBorder,
                               focusedBorder: textFieldBorder,
