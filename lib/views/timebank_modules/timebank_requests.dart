@@ -1093,13 +1093,14 @@ class RequestListItemsState extends State<RequestListItems> {
                         ),
                       ],
                     ),
-                    Offstage(
-                      offstage: !model.acceptors.contains(userEmail),
-                      child: Container(
-                          alignment: Alignment.topRight,
-                          margin: EdgeInsets.all(12),
-                          // width: double.infinity,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Offstage(
+                          offstage: !model.acceptors.contains(userEmail),
                           child: Container(
+                            margin: EdgeInsets.all(10),
                             width: 100,
                             height: 32,
                             child: FlatButton(
@@ -1107,37 +1108,18 @@ class RequestListItemsState extends State<RequestListItems> {
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               padding: EdgeInsets.all(0),
-                              color: Color.fromRGBO(44, 64, 140, 0.7),
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(width: 1),
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(44, 64, 140, 1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    'Applied',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Spacer(
-                                    flex: 2,
-                                  ),
-                                ],
+                              color: Colors.green,
+                              child: Text(
+                                'Applied',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                               onPressed: () {},
                             ),
-                          )),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
