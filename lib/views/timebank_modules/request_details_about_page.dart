@@ -69,164 +69,143 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                shrinkWrap: true,
+//                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
+                  Text(
+                    widget.requestItem.title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  CustomListTile(
+                      leading: Icon(
+                        Icons.access_time,
+                        color: Colors.grey,
+                      ),
+                      title: Text(
+                        DateFormat('EEEEEEE, MMMM dd').format(
+                          getDateTimeAccToUserTimezone(
+                              dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                  widget.requestItem.requestStart),
+                              timezoneAbb:
+                                  SevaCore.of(context).loggedInUser.timezone),
                         ),
-                        Text(
-                          widget.requestItem.title,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        CustomListTile(
-                            leading: Icon(
-                              Icons.access_time,
-                              color: Colors.grey,
+                        style: titleStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        DateFormat('h:mm a').format(
+                              getDateTimeAccToUserTimezone(
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      widget.requestItem.requestStart),
+                                  timezoneAbb: SevaCore.of(context)
+                                      .loggedInUser
+                                      .timezone),
+                            ) +
+                            ' - ' +
+                            DateFormat('h:mm a').format(
+                              getDateTimeAccToUserTimezone(
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      widget.requestItem.requestEnd),
+                                  timezoneAbb: SevaCore.of(context)
+                                      .loggedInUser
+                                      .timezone),
                             ),
-                            title: Text(
-                              DateFormat('EEEEEEE, MMMM dd').format(
-                                getDateTimeAccToUserTimezone(
-                                    dateTime:
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            widget.requestItem.requestStart),
-                                    timezoneAbb: SevaCore.of(context)
-                                        .loggedInUser
-                                        .timezone),
-                              ),
-                              style: titleStyle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            subtitle: Text(
-                              DateFormat('h:mm a').format(
-                                    getDateTimeAccToUserTimezone(
-                                        dateTime:
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                widget
-                                                    .requestItem.requestStart),
-                                        timezoneAbb: SevaCore.of(context)
+                        style: subTitleStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Container(
+                        height: 25,
+                        width: 75,
+                        child: widget.requestItem.sevaUserId ==
+                                SevaCore.of(context).loggedInUser.sevaUserID
+                            ? FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                child: Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                                onPressed: () {
+                                  RequestModel _modelItem = widget.requestItem;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditRequest(
+                                        timebankId: SevaCore.of(context)
                                             .loggedInUser
-                                            .timezone),
-                                  ) +
-                                  ' - ' +
-                                  DateFormat('h:mm a').format(
-                                    getDateTimeAccToUserTimezone(
-                                        dateTime:
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                widget.requestItem.requestEnd),
-                                        timezoneAbb: SevaCore.of(context)
-                                            .loggedInUser
-                                            .timezone),
-                                  ),
-                              style: subTitleStyle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            trailing: Container(
-                              height: 25,
-                              width: 75,
-                              child: widget.requestItem.sevaUserId ==
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID
-                                  ? FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                            .currentTimebank,
+                                        requestModel: widget.requestItem,
                                       ),
-                                      color: Color.fromRGBO(44, 64, 140, 1),
-                                      child: Text(
-                                        'Edit',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 13),
-                                      ),
-                                      onPressed: () {
-                                        RequestModel _modelItem =
-                                            widget.requestItem;
-                                        print("widget.requestItem:$_modelItem");
-                                        print(
-                                            "SevaCore.of(context).loggedInUser.currentTimebank:${SevaCore.of(context).loggedInUser.currentTimebank}");
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => EditRequest(
-                                              timebankId: SevaCore.of(context)
-                                                  .loggedInUser
-                                                  .currentTimebank,
-                                              requestModel: widget.requestItem,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Container(),
-                            )),
-                        CustomListTile(
-                          leading: Icon(
-                            Icons.location_on,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            location,
-                            style: titleStyle,
-                            maxLines: 1,
-                          ),
-                          subtitle: FutureBuilder<String>(
-                            future: _getLocation(
-                              widget.requestItem.location.latitude,
-                              widget.requestItem.location.latitude,
-                            ),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                return Text("Unnamed Location");
-                              }
+                                    ),
+                                  );
+                                },
+                              )
+                            : Container(),
+                      )),
+                  CustomListTile(
+                    leading: Icon(
+                      Icons.location_on,
+                      color: Colors.grey,
+                    ),
+                    title: Text(
+                      location,
+                      style: titleStyle,
+                      maxLines: 1,
+                    ),
+                    subtitle: FutureBuilder<String>(
+                      future: _getLocation(
+                        widget.requestItem.location.latitude,
+                        widget.requestItem.location.latitude,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text("Unnamed Location");
+                        }
 
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text("Resolving location...");
-                              }
-                              return Text(
-                                snapshot.data ?? '',
-                                style: subTitleStyle,
-                                maxLines: 1,
-                              );
-                            },
-                          ),
-                        ),
-                        CustomListTile(
-                          // contentPadding: EdgeInsets.all(0),
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text("Resolving location...");
+                        }
+                        return Text(
+                          snapshot.data ?? '',
+                          style: subTitleStyle,
+                          maxLines: 1,
+                        );
+                      },
+                    ),
+                  ),
+                  CustomListTile(
+                    // contentPadding: EdgeInsets.all(0),
 
-                          leading: Icon(
-                            Icons.person,
-                            color: Colors.grey,
-                          ),
-                          title: Text(
-                            "Hosted by ${widget.requestItem.fullName}",
-                            style: titleStyle,
-                            maxLines: 1,
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} people Approved',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
+                    leading: Icon(
+                      Icons.person,
+                      color: Colors.grey,
+                    ),
+                    title: Text(
+                      "Hosted by ${widget.requestItem.fullName}",
+                      style: titleStyle,
+                      maxLines: 1,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} people Approved',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   FutureBuilder(
@@ -298,13 +277,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   //   ),
                   //   errorWidget: (context, url, error) => Icon(Icons.error),
                   // ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 20),
-                    child: Text(
-                      widget.requestItem.description,
-                      style: TextStyle(fontSize: 16),
-                    ),
+                  Text(
+                    widget.requestItem.description,
+                    style: TextStyle(fontSize: 16),
                   ),
                   /*CachedNetworkImage(
                       imageUrl: widget.requestItem.photoUrl,
@@ -318,11 +293,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                 ],
               ),
             ),
-            Spacer(),
             getBottombar(),
-            SizedBox(
-              height: 10,
-            )
           ],
         ),
       ),
@@ -350,17 +321,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   bool isApplied = false;
   Widget getBottombar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey[200],
-              blurRadius: 100.0,
-            ),
-          ],
-        ),
+    return Container(
+      color: Colors.grey[300],
+      child: Padding(
+        padding: const EdgeInsets.only(top: 30.0, left: 20, bottom: 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -378,6 +342,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                               : "Do you want to participate in this request?",
                       style: TextStyle(
                         fontSize: 16,
+                        fontFamily: 'Europa',
                         fontWeight: FontWeight.bold,
                       ),
                     ),

@@ -1067,9 +1067,14 @@ class RequestListItemsState extends State<RequestListItems> {
                       model.title,
                       style: Theme.of(widget.parentContext).textTheme.subhead,
                     ),
-                    Text(
-                      model.description,
-                      style: Theme.of(widget.parentContext).textTheme.subtitle,
+                    Container(
+                      width: MediaQuery.of(context).size.width - 95,
+                      child: Text(
+                        model.description,
+                        style:
+                            Theme.of(widget.parentContext).textTheme.subtitle,
+                        maxLines: 1,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Wrap(
