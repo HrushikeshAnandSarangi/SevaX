@@ -321,6 +321,8 @@ class UserModel extends DataModel {
     } else {
       object['past_hires'] = [];
     }
+
+    object['root_timebank_id'] = FlavorConfig.values.timebankId;
     return object;
   }
 

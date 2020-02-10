@@ -231,7 +231,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Total spendings',
+            'Total Spent',
             style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
@@ -601,7 +601,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         padding: EdgeInsets.all(8.0),
                       ),
                       RaisedButton(
-                        color: Colors.red,
+                        color: Colors.green,
                         child: Text(
                           'Approve',
                           style: TextStyle(
