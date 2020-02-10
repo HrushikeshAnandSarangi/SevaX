@@ -27,7 +27,7 @@ class CreateEditCommunityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Create timebank';
+    var title = 'Create a Timebank';
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -214,7 +214,7 @@ class CreateEditCommunityViewFormState
                   ),
                   Row(
                     children: <Widget>[
-                      headingText('Protected timebank'),
+                      headingText('Protected Timebank'),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -407,7 +407,7 @@ class CreateEditCommunityViewFormState
                           },
                           shape: StadiumBorder(),
                           child: Text(
-                            'Create Timebank',
+                            'Create a Timebank',
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
@@ -517,7 +517,7 @@ class CreateEditCommunityViewFormState
     return GestureDetector(
       onTap: () {},
       child: Text(
-        ' Find your timebank',
+        ' Find your Timebank',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,

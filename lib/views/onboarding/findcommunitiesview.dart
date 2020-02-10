@@ -78,7 +78,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
-            'Find your timebank',
+            'Find your Timebank',
             style: TextStyle(
               fontSize: 18,
             ),
@@ -98,7 +98,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          'Look for existing timebank to join',
+          'Looking for an existing timebank to join',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -372,7 +372,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               // Text('Or'),
               RaisedButton(
                 child: Text(
-                  'Create your timebank',
+                  'Create a Timebank',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
                 onPressed: () {

@@ -27,7 +27,6 @@ class UserModel extends DataModel {
   String requestStatus;
   String locationName;
   String lat_lng;
-
   int notificationsRead;
   Map<dynamic, dynamic> notificationsReadCount;
   String root_timebank_id;
@@ -77,9 +76,7 @@ class UserModel extends DataModel {
       this.blockedBy,
       this.currentPosition,
       this.currentCommunity,
-      this.communities}) {
-    this.root_timebank_id = FlavorConfig.values.timebankId;
-  }
+      this.communities}) {}
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -321,6 +318,8 @@ class UserModel extends DataModel {
     } else {
       object['past_hires'] = [];
     }
+    object['root_timebank_id'] = FlavorConfig.values.timebankId;
+    
     return object;
   }
 
