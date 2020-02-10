@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -56,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage>
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
-  double sevaCoins = 5;
+  double sevaCoinsValue = 0.0;
 
   // UserProfileBloc _profileBloc = UserProfileBloc();
 
@@ -81,6 +82,19 @@ class _ProfilePageState extends State<ProfilePage>
       setState(() {
         isUserLoaded = true;
       });
+      FirestoreManager.getCompletedRequestStream(
+          userEmail: SevaCore.of(context).loggedInUser.email,
+          userId: SevaCore.of(context).loggedInUser.sevaUserID).listen(
+            (requestList) {
+          if (!mounted) return;
+          requestList.forEach((requestObj){
+            requestObj.transactions?.forEach((transaction) {
+              if (transaction.isApproved && transaction.to == SevaCore.of(context).loggedInUser.sevaUserID)
+                sevaCoinsValue += transaction.credits;
+            });
+          });
+        },
+      );
     });
   }
 
@@ -231,7 +245,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  '${sevaCoins} Seva Coins',
+                                  '${sevaCoinsValue} Seva Coins',
                                   style: TextStyle(
                                     color: user.currentBalance > 0
                                         ? Colors.blue
@@ -305,7 +319,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
-                                      'Create Timebank',
+                                      'Create TimeBank',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
@@ -389,7 +403,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   Padding(
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
-                                      'Discover Timebanks',
+                                      'Discover TimeBanks',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,

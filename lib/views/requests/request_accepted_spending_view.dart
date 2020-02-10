@@ -231,7 +231,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            'Total spendings',
+            'Total Spent',
             style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
@@ -574,9 +574,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
+                        color: Colors.red,
                         child: Text(
                           'Reject',
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // reject the claim
@@ -599,9 +601,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         padding: EdgeInsets.all(8.0),
                       ),
                       RaisedButton(
+                        color: Colors.red,
                         child: Text(
                           'Approve',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // Once approved take for feeddback

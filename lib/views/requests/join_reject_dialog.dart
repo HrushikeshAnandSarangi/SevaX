@@ -4,20 +4,21 @@ import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
-import '../core.dart';
-
 class JoinRejectDialogView extends StatefulWidget {
-
   final RequestInvitationModel requestInvitationModel;
   final String timeBankId;
   final String notificationId;
   final UserModel userModel;
 
-
-  JoinRejectDialogView({this.requestInvitationModel, this.timeBankId, this.notificationId, this.userModel});
+  JoinRejectDialogView(
+      {this.requestInvitationModel,
+      this.timeBankId,
+      this.notificationId,
+      this.userModel});
 
   @override
-  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState(requestInvitationModel,timeBankId,notificationId,userModel);
+  _JoinRejectDialogViewState createState() => _JoinRejectDialogViewState(
+      requestInvitationModel, timeBankId, notificationId, userModel);
 }
 
 class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
@@ -26,8 +27,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
   final String notificationId;
   final UserModel userModel;
 
-  _JoinRejectDialogViewState(this.requestInvitationModel, this.timeBankId, this.notificationId, this.userModel);
-
+  _JoinRejectDialogViewState(this.requestInvitationModel, this.timeBankId,
+      this.notificationId, this.userModel);
 
   BuildContext progressContext;
 
@@ -46,7 +47,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               height: 70,
               width: 70,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(requestInvitationModel.timebankImage),
+                backgroundImage:
+                    NetworkImage(requestInvitationModel.timebankImage),
               ),
             ),
             Padding(
@@ -55,8 +57,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(4.0),
               child: Text(
-                requestInvitationModel.requestTitle
-                    ?? "Anonymous",
+                requestInvitationModel.requestTitle ?? "Anonymous",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -66,8 +67,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
               child: Text(
-                    requestInvitationModel.timebankName
-                    ?? "Timebank name not updated",
+                requestInvitationModel.timebankName ??
+                    "Timebank name not updated",
               ),
             ),
 //              Padding(
@@ -81,8 +82,8 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: Text(
-                requestInvitationModel.requestDesc
-                    ?? "Description not yet updated",
+                requestInvitationModel.requestDesc ??
+                    "Description not yet updated",
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -102,51 +103,47 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
+                  color: Colors.red,
                   child: Text(
                     'Decline',
-                    style: TextStyle(color: Colors.red),
+                    style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
                   ),
                   onPressed: () async {
                     // request declined
-                 //   showProgressDialog(context, 'Rejecting Invitation');
+                    //   showProgressDialog(context, 'Rejecting Invitation');
 
                     declineInvitationbRequest(
                         model: requestInvitationModel,
                         notificationId: widget.notificationId,
-                        userModel: userModel
-                        );
+                        userModel: userModel);
 
-
-                    if(progressContext != null){
+                    if (progressContext != null) {
                       Navigator.pop(progressContext);
                     }
                     Navigator.of(context).pop();
-
                   },
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
                 ),
                 RaisedButton(
+                  color: Colors.green,
                   child: Text(
                     'Approve',
-                    style: TextStyle(color: Colors.green),
+                    style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
                   ),
                   onPressed: () async {
-                     //Once approved
+                    //Once approved
 
-                   // showProgressDialog(context, 'Accepting Invitation');
+                    // showProgressDialog(context, 'Accepting Invitation');
                     approveInvitationForVolunteerRequest(
-                      model: requestInvitationModel,
+                        model: requestInvitationModel,
                         notificationId: widget.notificationId,
                         user: userModel);
 
-
-
-                    if(progressContext != null){
+                    if (progressContext != null) {
                       Navigator.pop(progressContext);
                     }
-
 
                     Navigator.of(context).pop();
                   },
@@ -158,6 +155,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
       ),
     );
   }
+
   void showProgressDialog(BuildContext context, String message) {
     showDialog(
         barrierDismissible: false,
@@ -170,14 +168,14 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
           );
         });
   }
+
   void declineInvitationbRequest({
     RequestInvitationModel model,
     String notificationId,
     UserModel userModel,
   }) {
-  print('decline data ${
-    model.toString() + notificationId + userModel.toString()
-  }');
+    print(
+        'decline data ${model.toString() + notificationId + userModel.toString()}');
     rejectInviteRequest(
       requestId: model.requestId,
       rejectedUserId: userModel.sevaUserID,
@@ -185,7 +183,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     );
 
     FirestoreManager.readUserNotification(notificationId, userModel.email);
-
   }
 
   void approveInvitationForVolunteerRequest({
@@ -193,7 +190,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     String notificationId,
     UserModel user,
   }) {
-
     acceptInviteRequest(
       requestId: model.requestId,
       acceptedUserEmail: user.email,
@@ -202,7 +198,6 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
     );
 
     FirestoreManager.readUserNotification(notificationId, user.email);
-
   }
 
   Widget _getCloseButton(BuildContext context) {

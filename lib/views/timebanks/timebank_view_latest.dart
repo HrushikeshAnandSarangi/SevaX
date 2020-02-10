@@ -114,7 +114,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                     style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
                   ),
                   TextSpan(
-                    text: " Seva Exchange Time Bank",
+                    text: " Seva Exchange TimeBank",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

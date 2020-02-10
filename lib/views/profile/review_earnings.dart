@@ -38,21 +38,16 @@ class _ReviewEarningState extends State<ReviewEarning> {
   List<RequestModel> requestList = [];
   //List<UserModel> userList = [];
 
-  Stream<List<RequestModel>> requestStream;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    requestStream = FirestoreManager.getCompletedRequestStream(
+    FirestoreManager.getCompletedRequestStream(
         userEmail: SevaCore.of(context).loggedInUser.email,
-        userId: SevaCore.of(context).loggedInUser.sevaUserID);
-    requestStream.listen(
-      (list) {
+        userId: SevaCore.of(context).loggedInUser.sevaUserID).listen(
+      (result) {
         if (!mounted) return;
+        requestList = result;
         setState(() {
-          requestList = list;
-
-          return requestList;
         });
       },
     );

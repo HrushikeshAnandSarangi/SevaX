@@ -311,6 +311,10 @@ Stream<List<NotificationsModel>> getNotifications({
   String userEmail,
   @required String communityId,
 }) async* {
+  print("userEmail "+userEmail);
+  print("timebankId "+FlavorConfig.values.timebankId);
+  print("communityId "+communityId);
+
   var data = Firestore.instance
       .collection('users')
       .document(userEmail)
@@ -432,3 +436,4 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
     ),
   );
 }
+
