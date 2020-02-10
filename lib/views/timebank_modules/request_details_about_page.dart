@@ -306,9 +306,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   }
 
               ),*/
-              SizedBox(
-                height: 10,
-              ),
+              Spacer(),
               getBottombar(),
               SizedBox(
                 height: 10,
@@ -356,7 +354,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       text: widget.requestItem.sevaUserId !=
                               SevaCore.of(context).loggedInUser.sevaUserID
                           ? 'You have${isApplied ? '' : " not"} applied for the request'
-                          : "You created this request",
+                          : "You are the creator of this request",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -377,22 +375,22 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: Color.fromRGBO(44, 64, 140, 0.7),
+                  color: isApplied ? Colors.green : Colors.red,
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 1),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: Color.fromRGBO(44, 64, 140, 1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.check,
-                          color: Colors.white,
-                        ),
-                      ),
+//                      Container(
+//                        width: 30,
+//                        height: 30,
+//                        decoration: BoxDecoration(
+//                          color: Color.fromRGBO(44, 64, 140, 1),
+//                          shape: BoxShape.circle,
+//                        ),
+//                        child: Icon(
+//                          Icons.check,
+//                          color: Colors.white,
+//                        ),
+//                      ),
                       Spacer(),
                       Text(
                         isApplied ? 'Withdraw' : 'Apply',

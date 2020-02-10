@@ -88,16 +88,22 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
+          List<UserModel> userList = [];
+
+          snapshot.data.documents.forEach((userModel) {
+            UserModel model = UserModel.fromMap(userModel.data);
+            userList.add(model);
+          });
+
+          // print("length ${userList.length}");
+          userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
+          //print("length ${userList.length}");
           return ListView.builder(
-            itemCount: snapshot.data.documents.length,
+            itemCount: userList.length,
             itemBuilder: (context, index) {
-              List timeBankIds =
-                  snapshot.data.documents[index].data['favoriteByTimeBank'] ??
-                      [];
-              List memberId =
-                  snapshot.data.documents[index].data['favoriteByMember'] ?? [];
-              UserModel user =
-                  UserModel.fromMap(snapshot.data.documents[index].data);
+              UserModel user = userList.elementAt(index);
+              List timeBankIds = user.favoriteByTimeBank ?? [];
+              List memberId = user.favoriteByMember ?? [];
 
               return RequestCardWidget(
                 timebankModel: timebank.model,
