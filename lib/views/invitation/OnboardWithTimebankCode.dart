@@ -246,7 +246,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       ],
                     )
                   : Text(
-                      'You already requested to this TimeBank. Please wait untill request is accepted',
+                      'You already requested to this timebank. Please wait untill request is accepted',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black54,

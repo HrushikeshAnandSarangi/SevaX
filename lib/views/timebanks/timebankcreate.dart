@@ -143,7 +143,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
-              'Group is a subset of a TimeBank that may be temporary. Ex: committees, project teams.',
+              'Group is a subset of a timebank that may be temporary. Ex: committees, project teams.',
               textAlign: TextAlign.center,
             ),
           ),

@@ -33,7 +33,7 @@ class InviteMembersState extends State<InviteMembers> {
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
               ? "Yang Gang Codes"
-              : "TimeBank Codes",
+              : "Timebank Codes",
           style: TextStyle(
             fontSize: 18,
           ),
