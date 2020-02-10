@@ -39,7 +39,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
     super.initState();
 
     FirestoreManager.getAllTimebankIdStream(
-      timebankId: timebankModel.model.id,
+      timebankId: widget.timebankId,
     ).then((onValue) {
       setState(() {
         validItems = onValue;
@@ -251,6 +251,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             ),
           );
         }
+        print("length ${snapshot.data}");
 
         List<UserModel> userList = snapshot.data;
         print("length ${userList.length}");
