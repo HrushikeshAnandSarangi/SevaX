@@ -160,21 +160,14 @@ Future<void> createRequestApprovalNotification({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap(), merge: true)
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap(), merge: true);
+  
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(isTimeBankNotification ? model.timebankId : user.email)
+      .collection('notifications')
+      .document(model.id)
+      .setData(model.toMap(), merge: true);
 }
 
 Future<void> createTaskCompletedApprovedNotification({
