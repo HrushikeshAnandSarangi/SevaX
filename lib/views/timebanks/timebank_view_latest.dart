@@ -41,7 +41,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
     getData(); // TODO: implement initState
   }
 
-
   @override
   void getData() async {
    // print('Admin id  ${widget.timebankModel.admins[0]}');

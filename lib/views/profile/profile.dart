@@ -108,31 +108,31 @@ class _ProfilePageState extends State<ProfilePage>
 
     Future.delayed(Duration.zero, () {
       FirestoreManager.getTimeBankForId(
-            timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
-        .then((timebank) {
-      if (timebank.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-          timebank.coordinators
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-        setState(() {
-          print("Admin access granted");
-          isAdminOrCoordinator = true;
-        });
-      } else {
-        // print("Admin access Revoked");
-        // isAdminOrCoordinator = false;
-      }
-    });
+              timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
+          .then((timebank) {
+        if (timebank.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+            timebank.coordinators
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          setState(() {
+            print("Admin access granted");
+            isAdminOrCoordinator = true;
+          });
+        } else {
+          // print("Admin access Revoked");
+          // isAdminOrCoordinator = false;
+        }
+      });
 
-    FirestoreManager.getUserForIdStream(
-      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-    ).listen((UserModel userModel) {
-      if (mounted) isUserLoaded = true;
-      print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
-      _profileBloc.getAllCommunities(context, userModel);
-      this.user = userModel;
-      setState(() {});
-    });
+      FirestoreManager.getUserForIdStream(
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      ).listen((UserModel userModel) {
+        if (mounted) isUserLoaded = true;
+        print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
+        _profileBloc.getAllCommunities(context, userModel);
+        this.user = userModel;
+        setState(() {});
+      });
     });
   }
 
@@ -174,12 +174,19 @@ class _ProfilePageState extends State<ProfilePage>
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: <Widget>[
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            user.photoURL,
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: navigateToSettings,
+                          child: Hero(
+                            tag: "ProfileImage",
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                user.photoURL,
+                              ),
+                              backgroundColor: Colors.white,
+                              radius: MediaQuery.of(context).size.width / 4.5,
+                            ),
                           ),
-                          backgroundColor: Colors.white,
-                          radius: MediaQuery.of(context).size.width / 4.5,
                         ),
                         SizedBox(height: 10),
                         Text(
@@ -341,42 +348,12 @@ class _ProfilePageState extends State<ProfilePage>
                         //     ),
                         //   ),
                         // ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => CreateEditCommunityView(
-                                  timebankId: timebankModel.id,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Card(
-                            elevation: 2,
-                            child: Container(
-                              height: 60,
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      'Create TimeBank',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Icon(Icons.navigate_next),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+
+
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           // child: ListView.separated(
                           //   padding: EdgeInsets.all(0),
                           //   shrinkWrap: true,
@@ -394,26 +371,26 @@ class _ProfilePageState extends State<ProfilePage>
                           //   },
                           // ),
 
-//                          child: StreamBuilder<List<Widget>>(
-//                            stream: _profileBloc.communities,
-//                            builder: (context, snapshot) {
-//                              if (snapshot.data != null)
-//                                return Column(children: snapshot.data);
-//
-//                              if (snapshot.hasError)
-//                                return Center(
-//                                    child: Padding(
-//                                  padding: const EdgeInsets.all(12.0),
-//                                  child: Text(snapshot.error),
-//                                ));
-//                              return Container(
-//                                height: 100,
-//                                child: Center(
-//                                  child: CircularProgressIndicator(),
-//                                ),
-//                              );
-//                            },
-//                          ),
+                          child: StreamBuilder<List<Widget>>(
+                            stream: _profileBloc.communities,
+                            builder: (context, snapshot) {
+                              if (snapshot.data != null)
+                                return Column(children: snapshot.data);
+
+                              if (snapshot.hasError)
+                                return Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(snapshot.error),
+                                ));
+                              return Container(
+                                height: 100,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
+                          ),
                         ),
 
                         SizedBox(height: 10),
@@ -469,7 +446,7 @@ class _ProfilePageState extends State<ProfilePage>
                               //   ),
                               // ),
                               TextSpan(
-                                text: 'Discover more TimeBanks',
+                                text: 'Discover more Timebanks',
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold,

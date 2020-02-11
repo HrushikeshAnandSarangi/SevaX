@@ -1,4 +1,4 @@
- import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/models.dart';
 
 class BillingAddress {
   String companyname;
@@ -126,7 +126,7 @@ class CommunityModel extends DataModel {
   List<String> members;
 
   CommunityModel(Map<String, dynamic> map) {
-    this.id = map.containsKey('id') ? map['id'] : '';
+    this.id = map != null ? map.containsKey('id') ? map['id'] : '' : '';
     this.name = map.containsKey('name') ? map['name'] : '';
     this.primary_email =
         map.containsKey('primary_email') ? map['primary_email'] : '';
@@ -142,7 +142,8 @@ class CommunityModel extends DataModel {
         map.containsKey('creator_email') ? map['creator_email'] : '';
     this.created_by = map.containsKey('created_by') ? map['created_by'] : '';
     this.created_at = map.containsKey('created_at') ? map['created_at'] : '';
-    this.primary_timebank = map.containsKey('primary_timebank') ? map['primary_timebank']: '';
+    this.primary_timebank =
+        map.containsKey('primary_timebank') ? map['primary_timebank'] : '';
     this.timebanks =
         map.containsKey('timebanks') ? List.castFrom(map['timebanks']) : [];
     this.admins = map.containsKey('admins') ? List.castFrom(map['admins']) : [];
@@ -259,6 +260,3 @@ class CommunityListModel {
 
   List<CommunityModel> get getCommunities => communities;
 }
-
-
-
