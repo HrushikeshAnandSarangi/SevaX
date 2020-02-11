@@ -1,4 +1,4 @@
-import 'dart:collection';
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +7,12 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/search_view.dart';
-import 'package:sevaexchange/views/core.dart';
-
-import 'dart:ui';
 
 import 'data_managers/chat_data_manager.dart';
 
@@ -185,6 +183,8 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               ChatModel model = ChatModel();
               model.user1 = users[0];
               model.user2 = users[1];
+              model.timebankId = widget.timebankId;
+
               print("Model1" + model.user1);
               print("Model2" + model.user2);
 
@@ -227,6 +227,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
               ChatModel model = ChatModel();
               model.user1 = users[0];
               model.user2 = users[1];
+              model.timebankId = widget.timebankId;
               print("Model1" + model.user1);
               print("Model2" + model.user2);
 
@@ -256,7 +257,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
 
             break;
           default:
-            return(){
+            return () {
               print("");
             };
         }
@@ -388,19 +389,19 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
     );
   }
 
-    TextStyle get sectionHeadingStyle {
-      return TextStyle(
-        fontWeight: FontWeight.w600,
-        fontSize: 12.5,
-        color: Colors.black,
-      );
-    }
+  TextStyle get sectionHeadingStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 12.5,
+      color: Colors.black,
+    );
+  }
 
-    TextStyle get sectionTextStyle {
-      return TextStyle(
-        fontWeight: FontWeight.w600,
-        fontSize: 11,
-        color: Colors.grey,
-      );
-    }
+  TextStyle get sectionTextStyle {
+    return TextStyle(
+      fontWeight: FontWeight.w600,
+      fontSize: 11,
+      color: Colors.grey,
+    );
+  }
 }

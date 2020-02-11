@@ -1,5 +1,3 @@
-//import 'dart:ffi';
-
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,23 +21,23 @@ import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
 
-class NotificationViewHolder extends StatefulWidget {
+class AdminNotificationViewHolder extends StatefulWidget {
   final String timebankId;
 
-  NotificationViewHolder({this.timebankId});
+  AdminNotificationViewHolder({this.timebankId});
 
   @override
   State<StatefulWidget> createState() {
-    return NotificationsView();
+    return AdminNotificationsView();
   }
 }
 
-class NotificationsView extends State<NotificationViewHolder> {
+class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<NotificationsModel>>(
-      stream: FirestoreManager.getNotifications(
-        userEmail: SevaCore.of(context).loggedInUser.email,
+      stream: FirestoreManager.getNotificationsForTimebank(
+        timebankId: widget.timebankId,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context_firestore, snapshot) {
@@ -73,190 +71,62 @@ class NotificationsView extends State<NotificationViewHolder> {
             switch (notification.type) {
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return FutureBuilder<RequestModel>(
-                    future: FirestoreManager.getRequestFutureById(
-                      requestId: model.id,
-                    ),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      RequestModel model = snapshot.data;
-                      return getNotificationAcceptedWidget(
-                        model,
-                        notification.senderUserId,
-                        notification.id,
-                      );
-                    });
+                return Text("NotificationType.RequestAccept");
                 break;
-              case NotificationType.RequestApprove:
-                RequestModel model = RequestModel.fromMap(notification.data);
 
-                return getNotificationRequestApprovalWidget(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
+              case NotificationType.RequestApprove:
+                return Text("NotificationType.RequestApprove");
                 break;
 
               case NotificationType.RequestReject:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return getNotificationRequestRejectWidget(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
+                return Text("NotificationType.RequestReject");
                 break;
 
               case NotificationType.JoinRequest:
-                JoinRequestNotificationModel model =
-                    JoinRequestNotificationModel.fromMap(notification.data);
-                return FutureBuilder<UserModel>(
-                    future: FirestoreManager.getUserForId(
-                        sevaUserId: notification.senderUserId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return notificationShimmer;
-                      }
-                      UserModel user = snapshot.data;
-                      return user != null && user.fullname != null
-                          ? getJoinReuqestsNotificationWidget(
-                              user, notification.id, model, context)
-                          : Offstage();
-                    });
+                return Text("NotificationType.JoinRequest");
                 break;
 
               case NotificationType.RequestCompleted:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return FutureBuilder<RequestModel>(
-                    future: FirestoreManager.getRequestFutureById(
-                        requestId: model.id),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
+                return Text("NotificationType.RequestCompleted");
 
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      RequestModel model = snapshot.data;
-                      return getNotificationRequestCompletedWidget(
-                        model,
-                        notification.senderUserId,
-                        notification.id,
-                      );
-                    });
                 break;
               case NotificationType.RequestCompletedApproved:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return getNotificationRequestCompletedApproved(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
+                return Text("NotificationType.RequestCompletedApproved");
                 break;
               case NotificationType.RequestCompletedRejected:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return getNotificationTaskCompletedRejectWidget(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
+                return Text("NotificationType.RequestCompletedRejected");
+
                 break;
               case NotificationType.TransactionCredit:
                 // TODO: Handle this case.
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
-                return getNotificationCredit(
-                    model, notification.senderUserId, notification.id);
-                break;
+                return Text("NotificationType.TransactionCredit");
+
               case NotificationType.TransactionDebit:
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
-                return getNotificationDebit(
-                    model, notification.senderUserId, notification.id);
+                return Text("NotificationType.TransactionDebit");
+                // getNotificationDebit(
+                //     model, notification.senderUserId, notification.id);
                 break;
               case NotificationType.OfferAccept:
                 OfferModel offerModel = OfferModel.fromMap(notification.data);
-
-                List<NotificationsModel> offerAcceptNotificationList =
-                    notifications.where((noti) {
-                  if (noti.type == NotificationType.OfferAccept) return true;
-                  return false;
-                }).toList();
-                return getOfferAcceptNotification(
-                  offerModel,
-                  notification.senderUserId,
-                  notification.targetUserId,
-                  notification.id,
-                  offerModel.requestList.elementAt(0),
-                  offerAcceptNotificationList,
-                );
-                // return Column(
-                //   children: offerModel.requestList.map<Widget>((value) {
-                //     return getOfferAcceptNotification(
-                //         offerModel,
-                //         notification.senderUserId,
-                //         notification.targetUserId,
-                //         notification.id,
-                //         value);
-                //   }).toList(),
-                // );
-
-                // return getOfferAcceptNotification(
-                //   offerModel,
-                //   notification.senderUserId,
-                //   notification.targetUserId,
-                //   notification.id,
-                // );
+                return Text("NotificationType.OfferAccept");
                 break;
               case NotificationType.OfferReject:
-                // TODO: Handle this case.
-                return Container(width: 50, height: 50, color: Colors.red);
+                return Text("NotificationType.OfferReject");
                 break;
               case NotificationType.AcceptedOffer:
-                print("Offere accepted");
-                OfferAcceptedNotificationModel acceptedOffer =
-                    OfferAcceptedNotificationModel.fromMap(notification.data);
-                return FutureBuilder<UserModel>(
-                    future: FirestoreManager.getUserForId(
-                        sevaUserId: acceptedOffer.acceptedBy),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return notificationShimmer;
-                      }
-                      UserModel user = snapshot.data;
-                      return getOfferAcceptedNotificationView(
-                          user, notification.id, acceptedOffer, context);
-                    });
-
-                // return Text(
-                //     'Acceptance Request ' + acceptedOffer.notificationContent);
+                return Text("NotificationType.AcceptedOffer");
                 break;
 
               case NotificationType.RequestInvite:
-                // TODO: Handle this case.
-
-                print("notification data ${notification.data}");
-                RequestInvitationModel requestInvitationModel =
-                    RequestInvitationModel.fromMap(notification.data);
-                return getInvitedRequestsNotificationWidget(
-                  requestInvitationModel,
-                  notification.id,
-                  context,
-                  notification.timebankId,
-                  notification.communityId,
-                );
+                return Text("NotificationType.RequestInvite");
                 break;
             }
             return Container(
@@ -280,7 +150,8 @@ class NotificationsView extends State<NotificationViewHolder> {
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return notificationShimmer;
+            // return notificationShimmer;
+            return Text("getNotificationCredit");
           }
           UserModel user = snapshot.data;
           return Dismissible(
@@ -352,7 +223,8 @@ class NotificationsView extends State<NotificationViewHolder> {
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return notificationShimmer;
+            // return notificationShimmer;
+            return Text('getNotificationDebit');
           }
           UserModel user = snapshot.data;
           return Dismissible(
@@ -412,7 +284,8 @@ class NotificationsView extends State<NotificationViewHolder> {
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
+          // return notificationShimmer;
+          return Text('getNotificationRequestCompletedApproved');
         }
         UserModel user = snapshot.data;
         TransactionModel transactionModel =
@@ -476,7 +349,8 @@ class NotificationsView extends State<NotificationViewHolder> {
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
+          // return notificationShimmer;
+          return Text('getOfferAcceptNotification');
         }
         UserModel user = snapshot.data;
         //bool fromOffer;
@@ -497,7 +371,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                           return Text(snapshot.error.toString());
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return notificationShimmer;
+                          // return notificationShimmer;
+                          return Text('getOfferAcceptNotification');
                         }
                         return SlideAction(
                           onTap: () {
@@ -548,7 +423,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                       if (snapshot.hasError)
                         return Text(snapshot.error.toString());
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return notificationShimmer;
+                        // return notificationShimmer;
+                        return Text('getOfferAcceptNotification');
                       }
                       return Container(
                         margin: notificationPadding,
@@ -676,7 +552,8 @@ class NotificationsView extends State<NotificationViewHolder> {
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
+          // return notificationShimmer;
+          return Text('getNotificationRequestCompletedWidget');
         }
         UserModel user = snapshot.data;
         TransactionModel transactionModel =
@@ -1167,7 +1044,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
+          return Text('getNotificationDebit');
         }
 
         UserModel user = snapshot.data;
@@ -1245,7 +1122,8 @@ class NotificationsView extends State<NotificationViewHolder> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
+          // return notificationShimmer;
+          return Text('getNotificationDebit');
         }
 
         UserModel user = snapshot.data;

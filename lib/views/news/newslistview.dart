@@ -490,7 +490,7 @@ class NewsListState extends State<NewsList> {
                           margin: EdgeInsets.only(left: 5, right: 40),
                           child: Text(
                             news.placeAddress == null
-                                ? "Av of the Americas/W 41 St, New York"
+                                ? ""
                                 : news.placeAddress.trim(),
                             // overflow: TextOverflow.ellipsis,
                             // maxLines: 1,

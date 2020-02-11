@@ -9,6 +9,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
@@ -18,9 +19,9 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
-import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -28,17 +29,12 @@ import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
 import 'core.dart';
+import 'messages/timebank_chats.dart';
 
 class TimebankTabsViewHolder extends StatelessWidget {
   final String timebankId;
-  TimebankModel timebankModel;
-  //final UserModel loggedInUser;
-
-  // TimebankTabsViewHolder.of({this.timebankId, this.timebankModel, this.loggedInUser});
-  //final UserModel loggedInUser;
-
+  final TimebankModel timebankModel;
   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
-  //TimebankTabsViewHolder.of(this.loggedInUser, {this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +172,10 @@ Widget createAdminTabBar(
               Tab(
                 text: "Manage",
               ),
+              getMessagingTab(
+                communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+                timebankId: timebankId,
+              ),
             ],
           ),
           Container(
@@ -203,12 +203,13 @@ Widget createAdminTabBar(
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
-                TimeBankNotificationView(
+                TimebankNotificationsView(
                   timebankId: timebankModel.id,
                 ),
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
                 ),
+                TimebankChatListView(),
               ],
             ),
           ),
@@ -218,105 +219,175 @@ Widget createAdminTabBar(
   );
 }
 
+Widget get gettingMessages {
+  return Icon(Icons.message);
+}
+
+Widget unreadMessages(int unreadCount) {
+  return Stack(
+    children: <Widget>[
+      Icon(Icons.message),
+      unreadCount > 0 ? badge(unreadCount) : Offstage(),
+    ],
+  );
+}
+
+Widget badge(int count) => Positioned(
+      right: 0,
+      top: 0,
+      child: new Container(
+        padding: EdgeInsets.all(1),
+        decoration: new BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(7.5),
+        ),
+        constraints: BoxConstraints(
+          minWidth: 15,
+          minHeight: 15,
+        ),
+        child: Text(
+          count.toString(),
+          style: new TextStyle(
+            color: Colors.white,
+            fontSize: 10,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+
+Widget getMessagingTab({String timebankId, String communityId}) {
+  return StreamBuilder<List<ChatModel>>(
+    stream: getChatsForTimebank(
+      timebankId: timebankId,
+      communityId: communityId,
+    ),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Tab(
+          icon: gettingMessages,
+        );
+      }
+      var unreadCount = 0;
+      snapshot.data.forEach((model) {
+        model.unreadStatus.containsKey(timebankId)
+            ? unreadCount += model.unreadStatus[timebankId]
+            : print("not found");
+      });
+
+      return Tab(
+        icon: unreadMessages(unreadCount),
+      );
+    },
+  );
+}
+
 Widget createJoinedUserTabBar(
   BuildContext context,
   TimebankModel timebankModel,
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 5,
+    length: 6,
     child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.5,
-          // backgroundColor: Colors.white,
-          title: Text(
-            timebankModel.name,
-            style: TextStyle(fontSize: 18),
-          ),
-          // bottom: ColoredTabBar(
-          //   color: Colors.white,
-          //   tabBar: TabBar(
-          //     labelColor: Theme.of(context).primaryColor,
-          //     unselectedLabelColor: Colors.grey,
-          //     indicatorColor: Color(0xFFF766FE0),
-          //     indicatorSize: TabBarIndicatorSize.label,
-          //     isScrollable: true,
-          //     tabs: [
-          //       Tab(
-          //         text: "Feeds",
-          //       ),
-          //       Tab(
-          //         text: "Requests",
-          //       ),
-          //       Tab(
-          //         text: "Offers",
-          //       ),
-          //       Tab(
-          //         text: "About",
-          //       ),
-          //       Tab(
-          //         text: "Members",
-          //       ),
-          //     ],
-          //   ),
-          // ),
+      appBar: AppBar(
+        elevation: 0.5,
+        // backgroundColor: Colors.white,
+        title: Text(
+          timebankModel.name,
+          style: TextStyle(fontSize: 18),
         ),
-        body: Column(
-          children: <Widget>[
-            TabBar(
-              labelColor: Theme.of(context).primaryColor,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Color(0xFFF766FE0),
-              indicatorSize: TabBarIndicatorSize.label,
-              isScrollable: true,
-              tabs: [
-                Tab(
-                  text: "Feeds",
+        // bottom: ColoredTabBar(
+        //   color: Colors.white,
+        //   tabBar: TabBar(
+        //     labelColor: Theme.of(context).primaryColor,
+        //     unselectedLabelColor: Colors.grey,
+        //     indicatorColor: Color(0xFFF766FE0),
+        //     indicatorSize: TabBarIndicatorSize.label,
+        //     isScrollable: true,
+        //     tabs: [
+        //       Tab(
+        //         text: "Feeds",
+        //       ),
+        //       Tab(
+        //         text: "Requests",
+        //       ),
+        //       Tab(
+        //         text: "Offers",
+        //       ),
+        //       Tab(
+        //         text: "About",
+        //       ),
+        //       Tab(
+        //         text: "Members",
+        //       ),
+        //     ],
+        //   ),
+        // ),
+      ),
+      body: Column(
+        children: <Widget>[
+          TabBar(
+            labelColor: Theme.of(context).primaryColor,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Color(0xFFF766FE0),
+            indicatorSize: TabBarIndicatorSize.label,
+            isScrollable: true,
+            tabs: [
+              Tab(
+                text: "Feeds",
+              ),
+              Tab(
+                text: "Requests",
+              ),
+              Tab(
+                text: "Offers",
+              ),
+              Tab(
+                text: "About",
+              ),
+              Tab(
+                text: "Members",
+              ),
+              Tab(
+                text: "Messages",
+              )
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                DiscussionList(
+                  timebankId: timebankId,
                 ),
-                Tab(
-                  text: "Requests",
+                RequestsModule.of(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
-                Tab(
-                  text: "Offers",
+                OffersModule.of(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
-                Tab(
-                  text: "About",
+                TimeBankAboutView.of(
+                  timebankModel: timebankModel,
+                  email: SevaCore.of(context).loggedInUser.email,
                 ),
-                Tab(
-                  text: "Members",
+                TimebankRequestAdminPage(
+                  isUserAdmin: timebankModel.admins.contains(
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                  ),
+                  timebankId: timebankModel.id,
+                  userEmail: SevaCore.of(context).loggedInUser.email,
+                ),
+                TimebankChatListView(
+                  timebankId: timebankId,
                 ),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  DiscussionList(
-                    timebankId: timebankId,
-                  ),
-                  RequestsModule.of(
-                    timebankId: timebankId,
-                    timebankModel: timebankModel,
-                  ),
-                  OffersModule.of(
-                    timebankId: timebankId,
-                    timebankModel: timebankModel,
-                  ),
-                  TimeBankAboutView.of(
-                    timebankModel: timebankModel,
-                    email: SevaCore.of(context).loggedInUser.email,
-                  ),
-                  TimebankRequestAdminPage(
-                    isUserAdmin: timebankModel.admins.contains(
-                      SevaCore.of(context).loggedInUser.sevaUserID,
-                    ),
-                    timebankId: timebankModel.id,
-                    userEmail: SevaCore.of(context).loggedInUser.email,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
+          ),
+        ],
+      ),
+    ),
   );
 }
 
@@ -807,20 +878,8 @@ class DiscussionListState extends State<DiscussionList> {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(0.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(25),
-                offset: Offset(0, 0),
-                spreadRadius: 8,
-                blurRadius: 10,
-              ),
-            ]),
-        child: Stack(
-          children: <Widget>[
+          margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
+          child: Stack(children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -834,7 +893,8 @@ class DiscussionListState extends State<DiscussionList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0, top: 5),
+                      padding: const EdgeInsets.only(
+                          left: 12.0, top: 15, bottom: 15),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -872,6 +932,7 @@ class DiscussionListState extends State<DiscussionList> {
                                         : news.subheading.trim(),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 7,
+                                    style: TextStyle(fontSize: 16.0),
                                   ),
                                 ),
                               ],
@@ -981,15 +1042,15 @@ class DiscussionListState extends State<DiscussionList> {
                                 ),
                                 Container(
                                   width:
-                                      MediaQuery.of(context).size.width - 113,
+                                      MediaQuery.of(context).size.width - 125,
                                   margin: EdgeInsets.only(left: 5, right: 40),
                                   child: Text(
                                     news.placeAddress == null
-                                        ? "Av of the Americas/W 41 St, New York"
+                                        ? ""
                                         : news.placeAddress.trim(),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    // style: TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 12.0),
                                   ),
                                 ),
                               ],
@@ -1244,22 +1305,10 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                   ],
                 ),
+                Divider(color: Colors.black38),
               ],
-            ),
-            // !isFromMessage
-            //     ? Positioned(
-            //         bottom: 8,
-            //         right: 8,
-            //         child: Material(
-            //           color: Colors.white.withAlpha(100),
-            //           shape: CircleBorder(),
-            //           child:
-            //         ),
-            //       )
-            // : Center(),
-          ],
-        ),
-      ),
+            )
+          ])),
     );
   }
 

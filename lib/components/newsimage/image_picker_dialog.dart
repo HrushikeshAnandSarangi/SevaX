@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import './image_picker_handler.dart';
 
@@ -82,7 +81,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       "Camera",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0xFF3F51B5),
+                      const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF)),
                 ),
                 new GestureDetector(
@@ -90,7 +89,7 @@ class ImagePickerDialog extends StatelessWidget {
                   child: roundedButton(
                       "Gallery",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                      const Color(0xFF3F51B5),
+                      const Color(0x0FF766FE0),
                       const Color(0xFFFFFFFF)),
                 ),
                 const SizedBox(height: 15.0),
@@ -101,7 +100,7 @@ class ImagePickerDialog extends StatelessWidget {
                     child: roundedButton(
                         "Cancel",
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-                        const Color(0xFF3F51B5),
+                        const Color(0x0FF766FE0),
                         const Color(0xFFFFFFFF)),
                   ),
                 ),

@@ -157,7 +157,7 @@ Future<void> sendOfferRequest({
   @required String communityId,
 }) async {
   NotificationsModel model = NotificationsModel(
-    timebankId: offerModel.timebankId,
+      timebankId: offerModel.timebankId,
       targetUserId: offerModel.sevaUserId,
       data: offerModel.toMap(),
       type: NotificationType.OfferAccept,
@@ -173,7 +173,6 @@ Future<void> sendOfferRequest({
 Future<void> acceptRequest({
   @required RequestModel requestModel,
   @required String senderUserId,
-  
   bool isWithdrawal = false,
   bool fromOffer = false,
   @required String communityId,
@@ -246,6 +245,15 @@ Future<void> approveRequestCompletion({
   @required String userId,
   @required String communityId,
 }) async {
+  var approvalCount = 0;
+  if (model.transactions != null) {
+    for (var i = 0; i < model.transactions.length; i++) {
+      if (model.transactions[i].isApproved) {
+        approvalCount++;
+      }
+    }
+  }
+  model.accepted = approvalCount >= model.numberOfApprovals;
   await Firestore.instance
       .collection('requests')
       .document(model.id)
@@ -328,6 +336,15 @@ Future<void> approveAcceptRequest({
   @required String notificationId,
   @required String communityId,
 }) async {
+  var approvalCount = 0;
+  if (requestModel.transactions != null) {
+    for (var i = 0; i < requestModel.transactions.length; i++) {
+      if (requestModel.transactions[i].isApproved) {
+        approvalCount++;
+      }
+    }
+  }
+  requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
   await Firestore.instance
       .collection('requests')
       .document(requestModel.id)

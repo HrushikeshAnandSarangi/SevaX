@@ -71,24 +71,9 @@ class RequestApiProvider {
             (documentSnapshot) {
               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
-//              if (model.approvedUsers.length <= model.numberOfApprovals){
-//                requestList.add(model);
-//              }
-              if (model.transactions == null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals) {
                 requestList.add(model);
-              } else {
-                var approvalCount = 0;
-                for (var i = 0; i < model.transactions.length; i++) {
-                  if (model.transactions[i].isApproved) {
-                    approvalCount++;
-                  }
-                }
-                if (approvalCount < model.numberOfApprovals) {
-                  requestList.add(model);
-                }
               }
-//              if (model.approvedUsers.length <= model.numberOfApprovals)
-//                requestList.add(model);
             },
           );
           requestSink.add(requestList);

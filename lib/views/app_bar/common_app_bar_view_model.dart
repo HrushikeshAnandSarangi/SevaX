@@ -88,7 +88,8 @@ class CommonAppBarViewModel extends BaseViewModel {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => NotificationsPage(),
+        builder: (context) => NotificationsPage(
+        ),
       ),
     );
   }

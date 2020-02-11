@@ -11,10 +11,12 @@ import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
-import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+// import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
+// import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 
 class HomeDashBoard extends StatelessWidget {
   HomeDashBoard();
@@ -209,7 +211,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         ),
                         ...isAdmin
                             ? [
-                                TimeBankNotificationView(
+                                TimebankNotificationsView(
                                   timebankId: primaryTimebank.id,
                                 ),
                                 ManageTimebankSeva.of(

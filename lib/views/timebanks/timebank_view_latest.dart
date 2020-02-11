@@ -33,6 +33,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
   UserModel user;
   bool isDataLoaded = false;
   bool isAdminLoaded = false;
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -40,12 +41,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
     getData(); // TODO: implement initState
   }
 
-  @override
-  bool get wantKeepAlive => true;
 
+  @override
   void getData() async {
-    // print('Admin id  ${widget.timebankModel.admins[0]}');
-    print('---->><><><><> ${widget.timebankModel.admins[0]}');
+   // print('Admin id  ${widget.timebankModel.admins[0]}');
+
     user = await FirestoreManager.getUserForId(
         sevaUserId: widget.timebankModel.admins[0]);
 
@@ -69,9 +69,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
   @override
   Widget build(BuildContext context) {
     var futures = <Future>[];
-
-    print("--------------------------->$isUserJoined");
-
     widget.timebankModel.members.forEach((member) {
       futures.add(getUserForId(sevaUserId: member));
     });
@@ -135,7 +132,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 15,
             ),
             widget.timebankModel.members.contains(
               SevaCore.of(context).loggedInUser.sevaUserID,
@@ -242,7 +239,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                     '0 Volunteers',
                 style: TextStyle(
                   fontFamily: 'Europa',
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -253,9 +250,15 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                 widget.timebankModel.address ?? '',
                 style: TextStyle(
                   fontFamily: 'Europa',
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.grey,
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Divider(
+                color: Colors.black12,
               ),
             ),
             Padding(
@@ -271,7 +274,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0,0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -319,10 +322,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                 ],
               ),
             ),
+
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Divider(
-                color: Colors.grey,
+                color: Colors.black12,
               ),
             ),
             Padding(
@@ -337,6 +341,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                 ),
               ),
             ),
+
+            // print(widget.timebankModel.id);
+
+            // burhan@uipep.com*9ecec05e-71fd-456e-9f6d-35798f41bdf5*73d0de2c-198b-4788-be64-a804700a88a4*4b75347e-56ec-4d62-8ce7-374c5cd84e5f
+
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Row(
@@ -370,7 +379,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                         padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            startChat(user.email, widget.email, context);
+                            startChat(widget.timebankModel.id, widget.email,
+                                context, widget.timebankModel.id);
                           },
                           child: Text(
                             'Message',
@@ -421,8 +431,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
   }
 }
 
+var timeStamp = DateTime.now().millisecondsSinceEpoch;
+
 void startChat(
-    String email, String loggedUserEmail, BuildContext context) async {
+  String email,
+  String loggedUserEmail,
+  BuildContext context,
+  String timbebankId,
+) async {
   if (email == loggedUserEmail) {
     return null;
   } else {
@@ -430,9 +446,10 @@ void startChat(
     print("Listing users");
     users.sort();
     ChatModel model = ChatModel();
+    model.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     model.user1 = users[0];
     model.user2 = users[1];
-    print("Model1" + model.user1);
+    model.timebankId = timbebankId;
     print("Model2" + model.user2);
 
     await createChat(chat: model).then(
@@ -447,8 +464,7 @@ void startChat(
               chatModel: model,
               isFromShare: false,
               news: NewsModel(),
-              isFromNewChat:
-                  IsFromNewChat(true, DateTime.now().millisecondsSinceEpoch),
+              isFromNewChat: IsFromNewChat(true, timeStamp),
             ),
           ),
         );

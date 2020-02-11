@@ -31,6 +31,7 @@ class CreateEditCommunityView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
+        automaticallyImplyLeading: true,
         title: Text(
           title,
           style: TextStyle(
@@ -124,7 +125,7 @@ class CreateEditCommunityViewFormState
     var colums = StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data != null) {
             print(snapshot.data.timebank.address);
             if ((selectedAddress.length > 0 &&
                     snapshot.data.timebank.address.length == 0) ||

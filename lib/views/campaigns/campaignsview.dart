@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-import 'package:sevaexchange/views/campaigns/campaignedit.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/campaigns/campaign_join_request.dart';
-import 'package:sevaexchange/views/campaigns/campaign_join_requests_view.dart';
-import 'package:sevaexchange/views/membersmanagecampaign.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/models/campaign_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FireStoreManager;
+import 'package:sevaexchange/views/campaigns/campaign_join_request.dart';
+import 'package:sevaexchange/views/campaigns/campaign_join_requests_view.dart';
+import 'package:sevaexchange/views/campaigns/campaignedit.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/membersmanagecampaign.dart';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CampaignsView extends StatelessWidget {
   final TimebankModel timebankModel;
 
   CampaignsView({@required this.timebankModel}) {
     assert(timebankModel != null && timebankModel.id != null);
+    print("___________________________________-${timebankModel.id}");
   }
 
   @override
@@ -41,7 +41,6 @@ class CampaignsView extends StatelessWidget {
 
 class CampaignsList extends StatelessWidget {
   final TimebankModel parentTimebankModel;
-
   CampaignsList({@required this.parentTimebankModel});
 
   ImageProvider _avatarImage(CampaignModel campaignModel) {
@@ -150,6 +149,7 @@ class CampaignsList extends StatelessWidget {
                           builder: (context) {
                             return CampaignView(
                               campaignId: campaignModel.id,
+                              timabankId: parentTimebankModel.id,
                             );
                           },
                         ),
@@ -167,12 +167,15 @@ class CampaignsList extends StatelessWidget {
 
 class CampaignView extends StatefulWidget {
   final String campaignId;
+  final String timabankId;
 
   CampaignView({
     Key key,
     @required this.campaignId,
+    @required this.timabankId,
   }) : super(key: key) {
     assert(campaignId != null);
+    print("&&&&&&&&&&&&&&${timabankId}");
   }
 
   _CampaignViewState createState() => _CampaignViewState();
@@ -293,7 +296,6 @@ class _CampaignViewState extends State<CampaignView> {
 
   Widget getTextWidgets() {
     List<Widget> list = List<Widget>();
-
     campaignModel.members.forEach((member) {
       list.add(
         FlatButton(
@@ -303,6 +305,7 @@ class _CampaignViewState extends State<CampaignView> {
               MaterialPageRoute(
                 builder: (context) => ProfileViewer(
                   userEmail: member.email,
+                  timebankId: widget.timabankId,
                 ),
               ),
             );
@@ -592,6 +595,7 @@ class _CampaignViewState extends State<CampaignView> {
                                 MaterialPageRoute(
                                   builder: (context) => ProfileViewer(
                                     userEmail: ownerModel.email,
+                                    timebankId: widget.timabankId,
                                   ),
                                 ),
                               );
