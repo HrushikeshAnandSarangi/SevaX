@@ -132,12 +132,11 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 7,
+    length: 8,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
         centerTitle: true,
-
         title: Text(
           timebankModel.name,
           style: TextStyle(fontSize: 18),
