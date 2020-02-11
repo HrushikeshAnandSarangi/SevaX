@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/requests/request_accepted_content_holder.dart';
 import 'package:sevaexchange/views/requests/request_users_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 class RequestTabHolder extends StatelessWidget {
-
-  RequestTabHolder();
+  bool isAdmin;
+  RequestTabHolder({this.isAdmin});
   final List<String> titles = ['About', 'Search', 'Accepted'];
   @override
   Widget build(BuildContext context) {
@@ -15,17 +14,15 @@ class RequestTabHolder extends StatelessWidget {
         stream: timeBankBloc.timebankController,
         builder: (context, AsyncSnapshot<TimebankController> snapshot) {
           if (snapshot.data != null && snapshot.data.selectedrequest != null) {
-            print("inside_if---"+snapshot.data.selectedrequest.toString());
+            print("inside_if---" + snapshot.data.selectedrequest.toString());
 
             var requestModel = snapshot.data.selectedrequest;
             var timebank = snapshot.data.selectedtimebank;
             return DefaultTabController(
               length: 3,
               child: Scaffold(
-
                 body: SafeArea(
                   child: Column(
-
                     children: <Widget>[
                       Container(
                         height: 50,
@@ -41,15 +38,16 @@ class RequestTabHolder extends StatelessWidget {
                               child: TabBar(
                                 tabs: List.generate(
                                   3,
-                                      (index) => Tab(
+                                  (index) => Tab(
                                     child: Text(
                                       titles[index],
-                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
+                            )
                           ],
                         ),
                       ),
@@ -57,13 +55,20 @@ class RequestTabHolder extends StatelessWidget {
                         child: TabBarView(
                           children: <Widget>[
                             Container(
-                              child: RequestDetailsAboutPage(requestItem: requestModel, timebankModel: timebank),
+                              child: RequestDetailsAboutPage(
+                                requestItem: requestModel,
+                                timebankModel: timebank,
+                              ),
                             ),
                             Container(
-                                child: RequestUsersTabsViewHolder.of(requestItem: requestModel,),
+                              child: RequestUsersTabsViewHolder.of(
+                                requestItem: requestModel,
+                              ),
                             ),
                             Container(
-                              child: RequestAcceptedTabsViewHolder.of(requestItem: requestModel,),
+                              child: RequestAcceptedTabsViewHolder.of(
+                                requestItem: requestModel,
+                              ),
                             ),
                           ],
                         ),
@@ -78,6 +83,5 @@ class RequestTabHolder extends StatelessWidget {
             return Text("");
           }
         });
-
   }
 }

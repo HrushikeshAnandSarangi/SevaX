@@ -7,7 +7,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
 
@@ -19,6 +18,8 @@ class RequestCardWidget extends StatelessWidget {
   final String reqStatus;
   final bool isAdmin;
   final Function refresh;
+  final String currentCommunity;
+  final String loggedUserId;
 
   const RequestCardWidget({
     @required this.userModel,
@@ -28,6 +29,8 @@ class RequestCardWidget extends StatelessWidget {
     @required this.isAdmin,
     @required this.reqStatus,
     this.refresh,
+    @required this.currentCommunity,
+    @required this.loggedUserId,
   });
 
   @override
@@ -125,15 +128,13 @@ class RequestCardWidget extends StatelessWidget {
                         removeFromFavoriteList(
                           email: userModel.email,
                           timeBankId: timebankModel.id,
-                          loggedInUserId:
-                              SevaCore.of(context).loggedInUser.sevaUserID,
+                          loggedInUserId: loggedUserId,
                         ).then((_) => refresh());
                       } else {
                         addToFavoriteList(
                           email: userModel.email,
                           timebankId: timebankModel.id,
-                          loggedInUserId:
-                              SevaCore.of(context).loggedInUser.sevaUserID,
+                          loggedInUserId: loggedUserId,
                         ).then((_) => refresh());
                       }
                     },
@@ -194,17 +195,14 @@ class RequestCardWidget extends StatelessWidget {
                           : () async {
                               await timeBankBloc.updateInvitedUsersForRequest(
                                   requestModel.id, userModel.sevaUserID);
+
                               //showProgressDialog(context);
                               sendNotification(
                                 requestModel: requestModel,
                                 userModel: userModel,
                                 timebankModel: timebankModel,
-                                currentCommunity: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentCommunity,
-                                sevaUserID: SevaCore.of(context)
-                                    .loggedInUser
-                                    .sevaUserID,
+                                currentCommunity: currentCommunity,
+                                sevaUserID: loggedUserId,
                               );
                             },
                       child: Text(

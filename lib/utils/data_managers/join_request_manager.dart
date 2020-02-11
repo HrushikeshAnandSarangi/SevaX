@@ -33,68 +33,68 @@ Future<void> createJoinRequest({@required JoinRequestModel model}) async {
 }
 
 Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
-@required String timebankID, }) async {
+  @required String timebankID,
+}) async {
   Query query = Firestore.instance
       .collection('join_requests')
       .where('entity_type', isEqualTo: 'Timebank')
       .where('entity_id', isEqualTo: timebankID);
   QuerySnapshot snapshot = await query.getDocuments();
 
-  if(snapshot.documents == null) {
+  if (snapshot.documents == null) {
     return [];
   }
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
     requestList.add(model);
-
-
   });
   return requestList;
 }
+
 ////to get all the user requests --umesh
 Future<List<JoinRequestModel>> getFutureUserRequest({
-@required String userID,}) async {
+  @required String userID,
+}) async {
   Query query = Firestore.instance
       .collection('join_requests')
-    //  .where('entity_id',isEqualTo: primaryTimebank)
+      //  .where('entity_id',isEqualTo: primaryTimebank)
       .where('user_id', isEqualTo: userID);
   QuerySnapshot snapshot = await query.getDocuments();
   //print('ghghgh ${snapshot.documents}');
-  if(snapshot.documents == null) {
+  if (snapshot.documents == null) {
     return [];
   }
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
-  //  print('hghghg ${model.userId}');
+    //  print('hghghg ${model.userId}');
 
-    if(model.userId == userID){
+    if (model.userId == userID) {
       requestList.add(model);
     }
   });
   return requestList;
 }
 
-
 ////to get only timebankrequest for the user  --umesh
-Future<List<JoinRequestModel>> getFutureUserTimeBankRequest({
-@required String userID, String primaryTimebank}) async {
+Future<List<JoinRequestModel>> getFutureUserTimeBankRequest(
+    {@required String userID, String primaryTimebank}) async {
   Query query = Firestore.instance
       .collection('join_requests')
-      .where('entity_id',isEqualTo: primaryTimebank)
+      .where('entity_id', isEqualTo: primaryTimebank)
       .where('user_id', isEqualTo: userID);
   QuerySnapshot snapshot = await query.getDocuments();
   //print('ghghgh ${snapshot.documents}');
-  if(snapshot.documents == null) {
+  if (snapshot.documents == null) {
     return [];
   }
   var requestList = List<JoinRequestModel>();
   snapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
     var model = JoinRequestModel.fromMap(documentSnapshot.data);
-  //  print('hghghg ${model.userId}');
+    //  print('hghghg ${model.userId}');
 
-    if(model.userId == userID){
+    if (model.userId == userID) {
       requestList.add(model);
     }
   });
@@ -134,8 +134,6 @@ Stream<List<JoinRequestModel>> getTimebankUserRequests({
 }
 */
 
-
-
 Stream<List<JoinRequestModel>> getTimebankJoinRequest({
   @required String timebankID,
 }) async* {
@@ -162,8 +160,6 @@ Stream<List<JoinRequestModel>> getTimebankJoinRequest({
     ),
   );
 }
-
-
 
 //Get chats for a user
 Stream<List<UserModel>> getRequestDetailsStream({
