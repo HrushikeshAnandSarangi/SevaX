@@ -290,7 +290,7 @@ Widget createJoinedUserTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 6,
+    length: 5,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -351,9 +351,6 @@ Widget createJoinedUserTabBar(
               Tab(
                 text: "Members",
               ),
-              Tab(
-                text: "Messages",
-              )
             ],
           ),
           Expanded(
@@ -380,9 +377,6 @@ Widget createJoinedUserTabBar(
                   ),
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
-                ),
-                TimebankChatListView(
-                  timebankId: timebankId,
                 ),
               ],
             ),
