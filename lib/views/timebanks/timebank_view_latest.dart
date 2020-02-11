@@ -33,21 +33,14 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
   UserModel user;
   bool isDataLoaded = false;
   bool isAdminLoaded = false;
-
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
     getData(); // TODO: implement initState
   }
 
-<<<<<<< HEAD
   @override
-  bool get wantKeepAlive => true;
-=======
-  void getData() async {
-    // print('Admin id  ${widget.timebankModel.admins[0]}');
->>>>>>> origin/signin_stable
-
   void getData() async {
    // print('Admin id  ${widget.timebankModel.admins[0]}');
 
