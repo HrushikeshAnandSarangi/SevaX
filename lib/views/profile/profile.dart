@@ -108,31 +108,31 @@ class _ProfilePageState extends State<ProfilePage>
 
     Future.delayed(Duration.zero, () {
       FirestoreManager.getTimeBankForId(
-            timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
-        .then((timebank) {
-      if (timebank.admins
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-          timebank.coordinators
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-        setState(() {
-          print("Admin access granted");
-          isAdminOrCoordinator = true;
-        });
-      } else {
-        // print("Admin access Revoked");
-        // isAdminOrCoordinator = false;
-      }
-    });
+              timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
+          .then((timebank) {
+        if (timebank.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+            timebank.coordinators
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          setState(() {
+            print("Admin access granted");
+            isAdminOrCoordinator = true;
+          });
+        } else {
+          // print("Admin access Revoked");
+          // isAdminOrCoordinator = false;
+        }
+      });
 
-    FirestoreManager.getUserForIdStream(
-      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-    ).listen((UserModel userModel) {
-      if (mounted) isUserLoaded = true;
-      print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
-      _profileBloc.getAllCommunities(context, userModel);
-      this.user = userModel;
-      setState(() {});
-    });
+      FirestoreManager.getUserForIdStream(
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      ).listen((UserModel userModel) {
+        if (mounted) isUserLoaded = true;
+        print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
+        _profileBloc.getAllCommunities(context, userModel);
+        this.user = userModel;
+        setState(() {});
+      });
     });
   }
 
@@ -174,12 +174,19 @@ class _ProfilePageState extends State<ProfilePage>
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: <Widget>[
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            user.photoURL,
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: navigateToSettings,
+                          child: Hero(
+                            tag: "ProfileImage",
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                user.photoURL,
+                              ),
+                              backgroundColor: Colors.white,
+                              radius: MediaQuery.of(context).size.width / 4.5,
+                            ),
                           ),
-                          backgroundColor: Colors.white,
-                          radius: MediaQuery.of(context).size.width / 4.5,
                         ),
                         SizedBox(height: 10),
                         Text(
@@ -439,7 +446,7 @@ class _ProfilePageState extends State<ProfilePage>
                               //   ),
                               // ),
                               TextSpan(
-                                text: 'Discover more TimeBanks',
+                                text: 'Discover more Timebanks',
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontWeight: FontWeight.bold,

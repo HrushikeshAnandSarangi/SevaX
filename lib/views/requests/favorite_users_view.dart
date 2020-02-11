@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 
@@ -78,7 +79,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           //print("length ${userList.length}");
           if (userList.length == 0) {
-            return Center(child: Text('No user found'));
+            return getEmptyWidget('Users', 'No user found');
           }
           return ListView.builder(
             itemCount: userList.length,

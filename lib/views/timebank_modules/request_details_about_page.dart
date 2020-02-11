@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -52,6 +53,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   @override
   void initState() {
     super.initState();
+    print("fullname ${widget.requestItem.fullName}");
   }
 
   @override
@@ -221,7 +223,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       color: Colors.grey,
                     ),
                     title: Text(
-                      "Hosted by ${widget.requestItem.fullName}",
+                      "Hosted by ${widget.requestItem.fullName ?? ""}",
                       style: titleStyle,
                       maxLines: 1,
                     ),
@@ -255,7 +257,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                         }
 
                         var snap = snapshot.data.map((f) {
-                          return UserModel.fromDynamic(f);
+                          return UserModel.fromDynamic(f ?? {});
                         }).toList();
 
                         print(" $snap ---------------------------- ");
@@ -281,7 +283,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         image: NetworkImage(
-                                          snap[index].photoURL,
+                                          snap[index].photoURL ??
+                                              defaultUserImageURL,
                                         ),
                                       ),
                                     ),

@@ -111,7 +111,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                     style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
                   ),
                   TextSpan(
-                    text: " Seva Exchange TimeBank",
+                    text: " Seva Exchange Global Network of Timebanks.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -379,8 +379,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                         padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            startChat(widget.timebankModel.id, widget.email,
-                                context, widget.timebankModel.id);
+                            if (widget.timebankModel.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                              _showAdminMessage();
+                            } else {
+                              startChat(widget.timebankModel.id, widget.email,
+                                  context, widget.timebankModel.id);
+                            }
                           },
                           child: Text(
                             'Message',
@@ -427,6 +432,26 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
           ],
         ),
       ),
+    );
+  }
+
+  void _showAdminMessage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Admins cannot create message"),
+          // content: new Text("Khud he ko message kyu kar rha hai?"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

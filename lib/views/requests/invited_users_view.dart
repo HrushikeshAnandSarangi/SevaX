@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 
 import '../core.dart';
@@ -405,29 +406,5 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   }
 */
-  Widget getEmptyWidget(String title, String notFoundValue) {
-    return Center(
-      child: Text(
-        notFoundValue,
-        overflow: TextOverflow.ellipsis,
-        style: sectionHeadingStyle,
-      ),
-    );
-  }
 
-  TextStyle get sectionHeadingStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 12.5,
-      color: Colors.black,
-    );
-  }
-
-  TextStyle get sectionTextStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 11,
-      color: Colors.grey,
-    );
-  }
 }

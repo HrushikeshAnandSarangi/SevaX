@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 
 import '../core.dart';
@@ -106,10 +107,7 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
           //print("length ${userList.length}");
           if (userList.length == 0) {
             return Center(
-              child: Text(
-                'No user found',
-                style: TextStyle(color: Colors.black, fontFamily: 'Europa'),
-              ),
+              child: getEmptyWidget('Users', 'No user found'),
             );
           }
           return ListView.builder(

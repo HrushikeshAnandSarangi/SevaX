@@ -1186,68 +1186,76 @@ class RequestListItemsState extends State<RequestListItems> {
                   ),
                 ),
                 SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      model.title,
-                      style: Theme.of(widget.parentContext).textTheme.subhead,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width - 95,
-                      child: Text(
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        model.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: Theme.of(widget.parentContext).textTheme.subhead,
+                      ),
+                      Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child:Text(
                         model.description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style:
                             Theme.of(widget.parentContext).textTheme.subtitle,
-                        maxLines: 1,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        Text(getTimeFormattedString(
-                            model.requestStart, loggedintimezone)),
-                        SizedBox(width: 2),
-                        Icon(Icons.arrow_forward, size: 14),
-                        SizedBox(width: 4),
-                        Text(
-                          getTimeFormattedString(
-                            model.requestEnd,
-                            loggedintimezone,
+                      ),),
+                      SizedBox(height: 8),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            getTimeFormattedString(
+                                model.requestStart, loggedintimezone),
                           ),
-                        ),
-                      ],
-                    ),
-                    Row(
+                          SizedBox(width: 2),
+                          Icon(Icons.arrow_forward, size: 14),
+                          SizedBox(width: 4),
+                          Text(
+                            getTimeFormattedString(
+                              model.requestEnd,
+                              loggedintimezone,
+                            ),
+                          ),
+                        ],
+                      ),Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
-                        Offstage(
-                          offstage: !model.acceptors.contains(userEmail),
-                          child: Container(
+                      Offstage(
+                        offstage: !model.acceptors.contains(userEmail),
+                        child: Container(
+
                             margin: EdgeInsets.all(10),
-                            width: 100,
-                            height: 32,
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: EdgeInsets.all(0),
-                              color: Colors.green,
-                              child: Text(
-                                'Applied',
-                                style: TextStyle(
-                                  color: Colors.white,
+                              width: 100,
+                              height: 32,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: EdgeInsets.all(0),
+                                color: Colors.green,
+                                child:
+                                    Text(
+                                      'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                ),
                                 ),
                               ),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                            ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

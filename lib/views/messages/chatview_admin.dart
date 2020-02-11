@@ -119,15 +119,18 @@ class AdminChatViewState extends State<AdminChatView> {
           ),
           onPressed: widget.isFromShare == null
               ? () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   Navigator.pop(context);
                   print("Inside pop widget.isFromShare == null");
                 }
               : widget.isFromShare
                   ? () {
+                      FocusScope.of(context).requestFocus(FocusNode());
                       print("Inside pop widget.isFromShare true");
                       Navigator.pop(context);
                     }
                   : () {
+                      FocusScope.of(context).requestFocus(FocusNode());
                       print("Inside pop widget.isFromShare false");
                       Navigator.pop(context);
                     },
@@ -310,9 +313,10 @@ class AdminChatViewState extends State<AdminChatView> {
                       ).then((onVlaue) {
                         //
                         updateMessagingReadStatus(
-                            chat: widget.chatModel,
-                            email: loggedInEmailId,
-                            userEmail: widget.useremail);
+                          chat: widget.chatModel,
+                          email: loggedInEmailId,
+                          userEmail: widget.useremail,
+                        );
                       });
 
                       textcontroller.clear();
