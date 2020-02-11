@@ -512,6 +512,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               communityId: SevaCore.of(context)
                                   .loggedInUser
                                   .currentCommunity,
+                                  
                             );
                             offermodel.associatedRequest = requestid;
                             updateOfferWithRequest(offer: offermodel);

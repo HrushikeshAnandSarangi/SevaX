@@ -22,22 +22,14 @@ Future<void> createAcceptRequestNotification({
   UserModel user =
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
-  bool isTimeBankNotification =
-      await fetchProtectedStatus(notificationsModel.timebankId);
-
-  isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(notificationsModel.timebankId)
-          .collection('notifications')
-          .document(notificationsModel.id)
-          .setData(notificationsModel.toMap())
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(notificationsModel.id)
-          .setData(notificationsModel.toMap());
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(notificationsModel.directToMember
+          ? user.email
+          : notificationsModel.timebankId)
+      .collection('notifications')
+      .document(notificationsModel.id)
+      .setData(notificationsModel.toMap());
 }
 
 Future<void> withdrawAcceptRequestNotification({
@@ -354,7 +346,6 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
   String timebankId,
   @required String communityId,
 }) async* {
-
   var data = Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
