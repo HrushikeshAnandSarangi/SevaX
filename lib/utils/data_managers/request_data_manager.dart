@@ -179,7 +179,7 @@ Future<void> acceptRequest({
   bool isWithdrawal = false,
   bool fromOffer = false,
   @required String communityId,
-  bool directToMember = true,
+  bool directToMember,
 }) async {
   assert(requestModel != null);
 
