@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -38,7 +39,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   // String description =
   //     'India Startup in association with BullerProof. Your Startup is hostion this FREE workshop "Idea to opportunity" at Excel Partner ';
-  bool isAdmin =false;
+
   TextStyle titleStyle = TextStyle(
     fontSize: 18,
     color: Colors.black,
@@ -48,10 +49,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     fontSize: 14,
     color: Colors.grey,
   );
-
+  bool isAdmin = false;
   @override
   void initState() {
     super.initState();
+    print("fullname ${widget.requestItem.fullName}");
   }
 
   @override
@@ -60,7 +62,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     futures.clear();
 
     if (widget.requestItem.acceptors != null) {
-      widget.requestItem.approvedUsers.forEach((memberEmail) {
+      widget.requestItem.acceptors.forEach((memberEmail) {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
       isApplied = widget.requestItem.acceptors
@@ -68,14 +70,18 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     } else {
       isApplied = false;
     }
-    if(widget.requestItem.sevaUserId ==
-        SevaCore.of(context).loggedInUser.sevaUserID ||
-        widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)){
-      isAdmin=true;
+    if (widget.requestItem.sevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID ||
+        widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      isAdmin = true;
     }
     return Scaffold(
-            appBar: !isAdmin ? AppBar(
+      appBar: !isAdmin
+          ? AppBar(
+              backgroundColor: Colors.white,
               leading: BackButton(
+                color: Colors.black,
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -83,270 +89,244 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               centerTitle: true,
               title: Text(
                 "Request details",
-                style: TextStyle(fontFamily: "Europa", fontSize: 20),
+                style: TextStyle(
+                    fontFamily: "Europa", fontSize: 20, color: Colors.black),
               ),
-            ):null,
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            widget.requestItem.title,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          CustomListTile(
-                              leading: Icon(
-                                Icons.access_time,
-                                color: Colors.grey,
-                              ),
-                              title: Text(
-                                DateFormat('EEEEEEE, MMMM dd').format(
-                                  getDateTimeAccToUserTimezone(
-                                      dateTime:
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                              widget.requestItem.requestStart),
-                                      timezoneAbb: SevaCore.of(context)
-                                          .loggedInUser
-                                          .timezone),
-                                ),
-                                style: titleStyle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              subtitle: Text(
-                                DateFormat('h:mm a').format(
-                                      getDateTimeAccToUserTimezone(
-                                          dateTime: DateTime
-                                              .fromMillisecondsSinceEpoch(widget
-                                                  .requestItem.requestStart),
-                                          timezoneAbb: SevaCore.of(context)
-                                              .loggedInUser
-                                              .timezone),
-                                    ) +
-                                    ' - ' +
-                                    DateFormat('h:mm a').format(
-                                      getDateTimeAccToUserTimezone(
-                                          dateTime: DateTime
-                                              .fromMillisecondsSinceEpoch(widget
-                                                  .requestItem.requestEnd),
-                                          timezoneAbb: SevaCore.of(context)
-                                              .loggedInUser
-                                              .timezone),
-                                    ),
-                                style: subTitleStyle,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              trailing: Container(
-                                height: 25,
-                                width: 75,
-                                child: widget.requestItem.sevaUserId ==
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID
-                                    ? FlatButton(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        color: Color.fromRGBO(44, 64, 140, 1),
-                                        child: Text(
-                                          'Edit',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 13),
-                                        ),
-                                        onPressed: () {
-                                          RequestModel _modelItem =
-                                              widget.requestItem;
-                                          print(
-                                              "widget.requestItem:$_modelItem");
-                                          print(
-                                              "SevaCore.of(context).loggedInUser.currentTimebank:${SevaCore.of(context).loggedInUser.currentTimebank}");
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => EditRequest(
-                                                timebankId: SevaCore.of(context)
-                                                    .loggedInUser
-                                                    .currentTimebank,
-                                                requestModel:
-                                                    widget.requestItem,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Container(),
-                              )),
-                          CustomListTile(
-                            leading: Icon(
-                              Icons.location_on,
-                              color: Colors.grey,
-                            ),
-                            title: Text(
-                              location,
-                              style: titleStyle,
-                              maxLines: 1,
-                            ),
-                            subtitle: FutureBuilder<String>(
-                              future: _getLocation(
-                                widget.requestItem.location.latitude,
-                                widget.requestItem.location.latitude,
-                              ),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text("Unnamed Location");
-                                }
-
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Text("Resolving location...");
-                                }
-                                return Text(
-                                  snapshot.data ?? '',
-                                  style: subTitleStyle,
-                                  maxLines: 1,
-                                );
-                              },
-                            ),
-                          ),
-                          CustomListTile(
-                            // contentPadding: EdgeInsets.all(0),
-
-                            leading: Icon(
-                              Icons.person,
-                              color: Colors.grey,
-                            ),
-                            title: Text(
-                              "Hosted by ${widget.requestItem.fullName}",
-                              style: titleStyle,
-                              maxLines: 1,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.numberOfApprovals} Volunteers participating',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
+            )
+          : null,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                shrinkWrap: true,
+//                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 10),
+                  Text(
+                    widget.requestItem.title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    FutureBuilder(
-                        future: Future.wait(futures),
-                        builder:
-                            (context, AsyncSnapshot<List<dynamic>> snapshot) {
-                          if (snapshot.hasError)
-                            return new Text('Error: ${snapshot.error}');
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-
-                          if (snapshot.data.length == 0) {
-                            return Container(
-                              margin: EdgeInsets.only(left: 20),
-                              child: Text(
-                                'No approved members',
-                              ),
-                            );
-                          }
-
-                          var snap = snapshot.data.map((f) {
-                            return UserModel.fromDynamic(f);
-                          }).toList();
-
-                          print(" $snap ---------------------------- ");
-
-                          return Container(
-                            height: 40,
-                            child: InkWell(
-                              onTap: () {
-                                print('tapped');
-                              },
-                              child: ListView.builder(
-                                padding: EdgeInsets.symmetric(horizontal: 12),
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snap.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 5),
-                                    child: Container(
-                                      height: 40,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: NetworkImage(
-                                            snap[index].photoURL,
-                                          ),
-                                        ),
+                  ),
+                  SizedBox(height: 10),
+                  CustomListTile(
+                      leading: Icon(
+                        Icons.access_time,
+                        color: Colors.grey,
+                      ),
+                      title: Text(
+                        DateFormat('EEEEEEE, MMMM dd').format(
+                          getDateTimeAccToUserTimezone(
+                              dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                  widget.requestItem.requestStart),
+                              timezoneAbb:
+                                  SevaCore.of(context).loggedInUser.timezone),
+                        ),
+                        style: titleStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        DateFormat('h:mm a').format(
+                              getDateTimeAccToUserTimezone(
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      widget.requestItem.requestStart),
+                                  timezoneAbb: SevaCore.of(context)
+                                      .loggedInUser
+                                      .timezone),
+                            ) +
+                            ' - ' +
+                            DateFormat('h:mm a').format(
+                              getDateTimeAccToUserTimezone(
+                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                      widget.requestItem.requestEnd),
+                                  timezoneAbb: SevaCore.of(context)
+                                      .loggedInUser
+                                      .timezone),
+                            ),
+                        style: subTitleStyle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Container(
+                        height: 25,
+                        width: 75,
+                        child: widget.requestItem.sevaUserId ==
+                                SevaCore.of(context).loggedInUser.sevaUserID
+                            ? FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                color: Color.fromRGBO(44, 64, 140, 1),
+                                child: Text(
+                                  'Edit',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 13),
+                                ),
+                                onPressed: () {
+                                  RequestModel _modelItem = widget.requestItem;
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => EditRequest(
+                                        timebankId: SevaCore.of(context)
+                                            .loggedInUser
+                                            .currentTimebank,
+                                        requestModel: widget.requestItem,
                                       ),
                                     ),
                                   );
                                 },
-                              ),
+                              )
+                            : Container(),
+                      )),
+                  CustomListTile(
+                    leading: Icon(
+                      Icons.location_on,
+                      color: Colors.grey,
+                    ),
+                    title: Text(
+                      location,
+                      style: titleStyle,
+                      maxLines: 1,
+                    ),
+                    subtitle: FutureBuilder<String>(
+                      future: _getLocation(
+                        widget.requestItem.location.latitude,
+                        widget.requestItem.location.latitude,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text("Unnamed Location");
+                        }
+
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Text("Resolving location...");
+                        }
+                        return Text(
+                          snapshot.data ?? '',
+                          style: subTitleStyle,
+                          maxLines: 1,
+                        );
+                      },
+                    ),
+                  ),
+                  CustomListTile(
+                    // contentPadding: EdgeInsets.all(0),
+
+                    leading: Icon(
+                      Icons.person,
+                      color: Colors.grey,
+                    ),
+                    title: Text(
+                      "Hosted by ${widget.requestItem.fullName ?? ""}",
+                      style: titleStyle,
+                      maxLines: 1,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} people Approved',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  FutureBuilder(
+                      future: Future.wait(futures),
+                      builder:
+                          (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                        if (snapshot.hasError)
+                          return new Text('Error: ${snapshot.error}');
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+
+                        if (snapshot.data.length == 0) {
+                          return Container(
+                            margin: EdgeInsets.only(left: 20),
+                            child: Text(
+                              'No approved members',
                             ),
                           );
-                        }),
-                    SizedBox(height: 10),
+                        }
 
-                    // NetworkImage(
-                    //   imageUrl:
-                    //       'https://technext.github.io/Evento/images/demo/bg-slide-01.jpg',
-                    //   fit: BoxFit.fitWidth,
-                    //   placeholder: (context, url) => Center(
-                    //     child: CircularProgressIndicator(),
-                    //   ),
-                    //   errorWidget: (context, url, error) => Icon(Icons.error),
-                    // ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      child: Text(
-                        widget.requestItem.description,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    /*CachedNetworkImage(
-                  imageUrl: widget.requestItem.photoUrl,
-                  errorWidget: (context,url,error) =>
-                      Container(),
-                  placeholder: (context,url){
-                    return Center(child: CircularProgressIndicator());
-                  }
+                        var snap = snapshot.data.map((f) {
+                          return UserModel.fromDynamic(f ?? {});
+                        }).toList();
 
-              ),*/
-                    Spacer(
-                    ),
-                    getBottombar(),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
-                ),
+                        print(" $snap ---------------------------- ");
+
+                        return Container(
+                          height: 40,
+                          child: InkWell(
+                            onTap: () {
+                              print('tapped');
+                            },
+                            child: ListView.builder(
+                              padding: EdgeInsets.symmetric(horizontal: 12),
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snap.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          snap[index].photoURL ??
+                                              defaultUserImageURL,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+                  SizedBox(height: 10),
+
+                  // NetworkImage(
+                  //   imageUrl:
+                  //       'https://technext.github.io/Evento/images/demo/bg-slide-01.jpg',
+                  //   fit: BoxFit.fitWidth,
+                  //   placeholder: (context, url) => Center(
+                  //     child: CircularProgressIndicator(),
+                  //   ),
+                  //   errorWidget: (context, url, error) => Icon(Icons.error),
+                  // ),
+                  Text(
+                    widget.requestItem.description,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  /*CachedNetworkImage(
+                      imageUrl: widget.requestItem.photoUrl,
+                      errorWidget: (context,url,error) =>
+                          Container(),
+                      placeholder: (context,url){
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                  ),*/
+                ],
               ),
             ),
-          );
+            getBottombar(),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<dynamic> getUserDetails({String memberEmail}) async {
@@ -370,9 +350,12 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
   bool isApplied = false;
   Widget getBottombar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
+    return Container(
+      decoration: BoxDecoration(color: Colors.white54, boxShadow: [
+        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+      ]),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -382,12 +365,15 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   style: TextStyle(color: Colors.black),
                   children: [
                     TextSpan(
-                      text: widget.requestItem.sevaUserId !=
+                      text: widget.requestItem.sevaUserId ==
                               SevaCore.of(context).loggedInUser.sevaUserID
-                          ? 'You have${isApplied ? '' : " not"} applied for the request'
-                          : "You are the creator of this request",
+                          ? "You are the creator of this request."
+                          : isApplied
+                              ? 'You have applied for the request.'
+                              : "Do you want to participate in this request?",
                       style: TextStyle(
                         fontSize: 16,
+                        fontFamily: 'Europa',
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -399,6 +385,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
               offstage: widget.requestItem.sevaUserId ==
                   SevaCore.of(context).loggedInUser.sevaUserID,
               child: Container(
+                margin: EdgeInsets.only(right: 5),
                 width: 100,
                 height: 32,
                 child: FlatButton(
@@ -406,7 +393,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: isApplied ? Colors.green : Colors.red,
+                  color: isApplied ? Colors.red : Colors.green,
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 1),
@@ -425,12 +412,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                       Spacer(),
                       Text(
                         isApplied ? 'Withdraw' : 'Apply',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
                         ),
                       ),
                       Spacer(
-                        flex: 2,
+                        flex: 1,
                       ),
                     ],
                   ),

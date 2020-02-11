@@ -4,7 +4,10 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
+
+import '../core.dart';
 //import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 enum PastHiredUserStatus { LOADING, LOADED, EMPTY }
@@ -33,10 +36,12 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
   bool isAdmin = false;
   PastHiredUserStatus userStatus = PastHiredUserStatus.LOADING;
   RequestModel requestModel;
+  UserModel loggedinUser;
 
   @override
   void initState() {
     super.initState();
+
     if (timebank.model.admins.contains(widget.sevaUserId)) {
       isAdmin = true;
     }
@@ -78,6 +83,8 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
 
   @override
   Widget build(BuildContext context) {
+    loggedinUser = SevaCore.of(context).loggedInUser;
+
     return StreamBuilder(
       stream: Firestore.instance
           .collection("users")
@@ -95,9 +102,14 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
             userList.add(model);
           });
 
-          // print("length ${userList.length}");
+          print("length ${userList.length}");
           userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
           //print("length ${userList.length}");
+          if (userList.length == 0) {
+            return Center(
+              child: getEmptyWidget('Users', 'No user found'),
+            );
+          }
           return ListView.builder(
             itemCount: userList.length,
             itemBuilder: (context, index) {
@@ -110,6 +122,8 @@ class _PastHiredUsersViewState extends State<PastHiredUsersView> {
                 requestModel: requestModel,
                 userModel: user,
                 isAdmin: isAdmin,
+                currentCommunity: loggedinUser.currentCommunity,
+                loggedUserId: loggedinUser.sevaUserID,
                 refresh: refresh,
                 isFavorite: isAdmin ?? false
                     ? timeBankIds.contains(widget.timebankId)

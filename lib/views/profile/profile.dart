@@ -19,7 +19,6 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -85,13 +84,16 @@ class _ProfilePageState extends State<ProfilePage>
         isUserLoaded = true;
       });
       FirestoreManager.getCompletedRequestStream(
-          userEmail: SevaCore.of(context).loggedInUser.email,
-          userId: SevaCore.of(context).loggedInUser.sevaUserID).listen(
-            (requestList) {
+              userEmail: SevaCore.of(context).loggedInUser.email,
+              userId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .listen(
+        (requestList) {
           if (!mounted) return;
-          requestList.forEach((requestObj){
+          requestList.forEach((requestObj) {
             requestObj.transactions?.forEach((transaction) {
-              if (transaction.isApproved && transaction.to == SevaCore.of(context).loggedInUser.sevaUserID)
+              if (transaction.isApproved &&
+                  transaction.to ==
+                      SevaCore.of(context).loggedInUser.sevaUserID)
                 sevaCoinsValue += transaction.credits;
             });
           });
@@ -339,11 +341,41 @@ class _ProfilePageState extends State<ProfilePage>
                         //     ),
                         //   ),
                         // ),
-
-                        Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => CreateEditCommunityView(
+                                  timebankId: timebankModel.id,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            elevation: 2,
+                            child: Container(
+                              height: 60,
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: Text(
+                                      'Create TimeBank',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Icon(Icons.navigate_next),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                           // child: ListView.separated(
                           //   padding: EdgeInsets.all(0),
@@ -362,26 +394,26 @@ class _ProfilePageState extends State<ProfilePage>
                           //   },
                           // ),
 
-                          child: StreamBuilder<List<Widget>>(
-                            stream: _profileBloc.communities,
-                            builder: (context, snapshot) {
-                              if (snapshot.data != null)
-                                return Column(children: snapshot.data);
-
-                              if (snapshot.hasError)
-                                return Center(
-                                    child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(snapshot.error),
-                                ));
-                              return Container(
-                                height: 100,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            },
-                          ),
+//                          child: StreamBuilder<List<Widget>>(
+//                            stream: _profileBloc.communities,
+//                            builder: (context, snapshot) {
+//                              if (snapshot.data != null)
+//                                return Column(children: snapshot.data);
+//
+//                              if (snapshot.hasError)
+//                                return Center(
+//                                    child: Padding(
+//                                  padding: const EdgeInsets.all(12.0),
+//                                  child: Text(snapshot.error),
+//                                ));
+//                              return Container(
+//                                height: 100,
+//                                child: Center(
+//                                  child: CircularProgressIndicator(),
+//                                ),
+//                              );
+//                            },
+//                          ),
                         ),
 
                         SizedBox(height: 10),

@@ -843,7 +843,9 @@ class NearRequestListItems extends StatelessWidget {
                 parentContext,
                 MaterialPageRoute(
                   builder: (context) => RequestDetailsAboutPage(
-                      requestItem: model, timebankModel: timebankModel, isAdmin: false),
+                      requestItem: model,
+                      timebankModel: timebankModel,
+                      isAdmin: false),
                 ),
               );
             }
@@ -932,7 +934,11 @@ class RequestListItems extends StatefulWidget {
   bool isAdmin;
 
   RequestListItems(
-      {Key key, this.timebankId, this.parentContext, this.timebankModel, this.isAdmin});
+      {Key key,
+      this.timebankId,
+      this.parentContext,
+      this.timebankModel,
+      this.isAdmin});
 
   @override
   State<StatefulWidget> createState() {
@@ -1130,7 +1136,10 @@ class RequestListItemsState extends State<RequestListItems> {
           onTap: () {
             timeBankBloc.setSelectedRequest(model);
             timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
-            widget.isAdmin = model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ? true : false ;
+            widget.isAdmin =
+                model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+                    ? true
+                    : false;
             timeBankBloc.setIsAdmin(widget.isAdmin);
 
             if (model.sevaUserId ==
@@ -1140,7 +1149,9 @@ class RequestListItemsState extends State<RequestListItems> {
               Navigator.push(
                 widget.parentContext,
                 MaterialPageRoute(
-                  builder: (context) => RequestTabHolder(isAdmin: widget.isAdmin,),
+                  builder: (context) => RequestTabHolder(
+                    isAdmin: true,
+                  ),
                 ),
               );
             } else {
@@ -1148,7 +1159,10 @@ class RequestListItemsState extends State<RequestListItems> {
                 widget.parentContext,
                 MaterialPageRoute(
                   builder: (context) => RequestDetailsAboutPage(
-                      requestItem: model, timebankModel: widget.timebankModel, isAdmin: widget.isAdmin),
+                    requestItem: model,
+                    timebankModel: widget.timebankModel,
+                    isAdmin: false,
+                  ),
                 ),
               );
             }
@@ -1183,13 +1197,15 @@ class RequestListItemsState extends State<RequestListItems> {
                         maxLines: 1,
                         style: Theme.of(widget.parentContext).textTheme.subhead,
                       ),
-                      Text(
+                      Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child:Text(
                         model.description,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style:
                             Theme.of(widget.parentContext).textTheme.subtitle,
-                      ),
+                      ),),
                       SizedBox(height: 8),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
@@ -1208,14 +1224,15 @@ class RequestListItemsState extends State<RequestListItems> {
                             ),
                           ),
                         ],
-                      ),
+                      ),Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
                       Offstage(
                         offstage: !model.acceptors.contains(userEmail),
                         child: Container(
-                            alignment: Alignment.topRight,
-                            margin: EdgeInsets.all(12),
-                            // width: double.infinity,
-                            child: Container(
+
+                            margin: EdgeInsets.all(10),
                               width: 100,
                               height: 32,
                               child: FlatButton(
@@ -1223,37 +1240,19 @@ class RequestListItemsState extends State<RequestListItems> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 padding: EdgeInsets.all(0),
-                                color: Color.fromRGBO(44, 64, 140, 0.7),
-                                child: Row(
-                                  children: <Widget>[
-                                    SizedBox(width: 1),
-                                    Container(
-                                      width: 30,
-                                      height: 30,
-                                      decoration: BoxDecoration(
-                                        color: Color.fromRGBO(44, 64, 140, 1),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Spacer(),
+                                color: Colors.green,
+                                child:
                                     Text(
                                       'Applied',
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),
                                     ),
-                                    Spacer(
-                                      flex: 2,
-                                    ),
-                                  ],
+                                    onPressed: () {},
                                 ),
-                                onPressed: () {},
+                                ),
                               ),
-                            )),
+                            ],
                       ),
                     ],
                   ),

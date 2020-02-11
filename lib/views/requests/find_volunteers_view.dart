@@ -9,6 +9,7 @@ import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 
 class FindVolunteersView extends StatefulWidget {
@@ -39,7 +40,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
     super.initState();
 
     FirestoreManager.getAllTimebankIdStream(
-      timebankId: timebankModel.model.id,
+      timebankId: widget.timebankId,
     ).then((onValue) {
       setState(() {
         validItems = onValue;
@@ -192,6 +193,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   bool isAdmin = false;
   RequestModel requestModel;
   bool isBookMarked = false;
+  UserModel loggedinUser;
 
   @override
   void initState() {
@@ -212,6 +214,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   }
 
   Widget build(BuildContext context) {
+    loggedinUser = SevaCore.of(context).loggedInUser;
+
     if (widget == null ||
         widget.controller == null ||
         widget.controller.text == null) {
@@ -251,6 +255,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             ),
           );
         }
+        print("length ${snapshot.data}");
 
         List<UserModel> userList = snapshot.data;
         print("length ${userList.length}");
@@ -278,6 +283,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
               timebankModel: widget.timebankModel,
               isAdmin: isAdmin,
               refresh: refresh,
+              currentCommunity: loggedinUser.currentCommunity,
+              loggedUserId: loggedinUser.sevaUserID,
               isFavorite: isAdmin
                   ? timeBankIds.contains(widget.timebankModel.id)
                   : memberId.contains(widget.sevaUserId),

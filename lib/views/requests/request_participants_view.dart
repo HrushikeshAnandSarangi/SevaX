@@ -376,9 +376,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
+                        color: Colors.red,
                         child: Text(
                           'Decline',
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // request declined
@@ -395,9 +397,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                         padding: EdgeInsets.all(8.0),
                       ),
                       RaisedButton(
+                        color: Colors.green,
                         child: Text(
                           'Approve',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // Once approved
