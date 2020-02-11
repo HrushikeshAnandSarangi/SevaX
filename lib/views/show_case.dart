@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'BioShowcase.dart';
-import 'SkillShowcase.dart';
+import 'package:sevaexchange/views/skillshowcase.dart';
 import 'InterestShowcase.dart';
+import 'bioshowcase.dart';
 
 class Showcase extends StatefulWidget {
   Showcase();

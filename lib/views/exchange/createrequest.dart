@@ -411,11 +411,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.approvedUsers = arrayOfSelectedMembers;
     //adding some members for humanity first
     if (_formKey.currentState.validate()) {
-      await _writeToDB();
       print("Select Members");
       if (widget.isOfferRequest == true && widget.userModel != null) {
-        print("Adding from selected members-------------");
+        if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
+        requestModel.approvedUsers.add(widget.userModel.email);
+      }
 
+      await _writeToDB();
+
+      if (widget.isOfferRequest == true && widget.userModel != null) {
+        print(
+            "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         // OfferModel offer = widget.offer;
         // Set<String> offerRequestList = () {
         //   if (offer.requestList == null) return [];
@@ -428,11 +434,15 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         // sendOfferRequest(
         //     offerModel: widget.offer,
         //     requestSevaID: requestModel.sevaUserId);
-        Navigator.pop(context);
+
+        // Navigator.pop(dialogContext);
+        // Navigator.pop(context);
+        Navigator.pop(dialogContext);
+        Navigator.pop(context, {'response': 'ACCEPTED'});
+      } else {
+        Navigator.pop(dialogContext);
         Navigator.pop(context);
       }
-      Navigator.pop(dialogContext);
-      Navigator.pop(context);
     }
   }
 
