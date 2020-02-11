@@ -1310,9 +1310,11 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
+                        color: Colors.orange,
                         child: Text(
                           'Decline',
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // request declined
@@ -1329,9 +1331,11 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         padding: EdgeInsets.all(8.0),
                       ),
                       RaisedButton(
+                        color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           'Approve',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // Once approved

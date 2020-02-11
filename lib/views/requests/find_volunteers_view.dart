@@ -98,9 +98,9 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
   }
 
   void _search(String queryString) {
-    if (queryString.length == 1) {
+    if (queryString.length == 3) {
       setState(() {
-        searchOnChange.add(queryString);
+        // searchOnChange.add(queryString);
       });
     } else {
       searchOnChange.add(queryString);

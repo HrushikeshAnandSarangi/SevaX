@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../flavor_config.dart';
 import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
@@ -376,7 +377,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
-                        color: Colors.red,
+                        color: Colors.orange,
                         child: Text(
                           'Decline',
                           style: TextStyle(
@@ -397,7 +398,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                         padding: EdgeInsets.all(8.0),
                       ),
                       RaisedButton(
-                        color: Colors.green,
+                        color: FlavorConfig.values.theme.primaryColor,
                         child: Text(
                           'Approve',
                           style: TextStyle(

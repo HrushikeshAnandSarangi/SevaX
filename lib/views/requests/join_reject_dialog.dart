@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -103,7 +104,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 RaisedButton(
-                  color: Colors.red,
+                  color: Colors.orange,
                   child: Text(
                     'Decline',
                     style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
@@ -127,7 +128,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   padding: EdgeInsets.all(8.0),
                 ),
                 RaisedButton(
-                  color: Colors.green,
+                  color: FlavorConfig.values.theme.primaryColor,
                   child: Text(
                     'Approve',
                     style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
