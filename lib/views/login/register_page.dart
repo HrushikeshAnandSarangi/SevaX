@@ -92,9 +92,11 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 16),
                             _imagePicker,
                             _formFields,
-                            SizedBox(height: 16),
+                            SizedBox(height: 24),
                             registerButton,
-                            SizedBox(height: 16),
+                            SizedBox(height: 8),
+                            Text('or'),
+                            SizedBox(height: 8),
                             signUpWithGoogle
                           ],
                         ))))
@@ -231,17 +233,19 @@ class _RegisterPageState extends State<RegisterPage>
             onSave: (value) {
               this.password = value;
             },
-            suffix: IconButton(
-              onPressed: () {
-                _shouldObscurePassword = !_shouldObscurePassword;
-                setState(() {});
-              },
-              splashColor: Colors.transparent,
-              icon: Icon(
-                _shouldObscurePassword
-                    ? Icons.visibility_off
-                    : Icons.visibility,
-              ),
+            suffix: Container(
+              height: 30,
+              child:  GestureDetector(
+                onTap: () {
+                  _shouldObscurePassword = !_shouldObscurePassword;
+                  setState(() {});
+                },
+                child: Icon(
+                  _shouldObscurePassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                ),
+              )
             ),
           ),
           getFormField(
@@ -257,19 +261,21 @@ class _RegisterPageState extends State<RegisterPage>
               }
               return null;
             },
-            suffix: IconButton(
-              onPressed: () {
-                _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
-                setState(() {});
-              },
-              splashColor: Colors.transparent,
-              icon: Icon(
-                shouldObscureConfirmPassword
-                    ? Icons.visibility_off
-                    : Icons.visibility,
-              ),
+            suffix: Container(
+                height: 30,
+                child:  GestureDetector(
+                  onTap: () {
+                    _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
+                    setState(() {});
+                  },
+                  child: Icon(
+                    shouldObscureConfirmPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                )
             ),
-          ),
+          )
         ],
       ),
     );
@@ -286,8 +292,7 @@ class _RegisterPageState extends State<RegisterPage>
   }) {
     var size = shouldRestrictLength ? 20 : 150;
     return Padding(
-      padding:
-          const EdgeInsets.only(bottom: 8.0, left: 16.0, right: 16.0, top: 8.0),
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: TextFormField(
         enabled: !isLoading,
         decoration: InputDecoration(
@@ -579,7 +584,7 @@ class _RegisterPageState extends State<RegisterPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text("or Signup in with"),
+            Text("Sign up with"),
             horizontalLine()
           ],
         ),

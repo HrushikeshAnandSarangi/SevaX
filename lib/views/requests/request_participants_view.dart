@@ -376,9 +376,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
+                        color: Colors.red,
                         child: Text(
                           'Decline',
-                          style: TextStyle(color: Colors.red),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // request declined
@@ -395,9 +397,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                         padding: EdgeInsets.all(8.0),
                       ),
                       RaisedButton(
+                        color: Colors.green,
                         child: Text(
                           'Approve',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(
+                              color: Colors.white, fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
                           // Once approved
@@ -442,19 +446,19 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     String notificationId,
   }) {
     List<String> approvedUsers = model.approvedUsers;
-    List<String> initialAccpetors = model.acceptors;
-    List<String> accpetors = [];
-    for (var i = 0; i < initialAccpetors.length; i++) {
-      if (initialAccpetors[i].trim() != user.email.trim()) {
-        accpetors.add(initialAccpetors[i].trim());
-      }
-    }
+//    List<String> initialAccpetors = model.acceptors;
+//    List<String> accpetors = [];
+//    for (var i = 0; i < initialAccpetors.length; i++) {
+//      if (initialAccpetors[i].trim() != user.email.trim()) {
+//        accpetors.add(initialAccpetors[i].trim());
+//      }
+//    }
     Set<String> acceptedSet = approvedUsers.toSet();
-    Set<String> acceptorsSet = accpetors.toSet();
+//    Set<String> acceptorsSet = accpetors.toSet();
 
     acceptedSet.add(user.email);
     model.approvedUsers = acceptedSet.toList();
-    model.acceptors = acceptorsSet.toList();
+//    model.acceptors = acceptorsSet.toList();
 
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;

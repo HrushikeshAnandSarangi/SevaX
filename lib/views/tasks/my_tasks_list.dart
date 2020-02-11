@@ -87,7 +87,7 @@ class MyTasksList extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(top: 58.0),
                   child: Text(
-                    'No Pending Tasks',
+                    'No pending tasks',
                     textAlign: TextAlign.center,
                   ),
                 );

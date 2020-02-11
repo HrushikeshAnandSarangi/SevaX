@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:share/share.dart';
 
 import 'TimebankCodeModel.dart';
@@ -23,6 +24,7 @@ class InviteMembers extends StatefulWidget {
 class InviteMembersState extends State<InviteMembers> {
   String timebankId;
   InviteMembersState(this.timebankId);
+  TimebankCodeModel codeModel = TimebankCodeModel();
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class InviteMembersState extends State<InviteMembers> {
         title: Text(
           FlavorConfig.values.timebankName == "Yang 2020"
               ? "Yang Gang Codes"
-              : "Timebank codes",
+              : "Timebank Codes",
           style: TextStyle(
             fontSize: 18,
           ),
@@ -61,7 +63,7 @@ class InviteMembersState extends State<InviteMembers> {
                   return Center(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: Text('No codes genrated yet.'),
+                      child: Text('No codes generated yet.'),
                     ),
                   );
                 }
@@ -70,8 +72,22 @@ class InviteMembersState extends State<InviteMembers> {
                       shrinkWrap: true,
                       itemCount: codeList.length,
                       itemBuilder: (context, index) {
+                        String length = "0";
+
                         TimebankCodeModel timebankCode =
                             codeList.elementAt(index);
+                        if (timebankCode.usersOnBoarded == null) {
+                          length = "Not yet redeemed";
+                        } else {
+                          if (timebankCode.usersOnBoarded.length == 1) {
+                            length = "Redeemed by 1 user";
+                          } else if (timebankCode.usersOnBoarded.length > 1) {
+                            length =
+                                "Redeemed by ${timebankCode.usersOnBoarded.length} users";
+                          } else {
+                            length = "Not yet redeemed";
+                          }
+                        }
                         return GestureDetector(
                           child: Card(
                             margin: EdgeInsets.all(5),
@@ -87,25 +103,45 @@ class InviteMembersState extends State<InviteMembers> {
                                           timebankCode.timebankCode
                                       : "Timebank code : " +
                                           timebankCode.timebankCode),
-                                  Text(
-                                      "Redeemed by ${timebankCode.usersOnBoarded == null ? 0 : timebankCode.usersOnBoarded.length} users"),
+                                  Text(length),
                                   Text(
                                     DateTime.now().millisecondsSinceEpoch >
                                             timebankCode.validUpto
                                         ? "Expired"
                                         : "Active",
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Share.share(shareText(timebankCode));
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                      child: Text(
-                                        'Share code',
-                                        style: TextStyle(color: Colors.blue),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      GestureDetector(
+                                        onTap: () {
+                                          Share.share(shareText(timebankCode));
+                                        },
+                                        child: Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                          child: Text(
+                                            'Share code',
+                                            style:
+                                                TextStyle(color: Colors.blue),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      GestureDetector(
+                                        child: IconButton(
+                                          icon: Image.asset(
+                                            'lib/assets/images/recycle-bin.png',
+                                          ),
+                                          iconSize: 30,
+                                          onPressed: () {
+                                            deleteShareCode(
+                                                timebankCode.timebankCodeId);
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   )
                                 ],
                               ),
@@ -229,21 +265,44 @@ class InviteMembersState extends State<InviteMembers> {
     return base64Url.encode(values).substring(0, 6).toLowerCase();
   }
 
-  void registerTimebankCode({
+  Future<void> registerTimebankCode({
     String timebankId,
     String timebankCode,
     int validUpto,
     String communityId,
-  }) {
-    Firestore.instance.collection("timebankCodes").add({
-      "timebankId": timebankId,
-      "timebankCode": timebankCode,
-      "validUpto": validUpto,
-      "createdOn": DateTime.now().millisecondsSinceEpoch,
-      "communityId": communityId,
-    }).then((doc) {
-      // task completed
-    });
+  }) async {
+    codeModel.createdOn = DateTime.now().millisecondsSinceEpoch;
+    codeModel.timebankId = timebankId;
+    codeModel.validUpto = validUpto;
+    codeModel.timebankCodeId = utils.Utils.getUuid();
+    codeModel.timebankCode = timebankCode;
+    codeModel.communityId = communityId;
+
+    print('codemodel ${codeModel.toString()}');
+    await Firestore.instance
+        .collection('timebankCodes')
+        .document(codeModel.timebankCodeId)
+        .setData(codeModel.toMap());
+
+//    Firestore.instance.collection("timebankCodes").add({
+//      "timebankId": timebankId,
+//      "timebankCode": timebankCode,
+//      "timebankCodeId": utils.Utils.getUuid(),
+//      "validUpto": validUpto,
+//      "createdOn": DateTime.now().millisecondsSinceEpoch,
+//      "communityId": communityId,
+//    }).then((doc) {
+//      // task completed
+//    });
+  }
+
+  void deleteShareCode(String timebankCodeId) {
+    Firestore.instance
+        .collection("timebankCodes")
+        .document(timebankCodeId)
+        .delete();
+
+    print('deleted');
   }
 }
 

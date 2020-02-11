@@ -337,7 +337,7 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-              
+
               print("============== $consolidatedList");
 
               return formatListOffer(consolidatedList: consolidatedList);
@@ -375,8 +375,6 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-              
-
 
               return formatListOffer(consolidatedList: consolidatedList);
           }
@@ -416,9 +414,6 @@ class OfferListItems extends StatelessWidget {
                 );
               }
               return getOfferWidget(consolidatedList[index]);
-
-
-
             }
             // children: consolidatedList.map((OfferModelList offerModel) {
             //   return getOfferWidget(offerModel);
@@ -1164,6 +1159,7 @@ class OfferCardViewState extends State<OfferCardView> {
       'acceptorSevaId': SevaCore.of(context).loggedInUser.sevaUserID,
       'timebankId': FlavorConfig.values.timebankId,
       'sevaUserId': offerModel.sevaUserId,
+      'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
     };
 
     setState(() {
@@ -1389,7 +1385,7 @@ class OfferCardViewState extends State<OfferCardView> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Protected Timebank"),
-          content: new Text("You cannot accept offers in a protcted timebank"),
+          content: new Text("Admins or Co-Ordinators can only accept offers in a protected timebank"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

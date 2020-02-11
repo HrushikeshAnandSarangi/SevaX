@@ -4,6 +4,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
 
 enum FavoriteUserStatus { LOADING, LOADED, EMPTY }
@@ -36,6 +38,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
   FavoriteUserStatus userStatus = FavoriteUserStatus.LOADING;
   BuildContext dialogLoadingContext;
   RequestModel requestModel;
+  UserModel loggedinUser;
 
   @override
   void initState() {
@@ -56,6 +59,7 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
   }
 
   Widget build(BuildContext context) {
+    loggedinUser = SevaCore.of(context).loggedInUser;
     return StreamBuilder(
       stream: Firestore.instance
           .collection("users")
@@ -64,15 +68,32 @@ class _FavoriteUsersState extends State<FavoriteUsers> {
           .snapshots(),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasData && snapshot.data != null) {
+          List<UserModel> userList = [];
+
+          snapshot.data.documents.forEach((userModel) {
+            UserModel model = UserModel.fromMap(userModel.data);
+            userList.add(model);
+          });
+
+          // print("length ${userList.length}");
+          userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
+          //print("length ${userList.length}");
+          if (userList.length == 0) {
+            return getEmptyWidget('Users', 'No user found');
+          }
           return ListView.builder(
-            itemCount: snapshot.data.documents.length,
+            itemCount: userList.length,
             itemBuilder: (context, index) {
-              UserModel user =
-                  UserModel.fromMap(snapshot.data.documents[index].data);
+              UserModel user = userList.elementAt(index);
+              print(
+                  "looger user ${loggedinUser.currentCommunity + loggedinUser.sevaUserID}");
+
               return RequestCardWidget(
                 timebankModel: timebank.model,
                 requestModel: requestModel,
                 userModel: user,
+                currentCommunity: loggedinUser.currentCommunity,
+                loggedUserId: loggedinUser.sevaUserID,
                 isFavorite: true,
                 isAdmin: isAdmin,
                 refresh: refresh,

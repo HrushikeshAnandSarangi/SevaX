@@ -27,7 +27,7 @@ class TimebankCreate extends StatelessWidget {
         // leading: BackButton(color: Colors.black54),
         title: Text(
           // 'Create a ${FlavorConfig.values.timebankTitle}',
-          'Create Your Group',
+          'Create Group',
           style: TextStyle(
             fontSize: 20,
           ),
@@ -143,7 +143,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
-              'Group is a subset of a Timebank that may be temporary. Ex: committees, project teams.',
+              'Group is a subset of a timebank that may be temporary. Ex: committees, project teams.',
               textAlign: TextAlign.center,
             ),
           ),
@@ -155,7 +155,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 TimebankAvatar(),
                 SizedBox(height: 5),
                 Text(
-                  'Your logo',
+                  'Group logo',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.grey,
@@ -195,7 +195,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           tappableInviteMembers,
           Row(
             children: <Widget>[
-              headingText('Private group'),
+              headingText('Protected group'),
               Column(
                 children: <Widget>[
                   Divider(),
@@ -643,7 +643,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 'Invite members +',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.blue,
                 ),
               ),
             ))

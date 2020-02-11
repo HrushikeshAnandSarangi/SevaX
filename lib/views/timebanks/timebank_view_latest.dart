@@ -34,6 +34,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
   bool isDataLoaded = false;
   bool isAdminLoaded = false;
   bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -109,7 +110,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                     style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
                   ),
                   TextSpan(
-                    text: " Seva Exchange Time Bank",
+                    text: " Seva Exchange Global Network of Timebanks.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -130,7 +131,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 15,
             ),
             widget.timebankModel.members.contains(
               SevaCore.of(context).loggedInUser.sevaUserID,
@@ -237,7 +238,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                     '0 Volunteers',
                 style: TextStyle(
                   fontFamily: 'Europa',
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -248,9 +249,15 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                 widget.timebankModel.address ?? '',
                 style: TextStyle(
                   fontFamily: 'Europa',
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.grey,
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Divider(
+                color: Colors.black12,
               ),
             ),
             Padding(
@@ -266,7 +273,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0,0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -316,9 +323,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
             ),
 
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(10.0),
               child: Divider(
-                color: Colors.grey,
+                color: Colors.black12,
               ),
             ),
             Padding(
@@ -371,8 +378,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                         padding: const EdgeInsets.only(top: 8.0),
                         child: GestureDetector(
                           onTap: () {
-                            startChat(widget.timebankModel.id, widget.email,
-                                context, widget.timebankModel.id);
+                            if (widget.timebankModel.admins.contains(
+                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                              _showAdminMessage();
+                            } else {
+                              startChat(widget.timebankModel.id, widget.email,
+                                  context, widget.timebankModel.id);
+                            }
                           },
                           child: Text(
                             'Message',
@@ -419,6 +431,26 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
           ],
         ),
       ),
+    );
+  }
+
+  void _showAdminMessage() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Admins cannot create message"),
+          // content: new Text("Khud he ko message kyu kar rha hai?"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

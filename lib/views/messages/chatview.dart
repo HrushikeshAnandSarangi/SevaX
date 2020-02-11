@@ -160,7 +160,7 @@ class _ChatViewState extends State<ChatView> {
                     TimebankModel timebankModel = snapshot.data;
                     return appBar(
                         appbarTitle: timebankModel.name,
-                        imageUrl: timebankModel.photoUrl);
+                        imageUrl: timebankModel.photoUrl??'');
                   }
 
                   partnerUser = snapshot.data;

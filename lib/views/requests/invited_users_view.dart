@@ -4,7 +4,10 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/requests/request_card_widget.dart';
+
+import '../core.dart';
 
 class InvitedUsersView extends StatefulWidget {
   final String timebankId;
@@ -28,10 +31,12 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
   bool shouldInvite = true;
   TimeBankModelSingleton timebank = TimeBankModelSingleton();
   RequestModel requestModel;
+  UserModel loggedinUser;
 
   @override
   void initState() {
     super.initState();
+
     timeBankBloc.setInvitedUsersData(widget.requestModel.id);
     setState(() {});
 
@@ -123,6 +128,8 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   @override
   Widget build(BuildContext context) {
+    loggedinUser = SevaCore.of(context).loggedInUser;
+
     // TODO: implement build
     return StreamBuilder<TimebankController>(
 //      stream: SearchManager.searchForUserWithTimebankId( // TODO : replace function here
@@ -143,6 +150,9 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
           );
         }
         List<UserModel> userList = snapshot.data.invitedUsersForRequest;
+        // print("length ${userList.length}");
+        userList.removeWhere((user) => user.sevaUserID == widget.sevaUserId);
+        //print("length ${userList.length}");
 
         if (userList.length == 0) {
           return getEmptyWidget('Users', 'No user found');
@@ -162,6 +172,8 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
                 userModel: user,
                 requestModel: requestModel,
                 timebankModel: timebank.model,
+                currentCommunity: loggedinUser.currentCommunity,
+                loggedUserId: loggedinUser.sevaUserID,
                 refresh: refresh,
                 isFavorite: isAdmin
                     ? timeBankIds.contains(widget.timebankId)
@@ -394,29 +406,5 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
   }
 */
-  Widget getEmptyWidget(String title, String notFoundValue) {
-    return Center(
-      child: Text(
-        notFoundValue,
-        overflow: TextOverflow.ellipsis,
-        style: sectionHeadingStyle,
-      ),
-    );
-  }
 
-  TextStyle get sectionHeadingStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 12.5,
-      color: Colors.black,
-    );
-  }
-
-  TextStyle get sectionTextStyle {
-    return TextStyle(
-      fontWeight: FontWeight.w600,
-      fontSize: 11,
-      color: Colors.grey,
-    );
-  }
 }

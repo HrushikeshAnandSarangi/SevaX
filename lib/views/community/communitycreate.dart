@@ -27,10 +27,11 @@ class CreateEditCommunityView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Create your Timebank';
+    var title = 'Create a Timebank';
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
+        automaticallyImplyLeading: true,
         title: Text(
           title,
           style: TextStyle(
@@ -124,7 +125,7 @@ class CreateEditCommunityViewFormState
     var colums = StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data != null) {
             print(snapshot.data.timebank.address);
             if ((selectedAddress.length > 0 &&
                     snapshot.data.timebank.address.length == 0) ||
@@ -407,7 +408,7 @@ class CreateEditCommunityViewFormState
                           },
                           shape: StadiumBorder(),
                           child: Text(
-                            'Create Timebank',
+                            'Create a Timebank',
                             style:
                                 TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
@@ -517,7 +518,7 @@ class CreateEditCommunityViewFormState
     return GestureDetector(
       onTap: () {},
       child: Text(
-        ' Find your timebank',
+        ' Find your Timebank',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -581,13 +582,14 @@ class CreateEditCommunityViewFormState
 
   Widget get _billingDetailsTitle {
     return Container(
-        margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
+//        margin: EdgeInsets.fromLTRB(10, 0, 20, 10),
+        margin: EdgeInsets.fromLTRB(20,0,20,5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Column(
               children: <Widget>[
-                Text(''),
+
                 Text(
                   'Billing Details',
                   style: TextStyle(
@@ -599,17 +601,19 @@ class CreateEditCommunityViewFormState
             ),
             Column(
               children: <Widget>[
-                Text(''),
                 GestureDetector(
                   onTap: () {
                     _pc.close();
                   },
-                  child: Text(
-                    ''' x ''',
-                    style: TextStyle(
-                      color: Colors.orange,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+                    child: Text(
+                      ''' x ''',
+                      style: TextStyle(
+                        color: Colors.orange,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 )
@@ -625,14 +629,14 @@ class CreateEditCommunityViewFormState
         color: Colors.red,
         wordSpacing: 2.0,
       ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.greenAccent, width: 1.0),
-      ),
-      border: OutlineInputBorder(
-          gapPadding: 0.0, borderRadius: BorderRadius.circular(1.5)),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.green, width: 1.0),
-      ),
+//      focusedBorder: OutlineInputBorder(
+//        borderSide: BorderSide(color: Colors.greenAccent, width: 1.0),
+//      ),
+//      border: OutlineInputBorder(
+//          gapPadding: 0.0, borderRadius: BorderRadius.circular(1.5)),
+//      enabledBorder: OutlineInputBorder(
+//        borderSide: BorderSide(color: Colors.green, width: 1.0),
+//      ),
       hintText: fieldTitle,
       alignLabelWithHint: false,
     );
@@ -642,7 +646,7 @@ class CreateEditCommunityViewFormState
     print(focusNodes);
     Widget _stateWidget(controller) {
       return Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(20,10,20,10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
@@ -670,7 +674,7 @@ class CreateEditCommunityViewFormState
 
     Widget _pinCodeWidget(controller) {
       return Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(20,10,20,10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
@@ -699,7 +703,7 @@ class CreateEditCommunityViewFormState
 
     Widget _additionalNotesWidget(controller) {
       return Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             scrollToBottom();
@@ -730,7 +734,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressWidget(controller) {
       return Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(20,10,20,10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
@@ -758,7 +762,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressTwoWidget(controller) {
       return Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(20,10,20,10),
         child: TextFormField(
             onFieldSubmitted: (input) {
               FocusScope.of(context).requestFocus(focusNodes[4]);
@@ -767,9 +771,6 @@ class CreateEditCommunityViewFormState
               controller.community.billing_address
                   .updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
-            },
-            validator: (value) {
-              return value.isEmpty ? 'Field cannot be left blank' : null;
             },
             focusNode: focusNodes[3],
             textInputAction: TextInputAction.next,
@@ -785,7 +786,7 @@ class CreateEditCommunityViewFormState
 
     Widget _companyNameWidget(controller) {
       return Container(
-        margin: EdgeInsets.all(10),
+        margin: EdgeInsets.fromLTRB(20,10,20,10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[5]);
@@ -811,8 +812,8 @@ class CreateEditCommunityViewFormState
     }
 
     Widget _continueBtn(controller) {
-      return Container(
-        margin: EdgeInsets.all(10),
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(100, 10, 100, 20 ),
         child: RaisedButton(
           child: Text(
             "Continue",
@@ -838,7 +839,7 @@ class CreateEditCommunityViewFormState
         // var scrollController = Sc
         //adding a margin to the top leaves an area where the user can swipe
         //to open/close the sliding panel
-        margin: const EdgeInsets.only(top: 36.0),
+        margin: const EdgeInsets.only(top: 15.0),
         color: Colors.white,
         child: Form(
             key: _billingInformationKey,

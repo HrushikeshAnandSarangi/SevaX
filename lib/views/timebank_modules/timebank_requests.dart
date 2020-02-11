@@ -69,8 +69,6 @@ class RequestsState extends State<RequestsModule> {
           Offstage(
             offstage: false,
             child: Row(
-              // crossAxisAlignment: CrossAxisAlignment.end,
-              // mainAxisAlignment: MainAxisAlignment.,
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
@@ -80,7 +78,6 @@ class RequestsState extends State<RequestsModule> {
                     children: <Widget>[
                       Text(
                         'My Requests',
-                        // FlavorConfig.values.timebankTitle,
                         style: (TextStyle(fontWeight: FontWeight.w500)),
                       ),
                       GestureDetector(
@@ -93,11 +90,7 @@ class RequestsState extends State<RequestsModule> {
                           ),
                         ),
                         onTap: () {
-                          //Create a new request
-
                           if (widget.timebankModel.protected) {
-                            //show dialog its a protcted timebank
-
                             if (widget.timebankModel.admins.contains(
                                 SevaCore.of(context).loggedInUser.sevaUserID)) {
                               Navigator.push(
@@ -110,7 +103,6 @@ class RequestsState extends State<RequestsModule> {
                               );
                               return;
                             }
-
                             _showProtectedTimebankMessage();
                           } else {
                             Navigator.push(
@@ -122,8 +114,6 @@ class RequestsState extends State<RequestsModule> {
                               ),
                             );
                           }
-
-                          print("Create a new request");
                         },
                       ),
                     ],
@@ -165,13 +155,11 @@ class RequestsState extends State<RequestsModule> {
                                 .timebankIdForYangGangAdmin = t.id;
                           }
                         });
-
                         SevaCore.of(context)
                             .loggedInUser
                             .associatedWithTimebanks = dropdownList.length;
                         SevaCore.of(context).loggedInUser.adminOfYanagGangs =
                             adminOfCount;
-
                         return DropdownButton<String>(
                           value: timebankId,
                           onChanged: (String newValue) {
@@ -232,7 +220,9 @@ class RequestsState extends State<RequestsModule> {
                         );
                       }),
                 ),
-                Spacer(),
+                Expanded(
+                  child: Container(),
+                ),
                 Container(
                   width: 120,
                   child: CupertinoSegmentedControl<int>(
@@ -240,13 +230,17 @@ class RequestsState extends State<RequestsModule> {
                     children: logoWidgets,
 
                     padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    //selectedColor: Colors.deepOrange,
                     groupValue: sharedValue,
                     onValueChanged: (int val) {
                       print(val);
                       if (val != sharedValue) {
                         setState(() {
-                          isNearme = !isNearme;
+                          if (isNearme == true)
+                            isNearme = false;
+                          else
+                            isNearme = true;
+                        });
+                        setState(() {
                           sharedValue = val;
                         });
                       }
@@ -254,19 +248,6 @@ class RequestsState extends State<RequestsModule> {
                     //groupValue: sharedValue,
                   ),
                 ),
-                //  RaisedButton(
-                //    onPressed: () {
-                //      setState(() {
-                //        if (isNearme == true)
-                //          isNearme = false;
-                //        else
-                //          isNearme = true;
-                //      });
-                //    },
-                //    child: isNearme == false ? Text('Near Me') : Text('All'),
-                //    color: Theme.of(context).accentColor,
-                //    textColor: Colors.white,
-                //  ),
                 Padding(
                   padding: EdgeInsets.only(right: 5),
                 ),
@@ -557,7 +538,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                               widget.requestItem.acceptors.contains(
                                       SevaCore.of(context).loggedInUser.email)
                                   ? 'Withdraw Request'
-                                  : 'Accept Request',
+                                  : 'Acxcept Request',
                               style: TextStyle(
                                 color: FlavorConfig.values.buttonTextColor,
                               ),
@@ -651,7 +632,7 @@ class NearRequestListItems extends StatelessWidget {
             stream: timebankId != 'All'
                 ? FirestoreManager.getNearRequestListStream(
                     timebankId: timebankId)
-                : FirestoreManager.getAllRequestListStream(),
+                : FirestoreManager.getNearRequestListStream(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
               if (requestListSnapshot.hasError) {
@@ -663,8 +644,7 @@ class NearRequestListItems extends StatelessWidget {
                 default:
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
-                  print(
-                      "request data ${requestModelList.toString()} ${requestModelList.length}");
+
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
 
@@ -679,8 +659,7 @@ class NearRequestListItems extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: requestModelList.length + 1,
                     itemBuilder: (context, index) {
-                      if (index >= requestModelList.length ||
-                          requestTaskCompleted(requestModelList[index])) {
+                      if (index >= requestModelList.length) {
                         return Container(
                           width: double.infinity,
                           height: 65,
@@ -697,19 +676,126 @@ class NearRequestListItems extends StatelessWidget {
             },
           );
         });
-  }
 
-  bool requestTaskCompleted(RequestModel request) {
-    if (request.transactions == null) {
-      return false;
-    }
-    var count = 0;
-    for (var i = 0; i < request.transactions.length; i++) {
-      if (request.transactions[i].isApproved) {
-        count++;
-      }
-    }
-    return count >= request.numberOfApprovals;
+//    if (timebankId != 'All') {
+//      print("ifff " + timebankId);
+//      return FutureBuilder<Object>(
+//          future: FirestoreManager.getUserForId(
+//              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+//          builder: (context, snapshot) {
+//            if (snapshot.hasError) {
+//              return new Text('Error: ${snapshot.error}');
+//            }
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Center(child: CircularProgressIndicator());
+//            }
+//            UserModel user = snapshot.data;
+//            String loggedintimezone = user.timezone;
+//
+//            return StreamBuilder<List<RequestModel>>(
+//              stream: FirestoreManager.getNearRequestListStream(
+//                timebankId: timebankId,
+//              ),
+//              builder: (BuildContext context,
+//                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+//                if (requestListSnapshot.hasError) {
+//                  return new Text('Error: ${requestListSnapshot.error}');
+//                }
+//                switch (requestListSnapshot.connectionState) {
+//                  case ConnectionState.waiting:
+//                    return Center(child: CircularProgressIndicator());
+//                  default:
+//                    List<RequestModel> requestModelList =
+//                        requestListSnapshot.data;
+//
+//                    requestModelList = filterBlockedRequestsContent(
+//                        context: context, requestModelList: requestModelList);
+//
+//                    if (requestModelList.length == 0) {
+//                      return Padding(
+//                        padding: const EdgeInsets.all(16.0),
+//                        child: Center(child: Text('No Requests')),
+//                      );
+//                    }
+//
+//                    return ListView.builder(
+//                      shrinkWrap: true,
+//                      itemCount: requestModelList.length + 1,
+//                      itemBuilder: (context, index) {
+//                        if (index >= requestModelList.length) {
+//                          return Container(
+//                            width: double.infinity,
+//                            height: 65,
+//                          );
+//                        }
+//                        return getRequestView(
+//                          requestModelList[index],
+//                          loggedintimezone,
+//                          context,
+//                        );
+//                      },
+//                    );
+//                }
+//              },
+//            );
+//          });
+//    } else {
+//      return FutureBuilder<Object>(
+//          future: FirestoreManager.getUserForId(
+//              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+//          builder: (context, snapshot) {
+//            if (snapshot.hasError) {
+//              return new Text('Error: ${snapshot.error}');
+//            }
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Center(child: CircularProgressIndicator());
+//            }
+//            UserModel user = snapshot.data;
+//            String loggedintimezone = user.timezone;
+//
+//            return StreamBuilder<List<RequestModel>>(
+//              stream: FirestoreManager.getNearRequestListStream(),
+//              builder: (BuildContext context,
+//                  AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+//                if (requestListSnapshot.hasError) {
+//                  return new Text('Error: ${requestListSnapshot.error}');
+//                }
+//                switch (requestListSnapshot.connectionState) {
+//                  case ConnectionState.waiting:
+//                    return Center(child: CircularProgressIndicator());
+//                  //filter
+//
+//                  default:
+//                    List<RequestModel> requestModelList =
+//                        requestListSnapshot.data;
+//
+//                    requestModelList = filterBlockedRequestsContent(
+//                        context: context, requestModelList: requestModelList);
+//
+//                    if (requestModelList.length == 0) {
+//                      return Padding(
+//                        padding: const EdgeInsets.all(16.0),
+//                        child: Center(child: Text('No Requests')),
+//                      );
+//                    }
+//
+//                    return Container(
+//                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
+//                      child: ListView(
+//                        shrinkWrap: true,
+//                        children: requestModelList.map(
+//                          (RequestModel requestModel) {
+//                            return getRequestView(
+//                                requestModel, loggedintimezone, context);
+//                          },
+//                        ).toList(),
+//                      ),
+//                    );
+//                }
+//              },
+//            );
+//          });
+//    }
   }
 
   List<RequestModel> filterBlockedRequestsContent(
@@ -749,7 +835,7 @@ class NearRequestListItems extends StatelessWidget {
               Navigator.push(
                 parentContext,
                 MaterialPageRoute(
-                  builder: (context) => RequestTabHolder(),
+                  builder: (context) => RequestTabHolder(isAdmin: true),
                 ),
               );
             } else {
@@ -757,7 +843,9 @@ class NearRequestListItems extends StatelessWidget {
                 parentContext,
                 MaterialPageRoute(
                   builder: (context) => RequestDetailsAboutPage(
-                      requestItem: model, timebankModel: timebankModel),
+                      requestItem: model,
+                      timebankModel: timebankModel,
+                      isAdmin: false),
                 ),
               );
             }
@@ -843,8 +931,14 @@ class RequestListItems extends StatefulWidget {
   final BuildContext parentContext;
   final TimebankModel timebankModel;
 
+  bool isAdmin;
+
   RequestListItems(
-      {Key key, this.timebankId, this.parentContext, this.timebankModel});
+      {Key key,
+      this.timebankId,
+      this.parentContext,
+      this.timebankModel,
+      this.isAdmin});
 
   @override
   State<StatefulWidget> createState() {
@@ -856,12 +950,13 @@ class RequestListItemsState extends State<RequestListItems> {
   @override
   void initState() {
     super.initState();
-    timeBankBloc.getRequestsFromTimebankId(widget.timebankId);
+    timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
   }
 
   @override
   Widget build(BuildContext context) {
     if (widget.timebankId != 'All') {
+      print("if");
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -873,9 +968,7 @@ class RequestListItemsState extends State<RequestListItems> {
               return Center(child: CircularProgressIndicator());
             }
             UserModel user = snapshot.data;
-
             String loggedintimezone = user.timezone;
-
             return StreamBuilder(
                 stream: timeBankBloc.timebankController,
                 builder: (context, AsyncSnapshot<TimebankController> snapshot) {
@@ -888,9 +981,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   if (snapshot.hasData) {
                     List<RequestModel> requestModelList =
                         snapshot.data.requests;
-                    print(
-                        "request data ${requestModelList.length} ${requestModelList.toString()} ");
-
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 
@@ -915,6 +1005,7 @@ class RequestListItemsState extends State<RequestListItems> {
                 });
           });
     } else {
+      print("else");
       return FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -925,9 +1016,6 @@ class RequestListItemsState extends State<RequestListItems> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             }
-            // UserModel user = snapshot.data;
-            // String loggedintimezone = user.timezone;
-
             return StreamBuilder<List<RequestModel>>(
               stream: FirestoreManager.getAllRequestListStream(),
               builder: (BuildContext context,
@@ -941,9 +1029,6 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-
-                    print(
-                        "request data ${requestModelList.length}   ${requestModelList.toString()} ");
 
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
@@ -1003,9 +1088,9 @@ class RequestListItemsState extends State<RequestListItems> {
             );
           }
           return getRequestView(
-            model: consolidatedList[index],
-            loggedintimezone: loggedintimezone,
-            userEmail: userEmail,
+            consolidatedList[index],
+            loggedintimezone,
+            userEmail,
           );
         },
       )),
@@ -1013,7 +1098,7 @@ class RequestListItemsState extends State<RequestListItems> {
   }
 
   Widget getRequestView(
-      {RequestModelList model, String loggedintimezone, String userEmail}) {
+      RequestModelList model, String loggedintimezone, String userEmail) {
     switch (model.getType()) {
       case RequestModelList.TITLE:
         var isMyContent = (model as GroupTitle).groupTitle.contains("My");
@@ -1051,6 +1136,11 @@ class RequestListItemsState extends State<RequestListItems> {
           onTap: () {
             timeBankBloc.setSelectedRequest(model);
             timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
+            widget.isAdmin =
+                model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+                    ? true
+                    : false;
+            timeBankBloc.setIsAdmin(widget.isAdmin);
 
             if (model.sevaUserId ==
                     SevaCore.of(context).loggedInUser.sevaUserID ||
@@ -1059,7 +1149,9 @@ class RequestListItemsState extends State<RequestListItems> {
               Navigator.push(
                 widget.parentContext,
                 MaterialPageRoute(
-                  builder: (context) => RequestTabHolder(),
+                  builder: (context) => RequestTabHolder(
+                    isAdmin: true,
+                  ),
                 ),
               );
             } else {
@@ -1067,7 +1159,10 @@ class RequestListItemsState extends State<RequestListItems> {
                 widget.parentContext,
                 MaterialPageRoute(
                   builder: (context) => RequestDetailsAboutPage(
-                      requestItem: model, timebankModel: widget.timebankModel),
+                    requestItem: model,
+                    timebankModel: widget.timebankModel,
+                    isAdmin: false,
+                  ),
                 ),
               );
             }
@@ -1091,81 +1186,76 @@ class RequestListItemsState extends State<RequestListItems> {
                   ),
                 ),
                 SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      model.title,
-                      style: Theme.of(widget.parentContext).textTheme.subhead,
-                    ),
-                    Text(
-                      model.description,
-                      style: Theme.of(widget.parentContext).textTheme.subtitle,
-                    ),
-                    SizedBox(height: 8),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        Text(getTimeFormattedString(
-                            model.requestStart, loggedintimezone)),
-                        SizedBox(width: 2),
-                        Icon(Icons.arrow_forward, size: 14),
-                        SizedBox(width: 4),
-                        Text(
-                          getTimeFormattedString(
-                            model.requestEnd,
-                            loggedintimezone,
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        model.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: Theme.of(widget.parentContext).textTheme.subhead,
+                      ),
+                      Container(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child:Text(
+                        model.description,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            Theme.of(widget.parentContext).textTheme.subtitle,
+                      ),),
+                      SizedBox(height: 8),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            getTimeFormattedString(
+                                model.requestStart, loggedintimezone),
                           ),
-                        ),
-                      ],
-                    ),
-                    Offstage(
-                      offstage: !model.acceptors.contains(userEmail),
-                      child: Container(
-                          alignment: Alignment.topRight,
-                          margin: EdgeInsets.all(12),
-                          // width: double.infinity,
-                          child: Container(
-                            width: 100,
-                            height: 32,
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: EdgeInsets.all(0),
-                              color: Color.fromRGBO(44, 64, 140, 0.7),
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(width: 1),
-                                  Container(
-                                    width: 30,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      color: Color.fromRGBO(44, 64, 140, 1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    'Applied',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Spacer(
-                                    flex: 2,
-                                  ),
-                                ],
-                              ),
-                              onPressed: () {},
+                          SizedBox(width: 2),
+                          Icon(Icons.arrow_forward, size: 14),
+                          SizedBox(width: 4),
+                          Text(
+                            getTimeFormattedString(
+                              model.requestEnd,
+                              loggedintimezone,
                             ),
-                          )),
-                    ),
-                  ],
+                          ),
+                        ],
+                      ),Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                      Offstage(
+                        offstage: !model.acceptors.contains(userEmail),
+                        child: Container(
+
+                            margin: EdgeInsets.all(10),
+                              width: 100,
+                              height: 32,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: EdgeInsets.all(0),
+                                color: Colors.green,
+                                child:
+                                    Text(
+                                      'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                ),
+                                ),
+                              ),
+                            ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

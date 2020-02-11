@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -22,17 +23,18 @@ import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'edit_profile.dart';
 import 'timezone.dart';
 
+//TODO fetch the communities from home dashboard
+
 class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ProfilePage(userID: SevaCore.of(context).loggedInUser.sevaUserID);
+    return ProfilePage(userModel: SevaCore.of(context).loggedInUser);
   }
 }
 
 class ProfilePage extends StatefulWidget {
-  final String userID;
-
-  const ProfilePage({Key key, this.userID}) : super(key: key);
+  final UserModel userModel;
+  const ProfilePage({Key key, this.userModel}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -46,19 +48,19 @@ class _ProfilePageState extends State<ProfilePage>
   TimebankModel timebankModel;
   FirebaseUser firebaseUser;
 
-  double appbarScale = 0.9;
-  double flexibleScale = 1.0;
+  // double appbarScale = 0.9;
+  // double flexibleScale = 1.0;
 
-  AnimationController appbarAnimationController;
-  AnimationController flexibleAnimationController;
+  // AnimationController appbarAnimationController;
+  // AnimationController flexibleAnimationController;
   bool isAdminOrCoordinator = false;
   bool isVerifyAccountPressed = false;
   bool isUserLoaded = false;
   bool isCommunityLoaded = false;
   int selected = 0;
-  double sevaCoins = 5;
+  double sevaCoinsValue = 0.0;
 
-  // UserProfileBloc _profileBloc = UserProfileBloc();
+  UserProfileBloc _profileBloc = UserProfileBloc();
 
   List<CommunityModel> communities = [];
   Stream<List<RequestModel>> requestStream;
@@ -66,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    // _profileBloc.getAllCommunities(context, widget.userID);
+    _profileBloc.getAllCommunities(context, widget.userModel);
     checkEmailVerified();
     FirestoreManager.getTimeBankForId(
             timebankId: FlavorConfig.values.timebankId)
@@ -81,55 +83,71 @@ class _ProfilePageState extends State<ProfilePage>
       setState(() {
         isUserLoaded = true;
       });
+      FirestoreManager.getCompletedRequestStream(
+              userEmail: SevaCore.of(context).loggedInUser.email,
+              userId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .listen(
+        (requestList) {
+          if (!mounted) return;
+          requestList.forEach((requestObj) {
+            requestObj.transactions?.forEach((transaction) {
+              if (transaction.isApproved &&
+                  transaction.to ==
+                      SevaCore.of(context).loggedInUser.sevaUserID)
+                sevaCoinsValue += transaction.credits;
+            });
+          });
+        },
+      );
+    });
+
+    _profileBloc.communityLoaded.listen((value) {
+      isCommunityLoaded = value;
+      setState(() {});
+    });
+
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getTimeBankForId(
+              timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
+          .then((timebank) {
+        if (timebank.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+            timebank.coordinators
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          setState(() {
+            print("Admin access granted");
+            isAdminOrCoordinator = true;
+          });
+        } else {
+          // print("Admin access Revoked");
+          // isAdminOrCoordinator = false;
+        }
+      });
+
+      FirestoreManager.getUserForIdStream(
+        sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      ).listen((UserModel userModel) {
+        if (mounted) isUserLoaded = true;
+        print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
+        _profileBloc.getAllCommunities(context, userModel);
+        this.user = userModel;
+        setState(() {});
+      });
     });
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
-  // FirestoreManager.getTimeBankForId()
-
-  // FirestoreManager.getTimeBankForId(
-  //         timebankId: SevaCore.of(context).loggedInUser.currentTimebank)
-  //     .then((timebank) {
-  //   if (timebank.admins
-  //           .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-  //       timebank.coordinators
-  //           .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-  //     setState(() {
-  //       print("Admin access granted");
-  //       isAdminOrCoordinator = true;
-  //     });
-  //   } else {
-  //     // print("Admin access Revoked");
-  //     // isAdminOrCoordinator = false;
-  //   }
-  // });
-
-  // FirestoreManager.getUserForIdStream(
-  //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-  // ).listen((UserModel userModel) {
-  //   if (mounted) isUserLoaded = true;
-  //   print("userMOde ->>>>>    >>>> ${userModel.currentCommunity}");
-  //   // _profileBloc.getAllCommunities(context, userModel);
-  //   this.user = userModel;
-  //   setState(() {});
-  // });
-
-  // _profileBloc.communityLoaded.listen((value) {
-  //   isCommunityLoaded = value;
-  //   setState(() {});
-  // });
-  // }
-
-  // @override
-  // void dispose() {
-  //   // _profileBloc.dispose();
-  //   appbarAnimationController.dispose();
-  //   flexibleAnimationController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _profileBloc.dispose();
+    // appbarAnimationController.dispose();
+    // flexibleAnimationController.dispose();
+    super.dispose();
+  }
 
   void navigateToSettings() {
     Navigator.push(
@@ -156,12 +174,19 @@ class _ProfilePageState extends State<ProfilePage>
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       children: <Widget>[
-                        CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            user.photoURL,
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: navigateToSettings,
+                          child: Hero(
+                            tag: "ProfileImage",
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                user.photoURL,
+                              ),
+                              backgroundColor: Colors.white,
+                              radius: MediaQuery.of(context).size.width / 4.5,
+                            ),
                           ),
-                          backgroundColor: Colors.white,
-                          radius: MediaQuery.of(context).size.width / 4.5,
                         ),
                         SizedBox(height: 10),
                         Text(
@@ -231,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 ),
                                 SizedBox(width: 8),
                                 Text(
-                                  '${sevaCoins} Seva Coins',
+                                  '${sevaCoinsValue} Seva Coins',
                                   style: TextStyle(
                                     color: user.currentBalance > 0
                                         ? Colors.blue
@@ -264,183 +289,186 @@ class _ProfilePageState extends State<ProfilePage>
                         Divider(
                           thickness: 0.5,
                         ),
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   children: <Widget>[
-                        //     Text(
-                        //       'Select a timebank',
-                        //       style: TextStyle(fontSize: 18),
-                        //     ),
-                        //     IconButton(
-                        //       icon: Icon(Icons.add_circle_outline),
-                        //       onPressed: () {
-                        //         Navigator.of(context).push(
-                        //           MaterialPageRoute(
-                        //             builder: (context) =>
-                        //                 CreateEditCommunityView(
-                        //               timebankId: timebankModel.id,
-                        //             ),
-                        //           ),
-                        //         );
-                        //       },
-                        //     ),
-                        //   ],
-                        // ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => CreateEditCommunityView(
-                                  timebankId: timebankModel.id,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Card(
-                            elevation: 2,
-                            child: Container(
-                              height: 60,
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      'Create Timebank',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              'Select a timebank',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.add_circle_outline),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateEditCommunityView(
+                                      timebankId: timebankModel.id,
                                     ),
                                   ),
-                                  Spacer(),
-                                  Icon(Icons.navigate_next),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
+                          ],
+                        ),
+                        // InkWell(
+                        //   onTap: () {
+                        //     Navigator.of(context).push(
+                        //       MaterialPageRoute(
+                        //         builder: (context) => CreateEditCommunityView(
+                        //           timebankId: timebankModel.id,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: Card(
+                        //     elevation: 2,
+                        //     child: Container(
+                        //       height: 60,
+                        //       child: Row(
+                        //         children: <Widget>[
+                        //           Padding(
+                        //             padding: const EdgeInsets.only(left: 15),
+                        //             child: Text(
+                        //               'Create Timebank',
+                        //               style: TextStyle(
+                        //                 fontWeight: FontWeight.w500,
+                        //                 color: Colors.black,
+                        //                 fontSize: 16,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           Spacer(),
+                        //           Icon(Icons.navigate_next),
+                        //           SizedBox(
+                        //             width: 10,
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+
+
+                        Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          // child: ListView.separated(
+                          //   padding: EdgeInsets.all(0),
+                          //   shrinkWrap: true,
+                          //   itemCount: communities.length,
+                          //   physics: NeverScrollableScrollPhysics(),
+                          //   itemBuilder: (context, index) {
+                          //     return CommunityCard(
+                          //       community: communities[index],
+                          //       selected: communities[index].id ==
+                          //           user.currentCommunity,
+                          //     );
+                          //   },
+                          //   separatorBuilder: (context, index) {
+                          //     return Divider();
+                          //   },
+                          // ),
+
+                          child: StreamBuilder<List<Widget>>(
+                            stream: _profileBloc.communities,
+                            builder: (context, snapshot) {
+                              if (snapshot.data != null)
+                                return Column(children: snapshot.data);
+
+                              if (snapshot.hasError)
+                                return Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(snapshot.error),
+                                ));
+                              return Container(
+                                height: 100,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            },
                           ),
                         ),
 
-                        // Card(
-                        //   elevation: 2,
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(8),
-                        //   ),
-                        // child: ListView.separated(
-                        //   padding: EdgeInsets.all(0),
-                        //   shrinkWrap: true,
-                        //   itemCount: communities.length,
-                        //   physics: NeverScrollableScrollPhysics(),
-                        //   itemBuilder: (context, index) {
-                        //     return CommunityCard(
-                        //       community: communities[index],
-                        //       selected:
-                        //           communities[index].id == user.currentCommunity,
+                        SizedBox(height: 10),
+                        // InkWell(
+                        //   onTap: () {
+                        //     Navigator.of(context).push(
+                        //       MaterialPageRoute(
+                        //         builder: (context) {
+                        //           return FindCommunitiesView(
+                        //             keepOnBackPress: true,
+                        //             loggedInUser: user,
+                        //           );
+                        //         },
+                        //       ),
                         //     );
                         //   },
-                        //   separatorBuilder: (context, index) {
-                        //     return Divider();
-                        //   },
-                        // ),
-                        //   child: StreamBuilder<List<Widget>>(
-                        //     stream: _profileBloc.communities,
-                        //     builder: (context, snapshot) {
-                        //       if (snapshot.data != null)
-                        //         return Column(children: snapshot.data);
-
-                        //       if (snapshot.hasError)
-                        //         return Center(
-                        //             child: Padding(
-                        //           padding: const EdgeInsets.all(12.0),
-                        //           child: Text(snapshot.error),
-                        //         ));
-                        //       return Container(
-                        //         height: 100,
-                        //         child: Center(
-                        //           child: CircularProgressIndicator(),
-                        //         ),
-                        //       );
-                        //     },
+                        //   child: Card(
+                        //     elevation: 2,
+                        //     child: Container(
+                        //       height: 60,
+                        //       child: Row(
+                        //         children: <Widget>[
+                        //           Padding(
+                        //             padding: const EdgeInsets.only(left: 15),
+                        //             child: Text(
+                        //               'Discover Timebanks',
+                        //               style: TextStyle(
+                        //                 fontWeight: FontWeight.w500,
+                        //                 color: Colors.black,
+                        //                 fontSize: 16,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           Spacer(),
+                        //           Icon(Icons.navigate_next),
+                        //           SizedBox(
+                        //             width: 10,
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
                         //   ),
                         // ),
                         SizedBox(height: 10),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return FindCommunitiesView(
-                                    keepOnBackPress: true,
-                                    loggedInUser: user,
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                          child: Card(
-                            elevation: 2,
-                            child: Container(
-                              height: 60,
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      'Discover Timebanks',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                        fontSize: 16,
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              // TextSpan(
+                              //   text: 'or \n\n',
+                              //   style: TextStyle(
+                              //     color: Colors.black,
+                              //   ),
+                              // ),
+                              TextSpan(
+                                text: 'Discover more Timebanks',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    //Navigate to discover teams
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return FindCommunitiesView(
+                                            keepOnBackPress: true,
+                                          );
+                                        },
                                       ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Icon(Icons.navigate_next),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
+                                    );
+                                  },
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                        // RichText(
-                        //   textAlign: TextAlign.center,
-                        //   text: TextSpan(
-                        //     children: [
-                        //       TextSpan(
-                        //         text: 'or \n\n',
-                        //         style: TextStyle(
-                        //           color: Colors.black,
-                        //         ),
-                        //       ),
-                        //       TextSpan(
-                        //         text: 'Discover Timebanks',
-                        //         style: TextStyle(
-                        //           color: Colors.grey,
-                        //           fontWeight: FontWeight.bold,
-                        //           decoration: TextDecoration.underline,
-                        //         ),
-                        //         recognizer: TapGestureRecognizer()
-                        //           ..onTap = () {
-                        //             //Navigate to discover teams
-                        //             Navigator.of(context).push(
-                        //               MaterialPageRoute(
-                        //                 builder: (context) {
-                        //                   return FindCommunitiesView(
-                        //                     keepOnBackPress: true,
-                        //                   );
-                        //                 },
-                        //               ),
-                        //             );
-                        //           },
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {

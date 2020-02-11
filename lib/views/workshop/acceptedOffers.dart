@@ -258,7 +258,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                   getBio(userModel),
                   Center(
                     child: Text(
-                        "${userModel.fullname} will be automatically added to the campaign request.",
+                        "${userModel.fullname} will be automatically added to the request.",
                         style: TextStyle(
                           fontStyle: FontStyle.italic,
                         ),
@@ -274,13 +274,15 @@ class _ViewAcceptedOffers extends StatelessWidget {
                         child: Container(
                           width: double.infinity,
                           child: Text(
-                            'Create Campaign Request',
-                            style: TextStyle(color: Colors.green),
+                            'Create Request',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                         onPressed: () async {
                           // Once approved
                           print("UserModel ${userModel.fullname}");
+                          Navigator.pop(viewContext);
 
                           Navigator.push(
                             context,
@@ -294,7 +296,11 @@ class _ViewAcceptedOffers extends StatelessWidget {
                             ),
                           );
 
-                          Navigator.pop(viewContext);
+                          // if (results != null &&
+                          //     (results['response'] == "ACCEPTED" ||
+                          //         results['response'] == "SKIPPED")) {
+                          //   Navigator.pop(context);
+                          // }
                         },
                       ),
                       Padding(
@@ -307,7 +313,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                               child: Text(
                                 'Cancel',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.red),
+                                style: TextStyle(color: Colors.white),
                               ),
                             )),
                         onPressed: () async {
@@ -327,11 +333,18 @@ class _ViewAcceptedOffers extends StatelessWidget {
   Widget getBio(UserModel userModel) {
     if (userModel.bio != null) {
       if (userModel.bio.length < 100) {
-        return Center(
-          child: Text(userModel.bio),
+        return Container(
+          margin: EdgeInsets.all(8),
+          child: Center(
+            child: Text(
+              userModel.bio,
+              textAlign: TextAlign.center,
+            ),
+          ),
         );
       }
       return Container(
+        margin: EdgeInsets.all(8),
         height: 100,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,

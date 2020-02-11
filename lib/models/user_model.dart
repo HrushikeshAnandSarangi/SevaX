@@ -77,13 +77,13 @@ class UserModel extends DataModel {
       this.blockedBy,
       this.currentPosition,
       this.currentCommunity,
-      this.communities}) {
-    this.root_timebank_id = FlavorConfig.values.timebankId;
-  }
+      this.communities}) {}
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
+    } else {
+      this.tokens = "";
     }
     if (map.containsKey('reportedUsers')) {
       List<String> reportedUsersList = List.castFrom(map['reportedUsers']);
@@ -117,7 +117,7 @@ class UserModel extends DataModel {
     if (map.containsKey('currentCommunity')) {
       this.currentCommunity = map['currentCommunity'];
     } else {
-      currentCommunity = "undefined";
+      currentCommunity = "";
     }
 
     if (map.containsKey('communities')) {
@@ -321,6 +321,8 @@ class UserModel extends DataModel {
     } else {
       object['past_hires'] = [];
     }
+    object['root_timebank_id'] = FlavorConfig.values.timebankId;
+
     return object;
   }
 

@@ -5,17 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/chat_model.dart';
-import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/messages/chatview_admin.dart';
-import 'package:sevaexchange/views/messages/select_timebank_for_chat.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -75,7 +72,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
                 child: CircularProgressIndicator(),
               );
             default:
-              // print("Chat Model list ${chatListSnapshot.data}");
+              print("Chat Model list ${chatListSnapshot.data}");
               List<ChatModel> allChalModelList = chatListSnapshot.data;
 
               List<ChatModel> chatModelList = allChalModelList;
@@ -94,45 +91,45 @@ class _ChatListViewState extends State<TimebankChatListView> {
           }
         },
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: FloatingActionButton.extended(
-          icon: Icon(
-            Icons.chat,
-          ),
-          label: Text('New Message'),
-          foregroundColor: FlavorConfig.values.buttonTextColor,
-          onPressed: () {
-            if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SelectTimeBankForNewChat()),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectMembersFromTimebank(
-                    timebankId:
-                        SevaCore.of(context).loggedInUser.currentTimebank,
-                    newsModel: NewsModel(),
-                    isFromShare: false,
-                    selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
-                    userSelected: HashMap(),
-                  ),
-                ),
-              );
-            }
-            // NewsModel news;
-            // Navigator.push(
-            //   context,
-            //   // MaterialPageRoute(builder: (context) => NewChat(false, news)),
-            //   MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
-            // );
-          },
-        ),
-      ),
+      // floatingActionButton: Padding(
+      //   padding: const EdgeInsets.only(bottom: 10),
+      //   child: FloatingActionButton.extended(
+      //     icon: Icon(
+      //       Icons.chat,
+      //     ),
+      //     label: Text('New Message'),
+      //     foregroundColor: FlavorConfig.values.buttonTextColor,
+      //     onPressed: () {
+      //       if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //               builder: (context) => SelectTimeBankForNewChat()),
+      //         );
+      //       } else {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (context) => SelectMembersFromTimebank(
+      //               timebankId:
+      //                   SevaCore.of(context).loggedInUser.currentTimebank,
+      //               newsModel: NewsModel(),
+      //               isFromShare: false,
+      //               selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
+      //               userSelected: HashMap(),
+      //             ),
+      //           ),
+      //         );
+      //       }
+      //       // NewsModel news;
+      //       // Navigator.push(
+      //       //   context,
+      //       //   // MaterialPageRoute(builder: (context) => NewChat(false, news)),
+      //       //   MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
+      //       // );
+      //     },
+      // ),
+      // ),
     );
   }
 
@@ -255,6 +252,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
           child: InkWell(
             onTap: () {
               print("Getting intp existing chat");
+              // FirestoreManager.
               Navigator.push(
                 parentContext,
                 MaterialPageRoute(
@@ -326,7 +324,7 @@ class _ChatListViewState extends State<TimebankChatListView> {
                                     chatModel.unreadStatus.containsKey(
                                       widget.timebankId,
                                     )
-                                ? "${chatModel.unreadStatus[userEmail] == 0 ? '' : chatModel.unreadStatus[userEmail]}"
+                                ? "${chatModel.unreadStatus[widget.timebankId] == 0 ? '' : chatModel.unreadStatus[widget.timebankId]}"
                                 : '',
                           ),
                           ClipOval(

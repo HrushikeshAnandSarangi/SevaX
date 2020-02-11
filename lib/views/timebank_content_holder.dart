@@ -19,9 +19,9 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
-import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -132,7 +132,7 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 7,
+    length: 8,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -203,13 +203,15 @@ Widget createAdminTabBar(
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
-                TimeBankNotificationView(
+                TimebankNotificationsView(
                   timebankId: timebankModel.id,
                 ),
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
                 ),
-                TimebankChatListView(),
+                TimebankChatListView(
+                  timebankId: timebankId,
+                ),
               ],
             ),
           ),
@@ -290,106 +292,104 @@ Widget createJoinedUserTabBar(
   return DefaultTabController(
     length: 6,
     child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.5,
-          // backgroundColor: Colors.white,
-          title: Text(
-            timebankModel.name,
-            style: TextStyle(fontSize: 18),
-          ),
-          // bottom: ColoredTabBar(
-          //   color: Colors.white,
-          //   tabBar: TabBar(
-          //     labelColor: Theme.of(context).primaryColor,
-          //     unselectedLabelColor: Colors.grey,
-          //     indicatorColor: Color(0xFFF766FE0),
-          //     indicatorSize: TabBarIndicatorSize.label,
-          //     isScrollable: true,
-          //     tabs: [
-          //       Tab(
-          //         text: "Feeds",
-          //       ),
-          //       Tab(
-          //         text: "Requests",
-          //       ),
-          //       Tab(
-          //         text: "Offers",
-          //       ),
-          //       Tab(
-          //         text: "About",
-          //       ),
-          //       Tab(
-          //         text: "Members",
-          //       ),
-          //     ],
-          //   ),
-          // ),
+      appBar: AppBar(
+        elevation: 0.5,
+        // backgroundColor: Colors.white,
+        title: Text(
+          timebankModel.name,
+          style: TextStyle(fontSize: 18),
         ),
-        body: Column(
-          children: <Widget>[
-            TabBar(
-              labelColor: Theme.of(context).primaryColor,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: Color(0xFFF766FE0),
-              indicatorSize: TabBarIndicatorSize.label,
-              isScrollable: true,
-              tabs: [
-                Tab(
-                  text: "Feeds",
+        // bottom: ColoredTabBar(
+        //   color: Colors.white,
+        //   tabBar: TabBar(
+        //     labelColor: Theme.of(context).primaryColor,
+        //     unselectedLabelColor: Colors.grey,
+        //     indicatorColor: Color(0xFFF766FE0),
+        //     indicatorSize: TabBarIndicatorSize.label,
+        //     isScrollable: true,
+        //     tabs: [
+        //       Tab(
+        //         text: "Feeds",
+        //       ),
+        //       Tab(
+        //         text: "Requests",
+        //       ),
+        //       Tab(
+        //         text: "Offers",
+        //       ),
+        //       Tab(
+        //         text: "About",
+        //       ),
+        //       Tab(
+        //         text: "Members",
+        //       ),
+        //     ],
+        //   ),
+        // ),
+      ),
+      body: Column(
+        children: <Widget>[
+          TabBar(
+            labelColor: Theme.of(context).primaryColor,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Color(0xFFF766FE0),
+            indicatorSize: TabBarIndicatorSize.label,
+            isScrollable: true,
+            tabs: [
+              Tab(
+                text: "Feeds",
+              ),
+              Tab(
+                text: "Requests",
+              ),
+              Tab(
+                text: "Offers",
+              ),
+              Tab(
+                text: "About",
+              ),
+              Tab(
+                text: "Members",
+              ),
+              Tab(
+                text: "Messages",
+              )
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
+              children: [
+                DiscussionList(
+                  timebankId: timebankId,
                 ),
-                Tab(
-                  text: "Requests",
+                RequestsModule.of(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
-                Tab(
-                  text: "Offers",
+                OffersModule.of(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
-                Tab(
-                  text: "About",
+                TimeBankAboutView.of(
+                  timebankModel: timebankModel,
+                  email: SevaCore.of(context).loggedInUser.email,
                 ),
-                Tab(
-                  text: "Members",
+                TimebankRequestAdminPage(
+                  isUserAdmin: timebankModel.admins.contains(
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                  ),
+                  timebankId: timebankModel.id,
+                  userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
-                Tab(
-                  text: "Messages",
-                )
+                TimebankChatListView(
+                  timebankId: timebankId,
+                ),
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  DiscussionList(
-                    timebankId: timebankId,
-                  ),
-                  RequestsModule.of(
-                    timebankId: timebankId,
-                    timebankModel: timebankModel,
-                  ),
-                  OffersModule.of(
-                    timebankId: timebankId,
-                    timebankModel: timebankModel,
-                  ),
-                  TimeBankAboutView.of(
-                    timebankModel: timebankModel,
-                    email: SevaCore.of(context).loggedInUser.email,
-                  ),
-                  TimebankRequestAdminPage(
-                    isUserAdmin: timebankModel.admins.contains(
-                      SevaCore.of(context).loggedInUser.sevaUserID,
-                    ),
-                    timebankId: timebankModel.id,
-                    userEmail: SevaCore.of(context).loggedInUser.email,
-                  ),
-                  TimebankChatListView(
-                    timebankId: timebankId,
-                  )
-                ],
-              ),
-            ),
-            TimebankChatListView(
-              timebankId: timebankId,
-            ),
-          ],
-        )),
+          ),
+        ],
+      ),
+    ),
   );
 }
 
@@ -880,20 +880,8 @@ class DiscussionListState extends State<DiscussionList> {
         );
       },
       child: Container(
-        margin: EdgeInsets.all(4.0),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(0.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(25),
-                offset: Offset(0, 0),
-                spreadRadius: 8,
-                blurRadius: 10,
-              ),
-            ]),
-        child: Stack(
-          children: <Widget>[
+          margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
+          child: Stack(children: <Widget>[
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -907,7 +895,8 @@ class DiscussionListState extends State<DiscussionList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 12.0, top: 5),
+                      padding: const EdgeInsets.only(
+                          left: 12.0, top: 15, bottom: 15),
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -945,6 +934,7 @@ class DiscussionListState extends State<DiscussionList> {
                                         : news.subheading.trim(),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 7,
+                                    style: TextStyle(fontSize: 16.0),
                                   ),
                                 ),
                               ],
@@ -1054,15 +1044,15 @@ class DiscussionListState extends State<DiscussionList> {
                                 ),
                                 Container(
                                   width:
-                                      MediaQuery.of(context).size.width - 113,
+                                      MediaQuery.of(context).size.width - 125,
                                   margin: EdgeInsets.only(left: 5, right: 40),
                                   child: Text(
                                     news.placeAddress == null
-                                        ? "Av of the Americas/W 41 St, New York"
+                                        ? ""
                                         : news.placeAddress.trim(),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    // style: TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 12.0),
                                   ),
                                 ),
                               ],
@@ -1317,22 +1307,10 @@ class DiscussionListState extends State<DiscussionList> {
                     ),
                   ],
                 ),
+                Divider(color: Colors.black38),
               ],
-            ),
-            // !isFromMessage
-            //     ? Positioned(
-            //         bottom: 8,
-            //         right: 8,
-            //         child: Material(
-            //           color: Colors.white.withAlpha(100),
-            //           shape: CircleBorder(),
-            //           child:
-            //         ),
-            //       )
-            // : Center(),
-          ],
-        ),
-      ),
+            )
+          ])),
     );
   }
 

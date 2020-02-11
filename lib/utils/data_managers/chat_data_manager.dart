@@ -62,10 +62,12 @@ Future<void> updateReadStatus(ChatModel chat, String email) async {
 
 //tested and working
 /// Update a [chat]
+
 Future<void> updateMessagingReadStatus({
   @required ChatModel chat,
   @required String email,
   @required String userEmail,
+  bool isAdmin = false
 }) async {
   await Firestore.instance
       .collection("chatsnew")

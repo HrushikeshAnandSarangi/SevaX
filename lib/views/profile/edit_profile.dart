@@ -80,11 +80,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 16),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      //child: _imagePicker,
-                    ),
+                    SizedBox(height: 20),
+
                     Stack(
                       children: <Widget>[
                         new Container(
@@ -541,26 +538,29 @@ class _EditProfilePageState extends State<EditProfilePage>
 
   Widget get _imagePicker {
     return SizedBox(
-      height: 150,
-      width: 150,
+      height: MediaQuery.of(context).size.width * 0.45,
+      width: MediaQuery.of(context).size.width * 0.45,
       child: Container(
 //        onTap: isLoading
 //            ? null
 //            : () {
 //                imagePicker.showDialog(context);
 //              },
-        child: Container(
-          decoration: ShapeDecoration(
-            shape: CircleBorder(
-              side: BorderSide(
-                color: Colors.white,
-                width: 2.0,
+        child: Hero(
+          tag: "ProfileImage",
+          child: Container(
+            decoration: ShapeDecoration(
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
               ),
-            ),
-            image: DecorationImage(
-              image: selectedImage != null
-                  ? FileImage(selectedImage)
-                  : NetworkImage(widget.userModel.photoURL),
+              image: DecorationImage(
+                image: selectedImage != null
+                    ? FileImage(selectedImage)
+                    : NetworkImage(widget.userModel.photoURL),
+              ),
             ),
           ),
         ),

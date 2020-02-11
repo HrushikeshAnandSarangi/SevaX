@@ -349,9 +349,9 @@ class _LoginPageState extends State<LoginPage> {
                     //     ),
                     //   ),
                     // ),
-                    SizedBox(
-                      height: ScreenUtil.getInstance().setHeight(40),
-                    ),
+                    SizedBox(height: 8),
+                    Text('or'),
+                    SizedBox(height: 8),
                     signInWithGoogle,
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(30),
@@ -461,23 +461,20 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(0.0),
-                    child: TextFormField(
-                      style: textStyle,
-                      cursorColor: Colors.black54,
-                      validator: _validateEmailId,
-                      onSaved: _saveEmail,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black54),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black54),
-                        ),
-                        labelText: 'EMAIL',
-                        labelStyle: textStyle,
+                  TextFormField(
+                    style: textStyle,
+                    cursorColor: Colors.black54,
+                    validator: _validateEmailId,
+                    onSaved: _saveEmail,
+                    decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
                       ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black54),
+                      ),
+                      labelText: 'EMAIL',
+                      labelStyle: textStyle,
                     ),
                   ),
                   TextFormField(
@@ -494,20 +491,17 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       labelText: 'PASSWORD',
                       labelStyle: textStyle,
-                      suffix: IconButton(
-                        onPressed: () {
-                          setState(() {
+                        suffix:   GestureDetector(
+                          onTap: () {
                             _shouldObscurePassword = !_shouldObscurePassword;
-                          });
-                        },
-                        splashColor: Colors.transparent,
-                        color: Colors.grey,
-                        icon: Icon(
-                          _shouldObscurePassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                      ),
+                            setState(() {});
+                          },
+                          child: Icon(
+                            _shouldObscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                        )
                     ),
                   ),
                   SizedBox(height: 22),
@@ -676,7 +670,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             horizontalLine(),
-            Text("or Sign in with"),
+            Text("Sign in with"),
             horizontalLine()
           ],
         ),

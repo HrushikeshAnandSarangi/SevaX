@@ -1,25 +1,18 @@
-import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart' as prefix0;
-import 'package:html/parser.dart' show urlscraper;
-import 'package:html/dom.dart' show domHtml;
-import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';
+import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-import 'package:sevaexchange/components/location_picker.dart';
-
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -329,7 +322,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             },
                           ),
                         ),
-                        Text(""),
                         // TextFormField(
                         //   decoration: InputDecoration(
                         //     hintText: 'Your news and any #hashtags',
@@ -435,7 +427,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Container(
                 width: 150,
                 alignment: Alignment(0, 1),
-                padding: const EdgeInsets.only(top: 10.0),
+                padding: const EdgeInsets.only(top: 40.0),
                 child: RaisedButton(
                   onPressed: () async {
                     if (location != null) {

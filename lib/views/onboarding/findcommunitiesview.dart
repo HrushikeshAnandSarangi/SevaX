@@ -72,11 +72,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          automaticallyImplyLeading: widget.keepOnBackPress,
+          // automaticallyImplyLeading: widget.keepOnBackPress,
+          automaticallyImplyLeading: false,
           elevation: 0.5,
-          leading: BackButton(
-            onPressed: () => Navigator.pop(context),
-          ),
+          // leading: BackButton(
+          //   onPressed: () => Navigator.pop(context),
+          // ),
           title: Text(
             'Find your Timebank',
             style: TextStyle(
@@ -98,7 +99,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           padding: EdgeInsets.fromLTRB(0, 8, 0, 0),
         ),
         Text(
-          'Look for existing timebanks to join',
+          'Looking for an existing timebank to join',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.black54, fontSize: 16, fontWeight: FontWeight.w500),
@@ -119,7 +120,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               ),
               contentPadding: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 5.0),
               filled: true,
-              fillColor: Colors.white,
+              fillColor: Colors.grey[300],
               focusedBorder: OutlineInputBorder(
                 borderSide: new BorderSide(color: Colors.white),
                 borderRadius: new BorderRadius.circular(25.7),
@@ -130,7 +131,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               hintText: 'Type your timebank name. Ex: Alaska (min 5 char)',
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
+        SizedBox(height: 20),
         buildList(),
+        Spacer(),
         // This container holds the align
         createCommunity(),
       ]),
@@ -156,9 +159,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
     if (searchTextController.text.trim().length < 3) {
       print('Search requires minimum 3 characters');
-      return Expanded(
-          child:
-              getEmptyWidget('Users', 'Search requires minimum 3 characters'));
+      return getEmptyWidget('Users', 'Search requires minimum 3 characters');
     }
     // ListView contains a group of widgets that scroll inside the drawer
     return StreamBuilder<List<CommunityModel>>(
@@ -324,7 +325,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       child: Text(
         notFoundValue,
         overflow: TextOverflow.ellipsis,
-        style: sectionHeadingStyle,
+        // style: sectionHeadingStyle,
       ),
     );
   }
@@ -372,7 +373,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               // Text('Or'),
               RaisedButton(
                 child: Text(
-                  'Create your timebank',
+                  'Create a Timebank',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
                 onPressed: () {
