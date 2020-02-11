@@ -84,6 +84,8 @@ class UserModel extends DataModel {
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
       this.tokens = map['tokens'];
+    } else {
+      this.tokens = "";
     }
     if (map.containsKey('reportedUsers')) {
       List<String> reportedUsersList = List.castFrom(map['reportedUsers']);
