@@ -17,6 +17,7 @@ import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
 import 'messages/timebank_chats.dart';
 // import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
@@ -169,8 +170,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   tabs.length == 6) {
                 isAdmin = true;
                 _timebankController = TabController(length: 9, vsync: this);
-                tabs.add(Tab(text: 'Notifications'));
+
                 tabs.add(Tab(text: 'Manage'));
+                tabs.add(
+                  GetActiveTimebankNotifications(
+                      timebankId: primaryTimebank.id),
+                );
                 tabs.add(
                   getMessagingTab(
                     timebankId: primaryTimebank.id,
@@ -222,11 +227,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       ...isAdmin
                           ? [
-                              TimebankNotificationsView(
-                                timebankId: primaryTimebank.id,
-                              ),
                               ManageTimebankSeva.of(
                                 timebankModel: primaryTimebank,
+                              ),
+                              TimebankNotificationsView(
+                                timebankId: primaryTimebank.id,
                               ),
                               TimebankChatListView(
                                 timebankId: primaryTimebank.id,
