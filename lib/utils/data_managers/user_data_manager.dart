@@ -240,7 +240,6 @@ Future<UserModelListMoreStatus> getUsersForTimebankId(
 Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
   assert(sevaUserId != null && sevaUserId.isNotEmpty,
       "Seva UserId cannot be null or empty");
-
   var data = Firestore.instance
       .collection('users')
       .where('sevauserid', isEqualTo: sevaUserId)
@@ -257,6 +256,34 @@ Stream<UserModel> getUserForIdStream({@required String sevaUserId}) async* {
       },
     ),
   );
+}
+
+Future<UserModel> getUserForIdFuture({@required String sevaUserId}) async {
+  assert(sevaUserId != null && sevaUserId.isNotEmpty,
+      "Seva UserId cannot be null or empty");
+  return Firestore.instance
+      .collection('users')
+      .where('sevauserid', isEqualTo: sevaUserId)
+      .getDocuments()
+      .then((snapshot) {
+    DocumentSnapshot documentSnapshot = snapshot.documents[0];
+    UserModel model = UserModel.fromMap(documentSnapshot.data);
+    return model;
+  }).catchError((onError) {
+    return UserModel();
+  });
+
+  // yield* data.transform(
+  //   StreamTransformer<QuerySnapshot, UserModel>.fromHandlers(
+  //     handleData: (snapshot, userSink) async {
+  //       DocumentSnapshot documentSnapshot = snapshot.documents[0];
+  //       UserModel model = UserModel.fromMap(documentSnapshot.data);
+
+  //       model.sevaUserID = sevaUserId;
+  //       userSink.add(model);
+  //     },
+  //   ),
+  // );
 }
 
 Stream<UserModel> getUserForEmailStream(String userEmailAddress) async* {

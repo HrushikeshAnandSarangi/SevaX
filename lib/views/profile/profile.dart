@@ -349,11 +349,11 @@ class _ProfilePageState extends State<ProfilePage>
                         //   ),
                         // ),
 
+
                         Card(
                           elevation: 2,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
-                          ),
                           // child: ListView.separated(
                           //   padding: EdgeInsets.all(0),
                           //   shrinkWrap: true,
