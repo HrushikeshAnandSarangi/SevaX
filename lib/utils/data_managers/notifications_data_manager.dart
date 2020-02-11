@@ -307,15 +307,14 @@ Future<void> readTimeBankNotification(
   });
 }
 
-
 // burhan@uipep.com*9ecec05e-71fd-456e-9f6d-35798f41bdf5*73d0de2c-198b-4788-be64-a804700a88a4*4b75347e-56ec-4d62-8ce7-374c5cd84e5f
 Stream<List<NotificationsModel>> getNotifications({
   String userEmail,
   @required String communityId,
 }) async* {
-  print("userEmail "+userEmail);
-  print("timebankId "+FlavorConfig.values.timebankId);
-  print("communityId "+communityId);
+  print("userEmail " + userEmail);
+  print("timebankId " + FlavorConfig.values.timebankId);
+  print("communityId " + communityId);
 
   var data = Firestore.instance
       .collection('users')
@@ -332,7 +331,46 @@ Stream<List<NotificationsModel>> getNotifications({
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
       handleData: (querySnapshot, notificationSink) {
+        List<NotificationsModel> notifications = [];
 
+        querySnapshot.documents.forEach((documentSnapshot) {
+          NotificationsModel model = NotificationsModel.fromMap(
+            documentSnapshot.data,
+          );
+          if (FlavorConfig.appFlavor != Flavor.APP) {
+            if (model.type != NotificationType.TransactionDebit)
+              notifications.add(model);
+          } else
+            notifications.add(model);
+        });
+        notificationSink.add(notifications);
+        print(
+            "${notifications.length}----------------------------------------");
+      },
+    ),
+  );
+}
+
+Stream<List<NotificationsModel>> getNotificationsForTimebank({
+  String timebankId,
+  @required String communityId,
+}) async* {
+
+  var data = Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .collection('notifications')
+      .where('isRead', isEqualTo: false)
+      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      // .where(
+      //   'communityId',
+      //   isEqualTo: communityId,
+      // )
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
+      handleData: (querySnapshot, notificationSink) {
         List<NotificationsModel> notifications = [];
 
         querySnapshot.documents.forEach((documentSnapshot) {
@@ -375,13 +413,9 @@ Future<bool> isUnreadNotification(String userEmail) async {
   });
   return isNotification;
 }
-Future updateNotificationStatusByAdmin(
-    notificationType,
-    timebankId,
-    userModel
-) async {
 
-}
+Future updateNotificationStatusByAdmin(
+    notificationType, timebankId, userModel) async {}
 
 Future<List<NotificationsModel>> getCompletedNotifications(
   String userEmail,
@@ -446,4 +480,3 @@ Stream<List<NotificationsModel>> getCompletedNotificationsStream(
     ),
   );
 }
-

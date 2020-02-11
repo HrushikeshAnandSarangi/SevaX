@@ -19,9 +19,9 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
-import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -203,7 +203,7 @@ Widget createAdminTabBar(
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
-                TimeBankNotificationView(
+                TimebankNotificationsView(
                   timebankId: timebankModel.id,
                 ),
                 ManageTimebankSeva.of(
