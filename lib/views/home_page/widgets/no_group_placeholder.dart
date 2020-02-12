@@ -1,6 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class NoGroupPlaceHolder extends StatelessWidget {
+  final Function navigateToCreateGroup;
+
+  const NoGroupPlaceHolder({Key key, this.navigateToCreateGroup})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,14 +26,15 @@ class NoGroupPlaceHolder extends StatelessWidget {
                 TextSpan(
                   style: TextStyle(color: Colors.grey, fontSize: 14),
                   text:
-                      'Groups help you to organize your specific \n activities,you don\'t have any . try ',
+                      'Groups help you to organize your specific \n activities,you don\'t have any.Try ',
                 ),
                 TextSpan(
-                  text: 'creating one',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
+                    text: 'creating one',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = navigateToCreateGroup),
               ],
             ),
           ),

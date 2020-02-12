@@ -460,6 +460,7 @@ class _ProfilePageState extends State<ProfilePage>
                                             keepOnBackPress: true,
                                             loggedInUser: SevaCore.of(context)
                                                 .loggedInUser,
+                                            showBackBtn: true,
                                           );
                                         },
                                       ),
