@@ -653,10 +653,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
     // creating chat
-    String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-    List users = [user.email, loggedInEmail];
+    // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+    List users = [user.email, model.timebankId];
     users.sort();
     ChatModel chatModel = ChatModel();
+    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
 
@@ -673,7 +674,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     );
     await createChat(
       chat: chatModel,
-//        communityId: SevaCore.of(context).loggedInUser.currentCommunity
     );
 
     setState(() {
