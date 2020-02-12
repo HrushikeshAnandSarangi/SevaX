@@ -47,6 +47,7 @@ class AdminChatViewState extends State<AdminChatView> {
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   ScrollController scrollcontroller = ScrollController();
+  Future _fetchAppBarData;
 
   @override
   void didChangeDependencies() {
@@ -65,7 +66,9 @@ class AdminChatViewState extends State<AdminChatView> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _fetchAppBarData = isValidEmail(widget.useremail)
+        ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
+        : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
     if (widget.isFromRejectCompletion == null)
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
@@ -141,11 +144,7 @@ class AdminChatViewState extends State<AdminChatView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FutureBuilder<Object>(
-                future: isValidEmail(widget.useremail)
-                    ? FirestoreManager.getUserForEmail(
-                        emailAddress: widget.useremail)
-                    : FirestoreManager.getTimeBankForId(
-                        timebankId: widget.useremail),
+                future: _fetchAppBarData,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return new Text('Error');

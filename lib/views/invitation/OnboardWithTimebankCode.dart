@@ -335,7 +335,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 key: formkey,
                 child: TextFormField(
                   decoration: InputDecoration(
-                    hintText: 'Reason',
                     labelText: 'Reason',
                     // labelStyle: textStyle,
                     // labelStyle: textStyle,

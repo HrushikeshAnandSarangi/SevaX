@@ -52,6 +52,7 @@ class _ChatViewState extends State<ChatView> {
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   ScrollController scrollcontroller = ScrollController();
+  Future _fetchAppBarData;
 
   @override
   void didChangeDependencies() {
@@ -70,7 +71,9 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _fetchAppBarData = isValidEmail(widget.useremail)
+        ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
+        : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
     if (widget.isFromRejectCompletion == null)
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
@@ -144,34 +147,29 @@ class _ChatViewState extends State<ChatView> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: FutureBuilder<Object>(
-                  future: isValidEmail(widget.useremail)
-                      ? FirestoreManager.getUserForEmail(
-                          emailAddress: widget.useremail)
-                      : FirestoreManager.getTimeBankForId(
-                          timebankId: widget.useremail),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return new Text('Error');
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center();
-                    }
+            FutureBuilder<Object>(
+                future: _fetchAppBarData,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return new Text('Error');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center();
+                  }
 
-                    if (!isValidEmail(widget.useremail)) {
-                      TimebankModel timebankModel = snapshot.data;
-                      return appBar(
-                          appbarTitle: timebankModel.name,
-                          imageUrl: timebankModel.photoUrl ?? '');
-                    }
-
-                    partnerUser = snapshot.data;
+                  if (!isValidEmail(widget.useremail)) {
+                    TimebankModel timebankModel = snapshot.data;
                     return appBar(
-                        appbarTitle: partnerUser.fullname,
-                        imageUrl: partnerUser.photoURL);
-                  }),
-            ),
+                        appbarTitle: timebankModel.name,
+                        imageUrl: timebankModel.photoUrl ?? '');
+                  }
+
+                  partnerUser = snapshot.data;
+                  print("Blah blah blah Blocked:${partnerUser.sevaUserID}");
+                  return appBar(
+                      appbarTitle: partnerUser.fullname,
+                      imageUrl: partnerUser.photoURL);
+                }),
             Divider(),
             Offstage(
               offstage: !isValidEmail(widget.chatModel.user1) ||
