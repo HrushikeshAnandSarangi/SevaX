@@ -52,6 +52,7 @@ class _ChatViewState extends State<ChatView> {
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   ScrollController scrollcontroller = ScrollController();
+  Future _fetchAppBarData;
 
   @override
   void didChangeDependencies() {
@@ -70,7 +71,9 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _fetchAppBarData = isValidEmail(widget.useremail)
+        ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
+        : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
     if (widget.isFromRejectCompletion == null)
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
@@ -143,11 +146,7 @@ class _ChatViewState extends State<ChatView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FutureBuilder<Object>(
-                future: isValidEmail(widget.useremail)
-                    ? FirestoreManager.getUserForEmail(
-                        emailAddress: widget.useremail)
-                    : FirestoreManager.getTimeBankForId(
-                        timebankId: widget.useremail),
+                future: _fetchAppBarData,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return new Text('Error');
@@ -160,7 +159,7 @@ class _ChatViewState extends State<ChatView> {
                     TimebankModel timebankModel = snapshot.data;
                     return appBar(
                         appbarTitle: timebankModel.name,
-                        imageUrl: timebankModel.photoUrl??'');
+                        imageUrl: timebankModel.photoUrl ?? '');
                   }
 
                   partnerUser = snapshot.data;
