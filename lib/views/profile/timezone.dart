@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 
 //import 'package:timezone/timezone.dart';
 
@@ -77,6 +77,21 @@ class TimezoneListState extends State<TimezoneList> {
           offsetFromUtc: 12,
           timezoneAbb: 'WIT',
           timezoneName: 'Wake Island Time Zone'),
+          //europian timezones 
+      TimeZoneModel(
+          offsetFromUtc: 0,
+          timezoneAbb: 'WET',
+          timezoneName: 'Western European Time'),
+      TimeZoneModel(
+          offsetFromUtc: 1,
+          timezoneAbb: 'CET',
+          timezoneName: 'Central European Time'),
+      TimeZoneModel(
+          offsetFromUtc: 2,
+          timezoneAbb: 'EET',
+          timezoneName: 'Eastern European Time'),
+      TimeZoneModel(
+          offsetFromUtc: 3, timezoneAbb: 'MSK', timezoneName: 'Moscow Time'),
     ];
     super.initState();
   }
