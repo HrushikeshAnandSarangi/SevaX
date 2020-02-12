@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../flavor_config.dart';
 import '../core.dart';
 
 class RequestAcceptedSpendingView extends StatefulWidget {
@@ -570,59 +571,65 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        color: Colors.red,
-                        child: Text(
-                          'Reject',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // Once approved take for feeddback
+                            Navigator.pop(viewContext);
+                            setState(() {
+                              isProgressBarActive = true;
+                              isRemoving = false;
+                            });
+                            approveMemberClaim(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId,
+                              credits: credits,
+                            );
+                          },
                         ),
-                        onPressed: () async {
-                          // reject the claim
-                          Navigator.pop(viewContext);
-                          setState(() {
-                            isRemoving = true;
-                            isProgressBarActive = true;
-                          });
-                          await rejectMemberClaimForEvent(
-                            context: context,
-                            model: requestModel,
-                            notificationId: notificationId,
-                            user: userModel,
-                            userId: userId,
-                            credits: credits,
-                          );
-                        },
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(5.0),
                       ),
-                      RaisedButton(
-                        color: Colors.green,
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Reject',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // reject the claim
+                            Navigator.pop(viewContext);
+                            setState(() {
+                              isRemoving = true;
+                              isProgressBarActive = true;
+                            });
+                            await rejectMemberClaimForEvent(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId,
+                              credits: credits,
+                            );
+                          },
                         ),
-                        onPressed: () async {
-                          // Once approved take for feeddback
-                          Navigator.pop(viewContext);
-                          setState(() {
-                            isProgressBarActive = true;
-                            isRemoving = false;
-                          });
-                          approveMemberClaim(
-                            context: context,
-                            model: requestModel,
-                            notificationId: notificationId,
-                            user: userModel,
-                            userId: userId,
-                            credits: credits,
-                          );
-                        },
                       ),
                     ],
                   )

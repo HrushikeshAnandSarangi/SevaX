@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
@@ -36,8 +35,7 @@ class TimeBankList extends StatelessWidget {
               icon: Icon(Icons.home),
               onPressed: () {
                 Navigator.popUntil(
-                    context, ModalRoute.withName(Navigator.defaultRouteName)
-                );
+                    context, ModalRoute.withName(Navigator.defaultRouteName));
               },
             )
           ],
@@ -136,21 +134,14 @@ class TimeBankList extends StatelessWidget {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text(
-                "Close",
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            new FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: new Text(
                 "Join",
                 style: TextStyle(
                   fontSize: dialogButtonSize,
+                  fontFamily: 'Europa',
                 ),
               ),
               onPressed: () {
@@ -160,6 +151,19 @@ class TimeBankList extends StatelessWidget {
                     builder: (BuildContext context) => WaitingView(),
                   ),
                 );
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "Close",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                  fontFamily: 'Europa',
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],

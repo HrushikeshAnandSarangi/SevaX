@@ -160,6 +160,8 @@ class _LocationPickerState extends State<LocationPicker> {
               '${FlavorConfig.values.appName} requires permission to access your location.'),
           actions: <Widget>[
             RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
               child: Text(
                 'Open Settings',
                 style: TextStyle(
@@ -176,6 +178,7 @@ class _LocationPickerState extends State<LocationPicker> {
                 'Cancel',
                 style: TextStyle(
                   fontSize: dialogButtonSize,
+                  color: Colors.red,
                 ),
               ),
               onPressed: () {

@@ -665,7 +665,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       _signOut(context);
                     },
                   ),
-                  new RaisedButton(
+                  new FlatButton(
                     child: new Text(
                       "Cancel",
                       style: TextStyle(color: Colors.red, fontFamily: 'Europa'),

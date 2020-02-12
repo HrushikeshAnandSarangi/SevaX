@@ -366,12 +366,13 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
               Row(
                 children: <Widget>[
                   new FlatButton(
-                    padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
-                      "Send Join Request",
-                      style: TextStyle(fontSize: 15, fontFamily: 'Europa'),
+                      "Send Request",
+                      style: TextStyle(
+                          fontSize: dialogButtonSize, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
                       Navigator.of(dialogContext).pop();
@@ -433,7 +434,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       "Cancel",
                       style: TextStyle(
                           color: Colors.red,
-                          fontSize: 15,
+                          fontSize: 16,
                           fontFamily: 'Europa'),
                     ),
                     onPressed: () {
@@ -563,6 +564,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 "Close",
                 style: TextStyle(
                   fontSize: dialogButtonSize,
+                  color: Colors.red,
                 ),
               ),
               onPressed: () {

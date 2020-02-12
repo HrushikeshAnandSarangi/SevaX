@@ -309,6 +309,9 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
+                          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          color: Theme.of(context).accentColor,
+                          textColor: FlavorConfig.values.buttonTextColor,
                           child: Text(
                             'Update',
                             style: TextStyle(
@@ -331,8 +334,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           child: Text(
                             'Cancel',
                             style: TextStyle(
-                              fontSize: dialogButtonSize,
-                            ),
+                                fontSize: dialogButtonSize, color: Colors.red),
                           ),
                           onPressed: () {
                             Navigator.pop(viewContext);
@@ -407,6 +409,9 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
+                          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          color: Theme.of(context).accentColor,
+                          textColor: FlavorConfig.values.buttonTextColor,
                           child: Text(
                             'Update',
                             style: TextStyle(
@@ -430,6 +435,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
                             'Cancel',
                             style: TextStyle(
                               fontSize: dialogButtonSize,
+                              color: Colors.red,
                             ),
                           ),
                           onPressed: () {
@@ -506,6 +512,9 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
+                          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          color: Theme.of(context).accentColor,
+                          textColor: FlavorConfig.values.buttonTextColor,
                           child: Text(
                             'Update',
                             style: TextStyle(
@@ -529,6 +538,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
                             'Cancel',
                             style: TextStyle(
                               fontSize: dialogButtonSize,
+                              color: Colors.red,
                             ),
                           ),
                           onPressed: () {
@@ -605,6 +615,9 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
+                          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          color: Theme.of(context).accentColor,
+                          textColor: FlavorConfig.values.buttonTextColor,
                           child: Text(
                             'Update',
                             style: TextStyle(
@@ -627,8 +640,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           child: Text(
                             'Cancel',
                             style: TextStyle(
-                              fontSize: dialogButtonSize,
-                            ),
+                                fontSize: dialogButtonSize, color: Colors.red),
                           ),
                           onPressed: () {
                             Navigator.pop(viewContext);

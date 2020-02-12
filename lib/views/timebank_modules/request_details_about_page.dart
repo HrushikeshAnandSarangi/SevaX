@@ -460,7 +460,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              textColor: Colors.red,
+              child: new Text(
+                "Close",
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
