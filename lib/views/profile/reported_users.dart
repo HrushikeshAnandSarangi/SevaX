@@ -1,19 +1,15 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import 'dart:ui';
+import 'package:shimmer/shimmer.dart';
 
 class ReportedUsersPage extends StatefulWidget {
   final String timebankId;
@@ -283,13 +279,19 @@ class _ReportedUsersView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       RaisedButton(
+                        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        color: Theme.of(context).accentColor,
+                        textColor: FlavorConfig.values.buttonTextColor,
                         child: Text(
-                          'Ignore',
-                          style: TextStyle(color: Colors.red),
+                          'Remove',
+                          style: TextStyle(fontFamily: 'Europa'),
                         ),
                         onPressed: () async {
-                          // request declined
-                          ignoreMember(model: model, user: userModel);
+                          removeMemberFromYangGang(
+                            model: model,
+                            user: userModel,
+                          );
+                          // Once approved
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -298,15 +300,12 @@ class _ReportedUsersView extends StatelessWidget {
                       ),
                       RaisedButton(
                         child: Text(
-                          'Remove',
-                          style: TextStyle(color: Colors.green),
+                          'Ignore',
+                          style: TextStyle(color: Colors.red),
                         ),
                         onPressed: () async {
-                          removeMemberFromYangGang(
-                            model: model,
-                            user: userModel,
-                          );
-                          // Once approved
+                          // request declined
+                          ignoreMember(model: model, user: userModel);
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -319,18 +318,16 @@ class _ReportedUsersView extends StatelessWidget {
         });
   }
 
-  Widget getBio(UserModel userModel){
-    if(userModel.bio != null) {
-      if(userModel.bio.length <100){
+  Widget getBio(UserModel userModel) {
+    if (userModel.bio != null) {
+      if (userModel.bio.length < 100) {
         return Center(
-          child: Text(
-              userModel.bio
-          ),
+          child: Text(userModel.bio),
         );
       }
       return Container(
         height: 200,
-        child:  SingleChildScrollView(
+        child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
             userModel.bio,
@@ -343,9 +340,7 @@ class _ReportedUsersView extends StatelessWidget {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text(
-          "Bio not yet updated"
-      ),
+      child: Text("Bio not yet updated"),
     );
   }
 

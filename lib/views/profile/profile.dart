@@ -836,15 +836,6 @@ class _ProfilePageState extends State<ProfilePage>
           title: Text("Signing out"),
           content: Text("Acknowledge the verification mail and login back"),
           actions: <Widget>[
-            FlatButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Text(
-                  "No, I'll do it later",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () => Navigator.of(context).pop()),
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               elevation: 5,
@@ -863,6 +854,13 @@ class _ProfilePageState extends State<ProfilePage>
                 });
               },
             ),
+            FlatButton(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: Text(
+                  "No, I'll do it later",
+                  style: TextStyle(fontSize: 16, color: Colors.red),
+                ),
+                onPressed: () => Navigator.of(context).pop()),
           ],
         );
       },

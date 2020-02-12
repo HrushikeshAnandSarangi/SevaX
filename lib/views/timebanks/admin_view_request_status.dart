@@ -597,52 +597,59 @@ class ApprovedMembers extends StatelessWidget {
                     padding: EdgeInsets.all(8.0),
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+//                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
 //
-                      RaisedButton(
-                        color: FlavorConfig.values.theme.primaryColor,
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(color: Colors.white),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // Once approved
+                            approveMemberForVolunteerRequest(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                            );
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // Once approved
-                          approveMemberForVolunteerRequest(
-                            model: requestModel,
-                            notificationId: notificationId,
-                            user: userModel,
-                            communityId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity,
-                          );
-                          Navigator.pop(viewContext);
-                        },
                       ),
-                      // Padding(
-//                        padding: EdgeInsets.all(8.0),
-//                      ),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          'Decline',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
+                      Padding(
+                        padding: EdgeInsets.all(5.0),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Decline',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // request declined
+
+                            declineRequestedMember(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                            );
+
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // request declined
-
-                          declineRequestedMember(
-                            model: requestModel,
-                            notificationId: notificationId,
-                            user: userModel,
-                            communityId: SevaCore.of(context)
-                                .loggedInUser
-                                .currentCommunity,
-                          );
-
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )
