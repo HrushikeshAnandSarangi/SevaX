@@ -460,6 +460,8 @@ class _ProfilePageState extends State<ProfilePage>
                                         builder: (context) {
                                           return FindCommunitiesView(
                                             keepOnBackPress: true,
+                                            loggedInUser: SevaCore.of(context)
+                                                .loggedInUser,
                                           );
                                         },
                                       ),

@@ -91,6 +91,7 @@ class CalendarWidgetState extends State<CalendarWidget> {
                                 endDate = startDate;
                                 widget
                                     .onDateSelected(getSelectedDate(dayNumber));
+                                //selectionType = SelectionType.END_DATE;
                               });
                               break;
                             case SelectionType.END_DATE:

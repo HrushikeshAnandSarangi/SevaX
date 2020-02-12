@@ -38,10 +38,11 @@ class DateTimeSelector extends StatelessWidget {
                     Text(
                       _title,
                       style: TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                        color: title == 'End' ? Colors.red : Colors.green,
-                      ),
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Europa'
+                          //color: title == 'End' ? Colors.red : Colors.green,
+                          ),
                     ),
                     SizedBox(
                       height: 2.0,
@@ -80,10 +81,10 @@ class DateTimeSelector extends StatelessWidget {
       String _forDate = new DateFormat('dd MMM yyyy, hh:mm a').format(_date);
       return Text(_forDate,
           style: TextStyle(
-            color: title == 'End' ? Colors.red : Colors.green,
-            fontSize: 14.0,
-            fontWeight: FontWeight.bold,
-          ));
+              // color: title == 'End' ? Colors.red : Colors.green,
+              fontSize: 14.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Europa'));
     }
   }
 }

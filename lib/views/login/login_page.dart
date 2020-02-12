@@ -214,24 +214,8 @@ class _LoginPageState extends State<LoginPage> {
                                               ),
                                             ),
                                             actions: <Widget>[
-                                              new FlatButton(
-                                                child: new Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                    fontSize: dialogButtonSize,
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                    {
-                                                      "sendResetLink": false,
-                                                      "userEmail": null
-                                                    },
-                                                  );
-                                                },
-                                              ),
-                                              new FlatButton(
-                                                child: new Text(
+                                              FlatButton(
+                                                child: Text(
                                                   'Reset Password',
                                                   style: TextStyle(
                                                     fontSize: dialogButtonSize,
@@ -250,7 +234,25 @@ class _LoginPageState extends State<LoginPage> {
                                                             .trim()
                                                   });
                                                 },
-                                              )
+                                              ),
+                                              FlatButton(
+                                                textColor: FlavorConfig
+                                                    .values.buttonTextColor,
+                                                child: Text(
+                                                  'Cancel',
+                                                  style: TextStyle(
+                                                    fontSize: dialogButtonSize,
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                    {
+                                                      "sendResetLink": false,
+                                                      "userEmail": null
+                                                    },
+                                                  );
+                                                },
+                                              ),
                                             ],
                                           );
                                         }).then((onActivityResult) {
@@ -484,14 +486,14 @@ class _LoginPageState extends State<LoginPage> {
                     validator: _validatePassword,
                     onSaved: _savePassword,
                     decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black54)),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black54),
-                      ),
-                      labelText: 'PASSWORD',
-                      labelStyle: textStyle,
-                        suffix:   GestureDetector(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54)),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        labelText: 'PASSWORD',
+                        labelStyle: textStyle,
+                        suffix: GestureDetector(
                           onTap: () {
                             _shouldObscurePassword = !_shouldObscurePassword;
                             setState(() {});
@@ -501,8 +503,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                           ),
-                        )
-                    ),
+                        )),
                   ),
                   SizedBox(height: 22),
                   // SizedBox(height: 32),

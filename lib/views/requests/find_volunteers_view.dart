@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/get_request_user_status.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
@@ -28,6 +30,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
       new TextEditingController();
   final _firestore = Firestore.instance;
   bool isAdmin = false;
+  final _textUpdates = StreamController<String>();
 
   TimeBankModelSingleton timebankModel = TimeBankModelSingleton();
 
@@ -38,6 +41,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
   @override
   void initState() {
     super.initState();
+    String _searchText = "";
 
     FirestoreManager.getAllTimebankIdStream(
       timebankId: widget.timebankId,
@@ -51,6 +55,24 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
       isAdmin = true;
     }
 
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 400))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        volunteerUsersBloc.fetchUsers(s);
+        setState(() {
+          _searchText = s;
+        });
+      }
+    });
     // if (isAdmin) {
     //   _firestore
     //       .collection("users")
@@ -100,7 +122,7 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
   void _search(String queryString) {
     if (queryString.length == 3) {
       setState(() {
-        // searchOnChange.add(queryString);
+        searchOnChange.add(queryString);
       });
     } else {
       searchOnChange.add(queryString);
@@ -168,13 +190,14 @@ class UserResultViewElastic extends StatefulWidget {
   final List<UserModel> favoriteUsers;
 
   UserResultViewElastic(
-      this.controller,
-      this.timebankId,
-      this.validItems,
-      this.requestModelId,
-      this.timebankModel,
-      this.favoriteUsers,
-      this.sevaUserId);
+    this.controller,
+    this.timebankId,
+    this.validItems,
+    this.requestModelId,
+    this.timebankModel,
+    this.favoriteUsers,
+    this.sevaUserId,
+  );
 
   @override
   _UserResultViewElasticState createState() {
@@ -198,7 +221,6 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
   @override
   void initState() {
     super.initState();
-
     if (widget.timebankModel.admins.contains(widget.sevaUserId)) {
       isAdmin = true;
     }
@@ -255,7 +277,7 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
             ),
           );
         }
-        print("length ${snapshot.data}");
+        print("length-----> ${snapshot.data}");
 
         List<UserModel> userList = snapshot.data;
         print("length ${userList.length}");
@@ -304,6 +326,8 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
     setState(() {
       buildWidget();
     });
+//    setState(() {
+//    });
   }
 
   Widget getEmptyWidget(String title, String notFoundValue) {
