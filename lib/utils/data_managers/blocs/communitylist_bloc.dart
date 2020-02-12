@@ -38,6 +38,29 @@ class CommunityFindBloc {
   }
 }
 
+class VolunteerFindBloc {
+  final _repository = Repository();
+  final _usersFetcher = PublishSubject<UserListModel>();
+  final searchOnChange = new BehaviorSubject<String>();
+
+  Observable<UserListModel> get allUsers => _usersFetcher.stream;
+
+  fetchUsers(name) async {
+    UserListModel userListModel = UserListModel();
+    userListModel.loading = true;
+    _usersFetcher.sink.add(userListModel);
+    userListModel = await _repository.searchUserByName(name, userListModel);
+    userListModel.loading = false;
+    print(userListModel.users.length);
+    _usersFetcher.sink.add(userListModel);
+  }
+
+  dispose() {
+    _usersFetcher.close();
+    searchOnChange.close();
+  }
+}
+
 class CommunityCreateEditController {
   CommunityModel community = CommunityModel({});
   TimebankModel timebank = new TimebankModel({});
@@ -146,7 +169,8 @@ class TimebankController {
   setInvitedUsersDataForRequest(usersListData) {
     this.invitedUsersForRequest = usersListData;
   }
-  setIsAdmin(isAdminStatus){
+
+  setIsAdmin(isAdminStatus) {
     this.isAdmin = isAdminStatus;
   }
 }
@@ -170,8 +194,8 @@ class TimeBankBloc {
   setIsAdmin(isAdminStatus) {
     _timebankController.value.setIsAdmin(isAdminStatus);
     _timebankController.add(_timebankController.value);
-
   }
+
   getSelectedRequestInvitedUsersData(usersids) async {
     // TODO - get users from request
     var usersdata = await _repository.getUsersFromRequest(usersids);
@@ -343,3 +367,4 @@ final timeBankBloc = TimeBankBloc();
 final createEditCommunityBloc = CommunityCreateEditBloc();
 final communityBloc = CommunityFindBloc();
 final userBloc = UserBloc();
+final volunteerUsersBloc = VolunteerFindBloc();

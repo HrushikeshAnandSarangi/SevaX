@@ -1,23 +1,19 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:sevaexchange/components/location_picker.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sevaexchange/auth/auth.dart';
-import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/newsimage/image_picker_handler.dart';
-import 'package:sevaexchange/main.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/views/profile/edit_skills.dart';
 
 import '../core.dart';
 
@@ -88,7 +84,8 @@ class _EditTimebankViewState extends State<EditTimebankView>
 
   @override
   Widget build(BuildContext context) {
-    var timebankName = FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang gang";
+    var timebankName =
+        FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang gang";
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
@@ -208,11 +205,14 @@ class _EditTimebankViewState extends State<EditTimebankView>
                       ),
                       actions: <Widget>[
                         FlatButton(
+                          padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          color: Theme.of(context).accentColor,
+                          textColor: FlavorConfig.values.buttonTextColor,
                           child: Text(
                             'Update',
                             style: TextStyle(
-                              fontSize: dialogButtonSize,
-                            ),
+                                fontSize: dialogButtonSize,
+                                fontFamily: 'Europa'),
                           ),
                           onPressed: () {
                             if (!_formKey.currentState.validate()) {
@@ -231,8 +231,9 @@ class _EditTimebankViewState extends State<EditTimebankView>
                           child: Text(
                             'Cancel',
                             style: TextStyle(
-                              fontSize: dialogButtonSize,
-                            ),
+                                fontSize: dialogButtonSize,
+                                color: Colors.red,
+                                fontFamily: 'Europa'),
                           ),
                           onPressed: () {
                             Navigator.pop(viewContext);

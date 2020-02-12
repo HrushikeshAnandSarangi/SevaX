@@ -810,6 +810,7 @@ class _SplashViewState extends State<SplashView> {
           child: FindCommunitiesView(
             keepOnBackPress: false,
             loggedInUser: loggedInUser,
+            showBackBtn: false,
           ),
         ),
       ),

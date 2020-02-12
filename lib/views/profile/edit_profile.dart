@@ -151,64 +151,79 @@ class _EditProfilePageState extends State<EditProfilePage>
                               BorderRadius.all(Radius.circular(10.0))),
                       title:
                           Text('Update name', style: TextStyle(fontSize: 15.0)),
-                      content: Form(
-                        key: _formKey,
-                        child: TextFormField(
-                          //key: _formKey,
-                          decoration: InputDecoration(hintText: 'Enter name'),
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.sentences,
-                          style: TextStyle(fontSize: 17.0),
-                          initialValue: widget.userModel.fullname,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(20),
-                          ],
-                          onChanged: (value) {
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Form(
+                            key: _formKey,
+                            child: TextFormField(
+                              //key: _formKey,
+                              decoration:
+                                  InputDecoration(hintText: 'Enter name'),
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: TextStyle(fontSize: 17.0),
+                              initialValue: widget.userModel.fullname,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(20),
+                              ],
+                              onChanged: (value) {
 //                            if (value.isEmpty == false) {
 //                              this.usermodel.fullname = value;
 //                            }
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter name to update';
-                            }
-                            widget.userModel.fullname = value;
-                          },
-                        ),
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text(
-                            'Update',
-                            style: TextStyle(
-                              fontSize: dialogButtonSize,
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter name to update';
+                                }
+                                widget.userModel.fullname = value;
+                              },
                             ),
                           ),
-                          onPressed: () {
-                            if (!_formKey.currentState.validate()) {
-                              return;
-                            }
-                            Navigator.pop(viewContext);
-                            updateName();
-                            isLoading = false;
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Spacer(),
+                              FlatButton(
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                color: Theme.of(context).accentColor,
+                                textColor: FlavorConfig.values.buttonTextColor,
+                                child: Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (!_formKey.currentState.validate()) {
+                                    return;
+                                  }
+                                  Navigator.pop(viewContext);
+                                  updateName();
+                                  isLoading = false;
 //                            setState(() {
 //                              widget.userModel.fullname =
 //                                  this.usermodel.fullname;
 //                            });
-                          },
-                        ),
-                        FlatButton(
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontSize: dialogButtonSize,
-                            ),
+                                },
+                              ),
+                              FlatButton(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      fontSize: dialogButtonSize,
+                                      color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(viewContext);
+                                },
+                              ),
+                            ],
                           ),
-                          onPressed: () {
-                            Navigator.pop(viewContext);
-                          },
-                        )
-                      ],
+                        ],
+                      ),
                     );
                   },
                 );
@@ -257,60 +272,73 @@ class _EditProfilePageState extends State<EditProfilePage>
                               BorderRadius.all(Radius.circular(10.0))),
                       title:
                           Text('Update bio', style: TextStyle(fontSize: 15.0)),
-                      content: Form(
-                        key: _formKey,
-                        child: TextFormField(
-                          //key: _formKey,
-                          decoration: InputDecoration(hintText: 'Enter bio'),
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.sentences,
-                          style: TextStyle(fontSize: 17.0),
-                          initialValue: widget.userModel.bio,
-                          onChanged: (value) {
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Form(
+                            key: _formKey,
+                            child: TextFormField(
+                              //key: _formKey,
+                              decoration:
+                                  InputDecoration(hintText: 'Enter bio'),
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: TextStyle(fontSize: 17.0),
+                              initialValue: widget.userModel.bio,
+                              onChanged: (value) {
 //                            if (value.isEmpty == false) {
 //                              this.usermodel.bio = value;
 //                            }
-                          },
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter bio to update';
-                            }
-                            widget.userModel.bio = value;
-                          },
-                        ),
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text(
-                            'Update',
-                            style: TextStyle(
-                              fontSize: dialogButtonSize,
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter bio to update';
+                                }
+                                widget.userModel.bio = value;
+                              },
                             ),
                           ),
-                          onPressed: () {
-                            if (!_formKey.currentState.validate()) {
-                              return;
-                            }
-                            Navigator.pop(viewContext);
-                            updateBio();
-                            isLoading = false;
+                          SizedBox(height: 15),
+                          Row(
+                            children: <Widget>[
+                              Spacer(),
+                              FlatButton(
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                color: Theme.of(context).accentColor,
+                                textColor: FlavorConfig.values.buttonTextColor,
+                                child: Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (!_formKey.currentState.validate()) {
+                                    return;
+                                  }
+                                  Navigator.pop(viewContext);
+                                  updateBio();
+                                  isLoading = false;
 //                            setState(() {
 //                              widget.userModel.bio = this.usermodel.bio;
 //                            });
-                          },
-                        ),
-                        FlatButton(
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontSize: dialogButtonSize,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(viewContext);
-                          },
-                        )
-                      ],
+                                },
+                              ),
+                              FlatButton(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      fontSize: dialogButtonSize,
+                                      color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(viewContext);
+                                },
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     );
                   },
                 );
@@ -426,10 +454,10 @@ class _EditProfilePageState extends State<EditProfilePage>
               child: Container(
                 width: 134,
                 child: RaisedButton(
-                  color: Colors.red,
+                  color: Theme.of(context).accentColor,
+                  textColor: FlavorConfig.values.buttonTextColor,
                   child: Text(
                     'Logout',
-                    style: Theme.of(context).primaryTextTheme.button,
                   ),
                   onPressed: logOut,
                 ),
@@ -621,9 +649,12 @@ class _EditProfilePageState extends State<EditProfilePage>
                 children: <Widget>[
                   Spacer(),
                   FlatButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
                       "Log Out",
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () {
                       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -635,11 +666,10 @@ class _EditProfilePageState extends State<EditProfilePage>
                     },
                   ),
                   new RaisedButton(
-                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    elevation: 5,
-                    color: Theme.of(context).accentColor,
-                    textColor: FlavorConfig.values.buttonTextColor,
-                    child: new Text("Cancel"),
+                    child: new Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
+                    ),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },

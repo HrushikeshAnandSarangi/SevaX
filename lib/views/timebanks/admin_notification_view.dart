@@ -202,6 +202,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             text: 'Congrats,  ',
                             style: TextStyle(
                               color: Colors.grey,
+                              fontFamily: 'Europa',
                             ),
                           ),
                           TextSpan(
@@ -215,6 +216,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             }(),
                             style: TextStyle(
                               color: Colors.black,
+                              fontFamily: 'Europa',
                             ),
                           ),
                           TextSpan(
@@ -223,6 +225,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             }(),
                             style: TextStyle(
                               color: Colors.black,
+                              fontFamily: 'Europa',
                             ),
                           )
                         ],
@@ -279,12 +282,14 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         }(),
                         style: TextStyle(
                           color: Colors.black,
+                          fontFamily: 'Europa',
                         ),
                       ),
                       TextSpan(
                         text: 'has been debited to ${user.fullname}',
                         style: TextStyle(
                           color: Colors.grey,
+                          fontFamily: 'Europa',
                         ),
                       ),
                     ],
@@ -339,6 +344,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           '${user.fullname} approved the task completion for ',
                       style: TextStyle(
                         color: Colors.grey,
+                        fontFamily: 'Europa',
                       ),
                     ),
                     TextSpan(
@@ -347,6 +353,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       }(),
                       style: TextStyle(
                         color: Colors.black,
+                        fontFamily: 'Europa',
                       ),
                     )
                   ],
@@ -464,6 +471,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                                       '${user.fullname} sent request for your offer: ${offermodel.title} ',
                                   style: TextStyle(
                                     color: Colors.grey,
+                                    fontFamily: 'Europa',
                                   ),
                                 ),
                                 TextSpan(
@@ -472,6 +480,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                                   }(),
                                   style: TextStyle(
                                     color: Colors.black,
+                                    fontFamily: 'Europa',
                                   ),
                                 )
                               ],
@@ -611,6 +620,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           text: '${user.fullname} completed the task in ',
                           style: TextStyle(
                             color: Colors.grey,
+                            fontFamily: 'Europa',
                           ),
                         ),
                         TextSpan(
@@ -627,6 +637,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           }(),
                           style: TextStyle(
                             color: Colors.grey,
+                            fontFamily: 'Europa',
                           ),
                         )
                       ],
@@ -720,6 +731,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       userModel.fullname,
                       style: TextStyle(
                         fontSize: 18,
+                        fontFamily: 'Europa',
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -734,7 +746,9 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       child: Text(
                         "About ${userModel.fullname}",
                         style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
+                            fontFamily: 'Europa',
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   getBio(userModel),
@@ -745,6 +759,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           "By approving, you accept that ${userModel.fullname} has worked for $credits hours",
                           textAlign: TextAlign.center,
                           style: TextStyle(
+                            fontFamily: 'Europa',
                             fontStyle: FontStyle.italic,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -754,32 +769,16 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       RaisedButton(
                         child: Text(
-                          'Reject',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        onPressed: () async {
-                          // reject the claim
-                          rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                      ),
-                      RaisedButton(
-                        child: Text(
                           'Approve',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontFamily: 'Europa',
+                          ),
                         ),
                         onPressed: () async {
                           // Once approved take for feeddback
@@ -790,6 +789,29 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                               user: userModel,
                               userId: userId);
 
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(5.0),
+                      ),
+                      RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        child: Text(
+                          'Reject',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Europa',
+                          ),
+                        ),
+                        onPressed: () async {
+                          // reject the claim
+                          rejectMemberClaimForEvent(
+                              context: context,
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              userId: userId);
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -1259,6 +1281,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   Container(
                     width: double.maxFinite,
                     child: RaisedButton(
+                      color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
                         'Approve',
                         style: TextStyle(color: Colors.white),
@@ -1272,31 +1295,27 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       },
                     ),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        width: double.infinity,
-                        child: RaisedButton(
-                          child: Text(
-                            'Decline',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          onPressed: () async {
-                            declineRequestedMember(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                            );
-                            Navigator.pop(viewContext);
-                          },
-                        ),
+                  Container(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        'Decline',
+                        style: TextStyle(color: Colors.white),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                      ),
-                    ],
-                  )
+                      onPressed: () async {
+                        declineRequestedMember(
+                          model: requestModel,
+                          notificationId: notificationId,
+                          user: userModel,
+                        );
+                        Navigator.pop(viewContext);
+                      },
+                    ),
+                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                  )
                 ],
               ),
             ),

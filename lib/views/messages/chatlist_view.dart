@@ -582,18 +582,9 @@ class _ChatListViewState extends State<ChatListView> {
           content: const Text('Are you sure you want to delete this chat'),
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
                 'Delete',
                 style: TextStyle(
@@ -637,6 +628,16 @@ class _ChatListViewState extends State<ChatListView> {
                 setState(() {
                   print("Update and remove the object from list");
                 });
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+              onPressed: () {
+                setState(() {});
+                Navigator.of(context).pop();
               },
             ),
           ],

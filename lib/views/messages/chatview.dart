@@ -110,8 +110,10 @@ class _ChatViewState extends State<ChatView> {
         Padding(
           padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
         ),
-        Text(appbarTitle,
-            style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis),
+        Expanded(
+          child: Text(appbarTitle,
+              style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis),
+        ),
       ],
     );
   }
@@ -457,25 +459,26 @@ class _ChatViewState extends State<ChatView> {
               "${partnerUser.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
           actions: <Widget>[
             new FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: new Text(
-                "CANCEL",
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop("CANCEL");
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                'BLOCK',
+                'Block',
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),
               ),
               onPressed: () {
                 Navigator.of(context).pop("BLOCK");
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "Cancel",
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop("CANCEL");
               },
             ),
           ],

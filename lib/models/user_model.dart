@@ -354,3 +354,19 @@ class UserModel extends DataModel {
     ''';
   }
 }
+
+class UserListModel {
+  List<UserModel> users = [];
+  bool loading = false;
+  UserListModel();
+
+  add(user) {
+    this.users.add(user);
+  }
+
+  removeall() {
+    this.users = [];
+  }
+
+  List<UserModel> get getUsers => users;
+}
