@@ -393,7 +393,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: isApplied ? Colors.red : Colors.green,
+                  color:
+                      isApplied ? Theme.of(context).accentColor : Colors.green,
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 1),
@@ -484,11 +485,13 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   void _acceptRequest() {
     Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
     acceptorList.add(SevaCore.of(context).loggedInUser.email);
+
     widget.requestItem.acceptors = acceptorList.toList();
     acceptRequest(
       requestModel: widget.requestItem,
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      directToMember: !widget.timebankModel.protected,
     );
   }
 
@@ -501,6 +504,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
       senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       isWithdrawal: true,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      directToMember: !widget.timebankModel.protected,
     );
   }
 }

@@ -22,22 +22,14 @@ Future<void> createAcceptRequestNotification({
   UserModel user =
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
-  bool isTimeBankNotification =
-      await fetchProtectedStatus(notificationsModel.timebankId);
-
-  isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(notificationsModel.timebankId)
-          .collection('notifications')
-          .document(notificationsModel.id)
-          .setData(notificationsModel.toMap())
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(notificationsModel.id)
-          .setData(notificationsModel.toMap());
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(notificationsModel.directToMember
+          ? user.email
+          : notificationsModel.timebankId)
+      .collection('notifications')
+      .document(notificationsModel.id)
+      .setData(notificationsModel.toMap());
 }
 
 Future<void> withdrawAcceptRequestNotification({
@@ -168,21 +160,14 @@ Future<void> createRequestApprovalNotification({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap(), merge: true)
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap(), merge: true);
+  
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(isTimeBankNotification ? model.timebankId : user.email)
+      .collection('notifications')
+      .document(model.id)
+      .setData(model.toMap(), merge: true);
 }
 
 Future<void> createTaskCompletedApprovedNotification({
@@ -354,7 +339,6 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
   String timebankId,
   @required String communityId,
 }) async* {
-
   var data = Firestore.instance
       .collection('timebanknew')
       .document(timebankId)

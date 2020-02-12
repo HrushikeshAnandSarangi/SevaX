@@ -538,7 +538,7 @@ class _RequestCardViewState extends State<RequestCardView> {
                               widget.requestItem.acceptors.contains(
                                       SevaCore.of(context).loggedInUser.email)
                                   ? 'Withdraw Request'
-                                  : 'Acxcept Request',
+                                  : 'Accept Request',
                               style: TextStyle(
                                 color: FlavorConfig.values.buttonTextColor,
                               ),
@@ -1198,14 +1198,15 @@ class RequestListItemsState extends State<RequestListItems> {
                         style: Theme.of(widget.parentContext).textTheme.subhead,
                       ),
                       Container(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child:Text(
-                        model.description,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            Theme.of(widget.parentContext).textTheme.subtitle,
-                      ),),
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        child: Text(
+                          model.description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style:
+                              Theme.of(widget.parentContext).textTheme.subtitle,
+                        ),
+                      ),
                       SizedBox(height: 8),
                       Wrap(
                         crossAxisAlignment: WrapCrossAlignment.center,
@@ -1224,15 +1225,15 @@ class RequestListItemsState extends State<RequestListItems> {
                             ),
                           ),
                         ],
-                      ),Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                      Offstage(
-                        offstage: !model.acceptors.contains(userEmail),
-                        child: Container(
-
-                            margin: EdgeInsets.all(10),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          Offstage(
+                            offstage: !model.acceptors.contains(userEmail),
+                            child: Container(
+                              margin: EdgeInsets.all(10),
                               width: 100,
                               height: 32,
                               child: FlatButton(
@@ -1241,18 +1242,17 @@ class RequestListItemsState extends State<RequestListItems> {
                                 ),
                                 padding: EdgeInsets.all(0),
                                 color: Colors.green,
-                                child:
-                                    Text(
-                                      'Applied',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    onPressed: () {},
+                                child: Text(
+                                  'Applied',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                                ),
+                                onPressed: () {},
                               ),
-                            ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

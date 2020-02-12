@@ -11,7 +11,6 @@ import 'models/news_model.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = Flavor.APP;
-  WidgetsFlutterBinding.ensureInitialized();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(

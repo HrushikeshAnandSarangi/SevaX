@@ -41,7 +41,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
     getData(); // TODO: implement initState
   }
 
-
   @override
   void getData() async {
    // print('Admin id  ${widget.timebankModel.admins[0]}');
@@ -111,7 +110,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
                     style: TextStyle(fontSize: 16, fontFamily: 'Europa'),
                   ),
                   TextSpan(
-                    text: " Seva Exchange Global Network of Timebanks.",
+                    text: " SevaX Global Network of Timebanks.",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

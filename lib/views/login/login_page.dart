@@ -181,79 +181,101 @@ class _LoginPageState extends State<LoginPage> {
                                             title: Text(
                                               'Enter email',
                                             ),
-                                            content: Form(
-                                              key: _formKeyDialog,
-                                              child: TextFormField(
-                                                validator: (value) {
-                                                  if (value.isEmpty) {
-                                                    return 'Please enter email to update';
-                                                  } else if (!validateEmail(
-                                                      value.trim())) {
-                                                    return 'Please enter a valid email';
-                                                  }
-                                                  _textFieldControllerResetEmail =
-                                                      value;
-                                                },
-                                                // validator: validateEmail,
-                                                onChanged: (value) {
-                                                  print("$value");
-                                                },
-                                                initialValue: "",
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                controller: null,
-                                                decoration: InputDecoration(
-                                                  hintText:
-                                                      "Your email address",
-                                                  // errorText: isEmailValidForReset
-                                                  //     ? null
-                                                  //     : validateEmail(
-                                                  //         _textFieldControllerResetEmail.text,
-                                                  //       ),
-                                                ),
-                                              ),
-                                            ),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                child: Text(
-                                                  'Reset Password',
-                                                  style: TextStyle(
-                                                    fontSize: dialogButtonSize,
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  if (!_formKeyDialog
-                                                      .currentState
-                                                      .validate()) {
-                                                    return;
-                                                  }
-                                                  Navigator.of(context).pop({
-                                                    "sendResetLink": true,
-                                                    "userEmail":
-                                                        _textFieldControllerResetEmail
-                                                            .trim()
-                                                  });
-                                                },
-                                              ),
-                                              FlatButton(
-                                                textColor: FlavorConfig
-                                                    .values.buttonTextColor,
-                                                child: Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                    fontSize: dialogButtonSize,
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                    {
-                                                      "sendResetLink": false,
-                                                      "userEmail": null
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Form(
+                                                  key: _formKeyDialog,
+                                                  child: TextFormField(
+                                                    validator: (value) {
+                                                      if (value.isEmpty) {
+                                                        return 'Please enter email to update';
+                                                      } else if (!validateEmail(
+                                                          value.trim())) {
+                                                        return 'Please enter a valid email';
+                                                      }
+                                                      _textFieldControllerResetEmail =
+                                                          value;
                                                     },
-                                                  );
-                                                },
-                                              ),
-                                            ],
+                                                    // validator: validateEmail,
+                                                    onChanged: (value) {
+                                                      print("$value");
+                                                    },
+                                                    initialValue: "",
+                                                    keyboardType: TextInputType
+                                                        .emailAddress,
+                                                    controller: null,
+                                                    decoration: InputDecoration(
+                                                      hintText:
+                                                          "Your email address",
+                                                      // errorText: isEmailValidForReset
+                                                      //     ? null
+                                                      //     : validateEmail(
+                                                      //         _textFieldControllerResetEmail.text,
+                                                      //       ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Row(
+                                                  children: <Widget>[
+                                                    FlatButton(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              10, 5, 5, 5),
+                                                      color: Theme.of(context)
+                                                          .accentColor,
+                                                      textColor: FlavorConfig
+                                                          .values
+                                                          .buttonTextColor,
+                                                      child: Text(
+                                                        'Reset Password',
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              dialogButtonSize,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        if (!_formKeyDialog
+                                                            .currentState
+                                                            .validate()) {
+                                                          return;
+                                                        }
+                                                        Navigator.of(context)
+                                                            .pop({
+                                                          "sendResetLink": true,
+                                                          "userEmail":
+                                                              _textFieldControllerResetEmail
+                                                                  .trim()
+                                                        });
+                                                      },
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text(
+                                                        'Cancel',
+                                                        style: TextStyle(
+                                                          fontSize:
+                                                              dialogButtonSize,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(
+                                                          {
+                                                            "sendResetLink":
+                                                                false,
+                                                            "userEmail": null
+                                                          },
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           );
                                         }).then((onActivityResult) {
                                       if (onActivityResult != null &&

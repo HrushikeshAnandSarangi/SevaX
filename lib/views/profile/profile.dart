@@ -353,24 +353,22 @@ class _ProfilePageState extends State<ProfilePage>
                           elevation: 2,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
+                            // child: ListView.separated(
+                            //   padding: EdgeInsets.all(0),
+                            //   shrinkWrap: true,
+                            //   itemCount: communities.length,
+                            //   physics: NeverScrollableScrollPhysics(),
+                            //   itemBuilder: (context, index) {
+                            //     return CommunityCard(
+                            //       community: communities[index],
+                            //       selected: communities[index].id ==
+                            //           user.currentCommunity,
+                            //     );
+                            //   },
+                            //   separatorBuilder: (context, index) {
+                            //     return Divider();
+                            //   },
                           ),
-                          // child: ListView.separated(
-                          //   padding: EdgeInsets.all(0),
-                          //   shrinkWrap: true,
-                          //   itemCount: communities.length,
-                          //   physics: NeverScrollableScrollPhysics(),
-                          //   itemBuilder: (context, index) {
-                          //     return CommunityCard(
-                          //       community: communities[index],
-                          //       selected: communities[index].id ==
-                          //           user.currentCommunity,
-                          //     );
-                          //   },
-                          //   separatorBuilder: (context, index) {
-                          //     return Divider();
-                          //   },
-                          // ),
-
                           child: StreamBuilder<List<Widget>>(
                             stream: _profileBloc.communities,
                             builder: (context, snapshot) {

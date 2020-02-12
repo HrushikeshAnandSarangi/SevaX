@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
@@ -17,7 +16,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
-import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -71,11 +69,35 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             switch (notification.type) {
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return Text("NotificationType.RequestAccept");
+                return FutureBuilder<RequestModel>(
+                    future: FirestoreManager.getRequestFutureById(
+                      requestId: model.id,
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      RequestModel model = snapshot.data;
+                      return getNotificationAcceptedWidget(
+                        model,
+                        notification.senderUserId,
+                        notification.id,
+                      );
+                    });
                 break;
 
               case NotificationType.RequestApprove:
-                return Text("NotificationType.RequestApprove");
+                RequestModel model = RequestModel.fromMap(notification.data);
+
+                return getNotificationRequestApprovalWidget(
+                  model,
+                  notification.senderUserId,
+                  notification.id,
+                );
                 break;
 
               case NotificationType.RequestReject:
@@ -715,16 +737,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   getBio(userModel),
                   Padding(
                       padding: EdgeInsets.all(8.0),
@@ -798,7 +810,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         );
       }
       return Container(
-        height: 200,
+        height: 150,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
@@ -967,23 +979,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         ),
       ),
     );
-
-    // return StreamBuilder<UserModel>(
-    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) {
-    //       return Center(
-    //         child: Text(snapshot.error.toString()),
-    //       );
-    //     }
-
-    //     if (snapshot.connectionState == ConnectionState.waiting) {
-    //       return notificationShimmer;
-    //     }
-
-    //     UserModel user = snapshot.data;
-    //   },
-    // );
   }
 
   Widget getNotificationRequestRejectWidget(
@@ -1112,8 +1107,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
   Widget getNotificationAcceptedWidget(
       RequestModel model, String userId, String notificationId) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -1122,53 +1117,21 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // return notificationShimmer;
-          return Text('getNotificationDebit');
+          return notificationShimmer;
         }
 
         UserModel user = snapshot.data;
-
         return Slidable(
             delegate: SlidableBehindDelegate(),
             actions: <Widget>[],
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () {
-                // showDialogForApproval(
-                //     context: context,
-                //     userModel: user,
-                //     notificationId: notificationId,
-                //     requestModel: model);
-
-                BuildContext dialogContext;
-
-                showDialog(
-                    barrierDismissible: false,
+                showDialogForApproval(
                     context: context,
-                    builder: (createDialogContext) {
-                      dialogContext = createDialogContext;
-                      return AlertDialog(
-                        title: Text('Please wait'),
-                        content: LinearProgressIndicator(),
-                      );
-                    });
-
-                Firestore.instance
-                    .collection("requests")
-                    .document(model.id)
-                    .get()
-                    .then((onValue) {
-                  var requestModel = RequestModel.fromMap(onValue.data);
-                  prefix0.Navigator.pop(dialogContext);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewRequestStatus(
-                        requestModel: requestModel,
-                      ),
-                    ),
-                  );
-                });
+                    userModel: user,
+                    notificationId: notificationId,
+                    requestModel: model);
               },
               child: Container(
                   margin: notificationPadding,
@@ -1285,16 +1248,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       ),
                     ),
                   getBio(userModel),
-//                  Padding(
-//                    padding: EdgeInsets.all(8.0),
-//                    child: Text(
-//                      userModel.bio == null
-//                          ? "Bio not yet updated"
-//                          : userModel.bio,
-//                      maxLines: 5,
-//                      overflow: TextOverflow.ellipsis,
-//                    ),
-//                  ),
                   Center(
                     child: Text(
                         "By approving, ${userModel.fullname} will be added to the event.",
@@ -1303,51 +1256,44 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                         textAlign: TextAlign.center),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
+                  Container(
+                    width: double.maxFinite,
+                    child: RaisedButton(
+                      color: FlavorConfig.values.theme.primaryColor,
+                      child: Text(
+                        'Approve',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () async {
+                        approveMemberForVolunteerRequest(
+                            model: requestModel,
+                            notificationId: notificationId,
+                            user: userModel);
+                        Navigator.pop(viewContext);
+                      },
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      RaisedButton(
-                        color: Colors.orange,
-                        child: Text(
-                          'Decline',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
-                        ),
-                        onPressed: () async {
-                          // request declined
-
-                          declineRequestedMember(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-
-                          Navigator.pop(viewContext);
-                        },
+                  Container(
+                    width: double.infinity,
+                    child: RaisedButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        'Decline',
+                        style: TextStyle(color: Colors.white),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                      ),
-                      RaisedButton(
-                        color: FlavorConfig.values.theme.primaryColor,
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
-                        ),
-                        onPressed: () async {
-                          // Once approved
-                          approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                    ],
-                  )
+                      onPressed: () async {
+                        declineRequestedMember(
+                          model: requestModel,
+                          notificationId: notificationId,
+                          user: userModel,
+                        );
+                        Navigator.pop(viewContext);
+                      },
+                    ),
+                  ),
+//                  Padding(
+//                    padding: EdgeInsets.all(8.0),
+//                  )
                 ],
               ),
             ),

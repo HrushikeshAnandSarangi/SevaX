@@ -155,16 +155,19 @@ Future<void> sendOfferRequest({
   @required OfferModel offerModel,
   @required String requestSevaID,
   @required String communityId,
+  bool directToMember = true,
 }) async {
   NotificationsModel model = NotificationsModel(
-      timebankId: offerModel.timebankId,
-      targetUserId: offerModel.sevaUserId,
-      data: offerModel.toMap(),
-      type: NotificationType.OfferAccept,
-      id: utils.Utils.getUuid(),
-      isRead: false,
-      senderUserId: requestSevaID,
-      communityId: communityId);
+    timebankId: offerModel.timebankId,
+    targetUserId: offerModel.sevaUserId,
+    data: offerModel.toMap(),
+    type: NotificationType.OfferAccept,
+    id: utils.Utils.getUuid(),
+    isRead: false,
+    senderUserId: requestSevaID,
+    communityId: communityId,
+    directToMember: directToMember,
+  );
   await utils.offerAcceptNotification(
     model: model,
   );
@@ -176,6 +179,7 @@ Future<void> acceptRequest({
   bool isWithdrawal = false,
   bool fromOffer = false,
   @required String communityId,
+  bool directToMember,
 }) async {
   assert(requestModel != null);
 
@@ -194,6 +198,7 @@ Future<void> acceptRequest({
       isRead: false,
       senderUserId: senderUserId,
       communityId: communityId,
+      directToMember: directToMember,
     );
 
     print("Creating notification model $model");

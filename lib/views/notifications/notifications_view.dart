@@ -1428,45 +1428,51 @@ class NotificationsView extends State<NotificationViewHolder> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        color: Colors.orange,
-                        child: Text(
-                          'Decline',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // Once approved
+                            approveMemberForVolunteerRequest(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // request declined
-
-                          declineRequestedMember(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-
-                          Navigator.pop(viewContext);
-                        },
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(5.0),
                       ),
-                      RaisedButton(
-                        color: FlavorConfig.values.theme.primaryColor,
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Decline',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // request declined
+
+                            declineRequestedMember(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // Once approved
-                          approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )

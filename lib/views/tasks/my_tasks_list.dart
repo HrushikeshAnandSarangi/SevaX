@@ -643,6 +643,7 @@ class TaskCardViewState extends State<TaskCardView> {
 
       FirestoreManager.requestComplete(model: requestModel);
 
+
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(
           id: utils.Utils.getUuid(),
