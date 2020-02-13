@@ -88,11 +88,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
     }
     var finalWidget = Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           "Select volunteers",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 20),
         ),
         elevation: 0,
         actions: <Widget>[
@@ -109,8 +107,8 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Text(
-                  "Save",
-                  style: prefix0.TextStyle(color: Colors.black),
+                  "save",
+                  style: prefix0.TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
             ),
