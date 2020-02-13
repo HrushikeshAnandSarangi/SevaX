@@ -15,11 +15,10 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
-import '../../main_app.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -323,95 +322,96 @@ class CreateEditCommunityViewFormState
                             // show a dialog
 
                             print(_formKey.currentState.validate());
-                            communityFound =
-                                await isCommunityFound(enteredName);
-                            if (communityFound) {
-                              print("Found:$communityFound");
-                              return;
-                            }
-                            if (_formKey.currentState.validate()) {
-                              if (_billingInformationKey.currentState
-                                  .validate()) {
-                                setState(() {
-                                  this._billingDetailsError = '';
-                                });
-                                print(globals.timebankAvatarURL);
-                                if (globals.timebankAvatarURL == null) {
-                                  setState(() {
-                                    this.communityImageError =
-                                        'Community logo is mandatory';
-                                  });
-                                } else {
-                                  showProgressDialog();
-
-                                  setState(() {
-                                    this.communityImageError = '';
-                                  });
-
-                                  // creation of community;
-                                  snapshot.data.UpdateCommunityDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                  );
-                                  // creation of default timebank;
-                                  snapshot.data.UpdateTimebankDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                    widget,
-                                  );
-                                  // updating the community with default timebank id
-                                  snapshot.data.community.timebanks = [
-                                    snapshot.data.timebank.id
-                                  ].cast<String>();
-
-                                  snapshot.data.community.primary_timebank =
-                                      snapshot.data.timebank.id;
-
-                                  createEditCommunityBloc.createCommunity(
-                                    snapshot.data,
-                                    SevaCore.of(context).loggedInUser,
-                                  );
-
-                                  await Firestore.instance
-                                      .collection("users")
-                                      .document(SevaCore.of(context)
-                                          .loggedInUser
-                                          .email)
-                                      .updateData({
-                                    'communities': FieldValue.arrayUnion([
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID
-                                    ]),
-                                    'currentCommunity':
-                                        snapshot.data.community.id
-                                  });
-
-                                  setState(() {
-                                    SevaCore.of(context)
-                                            .loggedInUser
-                                            .currentCommunity =
-                                        snapshot.data.community.id;
-                                  });
-
-                                  Navigator.pop(dialogContext);
-                                  _formKey.currentState.reset();
-                                  _billingInformationKey.currentState.reset();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context1) => MainApplication(
-                                          skipToHomePage: true,
-                                        ),
-                                      ),
-                                      (Route<dynamic> route) => false);
-                                }
-                              } else {
-                                setState(() {
-                                  this._billingDetailsError =
-                                      'Please configure your billing details';
-                                });
-                              }
-                            } else {}
+                            _showAlreadyExistsMessage(enteredName);
+//                            communityFound =
+//                                await isCommunityFound(enteredName);
+//                            if (communityFound) {
+//                              print("Found:$communityFound");
+//                              return;
+//                            }
+//                            if (_formKey.currentState.validate()) {
+//                              if (_billingInformationKey.currentState
+//                                  .validate()) {
+//                                setState(() {
+//                                  this._billingDetailsError = '';
+//                                });
+//                                print(globals.timebankAvatarURL);
+//                                if (globals.timebankAvatarURL == null) {
+//                                  setState(() {
+//                                    this.communityImageError =
+//                                        'Community logo is mandatory';
+//                                  });
+//                                } else {
+//                                  showProgressDialog();
+//
+//                                  setState(() {
+//                                    this.communityImageError = '';
+//                                  });
+//
+//                                  // creation of community;
+//                                  snapshot.data.UpdateCommunityDetails(
+//                                    SevaCore.of(context).loggedInUser,
+//                                    globals.timebankAvatarURL,
+//                                  );
+//                                  // creation of default timebank;
+//                                  snapshot.data.UpdateTimebankDetails(
+//                                    SevaCore.of(context).loggedInUser,
+//                                    globals.timebankAvatarURL,
+//                                    widget,
+//                                  );
+//                                  // updating the community with default timebank id
+//                                  snapshot.data.community.timebanks = [
+//                                    snapshot.data.timebank.id
+//                                  ].cast<String>();
+//
+//                                  snapshot.data.community.primary_timebank =
+//                                      snapshot.data.timebank.id;
+//
+//                                  createEditCommunityBloc.createCommunity(
+//                                    snapshot.data,
+//                                    SevaCore.of(context).loggedInUser,
+//                                  );
+//
+//                                  await Firestore.instance
+//                                      .collection("users")
+//                                      .document(SevaCore.of(context)
+//                                          .loggedInUser
+//                                          .email)
+//                                      .updateData({
+//                                    'communities': FieldValue.arrayUnion([
+//                                      SevaCore.of(context)
+//                                          .loggedInUser
+//                                          .sevaUserID
+//                                    ]),
+//                                    'currentCommunity':
+//                                        snapshot.data.community.id
+//                                  });
+//
+//                                  setState(() {
+//                                    SevaCore.of(context)
+//                                            .loggedInUser
+//                                            .currentCommunity =
+//                                        snapshot.data.community.id;
+//                                  });
+//
+//                                  Navigator.pop(dialogContext);
+//                                  _formKey.currentState.reset();
+//                                  _billingInformationKey.currentState.reset();
+//                                  Navigator.of(context).pushAndRemoveUntil(
+//                                      MaterialPageRoute(
+//                                        builder: (context1) => MainApplication(
+//                                          skipToHomePage: true,
+//                                        ),
+//                                      ),
+//                                      (Route<dynamic> route) => false);
+//                                }
+//                              } else {
+//                                setState(() {
+//                                  this._billingDetailsError =
+//                                      'Please configure your billing details';
+//                                });
+//                              }
+//                            } else {}
                           },
                           shape: StadiumBorder(),
                           child: Text(
@@ -907,23 +907,71 @@ class CreateEditCommunityViewFormState
     );
   }
 
+  Widget _showAlreadyExistsMessage(String enteredName) {
+    Stream<List<CommunityModel>> results = SearchManager.searchCommunity(
+      queryString: enteredName,
+    );
+
+    print("------------ called $enteredName");
+//    // flutter defined function
+//    return StreamBuilder<List<CommunityModel>>(
+//        stream: SearchManager.searchCommunity(
+//          queryString: enteredName,
+//        ),
+//        builder: (context, snapshot) {
+//          print("doc length ${snapshot}");
+//
+//          if (snapshot.hasData) {
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Container();
+//            } else {
+//              List<CommunityModel> communities = snapshot.data;
+//
+//              print("doc length ${communities.length}");
+//              showDialog(
+//                context: context,
+//                builder: (BuildContext context) {
+//                  // return object of type Dialog
+//
+//                  return AlertDialog(
+//                    //title: new Text("Protected Timebank"),
+//                    content: new Text("Timebank name already exists"),
+//                    actions: <Widget>[
+//                      // usually buttons at the bottom of the dialog
+//                      new FlatButton(
+//                        child: new Text("Close"),
+//                        onPressed: () {
+//                          Navigator.of(context).pop();
+//                        },
+//                      ),
+//                    ],
+//                  );
+//                  ;
+//                },
+//              );
+//            }
+//          }
+//          return Container();
+//        });
+    return Container();
+  }
+
   Future<bool> isCommunityFound(String enteredName) async {
     //ommunityBloc.fetchCommunities(enteredName);
-    CommunityListModel communities = CommunityListModel();
+    List<CommunityModel> communities = List<CommunityModel>();
     var communitiesFound =
         await searchCommunityByName(enteredName, communities);
-    if (communitiesFound == null ||
-        communitiesFound.communities == null ||
-        communitiesFound.communities.length == 0) {
+
+    if (communities == null || communities == null || communities.length == 0) {
       return false;
     } else {
       return true;
     }
   }
 
-  Future<CommunityListModel> searchCommunityByName(
-      String name, CommunityListModel communities) async {
-    communities.removeall();
+  Future<List<CommunityModel>> searchCommunityByName(
+      String name, List<CommunityModel> communities) async {
+    communities.clear();
     if (name.isNotEmpty && name.length > 4) {
       await Firestore.instance
           .collection('communities')

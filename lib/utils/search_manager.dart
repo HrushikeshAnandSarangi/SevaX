@@ -101,6 +101,8 @@ class SearchManager {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<CommunityModel> communityList = [];
+    print("community data ${hitList}");
+
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       var community = CommunityModel(sourceMap);
