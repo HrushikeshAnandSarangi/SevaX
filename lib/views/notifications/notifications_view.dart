@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
@@ -19,7 +18,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
-import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -512,7 +510,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                               communityId: SevaCore.of(context)
                                   .loggedInUser
                                   .currentCommunity,
-                                  
                             );
                             offermodel.associatedRequest = requestid;
                             updateOfferWithRequest(offer: offermodel);
@@ -1257,41 +1254,41 @@ class NotificationsView extends State<NotificationViewHolder> {
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () {
-                // showDialogForApproval(
-                //     context: context,
-                //     userModel: user,
-                //     notificationId: notificationId,
-                //     requestModel: model);
-
-                BuildContext dialogContext;
-
-                showDialog(
-                    barrierDismissible: false,
+                showDialogForApproval(
                     context: context,
-                    builder: (createDialogContext) {
-                      dialogContext = createDialogContext;
-                      return AlertDialog(
-                        title: Text('Please wait'),
-                        content: LinearProgressIndicator(),
-                      );
-                    });
+                    userModel: user,
+                    notificationId: notificationId,
+                    requestModel: model);
 
-                Firestore.instance
-                    .collection("requests")
-                    .document(model.id)
-                    .get()
-                    .then((onValue) {
-                  var requestModel = RequestModel.fromMap(onValue.data);
-                  prefix0.Navigator.pop(dialogContext);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewRequestStatus(
-                        requestModel: requestModel,
-                      ),
-                    ),
-                  );
-                });
+                // BuildContext dialogContext;
+
+                // showDialog(
+                //     barrierDismissible: false,
+                //     context: context,
+                //     builder: (createDialogContext) {
+                //       dialogContext = createDialogContext;
+                //       return AlertDialog(
+                //         title: Text('Please wait'),
+                //         content: LinearProgressIndicator(),
+                //       );
+                //     });
+
+                // Firestore.instance
+                //     .collection("requests")
+                //     .document(model.id)
+                //     .get()
+                //     .then((onValue) {
+                //   var requestModel = RequestModel.fromMap(onValue.data);
+                //   prefix0.Navigator.pop(dialogContext);
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => ViewRequestStatus(
+                //         requestModel: requestModel,
+                //       ),
+                //     ),
+                //   );
+                // });
               },
               child: Container(
                   margin: notificationPadding,
@@ -1352,6 +1349,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      directToMember: true,
     );
   }
 
@@ -1426,44 +1424,48 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                         textAlign: TextAlign.center),
                   ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  Row(
+
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        child: Text(
-                          'Decline',
-                          style: TextStyle(color: Colors.red),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // Once approved
+                            approveMemberForVolunteerRequest(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // request declined
-
-                          declineRequestedMember(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-
-                          Navigator.pop(viewContext);
-                        },
                       ),
                       Padding(
                         padding: EdgeInsets.all(8.0),
                       ),
-                      RaisedButton(
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(color: Colors.green),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          child: Text(
+                            'Decline',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // request declined
+
+                            declineRequestedMember(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // Once approved
-                          approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )
