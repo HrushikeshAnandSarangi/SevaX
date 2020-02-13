@@ -393,6 +393,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         loggedInUser: SevaCore.of(context).loggedInUser,
                         child: CreateEditCommunityView(
                           timebankId: FlavorConfig.values.timebankId,
+                          isFromFind: true,
                         ),
                       ),
                     ),

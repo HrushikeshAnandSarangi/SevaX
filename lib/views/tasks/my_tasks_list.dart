@@ -94,7 +94,7 @@ class MyTasksList extends StatelessWidget {
               }
               return ListView.builder(
                 itemCount: requestModelList.length,
-                physics: NeverScrollableScrollPhysics(),
+                // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (listContext, index) {
                   RequestModel model = requestModelList[index];
 
@@ -642,7 +642,6 @@ class TaskCardViewState extends State<TaskCardView> {
       }
 
       FirestoreManager.requestComplete(model: requestModel);
-
 
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(

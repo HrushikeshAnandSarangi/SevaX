@@ -770,50 +770,57 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     padding: EdgeInsets.all(8.0),
                   ),
                   Column(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontFamily: 'Europa',
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Europa',
+                            ),
                           ),
-                        ),
-                        onPressed: () async {
-                          // Once approved take for feeddback
-                          approveMemberClaim(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                          onPressed: () async {
+                            // Once approved take for feeddback
+                            approveMemberClaim(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
 
-                          Navigator.pop(viewContext);
-                        },
+                            Navigator.pop(viewContext);
+                          },
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.all(5.0),
                       ),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          'Reject',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Europa',
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Reject',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Europa',
+                            ),
                           ),
+                          onPressed: () async {
+                            // reject the claim
+                            rejectMemberClaimForEvent(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // reject the claim
-                          rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )

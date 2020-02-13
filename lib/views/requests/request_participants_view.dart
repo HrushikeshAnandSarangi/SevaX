@@ -245,14 +245,16 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           padding: EdgeInsets.only(bottom: 10),
                           child: RaisedButton(
                             shape: StadiumBorder(),
-                            color: Colors.indigo,
+                            color: Colors.green,
                             textColor: Colors.white,
                             elevation: 5,
                             onPressed: () {
                               print("approved");
                             },
                             child: Text('Approved',
-                                style: TextStyle(fontSize: 12)),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                )),
                           ),
                         ),
                       ],

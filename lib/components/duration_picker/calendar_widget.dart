@@ -10,7 +10,8 @@ class CalendarWidget extends StatefulWidget {
   final DateTime startDate;
   final DateTime endDate;
   final SelectionType selectionType;
-  final void Function(DateTime callbackDate) onDateSelected;
+  final void Function(DateTime callbackDate, SelectionType selectionType)
+      onDateSelected;
 
   CalendarWidget(
     this.dateTime,
@@ -38,10 +39,11 @@ class CalendarWidgetState extends State<CalendarWidget> {
   @override
   void initState() {
     super.initState();
+    selectionType = widget.selectionType;
     _currentDate = widget.dateTime ?? DateTime.now();
     setMonthPadding();
-    assert(widget.startDate.isBefore(widget.endDate) ||
-        isSameDay(widget.startDate, widget.endDate));
+//    assert(widget.startDate.isBefore(widget.endDate) ||
+//        isSameDay(widget.startDate, widget.endDate));
     startDate = widget.startDate;
     endDate = widget.endDate;
   }
@@ -89,9 +91,10 @@ class CalendarWidgetState extends State<CalendarWidget> {
                               setState(() {
                                 startDate = getSelectedDate(dayNumber);
                                 endDate = startDate;
-                                widget
-                                    .onDateSelected(getSelectedDate(dayNumber));
-                                //selectionType = SelectionType.END_DATE;
+
+                                //   selectionType = SelectionType.END_DATE;
+                                widget.onDateSelected(
+                                    getSelectedDate(dayNumber), selectionType);
                               });
                               break;
                             case SelectionType.END_DATE:
@@ -100,11 +103,14 @@ class CalendarWidgetState extends State<CalendarWidget> {
                                   .isBefore(startDate)) return false;
                               setState(() {
                                 endDate = getSelectedDate(dayNumber);
-                                widget
-                                    .onDateSelected(getSelectedDate(dayNumber));
+
+                                //   selectionType = SelectionType.START_DATE;
+                                widget.onDateSelected(
+                                    getSelectedDate(dayNumber), selectionType);
                               });
                               break;
                           }
+                          return DateTime.now();
                         },
                         child: Center(
                           child: AnimatedContainer(

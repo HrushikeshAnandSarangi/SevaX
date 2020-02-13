@@ -15,7 +15,7 @@ class NoGroupPlaceHolder extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
-            Icons.search,
+            Icons.group,
             color: Theme.of(context).primaryColor,
           ),
           SizedBox(height: 5),

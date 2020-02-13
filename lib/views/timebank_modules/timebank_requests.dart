@@ -228,6 +228,7 @@ class RequestsState extends State<RequestsModule> {
                   child: CupertinoSegmentedControl<int>(
                     selectedColor: Theme.of(context).primaryColor,
                     children: logoWidgets,
+                    borderColor: Colors.grey,
 
                     padding: EdgeInsets.only(left: 5.0, right: 5.0),
                     groupValue: sharedValue,
