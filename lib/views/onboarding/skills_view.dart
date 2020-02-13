@@ -24,15 +24,10 @@ class SkillViewNew extends StatefulWidget {
 
 class _SkillViewNewState extends State<SkillViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
+  TextEditingController _textEditingController = TextEditingController();
   bool autovalidate = false;
-  // List<String> suggestionText = [];
-  // List<String> suggestionID = [];
-  // List<String> selectedSkills = [];
-  // List<String> selectedID = [];
   Map<String, dynamic> skills = {};
-  // Map<String, dynamic> ids = {};
   Map<String, dynamic> _selectedSkills = {};
-  // List<Widget> selectedChips = [];
   @override
   void initState() {
     print(widget.userModel.skills);
@@ -91,6 +86,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
               ),
               hideOnError: true,
               textFieldConfiguration: TextFieldConfiguration(
+                controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   filled: true,
@@ -115,6 +111,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 skills.forEach((id, skill) => dataCopy.add(skill));
                 dataCopy.retainWhere(
                     (s) => s.toLowerCase().contains(pattern.toLowerCase()));
+
                 return await Future.value(dataCopy);
               },
               itemBuilder: (context, suggestion) {
@@ -138,13 +135,15 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 );
               },
               onSuggestionSelected: (suggestion) {
+                _textEditingController.clear();
                 if (!_selectedSkills.containsValue(suggestion)) {
                   controller.close();
                   String id =
                       skills.keys.firstWhere((k) => skills[k] == suggestion);
                   _selectedSkills[id] = suggestion;
-                  // selectedChips.add(buildChip(id: id, value: suggestion));
-                  setState(() {});
+                  setState(() {
+
+                  });
                 }
               },
             ),

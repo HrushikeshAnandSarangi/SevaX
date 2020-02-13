@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/views/onboarding/skills_view.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
@@ -9,12 +10,14 @@ typedef StringListCallback = void Function(List<String> skills);
 class InterestViewNew extends StatefulWidget {
   final UserModel userModel;
   final VoidCallback onSkipped;
+  final VoidCallback onBacked;
   final StringListCallback onSelectedInterests;
   final bool automaticallyImplyLeading;
 
   InterestViewNew({
     @required this.onSelectedInterests,
     @required this.onSkipped,
+    this.onBacked,
     this.userModel,
     this.automaticallyImplyLeading = true,
   });
@@ -24,6 +27,7 @@ class InterestViewNew extends StatefulWidget {
 
 class _InterestViewNewState extends State<InterestViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
+  TextEditingController _textEditingController = TextEditingController();
 
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
@@ -50,6 +54,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
+        leading:BackButton(
+          onPressed: (){widget.onBacked();},
+        ),
         title: Text(
           'Interests',
           style: TextStyle(
@@ -76,6 +83,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 borderRadius: BorderRadius.circular(8),
               ),
               textFieldConfiguration: TextFieldConfiguration(
+                controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   filled: true,
@@ -124,12 +132,12 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 );
               },
               onSuggestionSelected: (suggestion) {
+                _textEditingController.clear();
                 if (!_selectedInterests.containsValue(suggestion)) {
                   controller.close();
                   String id = interests.keys
                       .firstWhere((k) => interests[k] == suggestion);
                   _selectedInterests[id] = suggestion;
-
                   setState(() {});
                 }
               },

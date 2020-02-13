@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/views/onboarding/interests_view.dart';
 
 typedef StringCallback = void Function(String bio);
 
 class BioView extends StatefulWidget {
   final VoidCallback onSkipped;
   final StringCallback onSave;
+  final VoidCallback onBacked;
 
   BioView({
     @required this.onSkipped,
     @required this.onSave,
+    this.onBacked
   });
 
   @override
@@ -36,6 +39,9 @@ class _BioViewState extends State<BioView> {
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
+            leading:BackButton(
+                onPressed: (){widget.onBacked();},
+            ),
             elevation: 0.5,
             title: Text(
               'Bio',
@@ -89,10 +95,13 @@ class _BioViewState extends State<BioView> {
                               if (value.trim().isEmpty) {
                                 return 'Its easy, please fill few words about you.';
                               }
-                              if (value.length < 50)
+                              if (value.length < 50){
+                                this.bio = value;
                                 return '* min 50 characters';
+                              }
                               this.bio = value;
-                            },
+
+                            }
                           ),
                           // Text(
                           //   '*min 100 characters',

@@ -276,6 +276,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                                 return 'Please enter bio to update';
                               }
                               widget.userModel.bio = value;
+
                             },
                           ),
                         ),

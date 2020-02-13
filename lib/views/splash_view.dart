@@ -269,16 +269,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Text(
-              //   'Humanity\nFirst'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
               SizedBox(
                 height: 16,
               ),
@@ -671,18 +661,6 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.skills = skills;
             updateUserData(loggedInUser);
-            // var batch = _firestore.batch();
-            // skills.forEach(
-            //   (id) => batch.updateData(
-            //     _firestore.collection('skills').document(id),
-            //     {
-            //       "users": FieldValue.arrayUnion(
-            //         [loggedInUser.sevaUserID],
-            //       ),
-            //     },
-            //   ),
-            // );
-            // batch.commit();
             loadingMessage = 'Updating skills';
           },
           onSkipped: () {
@@ -756,18 +734,6 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.interests = interests;
             updateUserData(loggedInUser);
-            //  var batch = _firestore.batch();
-            // interests.forEach(
-            //   (id) => batch.updateData(
-            //     _firestore.collection('interests').document(id),
-            //     {
-            //       "users": FieldValue.arrayUnion(
-            //         [loggedInUser.sevaUserID],
-            //       ),
-            //     },
-            //   ),
-            // );
-            // batch.commit();
             loadingMessage = 'Updating interests';
           },
           onSkipped: () {
@@ -775,6 +741,9 @@ class _SplashViewState extends State<SplashView> {
             loggedInUser.interests = [];
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping interests';
+          },
+          onBacked:(){
+            _navigateToSkillsView(loggedInUser);
           },
         ),
       ),
@@ -797,6 +766,31 @@ class _SplashViewState extends State<SplashView> {
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping bio';
           },
+      onBacked:(){
+        Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => InterestViewNew(
+            automaticallyImplyLeading: false,
+            userModel: loggedInUser,
+            onSelectedInterests: (interests) {
+              Navigator.pop(context);
+              loggedInUser.interests = interests;
+              updateUserData(loggedInUser);
+              loadingMessage = 'Updating interests';
+            },
+            onSkipped: () {
+              Navigator.pop(context);
+              loggedInUser.interests = [];
+              updateUserData(loggedInUser);
+              loadingMessage = 'Skipping interests';
+            },
+            onBacked:(){
+              _navigateToInterestsView(loggedInUser);
+            },
+          ),
+          ),
+        );
+      }
         ),
       ),
     );
