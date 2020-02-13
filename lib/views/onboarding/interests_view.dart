@@ -24,6 +24,7 @@ class InterestViewNew extends StatefulWidget {
 
 class _InterestViewNewState extends State<InterestViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
+  TextEditingController _textEditingController = TextEditingController();
 
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
@@ -66,9 +67,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
             Text(
               'What are some of your interests and passions that you would be willing to share with your community?',
               style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
+                color: Colors.black54,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             SizedBox(height: 20),
             TypeAheadField<String>(
@@ -76,6 +78,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 borderRadius: BorderRadius.circular(8),
               ),
               textFieldConfiguration: TextFieldConfiguration(
+                controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   filled: true,
@@ -124,6 +127,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 );
               },
               onSuggestionSelected: (suggestion) {
+                _textEditingController.clear();
                 if (!_selectedInterests.containsValue(suggestion)) {
                   controller.close();
                   String id = interests.keys

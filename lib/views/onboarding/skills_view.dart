@@ -33,6 +33,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   // Map<String, dynamic> ids = {};
   Map<String, dynamic> _selectedSkills = {};
   // List<Widget> selectedChips = [];
+  TextEditingController _textEditingController = TextEditingController();
   @override
   void initState() {
     print(widget.userModel.skills);
@@ -91,6 +92,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
               ),
               hideOnError: true,
               textFieldConfiguration: TextFieldConfiguration(
+                controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   filled: true,
@@ -138,6 +140,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 );
               },
               onSuggestionSelected: (suggestion) {
+                _textEditingController.clear();
                 if (!_selectedSkills.containsValue(suggestion)) {
                   controller.close();
                   String id =
@@ -1069,4 +1072,3 @@ class _SkillViewNewState extends State<SkillViewNew> {
 //     );
 //   }
 // }
-
