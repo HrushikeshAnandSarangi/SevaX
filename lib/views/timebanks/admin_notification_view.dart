@@ -534,7 +534,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
-      directToMember: true,
     );
 
     print("request completion chain ends here");
