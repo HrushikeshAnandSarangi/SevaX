@@ -328,10 +328,14 @@ class NewsCardView extends StatelessWidget {
 
   Widget get newsImage {
     return newsModel.newsImageUrl == null
-        ? newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
-            ? Offstage()
-            : getImageView(url: newsModel.imageScraped, imageId: newsModel.id)
+        ? Offstage()
         : getImageView(url: newsModel.newsImageUrl, imageId: newsModel.id);
+  }
+
+  Widget get scrappedImage {
+    return newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
+        ? Offstage()
+        : getImageView(url: newsModel.imageScraped, imageId: newsModel.id);
   }
 
   Widget getImageView({
@@ -395,7 +399,10 @@ class NewsCardView extends StatelessWidget {
                 Text(
                   newsModel.subheading.trim(),
                   style: TextStyle(fontSize: 18.0, height: 1.4),
-                )
+                ),
+                Center(
+                  child: scrappedImage,
+                ),
               ],
             ),
           );
