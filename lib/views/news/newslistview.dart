@@ -1,25 +1,24 @@
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
+import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
+import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
-import 'package:sevaexchange/models/news_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/timebanks/timebank_view.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-// import 'package:flutter_linkify/flutter_linkify.dart';
+
 import '../../flavor_config.dart';
 import '../core.dart';
-import 'package:flutter/cupertino.dart';
 
 class NewsListView extends StatelessWidget {
   @override
@@ -698,14 +697,14 @@ class NewsListState extends State<NewsList> {
                                                       'Do you want to report this feed?'),
                                                   actions: <Widget>[
                                                     FlatButton(
-                                                      child: Text('Cancel'),
-                                                      onPressed: () {
-                                                        Navigator.of(
-                                                                viewContext)
-                                                            .pop();
-                                                      },
-                                                    ),
-                                                    FlatButton(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              20, 5, 20, 5),
+                                                      color: Theme.of(context)
+                                                          .accentColor,
+                                                      textColor: FlavorConfig
+                                                          .values
+                                                          .buttonTextColor,
                                                       child: Text(
                                                         'Report Feed',
                                                         style: TextStyle(
@@ -741,6 +740,18 @@ class NewsListState extends State<NewsList> {
                                                                 news.reports
                                                           });
                                                         }
+                                                        Navigator.of(
+                                                                viewContext)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text(
+                                                        'Cancel',
+                                                        style: TextStyle(
+                                                            color: Colors.red),
+                                                      ),
+                                                      onPressed: () {
                                                         Navigator.of(
                                                                 viewContext)
                                                             .pop();

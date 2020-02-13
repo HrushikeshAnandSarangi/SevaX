@@ -1135,14 +1135,14 @@ class DiscussionListState extends State<DiscussionList> {
                                                         'Do you want to report this feed?'),
                                                     actions: <Widget>[
                                                       FlatButton(
-                                                        child: Text('Cancel'),
-                                                        onPressed: () {
-                                                          Navigator.of(
-                                                                  viewContext)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                      FlatButton(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                20, 5, 20, 5),
+                                                        color: Theme.of(context)
+                                                            .accentColor,
+                                                        textColor: FlavorConfig
+                                                            .values
+                                                            .buttonTextColor,
                                                         child: Text(
                                                           'Report Feed',
                                                           style: TextStyle(
@@ -1180,6 +1180,19 @@ class DiscussionListState extends State<DiscussionList> {
                                                                   news.reports
                                                             });
                                                           }
+                                                          Navigator.of(
+                                                                  viewContext)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                      FlatButton(
+                                                        child: Text(
+                                                          'Cancel',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                        onPressed: () {
                                                           Navigator.of(
                                                                   viewContext)
                                                               .pop();

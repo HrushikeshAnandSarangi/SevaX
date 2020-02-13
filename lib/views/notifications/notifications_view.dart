@@ -607,7 +607,6 @@ class NotificationsView extends State<NotificationViewHolder> {
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
-      directToMember: true,
     );
 
     FirestoreManager.readUserNotification(
@@ -1425,16 +1424,20 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                         textAlign: TextAlign.center),
                   ),
-
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         width: double.infinity,
                         child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
                           child: Text(
                             'Approve',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
                           ),
                           onPressed: () async {
                             // Once approved
@@ -1447,14 +1450,16 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(5.0),
                       ),
                       Container(
                         width: double.infinity,
                         child: RaisedButton(
+                          color: Theme.of(context).accentColor,
                           child: Text(
                             'Decline',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
                           ),
                           onPressed: () async {
                             // request declined

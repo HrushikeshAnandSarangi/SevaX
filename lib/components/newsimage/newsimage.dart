@@ -171,6 +171,7 @@ class NewsImageState extends State<NewsImage>
                       child: Container(
                         margin: EdgeInsets.only(left: 20),
                         child: FlatButton.icon(
+                          padding: EdgeInsets.only(left: 8),
                           icon: Icon(Icons.image),
                           color: Colors.grey[200],
                           label: Text(
@@ -187,6 +188,7 @@ class NewsImageState extends State<NewsImage>
                       child: Container(
                         margin: EdgeInsets.only(left: 20),
                         child: FlatButton.icon(
+                          padding: EdgeInsets.only(left: 8),
                           icon: Icon(Icons.add_location),
                           label: Text(
                             "",

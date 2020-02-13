@@ -234,19 +234,18 @@ class _RegisterPageState extends State<RegisterPage>
               this.password = value;
             },
             suffix: Container(
-              height: 30,
-              child:  GestureDetector(
-                onTap: () {
-                  _shouldObscurePassword = !_shouldObscurePassword;
-                  setState(() {});
-                },
-                child: Icon(
-                  _shouldObscurePassword
-                      ? Icons.visibility_off
-                      : Icons.visibility,
-                ),
-              )
-            ),
+                height: 30,
+                child: GestureDetector(
+                  onTap: () {
+                    _shouldObscurePassword = !_shouldObscurePassword;
+                    setState(() {});
+                  },
+                  child: Icon(
+                    _shouldObscurePassword
+                        ? Icons.visibility_off
+                        : Icons.visibility,
+                  ),
+                )),
           ),
           getFormField(
             shouldRestrictLength: false,
@@ -263,9 +262,10 @@ class _RegisterPageState extends State<RegisterPage>
             },
             suffix: Container(
                 height: 30,
-                child:  GestureDetector(
+                child: GestureDetector(
                   onTap: () {
-                    _shouldObscureConfirmPassword = !_shouldObscureConfirmPassword;
+                    _shouldObscureConfirmPassword =
+                        !_shouldObscureConfirmPassword;
                     setState(() {});
                   },
                   child: Icon(
@@ -273,8 +273,7 @@ class _RegisterPageState extends State<RegisterPage>
                         ? Icons.visibility_off
                         : Icons.visibility,
                   ),
-                )
-            ),
+                )),
           )
         ],
       ),
@@ -350,8 +349,9 @@ class _RegisterPageState extends State<RegisterPage>
                               child: Text(
                                 'Skip and register',
                                 style: TextStyle(
-                                  fontSize: dialogButtonSize,
-                                ),
+                                    fontSize: dialogButtonSize,
+                                    color: Colors.red,
+                                    fontFamily: 'Europa'),
                               ),
                               onPressed: () async {
                                 Navigator.pop(viewContext);
@@ -365,11 +365,14 @@ class _RegisterPageState extends State<RegisterPage>
                               },
                             ),
                             FlatButton(
+                              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                              color: Theme.of(context).accentColor,
+                              textColor: FlavorConfig.values.buttonTextColor,
                               child: Text(
                                 'Add Photo',
                                 style: TextStyle(
-                                  fontSize: dialogButtonSize,
-                                ),
+                                    fontSize: dialogButtonSize,
+                                    fontFamily: 'Europa'),
                               ),
                               onPressed: () {
                                 Navigator.pop(viewContext);
@@ -471,6 +474,9 @@ class _RegisterPageState extends State<RegisterPage>
       Navigator.pop(context, user);
       // Navigator.popUntil(context, (r) => r.isFirst);
     } on PlatformException catch (error) {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text(error.message),
@@ -482,6 +488,10 @@ class _RegisterPageState extends State<RegisterPage>
       );
       return null;
     } catch (error) {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
+
       log('createUser: error: ${error.toString()}');
       return null;
     }

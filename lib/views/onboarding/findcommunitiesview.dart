@@ -16,9 +16,12 @@ import 'package:sevaexchange/views/invitation/OnboardWithTimebankCode.dart';
 class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
   final UserModel loggedInUser;
+  final bool showBackBtn;
 
   FindCommunitiesView(
-      {@required this.keepOnBackPress, @required this.loggedInUser});
+      {@required this.keepOnBackPress,
+      @required this.loggedInUser,
+      @required this.showBackBtn});
 
   @override
   State<StatefulWidget> createState() {
@@ -67,6 +70,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   @override
   Widget build(BuildContext context) {
+    bool showBachBtn = widget.showBackBtn;
     return MaterialApp(
       theme: FlavorConfig.values.theme,
       home: Scaffold(
@@ -75,9 +79,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           // automaticallyImplyLeading: widget.keepOnBackPress,
           automaticallyImplyLeading: false,
           elevation: 0.5,
-          // leading: BackButton(
-          //   onPressed: () => Navigator.pop(context),
-          // ),
+
+          leading: showBachBtn
+              ? BackButton(
+                  onPressed: () => Navigator.pop(context),
+                )
+              : Offstage(),
           title: Text(
             'Find your Timebank',
             style: TextStyle(
@@ -386,6 +393,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                         loggedInUser: SevaCore.of(context).loggedInUser,
                         child: CreateEditCommunityView(
                           timebankId: FlavorConfig.values.timebankId,
+                          isFromFind: true,
                         ),
                       ),
                     ),

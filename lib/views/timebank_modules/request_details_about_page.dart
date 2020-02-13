@@ -393,7 +393,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: isApplied ? Colors.red : Colors.green,
+                  color:
+                      isApplied ? Theme.of(context).accentColor : Colors.green,
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 1),
@@ -459,7 +460,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              textColor: Colors.red,
+              child: new Text(
+                "Close",
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },

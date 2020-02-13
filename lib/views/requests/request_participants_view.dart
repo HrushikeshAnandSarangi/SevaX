@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
 import 'package:sevaexchange/utils/firestore_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../flavor_config.dart';
 import '../core.dart';
 
 class RequestParticipantsView extends StatefulWidget {
@@ -244,14 +245,16 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           padding: EdgeInsets.only(bottom: 10),
                           child: RaisedButton(
                             shape: StadiumBorder(),
-                            color: Colors.indigo,
+                            color: Colors.green,
                             textColor: Colors.white,
                             elevation: 5,
                             onPressed: () {
                               print("approved");
                             },
                             child: Text('Approved',
-                                style: TextStyle(fontSize: 12)),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                )),
                           ),
                         ),
                       ],
@@ -372,45 +375,51 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        color: Colors.red,
-                        child: Text(
-                          'Decline',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // Once approved
+                            approveMemberForVolunteerRequest(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // request declined
-
-                          declineRequestedMember(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-
-                          Navigator.pop(viewContext);
-                        },
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(5.0),
                       ),
-                      RaisedButton(
-                        color: Colors.green,
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(
-                              color: Colors.white, fontFamily: 'Europa'),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Decline',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // request declined
+
+                            declineRequestedMember(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // Once approved
-                          approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )
