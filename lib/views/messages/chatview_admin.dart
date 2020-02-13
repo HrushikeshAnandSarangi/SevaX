@@ -47,6 +47,7 @@ class AdminChatViewState extends State<AdminChatView> {
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   ScrollController scrollcontroller = ScrollController();
+  Future _fetchAppBarData;
 
   @override
   void didChangeDependencies() {
@@ -65,7 +66,9 @@ class AdminChatViewState extends State<AdminChatView> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _fetchAppBarData = isValidEmail(widget.useremail)
+        ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
+        : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
     if (widget.isFromRejectCompletion == null)
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
@@ -141,11 +144,7 @@ class AdminChatViewState extends State<AdminChatView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FutureBuilder<Object>(
-                future: isValidEmail(widget.useremail)
-                    ? FirestoreManager.getUserForEmail(
-                        emailAddress: widget.useremail)
-                    : FirestoreManager.getTimeBankForId(
-                        timebankId: widget.useremail),
+                future: _fetchAppBarData,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return new Text('Error');
@@ -457,25 +456,31 @@ class AdminChatViewState extends State<AdminChatView> {
               "${partnerUser.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
           actions: <Widget>[
             new FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: new Text(
-                "CANCEL",
+                'Block',
                 style: TextStyle(
                   fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop("CANCEL");
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                'BLOCK',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
+                  fontFamily: 'Europa',
                 ),
               ),
               onPressed: () {
                 Navigator.of(context).pop("BLOCK");
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "Cancel",
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                  color: Colors.red,
+                  fontFamily: 'Europa',
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop("CANCEL");
               },
             ),
           ],

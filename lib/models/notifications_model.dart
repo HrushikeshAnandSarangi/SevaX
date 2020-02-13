@@ -10,6 +10,7 @@ class NotificationsModel extends DataModel {
   bool isRead;
   String timebankId;
   String communityId;
+  bool directToMember;
 
   NotificationsModel({
     this.id,
@@ -20,9 +21,11 @@ class NotificationsModel extends DataModel {
     this.senderUserId,
     @required this.timebankId,
     @required this.communityId,
+    this.directToMember = true,
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
+
     if (map.containsKey('id')) {
       this.id = map['id'];
     }

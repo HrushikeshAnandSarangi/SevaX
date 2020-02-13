@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
+import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -15,6 +17,9 @@ import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
+
+import 'messages/timebank_chats.dart';
 // import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 // import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 
@@ -42,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
   CommunityModel selectedCommunity;
   TimeBankModelSingleton timeBankModelSingleton = TimeBankModelSingleton();
-  List<Tab> tabs = [];
+  List<Widget> tabs = [];
   List<Widget> pages = [];
   bool isAdmin = false;
 
@@ -138,94 +143,135 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           ),
         ),
         body: StreamBuilder<SelectedCommuntityGroup>(
-            stream: _homeDashBoardBloc
-                .getCurrentGroups(SevaCore.of(context).loggedInUser),
-            builder: (context, snapshot) {
-              if (snapshot.data == null || !snapshot.hasData) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasData && snapshot.data != null) {
-                print("asd" + snapshot.data.timebanks.length.toString());
-                snapshot.data.timebanks.forEach(
-                  (TimebankModel data) {
-                    print(
-                        "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
-                    if (data.id ==
-                        snapshot.data.currentCommunity.primary_timebank) {
-                      print("inside if" + data.toString());
-                      primaryTimebank = data;
-                      timeBankModelSingleton.model = primaryTimebank;
-                    }
-                  },
-                );
-
-                if (primaryTimebank != null &&
-                    primaryTimebank.admins.contains(
-                        SevaCore.of(context).loggedInUser.sevaUserID) &&
-                    tabs.length == 6) {
-                  isAdmin = true;
-                  _timebankController = TabController(length: 8, vsync: this);
-                  tabs.add(Tab(text: 'Notifications'));
-                  tabs.add(Tab(text: 'Manage'));
-                }
-              }
-
-              return Column(
-                children: <Widget>[
-                  TabBar(
-                    controller: _timebankController,
-                    indicatorColor: Colors.black,
-                    labelColor: Colors.black,
-                    isScrollable: true,
-                    tabs: tabs,
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      controller: _timebankController,
-                      children: <Widget>[
-                        TimebankHomePage(
-                          selectedCommuntityGroup: snapshot.data,
-                        ),
-                        DiscussionList(
-                          timebankId: primaryTimebank.id,
-                        ),
-                        // TimebankFeeds(),
-                        RequestsModule.of(
-                          timebankId: primaryTimebank.id,
-                          timebankModel: primaryTimebank,
-                        ),
-                        OffersModule.of(
-                          timebankId: primaryTimebank.id,
-                          timebankModel: primaryTimebank,
-                        ),
-                        TimeBankAboutView.of(
-                          timebankModel: primaryTimebank,
-                          email: SevaCore.of(context).loggedInUser.email,
-                        ),
-                        TimebankRequestAdminPage(
-                          isUserAdmin: primaryTimebank.admins.contains(
-                            SevaCore.of(context).loggedInUser.sevaUserID,
-                          ),
-                          timebankId: primaryTimebank.id,
-                          userEmail: SevaCore.of(context).loggedInUser.email,
-                        ),
-                        ...isAdmin
-                            ? [
-                                TimebankNotificationsView(
-                                  timebankId: primaryTimebank.id,
-                                ),
-                                ManageTimebankSeva.of(
-                                  timebankModel: primaryTimebank,
-                                ),
-                              ]
-                            : []
-                      ],
-                    ),
-                  ),
-                ],
+          stream: _homeDashBoardBloc
+              .getCurrentGroups(SevaCore.of(context).loggedInUser),
+          builder: (context, snapshot) {
+            if (snapshot.data == null || !snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasData && snapshot.data != null) {
+              print("asd" + snapshot.data.timebanks.length.toString());
+              snapshot.data.timebanks.forEach(
+                (TimebankModel data) {
+                  print(
+                      "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
+                  if (data.id ==
+                      snapshot.data.currentCommunity.primary_timebank) {
+                    print("inside if" + data.toString());
+                    primaryTimebank = data;
+                    timeBankModelSingleton.model = primaryTimebank;
+                  }
+                },
               );
-            }),
+
+              if (primaryTimebank != null &&
+                  primaryTimebank.admins
+                      .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
+                  tabs.length == 6) {
+                isAdmin = true;
+                _timebankController = TabController(length: 9, vsync: this);
+
+                tabs.add(Tab(text: 'Manage'));
+                tabs.add(
+                  GetActiveTimebankNotifications(
+                      timebankId: primaryTimebank.id),
+                );
+                tabs.add(
+                  getMessagingTab(
+                    timebankId: primaryTimebank.id,
+                    communityId:
+                        SevaCore.of(context).loggedInUser.currentCommunity,
+                  ),
+                );
+              }
+            }
+
+            return Column(
+              children: <Widget>[
+                TabBar(
+                  controller: _timebankController,
+                  indicatorColor: Colors.black,
+                  labelColor: Colors.black,
+                  isScrollable: true,
+                  tabs: tabs,
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _timebankController,
+                    children: <Widget>[
+                      TimebankHomePage(
+                        selectedCommuntityGroup: snapshot.data,
+                      ),
+                      DiscussionList(
+                        timebankId: primaryTimebank.id,
+                      ),
+                      // TimebankFeeds(),
+                      RequestsModule.of(
+                        timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
+                      ),
+                      OffersModule.of(
+                        timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
+                      ),
+                      TimeBankAboutView.of(
+                        timebankModel: primaryTimebank,
+                        email: SevaCore.of(context).loggedInUser.email,
+                      ),
+                      TimebankRequestAdminPage(
+                        isUserAdmin: primaryTimebank.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID,
+                        ),
+                        timebankId: primaryTimebank.id,
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                      ),
+                      ...isAdmin
+                          ? [
+                              ManageTimebankSeva.of(
+                                timebankModel: primaryTimebank,
+                              ),
+                              TimebankNotificationsView(
+                                timebankId: primaryTimebank.id,
+                              ),
+                              TimebankChatListView(
+                                timebankId: primaryTimebank.id,
+                              ),
+                            ]
+                          : []
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
+    );
+  }
+
+  Widget getMessagingTab({String timebankId, String communityId}) {
+    return StreamBuilder<List<ChatModel>>(
+      stream: getChatsForTimebank(
+        timebankId: timebankId,
+        communityId: communityId,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Tab(
+            icon: gettingMessages,
+          );
+        }
+        var unreadCount = 0;
+        snapshot.data.forEach((model) {
+          model.unreadStatus.containsKey(timebankId)
+              ? unreadCount += model.unreadStatus[timebankId]
+              : print("not found");
+        });
+
+        return Tab(
+          icon: unreadMessages(unreadCount),
+        );
+      },
     );
   }
 }

@@ -52,6 +52,7 @@ class _ChatViewState extends State<ChatView> {
   final TextEditingController textcontroller = new TextEditingController();
   final _formKey = GlobalKey<FormState>();
   ScrollController scrollcontroller = ScrollController();
+  Future _fetchAppBarData;
 
   @override
   void didChangeDependencies() {
@@ -70,7 +71,9 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    _fetchAppBarData = isValidEmail(widget.useremail)
+        ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
+        : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
     if (widget.isFromRejectCompletion == null)
       widget.isFromRejectCompletion = false;
     if (widget.isFromRejectCompletion)
@@ -87,29 +90,34 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Widget appBar({String imageUrl, String appbarTitle}) {
-    return Row(
-      children: <Widget>[
-        Container(
-          height: 36,
-          width: 36,
-          decoration: ShapeDecoration(
-            shape: CircleBorder(
-              side: BorderSide(
-                color: Colors.white,
-                width: 1,
+    return Expanded(
+      child: Row(
+        children: <Widget>[
+          Container(
+            height: 36,
+            width: 36,
+            decoration: ShapeDecoration(
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: Colors.white,
+                  width: 1,
+                ),
+              ),
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
               ),
             ),
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-        ),
-        Text(appbarTitle,
-            style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis),
-      ],
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          ),
+          Expanded(
+            child: Text(appbarTitle,
+                style: TextStyle(fontSize: 18),
+                overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
     );
   }
 
@@ -143,11 +151,7 @@ class _ChatViewState extends State<ChatView> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FutureBuilder<Object>(
-                future: isValidEmail(widget.useremail)
-                    ? FirestoreManager.getUserForEmail(
-                        emailAddress: widget.useremail)
-                    : FirestoreManager.getTimeBankForId(
-                        timebankId: widget.useremail),
+                future: _fetchAppBarData,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return new Text('Error');
@@ -160,7 +164,7 @@ class _ChatViewState extends State<ChatView> {
                     TimebankModel timebankModel = snapshot.data;
                     return appBar(
                         appbarTitle: timebankModel.name,
-                        imageUrl: timebankModel.photoUrl??'');
+                        imageUrl: timebankModel.photoUrl ?? '');
                   }
 
                   partnerUser = snapshot.data;
@@ -269,6 +273,7 @@ class _ChatViewState extends State<ChatView> {
                           return 'Please type message';
                         }
                         messageModel.message = value;
+                        setState(() {});
                       },
                     ),
                   ),
@@ -458,25 +463,26 @@ class _ChatViewState extends State<ChatView> {
               "${partnerUser.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
           actions: <Widget>[
             new FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: new Text(
-                "CANCEL",
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop("CANCEL");
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                'BLOCK',
+                'Block',
                 style: TextStyle(
                   fontSize: dialogButtonSize,
                 ),
               ),
               onPressed: () {
                 Navigator.of(context).pop("BLOCK");
+              },
+            ),
+            new FlatButton(
+              child: new Text(
+                "Cancel",
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop("CANCEL");
               },
             ),
           ],

@@ -1068,4 +1068,3 @@ class _SkillViewNewState extends State<SkillViewNew> {
 //     );
 //   }
 // }
-

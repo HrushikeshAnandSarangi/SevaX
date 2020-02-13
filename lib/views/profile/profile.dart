@@ -293,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                              'Select a timebank',
+                              'Select a Timebank',
                               style: TextStyle(fontSize: 18),
                             ),
                             IconButton(
@@ -304,6 +304,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     builder: (context) =>
                                         CreateEditCommunityView(
                                       timebankId: timebankModel.id,
+                                      isFromFind: false,
                                     ),
                                   ),
                                 );
@@ -353,24 +354,22 @@ class _ProfilePageState extends State<ProfilePage>
                           elevation: 2,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
+                            // child: ListView.separated(
+                            //   padding: EdgeInsets.all(0),
+                            //   shrinkWrap: true,
+                            //   itemCount: communities.length,
+                            //   physics: NeverScrollableScrollPhysics(),
+                            //   itemBuilder: (context, index) {
+                            //     return CommunityCard(
+                            //       community: communities[index],
+                            //       selected: communities[index].id ==
+                            //           user.currentCommunity,
+                            //     );
+                            //   },
+                            //   separatorBuilder: (context, index) {
+                            //     return Divider();
+                            //   },
                           ),
-                          // child: ListView.separated(
-                          //   padding: EdgeInsets.all(0),
-                          //   shrinkWrap: true,
-                          //   itemCount: communities.length,
-                          //   physics: NeverScrollableScrollPhysics(),
-                          //   itemBuilder: (context, index) {
-                          //     return CommunityCard(
-                          //       community: communities[index],
-                          //       selected: communities[index].id ==
-                          //           user.currentCommunity,
-                          //     );
-                          //   },
-                          //   separatorBuilder: (context, index) {
-                          //     return Divider();
-                          //   },
-                          // ),
-
                           child: StreamBuilder<List<Widget>>(
                             stream: _profileBloc.communities,
                             builder: (context, snapshot) {
@@ -460,6 +459,9 @@ class _ProfilePageState extends State<ProfilePage>
                                         builder: (context) {
                                           return FindCommunitiesView(
                                             keepOnBackPress: true,
+                                            loggedInUser: SevaCore.of(context)
+                                                .loggedInUser,
+                                            showBackBtn: true,
                                           );
                                         },
                                       ),
@@ -836,15 +838,6 @@ class _ProfilePageState extends State<ProfilePage>
           title: Text("Signing out"),
           content: Text("Acknowledge the verification mail and login back"),
           actions: <Widget>[
-            FlatButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Text(
-                  "No, I'll do it later",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () => Navigator.of(context).pop()),
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               elevation: 5,
@@ -863,6 +856,13 @@ class _ProfilePageState extends State<ProfilePage>
                 });
               },
             ),
+            FlatButton(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: Text(
+                  "No, I'll do it later",
+                  style: TextStyle(fontSize: 16, color: Colors.red),
+                ),
+                onPressed: () => Navigator.of(context).pop()),
           ],
         );
       },

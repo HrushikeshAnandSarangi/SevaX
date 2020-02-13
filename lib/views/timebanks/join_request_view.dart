@@ -215,29 +215,15 @@ class TimebankRequests extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column(
+                    //  mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       RaisedButton(
-                        child: Text(
-                          'Reject',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        onPressed: () async {
-                          // request declined
-                          print("Declining request");
-                          model.accepted = false;
-                          await createJoinRequest(model: model);
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                      ),
-                      RaisedButton(
+                        color: Theme.of(context).accentColor,
                         child: Text(
                           'Allow',
-                          style: TextStyle(color: Colors.green),
+                          style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () async {
                           // Once approved
@@ -249,6 +235,23 @@ class TimebankRequests extends StatelessWidget {
                           model.accepted = true;
                           await createJoinRequest(model: model);
                           await updateTimebank(timebankModel: timebankModel);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(4.0),
+                      ),
+                      RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        child: Text(
+                          'Reject',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () async {
+                          // request declined
+                          print("Declining request");
+                          model.accepted = false;
+                          await createJoinRequest(model: model);
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -288,18 +291,17 @@ class TimebankRequests extends StatelessWidget {
       ),
     );
   }
-  Widget getBio(UserModel userModel){
-    if(userModel.bio != null) {
-      if(userModel.bio.length <100){
+
+  Widget getBio(UserModel userModel) {
+    if (userModel.bio != null) {
+      if (userModel.bio.length < 100) {
         return Center(
-          child: Text(
-              userModel.bio
-          ),
+          child: Text(userModel.bio),
         );
       }
       return Container(
         height: 200,
-        child:  SingleChildScrollView(
+        child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
             userModel.bio,
@@ -312,11 +314,10 @@ class TimebankRequests extends StatelessWidget {
     }
     return Padding(
       padding: EdgeInsets.all(8.0),
-      child: Text(
-          "Bio not yet updated"
-      ),
+      child: Text("Bio not yet updated"),
     );
   }
+
   Decoration get notificationDecoration => ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

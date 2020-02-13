@@ -73,9 +73,10 @@ class _InterestViewNewState extends State<InterestViewNew> {
             Text(
               'What are some of your interests and passions that you would be willing to share with your community?',
               style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
+                color: Colors.black54,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             SizedBox(height: 20),
             TypeAheadField<String>(

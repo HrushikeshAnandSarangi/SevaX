@@ -1,7 +1,7 @@
 // import 'package:business/main.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'calendar_picker.dart';
 
@@ -41,7 +41,10 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
           Navigator.of(context)
               .push(MaterialPageRoute<List<DateTime>>(
             builder: (context) => CalendarPicker(
-                widget.title.replaceAll('*', ''), _calendarState),
+                widget.title.replaceAll('*', ''),
+                _calendarState,
+                startTime ?? DateTime.now(),
+                endTime ?? DateTime.now()),
             // Open calendar
           ))
               .then((List<DateTime> dateList) {

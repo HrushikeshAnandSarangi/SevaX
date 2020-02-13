@@ -290,6 +290,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                                     widget.loggedInUserModel.sevaUserID,
                                 type: prefix0.NotificationType.JoinRequest,
                                 data: joinReqModel.toMap(),
+                                directToMember: false,
                               );
 
                               notification.timebankId =
@@ -344,9 +345,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   CompareToTimeBank compareTimeBanks(
       List<JoinRequestModel> joinRequestModels, TimebankModel timeBank) {
-
     // CompareToTimeBank status;
-   // print("inside compareTimeBanks" + joinRequestModels.length.toString());
+    // print("inside compareTimeBanks" + joinRequestModels.length.toString());
     for (int i = 0; i < joinRequestModels.length; i++) {
       JoinRequestModel requestModel = joinRequestModels[i];
       print("inside compareTimeBanks " + requestModel.userId);

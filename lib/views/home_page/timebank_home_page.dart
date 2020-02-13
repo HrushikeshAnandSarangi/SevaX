@@ -37,6 +37,19 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     super.dispose();
   }
 
+  void navigateToCreateGroup() {
+    createEditCommunityBloc
+        .updateUserDetails(SevaCore.of(context).loggedInUser);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimebankCreate(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,19 +70,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
-                  onPressed: () {
-                    createEditCommunityBloc
-                        .updateUserDetails(SevaCore.of(context).loggedInUser);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TimebankCreate(
-                          timebankId:
-                              SevaCore.of(context).loggedInUser.currentTimebank,
-                        ),
-                      ),
-                    );
-                  },
+                  onPressed: navigateToCreateGroup,
                 ),
               ],
             ),
@@ -125,7 +126,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   Widget getTimebanks() {
     print("length ==> ${widget.selectedCommuntityGroup.timebanks.length}");
     if (widget.selectedCommuntityGroup.timebanks.length <= 1) {
-      return NoGroupPlaceHolder();
+      return NoGroupPlaceHolder(navigateToCreateGroup: navigateToCreateGroup);
     }
     return FadeAnimation(
       0,

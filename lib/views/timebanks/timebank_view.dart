@@ -2,34 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as prefix2;
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/utils.dart' as prefix1;
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
+import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
+import 'package:sevaexchange/views/campaigns/campaignsview.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/timebanks/timebankedit.dart';
-import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
-import 'package:sevaexchange/views/campaigns/campaignjoin.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_requests_view.dart';
-import 'package:sevaexchange/views/campaigns/campaignsview.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-
-import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/views/timebanks/timebankedit.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../flavor_config.dart';
 import 'edit_super_admins_view.dart';
-import 'edit_timebank_view.dart';
 
 class TimebankView extends StatefulWidget {
   final String timebankId;
@@ -231,143 +228,163 @@ class _TimebankViewState extends State<TimebankView> {
                                           return AlertDialog(
                                             title: new Text(
                                                 "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
-                                            content: Form(
-                                              key: formkey,
-                                              child: TextFormField(
-                                                decoration: InputDecoration(
-                                                  hintText: 'Reason',
-                                                  labelText: 'Reason',
-                                                  // labelStyle: textStyle,
-                                                  // labelStyle: textStyle,
-                                                  // labelText: 'Description',
-                                                  border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                      const Radius.circular(
-                                                          20.0),
+                                            content: Column(
+                                              children: <Widget>[
+                                                Form(
+                                                  key: formkey,
+                                                  child: TextFormField(
+                                                    decoration: InputDecoration(
+                                                      hintText: 'Reason',
+                                                      labelText: 'Reason',
+                                                      // labelStyle: textStyle,
+                                                      // labelStyle: textStyle,
+                                                      // labelText: 'Description',
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .all(
+                                                          const Radius.circular(
+                                                              20.0),
+                                                        ),
+                                                        borderSide:
+                                                            new BorderSide(
+                                                          color: Colors.black,
+                                                          width: 1.0,
+                                                        ),
+                                                      ),
                                                     ),
-                                                    borderSide: new BorderSide(
-                                                      color: Colors.black,
-                                                      width: 1.0,
+                                                    keyboardType:
+                                                        TextInputType.multiline,
+                                                    maxLines: 1,
+                                                    validator: (value) {
+                                                      if (value.isEmpty) {
+                                                        return 'Please enter some text';
+                                                      }
+                                                      joinRequestModel.reason =
+                                                          value;
+                                                    },
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+
+                                                // usually buttons at the bottom of the dialog
+                                                new FlatButton(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      10, 5, 5, 5),
+                                                  color: Theme.of(context)
+                                                      .accentColor,
+                                                  textColor: FlavorConfig
+                                                      .values.buttonTextColor,
+                                                  child: new Text(
+                                                    "Send Join Request",
+                                                    style: TextStyle(
+                                                      fontSize:
+                                                          dialogButtonSize,
+                                                      fontFamily: 'Europa',
                                                     ),
                                                   ),
+                                                  onPressed: () async {
+                                                    joinRequestModel.userId =
+                                                        loggedInUser;
+                                                    joinRequestModel
+                                                        .timestamp = DateTime
+                                                            .now()
+                                                        .millisecondsSinceEpoch;
+
+                                                    joinRequestModel.entityId =
+                                                        timebankModel.id;
+                                                    joinRequestModel
+                                                            .entityType =
+                                                        EntityType.Timebank;
+                                                    joinRequestModel.accepted =
+                                                        null;
+
+                                                    if (formkey.currentState
+                                                        .validate()) {
+                                                      await createJoinRequest(
+                                                          model:
+                                                              joinRequestModel);
+
+                                                      JoinRequestNotificationModel
+                                                          joinReqModel =
+                                                          JoinRequestNotificationModel(
+                                                              timebankId:
+                                                                  timebankModel
+                                                                      .id,
+                                                              timebankTitle:
+                                                                  timebankModel
+                                                                      .name);
+
+                                                      NotificationsModel
+                                                          notification =
+                                                          NotificationsModel(
+                                                        id: utils.Utils
+                                                            .getUuid(),
+                                                        communityId: SevaCore
+                                                                .of(context)
+                                                            .loggedInUser
+                                                            .currentCommunity,
+                                                        targetUserId:
+                                                            timebankModel
+                                                                .creatorId,
+                                                        senderUserId:
+                                                            SevaCore.of(context)
+                                                                .loggedInUser
+                                                                .sevaUserID,
+                                                        type: prefix0
+                                                            .NotificationType
+                                                            .JoinRequest,
+                                                        data: joinReqModel
+                                                            .toMap(),
+                                                        directToMember: false,
+                                                      );
+                                                      notification.timebankId =
+                                                          FlavorConfig.values
+                                                              .timebankId;
+
+                                                      UserModel
+                                                          timebankCreator =
+                                                          await FirestoreManager
+                                                              .getUserForId(
+                                                                  sevaUserId:
+                                                                      timebankModel
+                                                                          .creatorId);
+
+                                                      await Firestore.instance
+                                                          .collection('users')
+                                                          .document(
+                                                              timebankCreator
+                                                                  .email)
+                                                          .collection(
+                                                              "notifications")
+                                                          .document(
+                                                              notification.id)
+                                                          .setData(notification
+                                                              .toMap());
+                                                      // return;
+                                                      Navigator.of(
+                                                              dialogContext)
+                                                          .pop();
+                                                    }
+                                                  },
                                                 ),
-                                                keyboardType:
-                                                    TextInputType.multiline,
-                                                maxLines: 1,
-                                                validator: (value) {
-                                                  if (value.isEmpty) {
-                                                    return 'Please enter some text';
-                                                  }
-                                                  joinRequestModel.reason =
-                                                      value;
-                                                },
-                                              ),
-                                            ),
-                                            actions: <Widget>[
-                                              new FlatButton(
-                                                child: new Text(
-                                                  "Cancel",
-                                                  style: TextStyle(
-                                                    fontSize: dialogButtonSize,
+                                                new FlatButton(
+                                                  child: new Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        color: Colors.red),
                                                   ),
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(dialogContext)
-                                                      .pop();
-                                                },
-                                              ),
-                                              // usually buttons at the bottom of the dialog
-                                              new FlatButton(
-                                                child: new Text(
-                                                  "Send Join Request",
-                                                  style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .accentColor,
-                                                    fontSize: dialogButtonSize,
-                                                  ),
-                                                ),
-                                                onPressed: () async {
-                                                  joinRequestModel.userId =
-                                                      loggedInUser;
-                                                  joinRequestModel
-                                                      .timestamp = DateTime
-                                                          .now()
-                                                      .millisecondsSinceEpoch;
-
-                                                  joinRequestModel.entityId =
-                                                      timebankModel.id;
-                                                  joinRequestModel.entityType =
-                                                      EntityType.Timebank;
-                                                  joinRequestModel.accepted =
-                                                      null;
-
-                                                  if (formkey.currentState
-                                                      .validate()) {
-                                                    await createJoinRequest(
-                                                        model:
-                                                            joinRequestModel);
-
-                                                    JoinRequestNotificationModel
-                                                        joinReqModel =
-                                                        JoinRequestNotificationModel(
-                                                            timebankId:
-                                                                timebankModel
-                                                                    .id,
-                                                            timebankTitle:
-                                                                timebankModel
-                                                                    .name);
-
-                                                    NotificationsModel
-                                                        notification =
-                                                        NotificationsModel(
-                                                      id: utils.Utils.getUuid(),
-                                                      communityId:
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .currentCommunity,
-                                                      targetUserId:
-                                                          timebankModel
-                                                              .creatorId,
-                                                      senderUserId:
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .sevaUserID,
-                                                      type: prefix0
-                                                          .NotificationType
-                                                          .JoinRequest,
-                                                      data:
-                                                          joinReqModel.toMap(),
-                                                    );
-                                                    notification.timebankId =
-                                                        FlavorConfig
-                                                            .values.timebankId;
-
-                                                    UserModel timebankCreator =
-                                                        await FirestoreManager
-                                                            .getUserForId(
-                                                                sevaUserId:
-                                                                    timebankModel
-                                                                        .creatorId);
-
-                                                    await Firestore.instance
-                                                        .collection('users')
-                                                        .document(
-                                                            timebankCreator
-                                                                .email)
-                                                        .collection(
-                                                            "notifications")
-                                                        .document(
-                                                            notification.id)
-                                                        .setData(notification
-                                                            .toMap());
-                                                    // return;
+                                                  onPressed: () {
                                                     Navigator.of(dialogContext)
                                                         .pop();
-                                                  }
-                                                },
-                                              ),
-                                            ],
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           );
                                         },
                                       );

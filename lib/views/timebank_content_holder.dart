@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../flavor_config.dart';
@@ -132,12 +133,11 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 7,
+    length: 8,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
         centerTitle: true,
-
         title: Text(
           timebankModel.name,
           style: TextStyle(fontSize: 18),
@@ -168,11 +168,9 @@ Widget createAdminTabBar(
                 text: "Members",
               ),
               Tab(
-                text: "Notifications",
-              ),
-              Tab(
                 text: "Manage",
               ),
+              GetActiveTimebankNotifications(timebankId: timebankId),
               getMessagingTab(
                 communityId: SevaCore.of(context).loggedInUser.currentCommunity,
                 timebankId: timebankId,
@@ -204,11 +202,11 @@ Widget createAdminTabBar(
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
-                TimebankNotificationsView(
-                  timebankId: timebankModel.id,
-                ),
                 ManageTimebankSeva.of(
                   timebankModel: timebankModel,
+                ),
+                TimebankNotificationsView(
+                  timebankId: timebankModel.id,
                 ),
                 TimebankChatListView(
                   timebankId: timebankId,
@@ -291,7 +289,7 @@ Widget createJoinedUserTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 6,
+    length: 5,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -352,9 +350,6 @@ Widget createJoinedUserTabBar(
               Tab(
                 text: "Members",
               ),
-              Tab(
-                text: "Messages",
-              )
             ],
           ),
           Expanded(
@@ -381,9 +376,6 @@ Widget createJoinedUserTabBar(
                   ),
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
-                ),
-                TimebankChatListView(
-                  timebankId: timebankId,
                 ),
               ],
             ),
@@ -1143,14 +1135,14 @@ class DiscussionListState extends State<DiscussionList> {
                                                         'Do you want to report this feed?'),
                                                     actions: <Widget>[
                                                       FlatButton(
-                                                        child: Text('Cancel'),
-                                                        onPressed: () {
-                                                          Navigator.of(
-                                                                  viewContext)
-                                                              .pop();
-                                                        },
-                                                      ),
-                                                      FlatButton(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                20, 5, 20, 5),
+                                                        color: Theme.of(context)
+                                                            .accentColor,
+                                                        textColor: FlavorConfig
+                                                            .values
+                                                            .buttonTextColor,
                                                         child: Text(
                                                           'Report Feed',
                                                           style: TextStyle(
@@ -1188,6 +1180,19 @@ class DiscussionListState extends State<DiscussionList> {
                                                                   news.reports
                                                             });
                                                           }
+                                                          Navigator.of(
+                                                                  viewContext)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                      FlatButton(
+                                                        child: Text(
+                                                          'Cancel',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.red),
+                                                        ),
+                                                        onPressed: () {
                                                           Navigator.of(
                                                                   viewContext)
                                                               .pop();

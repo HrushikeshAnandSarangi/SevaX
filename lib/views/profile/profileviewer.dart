@@ -626,17 +626,9 @@ class ProfileViewerState extends State<ProfileViewer> {
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(viewContext).pop();
-              },
-            ),
-            FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
                 'Report',
                 style: TextStyle(
@@ -672,6 +664,15 @@ class ProfileViewerState extends State<ProfileViewer> {
                     Navigator.of(context).pop();
                   }
                 });
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.of(viewContext).pop();
               },
             ),
           ],
@@ -742,35 +743,49 @@ class ProfileViewerState extends State<ProfileViewer> {
           title: new Text(widget.isBlocked
               ? 'Unblock'
               : 'Block' + " ${widget.userModel.fullname.split(' ')[0]}."),
-          content: new Text(widget.isBlocked
-              ? '${widget.userModel.fullname.split(' ')[0]}  would be unblocked'
-              : "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text(
-                "CANCEL",
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new Text(widget.isBlocked
+                  ? '${widget.userModel.fullname.split(' ')[0]}  would be unblocked'
+                  : "${widget.userModel.fullname.split(' ')[0]} will no longer be available to send you messages and engage with the content you create"),
+              SizedBox(
+                height: 15,
               ),
-              onPressed: () {
-                Navigator.of(context).pop("CANCEL");
-              },
-            ),
-            new FlatButton(
-              child: new Text(
-                widget.isBlocked ? 'UNBLOCK' : 'BLOCK',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
+              Row(
+                children: <Widget>[
+                  Spacer(),
+                  new FlatButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: new Text(
+                      widget.isBlocked ? 'Unblock' : 'Block',
+                      style: TextStyle(
+                          fontSize: dialogButtonSize, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () {
+                      widget.isBlocked
+                          ? Navigator.of(context).pop("UNBLOCK")
+                          : Navigator.of(context).pop("BLOCK");
+                    },
+                  ),
+                  new FlatButton(
+                    child: new Text(
+                      "Cancel",
+                      style: TextStyle(
+                          fontSize: dialogButtonSize,
+                          fontFamily: 'Europa',
+                          color: Colors.red),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop("CANCEL");
+                    },
+                  ),
+                ],
               ),
-              onPressed: () {
-                widget.isBlocked
-                    ? Navigator.of(context).pop("UNBLOCK")
-                    : Navigator.of(context).pop("BLOCK");
-              },
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -1154,7 +1169,7 @@ class CompletedList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text('${transmodel.credits}'),
-                      Text('Yang bucks',
+                      Text('Seva Coins',
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w600,
@@ -1638,7 +1653,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
             color: Color(0xFFFa3ebff).withOpacity(0.3),
             alignment: Alignment.center,
             child: Text(
-              data[index],
+              data[index].toString(),
               style: TextStyle(
                 color: Color(0xFFF0ca5f2),
                 fontSize: 16,

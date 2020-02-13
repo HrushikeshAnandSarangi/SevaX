@@ -6,21 +6,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/location_model.dart';
+import 'package:sevaexchange/ui/screens/location/widgets/location_confirmation_card.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import 'get_location.dart';
+
+extension StringExtension on String {
+  get notNullLocation {
+    return this != '' ? ',' + this : '';
+  }
+}
 
 class LocationPicker extends StatefulWidget {
   final GeoFirePoint selectedLocation;
   final Location location = new Location();
   final Geoflutterfire geo = Geoflutterfire();
   final Firestore firestore = Firestore.instance;
-  LatLng defaultLocation;
+  final LatLng defaultLocation;
 
   LocationPicker({
     this.defaultLocation,
@@ -35,27 +43,43 @@ class _LocationPickerState extends State<LocationPicker> {
   GoogleMapController _mapController;
   LatLng target;
   Set<Marker> markers = {};
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   LocationData locationData;
+  String address = 'Fetching location ...*';
+  CameraPosition cameraPosition;
 
   CameraPosition get initialCameraPosition {
     try {
       return CameraPosition(
-          target: SevaCore.of(context).loggedInUser.currentPosition == null
-              ? LatLng(41.678510, -87.494080)
-              : LatLng(
-                  SevaCore.of(context).loggedInUser.currentPosition.latitude,
-                  SevaCore.of(context).loggedInUser.currentPosition.longitude),
-          zoom: 15);
+        target: SevaCore.of(context).loggedInUser.currentPosition == null
+            ? LatLng(41.678510, -87.494080)
+            : LatLng(SevaCore.of(context).loggedInUser.currentPosition.latitude,
+                SevaCore.of(context).loggedInUser.currentPosition.longitude),
+        zoom: 15,
+      );
     } catch (e) {
       return CameraPosition(target: LatLng(41.678510, -87.494080), zoom: 15);
     }
   }
 
+  loadCameraPosition() async {
+    Position position = await Geolocator().getLastKnownPosition();
+    cameraPosition = CameraPosition(
+        target: LatLng(position.latitude, position.longitude), zoom: 15);
+  }
+
   @override
   void initState() {
     log('init state called for ${this.runtimeType.toString()}');
+    loadCameraPosition();
     super.initState();
     loadInitialLocation();
+    // _mapController.
+  }
+
+  Future<void> loadInitialAddress() async {
+    address = await _getAddressFromLatLng(target);
+    setState(() {});
   }
 
   @override
@@ -76,26 +100,26 @@ class _LocationPickerState extends State<LocationPicker> {
   Widget build(context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
+        // iconTheme: IconThemeData(color: Colors.black),
+        // backgroundColor: Colors.white,
         title: Text(
           'Add Location',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
           IconButton(
             icon: Icon(
               Icons.search,
-              color: Colors.black,
             ),
             onPressed: () async {
               LocationDataModel dataModel = LocationDataModel("", null, null);
               dataModel = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        new CustomSearchScaffold1(),
-                    fullscreenDialog: true),
+                  builder: (BuildContext context) =>
+                      new CustomSearchScaffold1(),
+                  fullscreenDialog: true,
+                ),
               );
               this.target = LatLng(dataModel.lat, dataModel.lng);
               _mapController.animateCamera(
@@ -113,9 +137,13 @@ class _LocationPickerState extends State<LocationPicker> {
       ),
       body: Stack(children: [
         mapWidget,
-        markLocationWidget,
+        // markLocationWidget,
         crosshair,
-        button,
+        LocationConfimationCard(
+          address: address,
+          point: point,
+        ),
+        // button,
       ]),
     );
   }
@@ -160,6 +188,8 @@ class _LocationPickerState extends State<LocationPicker> {
               '${FlavorConfig.values.appName} requires permission to access your location.'),
           actions: <Widget>[
             RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
               child: Text(
                 'Open Settings',
                 style: TextStyle(
@@ -176,6 +206,7 @@ class _LocationPickerState extends State<LocationPicker> {
                 'Cancel',
                 style: TextStyle(
                   fontSize: dialogButtonSize,
+                  color: Colors.red,
                 ),
               ),
               onPressed: () {
@@ -192,39 +223,58 @@ class _LocationPickerState extends State<LocationPicker> {
   Positioned get mapWidget {
     return Positioned.fill(
       child: GoogleMap(
-        initialCameraPosition: initialCameraPosition,
+        initialCameraPosition: widget.selectedLocation != null
+            ? CameraPosition(
+                target: LatLng(
+                  widget.selectedLocation.latitude,
+                  widget.selectedLocation.longitude,
+                ),
+                zoom: 15)
+            : initialCameraPosition,
         onMapCreated: _onMapCreated,
         myLocationEnabled: true,
         mapType: MapType.normal,
         compassEnabled: true,
         markers: markers,
         onCameraMove: (position) {
-          setState(() => target = position.target);
+          setState(() {
+            target = position.target;
+          });
         },
+        onCameraIdle: () {
+          _addMarker();
+        },
+        // onTap: (LatLng latLng) {
+        //   target = latLng;
+        //   _addMarker();
+        //   setState(() {
+
+        //   });
+        // },
       ),
     );
   }
 
-  Positioned get markLocationWidget {
-    return Positioned(
-      bottom: 50,
-      right: 10,
-      left: 0,
-      child: Center(
-        child: RaisedButton.icon(
-          icon: Icon(Icons.pin_drop, color: Colors.white),
-          shape: StadiumBorder(),
-          label: Text(
-            'Pick Location',
-            style: TextStyle(color: Colors.white),
-          ),
-          color: Color(0xff007722),
-          onPressed:
-              _mapController != null && target != null ? _addMarker : null,
-        ),
-      ),
-    );
-  }
+  // Positioned get markLocationWidget {
+  //   return Positioned(
+  //     bottom: 50,
+  //     right: 10,
+  //     left: 0,
+  //     child: Center(
+  //       child: RaisedButton.icon(
+  //         icon: Icon(Icons.pin_drop, color: Colors.white),
+  //         shape: StadiumBorder(),
+  //         label: Text(
+  //           'Pick Location',
+  //           style: TextStyle(color: Colors.white),
+  //         ),
+  //         color: Color(0xff007722),
+  //         onPressed:
+  //             _mapController != null && target != null ? _addMarker : null,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Positioned get crosshair {
     return Positioned.fill(
@@ -236,30 +286,51 @@ class _LocationPickerState extends State<LocationPicker> {
     );
   }
 
-  Positioned get button {
-    return Positioned(
-      bottom: -8,
-      left: 0,
-      right: 0,
-      child: Offstage(
-        offstage: point == null,
-        child: RaisedButton(
-          textColor: Colors.white,
-          color: Theme.of(context).accentColor,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
-            child: Text(
-              'Done',
-              style: TextStyle(fontSize: 16),
-            ),
-          ),
-          onPressed: () {
-            Navigator.pop(context, point);
-          },
-        ),
-      ),
-    );
+  Future<String> _getAddressFromLatLng(LatLng latlng) async {
+    if (latlng != null) {
+      try {
+        List<Placemark> p = await geolocator.placemarkFromCoordinates(
+            latlng.latitude, latlng.longitude);
+        Placemark place = p[0];
+        print(place.toJson());
+        String locality =
+            place.subLocality != '' ? place.subLocality : place.locality;
+        return "$locality*${place.name}${locality.notNullLocation}${place.subAdministrativeArea.notNullLocation}${place.administrativeArea.notNullLocation}${place.country.notNullLocation}";
+      } catch (e) {
+        print(e);
+        return "Failed to fetch location*";
+      }
+    } else {
+      return address;
+    }
   }
+
+  // Positioned get button {
+  //   return Positioned(
+  //     bottom: -8,
+  //     left: 0,
+  //     right: 0,
+  //     child: Offstage(
+  //       offstage: point == null,
+  //       child: FlatButton(
+  //         // textColor: Colors.white,
+  //         // color: Theme.of(context).accentColor,
+  //         shape: null,
+  //         color: Theme.of(context).primaryColor,
+  //         child: Padding(
+  //           padding: const EdgeInsets.fromLTRB(0, 12, 0, 20),
+  //           child: Text(
+  //             'Confirm',
+  //             style: TextStyle(fontSize: 16),
+  //           ),
+  //         ),
+  //         onPressed: () {
+  //           Navigator.pop(context, point);
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   GeoFirePoint get point {
     if (markers == null || markers.isEmpty) return null;
@@ -303,6 +374,7 @@ class _LocationPickerState extends State<LocationPicker> {
     );
 
     setState(() {
+      loadInitialAddress();
       markers = {marker};
     });
   }
