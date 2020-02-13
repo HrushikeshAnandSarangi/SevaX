@@ -32,7 +32,7 @@ Future<void> createAcceptRequestNotification({
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
   await Firestore.instance
-      .collection(notificationsModel.directToMember ? 'users' :'timebanknew')
+      .collection(notificationsModel.directToMember ? 'users' : 'timebanknew')
       .document(notificationsModel.directToMember
           ? user.email
           : notificationsModel.timebankId)
@@ -172,7 +172,6 @@ Future<void> createRequestApprovalNotification({
           .collection('notifications')
           .document(model.id)
           .setData(model.toMap());
-
 }
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
@@ -195,25 +194,25 @@ Future<void> createTaskCompletedApprovedNotification({
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
 
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap())
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
+  var timebankModel = await fetchTimebankData(model.timebankId);
 
+  if (timebankModel.protected) {
+    var requestModel = RequestModel.fromMap(model.data);
+    requestModel.fullName = timebankModel.name;
+    requestModel.photoUrl = timebankModel.photoUrl;
+    model.data = requestModel.toMap();
+    print("_______________________________________________${model.data}");
 
-    print("Creating task approved notification for $isTimeBankNotification");
+  }
 
+  await Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .collection('notifications')
+      .document(model.id)
+      .setData(model.toMap());
 
+  print("Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
 }
 
 Future<void> createTransactionNotification({
@@ -295,8 +294,6 @@ Future<void> offerRejectNotification({
 
 Future<void> readUserNotification(
     String notificationId, String userEmail) async {
-  
-      
   await Firestore.instance
       .collection('users')
       .document(userEmail)
@@ -306,7 +303,6 @@ Future<void> readUserNotification(
     'isRead': true,
   });
 }
-
 
 Future<void> readTimeBankNotification(
     String notificationId, String timebankId) async {

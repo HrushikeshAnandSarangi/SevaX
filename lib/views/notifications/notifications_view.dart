@@ -405,61 +405,65 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-        UserModel user = snapshot.data;
-        TransactionModel transactionModel =
-            model.transactions.firstWhere((transaction) {
-          return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
-        });
-        return Dismissible(
-          key: Key(Utils.getUuid()),
-          background: dismissibleBackground,
-          onDismissed: (direction) {
-            FirestoreManager.readUserNotification(
-              notificationId,
-              SevaCore.of(context).loggedInUser.email,
-            );
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              title: Text(model.title),
-              subtitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text:
-                          '${user.fullname} approved the task completion for ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: () {
-                        return '${transactionModel.credits} hours';
-                      }(),
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+    // return
+
+    TransactionModel transactionModel =
+        model.transactions.firstWhere((transaction) {
+      return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
+    });
+
+    return Dismissible(
+      key: Key(Utils.getUuid()),
+      background: dismissibleBackground,
+      onDismissed: (direction) {
+        FirestoreManager.readUserNotification(
+          notificationId,
+          SevaCore.of(context).loggedInUser.email,
         );
       },
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(model.photoUrl),
+          ),
+          title: Text(model.title),
+          subtitle: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '${model.fullName} approved the task completion for ',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                TextSpan(
+                  text: () {
+                    return '${transactionModel.credits} hours';
+                  }(),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
+
+    // return StreamBuilder<UserModel>(
+    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) return Text(snapshot.error.toString());
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return notificationShimmer;
+    //     }
+    //     UserModel user = snapshot.data;
+
+    //   },
+    // );
   }
 
   Widget getOfferAcceptNotification(
