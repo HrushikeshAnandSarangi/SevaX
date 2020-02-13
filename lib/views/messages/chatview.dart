@@ -273,6 +273,7 @@ class _ChatViewState extends State<ChatView> {
                           return 'Please type message';
                         }
                         messageModel.message = value;
+                        setState(() {});
                       },
                     ),
                   ),
