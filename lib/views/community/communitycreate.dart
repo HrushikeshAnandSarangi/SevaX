@@ -16,14 +16,19 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../main_app.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
+  final bool isFromFind;
 
-  CreateEditCommunityView({@required this.timebankId});
+  CreateEditCommunityView({
+    @required this.timebankId,
+    this.isFromFind,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +46,7 @@ class CreateEditCommunityView extends StatelessWidget {
       ),
       body: CreateEditCommunityViewForm(
         timebankId: timebankId,
+        isFromFind: isFromFind,
       ),
     );
   }
@@ -49,8 +55,9 @@ class CreateEditCommunityView extends StatelessWidget {
 // Create a Form Widget
 class CreateEditCommunityViewForm extends StatefulWidget {
   final String timebankId;
+  final bool isFromFind;
 
-  CreateEditCommunityViewForm({@required this.timebankId});
+  CreateEditCommunityViewForm({@required this.timebankId, this.isFromFind});
 
   @override
   CreateEditCommunityViewFormState createState() {
@@ -316,7 +323,12 @@ class CreateEditCommunityViewFormState
                             // show a dialog
 
                             print(_formKey.currentState.validate());
-
+                            communityFound =
+                                await isCommunityFound(enteredName);
+                            if (communityFound) {
+                              print("Found:$communityFound");
+                              return;
+                            }
                             if (_formKey.currentState.validate()) {
                               if (_billingInformationKey.currentState
                                   .validate()) {
@@ -335,12 +347,7 @@ class CreateEditCommunityViewFormState
                                   setState(() {
                                     this.communityImageError = '';
                                   });
-                                  communityFound =
-                                      await isCommunityFound(enteredName);
-                                  if (communityFound) {
-                                    print("Found:$communityFound");
-                                    return;
-                                  }
+
                                   // creation of community;
                                   snapshot.data.UpdateCommunityDetails(
                                     SevaCore.of(context).loggedInUser,
@@ -483,6 +490,7 @@ class CreateEditCommunityViewFormState
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.blue,
+                    decoration: TextDecoration.underline,
                     fontSize: 14,
                   ),
                 ),
@@ -516,12 +524,29 @@ class CreateEditCommunityViewFormState
 
   Widget get tappableFindYourTeam {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (widget.isFromFind) {
+          Navigator.pop(context);
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return FindCommunitiesView(
+                  keepOnBackPress: true,
+                  loggedInUser: SevaCore.of(context).loggedInUser,
+                  showBackBtn: true,
+                );
+              },
+            ),
+          );
+        }
+      },
       child: Text(
         ' Find your Timebank',
         style: TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.black,
+          color: Colors.blue,
+          decoration: TextDecoration.underline,
         ),
       ),
     );
@@ -583,13 +608,12 @@ class CreateEditCommunityViewFormState
   Widget get _billingDetailsTitle {
     return Container(
 //        margin: EdgeInsets.fromLTRB(10, 0, 20, 10),
-        margin: EdgeInsets.fromLTRB(20,0,20,5),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Column(
               children: <Widget>[
-
                 Text(
                   'Billing Details',
                   style: TextStyle(
@@ -646,7 +670,7 @@ class CreateEditCommunityViewFormState
     print(focusNodes);
     Widget _stateWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
@@ -674,7 +698,7 @@ class CreateEditCommunityViewFormState
 
     Widget _pinCodeWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
@@ -734,7 +758,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
@@ -762,7 +786,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressTwoWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
             onFieldSubmitted: (input) {
               FocusScope.of(context).requestFocus(focusNodes[4]);
@@ -786,7 +810,7 @@ class CreateEditCommunityViewFormState
 
     Widget _companyNameWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[5]);
@@ -813,7 +837,7 @@ class CreateEditCommunityViewFormState
 
     Widget _continueBtn(controller) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(100, 10, 100, 20 ),
+        padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
           child: Text(
             "Continue",

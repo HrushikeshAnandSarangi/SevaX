@@ -474,6 +474,9 @@ class _RegisterPageState extends State<RegisterPage>
       Navigator.pop(context, user);
       // Navigator.popUntil(context, (r) => r.isFirst);
     } on PlatformException catch (error) {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
       _scaffoldKey.currentState.showSnackBar(
         SnackBar(
           content: Text(error.message),
@@ -485,6 +488,10 @@ class _RegisterPageState extends State<RegisterPage>
       );
       return null;
     } catch (error) {
+      if (dialogContext != null) {
+        Navigator.pop(dialogContext);
+      }
+
       log('createUser: error: ${error.toString()}');
       return null;
     }

@@ -132,8 +132,6 @@ class _InvitedUsersViewState extends State<InvitedUsersView> {
 
     // TODO: implement build
     return StreamBuilder<TimebankController>(
-//      stream: SearchManager.searchForUserWithTimebankId( // TODO : replace function here
-//          queryString: "", validItems: validItems),
       stream: timeBankBloc.timebankController,
       builder: (context, AsyncSnapshot<TimebankController> snapshot) {
         if (snapshot.hasError) {

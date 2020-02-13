@@ -15,6 +15,15 @@ Future<bool> fetchProtectedStatus(String timebankId) async {
   return timebank.data['protected'];
 }
 
+Future<TimebankModel> fetchTimebankData(String timebankId) async {
+  DocumentSnapshot timebank = await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .get();
+
+  return TimebankModel.fromMap(timebank.data);
+}
+
 //Fetch timebank from timebank id
 Future<void> createAcceptRequestNotification({
   NotificationsModel notificationsModel,
@@ -23,7 +32,7 @@ Future<void> createAcceptRequestNotification({
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
   await Firestore.instance
-      .collection('timebanknew')
+      .collection(notificationsModel.directToMember ? 'users' : 'timebanknew')
       .document(notificationsModel.directToMember
           ? user.email
           : notificationsModel.timebankId)
@@ -142,8 +151,15 @@ Future<void> createRequestApprovalNotification({
     sevaUserId: model.targetUserId,
   );
 
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
+  // if (!model.directToMember) {
+  //   var timebankModel = await fetchTimebankData(model.timebankId);
+  //   var requetsModel = RequestModel.fromMap(model.data);
+  //   requetsModel.photoUrl = timebankModel.photoUrl;
+  //   requetsModel.title = timebankModel.name;
+  //   model.data = requetsModel.toMap();
+  // }
+
+  !model.directToMember
       ? Firestore.instance
           .collection('timebanknew')
           .document(model.timebankId)
@@ -160,10 +176,13 @@ Future<void> createRequestApprovalNotification({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  
+
+  print('is Timebank protected  $isTimeBankNotification ');
+
   await Firestore.instance
-      .collection('timebanknew')
+      .collection(isTimeBankNotification ? 'timebanknew' : 'users')
       .document(isTimeBankNotification ? model.timebankId : user.email)
       .collection('notifications')
       .document(model.id)
@@ -175,20 +194,25 @@ Future<void> createTaskCompletedApprovedNotification({
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
 
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap())
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
+  var timebankModel = await fetchTimebankData(model.timebankId);
+
+  if (timebankModel.protected) {
+    var requestModel = RequestModel.fromMap(model.data);
+    requestModel.fullName = timebankModel.name;
+    requestModel.photoUrl = timebankModel.photoUrl;
+    model.data = requestModel.toMap();
+    print("_______________________________________________${model.data}");
+
+  }
+
+  await Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .collection('notifications')
+      .document(model.id)
+      .setData(model.toMap());
+
+  print("Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
 }
 
 Future<void> createTransactionNotification({
@@ -304,12 +328,12 @@ Stream<List<NotificationsModel>> getNotifications({
       .collection('users')
       .document(userEmail)
       .collection('notifications')
-      .where('isRead', isEqualTo: false)
-      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
-      .where(
-        'communityId',
-        isEqualTo: communityId,
-      )
+      // .where('isRead', isEqualTo: false)
+      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      // .where(
+      //   'communityId',
+      //   isEqualTo: communityId,
+      // )
       .snapshots();
 
   yield* data.transform(

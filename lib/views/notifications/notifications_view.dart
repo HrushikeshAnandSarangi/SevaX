@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
@@ -19,7 +18,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
-import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -407,61 +405,65 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-        UserModel user = snapshot.data;
-        TransactionModel transactionModel =
-            model.transactions.firstWhere((transaction) {
-          return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
-        });
-        return Dismissible(
-          key: Key(Utils.getUuid()),
-          background: dismissibleBackground,
-          onDismissed: (direction) {
-            FirestoreManager.readUserNotification(
-              notificationId,
-              SevaCore.of(context).loggedInUser.email,
-            );
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              title: Text(model.title),
-              subtitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text:
-                          '${user.fullname} approved the task completion for ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: () {
-                        return '${transactionModel.credits} hours';
-                      }(),
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+    // return
+
+    TransactionModel transactionModel =
+        model.transactions.firstWhere((transaction) {
+      return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
+    });
+
+    return Dismissible(
+      key: Key(Utils.getUuid()),
+      background: dismissibleBackground,
+      onDismissed: (direction) {
+        FirestoreManager.readUserNotification(
+          notificationId,
+          SevaCore.of(context).loggedInUser.email,
         );
       },
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(model.photoUrl),
+          ),
+          title: Text(model.title),
+          subtitle: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '${model.fullName} approved the task completion for ',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                TextSpan(
+                  text: () {
+                    return '${transactionModel.credits} hours';
+                  }(),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
+
+    // return StreamBuilder<UserModel>(
+    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) return Text(snapshot.error.toString());
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return notificationShimmer;
+    //     }
+    //     UserModel user = snapshot.data;
+
+    //   },
+    // );
   }
 
   Widget getOfferAcceptNotification(
@@ -1256,41 +1258,41 @@ class NotificationsView extends State<NotificationViewHolder> {
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () {
-                // showDialogForApproval(
-                //     context: context,
-                //     userModel: user,
-                //     notificationId: notificationId,
-                //     requestModel: model);
-
-                BuildContext dialogContext;
-
-                showDialog(
-                    barrierDismissible: false,
+                showDialogForApproval(
                     context: context,
-                    builder: (createDialogContext) {
-                      dialogContext = createDialogContext;
-                      return AlertDialog(
-                        title: Text('Please wait'),
-                        content: LinearProgressIndicator(),
-                      );
-                    });
+                    userModel: user,
+                    notificationId: notificationId,
+                    requestModel: model);
 
-                Firestore.instance
-                    .collection("requests")
-                    .document(model.id)
-                    .get()
-                    .then((onValue) {
-                  var requestModel = RequestModel.fromMap(onValue.data);
-                  prefix0.Navigator.pop(dialogContext);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewRequestStatus(
-                        requestModel: requestModel,
-                      ),
-                    ),
-                  );
-                });
+                // BuildContext dialogContext;
+
+                // showDialog(
+                //     barrierDismissible: false,
+                //     context: context,
+                //     builder: (createDialogContext) {
+                //       dialogContext = createDialogContext;
+                //       return AlertDialog(
+                //         title: Text('Please wait'),
+                //         content: LinearProgressIndicator(),
+                //       );
+                //     });
+
+                // Firestore.instance
+                //     .collection("requests")
+                //     .document(model.id)
+                //     .get()
+                //     .then((onValue) {
+                //   var requestModel = RequestModel.fromMap(onValue.data);
+                //   prefix0.Navigator.pop(dialogContext);
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => ViewRequestStatus(
+                //         requestModel: requestModel,
+                //       ),
+                //     ),
+                //   );
+                // });
               },
               child: Container(
                   margin: notificationPadding,
@@ -1351,6 +1353,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      directToMember: true,
     );
   }
 

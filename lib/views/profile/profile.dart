@@ -293,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(
-                              'Select a timebank',
+                              'Select a Timebank',
                               style: TextStyle(fontSize: 18),
                             ),
                             IconButton(
@@ -304,6 +304,7 @@ class _ProfilePageState extends State<ProfilePage>
                                     builder: (context) =>
                                         CreateEditCommunityView(
                                       timebankId: timebankModel.id,
+                                      isFromFind: false,
                                     ),
                                   ),
                                 );

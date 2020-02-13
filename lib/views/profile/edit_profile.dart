@@ -454,8 +454,8 @@ class _EditProfilePageState extends State<EditProfilePage>
               child: Container(
                 width: 134,
                 child: RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  textColor: FlavorConfig.values.buttonTextColor,
+                  color: Theme.of(context).primaryColor,
+                  textColor: Colors.white,
                   child: Text(
                     'Logout',
                   ),
@@ -639,7 +639,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Log Out"),
+          title: new Text("Logout"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -653,7 +653,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                     color: Theme.of(context).accentColor,
                     textColor: FlavorConfig.values.buttonTextColor,
                     child: new Text(
-                      "Log Out",
+                      "Logout",
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
                     onPressed: () {

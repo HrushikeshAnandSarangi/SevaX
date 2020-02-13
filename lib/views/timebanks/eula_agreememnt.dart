@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
+
 import 'EULAgreement.dart';
 
 class EulaAgreement extends StatefulWidget {
