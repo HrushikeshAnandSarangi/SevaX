@@ -651,6 +651,7 @@ class TaskCardViewState extends State<TaskCardView> {
           senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
           targetUserId: requestModel.sevaUserId,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          timebankId: requestModel.timebankId,
         ),
       );
 

@@ -92,7 +92,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
               case NotificationType.RequestApprove:
                 RequestModel model = RequestModel.fromMap(notification.data);
-
                 return getNotificationRequestApprovalWidget(
                   model,
                   notification.senderUserId,
@@ -111,8 +110,24 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
               case NotificationType.RequestCompleted:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return Text("NotificationType.RequestCompleted");
+                return FutureBuilder<RequestModel>(
+                    future: FirestoreManager.getRequestFutureById(
+                        requestId: model.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
 
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      RequestModel model = snapshot.data;
+                      return getNotificationRequestCompletedWidget(
+                        model,
+                        notification.senderUserId,
+                        notification.id,
+                      );
+                    });
                 break;
               case NotificationType.RequestCompletedApproved:
                 RequestModel model = RequestModel.fromMap(notification.data);
@@ -132,7 +147,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               case NotificationType.TransactionDebit:
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
-                return Text("NotificationType.TransactionDebit");
+                return Offstage();
                 // getNotificationDebit(
                 //     model, notification.senderUserId, notification.id);
                 break;
@@ -180,7 +195,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               key: Key(Utils.getUuid()),
               background: dismissibleBackground,
               onDismissed: (direction) {
-                FirestoreManager.readUserNotification(
+                FirestoreManager.readTimeBankNotification(
                   notificationId,
                   SevaCore.of(context).loggedInUser.email,
                 );
@@ -512,14 +527,23 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     if (model.transactions.where((model) => model.isApproved).length ==
         model.numberOfApprovals) {}
 
+    //request completion chain
+    print("request completion chain starts here");
+
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
     );
 
-    FirestoreManager.readUserNotification(
-        notificationId, sevaCore.loggedInUser.email);
+    print("request completion chain ends here");
+
+    // return;
+    FirestoreManager.readTimeBankNotification(
+      notificationId,
+      model.timebankId,
+    );
+    //
   }
 
   void checkForFeedback(
@@ -1001,9 +1025,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         child: ListTile(
           title: Text(model.title),
           leading: CircleAvatar(
-              backgroundImage: model.photoUrl != null
-                  ? NetworkImage(model.photoUrl)
-                  : AssetImage("lib/assets/images/approved.png")),
+            backgroundImage: model.photoUrl != null
+                ? NetworkImage(model.photoUrl)
+                : AssetImage("lib/assets/images/approved.png"),
+          ),
           subtitle: Text('Request approved by ${model.fullName.toLowerCase()}'),
         ),
       ),
@@ -1203,16 +1228,22 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     );
   }
 
-  void approveMemberForVolunteerRequest({
+  Future<void> approveMemberForVolunteerRequest({
     RequestModel model,
     UserModel user,
     String notificationId,
-  }) {
+  }) async {
     List<String> approvedUsers = model.approvedUsers;
     Set<String> usersSet = approvedUsers.toSet();
 
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
+
+    var timebankModel = await fetchTimebankData(model.timebankId);
+    var requetsModel = model;
+    requetsModel.photoUrl = timebankModel.photoUrl;
+    requetsModel.fullName = timebankModel.name;
+    model = requetsModel;
 
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;
@@ -1221,6 +1252,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      directToMember: true,
     );
   }
 
@@ -1295,9 +1327,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       ),
                       onPressed: () async {
                         approveMemberForVolunteerRequest(
-                            model: requestModel,
-                            notificationId: notificationId,
-                            user: userModel);
+                          model: requestModel,
+                          notificationId: notificationId,
+                          user: userModel,
+                        );
                         Navigator.pop(viewContext);
                       },
                     ),
