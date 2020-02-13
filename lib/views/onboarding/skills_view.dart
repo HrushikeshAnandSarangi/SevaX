@@ -34,6 +34,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   Map<String, dynamic> _selectedSkills = {};
   // List<Widget> selectedChips = [];
   TextEditingController _textEditingController = TextEditingController();
+
   @override
   void initState() {
     print(widget.userModel.skills);
@@ -55,6 +56,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       }
       setState(() {});
     });
+
     super.initState();
   }
 
@@ -108,6 +110,20 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   prefixIcon: Icon(
                     Icons.search,
                     color: Colors.grey,
+                  ),
+                  suffixIcon: InkWell(
+                    splashColor: Colors.transparent,
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.grey,
+                      // color: _textEditingController.text.length > 1
+                      //     ? Colors.black
+                      //     : Colors.grey,
+                    ),
+                    onTap: () {
+                      _textEditingController.clear();
+                      controller.close();
+                    },
                   ),
                 ),
               ),
