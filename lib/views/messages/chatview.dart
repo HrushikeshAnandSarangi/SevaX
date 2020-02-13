@@ -90,31 +90,34 @@ class _ChatViewState extends State<ChatView> {
   }
 
   Widget appBar({String imageUrl, String appbarTitle}) {
-    return Row(
-      children: <Widget>[
-        Container(
-          height: 36,
-          width: 36,
-          decoration: ShapeDecoration(
-            shape: CircleBorder(
-              side: BorderSide(
-                color: Colors.white,
-                width: 1,
+    return Expanded(
+      child: Row(
+        children: <Widget>[
+          Container(
+            height: 36,
+            width: 36,
+            decoration: ShapeDecoration(
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: Colors.white,
+                  width: 1,
+                ),
+              ),
+              image: DecorationImage(
+                image: NetworkImage(imageUrl),
               ),
             ),
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-            ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-        ),
-        Expanded(
-          child: Text(appbarTitle,
-              style: TextStyle(fontSize: 18), overflow: TextOverflow.ellipsis),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          ),
+          Expanded(
+            child: Text(appbarTitle,
+                style: TextStyle(fontSize: 18),
+                overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
     );
   }
 

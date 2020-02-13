@@ -484,7 +484,7 @@ void startChat(
 
     await createChat(chat: model).then(
       (_) {
-        Navigator.of(context).pop();
+//        Navigator.of(context).pop();
 
         Navigator.push(
           context,
