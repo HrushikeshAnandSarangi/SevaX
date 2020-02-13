@@ -607,6 +607,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      directToMember: true,
     );
 
     FirestoreManager.readUserNotification(

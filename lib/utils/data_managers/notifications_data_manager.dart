@@ -209,6 +209,11 @@ Future<void> createTaskCompletedApprovedNotification({
           .collection('notifications')
           .document(model.id)
           .setData(model.toMap());
+
+
+    print("Creating task approved notification for $isTimeBankNotification");
+
+
 }
 
 Future<void> createTransactionNotification({
@@ -290,6 +295,8 @@ Future<void> offerRejectNotification({
 
 Future<void> readUserNotification(
     String notificationId, String userEmail) async {
+  
+      
   await Firestore.instance
       .collection('users')
       .document(userEmail)
@@ -299,6 +306,7 @@ Future<void> readUserNotification(
     'isRead': true,
   });
 }
+
 
 Future<void> readTimeBankNotification(
     String notificationId, String timebankId) async {

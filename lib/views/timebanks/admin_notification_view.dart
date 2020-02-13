@@ -147,7 +147,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               case NotificationType.TransactionDebit:
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
-                return Text("NotificationType.TransactionDebit");
+                return Offstage();
                 // getNotificationDebit(
                 //     model, notification.senderUserId, notification.id);
                 break;
@@ -195,7 +195,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               key: Key(Utils.getUuid()),
               background: dismissibleBackground,
               onDismissed: (direction) {
-                FirestoreManager.readUserNotification(
+                FirestoreManager.readTimeBankNotification(
                   notificationId,
                   SevaCore.of(context).loggedInUser.email,
                 );
@@ -518,17 +518,22 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     if (model.transactions.where((model) => model.isApproved).length ==
         model.numberOfApprovals) {}
 
-
+    //request completion chain
+    print("request completion chain starts here");
 
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      directToMember: true,
     );
 
-    FirestoreManager.readUserNotification(
+    print("request completion chain ends here");
+
+    // return;
+    FirestoreManager.readTimeBankNotification(
       notificationId,
-      sevaCore.loggedInUser.email,
+      model.timebankId,
     );
     //
   }

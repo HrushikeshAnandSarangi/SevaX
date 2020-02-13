@@ -260,8 +260,7 @@ Future<void> approveRequestCompletion({
   }
   model.accepted = approvalCount >= model.numberOfApprovals;
 
-  print(
-      "========================================================== Step1");
+  print("========================================================== Step1");
 
   await Firestore.instance
       .collection('requests')
@@ -269,6 +268,8 @@ Future<void> approveRequestCompletion({
       .setData(model.toMap(), merge: true);
 
   UserModel user = await utils.getUserForId(sevaUserId: userId);
+
+  //check if protected
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -280,9 +281,7 @@ Future<void> approveRequestCompletion({
     communityId: communityId,
   );
 
-  print(
-      "========================================================== Step2");
-
+  print("========================================================== Step2");
 
   num transactionvalue = model.durationOfRequest / 60;
   String credituser = model.approvedUsers.toString();
@@ -293,8 +292,7 @@ Future<void> approveRequestCompletion({
         .updateData(
             {'currentBalance': FieldValue.increment(-(transactionvalue))});
 
-  print(
-      "========================================================== Step3");
+    print("========================================================== Step3");
 
     NotificationsModel debitnotification = NotificationsModel(
       timebankId: model.timebankId,
@@ -315,14 +313,12 @@ Future<void> approveRequestCompletion({
           .elementAt(0)
           .toMap(),
     );
-      print(
-      "========================================================== Step4");
+    print("========================================================== Step4");
 
     await utils.createTransactionNotification(model: debitnotification);
   }
 
-  print(
-      "========================================================== Step6");
+  print("========================================================== Step6");
 
   await Firestore.instance
       .collection('users')
@@ -348,15 +344,12 @@ Future<void> approveRequestCompletion({
         .toMap(),
   );
 
-  print(
-      "========================================================== Step7");
+  print("========================================================== Step7");
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
 
-    print(
-      "========================================================== Step8");
-
+  print("========================================================== Step8");
 }
 
 Future<void> approveAcceptRequest({
