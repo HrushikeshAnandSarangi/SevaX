@@ -867,44 +867,49 @@ class NotificationsView extends State<NotificationViewHolder> {
                   Padding(
                     padding: EdgeInsets.all(8.0),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Column(
                     children: <Widget>[
-                      RaisedButton(
-                        child: Text(
-                          'Reject',
-                          style: TextStyle(color: Colors.red),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // Once approved take for feeddback
+                            approveMemberClaim(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
+
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // reject the claim
-                          rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
-                          Navigator.pop(viewContext);
-                        },
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(4.0),
                       ),
-                      RaisedButton(
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(color: Colors.green),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          child: Text(
+                            'Reject',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // reject the claim
+                            rejectMemberClaimForEvent(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // Once approved take for feeddback
-                          approveMemberClaim(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
-
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )

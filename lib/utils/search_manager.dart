@@ -116,6 +116,44 @@ class SearchManager {
     yield communityList;
   }
 
+  static Stream<List<CommunityModel>> searchCommunityForDuplicate({
+    @required queryString,
+  }) async* {
+    print("searchForUser :: ---------------");
+    String url =
+        'http://35.227.18.55//elasticsearch/sevaxcommunities/sevaxcommunity/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "match": {"name": queryString}
+            }
+          ]
+        }
+      },
+      "sort": {
+        "name.keyword": {"order": "asc"}
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    List<CommunityModel> communityList = [];
+    print("community data ${hitList}");
+
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      var community = CommunityModel(sourceMap);
+      // print("community data ${community.name}");
+
+      communityList.add(community);
+
+      //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
+      //communityList.add(communityModel);
+    });
+    yield communityList;
+  }
+
   static Stream<List<TimebankModel>> searchTimeBank({
     @required queryString,
   }) async* {

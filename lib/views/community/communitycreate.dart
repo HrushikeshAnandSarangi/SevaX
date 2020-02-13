@@ -908,11 +908,12 @@ class CreateEditCommunityViewFormState
   }
 
   Widget _showAlreadyExistsMessage(String enteredName) {
-    Stream<List<CommunityModel>> results = SearchManager.searchCommunity(
+    Stream<List<CommunityModel>> results =
+        SearchManager.searchCommunityForDuplicate(
       queryString: enteredName,
     );
 
-    print("------------ called $enteredName");
+    print("------------ called $results");
 //    // flutter defined function
 //    return StreamBuilder<List<CommunityModel>>(
 //        stream: SearchManager.searchCommunity(
