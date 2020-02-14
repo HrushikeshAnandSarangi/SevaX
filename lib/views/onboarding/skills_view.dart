@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/user_config.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
@@ -208,7 +209,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
                       widget.onSkipped();
                     },
                     child: Text(
-                      'Skip',
+                      UserConfig.prefs.getBool(UserConfig.skip_skill) == null
+                          ? 'Skip'
+                          : 'Cancel',
                       style: TextStyle(
                         color: Theme.of(context).accentColor,
                       ),

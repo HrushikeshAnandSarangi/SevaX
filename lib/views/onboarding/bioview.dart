@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/views/onboarding/interests_view.dart';
+import 'package:sevaexchange/utils/user_config.dart';
 
 typedef StringCallback = void Function(String bio);
 
@@ -8,11 +8,7 @@ class BioView extends StatefulWidget {
   final StringCallback onSave;
   final VoidCallback onBacked;
 
-  BioView({
-    @required this.onSkipped,
-    @required this.onSave,
-    this.onBacked
-  });
+  BioView({@required this.onSkipped, @required this.onSave, this.onBacked});
 
   @override
   _BioViewState createState() => _BioViewState();
@@ -39,8 +35,10 @@ class _BioViewState extends State<BioView> {
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
-            leading:BackButton(
-                onPressed: (){widget.onBacked();},
+            leading: BackButton(
+              onPressed: () {
+                widget.onBacked();
+              },
             ),
             elevation: 0.5,
             title: Text(
@@ -75,34 +73,31 @@ class _BioViewState extends State<BioView> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           TextFormField(
-                            style: TextStyle(
-                                fontSize: 16.0, color: Colors.black87),
-                            decoration: InputDecoration(
-                              fillColor: Colors.grey[300],
-                              filled: true,
-                              hintText:
-                                  'Tell us a little about yourself.',
-                              border: textFieldBorder,
-                              enabledBorder: textFieldBorder,
-                              focusedBorder: textFieldBorder,
-                            ),
-                            keyboardType: TextInputType.multiline,
-                            textCapitalization: TextCapitalization.sentences,
-                            minLines: 6,
-                            maxLines: 50,
-                            maxLength: 150,
-                            validator: (value) {
-                              if (value.trim().isEmpty) {
-                                return 'Its easy, please fill few words about you.';
-                              }
-                              if (value.length < 50){
+                              style: TextStyle(
+                                  fontSize: 16.0, color: Colors.black87),
+                              decoration: InputDecoration(
+                                fillColor: Colors.grey[300],
+                                filled: true,
+                                hintText: 'Tell us a little about yourself.',
+                                border: textFieldBorder,
+                                enabledBorder: textFieldBorder,
+                                focusedBorder: textFieldBorder,
+                              ),
+                              keyboardType: TextInputType.multiline,
+                              textCapitalization: TextCapitalization.sentences,
+                              minLines: 6,
+                              maxLines: 50,
+                              maxLength: 150,
+                              validator: (value) {
+                                if (value.trim().isEmpty) {
+                                  return 'Its easy, please fill few words about you.';
+                                }
+                                if (value.length < 50) {
+                                  this.bio = value;
+                                  return '* min 50 characters';
+                                }
                                 this.bio = value;
-                                return '* min 50 characters';
-                              }
-                              this.bio = value;
-
-                            }
-                          ),
+                              }),
                           // Text(
                           //   '*min 100 characters',
                           //   style: TextStyle(color: Colors.red),
@@ -136,7 +131,9 @@ class _BioViewState extends State<BioView> {
                   widget.onSkipped();
                 },
                 child: Text(
-                  'Skip',
+                  UserConfig.prefs.getBool(UserConfig.skip_bio) == null
+                      ? 'Skip'
+                      : 'Cancel',
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
               ),
