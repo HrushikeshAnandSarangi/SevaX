@@ -125,7 +125,7 @@ class CreateEditCommunityViewFormState
           _searchText = "";
         });
       } else {
-        SearchManager.sx(queryString: s).then((v) {
+        SearchManager.searchCommunityForDuplicate(queryString: s).then((v) {
           if (v) {
             setState(() {
               communityFound = true;
@@ -943,60 +943,7 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Widget _showAlreadyExistsMessage(String enteredName) {
-    print("---------- called $enteredName");
-    Stream<bool> results = SearchManager.searchCommunityForDuplicate(
-      queryString: enteredName,
-    );
-    print("------------ called ${results.toString()}");
-//    // flutter defined function
-//    return StreamBuilder<List<CommunityModel>>(
-//        stream: SearchManager.searchCommunity(
-//          queryString: enteredName,
-//        ),
-//        builder: (context, snapshot) {
-//          print("doc length ${snapshot}");
-//
-//          if (snapshot.hasData) {
-//            if (snapshot.connectionState == ConnectionState.waiting) {
-//              return Container();
-//            } else {
-//              List<CommunityModel> communities = snapshot.data;
-//
-//              print("doc length ${communities.length}");
-//              showDialog(
-//                context: context,
-//                builder: (BuildContext context) {
-//                  // return object of type Dialog
-//
-//                  return AlertDialog(
-//                    //title: new Text("Protected Timebank"),
-//                    content: new Text("Timebank name already exists"),
-//                    actions: <Widget>[
-//                      // usually buttons at the bottom of the dialog
-//                      new FlatButton(
-//                        child: new Text("Close"),
-//                        onPressed: () {
-//                          Navigator.of(context).pop();
-//                        },
-//                      ),
-//                    ],
-//                  );
-//                  ;
-//                },
-//              );
-//            }
-//          }
-//          return Container();
-//        });
-    return Container();
-  }
-
   Future<bool> isCommunityFound(String enteredName) async {
-    Stream<bool> results = SearchManager.searchCommunityForDuplicate(
-      queryString: enteredName,
-    );
-    //ommunityBloc.fetchCommunities(enteredName);
     List<CommunityModel> communities = List<CommunityModel>();
     var communitiesFound =
         await searchCommunityByName(enteredName, communities);

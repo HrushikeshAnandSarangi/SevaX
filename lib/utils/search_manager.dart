@@ -75,7 +75,7 @@ class SearchManager {
   }) async* {
     print("searchForUser :: ---------------");
     String url =
-        'http://35.227.18.55//elasticsearch/sevaxcommunities/sevaxcommunity/_search';
+        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
@@ -116,7 +116,8 @@ class SearchManager {
     yield communityList;
   }
 
-  static Future<bool> sx({@required queryString}) async {
+  static Future<bool> searchCommunityForDuplicate(
+      {@required queryString}) async {
     String url =
         'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_count';
     dynamic body = json.encode({
@@ -131,27 +132,6 @@ class SearchManager {
     } else {
       return false;
     }
-  }
-
-  static Stream<bool> searchCommunityForDuplicate({
-    @required queryString,
-  }) async* {
-    print("searchForUser :: ---------------");
-    String url =
-        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_count';
-    dynamic body = json.encode({
-      "query": {
-        "term": {"name.keyword": queryString}
-      }
-    });
-    int count =
-        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
-    print("count ${count.toString()}");
-    bool isFound = false;
-    if (count > 0) {
-      isFound = true;
-    }
-    yield isFound;
   }
 
   static Stream<List<TimebankModel>> searchTimeBank({

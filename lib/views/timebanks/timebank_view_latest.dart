@@ -25,8 +25,6 @@ class TimeBankAboutView extends StatefulWidget {
 
 class _TimeBankAboutViewState extends State<TimeBankAboutView>
     with AutomaticKeepAliveClientMixin {
-  String text =
-      "We provide full-cycle services in the areas of App development, web-based enterprise solutions, web application and portal development, We combine our solid business domain experience, technical expertise, profound knowledge of latest industry trends and quality-driven delivery model to offer progressive, end-to-end mobile and web solutions.Single app for all user-types: Teachers, Students & Parent Teachers can take attendance, students can view timetables, parents can view attendance, principal and admins can send messages & announcements, etc. using the same app,Though the traditional login mechanism with the username and password is preferred by the majority of users; the One Time Password (OTP) login via SMS and Emails is favored by all the app users. We have incorporated both of them in the school mobile app to choose the one that suits you the best.";
   bool descTextShowFlag = false;
   bool isUserJoined = false;
   String loggedInUser;

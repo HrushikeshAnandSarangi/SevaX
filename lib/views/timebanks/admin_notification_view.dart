@@ -1016,6 +1016,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     JoinRequestNotificationModel model,
   }) {
     // JoinRequestModel model,
+
+    // model JoinRequestModel
     // get timebank model
 
     // model JoinRequestModel
@@ -1083,17 +1085,35 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     child: Text(model.reasonToJoin ?? "Reason not mentioned"),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
                   Column(
-                    //  mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          'Allow',
-                          style: TextStyle(color: Colors.white),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Allow',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // Once approved init timebank model
+                            var timebankModel;
+                            var model;
+
+                            List<String> members = timebankModel.members;
+                            Set<String> usersSet = members.toSet();
+
+                            usersSet.add(model.userId);
+                            timebankModel.members = usersSet.toList();
+                            model.accepted = true;
+                            await updateJoinRequest(model: model);
+                            await updateTimebank(timebankModel: timebankModel);
+                            Navigator.pop(viewContext);
+                          },
                         ),
                         onPressed: () async {
                           // Once approved init timebank model
@@ -1122,11 +1142,22 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       Padding(
                         padding: EdgeInsets.all(4.0),
                       ),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          'Reject',
-                          style: TextStyle(color: Colors.white),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Reject',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // request declined
+                            var model;
+                            print("Declining request");
+                            model.accepted = false;
+                            await updateJoinRequest(model: model);
+                            Navigator.pop(viewContext);
+                          },
                         ),
                         onPressed: () async {
                           // request declined
@@ -1494,51 +1525,59 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       ),
                     ),
                   getBio(userModel),
-                  Center(
-                    child: Text(
-                        "By approving, ${userModel.fullname} will be added to the event.",
-                        style: TextStyle(
-                          fontStyle: FontStyle.italic,
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                            "By approving, ${userModel.fullname} will be added to the event.",
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                            ),
+                            textAlign: TextAlign.center),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            approveMemberForVolunteerRequest(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              context: context,
+                            );
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        textAlign: TextAlign.center),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      color: FlavorConfig.values.theme.primaryColor,
-                      child: Text(
-                        'Approve',
-                        style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () async {
-                        approveMemberForVolunteerRequest(
-                          model: requestModel,
-                          notificationId: notificationId,
-                          user: userModel,
-                          context: context,
-                        );
-                        Navigator.pop(viewContext);
-                      },
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: RaisedButton(
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        'Decline',
-                        style: TextStyle(color: Colors.white),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Decline',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            declineRequestedMember(
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                              context: context,
+                            );
+                            Navigator.pop(viewContext);
+                          },
+                        ),
                       ),
-                      onPressed: () async {
-                        declineRequestedMember(
-                          model: requestModel,
-                          notificationId: notificationId,
-                          user: userModel,
-                          context: context,
-                        );
-                        Navigator.pop(viewContext);
-                      },
-                    ),
+                    ],
                   ),
 //                  Padding(
 //                    padding: EdgeInsets.all(8.0),

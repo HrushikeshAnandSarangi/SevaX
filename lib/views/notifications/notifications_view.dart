@@ -890,6 +890,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       Container(
                         width: double.infinity,
                         child: RaisedButton(
+                          color: Theme.of(context).accentColor,
                           child: Text(
                             'Reject',
                             style: TextStyle(color: Colors.white),
