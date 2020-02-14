@@ -1,12 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class JoinRequestNotificationModel extends DataModel {
   String timebankTitle;
   String timebankId;
+  String reasonToJoin;
 
   JoinRequestNotificationModel({
     this.timebankId,
     this.timebankTitle,
+    @required this.reasonToJoin,
   });
 
   JoinRequestNotificationModel.fromMap(Map<String, dynamic> map) {
@@ -16,6 +19,10 @@ class JoinRequestNotificationModel extends DataModel {
 
     if (map.containsKey('timebankTitle')) {
       this.timebankTitle = map['timebankTitle'];
+    }
+
+    if (map.containsKey('reasonToJoin')) {
+      this.timebankTitle = map['reasonToJoin'];
     }
   }
 
@@ -29,6 +36,11 @@ class JoinRequestNotificationModel extends DataModel {
     if (this.timebankTitle != null && this.timebankTitle.isNotEmpty) {
       object['timebankTitle'] = this.timebankTitle;
     }
+
+    if (this.reasonToJoin != null && this.reasonToJoin.isNotEmpty) {
+      object['reasonToJoin'] = this.reasonToJoin;
+    }
+
     return object;
   }
 }

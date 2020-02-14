@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
@@ -15,6 +16,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:shimmer/shimmer.dart';
@@ -1002,6 +1004,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             showDialogForJoinRequestApproval(
               context: context,
               userModel: user,
+              model: model,
             );
           },
         ));
@@ -1010,6 +1013,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   void showDialogForJoinRequestApproval({
     BuildContext context,
     UserModel userModel,
+    JoinRequestNotificationModel model,
   }) {
     // JoinRequestModel model,
     // get timebank model
@@ -1076,8 +1080,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
-                    // child: Text(model.reason),
-                    child: Text("Reason"),
+                    child: Text(model.reasonToJoin ?? "Reason not mentioned"),
                   ),
                   Padding(
                     padding: EdgeInsets.all(8.0),
@@ -1094,8 +1097,15 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                         onPressed: () async {
                           // Once approved init timebank model
-                          var timebankModel;
-                          var model;
+
+                          var timebankModel = await getTimebankDetailsbyFuture(
+                            timebankId: widget.timebankId,
+                          );
+
+                          var model = await getJoinRequestMadeFrom(
+                            timebankId: widget.timebankId,
+                            sevaUserId: userModel.sevaUserID,
+                          );
 
                           List<String> members = timebankModel.members;
                           Set<String> usersSet = members.toSet();
@@ -1105,6 +1115,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           model.accepted = true;
                           await updateJoinRequest(model: model);
                           await updateTimebank(timebankModel: timebankModel);
+                          //update user community
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -1119,9 +1130,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                         onPressed: () async {
                           // request declined
-
                           var model;
-
                           print("Declining request");
                           model.accepted = false;
                           await updateJoinRequest(model: model);
@@ -1135,6 +1144,24 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             ),
           );
         });
+  }
+
+  Future<JoinRequestModel> getJoinRequestMadeFrom({
+    String timebankId,
+    String sevaUserId,
+  }) async {
+    return Firestore.instance
+        .collection('join_requests')
+        .where('entity_id', isEqualTo: timebankId)
+        .where('user_id', isEqualTo: sevaUserId)
+        .getDocuments()
+        .then((snapshot) {
+      DocumentSnapshot documentSnapshot = snapshot.documents[0];
+      JoinRequestModel model = JoinRequestModel.fromMap(documentSnapshot.data);
+      return model;
+    }).catchError((onError) {
+      return onError;
+    });
   }
 
   Widget getOfferAcceptedNotificationView(UserModel user, String notificationId,
