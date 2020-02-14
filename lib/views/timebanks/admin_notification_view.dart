@@ -1101,8 +1101,16 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           ),
                           onPressed: () async {
                             // Once approved init timebank model
-                            var timebankModel;
-                            var model;
+
+                            var timebankModel =
+                                await getTimebankDetailsbyFuture(
+                              timebankId: widget.timebankId,
+                            );
+
+                            var model = await getJoinRequestMadeFrom(
+                              timebankId: widget.timebankId,
+                              sevaUserId: userModel.sevaUserID,
+                            );
 
                             List<String> members = timebankModel.members;
                             Set<String> usersSet = members.toSet();
@@ -1112,32 +1120,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             model.accepted = true;
                             await updateJoinRequest(model: model);
                             await updateTimebank(timebankModel: timebankModel);
+                            //update user community
                             Navigator.pop(viewContext);
                           },
                         ),
-                        onPressed: () async {
-                          // Once approved init timebank model
-
-                          var timebankModel = await getTimebankDetailsbyFuture(
-                            timebankId: widget.timebankId,
-                          );
-
-                          var model = await getJoinRequestMadeFrom(
-                            timebankId: widget.timebankId,
-                            sevaUserId: userModel.sevaUserID,
-                          );
-
-                          List<String> members = timebankModel.members;
-                          Set<String> usersSet = members.toSet();
-
-                          usersSet.add(model.userId);
-                          timebankModel.members = usersSet.toList();
-                          model.accepted = true;
-                          await updateJoinRequest(model: model);
-                          await updateTimebank(timebankModel: timebankModel);
-                          //update user community
-                          Navigator.pop(viewContext);
-                        },
                       ),
                       Padding(
                         padding: EdgeInsets.all(4.0),
@@ -1159,14 +1145,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             Navigator.pop(viewContext);
                           },
                         ),
-                        onPressed: () async {
-                          // request declined
-                          var model;
-                          print("Declining request");
-                          model.accepted = false;
-                          await updateJoinRequest(model: model);
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )
