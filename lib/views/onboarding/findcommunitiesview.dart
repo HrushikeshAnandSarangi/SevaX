@@ -161,16 +161,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       return Container();
     }
 
-    /*if (searchTextController.text.trim().isEmpty) {
-      return Expanded(
-        child: ClipOval(
-          child: FadeInImage.assetNetwork(
-              placeholder: 'lib/assets/images/search.png',
-              image: 'lib/assets/images/search.png'),
-        ),
-      );
-    } else */
-
     if (searchTextController.text.trim().length < 3) {
       print('Search requires minimum 3 characters');
       return Column(
@@ -189,94 +179,112 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else {
-              List<CommunityModel> communityList = snapshot.data;
+              if(snapshot.data.length!=0){
+                List<CommunityModel> communityList = snapshot.data;
+                return Expanded(
+                    child: Padding(
+                        padding: EdgeInsets.only(left: 0, right: 0, top: 12.0),
+                        child: ListView.builder(
+                            itemCount: communityList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              CompareUserStatus status;
 
-              return Padding(
-                  padding: EdgeInsets.only(left: 0, right: 0, top: 12.0),
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: communityList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        CompareUserStatus status;
+                              status = _compareUserStatus(communityList[index],
+                                  widget.loggedInUser.sevaUserID);
 
-                        status = _compareUserStatus(communityList[index],
-                            widget.loggedInUser.sevaUserID);
-
-                        return ListTile(
-                          onTap: goToNext(snapshot.data),
-                          title: Text(communityList[index].name,
-                              style: TextStyle(
-                                  fontSize: 16.0, fontWeight: FontWeight.w700)),
-                          // subtitle: Text("Created by " +
-                          //     snapshot.data.communities[index].created_by),
-                          subtitle: FutureBuilder(
-                            future: getUserForId(
-                                sevaUserId: communityList[index].created_by),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<UserModel> snapshot) {
-                              if (snapshot.hasError) {
-                                return Text(
-                                  "Not found",
-                                );
-                              } else if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text("...");
-                              } else if (snapshot.hasData) {
-                                return Text(
-                                  "Created by " + snapshot.data.fullname,
-                                );
-                              } else {
-                                return Text(
-                                  "Community",
-                                );
-                              }
-                            },
-                          ),
-                          trailing:
-                              Row(mainAxisSize: MainAxisSize.min, children: <
-                                  Widget>[
-                            RaisedButton(
-                              onPressed: status == CompareUserStatus.JOIN
-                                  ? () {
-                                      var communityModel = communityList[index];
-                                      createEditCommunityBloc
-                                          .selectCommunity(communityModel);
-                                      createEditCommunityBloc.updateUserDetails(
-                                          SevaCore.of(context).loggedInUser);
-                                      // snapshot.data.communities[index].
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (contexts) =>
-                                              OnBoardWithTimebank(
-                                                  communityModel:
-                                                      communityModel,
-                                                  sevauserId: widget
-                                                      .loggedInUser.sevaUserID),
-                                        ),
+                              return ListTile(
+                                onTap: goToNext(snapshot.data),
+                                title: Text(communityList[index].name,
+                                    style: TextStyle(
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w700)),
+                                subtitle: FutureBuilder(
+                                  future: getUserForId(
+                                      sevaUserId:
+                                      communityList[index].created_by),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<UserModel> snapshot) {
+                                    if (snapshot.hasError) {
+                                      return Text(
+                                        "Not found",
                                       );
-                                      print('clicked ${communityModel.id}');
+                                    } else if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("...");
+                                    } else if (snapshot.hasData) {
+                                      return Text(
+                                        "Created by " + snapshot.data.fullname,
+                                      );
+                                    } else {
+                                      return Text(
+                                        "Community",
+                                      );
                                     }
-                                  : null,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Text(
-                                        getUserTimeBankStatusTitle(status) ??
-                                            ""),
-                                  ),
-                                ],
-                              ),
-                              color: Theme.of(context).accentColor,
-                              textColor: FlavorConfig.values.buttonTextColor,
-                              shape: StadiumBorder(),
-                            )
-                          ]),
-                        );
-                      }));
+                                  },
+                                ),
+                                trailing: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      RaisedButton(
+                                        onPressed:
+                                        status == CompareUserStatus.JOIN
+                                            ? () {
+                                          var communityModel =
+                                          communityList[index];
+                                          createEditCommunityBloc
+                                              .selectCommunity(
+                                              communityModel);
+                                          createEditCommunityBloc
+                                              .updateUserDetails(
+                                              SevaCore.of(context)
+                                                  .loggedInUser);
+                                          // snapshot.data.communities[index].
+
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (contexts) =>
+                                                  OnBoardWithTimebank(
+                                                      communityModel:
+                                                      communityModel,
+                                                      sevauserId: widget
+                                                          .loggedInUser
+                                                          .sevaUserID),
+                                            ),
+                                          );
+                                          print(
+                                              'clicked ${communityModel.id}');
+                                        }
+                                            : null,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.all(0.0),
+                                              child: Text(
+                                                  getUserTimeBankStatusTitle(
+                                                      status) ??
+                                                      ""),
+                                            ),
+                                          ],
+                                        ),
+                                        color: Theme.of(context).accentColor,
+                                        textColor:
+                                        FlavorConfig.values.buttonTextColor,
+                                        shape: StadiumBorder(),
+                                      )
+                                    ]),
+                              );
+                            })));
+              }else{
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical:100,horizontal: 60),
+                  child: Center(
+                    child: Text("No timebanks found", style:TextStyle(fontFamily: "Europa", fontSize: 14)),
+                  ),
+                );
+              }
             }
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
