@@ -221,65 +221,11 @@ class NewsCreateFormState extends State<NewsCreateForm> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // Container(
-                  //   alignment: Alignment(1.0, 0),
-                  //   padding: const EdgeInsets.only(right: 10.0, bottom: 10),
-                  //   child:
-                  //   RaisedButton(
-                  //     shape: StadiumBorder(),
-                  //     color: Colors.indigoAccent,
-                  //     onPressed: () {
-                  //       // Validate will return true if the form is valid, or false if
-                  //       // the form is invalid.
-
-                  //       if (formKey.currentState.validate()) {
-                  //         // If the form is valid, we want to show a Snackbar
-                  //         Scaffold.of(context).showSnackBar(
-                  //             SnackBar(content: Text('Creating Post')));
-                  //         writeToDB();
-                  //       }
-                  //     },
-                  //     child: Text(
-                  //       'Save News Post',
-                  //       style: TextStyle(color: Colors.white),
-                  //     ),
-                  //   ),
-                  // ),
-
-//              entityDropdown,
-
                   Text(""),
                   Container(
                     margin: EdgeInsets.all(20),
                     child: Column(
                       children: <Widget>[
-                        // Padding(
-                        //   padding: EdgeInsets.only(bottom: 20.0),
-                        //   child: TextFormField(
-                        //     decoration: InputDecoration(
-                        //       hintText: 'Your feed title',
-                        //       labelText: '+ Feed Title',
-                        //       border: OutlineInputBorder(
-                        //         borderRadius: const BorderRadius.all(
-                        //           const Radius.circular(10.0),
-                        //         ),
-                        //         borderSide: new BorderSide(
-                        //           color: Colors.black,
-                        //           width: 0.5,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     keyboardType: TextInputType.text,
-                        //     //style: textStyle,
-                        //     validator: (value) {
-                        //       if (value.isEmpty) {
-                        //         return 'Please enter the Post Title';
-                        //       }
-                        //       newsObject.title = value;
-                        //     },
-                        //   ),
-                        // ),
-
                         Padding(
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
@@ -322,30 +268,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             },
                           ),
                         ),
-                        // TextFormField(
-                        //   decoration: InputDecoration(
-                        //     hintText: 'Your news and any #hashtags',
-                        //     labelText: 'Photo Credits',
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: const BorderRadius.all(
-                        //         const Radius.circular(10.0),
-                        //       ),
-                        //       borderSide: new BorderSide(
-                        //         color: Colors.black,
-                        //         width: 0.5,
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   keyboardType: TextInputType.multiline,
-                        //   //style: textStyle,
-                        //   maxLines: null,
-                        //   validator: (value) {
-                        //     if (value.isEmpty) {
-                        //       return 'Please enter some text';
-                        //     }
-                        //     newsObject.description = value;
-                        //   },
-                        // ),
                       ],
                     ),
                   ),
@@ -362,7 +284,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           location = geoLocationPointSelected;
                         },
                         onCreditsEntered: (photoCreditsFromNews) {
-                          print("" + photoCredits);
+                          print("Hello its me:" + photoCreditsFromNews);
                           photoCredits = photoCreditsFromNews;
                         },
                       ),
