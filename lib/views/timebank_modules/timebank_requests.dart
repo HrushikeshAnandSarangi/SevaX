@@ -877,6 +877,8 @@ class NearRequestListItems extends StatelessWidget {
                     Text(
                       model.description,
                       style: Theme.of(parentContext).textTheme.subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 8),
                     Wrap(
@@ -1127,6 +1129,14 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getRequestListViewHolder(
       {RequestModel model, String loggedintimezone, String userEmail}) {
+//    bool isApplied =false;
+//    if(model.acceptors.contains(userEmail) ||
+//        model.approvedUsers.contains(userEmail) ||
+//        model.invitedUsers.contains(SevaCore.of(context)
+//            .loggedInUser
+//            .sevaUserID)){
+//      isApplied = true;
+//    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1231,28 +1241,30 @@ class RequestListItemsState extends State<RequestListItems> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Offstage(
-                            offstage: !model.acceptors.contains(userEmail),
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              width: 100,
-                              height: 32,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: EdgeInsets.all(0),
-                                color: Colors.green,
-                                child: Text(
-                                  'Applied',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                          model.acceptors.contains(userEmail) ||
+                                  model.approvedUsers.contains(userEmail)
+                              ?
+//                          || model.invitedUsers.contains(userEmail) ?
+                              Container(
+                                  margin: EdgeInsets.all(10),
+                                  width: 100,
+                                  height: 32,
+                                  child: FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: EdgeInsets.all(0),
+                                    color: Colors.green,
+                                    child: Text(
+                                      'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {},
                                   ),
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                          ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ],
