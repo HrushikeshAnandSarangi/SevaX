@@ -1015,10 +1015,9 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
     // model JoinRequestModel
     // get timebank model
-    // get request model
 
-    var timebankModel;
-    var model;
+    // model JoinRequestModel
+    // var model = await;
 
     showDialog(
         context: context,
@@ -1079,7 +1078,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
-                    child: Text(model.reason),
+                    // child: Text(model.reason),
+                    child: Text("Reason"),
                   ),
                   Padding(
                     padding: EdgeInsets.all(5.0),
@@ -1097,7 +1097,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
-                            // Once approved
+                            // Once approved init timebank model
+                            var timebankModel;
+                            var model;
+
                             List<String> members = timebankModel.members;
                             Set<String> usersSet = members.toSet();
 
@@ -1123,6 +1126,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           ),
                           onPressed: () async {
                             // request declined
+                            var model;
                             print("Declining request");
                             model.accepted = false;
                             await updateJoinRequest(model: model);
