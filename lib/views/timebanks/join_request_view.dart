@@ -82,10 +82,13 @@ class TimebankRequests extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
+          
           List<JoinRequestModel> joinrequestModelList = snapshot.data;
+
           if (joinrequestModelList.length == 0) {
             return Center(child: Text('No pending join requests'));
           }
+          
           return ListView.builder(
               itemCount: joinrequestModelList.length,
               itemBuilder: (listContext, index) {
@@ -146,11 +149,12 @@ class TimebankRequests extends StatelessWidget {
         });
   }
 
-  void showDialogForApproval(
-      {BuildContext context,
-      UserModel userModel,
-      JoinRequestModel model,
-      TimebankModel timebankModel}) {
+  void showDialogForApproval({
+    BuildContext context,
+    UserModel userModel,
+    JoinRequestModel model,
+    TimebankModel timebankModel,
+  }) {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {

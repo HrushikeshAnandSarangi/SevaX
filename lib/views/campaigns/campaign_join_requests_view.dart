@@ -6,7 +6,7 @@ import 'package:sevaexchange/views/profile/profile_viewer_join_request.dart';
 
 class CampaignJoinRequestView extends StatefulWidget {
   final String campaignID;
-
+  
   CampaignJoinRequestView({Key key, this.campaignID}) : super(key: key);
 
   createState() => CampaignJoinRequestViewState();
