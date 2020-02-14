@@ -223,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     FlatButton(
                                                       padding:
                                                           EdgeInsets.fromLTRB(
-                                                              10, 5, 5, 5),
+                                                              10, 5, 10, 5),
                                                       color: Theme.of(context)
                                                           .accentColor,
                                                       textColor: FlavorConfig
