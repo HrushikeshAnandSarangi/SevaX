@@ -65,344 +65,408 @@ class _EditProfilePageState extends State<EditProfilePage>
   Widget build(BuildContext context) {
     TextStyle textStyle = Theme.of(context).textTheme.title;
     return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text(
-            'Profile',
-            style: TextStyle(fontSize: 18),
-          ),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(
+          'Profile',
+          style: TextStyle(fontSize: 18),
         ),
-        body: ModalProgressHUD(
-          inAsyncCall: _saving,
-          child: ListView(
-            children: <Widget>[
-              Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 20),
+      ),
+      body: ModalProgressHUD(
+        inAsyncCall: _saving,
+        child: ListView(
+          children: <Widget>[
+            Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: 20),
 
-                    Stack(
-                      children: <Widget>[
-                        new Container(
-                            padding: EdgeInsets.zero, child: _imagePicker),
-                        Positioned(
-                            width: 50,
-                            height: 50,
-                            right: 5.0,
-                            bottom: 5.0,
-                            child: FloatingActionButton(
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.black,
-                              ),
-                              backgroundColor: Colors.white,
-                              onPressed: () {
-                                imagePicker.showDialog(context);
-                                isLoading = false;
-                              },
-                            )),
-                      ],
-                    ),
-                    //registerButton,
-                  ],
-                ),
+                  Stack(
+                    children: <Widget>[
+                      new Container(
+                          padding: EdgeInsets.zero, child: _imagePicker),
+                      Positioned(
+                          width: 50,
+                          height: 50,
+                          right: 5.0,
+                          bottom: 5.0,
+                          child: FloatingActionButton(
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.black,
+                            ),
+                            backgroundColor: Colors.white,
+                            onPressed: () {
+                              imagePicker.showDialog(context);
+                              isLoading = false;
+                            },
+                          )),
+                    ],
+                  ),
+                  //registerButton,
+                ],
               ),
-              SizedBox(height: 50),
-              GestureDetector(
-                child: Container(
-                  child: Card(
-                    color: Colors.transparent,
-                    elevation: 0.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                          child: Text(
-                            'Name',
-                            style: TextStyle(
-                                fontSize: 15.0, fontWeight: FontWeight.w600),
-                          ),
+            ),
+            SizedBox(height: 50),
+            GestureDetector(
+              child: Container(
+                child: Card(
+                  color: Colors.transparent,
+                  elevation: 0.0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                        child: Text(
+                          'Name',
+                          style: TextStyle(
+                              fontSize: 15.0, fontWeight: FontWeight.w600),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                          child: Text(widget.userModel.fullname),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                        child: Text(widget.userModel.fullname),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 30.0, top: 5.0),
+                        child: Divider(
+                          color: Colors.black45,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 30.0, top: 5.0),
-                          child: Divider(
-                            color: Colors.black45,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                onTap: () {
-                  print('name clicked');
-                  return showDialog(
-                    context: context,
-                    builder: (BuildContext viewContext) {
-                      // return object of type Dialog
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        title: Text('Update name',
-                            style: TextStyle(fontSize: 15.0)),
-                        content: Form(
-                          key: _formKey,
-                          child: TextFormField(
-                            //key: _formKey,
-                            decoration: InputDecoration(hintText: 'Enter name'),
-                            keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.sentences,
-                            style: TextStyle(fontSize: 17.0),
-                            initialValue: widget.userModel.fullname,
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(20),
-                            ],
-                            onChanged: (value) {
+              ),
+              onTap: () {
+                print('name clicked');
+                return showDialog(
+                  context: context,
+                  builder: (BuildContext viewContext) {
+                    // return object of type Dialog
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      title:
+                          Text('Update name', style: TextStyle(fontSize: 15.0)),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Form(
+                            key: _formKey,
+                            child: TextFormField(
+                              //key: _formKey,
+                              decoration:
+                                  InputDecoration(hintText: 'Enter name'),
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: TextStyle(fontSize: 17.0),
+                              initialValue: widget.userModel.fullname,
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(20),
+                              ],
+                              onChanged: (value) {
 //                            if (value.isEmpty == false) {
 //                              this.usermodel.fullname = value;
 //                            }
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter name to update';
-                              }
-                              widget.userModel.fullname = value;
-                            },
-                          ),
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text(
-                              'Update',
-                              style: TextStyle(
-                                fontSize: dialogButtonSize,
-                              ),
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter name to update';
+                                }
+                                widget.userModel.fullname = value;
+                              },
                             ),
-                            onPressed: () {
-                              if (!_formKey.currentState.validate()) {
-                                return;
-                              }
-                              Navigator.pop(viewContext);
-                              updateName();
-                              isLoading = false;
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Spacer(),
+                              FlatButton(
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                color: Theme.of(context).accentColor,
+                                textColor: FlavorConfig.values.buttonTextColor,
+                                child: Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (!_formKey.currentState.validate()) {
+                                    return;
+                                  }
+                                  Navigator.pop(viewContext);
+                                  updateName();
+                                  isLoading = false;
 //                            setState(() {
 //                              widget.userModel.fullname =
 //                                  this.usermodel.fullname;
 //                            });
-                            },
-                          ),
-                          FlatButton(
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(
-                                fontSize: dialogButtonSize,
+                                },
                               ),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(viewContext);
-                            },
-                          )
+                              FlatButton(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      fontSize: dialogButtonSize,
+                                      color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(viewContext);
+                                },
+                              ),
+                            ],
+                          ),
                         ],
-                      );
-                    },
-                  );
-                },
-              ),
-              GestureDetector(
-                child: Card(
-                  color: Colors.transparent,
-                  elevation: 0.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text(
-                          'Bio',
-                          style: TextStyle(
-                              fontSize: 15.0, fontWeight: FontWeight.w600),
-                        ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text(
-                          widget.userModel.bio == null
-                              ? 'Add your bio'
-                              : widget.userModel.bio,
-                        ),
+                    );
+                  },
+                );
+              },
+            ),
+            GestureDetector(
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text(
+                        'Bio',
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.w600),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 5.0),
-                        child: Divider(
-                          color: Colors.black45,
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text(
+                        widget.userModel.bio == null
+                            ? 'Add your bio'
+                            : widget.userModel.bio,
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 5.0),
+                      child: Divider(
+                        color: Colors.black45,
+                      ),
+                    ),
+                  ],
                 ),
-                onTap: () {
-                  return showDialog(
-                    context: context,
-                    builder: (BuildContext viewContext) {
-                      // return object of type Dialog
-                      return AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        title: Text('Update bio',
-                            style: TextStyle(fontSize: 15.0)),
-                        content: Form(
-                          key: _formKey,
-                          child: TextFormField(
-                            maxLength: 150,
-                            decoration: InputDecoration(hintText: 'Enter bio'),
-                            keyboardType: TextInputType.text,
-                            textCapitalization: TextCapitalization.sentences,
-                            style: TextStyle(fontSize: 17.0),
-                            initialValue: widget.userModel.bio,
-                            onChanged: (value) {
-//
-                            },
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Please enter bio to update';
-                              }
-
-                              widget.userModel.bio = value;
-
-                            },
-                          ),
-                        ),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text(
-                              'Update',
-                              style: TextStyle(
-                                fontSize: dialogButtonSize,
-                              ),
+              ),
+              onTap: () {
+                return showDialog(
+                  context: context,
+                  builder: (BuildContext viewContext) {
+                    // return object of type Dialog
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      title:
+                          Text('Update bio', style: TextStyle(fontSize: 15.0)),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Form(
+                            key: _formKey,
+                            child: TextFormField(
+                              //key: _formKey,
+                              decoration:
+                                  InputDecoration(hintText: 'Enter bio'),
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.sentences,
+                              style: TextStyle(fontSize: 17.0),
+                              initialValue: widget.userModel.bio,
+                              onChanged: (value) {
+//                            if (value.isEmpty == false) {
+//                              this.usermodel.bio = value;
+//                            }
+                              },
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter bio to update';
+                                }
+                                widget.userModel.bio = value;
+                              },
                             ),
-                            onPressed: () {
-                              if (!_formKey.currentState.validate()) {
-                                return;
-                              }
-                              Navigator.pop(viewContext);
-                              updateBio();
-                              isLoading = false;
+                          ),
+                          SizedBox(height: 15),
+                          Row(
+                            children: <Widget>[
+                              Spacer(),
+                              FlatButton(
+                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                                color: Theme.of(context).accentColor,
+                                textColor: FlavorConfig.values.buttonTextColor,
+                                child: Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    fontSize: dialogButtonSize,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (!_formKey.currentState.validate()) {
+                                    return;
+                                  }
+                                  Navigator.pop(viewContext);
+                                  updateBio();
+                                  isLoading = false;
 //                            setState(() {
 //                              widget.userModel.bio = this.usermodel.bio;
 //                            });
-                            },
-                          ),
-                          FlatButton(
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(
-                                fontSize: dialogButtonSize,
+                                },
                               ),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(viewContext);
-                            },
+                              FlatButton(
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                      fontSize: dialogButtonSize,
+                                      color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(viewContext);
+                                },
+                              ),
+                            ],
                           )
                         ],
-                      );
-                    },
-                  );
-                },
-              ),
-              GestureDetector(
-                child: Card(
-                  color: Colors.transparent,
-                  elevation: 0.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text(
-                          'Interests',
-                          style: TextStyle(
-                              fontSize: 15.0, fontWeight: FontWeight.w600),
-                        ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text('Click here to see your interests'),
+                    );
+                  },
+                );
+              },
+            ),
+//            GestureDetector(
+//              child: Card(
+//                color: Colors.transparent,
+//                elevation: 0.0,
+//                child: Column(
+//                  crossAxisAlignment: CrossAxisAlignment.start,
+//                  children: <Widget>[
+//                    Padding(
+//                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+//                      child: Text(
+//                        'Email',
+//                        style: TextStyle(
+//                            fontSize: 15.0,
+//                            fontWeight: FontWeight.w600,
+//                            color: Colors.black45,
+//                        ),
+//                      ),
+//                    ),
+//                    Padding(
+//                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+//                      child: Text(widget.userModel.email,style: TextStyle(color: Colors.black45,),),
+//
+//                    ),
+//                    Padding(
+//                      padding: EdgeInsets.only(left: 30.0, top: 5.0),
+//                      child: Divider(
+//                        color: Colors.black45,
+//                      ),
+//                    ),
+//                  ],
+//                ),
+//              ),
+//              onTap: () {
+//                print('email clicked');
+//              },
+//            ),
+            GestureDetector(
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text(
+                        'Interests',
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.w600),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 5.0),
-                        child: Divider(
-                          color: Colors.black45,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  print('interests clicked');
-                  _navigateToInterestsView(usermodel);
-                },
-              ),
-              GestureDetector(
-                child: Card(
-                  color: Colors.transparent,
-                  elevation: 0.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text(
-                          'Skills',
-                          style: TextStyle(
-                              fontSize: 15.0, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text('Click here to see your skills'),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 30.0, top: 5.0),
-                        child: Divider(
-                          color: Colors.black45,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  _navigateToSkillsView(usermodel);
-                },
-              ),
-              SizedBox(height: 30),
-              Divider(),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width / 3.5,
-                  vertical: 20,
-                ),
-                child: Container(
-                  width: 134,
-                  child: RaisedButton(
-                    color: Colors.red,
-                    child: Text(
-                      'Logout',
-                      style: Theme.of(context).primaryTextTheme.button,
                     ),
-                    onPressed: logOut,
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text('Click here to see your interests'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 5.0),
+                      child: Divider(
+                        color: Colors.black45,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ));
+              onTap: () {
+                print('interests clicked');
+                _navigateToInterestsView(usermodel);
+              },
+            ),
+            GestureDetector(
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0.0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text(
+                        'Skills',
+                        style: TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
+                      child: Text('Click here to see your skills'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 30.0, top: 5.0),
+                      child: Divider(
+                        color: Colors.black45,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                _navigateToSkillsView(usermodel);
+              },
+            ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 3.5,
+                vertical: 20,
+              ),
+              child: Container(
+                width: 134,
+                child: RaisedButton(
+                  color: Theme.of(context).primaryColor,
+                  textColor: Colors.white,
+                  child: Text(
+                    'Logout',
+                  ),
+                  onPressed: logOut,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future _navigateToInterestsView(UserModel loggedInUser) async {
@@ -575,35 +639,45 @@ class _EditProfilePageState extends State<EditProfilePage>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Log Out"),
-          content: new Text("Are you sure you want to logout?"),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
-                "Log Out",
-                style: TextStyle(color: Colors.red),
-              ),
-              onPressed: () {
-                // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                //   statusBarBrightness: Brightness.light,
-                //   statusBarColor: Colors.white,
-                // ));
-                Navigator.of(context).pop();
-                _signOut(context);
-              },
-            ),
-            new RaisedButton(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-              elevation: 5,
-              color: Theme.of(context).accentColor,
-              textColor: FlavorConfig.values.buttonTextColor,
-              child: new Text("Cancel"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+          title: new Text("Logout"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text("Are you sure you want to logout?"),
+              SizedBox(height: 10),
+              Row(
+                children: <Widget>[
+                  Spacer(),
+                  FlatButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: new Text(
+                      "Logout",
+                      style: TextStyle(fontFamily: 'Europa'),
+                    ),
+                    onPressed: () {
+                      // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                      //   statusBarBrightness: Brightness.light,
+                      //   statusBarColor: Colors.white,
+                      // ));
+                      Navigator.of(context).pop();
+                      _signOut(context);
+                    },
+                  ),
+                  new FlatButton(
+                    child: new Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
         );
       },
     );
