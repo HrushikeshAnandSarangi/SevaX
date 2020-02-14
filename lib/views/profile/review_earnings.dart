@@ -42,13 +42,13 @@ class _ReviewEarningState extends State<ReviewEarning> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     FirestoreManager.getCompletedRequestStream(
-        userEmail: SevaCore.of(context).loggedInUser.email,
-        userId: SevaCore.of(context).loggedInUser.sevaUserID).listen(
+            userEmail: SevaCore.of(context).loggedInUser.email,
+            userId: SevaCore.of(context).loggedInUser.sevaUserID)
+        .listen(
       (result) {
         if (!mounted) return;
         requestList = result;
-        setState(() {
-        });
+        setState(() {});
       },
     );
   }
@@ -132,7 +132,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                               )),
-                          Text('Yang bucks',
+                          Text('Seva Coins',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,

@@ -160,7 +160,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text('${transmodel.credits}'),
-              Text('Yang bucks',
+              Text('Seva Coins',
                   style: TextStyle(
                     fontSize: 9,
                     fontWeight: FontWeight.w600,

@@ -14,9 +14,11 @@ class NoGroupPlaceHolder extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            Icons.group,
+          Image.asset(
+            'lib/assets/images/group_icon.png',
             color: Theme.of(context).primaryColor,
+            width: 30,
+            height: 30,
           ),
           SizedBox(height: 5),
           RichText(
