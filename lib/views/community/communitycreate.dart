@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -15,6 +16,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -74,7 +76,8 @@ class CreateEditCommunityViewFormState
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
-
+  final TextEditingController searchTextController =
+      new TextEditingController();
   TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
@@ -93,9 +96,13 @@ class CreateEditCommunityViewFormState
   var scrollIsOpen = false;
   var communityFound = false;
   List<FocusNode> focusNodes;
+  String errTxt;
 
   void initState() {
     super.initState();
+    var _searchText = "";
+    final _textUpdates = StreamController<String>();
+
     focusNodes = List.generate(6, (_) => FocusNode());
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -105,6 +112,34 @@ class CreateEditCommunityViewFormState
     if (FlavorConfig.appFlavor == Flavor.APP) {
       fetchCurrentlocation();
     }
+
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 400))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        SearchManager.sx(queryString: s).then((v) {
+          if (v) {
+            setState(() {
+              communityFound = true;
+              errTxt = 'Timebank name already exist';
+            });
+          } else {
+            setState(() {
+              communityFound = false;
+              errTxt = null;
+            });
+          }
+        });
+      }
+    });
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -178,15 +213,17 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+                    controller: searchTextController,
                     onChanged: (value) {
                       enteredName = value;
                     },
                     decoration: InputDecoration(
+                      errorText: errTxt,
                       hintText: "Ex: Pets-in-town, Citizen collab",
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    initialValue: snapshot.data.community.name ?? '',
+                    // initialValue: snapshot.data.community.name ?? '',
                     onSaved: (value) => enteredName = value,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -209,7 +246,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    initialValue: snapshot.data.timebank.missionStatement,
+                    //   initialValue: snapshot.data.timebank.missionStatement,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Tell us more about your timebank.';
@@ -323,12 +360,13 @@ class CreateEditCommunityViewFormState
                             // show a dialog
 
                             print(_formKey.currentState.validate());
-                            communityFound =
-                                await isCommunityFound(enteredName);
-                            if (communityFound) {
-                              print("Found:$communityFound");
-                              return;
-                            }
+
+//                            communityFound =
+//                                await isCommunityFound(enteredName);
+//                            if (communityFound) {
+//                              print("Found:$communityFound");
+//                              return;
+//                            }
                             if (_formKey.currentState.validate()) {
                               if (_billingInformationKey.currentState
                                   .validate()) {
@@ -378,9 +416,8 @@ class CreateEditCommunityViewFormState
                                           .loggedInUser
                                           .email)
                                       .updateData({
-                                    'communities': FieldValue.arrayUnion([
-                                      snapshot.data.community.id
-                                    ]),
+                                    'communities': FieldValue.arrayUnion(
+                                        [snapshot.data.community.id]),
                                     'currentCommunity':
                                         snapshot.data.community.id
                                   });
@@ -481,7 +518,7 @@ class CreateEditCommunityViewFormState
           height: 50,
           child: Column(children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   'Configure billing details',
@@ -504,7 +541,7 @@ class CreateEditCommunityViewFormState
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   _billingDetailsError,
@@ -615,7 +652,7 @@ class CreateEditCommunityViewFormState
                 Text(
                   'Billing Details',
                   style: TextStyle(
-                      color: Colors.orange,
+                      color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
@@ -679,9 +716,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.state != null
-              ? controller.community.billing_address.state
-              : '',
+//          initialValue: controller.community.billing_address.state != null
+//              ? controller.community.billing_address.state
+//              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
@@ -707,15 +744,16 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.pincode != null
-              ? controller.community.billing_address.pincode.toString()
-              : '',
+//          initialValue: controller.community.billing_address.pincode != null
+//              ? controller.community.billing_address.pincode.toString()
+//              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
           focusNode: focusNodes[1],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
+          maxLength: 15,
           decoration: getInputDecoration(
             fieldTitle: "ZIP Code",
           ),
@@ -735,10 +773,10 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('additionalnotes', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue:
-              controller.community.billing_address.additionalnotes != null
-                  ? controller.community.billing_address.additionalnotes
-                  : '',
+//          initialValue:
+//              controller.community.billing_address.additionalnotes != null
+//                  ? controller.community.billing_address.additionalnotes
+//                  : '',
 //          validator: (value) {
 //            return value.isEmpty ? 'Field cannot be left blank' : null;
 //          },
@@ -771,10 +809,10 @@ class CreateEditCommunityViewFormState
           },
           focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
-          initialValue:
-              controller.community.billing_address.street_address1 != null
-                  ? controller.community.billing_address.street_address1
-                  : '',
+//          initialValue:
+//              controller.community.billing_address.street_address1 != null
+//                  ? controller.community.billing_address.street_address1
+//                  : '',
           decoration: getInputDecoration(
             fieldTitle: "Street Address 1",
           ),
@@ -796,10 +834,10 @@ class CreateEditCommunityViewFormState
             },
             focusNode: focusNodes[3],
             textInputAction: TextInputAction.next,
-            initialValue:
-                controller.community.billing_address.street_address2 != null
-                    ? controller.community.billing_address.street_address2
-                    : '',
+//            initialValue:
+//                controller.community.billing_address.street_address2 != null
+//                    ? controller.community.billing_address.street_address2
+//                    : '',
             decoration: getInputDecoration(
               fieldTitle: "Street Address 2",
             )),
@@ -818,9 +856,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('companyname', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.companyname != null
-              ? controller.community.billing_address.companyname
-              : '',
+//          initialValue: controller.community.billing_address.companyname != null
+//              ? controller.community.billing_address.companyname
+//              : '',
           // validator: (value) {
           //   return value.isEmpty ? 'Field cannot be left blank' : null;
           // },
@@ -905,23 +943,74 @@ class CreateEditCommunityViewFormState
     );
   }
 
+  Widget _showAlreadyExistsMessage(String enteredName) {
+    print("---------- called $enteredName");
+    Stream<bool> results = SearchManager.searchCommunityForDuplicate(
+      queryString: enteredName,
+    );
+    print("------------ called ${results.toString()}");
+//    // flutter defined function
+//    return StreamBuilder<List<CommunityModel>>(
+//        stream: SearchManager.searchCommunity(
+//          queryString: enteredName,
+//        ),
+//        builder: (context, snapshot) {
+//          print("doc length ${snapshot}");
+//
+//          if (snapshot.hasData) {
+//            if (snapshot.connectionState == ConnectionState.waiting) {
+//              return Container();
+//            } else {
+//              List<CommunityModel> communities = snapshot.data;
+//
+//              print("doc length ${communities.length}");
+//              showDialog(
+//                context: context,
+//                builder: (BuildContext context) {
+//                  // return object of type Dialog
+//
+//                  return AlertDialog(
+//                    //title: new Text("Protected Timebank"),
+//                    content: new Text("Timebank name already exists"),
+//                    actions: <Widget>[
+//                      // usually buttons at the bottom of the dialog
+//                      new FlatButton(
+//                        child: new Text("Close"),
+//                        onPressed: () {
+//                          Navigator.of(context).pop();
+//                        },
+//                      ),
+//                    ],
+//                  );
+//                  ;
+//                },
+//              );
+//            }
+//          }
+//          return Container();
+//        });
+    return Container();
+  }
+
   Future<bool> isCommunityFound(String enteredName) async {
+    Stream<bool> results = SearchManager.searchCommunityForDuplicate(
+      queryString: enteredName,
+    );
     //ommunityBloc.fetchCommunities(enteredName);
-    CommunityListModel communities = CommunityListModel();
+    List<CommunityModel> communities = List<CommunityModel>();
     var communitiesFound =
         await searchCommunityByName(enteredName, communities);
-    if (communitiesFound == null ||
-        communitiesFound.communities == null ||
-        communitiesFound.communities.length == 0) {
+
+    if (communities == null || communities == null || communities.length == 0) {
       return false;
     } else {
       return true;
     }
   }
 
-  Future<CommunityListModel> searchCommunityByName(
-      String name, CommunityListModel communities) async {
-    communities.removeall();
+  Future<List<CommunityModel>> searchCommunityByName(
+      String name, List<CommunityModel> communities) async {
+    communities.clear();
     if (name.isNotEmpty && name.length > 4) {
       await Firestore.instance
           .collection('communities')

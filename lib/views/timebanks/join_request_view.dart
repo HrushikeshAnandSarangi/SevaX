@@ -217,7 +217,7 @@ class TimebankRequests extends StatelessWidget {
                     child: Text(model.reason),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
                   Column(
                     //  mainAxisAlignment: MainAxisAlignment.center,
@@ -304,7 +304,7 @@ class TimebankRequests extends StatelessWidget {
         );
       }
       return Container(
-        height: 200,
+        height: 150,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(

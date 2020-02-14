@@ -230,7 +230,7 @@ class _locationScreenState extends State<LocationView> {
             style: TextStyle(fontSize: 20.0, color: Colors.white)),
         actions: <Widget>[
           new FlatButton(
-            child: new Text('SAVE',
+            child: new Text('Save',
                 style: theme.textTheme.body1.copyWith(
                     color: _canSave
                         ? Colors.white

@@ -99,7 +99,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   textAlign: TextAlign.center),
             ),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(5.0),
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -131,7 +131,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(5.0),
+                  padding: EdgeInsets.all(4.0),
                 ),
                 Container(
                   width: double.infinity,

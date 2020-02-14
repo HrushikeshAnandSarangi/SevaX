@@ -810,7 +810,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                       )),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -840,7 +840,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(4.0),
                       ),
                       Container(
                         width: double.infinity,
@@ -1476,7 +1476,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         textAlign: TextAlign.center),
                   ),
                   Container(
-                    width: double.maxFinite,
+                    width: double.infinity,
                     child: RaisedButton(
                       color: FlavorConfig.values.theme.primaryColor,
                       child: Text(
