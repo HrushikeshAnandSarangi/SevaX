@@ -804,7 +804,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             content: Form(
               //key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   _getCloseButton(viewContext),
                   Container(
@@ -865,9 +865,10 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                       )),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         width: double.infinity,
@@ -888,9 +889,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                             Navigator.pop(viewContext);
                           },
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(4.0),
                       ),
                       Container(
                         width: double.infinity,
@@ -928,7 +926,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         );
       }
       return Container(
-        height: 200,
+        height: 150,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
@@ -1434,7 +1432,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         textAlign: TextAlign.center),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1459,7 +1457,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(3.0),
                       ),
                       Container(
                         width: double.infinity,

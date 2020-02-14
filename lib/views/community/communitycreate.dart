@@ -20,6 +20,8 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../main_app.dart';
+
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
   final bool isFromFind;
@@ -185,7 +187,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    initialValue: snapshot.data.community.name ?? '',
+                    // initialValue: snapshot.data.community.name ?? '',
                     onSaved: (value) => enteredName = value,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -208,7 +210,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    initialValue: snapshot.data.timebank.missionStatement,
+                    //   initialValue: snapshot.data.timebank.missionStatement,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Tell us more about your timebank.';
@@ -322,96 +324,96 @@ class CreateEditCommunityViewFormState
                             // show a dialog
 
                             print(_formKey.currentState.validate());
-                            _showAlreadyExistsMessage(enteredName);
-//                            communityFound =
-//                                await isCommunityFound(enteredName);
-//                            if (communityFound) {
-//                              print("Found:$communityFound");
-//                              return;
-//                            }
-//                            if (_formKey.currentState.validate()) {
-//                              if (_billingInformationKey.currentState
-//                                  .validate()) {
-//                                setState(() {
-//                                  this._billingDetailsError = '';
-//                                });
-//                                print(globals.timebankAvatarURL);
-//                                if (globals.timebankAvatarURL == null) {
-//                                  setState(() {
-//                                    this.communityImageError =
-//                                        'Community logo is mandatory';
-//                                  });
-//                                } else {
-//                                  showProgressDialog();
-//
-//                                  setState(() {
-//                                    this.communityImageError = '';
-//                                  });
-//
-//                                  // creation of community;
-//                                  snapshot.data.UpdateCommunityDetails(
-//                                    SevaCore.of(context).loggedInUser,
-//                                    globals.timebankAvatarURL,
-//                                  );
-//                                  // creation of default timebank;
-//                                  snapshot.data.UpdateTimebankDetails(
-//                                    SevaCore.of(context).loggedInUser,
-//                                    globals.timebankAvatarURL,
-//                                    widget,
-//                                  );
-//                                  // updating the community with default timebank id
-//                                  snapshot.data.community.timebanks = [
-//                                    snapshot.data.timebank.id
-//                                  ].cast<String>();
-//
-//                                  snapshot.data.community.primary_timebank =
-//                                      snapshot.data.timebank.id;
-//
-//                                  createEditCommunityBloc.createCommunity(
-//                                    snapshot.data,
-//                                    SevaCore.of(context).loggedInUser,
-//                                  );
-//
-//                                  await Firestore.instance
-//                                      .collection("users")
-//                                      .document(SevaCore.of(context)
-//                                          .loggedInUser
-//                                          .email)
-//                                      .updateData({
-//                                    'communities': FieldValue.arrayUnion([
-//                                      SevaCore.of(context)
-//                                          .loggedInUser
-//                                          .sevaUserID
-//                                    ]),
-//                                    'currentCommunity':
-//                                        snapshot.data.community.id
-//                                  });
-//
-//                                  setState(() {
-//                                    SevaCore.of(context)
-//                                            .loggedInUser
-//                                            .currentCommunity =
-//                                        snapshot.data.community.id;
-//                                  });
-//
-//                                  Navigator.pop(dialogContext);
-//                                  _formKey.currentState.reset();
-//                                  _billingInformationKey.currentState.reset();
-//                                  Navigator.of(context).pushAndRemoveUntil(
-//                                      MaterialPageRoute(
-//                                        builder: (context1) => MainApplication(
-//                                          skipToHomePage: true,
-//                                        ),
-//                                      ),
-//                                      (Route<dynamic> route) => false);
-//                                }
-//                              } else {
-//                                setState(() {
-//                                  this._billingDetailsError =
-//                                      'Please configure your billing details';
-//                                });
-//                              }
-//                            } else {}
+                            // _showAlreadyExistsMessage(enteredName);
+                            communityFound =
+                                await isCommunityFound(enteredName);
+                            if (communityFound) {
+                              print("Found:$communityFound");
+                              return;
+                            }
+                            if (_formKey.currentState.validate()) {
+                              if (_billingInformationKey.currentState
+                                  .validate()) {
+                                setState(() {
+                                  this._billingDetailsError = '';
+                                });
+                                print(globals.timebankAvatarURL);
+                                if (globals.timebankAvatarURL == null) {
+                                  setState(() {
+                                    this.communityImageError =
+                                        'Community logo is mandatory';
+                                  });
+                                } else {
+                                  showProgressDialog();
+
+                                  setState(() {
+                                    this.communityImageError = '';
+                                  });
+
+                                  // creation of community;
+                                  snapshot.data.UpdateCommunityDetails(
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                  );
+                                  // creation of default timebank;
+                                  snapshot.data.UpdateTimebankDetails(
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                    widget,
+                                  );
+                                  // updating the community with default timebank id
+                                  snapshot.data.community.timebanks = [
+                                    snapshot.data.timebank.id
+                                  ].cast<String>();
+
+                                  snapshot.data.community.primary_timebank =
+                                      snapshot.data.timebank.id;
+
+                                  createEditCommunityBloc.createCommunity(
+                                    snapshot.data,
+                                    SevaCore.of(context).loggedInUser,
+                                  );
+
+                                  await Firestore.instance
+                                      .collection("users")
+                                      .document(SevaCore.of(context)
+                                          .loggedInUser
+                                          .email)
+                                      .updateData({
+                                    'communities': FieldValue.arrayUnion([
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID
+                                    ]),
+                                    'currentCommunity':
+                                        snapshot.data.community.id
+                                  });
+
+                                  setState(() {
+                                    SevaCore.of(context)
+                                            .loggedInUser
+                                            .currentCommunity =
+                                        snapshot.data.community.id;
+                                  });
+
+                                  Navigator.pop(dialogContext);
+                                  _formKey.currentState.reset();
+                                  _billingInformationKey.currentState.reset();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context1) => MainApplication(
+                                          skipToHomePage: true,
+                                        ),
+                                      ),
+                                      (Route<dynamic> route) => false);
+                                }
+                              } else {
+                                setState(() {
+                                  this._billingDetailsError =
+                                      'Please configure your billing details';
+                                });
+                              }
+                            } else {}
                           },
                           shape: StadiumBorder(),
                           child: Text(
@@ -681,9 +683,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.state != null
-              ? controller.community.billing_address.state
-              : '',
+//          initialValue: controller.community.billing_address.state != null
+//              ? controller.community.billing_address.state
+//              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
@@ -709,15 +711,16 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.pincode != null
-              ? controller.community.billing_address.pincode.toString()
-              : '',
+//          initialValue: controller.community.billing_address.pincode != null
+//              ? controller.community.billing_address.pincode.toString()
+//              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
           focusNode: focusNodes[1],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
+          maxLength: 15,
           decoration: getInputDecoration(
             fieldTitle: "ZIP Code",
           ),
@@ -737,10 +740,10 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('additionalnotes', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue:
-              controller.community.billing_address.additionalnotes != null
-                  ? controller.community.billing_address.additionalnotes
-                  : '',
+//          initialValue:
+//              controller.community.billing_address.additionalnotes != null
+//                  ? controller.community.billing_address.additionalnotes
+//                  : '',
 //          validator: (value) {
 //            return value.isEmpty ? 'Field cannot be left blank' : null;
 //          },
@@ -773,10 +776,10 @@ class CreateEditCommunityViewFormState
           },
           focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
-          initialValue:
-              controller.community.billing_address.street_address1 != null
-                  ? controller.community.billing_address.street_address1
-                  : '',
+//          initialValue:
+//              controller.community.billing_address.street_address1 != null
+//                  ? controller.community.billing_address.street_address1
+//                  : '',
           decoration: getInputDecoration(
             fieldTitle: "Street Address 1",
           ),
@@ -798,10 +801,10 @@ class CreateEditCommunityViewFormState
             },
             focusNode: focusNodes[3],
             textInputAction: TextInputAction.next,
-            initialValue:
-                controller.community.billing_address.street_address2 != null
-                    ? controller.community.billing_address.street_address2
-                    : '',
+//            initialValue:
+//                controller.community.billing_address.street_address2 != null
+//                    ? controller.community.billing_address.street_address2
+//                    : '',
             decoration: getInputDecoration(
               fieldTitle: "Street Address 2",
             )),
@@ -820,9 +823,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('companyname', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.companyname != null
-              ? controller.community.billing_address.companyname
-              : '',
+//          initialValue: controller.community.billing_address.companyname != null
+//              ? controller.community.billing_address.companyname
+//              : '',
           // validator: (value) {
           //   return value.isEmpty ? 'Field cannot be left blank' : null;
           // },
@@ -912,8 +915,7 @@ class CreateEditCommunityViewFormState
         SearchManager.searchCommunityForDuplicate(
       queryString: enteredName,
     );
-
-    print("------------ called $results");
+    print("------------ called ${results.toString()}");
 //    // flutter defined function
 //    return StreamBuilder<List<CommunityModel>>(
 //        stream: SearchManager.searchCommunity(
