@@ -6,7 +6,6 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 
 class ListMambersForNewChat extends StatefulWidget {
   @override
@@ -73,4 +72,18 @@ Stream<List<TimebankModel>> getTimebankDetails({
       },
     ),
   );
+}
+
+Future<TimebankModel> getTimebankDetailsbyFuture({
+  String timebankId,
+}) async {
+  return Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .get()
+      .then((timebankModel) {
+    return TimebankModel.fromMap(timebankModel.data);
+  }).catchError((onError) {
+    return onError;
+  });
 }

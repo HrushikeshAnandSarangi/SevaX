@@ -316,7 +316,10 @@ class _TimebankViewState extends State<TimebankView> {
                                                                       .id,
                                                               timebankTitle:
                                                                   timebankModel
-                                                                      .name);
+                                                                      .name,
+                                                              reasonToJoin:
+                                                                  joinRequestModel
+                                                                      .reason);
 
                                                       NotificationsModel
                                                           notification =

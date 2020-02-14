@@ -25,7 +25,6 @@ class NotificationsModel extends DataModel {
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
-
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
@@ -138,6 +137,9 @@ class NotificationsModel extends DataModel {
     if (this.communityId != null) {
       map['communityId'] = this.communityId;
     }
+
+    map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
+
     return map;
   }
 }

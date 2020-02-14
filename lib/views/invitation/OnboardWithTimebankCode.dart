@@ -392,8 +392,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
                         JoinRequestNotificationModel joinReqModel =
                             JoinRequestNotificationModel(
-                                timebankId: timebankModel.id,
-                                timebankTitle: timebankModel.name);
+                          timebankId: timebankModel.id,
+                          timebankTitle: timebankModel.name,
+                          reasonToJoin: joinRequestModel.reason,
+                        );
                         NotificationsModel notification = NotificationsModel(
                           timebankId: timebankModel.id,
                           id: utils.Utils.getUuid(),
@@ -412,11 +414,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                         //     await FirestoreManager.getUserForId(
                         //         sevaUserId: timebankModel.creatorId);
 
-                        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>${communityCreateEditSnapshot.selectedCommunity.primary_timebank}");
                         await Firestore.instance
                             .collection('timebanknew')
                             // .document(
-                            //   communityCreateEditSnapshot.selectedCommunity.primary_timebank,
+                            //   communityCreateEditSnapshot
+                            //       .selectedCommunity.primary_timebank,
                             // )
                             .document(
                               "785006d5-597c-464e-9f3a-edd6c342088f",

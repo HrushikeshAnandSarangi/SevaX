@@ -280,7 +280,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               JoinRequestNotificationModel joinReqModel =
                                   JoinRequestNotificationModel(
                                       timebankId: timebank.id,
-                                      timebankTitle: timebank.name);
+                                      timebankTitle: timebank.name,
+                                      reasonToJoin: joinRequestModel.reason
+                                      );
 
                               NotificationsModel notification =
                                   NotificationsModel(
