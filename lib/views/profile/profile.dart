@@ -303,7 +303,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         CreateEditCommunityView(
-                                      timebankId: timebankModel.id,
+                                      timebankId: FlavorConfig.values.timebankId,
                                       isFromFind: false,
                                     ),
                                   ),
