@@ -257,7 +257,7 @@ class _BranchViewState extends State<BranchView> {
 
                                                   if (formkey.currentState
                                                       .validate()) {
-                                                    await createJoinRequest(
+                                                    await updateJoinRequest(
                                                         model:
                                                             joinRequestModel);
                                                   }

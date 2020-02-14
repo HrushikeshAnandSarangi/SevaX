@@ -202,7 +202,6 @@ Future<void> createTaskCompletedApprovedNotification({
     requestModel.photoUrl = timebankModel.photoUrl;
     model.data = requestModel.toMap();
     print("_______________________________________________${model.data}");
-
   }
 
   await Firestore.instance
@@ -212,7 +211,8 @@ Future<void> createTaskCompletedApprovedNotification({
       .document(model.id)
       .setData(model.toMap());
 
-  print("Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
+  print(
+      "Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
 }
 
 Future<void> createTransactionNotification({

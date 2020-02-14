@@ -16,7 +16,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
-import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AdminNotificationViewHolder extends StatefulWidget {
@@ -105,7 +104,24 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 break;
 
               case NotificationType.JoinRequest:
-                return Text("NotificationType.JoinRequest");
+                JoinRequestNotificationModel model =
+                    JoinRequestNotificationModel.fromMap(notification.data);
+                return FutureBuilder<UserModel>(
+                    future: FirestoreManager.getUserForId(
+                        sevaUserId: notification.senderUserId),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text(snapshot.error.toString());
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return notificationShimmer;
+                      }
+                      UserModel user = snapshot.data;
+                      return user != null && user.fullname != null
+                          ? getJoinReuqestsNotificationWidget(
+                              user, notification.id, model, context)
+                          : Offstage();
+                    });
                 break;
 
               case NotificationType.RequestCompleted:
@@ -131,7 +147,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 break;
               case NotificationType.RequestCompletedApproved:
                 RequestModel model = RequestModel.fromMap(notification.data);
-                return Text("NotificationType.RequestCompletedApproved");
+                return Offstage();
                 break;
               case NotificationType.RequestCompletedRejected:
                 RequestModel model = RequestModel.fromMap(notification.data);
@@ -140,9 +156,9 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 break;
               case NotificationType.TransactionCredit:
                 // TODO: Handle this case.
-                TransactionModel model =
-                    TransactionModel.fromMap(notification.data);
-                return Text("NotificationType.TransactionCredit");
+                // TransactionModel model =
+                //     TransactionModel.fromMap(notification.data);
+                return Offstage();
 
               case NotificationType.TransactionDebit:
                 TransactionModel model =
@@ -327,7 +343,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return notificationShimmer;
-          return Text('getNotificationRequestCompletedApproved');
+          return Offstage();
         }
         UserModel user = snapshot.data;
         TransactionModel transactionModel =
@@ -607,8 +623,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // return notificationShimmer;
-          return Text('getNotificationRequestCompletedWidget');
+          return notificationShimmer;
+          // return Offstage();
         }
         UserModel user = snapshot.data;
         TransactionModel transactionModel =
@@ -916,8 +932,9 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       userId: userId,
       communityid: SevaCore.of(context).loggedInUser.currentCommunity,
     );
-    // creating chat
-    String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+    // creating chat with a timebank
+    String loggedInEmail = model.timebankId;
+    // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     List users = [user.email, loggedInEmail];
     users.sort();
     ChatModel chatModel = ChatModel();
@@ -965,18 +982,21 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       backgroundImage: NetworkImage(user.photoURL),
                     )
                   : Offstage(),
-              subtitle: Text(
-                  '${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}, Tap to view all join requests'),
+              subtitle: Text('${user.fullname.toLowerCase()} has requested to join ${model.timebankTitle}.'),
             ),
           ),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => JoinRequestView(
-                        timebankId: model.timebankId,
-                      )),
-            );
+            
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //       builder: (context) => JoinRequestView(
+            //             timebankId: model.timebankId,
+            //           )),
+            // );
+
+            showDialogForApproval();
+
           },
         ));
   }
@@ -999,8 +1019,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(user.photoURL),
               ),
-              subtitle: Text(
-                  '${user.fullname.toLowerCase()} has shown interest in your offer'),
+              subtitle: Text('${user.fullname.toLowerCase()} has shown interest in your offer'),
             ),
           ),
           onTap: () {},
@@ -1034,6 +1053,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       ),
     );
   }
+
+///// utility functions for bio starts here
+
+  ////// utiliy functions for bio ends
 
   Widget getNotificationRequestRejectWidget(
     RequestModel model,
@@ -1239,15 +1262,9 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     usersSet.add(user.email);
     model.approvedUsers = usersSet.toList();
 
-    var timebankModel = await fetchTimebankData(model.timebankId);
-    var requetsModel = model;
-    requetsModel.photoUrl = timebankModel.photoUrl;
-    requetsModel.fullName = timebankModel.name;
-    model = requetsModel;
-
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;
-    FirestoreManager.approveAcceptRequest(
+    FirestoreManager.approveAcceptRequestForTimebank(
       requestModel: model,
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,

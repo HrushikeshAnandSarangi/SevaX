@@ -54,9 +54,6 @@ class NotificationsView extends State<NotificationViewHolder> {
         SevaCore.of(context).loggedInUser.notificationsRead =
             notifications.length;
 
-        print(
-            "Unread notifications ${SevaCore.of(context).loggedInUser.notificationsRead}");
-
         if (notifications.length == 0) {
           return Center(
             child: Text('No Notifications'),
