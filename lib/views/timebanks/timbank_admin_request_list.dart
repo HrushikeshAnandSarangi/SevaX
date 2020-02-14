@@ -352,7 +352,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = true;
                             await updateJoinRequest(model: joinRequestModel);
-                            await _updateUserCommunity(
+                            await updateUserCommunity(
                                 communityId: SevaCore.of(context)
                                     .loggedInUser
                                     .currentCommunity,
@@ -934,7 +934,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   }
 }
 
-Future _updateUserCommunity({
+Future updateUserCommunity({
   String communityId,
   String userEmail,
 }) async {

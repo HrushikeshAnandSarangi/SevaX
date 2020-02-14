@@ -19,6 +19,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
+import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AdminNotificationViewHolder extends StatefulWidget {
@@ -992,20 +993,36 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             ),
           ),
           onTap: () {
-
             showDialogForJoinRequestApproval(
               context: context,
               userModel: user,
               model: model,
+              notificationId: notificationId,
             );
           },
         ));
+  }
+
+  BuildContext showProgressForOnboardingUserContext;
+
+  void showProgressForOnboardingUser() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          showProgressForOnboardingUserContext = createDialogContext;
+          return AlertDialog(
+            title: Text('Updating timebank..'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   void showDialogForJoinRequestApproval({
     BuildContext context,
     UserModel userModel,
     JoinRequestNotificationModel model,
+    String notificationId,
   }) {
     // JoinRequestModel model,
 
@@ -1093,7 +1110,9 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           ),
                           onPressed: () async {
                             // Once approved init timebank model
-
+                            //show dialog for processing
+                            Navigator.pop(viewContext);
+                            showProgressForOnboardingUser();
                             var timebankModel =
                                 await getTimebankDetailsbyFuture(
                               timebankId: widget.timebankId,
@@ -1112,8 +1131,22 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             model.accepted = true;
                             await updateJoinRequest(model: model);
                             await updateTimebank(timebankModel: timebankModel);
+                            await updateUserCommunity(
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              userEmail: userModel.email,
+                            );
+                            await updateUserCommunity(
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              userEmail: userModel.email,
+                            );
+                            await readTimeBankNotification(
+                                notificationId, widget.timebankId);
                             //update user community
-                            Navigator.pop(viewContext);
+                            Navigator.pop(showProgressForOnboardingUserContext);
                           },
                         ),
                       ),
@@ -1129,12 +1162,19 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
+                            Navigator.pop(viewContext);
+                            showProgressForOnboardingUser();
                             // request declined
-                            var model;
-                            print("Declining request");
+                            var model = await getJoinRequestMadeFrom(
+                              timebankId: widget.timebankId,
+                              sevaUserId: userModel.sevaUserID,
+                            );
                             model.accepted = false;
                             await updateJoinRequest(model: model);
-                            Navigator.pop(viewContext);
+                            await readTimeBankNotification(
+                                notificationId, widget.timebankId);
+
+                            Navigator.pop(showProgressForOnboardingUserContext);
                           },
                         ),
                       ),
@@ -1151,6 +1191,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     String timebankId,
     String sevaUserId,
   }) async {
+
+    print("$timebankId ---- $sevaUserId");
     return Firestore.instance
         .collection('join_requests')
         .where('entity_id', isEqualTo: timebankId)

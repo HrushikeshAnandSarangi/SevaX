@@ -368,7 +368,7 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
       .document(timebankId)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
-      // .orderBy('timestamp', descending: true)
+      .orderBy('timestamp', descending: true)
       .snapshots();
 
   yield* data.transform(
