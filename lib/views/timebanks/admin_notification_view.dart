@@ -1129,6 +1129,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             usersSet.add(model.userId);
                             timebankModel.members = usersSet.toList();
                             model.accepted = true;
+                            model.operationTaken = true;
                             await updateJoinRequest(model: model);
                             await updateTimebank(timebankModel: timebankModel);
                             await updateUserCommunity(
@@ -1170,6 +1171,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                               sevaUserId: userModel.sevaUserID,
                             );
                             model.accepted = false;
+                            model.operationTaken = false;
+
                             await updateJoinRequest(model: model);
                             await readTimeBankNotification(
                                 notificationId, widget.timebankId);
@@ -1191,7 +1194,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     String timebankId,
     String sevaUserId,
   }) async {
-
     print("$timebankId ---- $sevaUserId");
     return Firestore.instance
         .collection('join_requests')
