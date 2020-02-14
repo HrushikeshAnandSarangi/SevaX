@@ -416,13 +416,13 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
                         await Firestore.instance
                             .collection('timebanknew')
-                            // .document(
-                            //   communityCreateEditSnapshot
-                            //       .selectedCommunity.primary_timebank,
-                            // )
                             .document(
-                              "785006d5-597c-464e-9f3a-edd6c342088f",
+                              communityCreateEditSnapshot
+                                  .selectedCommunity.primary_timebank,
                             )
+                            // .document(
+                            //   "785006d5-597c-464e-9f3a-edd6c342088f",
+                            // )
                             .collection("notifications")
                             .document(notification.id)
                             .setData(notification.toMap());

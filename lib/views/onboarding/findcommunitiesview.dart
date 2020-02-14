@@ -71,34 +71,34 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   @override
   Widget build(BuildContext context) {
     bool showBachBtn = widget.showBackBtn;
-    return MaterialApp(
-      theme: FlavorConfig.values.theme,
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          // automaticallyImplyLeading: widget.keepOnBackPress,
-          automaticallyImplyLeading: false,
-          elevation: 0.5,
+    //return MaterialApp(
+    //theme: FlavorConfig.values.theme,
+    //home: Scaffold(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        // automaticallyImplyLeading: widget.keepOnBackPress,
+        automaticallyImplyLeading: false,
+        elevation: 0.5,
 
-          leading: showBachBtn
-              ? BackButton(
-                  onPressed: () => Navigator.pop(context),
-                )
-              : Offstage(),
-          title: Text(
-            'Find your Timebank',
-            style: TextStyle(
-              fontSize: 18,
-            ),
+        leading: showBachBtn
+            ? BackButton(
+                onPressed: () => Navigator.pop(context),
+              )
+            : Offstage(),
+        title: Text(
+          'Find your Timebank',
+          style: TextStyle(
+            fontSize: 18,
           ),
-          centerTitle: true,
         ),
-        body: SearchTeams(),
+        centerTitle: true,
       ),
-    );
+      body: searchTeams(),
+    ); // );
   }
 
-  Widget SearchTeams() {
+  Widget searchTeams() {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: Column(children: <Widget>[

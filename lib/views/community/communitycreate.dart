@@ -177,9 +177,9 @@ class CreateEditCommunityViewFormState
               createEditCommunityBloc.onChange(snapshot.data);
             }
             return SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: Text(
@@ -354,12 +354,12 @@ class CreateEditCommunityViewFormState
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Container(
-                        alignment: Alignment.center,
-                        child: RaisedButton(
-                          onPressed: () async {
-                            // show a dialog
+                      alignment: Alignment.center,
+                      child: RaisedButton(
+                        onPressed: () async {
+                          // show a dialog
 
-                            print(_formKey.currentState.validate());
+                          print(_formKey.currentState.validate());
 
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
@@ -367,103 +367,104 @@ class CreateEditCommunityViewFormState
 //                              print("Found:$communityFound");
 //                              return;
 //                            }
-                            if (_formKey.currentState.validate()) {
-                              if (_billingInformationKey.currentState
-                                  .validate()) {
+                          if (_formKey.currentState.validate()) {
+                            if (_billingInformationKey.currentState
+                                .validate()) {
+                              setState(() {
+                                this._billingDetailsError = '';
+                              });
+                              print(globals.timebankAvatarURL);
+                              if (globals.timebankAvatarURL == null) {
                                 setState(() {
-                                  this._billingDetailsError = '';
+                                  this.communityImageError =
+                                      'Timebank logo is mandatory';
                                 });
-                                print(globals.timebankAvatarURL);
-                                if (globals.timebankAvatarURL == null) {
-                                  setState(() {
-                                    this.communityImageError =
-                                        'Timebank logo is mandatory';
-                                  });
-                                } else {
-                                  showProgressDialog();
-
-                                  setState(() {
-                                    this.communityImageError = '';
-                                  });
-
-                                  // creation of community;
-                                  snapshot.data.UpdateCommunityDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                  );
-                                  // creation of default timebank;
-                                  snapshot.data.UpdateTimebankDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                    widget,
-                                  );
-                                  // updating the community with default timebank id
-                                  snapshot.data.community.timebanks = [
-                                    snapshot.data.timebank.id
-                                  ].cast<String>();
-
-                                  snapshot.data.community.primary_timebank =
-                                      snapshot.data.timebank.id;
-
-                                  createEditCommunityBloc.createCommunity(
-                                    snapshot.data,
-                                    SevaCore.of(context).loggedInUser,
-                                  );
-
-                                  await Firestore.instance
-                                      .collection("users")
-                                      .document(SevaCore.of(context)
-                                          .loggedInUser
-                                          .email)
-                                      .updateData({
-                                    'communities': FieldValue.arrayUnion(
-                                        [snapshot.data.community.id]),
-                                    'currentCommunity':
-                                        snapshot.data.community.id
-                                  });
-
-                                  setState(() {
-                                    SevaCore.of(context)
-                                            .loggedInUser
-                                            .currentCommunity =
-                                        snapshot.data.community.id;
-                                  });
-
-                                  Navigator.pop(dialogContext);
-                                  _formKey.currentState.reset();
-                                  _billingInformationKey.currentState.reset();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context1) => MainApplication(
-                                          skipToHomePage: true,
-                                        ),
-                                      ),
-                                      (Route<dynamic> route) => false);
-                                }
                               } else {
+                                showProgressDialog();
+
                                 setState(() {
-                                  this._billingDetailsError =
-                                      'Please configure your billing details';
+                                  this.communityImageError = '';
                                 });
+
+                                // creation of community;
+                                snapshot.data.UpdateCommunityDetails(
+                                  SevaCore.of(context).loggedInUser,
+                                  globals.timebankAvatarURL,
+                                );
+                                // creation of default timebank;
+                                snapshot.data.UpdateTimebankDetails(
+                                  SevaCore.of(context).loggedInUser,
+                                  globals.timebankAvatarURL,
+                                  widget,
+                                );
+                                // updating the community with default timebank id
+                                snapshot.data.community.timebanks =
+                                    [snapshot.data.timebank.id].cast<String>();
+
+                                snapshot.data.community.primary_timebank =
+                                    snapshot.data.timebank.id;
+
+                                createEditCommunityBloc.createCommunity(
+                                  snapshot.data,
+                                  SevaCore.of(context).loggedInUser,
+                                );
+
+                                await Firestore.instance
+                                    .collection("users")
+                                    .document(
+                                        SevaCore.of(context).loggedInUser.email)
+                                    .updateData({
+                                  'communities': FieldValue.arrayUnion(
+                                      [snapshot.data.community.id]),
+                                  'currentCommunity': snapshot.data.community.id
+                                });
+
+                                setState(() {
+                                  SevaCore.of(context)
+                                          .loggedInUser
+                                          .currentCommunity =
+                                      snapshot.data.community.id;
+                                });
+
+                                Navigator.pop(dialogContext);
+                                _formKey.currentState.reset();
+                                _billingInformationKey.currentState.reset();
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context1) => MainApplication(
+                                        skipToHomePage: true,
+                                      ),
+                                    ),
+                                    (Route<dynamic> route) => false);
                               }
-                            } else {}
-                          },
-                          shape: StadiumBorder(),
-                          child: Text(
-                            'Create a Timebank',
-                            style:
-                                TextStyle(fontSize: 16.0, color: Colors.white),
-                          ),
-                          textColor: FlavorConfig.values.buttonTextColor,
-                        )),
+                            } else {
+                              setState(() {
+                                this._billingDetailsError =
+                                    'Please configure your billing details';
+                              });
+                            }
+                          } else {}
+                        },
+                        shape: StadiumBorder(),
+                        child: Text(
+                          'Create a Timebank',
+                          style: TextStyle(fontSize: 16.0, color: Colors.white),
+                        ),
+                        textColor: FlavorConfig.values.buttonTextColor,
+                      ),
+                    ),
                   ),
+                  SizedBox(height: 50),
                   Padding(
-                      padding: EdgeInsets.symmetric(vertical: 50),
-                      child: Text(
-                        '',
-                        textAlign: TextAlign.center,
-                      ))
-                ]));
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    child: Text(
+                      '',
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
