@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -75,7 +76,8 @@ class CreateEditCommunityViewFormState
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
-
+  final TextEditingController searchTextController =
+      new TextEditingController();
   TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
@@ -94,9 +96,13 @@ class CreateEditCommunityViewFormState
   var scrollIsOpen = false;
   var communityFound = false;
   List<FocusNode> focusNodes;
+  String errTxt;
 
   void initState() {
     super.initState();
+    var _searchText = "";
+    final _textUpdates = StreamController<String>();
+
     focusNodes = List.generate(6, (_) => FocusNode());
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -106,6 +112,34 @@ class CreateEditCommunityViewFormState
     if (FlavorConfig.appFlavor == Flavor.APP) {
       fetchCurrentlocation();
     }
+
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 400))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        SearchManager.sx(queryString: s).then((v) {
+          if (v) {
+            setState(() {
+              communityFound = true;
+              errTxt = 'Timebank name already exist';
+            });
+          } else {
+            setState(() {
+              communityFound = false;
+              errTxt = null;
+            });
+          }
+        });
+      }
+    });
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -179,10 +213,12 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+                    controller: searchTextController,
                     onChanged: (value) {
                       enteredName = value;
                     },
                     decoration: InputDecoration(
+                      errorText: errTxt,
                       hintText: "Ex: Pets-in-town, Citizen collab",
                     ),
                     keyboardType: TextInputType.multiline,
@@ -324,13 +360,13 @@ class CreateEditCommunityViewFormState
                             // show a dialog
 
                             print(_formKey.currentState.validate());
-                            // _showAlreadyExistsMessage(enteredName);
-                            communityFound =
-                                await isCommunityFound(enteredName);
-                            if (communityFound) {
-                              print("Found:$communityFound");
-                              return;
-                            }
+
+//                            communityFound =
+//                                await isCommunityFound(enteredName);
+//                            if (communityFound) {
+//                              print("Found:$communityFound");
+//                              return;
+//                            }
                             if (_formKey.currentState.validate()) {
                               if (_billingInformationKey.currentState
                                   .validate()) {
@@ -380,9 +416,8 @@ class CreateEditCommunityViewFormState
                                           .loggedInUser
                                           .email)
                                       .updateData({
-                                    'communities': FieldValue.arrayUnion([
-                                      snapshot.data.community.id
-                                    ]),
+                                    'communities': FieldValue.arrayUnion(
+                                        [snapshot.data.community.id]),
                                     'currentCommunity':
                                         snapshot.data.community.id
                                   });
@@ -483,7 +518,7 @@ class CreateEditCommunityViewFormState
           height: 50,
           child: Column(children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   'Configure billing details',
@@ -506,7 +541,7 @@ class CreateEditCommunityViewFormState
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
                   _billingDetailsError,
@@ -617,7 +652,7 @@ class CreateEditCommunityViewFormState
                 Text(
                   'Billing Details',
                   style: TextStyle(
-                      color: Colors.orange,
+                      color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
@@ -909,8 +944,8 @@ class CreateEditCommunityViewFormState
   }
 
   Widget _showAlreadyExistsMessage(String enteredName) {
-    Stream<List<CommunityModel>> results =
-        SearchManager.searchCommunityForDuplicate(
+    print("---------- called $enteredName");
+    Stream<bool> results = SearchManager.searchCommunityForDuplicate(
       queryString: enteredName,
     );
     print("------------ called ${results.toString()}");
@@ -958,6 +993,9 @@ class CreateEditCommunityViewFormState
   }
 
   Future<bool> isCommunityFound(String enteredName) async {
+    Stream<bool> results = SearchManager.searchCommunityForDuplicate(
+      queryString: enteredName,
+    );
     //ommunityBloc.fetchCommunities(enteredName);
     List<CommunityModel> communities = List<CommunityModel>();
     var communitiesFound =

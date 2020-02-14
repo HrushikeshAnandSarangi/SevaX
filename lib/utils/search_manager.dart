@@ -116,42 +116,42 @@ class SearchManager {
     yield communityList;
   }
 
-  static Stream<List<CommunityModel>> searchCommunityForDuplicate({
+  static Future<bool> sx({@required queryString}) async {
+    String url =
+        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_count';
+    dynamic body = json.encode({
+      "query": {
+        "term": {"name.keyword": queryString}
+      }
+    });
+    int count =
+        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+    if (count > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Stream<bool> searchCommunityForDuplicate({
     @required queryString,
   }) async* {
     print("searchForUser :: ---------------");
     String url =
-        'http://35.227.18.55//elasticsearch/sevaxcommunities/sevaxcommunity/_search';
+        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_count';
     dynamic body = json.encode({
       "query": {
-        "bool": {
-          "must": [
-            {
-              "match": {"name": queryString}
-            }
-          ]
-        }
-      },
-      "sort": {
-        "name.keyword": {"order": "asc"}
+        "term": {"name.keyword": queryString}
       }
     });
-    List<Map<String, dynamic>> hitList =
-        await _makeElasticSearchPostRequest(url, body);
-    List<CommunityModel> communityList = [];
-    print("community data ${hitList}");
-
-    hitList.forEach((map) {
-      Map<String, dynamic> sourceMap = map['_source'];
-      var community = CommunityModel(sourceMap);
-      // print("community data ${community.name}");
-
-      communityList.add(community);
-
-      //CommunityModel communityModel = CommunityModel.fromMap(sourceMap);
-      //communityList.add(communityModel);
-    });
-    yield communityList;
+    int count =
+        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+    print("count ${count.toString()}");
+    bool isFound = false;
+    if (count > 0) {
+      isFound = true;
+    }
+    yield isFound;
   }
 
   static Stream<List<TimebankModel>> searchTimeBank({
@@ -159,7 +159,7 @@ class SearchManager {
   }) async* {
     print("searchForUser :: ---------------");
     String url =
-        'http://35.227.18.55//elasticsearch/sevaxcommunities/sevaxcommunity/_search';
+        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
@@ -433,5 +433,36 @@ class SearchManager {
 //    log(response.body);
 //    log("loggg - "+hitList.toString());
     return hitList;
+  }
+
+  static Future<int> _makeElasticSearchPostRequestCommunityDuplicate(
+      String url, dynamic body) async {
+    print("Hitting - " + url);
+
+    String username = 'user';
+    String password = 'CiN36UNixJyq';
+    log(
+      json.encode(
+        {
+          'authorization':
+              'basic ' + base64Encode(utf8.encode('$username:$password'))
+        },
+      ),
+    );
+    http.Response response =
+        await makePostRequest(url: url, body: body, headers: {
+      'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=',
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    });
+    //log(response.body);
+    // print("Reuqest Response --> ${response.body}");
+
+//    print("Reuqest Response --> ${response.body}");
+
+    Map<String, dynamic> bodyMap = json.decode(response.body);
+    int count = bodyMap['count'];
+
+    return count;
   }
 }
