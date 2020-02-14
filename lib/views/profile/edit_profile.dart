@@ -260,21 +260,20 @@ class _EditProfilePageState extends State<EditProfilePage>
                         content: Form(
                           key: _formKey,
                           child: TextFormField(
-                            //key: _formKey,
+                            maxLength: 150,
                             decoration: InputDecoration(hintText: 'Enter bio'),
                             keyboardType: TextInputType.text,
                             textCapitalization: TextCapitalization.sentences,
                             style: TextStyle(fontSize: 17.0),
                             initialValue: widget.userModel.bio,
                             onChanged: (value) {
-//                            if (value.isEmpty == false) {
-//                              this.usermodel.bio = value;
-//                            }
+//
                             },
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Please enter bio to update';
                               }
+
                               widget.userModel.bio = value;
 
                             },
@@ -317,42 +316,6 @@ class _EditProfilePageState extends State<EditProfilePage>
                   );
                 },
               ),
-//            GestureDetector(
-//              child: Card(
-//                color: Colors.transparent,
-//                elevation: 0.0,
-//                child: Column(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  children: <Widget>[
-//                    Padding(
-//                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
-//                      child: Text(
-//                        'Email',
-//                        style: TextStyle(
-//                            fontSize: 15.0,
-//                            fontWeight: FontWeight.w600,
-//                            color: Colors.black45,
-//                        ),
-//                      ),
-//                    ),
-//                    Padding(
-//                      padding: EdgeInsets.only(left: 30.0, top: 10.0),
-//                      child: Text(widget.userModel.email,style: TextStyle(color: Colors.black45,),),
-//
-//                    ),
-//                    Padding(
-//                      padding: EdgeInsets.only(left: 30.0, top: 5.0),
-//                      child: Divider(
-//                        color: Colors.black45,
-//                      ),
-//                    ),
-//                  ],
-//                ),
-//              ),
-//              onTap: () {
-//                print('email clicked');
-//              },
-//            ),
               GestureDetector(
                 child: Card(
                   color: Colors.transparent,
