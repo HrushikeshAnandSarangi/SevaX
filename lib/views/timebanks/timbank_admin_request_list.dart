@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -351,6 +352,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = true;
                             await updateJoinRequest(model: joinRequestModel);
+                            await _updateUserCommunity(
+                                communityId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity,
+                                userEmail: user.email);
                             await _updateTimebank(timebankModel, admins: null);
                           },
                         ),
@@ -926,6 +932,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       resetAndLoad();
     });
   }
+}
+
+Future _updateUserCommunity({
+  String communityId,
+  String userEmail,
+}) async {
+  await Firestore.instance.collection("users").document(userEmail).updateData({
+    'communities': FieldValue.arrayUnion([communityId]),
+  });
 }
 
 enum Actions {

@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -224,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     FlatButton(
                                                       padding:
                                                           EdgeInsets.fromLTRB(
-                                                              10, 5, 5, 5),
+                                                              10, 5, 10, 5),
                                                       color: Theme.of(context)
                                                           .accentColor,
                                                       textColor: FlavorConfig
@@ -233,8 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       child: Text(
                                                         'Reset Password',
                                                         style: TextStyle(
-                                                          fontSize:
-                                                              dialogButtonSize,
+                                                          fontSize: 15,
                                                         ),
                                                       ),
                                                       onPressed: () {
@@ -256,8 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                                                       child: Text(
                                                         'Cancel',
                                                         style: TextStyle(
-                                                          fontSize:
-                                                              dialogButtonSize,
+                                                          fontSize: 15,
                                                           color: Colors.red,
                                                         ),
                                                       ),
