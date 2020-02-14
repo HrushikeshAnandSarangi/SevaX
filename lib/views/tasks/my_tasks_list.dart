@@ -525,7 +525,6 @@ class TaskCardViewState extends State<TaskCardView> {
                           Expanded(
                             child: DropdownButtonFormField<String>(
                               decoration: InputDecoration(
-                                hasFloatingPlaceholder: true,
                                 labelText: 'Minutes',
                                 hintText: 'Minutes',
                               ),
