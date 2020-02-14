@@ -381,9 +381,7 @@ class CreateEditCommunityViewFormState
                                           .email)
                                       .updateData({
                                     'communities': FieldValue.arrayUnion([
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID
+                                      snapshot.data.community.id
                                     ]),
                                     'currentCommunity':
                                         snapshot.data.community.id

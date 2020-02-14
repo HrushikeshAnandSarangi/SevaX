@@ -350,7 +350,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             timebankModel.members = usersSet.toList();
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = true;
-                            await createJoinRequest(model: joinRequestModel);
+                            await updateJoinRequest(model: joinRequestModel);
                             await _updateTimebank(timebankModel, admins: null);
                           },
                         ),
@@ -366,7 +366,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             });
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = false;
-                            createJoinRequest(model: joinRequestModel)
+                            updateJoinRequest(model: joinRequestModel)
                                 .then((onValue) {
                               resetAndLoad();
                             });

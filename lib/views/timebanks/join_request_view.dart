@@ -233,7 +233,7 @@ class TimebankRequests extends StatelessWidget {
                           usersSet.add(model.userId);
                           timebankModel.members = usersSet.toList();
                           model.accepted = true;
-                          await createJoinRequest(model: model);
+                          await updateJoinRequest(model: model);
                           await updateTimebank(timebankModel: timebankModel);
                           Navigator.pop(viewContext);
                         },
@@ -251,7 +251,7 @@ class TimebankRequests extends StatelessWidget {
                           // request declined
                           print("Declining request");
                           model.accepted = false;
-                          await createJoinRequest(model: model);
+                          await updateJoinRequest(model: model);
                           Navigator.pop(viewContext);
                         },
                       ),
