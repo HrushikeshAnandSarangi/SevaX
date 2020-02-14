@@ -377,7 +377,7 @@ class CreateEditCommunityViewFormState
                                 if (globals.timebankAvatarURL == null) {
                                   setState(() {
                                     this.communityImageError =
-                                        'Community logo is mandatory';
+                                        'Timebank logo is mandatory';
                                   });
                                 } else {
                                   showProgressDialog();

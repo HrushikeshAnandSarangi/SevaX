@@ -118,6 +118,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           style: TextStyle(color: Colors.black),
           controller: searchTextController,
           decoration: InputDecoration(
+              suffixIcon: IconButton(
+                  icon: Icon(
+                    Icons.clear,
+                    color: Colors.black54,
+                  ),
+                  onPressed: () {
+                    searchTextController.clear();
+                  }),
               hasFloatingPlaceholder: false,
               alignLabelWithHint: true,
               isDense: true,
@@ -140,7 +148,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
         SizedBox(height: 20),
         buildList(),
-        Spacer(),
         // This container holds the align
         createCommunity(),
       ]),
@@ -185,6 +192,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   child: Padding(
                       padding: EdgeInsets.only(left: 0, right: 0, top: 12.0),
                       child: ListView.builder(
+                          shrinkWrap: true,
                           itemCount: communityList.length,
                           itemBuilder: (BuildContext context, int index) {
                             CompareUserStatus status;
