@@ -22,7 +22,7 @@ class JoinRequestNotificationModel extends DataModel {
     }
 
     if (map.containsKey('reasonToJoin')) {
-      this.timebankTitle = map['reasonToJoin'];
+      this.reasonToJoin = map['reasonToJoin'];
     }
   }
 

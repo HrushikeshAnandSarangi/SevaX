@@ -992,14 +992,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             ),
           ),
           onTap: () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => JoinRequestView(
-            //       timebankId: model.timebankId,
-            //     ),
-            //   ),
-            // );
 
             showDialogForJoinRequestApproval(
               context: context,
