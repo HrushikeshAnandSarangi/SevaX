@@ -8,7 +8,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 
 import 'chat_data_manager.dart';
 
-Future<void> createJoinRequest({@required JoinRequestModel model}) async {
+Future<void> updateJoinRequest({@required JoinRequestModel model}) async {
   Query query = Firestore.instance
       .collection('join_requests')
       .where('entity_id', isEqualTo: model.entityId)

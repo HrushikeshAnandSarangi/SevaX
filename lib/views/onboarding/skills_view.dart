@@ -49,6 +49,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       }
       setState(() {});
     });
+
     super.initState();
   }
 
@@ -102,6 +103,20 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   prefixIcon: Icon(
                     Icons.search,
                     color: Colors.grey,
+                  ),
+                  suffixIcon: InkWell(
+                    splashColor: Colors.transparent,
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.grey,
+                      // color: _textEditingController.text.length > 1
+                      //     ? Colors.black
+                      //     : Colors.grey,
+                    ),
+                    onTap: () {
+                      _textEditingController.clear();
+                      controller.close();
+                    },
                   ),
                 ),
               ),

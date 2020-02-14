@@ -304,7 +304,7 @@ class _TimebankViewState extends State<TimebankView> {
 
                                                     if (formkey.currentState
                                                         .validate()) {
-                                                      await createJoinRequest(
+                                                      await updateJoinRequest(
                                                           model:
                                                               joinRequestModel);
 

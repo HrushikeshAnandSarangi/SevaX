@@ -326,7 +326,7 @@ class _ReportedUsersView extends StatelessWidget {
         );
       }
       return Container(
-        height: 200,
+        height: 150,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(

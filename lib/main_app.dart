@@ -4,11 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/user_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/news_model.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = Flavor.APP;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -19,6 +21,8 @@ void main() {
       sound: true,
     ),
   );
+
+  UserConfig.prefs = await SharedPreferences.getInstance();
 
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
