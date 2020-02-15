@@ -366,7 +366,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(user.photoURL),
                 ),
-                title: Text('Debited'),
+                title: Text(''),
                 subtitle: RichText(
                   text: TextSpan(
                     children: [
@@ -383,7 +383,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                       ),
                       TextSpan(
-                        text: 'has been debited to ${user.fullname}',
+                        text: 'has been credited to ${user.fullname}',
                         style: TextStyle(
                           color: Colors.grey,
                         ),
