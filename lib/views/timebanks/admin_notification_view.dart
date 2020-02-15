@@ -881,7 +881,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     if (userModel.bio != null) {
       if (userModel.bio.length < 100) {
         return Center(
-          child: Text(userModel.bio),
+          child: Text(
+            userModel.bio,
+            textAlign: TextAlign.center,
+          ),
         );
       }
       return Container(

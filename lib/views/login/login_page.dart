@@ -188,7 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   child: TextFormField(
                                                     validator: (value) {
                                                       if (value.isEmpty) {
-                                                        return 'Please enter email to update';
+                                                        return 'Please enter email to reset';
                                                       } else if (!validateEmail(
                                                           value.trim())) {
                                                         return 'Please enter a valid email';

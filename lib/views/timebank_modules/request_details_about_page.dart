@@ -66,7 +66,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
       isApplied = widget.requestItem.acceptors
-          .contains(SevaCore.of(context).loggedInUser.email);
+              .contains(SevaCore.of(context).loggedInUser.email) ||
+          widget.requestItem.approvedUsers
+              .contains(SevaCore.of(context).loggedInUser.email) ||
+          widget.requestItem.invitedUsers
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     } else {
       isApplied = false;
     }

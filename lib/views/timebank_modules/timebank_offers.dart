@@ -201,6 +201,7 @@ class OffersState extends State<OffersModule> {
                 child: CupertinoSegmentedControl<int>(
                   selectedColor: Theme.of(context).primaryColor,
                   children: logoWidgets,
+                  borderColor: Colors.grey,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
                   //selectedColor: Colors.deepOrange,
                   groupValue: sharedValue,
@@ -1385,7 +1386,8 @@ class OfferCardViewState extends State<OfferCardView> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("Protected Timebank"),
-          content: new Text("Admins or Co-Ordinators can only accept offers in a protected timebank"),
+          content: new Text(
+              "Admins or Co-Ordinators can only accept offers in a protected timebank"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

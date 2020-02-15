@@ -145,7 +145,10 @@ class _FindVolunteersViewState extends State<FindVolunteersView> {
               autocorrect: true,
               decoration: InputDecoration(
                   suffixIcon: IconButton(
-                      icon: Icon(Icons.clear),
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.black54,
+                      ),
                       onPressed: () {
                         searchTextController.clear();
                       }),
