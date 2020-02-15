@@ -1134,6 +1134,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             model.accepted = true;
                             model.operationTaken = true;
                             await updateJoinRequest(model: model);
+                            Navigator.pop(showProgressForOnboardingUserContext);
                             await readTimeBankNotification(
                                 notificationId, widget.timebankId);
 
@@ -1153,7 +1154,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             await readTimeBankNotification(
                                 notificationId, widget.timebankId);
                             //update user community
-                            Navigator.pop(showProgressForOnboardingUserContext);
+                            
                           },
                         ),
                       ),
