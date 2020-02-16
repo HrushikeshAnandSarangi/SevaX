@@ -224,6 +224,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         ),
                         timebankId: primaryTimebank.id,
                         userEmail: SevaCore.of(context).loggedInUser.email,
+                        isCommunity: true,
                       ),
                       ...isAdmin
                           ? [
