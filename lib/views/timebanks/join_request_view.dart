@@ -82,10 +82,13 @@ class TimebankRequests extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
+          
           List<JoinRequestModel> joinrequestModelList = snapshot.data;
+
           if (joinrequestModelList.length == 0) {
             return Center(child: Text('No pending join requests'));
           }
+          
           return ListView.builder(
               itemCount: joinrequestModelList.length,
               itemBuilder: (listContext, index) {
@@ -146,11 +149,12 @@ class TimebankRequests extends StatelessWidget {
         });
   }
 
-  void showDialogForApproval(
-      {BuildContext context,
-      UserModel userModel,
-      JoinRequestModel model,
-      TimebankModel timebankModel}) {
+  void showDialogForApproval({
+    BuildContext context,
+    UserModel userModel,
+    JoinRequestModel model,
+    TimebankModel timebankModel,
+  }) {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -213,7 +217,7 @@ class TimebankRequests extends StatelessWidget {
                     child: Text(model.reason),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
                   Column(
                     //  mainAxisAlignment: MainAxisAlignment.center,
@@ -233,7 +237,7 @@ class TimebankRequests extends StatelessWidget {
                           usersSet.add(model.userId);
                           timebankModel.members = usersSet.toList();
                           model.accepted = true;
-                          await createJoinRequest(model: model);
+                          await updateJoinRequest(model: model);
                           await updateTimebank(timebankModel: timebankModel);
                           Navigator.pop(viewContext);
                         },
@@ -251,7 +255,7 @@ class TimebankRequests extends StatelessWidget {
                           // request declined
                           print("Declining request");
                           model.accepted = false;
-                          await createJoinRequest(model: model);
+                          await updateJoinRequest(model: model);
                           Navigator.pop(viewContext);
                         },
                       ),
@@ -300,7 +304,7 @@ class TimebankRequests extends StatelessWidget {
         );
       }
       return Container(
-        height: 200,
+        height: 150,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(

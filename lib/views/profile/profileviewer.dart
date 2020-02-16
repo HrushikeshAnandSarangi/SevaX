@@ -1529,56 +1529,108 @@ class SkillAndInterestBuilder extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 25,
-          ),
-          child: Text(
-            'Skills',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
-          ),
-        ),
-        Container(
-          height: 40,
-          child: skills != null
-              ? createLabels(skills) //snapshot.data['skills'])
-              // ? getChipWidgets(snapshot.data['skills'], context)
-              : Padding(
-                  padding: EdgeInsets.all(5.0),
-                ),
-        ),
-        Container(
-          padding: EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 25,
-          ),
-          child: Text(
-            'My Interests',
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w700,
+  Widget build(BuildContext context) { //altered code
+    return FutureBuilder(
+        future: FirestoreManager.getUserSkillsInterests(skillsIdList:this.skills, interestsIdList:this.interests), builder: (context, snapshot){
+      print(snapshot.data);
+          return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 25,
+            ),
+            child: Text(
+              'Skills',
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
             ),
           ),
-        ),
-        Container(
-          height: 40,
-          // padding: EdgeInsets.only(left: 25.0, right: 25.0),
-          child: interests != null
-              ? createLabels(interests) //(snapshot.data['interests'])
-              // ? getChipWidgets(
-              //     snapshot.data['interests'], context)
-              : Padding(
-                  padding: EdgeInsets.all(5.0),
-                ),
-        ),
-      ],
+          Container(
+            height: 40,
+            child: this.skills.length != 0
+                ? createLabels(snapshot.data['skills'])
+                : Padding(
+              padding: EdgeInsets.all(5.0),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 25,
+            ),
+            child: Text(
+              'My Interests',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Container(
+            height: 40,
+            child: this.interests.length != 0
+                ? createLabels(snapshot.data['interests'])
+                : Padding(
+              padding: EdgeInsets.all(5.0),
+            ),
+          ),
+        ],
+      );
+    }
     );
   }
+
+//  Widget build(BuildContext context) {  //og code
+//    return Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+//        Container(
+//          padding: EdgeInsets.symmetric(
+//            vertical: 10,
+//            horizontal: 25,
+//          ),
+//          child: Text(
+//            'Skills',
+//            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
+//          ),
+//        ),
+//        Container(
+//          height: 40,
+//          child: skills != null
+//              ? createLabels(skills) //snapshot.data['skills'])
+//          // ? getChipWidgets(snapshot.data['skills'], context)
+//              : Padding(
+//            padding: EdgeInsets.all(5.0),
+//          ),
+//        ),
+//        Container(
+//          padding: EdgeInsets.symmetric(
+//            vertical: 10,
+//            horizontal: 25,
+//          ),
+//          child: Text(
+//            'My Interests',
+//            style: TextStyle(
+//              fontSize: 16.0,
+//              fontWeight: FontWeight.w700,
+//            ),
+//          ),
+//        ),
+//        Container(
+//          height: 40,
+//          // padding: EdgeInsets.only(left: 25.0, right: 25.0),
+//          child: interests != null
+//              ? createLabels(interests) //(snapshot.data['interests'])
+//          // ? getChipWidgets(
+//          //     snapshot.data['interests'], context)
+//              : Padding(
+//            padding: EdgeInsets.all(5.0),
+//          ),
+//        ),
+//      ],
+//    );
+//  }
 
   Widget createLabels(List data) {
     int length = data.length;

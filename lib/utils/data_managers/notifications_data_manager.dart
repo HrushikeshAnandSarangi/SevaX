@@ -202,7 +202,6 @@ Future<void> createTaskCompletedApprovedNotification({
     requestModel.photoUrl = timebankModel.photoUrl;
     model.data = requestModel.toMap();
     print("_______________________________________________${model.data}");
-
   }
 
   await Firestore.instance
@@ -212,7 +211,8 @@ Future<void> createTaskCompletedApprovedNotification({
       .document(model.id)
       .setData(model.toMap());
 
-  print("Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
+  print(
+      "Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
 }
 
 Future<void> createTransactionNotification({
@@ -328,12 +328,12 @@ Stream<List<NotificationsModel>> getNotifications({
       .collection('users')
       .document(userEmail)
       .collection('notifications')
-      // .where('isRead', isEqualTo: false)
-      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
-      // .where(
-      //   'communityId',
-      //   isEqualTo: communityId,
-      // )
+      .where('isRead', isEqualTo: false)
+      .where(
+        'communityId',
+        isEqualTo: communityId,
+      )
+      .orderBy('timestamp', descending: true)
       .snapshots();
 
   yield* data.transform(
@@ -368,11 +368,7 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
       .document(timebankId)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
-      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
-      // .where(
-      //   'communityId',
-      //   isEqualTo: communityId,
-      // )
+      .orderBy('timestamp', descending: true)
       .snapshots();
 
   yield* data.transform(

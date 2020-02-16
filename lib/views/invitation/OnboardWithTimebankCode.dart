@@ -12,7 +12,6 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/home_page_router.dart';
 
@@ -389,12 +388,14 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       joinRequestModel.accepted = false;
 
                       if (formkey.currentState.validate()) {
-                        await createJoinRequest(model: joinRequestModel);
+                        await updateJoinRequest(model: joinRequestModel);
 
                         JoinRequestNotificationModel joinReqModel =
                             JoinRequestNotificationModel(
-                                timebankId: timebankModel.id,
-                                timebankTitle: timebankModel.name);
+                          timebankId: timebankModel.id,
+                          timebankTitle: timebankModel.name,
+                          reasonToJoin: joinRequestModel.reason,
+                        );
                         NotificationsModel notification = NotificationsModel(
                           timebankId: timebankModel.id,
                           id: utils.Utils.getUuid(),
@@ -403,18 +404,25 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                               .loggedinuser.sevaUserID,
                           type: prefix0.NotificationType.JoinRequest,
                           data: joinReqModel.toMap(),
+                          directToMember: false,
                         );
 
                         notification.timebankId =
                             FlavorConfig.values.timebankId;
 
-                        UserModel timebankCreator =
-                            await FirestoreManager.getUserForId(
-                                sevaUserId: timebankModel.creatorId);
+                        // UserModel timebankCreator =
+                        //     await FirestoreManager.getUserForId(
+                        //         sevaUserId: timebankModel.creatorId);
 
                         await Firestore.instance
-                            .collection('users')
-                            .document(timebankCreator.email)
+                            .collection('timebanknew')
+                            .document(
+                              communityCreateEditSnapshot
+                                  .selectedCommunity.primary_timebank,
+                            )
+                            // .document(
+                            //   "785006d5-597c-464e-9f3a-edd6c342088f",
+                            // )
                             .collection("notifications")
                             .document(notification.id)
                             .setData(notification.toMap());
@@ -630,7 +638,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         builder: (createDialogContext) {
           dialogLoadingContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating Request'),
+            title: Text('Creating Join Request'),
             content: LinearProgressIndicator(),
           );
         });

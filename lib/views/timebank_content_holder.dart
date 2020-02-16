@@ -487,6 +487,7 @@ class DiscussionListState extends State<DiscussionList> {
                 child: CupertinoSegmentedControl<int>(
                   children: logoWidgets,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                  borderColor: Colors.grey,
                   selectedColor: Theme.of(context).primaryColor,
                   groupValue: sharedValue,
                   onValueChanged: (int val) {

@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:sevaexchange/models/location_model.dart';
 
 final searchScaffoldKey = GlobalKey<ScaffoldState>();
@@ -51,7 +51,7 @@ class _CustomSearchScaffoldState1 extends PlacesAutocompleteState {
   Widget build(BuildContext context) {
     final appBar = AppBar(
       iconTheme: IconThemeData(color: Colors.black),
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       title: AppBarPlacesAutoCompleteTextField(),
     );
     final body = PlacesAutocompleteResult(

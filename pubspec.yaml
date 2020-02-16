@@ -101,6 +101,7 @@ flutter:
     - lib/assets/images/profile.png
     - lib/assets/images/seva-x-logo.png
     - lib/assets/images/close.png
+    - lib/assets/images/group_icon.png
     - lib/assets/sevaX.png
     - lib/assets/images/sticker.webp
     - lib/assets/images/g.png

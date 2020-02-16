@@ -91,7 +91,7 @@ class CalendarPickerState extends State<CalendarPicker> {
                     DateTime.now(), startDate, endDate, selectionType,
                     (callbackDate, callbackSelectionType) {
                   setState(() {
-                    selectionType = callbackSelectionType;
+                    // selectionType = callbackSelectionType;
                     if (selectionType == SelectionType.START_DATE)
                       startDate = callbackDate;
                     else

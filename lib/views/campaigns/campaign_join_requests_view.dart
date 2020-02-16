@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/views/profile/profile_viewer_join_request.dart';
 
 class CampaignJoinRequestView extends StatefulWidget {
   final String campaignID;
-
+  
   CampaignJoinRequestView({Key key, this.campaignID}) : super(key: key);
 
   createState() => CampaignJoinRequestViewState();
@@ -20,7 +19,7 @@ class CampaignJoinRequestViewState extends State<CampaignJoinRequestView> {
   String docID;
   void initState() {
     super.initState();
-
+    
     docID = globals.currentCampaignCreator +
         '*' +
         globals.currentCampaignCreatedTimeStamp.toString();

@@ -275,12 +275,14 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               joinRequestModel.entityType = EntityType.Timebank;
                               joinRequestModel.accepted = false;
 
-                              await createJoinRequest(model: joinRequestModel);
+                              await updateJoinRequest(model: joinRequestModel);
 
                               JoinRequestNotificationModel joinReqModel =
                                   JoinRequestNotificationModel(
                                       timebankId: timebank.id,
-                                      timebankTitle: timebank.name);
+                                      timebankTitle: timebank.name,
+                                      reasonToJoin: joinRequestModel.reason
+                                      );
 
                               NotificationsModel notification =
                                   NotificationsModel(

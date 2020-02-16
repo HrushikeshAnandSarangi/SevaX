@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -353,7 +354,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             timebankModel.members = usersSet.toList();
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = true;
-                            await createJoinRequest(model: joinRequestModel);
+                            await updateJoinRequest(model: joinRequestModel);
+                            await updateUserCommunity(
+                                communityId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity,
+                                userEmail: user.email);
                             await _updateTimebank(timebankModel, admins: null);
                           },
                         ),
@@ -369,7 +375,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             });
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = false;
-                            createJoinRequest(model: joinRequestModel)
+                            updateJoinRequest(model: joinRequestModel)
                                 .then((onValue) {
                               resetAndLoad();
                             });
@@ -1002,6 +1008,15 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
+}
+
+Future updateUserCommunity({
+  String communityId,
+  String userEmail,
+}) async {
+  await Firestore.instance.collection("users").document(userEmail).updateData({
+    'communities': FieldValue.arrayUnion([communityId]),
+  });
 }
 
 enum Actions {

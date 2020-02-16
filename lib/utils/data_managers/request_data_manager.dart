@@ -12,6 +12,8 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import 'notifications_data_manager.dart';
+
 Location location = new Location();
 Geoflutterfire geo = Geoflutterfire();
 
@@ -379,6 +381,51 @@ Future<void> approveAcceptRequest({
     targetUserId: approvedUserId,
     communityId: communityId,
     senderUserId: requestModel.sevaUserId,
+    type: NotificationType.RequestApprove,
+    data: requestModel.toMap(),
+    directToMember: directToMember,
+  );
+
+  await utils.removeAcceptRequestNotification(
+    model: model,
+    notificationId: notificationId,
+  );
+  await utils.createRequestApprovalNotification(model: model);
+}
+
+Future<void> approveAcceptRequestForTimebank({
+  @required RequestModel requestModel,
+  @required String approvedUserId,
+  @required String notificationId,
+  @required String communityId,
+  @required bool directToMember,
+}) async {
+  var approvalCount = 0;
+  if (requestModel.transactions != null) {
+    for (var i = 0; i < requestModel.transactions.length; i++) {
+      if (requestModel.transactions[i].isApproved) {
+        approvalCount++;
+      }
+    }
+  }
+  requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData(requestModel.toMap());
+
+  //timebankUpdateFullName
+  var timebankModel = await fetchTimebankData(requestModel.timebankId);
+  var tempTimebankModel = requestModel;
+  tempTimebankModel.photoUrl = timebankModel.photoUrl;
+  tempTimebankModel.fullName = timebankModel.name;
+  
+  NotificationsModel model = NotificationsModel(
+    timebankId: requestModel.timebankId,
+    id: utils.Utils.getUuid(),
+    targetUserId: approvedUserId,
+    communityId: communityId,
+    senderUserId: tempTimebankModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: requestModel.toMap(),
     directToMember: directToMember,
