@@ -328,12 +328,12 @@ Stream<List<NotificationsModel>> getNotifications({
       .collection('users')
       .document(userEmail)
       .collection('notifications')
-      // .where('isRead', isEqualTo: false)
-      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
-      // .where(
-      //   'communityId',
-      //   isEqualTo: communityId,
-      // )
+      .where('isRead', isEqualTo: false)
+      .where(
+        'communityId',
+        isEqualTo: communityId,
+      )
+      .orderBy('timestamp', descending: true)
       .snapshots();
 
   yield* data.transform(

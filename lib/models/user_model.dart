@@ -229,6 +229,7 @@ class UserModel extends DataModel {
     this.sevaUserID = user['sevauserid'];
     this.bio = user['bio'];
     this.email = user['email'];
+    this.communities = List.castFrom(user['communities']);
   }
 
   UserModel setBlockedMembers(List<String> blockedMembers) {
@@ -351,6 +352,7 @@ class UserModel extends DataModel {
       ${this.blockedBy.toString()},
       ${this.currentPosition.toString()},
       ${this.acceptedEULA.toString()},
+      Communities:${this.communities.toString()},
     ''';
   }
 }

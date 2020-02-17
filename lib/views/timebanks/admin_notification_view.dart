@@ -1134,6 +1134,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             model.accepted = true;
                             model.operationTaken = true;
                             await updateJoinRequest(model: model);
+                            Navigator.pop(showProgressForOnboardingUserContext);
+                            await readTimeBankNotification(
+                                notificationId, widget.timebankId);
+
                             await updateTimebank(timebankModel: timebankModel);
                             await updateUserCommunity(
                               communityId: SevaCore.of(context)
@@ -1150,7 +1154,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             await readTimeBankNotification(
                                 notificationId, widget.timebankId);
                             //update user community
-                            Navigator.pop(showProgressForOnboardingUserContext);
+                            
                           },
                         ),
                       ),
@@ -1175,7 +1179,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             );
                             model.accepted = false;
                             model.operationTaken = false;
-
                             await updateJoinRequest(model: model);
                             await readTimeBankNotification(
                                 notificationId, widget.timebankId);
