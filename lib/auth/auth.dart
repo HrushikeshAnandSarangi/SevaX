@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sevaexchange/main.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/preference_manager.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -76,6 +76,10 @@ class Auth {
       )) as FirebaseUser;
       return _processEmailPasswordUser(user, displayName);
     } on PlatformException catch (error) {
+      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+        /// `foo@bar.com` has alread been registered.
+        print(" ${email} already registered");
+      }
       throw error;
     } catch (error) {
       log('createUserWithEmailAndPassword: error: ${error.toString()}');
