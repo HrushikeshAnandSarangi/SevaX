@@ -268,7 +268,7 @@ Future<void> approveRequestCompletion({
       .collection('requests')
       .document(model.id)
       .setData(model.toMap(), merge: true);
-      
+
   UserModel user = await utils.getUserForId(sevaUserId: userId);
 
   //check if protected
@@ -350,8 +350,6 @@ Future<void> approveRequestCompletion({
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
-
-  print("========================================================== Step8");
 }
 
 Future<void> approveAcceptRequest({
@@ -375,6 +373,14 @@ Future<void> approveAcceptRequest({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
+  var timebankModel = await fetchTimebankData(requestModel.timebankId);
+  var tempRequestModel = requestModel;
+
+  if (timebankModel.protected) {
+    tempRequestModel.photoUrl = timebankModel.photoUrl;
+    tempRequestModel.fullName = timebankModel.name;
+  }
+
   NotificationsModel model = NotificationsModel(
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
@@ -382,7 +388,7 @@ Future<void> approveAcceptRequest({
     communityId: communityId,
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestApprove,
-    data: requestModel.toMap(),
+    data: tempRequestModel.toMap(),
     directToMember: directToMember,
   );
 
@@ -427,7 +433,7 @@ Future<void> approveAcceptRequestForTimebank({
     communityId: communityId,
     senderUserId: tempTimebankModel.sevaUserId,
     type: NotificationType.RequestApprove,
-    data: requestModel.toMap(),
+    data: tempTimebankModel.toMap(),
     directToMember: directToMember,
   );
 
@@ -449,13 +455,21 @@ Future<void> rejectAcceptRequest({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
+  var timebankModel = await fetchTimebankData(requestModel.timebankId);
+  var tempRequestModel = requestModel;
+
+  if (timebankModel.protected) {
+    tempRequestModel.photoUrl = timebankModel.photoUrl;
+    tempRequestModel.fullName = timebankModel.name;
+  }
+
   NotificationsModel model = NotificationsModel(
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: rejectedUserId,
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestReject,
-    data: requestModel.toMap(),
+    data: tempRequestModel.toMap(),
     communityId: communityId,
   );
 
