@@ -147,7 +147,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
-        Expanded(child: buildList()),
+       // Expanded(child: buildList()),
+       buildList(),
         // This container holds the align
         createCommunity(),
       ]),
