@@ -74,7 +74,7 @@ class HomeDashBoardBloc extends BlocBase {
     return Future.value(true);
   }
 
-  void getPrimaryTimebank() {}
+  // void getPrimaryTimebank() {}
 
   void dispose() {
     _communities.close();
