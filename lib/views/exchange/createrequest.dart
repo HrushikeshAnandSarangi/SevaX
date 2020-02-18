@@ -388,17 +388,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (createDialogContext) {
-          dialogContext = createDialogContext;
-          return AlertDialog(
-            title: Text('Creating Request..'),
-            content: LinearProgressIndicator(),
-          );
-        });
-
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
@@ -411,6 +400,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.approvedUsers = arrayOfSelectedMembers;
     //adding some members for humanity first
     if (_formKey.currentState.validate()) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (createDialogContext) {
+            dialogContext = createDialogContext;
+            return AlertDialog(
+              title: Text('Creating Request..'),
+              content: LinearProgressIndicator(),
+            );
+          });
+
       print("Select Members");
       if (widget.isOfferRequest == true && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
