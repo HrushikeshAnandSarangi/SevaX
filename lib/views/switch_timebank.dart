@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/views/home_dashboard.dart';
-import 'package:sevaexchange/views/home_page_router.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 
 class SwitchTimebank extends StatelessWidget {
   @override
