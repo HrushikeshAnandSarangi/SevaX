@@ -1128,26 +1128,17 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             timebankModel.members = usersSet.toList();
                             model.accepted = true;
                             model.operationTaken = true;
+
+                            updateUserCommunity(
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              userEmail: userModel.email,
+                            );
+
                             await updateJoinRequest(model: model);
                             Navigator.pop(showProgressForOnboardingUserContext);
-                            await readTimeBankNotification(
-                                notificationId, widget.timebankId);
-
                             await updateTimebank(timebankModel: timebankModel);
-                            await updateUserCommunity(
-                              communityId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
-                              userEmail: userModel.email,
-                            );
-                            await updateUserCommunity(
-                              communityId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
-                              userEmail: userModel.email,
-                            );
-                            await readTimeBankNotification(
-                                notificationId, widget.timebankId);
                             //update user community
                           },
                         ),
