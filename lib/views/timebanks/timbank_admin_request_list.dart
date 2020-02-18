@@ -614,14 +614,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       List<String> members =
                           timebankModel.members.map((s) => s).toList();
                       members.remove(user.sevaUserID);
-                      if (widget.isCommunity != null && widget.isCommunity) {
-                        _removeTimebankAndUpdateUserCommunityList(
-                            model: timebankModel,
-                            members: members,
-                            userId: user.sevaUserID);
-                      } else {
-                        _updateTimebank(timebankModel, members: members);
-                      }
+//                      if (widget.isCommunity != null && widget.isCommunity) {
+//                        _removeUserFromCommunityAndUpdateUserCommunityList(
+//                            model: timebankModel,
+//                            members: members,
+//                            userId: user.sevaUserID);
+//                      } else {
+                      _updateTimebank(timebankModel, members: members);
+//                      }
                     }
                   },
                 ),
@@ -630,10 +630,11 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           );
   }
 
-  Future _addTimebankAndUpdateUserCommunityList(
-      {TimebankModel model,
-      List<UserModel> members,
-      String currentCommunity}) async {
+  Future _addUserToCommunityAndUpdateUserCommunityList({
+    TimebankModel model,
+    List<UserModel> members,
+    String currentCommunity,
+  }) async {
     if (model == null || members == null || members.length == 0) {
       return;
     }
@@ -642,21 +643,31 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     }
     members.forEach((user) async {
       var communities = List<String>();
+      if (user.communities.length > 0) {
+        communities.addAll(user.communities);
+      }
       if (user.communities != null &&
           !user.communities.contains(currentCommunity)) {
         communities.add(currentCommunity);
       }
       user.communities = communities;
+      var insertMembers = model.members.contains(user.sevaUserID);
+      print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
+      var memberList = List<String>();
+      memberList.addAll(model.members);
       if (!model.members.contains(user.sevaUserID)) {
-        model.members.add(user.sevaUserID);
+        memberList.add(user.sevaUserID);
       }
+      model.members = memberList;
+      print(
+          "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
       await updateUser(user: user);
     });
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
 
-  Future _removeTimebankAndUpdateUserCommunityList(
+  Future _removeUserFromCommunityAndUpdateUserCommunityList(
       {TimebankModel model, List<String> members, String userId}) async {
     if (model == null || members == null || members.length == 0) {
       return;
@@ -846,7 +857,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           users.add(model);
         });
         if (widget.isCommunity != null && widget.isCommunity) {
-          _addTimebankAndUpdateUserCommunityList(
+          _addUserToCommunityAndUpdateUserCommunityList(
             model: timebankModel,
             members: users,
             currentCommunity:
