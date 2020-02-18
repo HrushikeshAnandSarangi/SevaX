@@ -143,7 +143,7 @@ class RequestCardWidget extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  userModel.bio ?? "bio is not available",
+                  userModel.bio ?? "Bio is not available",
                   maxLines: 3,
                   style: TextStyle(
                     color: Colors.black,

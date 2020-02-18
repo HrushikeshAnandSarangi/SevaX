@@ -20,7 +20,6 @@ import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
-
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
@@ -449,19 +448,18 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
 
-    if((loggedInUser.currentCommunity?.isEmpty??false) && loggedInUser.communities.length ==1){
-      
-
+    if ((loggedInUser.currentCommunity?.isEmpty ?? true) &&
+        loggedInUser.communities.length > 0) {
+      print("-------------------------------------------------");
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
-      SevaCore.of(context).loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
-
-      await Firestore.instance.collection("users").document(loggedInUser.email).updateData({
-    'currentCommunity': loggedInUser.communities[0],
-
-    
-    
-  });
-
+      await Firestore.instance
+          .collection("users")
+          .document(loggedInUser.email)
+          .updateData({
+        'currentCommunity': loggedInUser.communities[0],
+      });
+    } else {
+      print("---------------------NO----------------------------");
     }
     if (loggedInUser == null) {
       loadingMessage = 'Welcome to the world of communities';
@@ -775,7 +773,7 @@ class _SplashViewState extends State<SplashView> {
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping interests';
           },
-          onBacked:(){
+          onBacked: () {
             _navigateToSkillsView(loggedInUser);
           },
         ),
@@ -786,46 +784,42 @@ class _SplashViewState extends State<SplashView> {
   Future _navigateToBioView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => BioView(
-          onSave: (bio) {
-            Navigator.pop(context);
-            loggedInUser.bio = bio;
-            updateUserData(loggedInUser);
-            loadingMessage = 'Updating bio';
-          },
-          onSkipped: () {
-            Navigator.pop(context);
-            loggedInUser.bio = '';
-            UserConfig.prefs.setBool(UserConfig.skip_bio, true);
-            updateUserData(loggedInUser);
-            loadingMessage = 'Skipping bio';
-          },
-      onBacked:(){
-        Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => InterestViewNew(
-            automaticallyImplyLeading: false,
-            userModel: loggedInUser,
-            onSelectedInterests: (interests) {
-              Navigator.pop(context);
-              loggedInUser.interests = interests;
-              updateUserData(loggedInUser);
-              loadingMessage = 'Updating interests';
-            },
-            onSkipped: () {
-              Navigator.pop(context);
-              loggedInUser.interests = [];
-              updateUserData(loggedInUser);
-              loadingMessage = 'Skipping interests';
-            },
-            onBacked:(){
-              _navigateToInterestsView(loggedInUser);
-            },
-          ),
-          ),
-        );
-      }
-        ),
+        builder: (context) => BioView(onSave: (bio) {
+          Navigator.pop(context);
+          loggedInUser.bio = bio;
+          updateUserData(loggedInUser);
+          loadingMessage = 'Updating bio';
+        }, onSkipped: () {
+          Navigator.pop(context);
+          loggedInUser.bio = '';
+          UserConfig.prefs.setBool(UserConfig.skip_bio, true);
+          updateUserData(loggedInUser);
+          loadingMessage = 'Skipping bio';
+        }, onBacked: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => InterestViewNew(
+                automaticallyImplyLeading: false,
+                userModel: loggedInUser,
+                onSelectedInterests: (interests) {
+                  Navigator.pop(context);
+                  loggedInUser.interests = interests;
+                  updateUserData(loggedInUser);
+                  loadingMessage = 'Updating interests';
+                },
+                onSkipped: () {
+                  Navigator.pop(context);
+                  loggedInUser.interests = [];
+                  updateUserData(loggedInUser);
+                  loadingMessage = 'Skipping interests';
+                },
+                onBacked: () {
+                  _navigateToInterestsView(loggedInUser);
+                },
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -856,7 +850,7 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  Future updateUserData(UserModel user) async {         
+  Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
   }
 

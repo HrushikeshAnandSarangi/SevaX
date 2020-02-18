@@ -48,7 +48,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   static const String REJECTED = "Rejected";
 
   bool hasError = false;
-  String errorMessage1 = '';
+  String errorMessage1 = '';  
   List<JoinRequestModel> _joinRequestModels;
   bool isDataLoaded = false;
   @override
