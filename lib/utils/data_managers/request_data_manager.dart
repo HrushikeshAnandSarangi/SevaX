@@ -268,7 +268,7 @@ Future<void> approveRequestCompletion({
       .collection('requests')
       .document(model.id)
       .setData(model.toMap(), merge: true);
-
+      
   UserModel user = await utils.getUserForId(sevaUserId: userId);
 
   //check if protected
@@ -419,7 +419,7 @@ Future<void> approveAcceptRequestForTimebank({
   var tempTimebankModel = requestModel;
   tempTimebankModel.photoUrl = timebankModel.photoUrl;
   tempTimebankModel.fullName = timebankModel.name;
-  
+
   NotificationsModel model = NotificationsModel(
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),

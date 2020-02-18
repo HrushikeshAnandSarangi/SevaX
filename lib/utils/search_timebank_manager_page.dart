@@ -363,6 +363,7 @@ class _ResultViewElasticState extends State<ResultViewElastic> {
           return getEmptyWidget('Users', 'No user found');
         }
         return ListView.builder(
+          shrinkWrap: true,
           itemBuilder: (context, index) {
             if (index == 0) {
               return Container(
