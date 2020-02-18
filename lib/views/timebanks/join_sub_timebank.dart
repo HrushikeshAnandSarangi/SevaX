@@ -119,7 +119,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   Widget getTimebanks({BuildContext context}) {
     Size size = MediaQuery.of(context).size;
-
     List<TimebankModel> timebankList = [];
     return StreamBuilder<CommunityCreateEditController>(
         stream: createEditCommunityBloc.createEditCommunity,
