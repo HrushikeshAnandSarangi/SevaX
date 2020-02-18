@@ -491,7 +491,7 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-
+        
       log('createUser: error: ${error.toString()}');
       return null;
     }
@@ -685,6 +685,19 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
       );
+    } else if(error.message.contains("already")){
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(error.message),
+          action: SnackBarAction(
+            label: 'This email is already registered',
+            onPressed: () {
+              resetPassword(email);
+              _scaffoldKey.currentState.hideCurrentSnackBar();
+            },
+          ),
+        ),
+      );
     }
   }
 
@@ -704,3 +717,4 @@ class _RegisterPageState extends State<RegisterPage>
     });
   }
 }
+

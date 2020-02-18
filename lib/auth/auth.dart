@@ -63,29 +63,68 @@ class Auth {
     return _processGoogleUser(user);
   }
 
-  /// Register a User with [email] and [password]
-  Future<UserModel> createUserWithEmailAndPassword({
-    @required String email,
-    @required String password,
-    @required String displayName,
-  }) async {
-    try {
-      FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      )) as FirebaseUser;
-      return _processEmailPasswordUser(user, displayName);
-    } on PlatformException catch (error) {
-      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-        /// `foo@bar.com` has alread been registered.
-        print(" ${email} already registered");
-      }
-      throw error;
-    } catch (error) {
-      log('createUserWithEmailAndPassword: error: ${error.toString()}');
-      return null;
-    }
-  }
+
+ /// Register a User with [email] and [password]
+ Future<UserModel> createUserWithEmailAndPassword({
+   @required String email,
+   @required String password,
+   @required String displayName,
+ }) async {
+   try {
+     FirebaseUser user = (await _firebaseAuth
+         .createUserWithEmailAndPassword(
+           email: email,
+           password: password,
+         ) as FirebaseUser);
+     return _processEmailPasswordUser(user, displayName);
+   } on PlatformException catch (error) {
+     if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+       
+       print(" ${email} already registered");
+     }
+     print("signup error $error");
+     throw error;
+   } catch (error) {
+     log('createUserWithEmailAndPassword: error: ${error.toString()}');
+     print(" ${email} already registered");
+     print("signup error $error");
+
+     return null;
+   }
+ }
+
+
+  // /// Register a User with [email] and [password]
+  // Future<UserModel> createUserWithEmailAndPassword({
+  //   @required String email,
+  //   @required String password,
+  //   @required String displayName,
+  // }) async {
+  //   try {
+  //     await _firebaseAuth
+  //         .createUserWithEmailAndPassword(
+  //           email: email,
+  //           password: password,
+  //         )
+  //         .then((onValue) {})
+  //         .catchError((onError) {
+  //       print("sign up error $onError");
+  //     });
+  //     //return _processEmailPasswordUser(user, displayName);
+  //   } on PlatformException catch (error) {
+  //     if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+  //       print(" ${email} already registered");
+  //     }
+  //     print("signup error $error");
+  //     throw error;
+  //   } catch (error) {
+  //     log('createUserWithEmailAndPassword: error: ${error.toString()}');
+  //     print(" ${email} already registered");
+  //     print("signup error $error");
+
+  //     return null;
+  //   }
+  // }
 
   /// Sign out the logged in user and clear all user preferences
   Future<void> signOut() async {

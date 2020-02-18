@@ -71,10 +71,10 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   @override
   Widget build(BuildContext context) {
     bool showBachBtn = widget.showBackBtn;
-    //return MaterialApp(
-    //theme: FlavorConfig.values.theme,
-    //home: Scaffold(
-    return Scaffold(
+    return MaterialApp(
+    theme: FlavorConfig.values.theme,
+    home: 
+     Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // automaticallyImplyLeading: widget.keepOnBackPress,
@@ -95,7 +95,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         centerTitle: true,
       ),
       body: searchTeams(),
-    ); // );
+    ),); // );
   }
 
   Widget searchTeams() {
@@ -147,7 +147,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
-        Expanded(child: buildList()),
+        buildList(),
+        //Expanded(child: buildList()),
         // This container holds the align
         createCommunity(),
       ]),
