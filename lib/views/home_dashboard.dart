@@ -4,6 +4,7 @@ import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
@@ -50,9 +51,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   List<Widget> tabs = [];
   List<Widget> pages = [];
   bool isAdmin = false;
+  UserDataBloc _user;
 
   @override
   void initState() {
+    _user = BlocProvider.of<UserDataBloc>(context);
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
         TabController(initialIndex: 0, length: 6, vsync: this);
@@ -75,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    _user.dispose();
     _homeDashBoardBloc.dispose();
     super.dispose();
   }
@@ -90,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
- //   print("currrrrrrr cominty-------- ${SevaCore.of(context).loggedInUser.currentCommunity}");
+    //   print("currrrrrrr cominty-------- ${SevaCore.of(context).loggedInUser.currentCommunity}");
 
     return BlocProvider(
       bloc: _homeDashBoardBloc,
