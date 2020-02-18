@@ -472,8 +472,8 @@ class NotificationsView extends State<NotificationViewHolder> {
       String notificationId,
       String requestid,
       List<NotificationsModel> notifications) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -672,8 +672,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1246,8 +1246,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   Widget getNotificationAcceptedWidget(
       RequestModel model, String userId, String notificationId) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
