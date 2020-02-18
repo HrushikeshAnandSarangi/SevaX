@@ -614,14 +614,14 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       List<String> members =
                           timebankModel.members.map((s) => s).toList();
                       members.remove(user.sevaUserID);
-//                      if (widget.isCommunity != null && widget.isCommunity) {
-//                        _removeUserFromCommunityAndUpdateUserCommunityList(
-//                            model: timebankModel,
-//                            members: members,
-//                            userId: user.sevaUserID);
-//                      } else {
-                      _updateTimebank(timebankModel, members: members);
-//                      }
+                      if (widget.isCommunity != null && widget.isCommunity) {
+                        _removeUserFromCommunityAndUpdateUserCommunityList(
+                            model: timebankModel,
+                            members: members,
+                            userId: user.sevaUserID);
+                      } else {
+                        _updateTimebank(timebankModel, members: members);
+                      }
                     }
                   },
                 ),
@@ -641,7 +641,18 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     if (model.members == null) {
       model.members = List<String>();
     }
+    var communityModel =
+        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
     members.forEach((user) async {
+      //Update community members inside community collection
+      var communityMembers = List<String>();
+      if (!communityModel.members.contains(user)) {
+        communityMembers.addAll(communityModel.members);
+      }
+      communityMembers.add(user.sevaUserID);
+      communityModel.members = communityMembers;
+
+      //Update community inside user collections
       var communities = List<String>();
       if (user.communities.length > 0) {
         communities.addAll(user.communities);
@@ -663,6 +674,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
       await updateUser(user: user);
     });
+    await updateCommunity(communityModel: communityModel);
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
@@ -676,23 +688,27 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
     var communities = List<String>();
     if (user.communities != null) {
-      communities.addAll(user.communities);
-      if (!user.communities.contains(currentCommunity)) {
-        communities.add(currentCommunity);
+      for (var i = 0; i < user.communities.length; i++) {
+        if (user.communities[i] != currentCommunity) {
+          communities.add(user.communities[i]);
+        }
       }
-    } else {
-      communities.add(currentCommunity);
+      user.communities = communities;
     }
-    user.communities = communities.length == 0 ? null : communities;
-    if (user.currentCommunity == currentCommunity) {
-      if (user.communities == null || user.communities.length == 0) {
-        user.currentCommunity = "";
-      } else {
-        user.currentCommunity = user.communities[0];
+    var communityModel =
+        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
+    if (communityModel.members.contains(user.sevaUserID)) {
+      var newMembers = List<String>();
+      for (var i = 0; i < communityModel.members.length; i++) {
+        if (communityModel.members[i] != user.sevaUserID) {
+          newMembers.add(communityModel.members[i]);
+        }
       }
+      communityModel.members = newMembers;
     }
-    await updateUser(user: user);
     model.members = members;
+    await updateUser(user: user);
+    await updateCommunity(communityModel: communityModel);
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
