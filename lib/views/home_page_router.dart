@@ -276,7 +276,9 @@ class CustomBottomNavigationItem extends StatelessWidget {
               }
             });
 
-            if (chatModelList.length == 0 || unreadCount == 0) {
+            if (chatModelList == null ||
+                chatModelList.length == 0 ||
+                unreadCount == 0) {
               return Center(
                 child: IconButton(
                   icon: Icon(
