@@ -186,6 +186,13 @@ Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   return timeBankModel;
 }
 
+Future updateCommunity({@required CommunityModel communityModel}) async {
+  await Firestore.instance
+      .collection('communities')
+      .document(communityModel.id)
+      .updateData({'members': communityModel.members});
+}
+
 Future<CommunityModel> getCommunityDetailsByCommunityId(
     {@required String communityId}) async {
   assert(communityId != null && communityId.isNotEmpty,

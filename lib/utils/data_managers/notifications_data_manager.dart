@@ -360,6 +360,15 @@ Stream<List<NotificationsModel>> getNotifications({
   );
 }
 
+Future updateUserCommunity({
+  String communityId,
+  String userEmail,
+}) async {
+  await Firestore.instance.collection('users').document(userEmail).updateData({
+    'communities': FieldValue.arrayUnion([communityId]),
+  });
+}
+
 Stream<List<NotificationsModel>> getNotificationsForTimebank({
   String timebankId,
 }) async* {
