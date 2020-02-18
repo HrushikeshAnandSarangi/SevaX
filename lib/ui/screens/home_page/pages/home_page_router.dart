@@ -69,7 +69,8 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
             builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
               if (snapshot.hasData && snapshot.data != null) {
                 UserModel user = UserModel.fromMap(snapshot.data.data);
-                _userBloc.updateUser.add(user);
+                // _userBloc.updateUser.add(user);
+                SevaCore.of(context).loggedInUser = user;
 
                 if (user.communities == null || user.communities.isEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {

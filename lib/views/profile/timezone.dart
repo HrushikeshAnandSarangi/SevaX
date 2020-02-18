@@ -228,7 +228,7 @@ class TimezoneListState extends State<TimezoneList> {
 
       TimeZoneModel(
         offsetFromUtc: 6,
-        timezoneAbb: '',
+        timezoneAbb: 'BT',
         timezoneName: 'BANGLADESH TIME',
       ),
 
@@ -564,6 +564,9 @@ class TimezoneListState extends State<TimezoneList> {
         timezoneName: 'YEKATERINBURG TIME',
       ),
     ];
+    timezonelist.sort((a, b) {
+      return a.timezoneName.toLowerCase().compareTo(b.timezoneName.toLowerCase());
+    });
     super.initState();
   }
 
@@ -596,7 +599,7 @@ class TimezoneListState extends State<TimezoneList> {
               // }
               return Card(
                 child: ListTile(
-                  leading: getIcon(isSelected, model.timezoneAbb),
+                  leading: getIcon(isSelected, model.timezoneName),
                   trailing: Text(
                     '${model.timezoneAbb}',
                     style: TextStyle(
@@ -608,7 +611,7 @@ class TimezoneListState extends State<TimezoneList> {
                   subtitle: Text('${format.format(localtime)}'),
                   onTap: () {
                     setState(() {
-                      userModel.timezone = model.timezoneAbb;
+                      userModel.timezone = model.timezoneName;
                       updateUser(user: userModel);
                     });
                   },
@@ -621,6 +624,7 @@ class TimezoneListState extends State<TimezoneList> {
 
   Widget getIcon(String isSelected, String userTimezone) {
     if (isSelected == userTimezone) {
+//      print("inside if card");
       return Padding(
         padding: const EdgeInsets.all(5.0),
         child: Icon(
@@ -630,6 +634,7 @@ class TimezoneListState extends State<TimezoneList> {
         ),
       );
     } else {
+//      print("inside else card");
       return null;
     }
   }
