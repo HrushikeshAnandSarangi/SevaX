@@ -1529,56 +1529,61 @@ class SkillAndInterestBuilder extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) { //altered code
+  Widget build(BuildContext context) {
+    //altered code
     return FutureBuilder(
-        future: FirestoreManager.getUserSkillsInterests(skillsIdList:this.skills, interestsIdList:this.interests), builder: (context, snapshot){
-      print(snapshot.data);
+        future: FirestoreManager.getUserSkillsInterests(
+            skillsIdList: this.skills, interestsIdList: this.interests),
+        builder: (context, snapshot) {
           return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 25,
-            ),
-            child: Text(
-              'Skills',
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
-            ),
-          ),
-          Container(
-            height: 40,
-            child: this.skills.length != 0
-                ? createLabels(snapshot.data['skills'])
-                : Padding(
-              padding: EdgeInsets.all(5.0),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 10,
-              horizontal: 25,
-            ),
-            child: Text(
-              'My Interests',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w700,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 25,
+                ),
+                child: Text(
+                  'Skills',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700),
+                ),
               ),
-            ),
-          ),
-          Container(
-            height: 40,
-            child: this.interests.length != 0
-                ? createLabels(snapshot.data['interests'])
-                : Padding(
-              padding: EdgeInsets.all(5.0),
-            ),
-          ),
-        ],
-      );
-    }
-    );
+              Container(
+                height: 40,
+                child: snapshot.data != null &&
+                        this.skills != null &&
+                        this.skills.length != 0
+                    ? createLabels(snapshot.data['skills'])
+                    : Padding(
+                        padding: EdgeInsets.all(5.0),
+                      ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 25,
+                ),
+                child: Text(
+                  'My Interests',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Container(
+                height: 40,
+                child: snapshot.data != null &&
+                        this.interests != null &&
+                        this.interests.length != 0
+                    ? createLabels(snapshot.data['interests'])
+                    : Padding(
+                        padding: EdgeInsets.all(5.0),
+                      ),
+              ),
+            ],
+          );
+        });
   }
 
 //  Widget build(BuildContext context) {  //og code
@@ -1633,7 +1638,7 @@ class SkillAndInterestBuilder extends StatelessWidget {
 //  }
 
   Widget createLabels(List data) {
-    int length = data.length;
+    var length = data == null ? 0 : data.length;
     return ListView.builder(
       padding: const EdgeInsets.symmetric(
         horizontal: 22.5,

@@ -373,10 +373,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                           fontSize: dialogButtonSize, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      Navigator.of(dialogContext).pop();
-
-                      showProgressDialog();
-
                       print("Timebank Model $timebankModel");
                       joinRequestModel.userId =
                           communityCreateEditSnapshot.loggedinuser.sevaUserID;
@@ -388,6 +384,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       joinRequestModel.accepted = false;
 
                       if (formkey.currentState.validate()) {
+                        Navigator.of(dialogContext).pop();
+
+                        showProgressDialog();
+
                         await updateJoinRequest(model: joinRequestModel);
 
                         JoinRequestNotificationModel joinReqModel =

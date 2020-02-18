@@ -615,7 +615,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                           timebankModel.members.map((s) => s).toList();
                       members.remove(user.sevaUserID);
                       if (widget.isCommunity != null && widget.isCommunity) {
-                        _removeTimebankAndUpdateUserCommunityList(
+                        _removeUserFromCommunityAndUpdateUserCommunityList(
                             model: timebankModel,
                             members: members,
                             userId: user.sevaUserID);
@@ -630,33 +630,56 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           );
   }
 
-  Future _addTimebankAndUpdateUserCommunityList(
-      {TimebankModel model,
-      List<UserModel> members,
-      String currentCommunity}) async {
+  Future _addUserToCommunityAndUpdateUserCommunityList({
+    TimebankModel model,
+    List<UserModel> members,
+    String currentCommunity,
+  }) async {
     if (model == null || members == null || members.length == 0) {
       return;
     }
     if (model.members == null) {
       model.members = List<String>();
     }
+    var communityModel =
+        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
     members.forEach((user) async {
+      //Update community members inside community collection
+      var communityMembers = List<String>();
+      if (!communityModel.members.contains(user)) {
+        communityMembers.addAll(communityModel.members);
+      }
+      communityMembers.add(user.sevaUserID);
+      communityModel.members = communityMembers;
+
+      //Update community inside user collections
       var communities = List<String>();
+      if (user.communities.length > 0) {
+        communities.addAll(user.communities);
+      }
       if (user.communities != null &&
           !user.communities.contains(currentCommunity)) {
         communities.add(currentCommunity);
       }
       user.communities = communities;
+      var insertMembers = model.members.contains(user.sevaUserID);
+      print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
+      var memberList = List<String>();
+      memberList.addAll(model.members);
       if (!model.members.contains(user.sevaUserID)) {
-        model.members.add(user.sevaUserID);
+        memberList.add(user.sevaUserID);
       }
+      model.members = memberList;
+      print(
+          "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
       await updateUser(user: user);
     });
+    await updateCommunity(communityModel: communityModel);
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
 
-  Future _removeTimebankAndUpdateUserCommunityList(
+  Future _removeUserFromCommunityAndUpdateUserCommunityList(
       {TimebankModel model, List<String> members, String userId}) async {
     if (model == null || members == null || members.length == 0) {
       return;
@@ -665,23 +688,27 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
     var communities = List<String>();
     if (user.communities != null) {
-      communities.addAll(user.communities);
-      if (!user.communities.contains(currentCommunity)) {
-        communities.add(currentCommunity);
+      for (var i = 0; i < user.communities.length; i++) {
+        if (user.communities[i] != currentCommunity) {
+          communities.add(user.communities[i]);
+        }
       }
-    } else {
-      communities.add(currentCommunity);
+      user.communities = communities;
     }
-    user.communities = communities.length == 0 ? null : communities;
-    if (user.currentCommunity == currentCommunity) {
-      if (user.communities == null || user.communities.length == 0) {
-        user.currentCommunity = "";
-      } else {
-        user.currentCommunity = user.communities[0];
+    var communityModel =
+        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
+    if (communityModel.members.contains(user.sevaUserID)) {
+      var newMembers = List<String>();
+      for (var i = 0; i < communityModel.members.length; i++) {
+        if (communityModel.members[i] != user.sevaUserID) {
+          newMembers.add(communityModel.members[i]);
+        }
       }
+      communityModel.members = newMembers;
     }
-    await updateUser(user: user);
     model.members = members;
+    await updateUser(user: user);
+    await updateCommunity(communityModel: communityModel);
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
@@ -846,7 +873,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           users.add(model);
         });
         if (widget.isCommunity != null && widget.isCommunity) {
-          _addTimebankAndUpdateUserCommunityList(
+          _addUserToCommunityAndUpdateUserCommunityList(
             model: timebankModel,
             members: users,
             currentCommunity:

@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sevaexchange/main.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/preference_manager.dart';
 
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -63,25 +63,68 @@ class Auth {
     return _processGoogleUser(user);
   }
 
-  /// Register a User with [email] and [password]
-  Future<UserModel> createUserWithEmailAndPassword({
-    @required String email,
-    @required String password,
-    @required String displayName,
-  }) async {
-    try {
-      FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      )) as FirebaseUser;
-      return _processEmailPasswordUser(user, displayName);
-    } on PlatformException catch (error) {
-      throw error;
-    } catch (error) {
-      log('createUserWithEmailAndPassword: error: ${error.toString()}');
-      return null;
-    }
-  }
+
+ /// Register a User with [email] and [password]
+ Future<UserModel> createUserWithEmailAndPassword({
+   @required String email,
+   @required String password,
+   @required String displayName,
+ }) async {
+   try {
+     FirebaseUser user = (await _firebaseAuth
+         .createUserWithEmailAndPassword(
+           email: email,
+           password: password,
+         ) as FirebaseUser);
+     return _processEmailPasswordUser(user, displayName);
+   } on PlatformException catch (error) {
+     if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+       
+       print(" ${email} already registered");
+     }
+     print("signup error $error");
+     throw error;
+   } catch (error) {
+     log('createUserWithEmailAndPassword: error: ${error.toString()}');
+     print(" ${email} already registered");
+     print("signup error $error");
+
+     return null;
+   }
+ }
+
+
+  // /// Register a User with [email] and [password]
+  // Future<UserModel> createUserWithEmailAndPassword({
+  //   @required String email,
+  //   @required String password,
+  //   @required String displayName,
+  // }) async {
+  //   try {
+  //     await _firebaseAuth
+  //         .createUserWithEmailAndPassword(
+  //           email: email,
+  //           password: password,
+  //         )
+  //         .then((onValue) {})
+  //         .catchError((onError) {
+  //       print("sign up error $onError");
+  //     });
+  //     //return _processEmailPasswordUser(user, displayName);
+  //   } on PlatformException catch (error) {
+  //     if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+  //       print(" ${email} already registered");
+  //     }
+  //     print("signup error $error");
+  //     throw error;
+  //   } catch (error) {
+  //     log('createUserWithEmailAndPassword: error: ${error.toString()}');
+  //     print(" ${email} already registered");
+  //     print("signup error $error");
+
+  //     return null;
+  //   }
+  // }
 
   /// Sign out the logged in user and clear all user preferences
   Future<void> signOut() async {

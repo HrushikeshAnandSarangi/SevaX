@@ -336,7 +336,8 @@ class NewsCardView extends StatelessWidget {
     return newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
         ? Offstage()
         //change tag to avoid hero widget issue
-        : getImageView(url: newsModel.imageScraped, imageId: newsModel.id);
+        : getImageView(
+            url: newsModel.imageScraped, imageId: newsModel.id + "*");
   }
 
   Widget getImageView({
@@ -401,9 +402,9 @@ class NewsCardView extends StatelessWidget {
                   newsModel.subheading.trim(),
                   style: TextStyle(fontSize: 18.0, height: 1.4),
                 ),
-                // Center(
-                //   child: scrappedImage,
-                // ),
+                Center(
+                  child: scrappedImage,
+                ),
               ],
             ),
           );

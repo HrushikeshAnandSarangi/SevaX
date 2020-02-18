@@ -841,7 +841,7 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  Future updateUserData(UserModel user) async {
+  Future updateUserData(UserModel user) async {         
     await fireStoreManager.updateUser(user: user);
   }
 

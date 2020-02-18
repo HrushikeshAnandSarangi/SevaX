@@ -39,7 +39,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotificationsForTimebank(
         timebankId: widget.timebankId,
-        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        // communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
       builder: (context_firestore, snapshot) {
         if (snapshot.hasError) {
@@ -624,19 +624,17 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
+    TransactionModel transactionModel = model.transactions?.firstWhere(
+        (transaction) => transaction.to == userId,
+        orElse: () => null);
     return StreamBuilder<UserModel>(
       stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
-          // return Offstage();
         }
         UserModel user = snapshot.data;
-        TransactionModel transactionModel =
-            model.transactions?.firstWhere((transaction) {
-          return transaction.to == userId;
-        });
         return Slidable(
             delegate: SlidableBehindDelegate(),
             actions: <Widget>[],
@@ -644,12 +642,13 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             child: GestureDetector(
               onTap: () {
                 showMemberClaimConfirmation(
-                    context: context,
-                    notificationId: notificationId,
-                    requestModel: model,
-                    userId: userId,
-                    userModel: user,
-                    credits: transactionModel.credits);
+                  context: context,
+                  notificationId: notificationId,
+                  requestModel: model,
+                  userId: userId,
+                  userModel: user,
+                  credits: transactionModel.credits,
+                );
               },
               child: Container(
                 margin: notificationPadding,
@@ -671,7 +670,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         ),
                         TextSpan(
                           text: () {
-                            return '${transactionModel.credits} hours';
+                            return '${transactionModel.credits ?? "0"} hours';
                           }(),
                           style: TextStyle(
                             color: Colors.black,
@@ -943,10 +942,12 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     );
     // creating chat with a timebank
     String loggedInEmail = model.timebankId;
+
     // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
     List users = [user.email, loggedInEmail];
     users.sort();
     ChatModel chatModel = ChatModel();
+    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
     chatModel.timebankId = widget.timebankId;
@@ -962,8 +963,10 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               )),
     );
 
-    FirestoreManager.readUserNotification(
-        notificationId, SevaCore.of(context).loggedInUser.email);
+    FirestoreManager.readTimeBankNotification(
+      notificationId,
+      widget.timebankId,
+    );
   }
 
   Widget getJoinReuqestsNotificationWidget(
@@ -1027,14 +1030,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     JoinRequestNotificationModel model,
     String notificationId,
   }) {
-    // JoinRequestModel model,
-
-    // model JoinRequestModel
-    // get timebank model
-
-    // model JoinRequestModel
-    // var model = await;
-
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -1133,28 +1128,18 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             timebankModel.members = usersSet.toList();
                             model.accepted = true;
                             model.operationTaken = true;
+
+                            updateUserCommunity(
+                              communityId: SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              userEmail: userModel.email,
+                            );
+
                             await updateJoinRequest(model: model);
                             Navigator.pop(showProgressForOnboardingUserContext);
-                            await readTimeBankNotification(
-                                notificationId, widget.timebankId);
-
                             await updateTimebank(timebankModel: timebankModel);
-                            await updateUserCommunity(
-                              communityId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
-                              userEmail: userModel.email,
-                            );
-                            await updateUserCommunity(
-                              communityId: SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
-                              userEmail: userModel.email,
-                            );
-                            await readTimeBankNotification(
-                                notificationId, widget.timebankId);
                             //update user community
-                            
                           },
                         ),
                       ),

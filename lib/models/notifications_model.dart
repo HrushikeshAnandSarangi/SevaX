@@ -11,6 +11,7 @@ class NotificationsModel extends DataModel {
   String timebankId;
   String communityId;
   bool directToMember;
+  int timestamp;
 
   NotificationsModel({
     this.id,
@@ -94,6 +95,10 @@ class NotificationsModel extends DataModel {
     }
     if (map.containsKey('isRead')) {
       this.isRead = map['isRead'];
+    }
+
+    if (map.containsKey('timestamp')) {
+      this.timestamp = map['timestamp'];
     }
   }
 
