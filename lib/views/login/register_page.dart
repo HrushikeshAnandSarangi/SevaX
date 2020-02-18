@@ -82,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage>
           children: <Widget>[
             SingleChildScrollView(
                 child: FadeAnimation(
-                    1.4,
+                    1.4,  
                     Padding(
                         padding:
                             EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
@@ -637,6 +637,23 @@ class _RegisterPageState extends State<RegisterPage>
     try {
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
+      if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+      
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("This email already registered"),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () {
+              resetPassword(email);
+              _scaffoldKey.currentState.hideCurrentSnackBar();
+            },
+          ),
+        ),
+      );
+    
+       print(" ${email} already registered");
+     }
       print("Platform Exception --->  $erorr");
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -685,20 +702,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
       );
-    } else if(error.message.contains("already")){
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(error.message),
-          action: SnackBarAction(
-            label: 'This email is already registered',
-            onPressed: () {
-              resetPassword(email);
-              _scaffoldKey.currentState.hideCurrentSnackBar();
-            },
-          ),
-        ),
-      );
-    }
+    } 
   }
 
   Future<void> resetPassword(String email) async {

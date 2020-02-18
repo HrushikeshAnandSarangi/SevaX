@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     ];
     super.initState();
     Future.delayed(Duration.zero, () {
-      print('---->${SevaCore.of(context).loggedInUser.currentCommunity}');
+      //print('---->${SevaCore.of(context).loggedInUser.currentCommunity}');
       _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
     });
   }

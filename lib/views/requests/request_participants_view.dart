@@ -175,11 +175,12 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Icon(
-                    Icons.chat_bubble,
-                    color: Colors.blueGrey,
-                    size: 35,
-                  ),
+                  // Icon(
+                  
+                  //   Icons.chat_bubble,
+                  //   color: Colors.blueGrey,
+                  //   size: 35,
+                  // ),
                 ],
               ),
               Expanded(
