@@ -10,10 +10,10 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/home_page_router.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -80,30 +80,26 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   @override
   Widget build(BuildContext context) {
     return isDataLoaded
-        ? MaterialApp(
-            home: Scaffold(
-              key: _scaffold,
-              appBar: AppBar(
-                centerTitle: true,
-                title: Text(
-                  'Join Timebank',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 18,
-                    // fontWeight: FontWeight.w500,
-                  ),
+        ? Scaffold(
+            key: _scaffold,
+            appBar: AppBar(
+              centerTitle: true,
+              title: Text(
+                'Join Timebank',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  // fontWeight: FontWeight.w500,
                 ),
               ),
-              body: SingleChildScrollView(
-                child: Container(child: timebankStreamBuilder(context)),
-              ),
+            ),
+            body: SingleChildScrollView(
+              child: Container(child: timebankStreamBuilder(context)),
             ),
           )
-        : MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
+        : Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
           );
   }
@@ -377,10 +373,6 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                           fontSize: dialogButtonSize, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      Navigator.of(dialogContext).pop();
-
-                      showProgressDialog();
-
                       print("Timebank Model $timebankModel");
                       joinRequestModel.userId =
                           communityCreateEditSnapshot.loggedinuser.sevaUserID;
@@ -392,6 +384,10 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                       joinRequestModel.accepted = false;
 
                       if (formkey.currentState.validate()) {
+                        Navigator.of(dialogContext).pop();
+
+                        showProgressDialog();
+
                         await updateJoinRequest(model: joinRequestModel);
 
                         JoinRequestNotificationModel joinReqModel =
