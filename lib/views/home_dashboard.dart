@@ -90,6 +90,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+ //   print("currrrrrrr cominty-------- ${SevaCore.of(context).loggedInUser.currentCommunity}");
+
     return BlocProvider(
       bloc: _homeDashBoardBloc,
       child: Scaffold(
