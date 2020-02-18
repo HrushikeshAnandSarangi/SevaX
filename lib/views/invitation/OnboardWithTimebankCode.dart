@@ -80,26 +80,30 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   @override
   Widget build(BuildContext context) {
     return isDataLoaded
-        ? Scaffold(
-            key: _scaffold,
-            appBar: AppBar(
-              centerTitle: true,
-              title: Text(
-                'Join Timebank',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  // fontWeight: FontWeight.w500,
+        ? MaterialApp(
+            home: Scaffold(
+              key: _scaffold,
+              appBar: AppBar(
+                centerTitle: true,
+                title: Text(
+                  'Join Timebank',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 18,
+                    // fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            ),
-            body: SingleChildScrollView(
-              child: Container(child: timebankStreamBuilder(context)),
+              body: SingleChildScrollView(
+                child: Container(child: timebankStreamBuilder(context)),
+              ),
             ),
           )
-        : Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+        : MaterialApp(
+            home: Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
           );
   }

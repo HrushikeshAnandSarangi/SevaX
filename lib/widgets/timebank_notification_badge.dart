@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/notifications_model.dart';
+import 'package:sevaexchange/utils/data_managers/notifications_data_manager.dart';
 
 class GetActiveTimebankNotifications extends StatelessWidget {
   final String timebankId;
@@ -8,14 +9,11 @@ class GetActiveTimebankNotifications extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: Firestore.instance
-          .collection("timebanknew")
-          .document(timebankId)
-          .collection("notifications")
-          .where("isRead", isEqualTo: false)
-          .snapshots(),
-      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    return StreamBuilder<List<NotificationsModel>>(
+      stream: getNotificationsForTimebank(
+        timebankId: timebankId,
+      ),
+      builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -25,7 +23,12 @@ class GetActiveTimebankNotifications extends StatelessWidget {
             color: Colors.black,
           );
         }
-        if (snapshot.data.documents.length > 0) {
+
+        List<NotificationsModel> notifications = snapshot.data;
+
+        notifications.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+
+        if (notifications.length > 0) {
           return Container(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +37,7 @@ class GetActiveTimebankNotifications extends StatelessWidget {
                   child: Icon(Icons.notifications_active, color: Colors.red),
                 ),
                 Text(
-                  "${snapshot.data.documents.length}",
+                  "${notifications == null ? 0 : notifications.length}",
                   style: TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
