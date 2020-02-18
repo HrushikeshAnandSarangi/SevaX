@@ -449,19 +449,15 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
 
-    if((loggedInUser.currentCommunity?.isEmpty??false) && loggedInUser.communities.length ==1){
-      
-
+    if((loggedInUser.currentCommunity?.isEmpty??false) && loggedInUser.communities.length == 1){
+      print("-------------------------------------------------");  
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
-      SevaCore.of(context).loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
-
-      await Firestore.instance.collection("users").document(loggedInUser.email).updateData({
-    'currentCommunity': loggedInUser.communities[0],
-
-    
-    
+      await Firestore.instance.collection("users").document(loggedInUser.email).updateData({'currentCommunity': loggedInUser.communities[0],
   });
 
+    }else {
+      print("---------------------NO----------------------------");  
+      
     }
     if (loggedInUser == null) {
       loadingMessage = 'Welcome to the world of communities';
