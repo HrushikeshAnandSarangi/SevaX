@@ -22,9 +22,9 @@ class ManageTimebankSeva extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             getTitle,
-            SizedBox(
-              height: 30,
-            ),
+            // SizedBox(
+            //   height: 30,
+            // ),
             // viewRequests(context: context),
             viewAcceptedOffers(context: context),
             manageTimebankCodes(context: context),
