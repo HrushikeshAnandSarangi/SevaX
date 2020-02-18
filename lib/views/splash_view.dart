@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
@@ -19,7 +20,7 @@ import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
-import 'home_page_router.dart';
+
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
@@ -447,6 +448,21 @@ class _SplashViewState extends State<SplashView> {
     }
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
+
+    if((loggedInUser.currentCommunity?.isEmpty??false) && loggedInUser.communities.length ==1){
+      
+
+      loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
+      SevaCore.of(context).loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
+
+      await Firestore.instance.collection("users").document(loggedInUser.email).updateData({
+    'currentCommunity': loggedInUser.communities[0],
+
+    
+    
+  });
+
+    }
     if (loggedInUser == null) {
       loadingMessage = 'Welcome to the world of communities';
       _navigateToLoginPage();
@@ -840,7 +856,7 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-  Future updateUserData(UserModel user) async {
+  Future updateUserData(UserModel user) async {         
     await fireStoreManager.updateUser(user: user);
   }
 

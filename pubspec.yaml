@@ -78,9 +78,9 @@ dependencies:
   cached_network_image: ^2.0.0
   curved_navigation_bar: ^0.3.1
   autocomplete_textfield: ^1.7.3
+  badges: ^1.1.0
 
   smooth_star_rating: 1.0.4+2
-
 
 dev_dependencies:
   flutter_test:
@@ -88,7 +88,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
 
   assets:
     - lib/assets/splash_images/1.jpg
@@ -150,7 +149,6 @@ flutter:
     - lib/assets/images/yang_in_crowd.png
     - lib/assets/images/yang_speaking.jpg
     - lib/assets/images/yang_standing.jpg
-
 
     # - lib/assets/images/andrew_yang_three.jpg
 

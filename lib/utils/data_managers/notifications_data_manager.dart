@@ -151,13 +151,14 @@ Future<void> createRequestApprovalNotification({
     sevaUserId: model.targetUserId,
   );
 
-  // if (!model.directToMember) {
-  //   var timebankModel = await fetchTimebankData(model.timebankId);
-  //   var requetsModel = RequestModel.fromMap(model.data);
-  //   requetsModel.photoUrl = timebankModel.photoUrl;
-  //   requetsModel.title = timebankModel.name;
-  //   model.data = requetsModel.toMap();
-  // }
+  var timebankModel = await fetchTimebankData(model.timebankId);
+
+  if (timebankModel.protected) {
+    var requestModel = RequestModel.fromMap(model.data);
+    requestModel.fullName = timebankModel.name;
+    requestModel.photoUrl = timebankModel.photoUrl;
+    model.data = requestModel.toMap();
+  }
 
   !model.directToMember
       ? Firestore.instance
@@ -351,17 +352,25 @@ Stream<List<NotificationsModel>> getNotifications({
           } else
             notifications.add(model);
         });
+
+        notifications.sort((a, b) => b.timestamp > a.timestamp ? 1 : -1);
         notificationSink.add(notifications);
-        print(
-            "${notifications.length}----------------------------------------");
       },
     ),
   );
 }
 
+Future updateUserCommunity({
+  String communityId,
+  String userEmail,
+}) async {
+  await Firestore.instance.collection('users').document(userEmail).updateData({
+    'communities': FieldValue.arrayUnion([communityId]),
+  });
+}
+
 Stream<List<NotificationsModel>> getNotificationsForTimebank({
   String timebankId,
-  @required String communityId,
 }) async* {
   var data = Firestore.instance
       .collection('timebanknew')
@@ -382,13 +391,19 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
           );
           if (FlavorConfig.appFlavor != Flavor.APP) {
             if (model.type != NotificationType.TransactionDebit)
+              // for other falvour of the app except
               notifications.add(model);
-          } else
-            notifications.add(model);
+          } else {
+            if (model.type == NotificationType.RequestAccept ||
+                model.type == NotificationType.JoinRequest ||
+                model.type == NotificationType.RequestCompleted) {
+              notifications.add(model);
+            }
+          }
         });
+        notifications.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
+
         notificationSink.add(notifications);
-        print(
-            "${notifications.length}----------------------------------------");
       },
     ),
   );

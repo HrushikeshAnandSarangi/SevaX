@@ -1,11 +1,12 @@
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sevaexchange/base/base_service.dart';
 import 'package:meta/meta.dart';
+import 'package:sevaexchange/base/base_service.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EmailAuthenticationService extends BaseService {
   FirebaseAuth _firebaseAuth;
@@ -56,8 +57,17 @@ class EmailAuthenticationService extends BaseService {
       )) as FirebaseUser;
     } on PlatformException catch (error) {
       log.e('register: Exception ${error.toString()}');
+      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+        /// `foo@bar.com` has alread been registered.
+        print(" ${emailId} already registered");
+      }
       throw error;
     } catch (error) {
+      if (error is PlatformException) {
+        if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+          print(" ${emailId} already registered");
+        }
+      }
       log.e('register: error ${error.toString()}');
       throw error;
     }

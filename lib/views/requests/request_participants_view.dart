@@ -8,6 +8,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart'
     as FirestoreRequestManager;
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -175,11 +176,12 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  Icon(
-                    Icons.chat_bubble,
-                    color: Colors.blueGrey,
-                    size: 35,
-                  ),
+                  // Icon(
+                  
+                  //   Icons.chat_bubble,
+                  //   color: Colors.blueGrey,
+                  //   size: 35,
+                  // ),
                 ],
               ),
               Expanded(
@@ -205,10 +207,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                             elevation: 5,
                             onPressed: () async {
                               approveMemberForVolunteerRequest(
-                                  model: requestModel,
-                                  notificationId: "sampleID",
-                                  user: userModel);
-                              print("Action completed");
+                                model: requestModel,
+                                notificationId: Utils.getUuid(),
+                                user: userModel,
+                                context: context,
+                              );
                             },
                             child: const Text('Approve',
                                 style: TextStyle(fontSize: 12)),
@@ -390,9 +393,10 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           onPressed: () async {
                             // Once approved
                             approveMemberForVolunteerRequest(
-                                model: requestModel,
-                                notificationId: notificationId,
-                                user: userModel);
+                              model: requestModel,
+                              notificationId: notificationId,
+                              user: userModel,
+                            );
                             Navigator.pop(viewContext);
                           },
                         ),
@@ -453,21 +457,13 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     RequestModel model,
     UserModel user,
     String notificationId,
+    @required BuildContext context,
   }) {
     List<String> approvedUsers = model.approvedUsers;
-//    List<String> initialAccpetors = model.acceptors;
-//    List<String> accpetors = [];
-//    for (var i = 0; i < initialAccpetors.length; i++) {
-//      if (initialAccpetors[i].trim() != user.email.trim()) {
-//        accpetors.add(initialAccpetors[i].trim());
-//      }
-//    }
     Set<String> acceptedSet = approvedUsers.toSet();
-//    Set<String> acceptorsSet = accpetors.toSet();
 
     acceptedSet.add(user.email);
     model.approvedUsers = acceptedSet.toList();
-//    model.acceptors = acceptorsSet.toList();
 
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;

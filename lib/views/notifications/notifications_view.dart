@@ -169,12 +169,14 @@ class NotificationsView extends State<NotificationViewHolder> {
                 // TODO: Handle this case.
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
+                //  return Text('jhb');
                 return getNotificationCredit(
                     model, notification.senderUserId, notification.id);
                 break;
               case NotificationType.TransactionDebit:
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
+                // return Text('ko');
                 return getNotificationDebit(
                     model, notification.senderUserId, notification.id);
                 break;
@@ -270,8 +272,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-        stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+        future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -342,8 +344,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-        stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+        future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -366,7 +368,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(user.photoURL),
                 ),
-                title: Text(''),
+                title: Text('Debited'),
                 subtitle: RichText(
                   text: TextSpan(
                     children: [
@@ -470,8 +472,8 @@ class NotificationsView extends State<NotificationViewHolder> {
       String notificationId,
       String requestid,
       List<NotificationsModel> notifications) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -670,8 +672,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -984,7 +986,9 @@ class NotificationsView extends State<NotificationViewHolder> {
     ChatModel chatModel = ChatModel();
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
+    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     chatModel.timebankId = widget.timebankId;
+
     createChat(chat: chatModel);
 
     Navigator.push(
@@ -1089,7 +1093,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/approved.png")),
-          subtitle: Text('Request approved by ${model.fullName.toLowerCase()}'),
+          subtitle: Text('Request approved by ${model.fullName}'),
         ),
       ),
     );
@@ -1133,7 +1137,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/profile.png")),
-          subtitle: Text('Request rejected by ${model.fullName.toLowerCase()}'),
+          subtitle: Text('Request rejected by ${model.fullName}'),
         ),
       ),
     );
@@ -1160,60 +1164,64 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(snapshot.error.toString()),
-          );
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-
-        UserModel user = snapshot.data;
-        return Dismissible(
-          background: dismissibleBackground,
-          key: Key(Utils.getUuid()),
-          onDismissed: (direction) {
-            String userEmail = SevaCore.of(context).loggedInUser.email;
-            FirestoreManager.readUserNotification(notificationId, userEmail);
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text(model.title),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              subtitle: Text('Task completion rejected by ${user.fullname}'),
-              onTap: () {
-                String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-                List users = [user.email, loggedInEmail];
-                users.sort();
-                ChatModel chatModel = ChatModel();
-                chatModel.user1 = users[0];
-                chatModel.user2 = users[1];
-                chatModel.timebankId = widget.timebankId;
-
-                createChat(chat: chatModel);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChatView(
-                            useremail: user.email,
-                            chatModel: chatModel,
-                          )),
-                );
-              },
-            ),
-          ),
-        );
+    return Dismissible(
+      background: dismissibleBackground,
+      key: Key(Utils.getUuid()),
+      onDismissed: (direction) {
+        String userEmail = SevaCore.of(context).loggedInUser.email;
+        FirestoreManager.readUserNotification(notificationId, userEmail);
       },
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          title: Text(model.title),
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(model.photoUrl),
+          ),
+          subtitle: Text('Task completion rejected by ${model.fullName}'),
+          onTap: () {
+            // hibernated for release, check timebank protection status
+            // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+            // List users = [model.timebankId, loggedInEmail];
+            // users.sort();
+            // ChatModel chatModel = ChatModel();
+            // chatModel.communityId =
+            //     SevaCore.of(context).loggedInUser.currentCommunity;
+            // chatModel.user1 = users[0];
+            // chatModel.user2 = users[1];
+            // chatModel.timebankId = widget.timebankId;
+
+            // createChat(chat: chatModel);
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //       builder: (context) => ChatView(
+            //             useremail: model.timebankId,
+            //             chatModel: chatModel,
+            //           )),
+            // );
+          },
+        ),
+      ),
     );
+    // return StreamBuilder<UserModel>(
+    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       return Center(
+    //         child: Text(snapshot.error.toString()),
+    //       );
+    //     }
+
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return notificationShimmer;
+    //     }
+
+    //     UserModel user = snapshot.data;
+
+    //   },
+    // );
   }
 
   Future<http.Response> scheduleNotification(
@@ -1238,8 +1246,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   Widget getNotificationAcceptedWidget(
       RequestModel model, String userId, String notificationId) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(

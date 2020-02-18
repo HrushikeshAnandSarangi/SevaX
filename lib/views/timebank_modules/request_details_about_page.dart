@@ -54,6 +54,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   void initState() {
     super.initState();
     print("fullname ${widget.requestItem.fullName}");
+
   }
 
   @override
@@ -200,7 +201,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     subtitle: FutureBuilder<String>(
                       future: _getLocation(
                         widget.requestItem.location.latitude,
-                        widget.requestItem.location.latitude,
+                        widget.requestItem.location.longitude,
                       ),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
