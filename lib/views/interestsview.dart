@@ -1,7 +1,7 @@
 // Lecagy code Not getting used
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/views/home_page_router.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
