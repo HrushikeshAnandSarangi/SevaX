@@ -285,6 +285,8 @@ class UserModel extends DataModel {
     }
     if (this.communities != null && this.communities.isNotEmpty) {
       object['communities'] = this.communities;
+    } else {
+      object['communities'] = [];
     }
     if (this.favoriteByTimeBank != null && this.favoriteByTimeBank.isNotEmpty) {
       object['favoriteByTimeBank'] = this.favoriteByTimeBank;

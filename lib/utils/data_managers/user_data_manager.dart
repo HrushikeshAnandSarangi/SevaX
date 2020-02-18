@@ -23,63 +23,11 @@ Future<void> createUser({
 Future<void> updateUser({
   @required UserModel user,
 }) async {
-  //print(user.toMap());
-
   return await Firestore.instance
       .collection('users')
       .document(user.email)
-      .updateData(user.toMap());
+      .setData(user.toMap(), merge: true);
 }
-//Future<void> updateTimebank({
-//  @required TimebankModel timebankModel,
-//}) async {
-//  //print(user.toMap());
-//
-//  return await Firestore.instance
-//      .collection('timebanknew')
-//      .document(timebankModel.id)
-//      .updateData(timebankModel.toMap());
-//}
-
-//Future<void> addReportUser({
-//  @required String userId,
-//}) async {
-////print(user.toMap());
-//
-//return await Firestore.instance
-//    .collection('reportedUsersList')
-//.document(user.email)
-//.updateData(user.toMap());
-//}
-
-//Future<void> updateUserAvailability({
-//  @required UserModel user,
-//}) async {
-//  print("upadte user availability feature");
-//  print(user.availability.weekArray);
-////  return await Firestore.instance.collection("seva_stage").add({
-////    "Availability" : "abcd"
-////  });
-//  return await Firestore.instance
-//      .collection('users')
-//      .document(user.email)
-//      .updateData({"availability":{
-//    "lat_lng":user.availability.lat_lng,
-//    "location":user.availability.location,
-//    "distnace":user.availability.distnace,
-//    "accurance_number":user.availability.accurance_number,
-//    "endsData":user.availability.endsData,
-//    "endsStatus":user.availability.endsStatus,
-//    "repeatAfterStr":user.availability.repeatAfterStr,
-//    "repeatNumber":user.availability.repeatNumber,
-//    //"weekArray":user.availability.weekArray,
-//
-//  }});
-//  // return await Firestore.instance
-//  //     .collection('users')
-//  //     .document(user.email)
-//  //     .setData({"Availability":user.availability.toMap()});
-//}
 
 Future<Map<String, UserModel>> getUserForUserModels(
     {@required List<String> admins}) async {

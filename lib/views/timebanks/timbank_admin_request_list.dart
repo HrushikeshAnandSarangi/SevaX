@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -662,6 +661,10 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         communities.add(currentCommunity);
       }
       user.communities = communities;
+      if (user.currentCommunity == '') {
+        user.currentCommunity =
+            SevaCore.of(context).loggedInUser.currentCommunity;
+      }
       var insertMembers = model.members.contains(user.sevaUserID);
       print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
       var memberList = List<String>();
@@ -686,14 +689,19 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     }
     UserModel user = await getUserForId(sevaUserId: userId);
     var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
+    print("Current community:$currentCommunity");
     var communities = List<String>();
-    if (user.communities != null) {
-      for (var i = 0; i < user.communities.length; i++) {
-        if (user.communities[i] != currentCommunity) {
-          communities.add(user.communities[i]);
-        }
-      }
-      user.communities = communities;
+    if (user.communities != null && user.communities.length > 0) {
+      communities.addAll(user.communities);
+      communities.remove(currentCommunity);
+    }
+    user.communities = communities.length > 0 ? communities : null;
+
+    if (user.communities == null) {
+      user.currentCommunity = '';
+    } else if (user.communities.contains(currentCommunity)) {
+      user.currentCommunity =
+          user.communities.length > 0 ? user.communities[0] : '';
     }
     var communityModel =
         await getCommunityDetailsByCommunityId(communityId: currentCommunity);
@@ -1035,15 +1043,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     await FirestoreManager.updateTimebank(timebankModel: model);
     resetAndLoad();
   }
-}
-
-Future updateUserCommunity({
-  String communityId,
-  String userEmail,
-}) async {
-  await Firestore.instance.collection("users").document(userEmail).updateData({
-    'communities': FieldValue.arrayUnion([communityId]),
-  });
 }
 
 enum Actions {
