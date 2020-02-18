@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
+import 'package:sevaexchange/views/splash_view.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 
 import '../../../../flavor_config.dart';
@@ -43,40 +46,58 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: FlavorConfig.values.theme,
-      home: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height - 65,
-              child: pages[selected],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 55,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[300],
-                      blurRadius: 100.0,
+      home: StreamBuilder(
+          stream: Firestore.instance
+              .collection("users")
+              .document(SevaCore.of(context).loggedInUser.email)
+              .snapshots(),
+          builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            UserModel user = UserModel.fromMap(snapshot.data.data);
+            print('---->>>here${user.email}');
+            if (snapshot.hasData && snapshot.data != null) {
+              if (user.communities == null || user.communities.isEmpty) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => SplashView()),
+                      ((Route<dynamic> route) => false));
+                });
+              }
+            }
+            return Scaffold(
+              body: Stack(
+                children: <Widget>[
+                  Container(
+                    height: MediaQuery.of(context).size.height - 65,
+                    child: pages[selected],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 55,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey[300],
+                            blurRadius: 100.0,
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: CustomBottomNavigationBar(
+                      selected: selected,
+                      onChanged: (index) {
+                        selected = index;
+                        setState(() {});
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: CustomBottomNavigationBar(
-                selected: selected,
-                onChanged: (index) {
-                  selected = index;
-                  setState(() {});
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 }
