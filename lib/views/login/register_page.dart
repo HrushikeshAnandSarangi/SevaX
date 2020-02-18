@@ -645,7 +645,6 @@ class _RegisterPageState extends State<RegisterPage>
           action: SnackBarAction(
             label: 'Dismiss',
             onPressed: () {
-              resetPassword(email);
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
           ),
@@ -697,6 +696,18 @@ class _RegisterPageState extends State<RegisterPage>
             label: 'Change password',
             onPressed: () {
               resetPassword(email);
+              _scaffoldKey.currentState.hideCurrentSnackBar();
+            },
+          ),
+        ),
+      );
+    } else if (error.message.contains("already")) {
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('This email is already registered'),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () {
               _scaffoldKey.currentState.hideCurrentSnackBar();
             },
           ),
