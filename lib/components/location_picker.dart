@@ -235,6 +235,7 @@ class _LocationPickerState extends State<LocationPicker> {
         myLocationEnabled: true,
         mapType: MapType.normal,
         compassEnabled: true,
+        padding: EdgeInsets.only(bottom: 150.0),
         markers: markers,
         onCameraMove: (position) {
           setState(() {
