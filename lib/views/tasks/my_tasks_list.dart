@@ -500,7 +500,7 @@ class TaskCardViewState extends State<TaskCardView> {
                               ),
                               validator: (value) {
                                 if (value == null) {
-                                  return 'Select hours';
+                                  return 'Enter hours';
                                 }
                                 if (value.isEmpty) {
                                   return 'Select hours';
@@ -524,10 +524,10 @@ class TaskCardViewState extends State<TaskCardView> {
                           ),
                           Expanded(
                             child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                labelText: 'Minutes',
-                                hintText: 'Minutes',
-                              ),
+                              // decoration: InputDecoration(
+                              //   labelText: 'Minutes',
+                              //   hintText: 'Minutes',
+                              // ),
                               validator: (value) {
                                 if (value == null) {
                                   return 'Minutes cannot be null';
@@ -539,7 +539,7 @@ class TaskCardViewState extends State<TaskCardView> {
                               },
                               items: minuteList.map((value) {
                                 return DropdownMenuItem(
-                                    child: Text(value), value: value);
+                                    child: Text(value +" Minutes"), value: value);
                               }).toList(),
                               onChanged: (value) {
                                 setState(() {
