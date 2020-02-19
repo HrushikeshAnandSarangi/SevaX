@@ -99,7 +99,7 @@ class RequestCardWidget extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      userModel.fullname,
+                      userModel.fullname ?? "Name is not available",
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -141,28 +141,9 @@ class RequestCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-//              SmoothStarRating(
-//                  allowHalfRating: true,
-//                  onRatingChanged: (v) {
-////                    rating = v;
-////                    setState(() {});
-//                  },
-//                  starCount: 5,
-//                  rating: 3.5,
-//                  size: 20.0,
-//                  filledIconData: Icons.star,
-//                  halfFilledIconData: Icons.star_half,
-//                  defaultIconData: Icons.star_border,
-//                  color: Colors.orangeAccent,
-//                  borderColor: Colors.orangeAccent,
-//                  spacing: 1.0
-//              ),
-//              SizedBox(
-//                  height: 10
-//              ),
               Expanded(
                 child: Text(
-                  userModel.bio,
+                  userModel.bio ?? "Bio is not available",
                   maxLines: 3,
                   style: TextStyle(
                     color: Colors.black,
@@ -170,7 +151,6 @@ class RequestCardWidget extends StatelessWidget {
                   ),
                 ),
               ),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[

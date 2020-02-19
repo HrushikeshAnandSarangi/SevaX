@@ -87,11 +87,20 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
     print("hey ${dataMap}");
     timeBankIdList = dataMap["timebanks"];
   });
+
+  var comm = await getCommunityDetailsByCommunityId(communityId: communityId);
+
+  print("+===========================${comm.primary_timebank}");
+
   print(timeBankIdList);
   for (int i = 0; i < timeBankIdList.length; i += 1) {
-    TimebankModel timeBankModel = await getTimeBankForId(
-      timebankId: timeBankIdList[i],
-    );
+    if (timeBankIdList[i] != comm.primary_timebank) {
+      TimebankModel timeBankModel = await getTimeBankForId(
+        timebankId: timeBankIdList[i],
+      );
+      timeBankModelList.add(timeBankModel);
+      print("hey ${timeBankModel.admins}");
+    }
     /*if(timeBankModel.members.contains(sevaUserId)){
       timeBankModel.joinStatus=CompareToTimeBank.JOIN;
     } else if(timeBankModel.admins.contains(sevaUserId)){
@@ -100,8 +109,6 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
       timeBankModel.joinStatus=CompareToTimeBank.JOIN;
     }*/
 
-    timeBankModelList.add(timeBankModel);
-    print("hey ${timeBankModel.admins}");
   }
   return timeBankModelList;
 }

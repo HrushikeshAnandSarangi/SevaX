@@ -401,7 +401,7 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
             }
           }
         });
-        notifications.sort((a, b) => a.timestamp > b.timestamp ? 1 : -1);
+        notifications.sort((a, b) => b.timestamp > a.timestamp ? 1 : -1);
 
         notificationSink.add(notifications);
       },

@@ -48,7 +48,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   static const String REJECTED = "Rejected";
 
   bool hasError = false;
-  String errorMessage1 = '';
+  String errorMessage1 = '';  
   List<JoinRequestModel> _joinRequestModels;
   bool isDataLoaded = false;
   @override
@@ -119,7 +119,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   Widget getTimebanks({BuildContext context}) {
     Size size = MediaQuery.of(context).size;
-
     List<TimebankModel> timebankList = [];
     return StreamBuilder<CommunityCreateEditController>(
         stream: createEditCommunityBloc.createEditCommunity,
