@@ -157,9 +157,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   String id =
                       skills.keys.firstWhere((k) => skills[k] == suggestion);
                   _selectedSkills[id] = suggestion;
-                  setState(() {
-
-                  });
+                  setState(() {});
                 }
               },
             ),
@@ -173,15 +171,17 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   children: _selectedSkills.values
                       .toList()
                       .map(
-                        (value) => CustomChip(
-                          title: value,
-                          onDelete: () {
-                            String id = skills.keys
-                                .firstWhere((k) => skills[k] == value);
-                            _selectedSkills.remove(id);
-                            setState(() {});
-                          },
-                        ),
+                        (value) => value == null
+                            ? Container()
+                            : CustomChip(
+                                title: value,
+                                onDelete: () {
+                                  String id = skills.keys
+                                      .firstWhere((k) => skills[k] == value);
+                                  _selectedSkills.remove(id);
+                                  setState(() {});
+                                },
+                              ),
                       )
                       .toList(),
                 ),
