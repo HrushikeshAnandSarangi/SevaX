@@ -281,9 +281,8 @@ class _EditProfilePageState extends State<EditProfilePage>
                               //key: _formKey,
                               decoration:
                                   InputDecoration(hintText: 'Enter bio'),
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(150),
-                              ],
+                              maxLength: 150,
+                              maxLengthEnforced: true,
                               keyboardType: TextInputType.text,
                               textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(fontSize: 17.0),
