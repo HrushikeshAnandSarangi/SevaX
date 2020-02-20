@@ -136,9 +136,16 @@ class _LocationPickerState extends State<LocationPicker> {
         ],
       ),
       body: Stack(children: [
-        mapWidget,
-        // markLocationWidget,
-        crosshair,
+        Padding(
+          padding: EdgeInsets.only(bottom: 150.0),
+          child: Stack(
+            children: <Widget>[
+              mapWidget,
+              // markLocationWidget,
+              crosshair,
+            ],
+          ),
+        ),
         LocationConfimationCard(
           address: address,
           point: point,

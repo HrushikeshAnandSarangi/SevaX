@@ -54,11 +54,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
-        leading: BackButton(
-          onPressed: () {
-            widget.onBacked();
-          },
-        ),
         title: Text(
           'Interests',
           style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
+import 'package:sevaexchange/views/manage/edit_timebank_view.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 import '../admin_viewe_requests.dart';
@@ -27,9 +28,15 @@ class ManageTimebankSeva extends StatelessWidget {
             // ),
             // viewRequests(context: context),
             viewAcceptedOffers(context: context),
+
             manageTimebankCodes(context: context),
+            vieweditPage(context: context),
+
+
           ],
+
         ),
+
       ),
     );
   }
@@ -82,8 +89,34 @@ class ManageTimebankSeva extends StatelessWidget {
       ),
     );
   }
+Widget vieweditPage({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditTimeBank(
+              timebankId: timebankModel.id,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Edit Timebank',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget manageTimebankCodes({BuildContext context}) {
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
