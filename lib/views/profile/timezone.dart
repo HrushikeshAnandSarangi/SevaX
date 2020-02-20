@@ -34,6 +34,8 @@ class TimezoneList extends StatefulWidget {
 class TimezoneListState extends State<TimezoneList> {
   List<TimeZoneModel> timezonelist = [];
   String isSelected;
+//  ScrollController _scrollController = new ScrollController();
+
   @override
   void initState() {
     timezonelist = [
@@ -77,7 +79,9 @@ class TimezoneListState extends State<TimezoneList> {
           offsetFromUtc: 12,
           timezoneAbb: 'WIT',
           timezoneName: 'Wake Island Time Zone'),
+
       //europian timezones
+
       TimeZoneModel(
           offsetFromUtc: 0,
           timezoneAbb: 'WET',
@@ -105,12 +109,6 @@ class TimezoneListState extends State<TimezoneList> {
         offsetFromUtc: 11,
         timezoneAbb: 'VT',
         timezoneName: 'Victoria Time',
-      ),
-
-      TimeZoneModel(
-        offsetFromUtc: 11,
-        timezoneAbb: 'TT',
-        timezoneName: 'Tasmania Time',
       ),
 
       TimeZoneModel(
@@ -586,6 +584,7 @@ class TimezoneListState extends State<TimezoneList> {
           isSelected = userModel.timezone;
           return ListView.builder(
             itemCount: timezonelist.length,
+//            controller: _scrollController,
             itemBuilder: (context, index) {
               TimeZoneModel model = timezonelist.elementAt(index);
               DateFormat format = DateFormat('dd/MMM/yyyy HH:mm');
