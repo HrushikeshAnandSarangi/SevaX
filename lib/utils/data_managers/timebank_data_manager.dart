@@ -237,7 +237,25 @@ Stream<TimebankModel> getTimebankModelStream(
     ),
   );
 }
+  /// Get a community data as a Stream
+Stream<CommunityModel> getCommunityModelStream(
+    {@required String communityId}) async* {
+  print('---->>> $communityId');
+  var data = Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .snapshots();
 
+  yield* data.transform(
+    StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
+      handleData: (snapshot, modelSink) {
+        CommunityModel model = CommunityModel(snapshot.data);
+        model.id = snapshot.documentID;
+        modelSink.add(model);
+      },
+    ),
+  );
+}
 Future<List<String>> getAllTimebankIdStream(
     {@required String timebankId}) async {
   return Firestore.instance
