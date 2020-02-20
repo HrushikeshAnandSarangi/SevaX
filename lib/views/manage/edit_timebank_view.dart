@@ -1,29 +1,23 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/location_picker.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/utils/search_manager.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/utils/search_manager.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../main_app.dart';
 
@@ -31,11 +25,9 @@ class EditTimeBank extends StatefulWidget {
   final String timebankId;
 
   const EditTimeBank({Key key, this.timebankId}) : super(key: key);
-  
+
   @override
   _EditTimeBankState createState() => _EditTimeBankState();
-
-
 }
 
 class _EditTimeBankState extends State<EditTimeBank> {
@@ -118,206 +110,217 @@ class _EditTimeBankState extends State<EditTimeBank> {
   Map onActivityResult;
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<CommunityModel>(stream:  FirestoreManager.getCommunityModelStream(communityId: widget.timebankId),
-    builder: (context, snapshot){
-       if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return circularBar;
-        }
-         if (snapshot.hasData && snapshot.data != null) {
-        communityModel = snapshot.data;
+    return StreamBuilder<CommunityModel>(
+        stream: FirestoreManager.getCommunityModelStream(
+            communityId: widget.timebankId),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return circularBar;
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+            communityModel = snapshot.data;
 
-        print("snappppp ----- ${timebankModel.name}");
-      return Scaffold(
-      
-      body: Form(
-        key: _formKey,
-        child: editTimeBank,
-      ),
-    );
-         }
-    });
+            print("snappppp ----- ${timebankModel.name}");
+            return Scaffold(
+              body: Form(
+                key: _formKey,
+                child: editTimeBank,
+              ),
+            );
+          }
+        });
   }
+
   Widget get circularBar {
     return Center(
       child: CircularProgressIndicator(),
     );
   }
-  Widget get editTimeBank{
-        return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+
+  Widget get editTimeBank {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            'Timebank is where you can collaborate with your organization',
+            textAlign: TextAlign.center,
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: EdgeInsets.all(5.0),
+            child: Column(
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Text(
-                    'Timebank is where you can collaborate with your organization',
-                    textAlign: TextAlign.center,
+                TimebankAvatar(),
+                Text(''),
+                Text(
+                  'Timebank Logo',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
                   ),
                 ),
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: Column(
-                      children: <Widget>[
-                        TimebankAvatar(),
-                        Text(''),
-                        Text(
-                          'Timebank Logo',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        Text(communityImageError,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                              fontSize: 12,
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
-                headingText('Name your timebank'),
-                TextFormField(
-                  controller: searchTextController,
-                  onChanged: (value) {
-                    enteredName = value;
-                  },
-                  decoration: InputDecoration(
-                    errorText: errTxt,
-                    hintText: "Ex: Pets-in-town, Citizen collab",
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 1,
-                   initialValue: communityModel.name ?? '',
-                  onSaved: (value) => enteredName = value,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Timebank name cannot be empty';
-                    } else if (communityFound) {
-                      return 'Timebank name already exist';
-                    } else {
-                      enteredName = value;
-                      timebankModel.updateValueByKey('name', value);
-                      createEditCommunityBloc.onChange(timebankModel);
-                    }
+                Text(communityImageError,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                      fontSize: 12,
+                    ))
+              ],
+            ),
+          ),
+        ),
+        headingText('Name your timebank'),
+        TextFormField(
+          controller: searchTextController,
+          onChanged: (value) {
+            enteredName = value;
+          },
+          decoration: InputDecoration(
+            errorText: errTxt,
+            hintText: "Ex: Pets-in-town, Citizen collab",
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: 1,
+          initialValue: communityModel.name ?? '',
+          onSaved: (value) => enteredName = value,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Timebank name cannot be empty';
+            } else if (communityFound) {
+              return 'Timebank name already exist';
+            } else {
+              enteredName = value;
+              timebankModel.updateValueByKey('name', value);
+              createEditCommunityBloc.onChange(timebankModel);
+            }
 
-                    return null;
-                  },
-                ),
-                headingText('About'),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Ex: A bit more about your timebank',
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                   initialValue: communityModel.,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Tell us more about your timebank.';
-                    }
-                    timebankModel
-                        .updateValueByKey('missionStatement', value);
+            return null;
+          },
+        ),
+        headingText('About'),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: 'Ex: A bit more about your timebank',
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          initialValue: communityModel.name,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Tell us more about your timebank.';
+            }
+            timebankModel.updateValueByKey('missionStatement', value);
+            createEditCommunityBloc.onChange(timebankModel);
+            return null;
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.all(8),
+        ),
+        headingText('Timebank Members'),
+        Row(
+          children: <Widget>[
+            Text(
+              timebankModel.members.length.toString() ?? "0",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),
+            ),
+            FlatButton(
+              onPressed: () {},
+              child: Text(
+                "manage",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                    fontFamily: 'Europa'),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            headingText('Protected Timebank'),
+            Column(
+              children: <Widget>[
+                Divider(),
+                Checkbox(
+                  value: timebankModel.protected,
+                  onChanged: (bool value) {
+                    print(value);
+                    timebankModel.updateValueByKey('protected', value);
                     createEditCommunityBloc.onChange(timebankModel);
-                    return null;
+                    return "";
                   },
                 ),
-                Padding(padding: EdgeInsets.all(8),),
-                headingText('Timebank Members'),
-                Row(
-                  children: <Widget>[
-                  Text(timebankModel.members.length.toString() ?? "0",style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Europa'),),
-                  FlatButton(
-                    onPressed: (){
+              ],
+            ),
+          ],
+        ),
+        Text(
+          'With protected timebank, user to user transactions are disabled.',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+        headingText('Your timebank location.'),
+        Text(
+          'Timebank location will help your members to locate',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+        ),
+        Center(
+          child: FlatButton.icon(
+            icon: Icon(Icons.add_location),
+            label: Text(
+              (timebankModel.address == null ||
+                          timebankModel.address.isEmpty) &&
+                      selectedAddress == ''
+                  ? 'Add Location'
+                  : timebankModel.address,
+            ),
+            color: Colors.grey[200],
+            onPressed: () {
+              print("Location opened : $location");
+              Navigator.push(
+                context,
+                MaterialPageRoute<GeoFirePoint>(
+                  builder: (context) => LocationPicker(
+                    selectedLocation: location,
+                  ),
+                ),
+              ).then((point) {
+                if (point != null) {
+                  location = timebankModel.location = point;
+                  print(
+                      "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                }
+                _getLocation(timebankModel.location);
+                print('ReceivedLocation: ${timebankModel.location}');
+              });
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Container(
+            alignment: Alignment.center,
+            child: RaisedButton(
+              onPressed: () async {
+                // show a dialog
 
-                  },child: Text("manage",style: TextStyle(fontWeight: FontWeight.bold,
-          color: Colors.grey, fontFamily: 'Europa'),),),
-                ],),
-                Row(
-                  children: <Widget>[
-                    headingText('Protected Timebank'),
-                    Column(
-                      children: <Widget>[
-                        Divider(),
-                        Checkbox(
-                          value: timebankModel.protected,
-                          onChanged: (bool value) {
-                            print(value);
-                            timebankModel
-                                .updateValueByKey('protected', value);
-                            createEditCommunityBloc.onChange(timebankModel);
-                            return "";
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Text(
-                  'With protected timebank, user to user transactions are disabled.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-                headingText('Your timebank location.'),
-                Text(
-                  'Timebank location will help your members to locate',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                Center(
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.add_location),
-                    label: Text(
-                      (timebankModel.address == null ||
-                                  timebankModel.address.isEmpty) &&
-                              selectedAddress == ''
-                          ? 'Add Location'
-                          : timebankModel.address,
-                    ),
-                    color: Colors.grey[200],
-                    onPressed: () {
-                      print("Location opened : $location");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<GeoFirePoint>(
-                          builder: (context) => LocationPicker(
-                            selectedLocation: location,
-                          ),
-                        ),
-                      ).then((point) {
-                        if (point != null) {
-                          location = timebankModel.location = point;
-                          print(
-                              "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
-                        }
-                        _getLocation(timebankModel.location);
-                        print(
-                            'ReceivedLocation: ${timebankModel.location}');
-                      });
-                    },
-                  ),
-                ),
-               
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: RaisedButton(
-                      onPressed: () async {
-                        // show a dialog
-
-                        print(_formKey.currentState.validate());
+                print(_formKey.currentState.validate());
 
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
@@ -325,104 +328,103 @@ class _EditTimeBankState extends State<EditTimeBank> {
 //                              print("Found:$communityFound");
 //                              return;
 //                            }
-                        if (_formKey.currentState.validate()) {
-                          if (_billingInformationKey.currentState
-                              .validate()) {
-                            setState(() {
-                              this._billingDetailsError = '';
-                            });
-                            print(globals.timebankAvatarURL);
-                            if (globals.timebankAvatarURL == null) {
-                              setState(() {
-                                this.communityImageError =
-                                    'Timebank logo is mandatory';
-                              });
-                            } else {
-                              showProgressDialog();
+                if (_formKey.currentState.validate()) {
+                  if (_billingInformationKey.currentState.validate()) {
+                    setState(() {
+                      this._billingDetailsError = '';
+                    });
+                    print(globals.timebankAvatarURL);
+                    if (globals.timebankAvatarURL == null) {
+                      setState(() {
+                        this.communityImageError = 'Timebank logo is mandatory';
+                      });
+                    } else {
+                      showProgressDialog();
 
-                              setState(() {
-                                this.communityImageError = '';
-                              });
+                      setState(() {
+                        this.communityImageError = '';
+                      });
 
-                              // // creation of community;
-                              // snapshot.data.UpdateCommunityDetails(
-                              //   SevaCore.of(context).loggedInUser,
-                              //   globals.timebankAvatarURL,
-                              // );
-                              // // creation of default timebank;
-                              // snapshot.data.UpdateTimebankDetails(
-                              //   SevaCore.of(context).loggedInUser,
-                              //   globals.timebankAvatarURL,
-                              //   widget,
-                              // );
-                              // // updating the community with default timebank id
-                              // snapshot.data.community.timebanks =
-                              //     [snapshot.data.timebank.id].cast<String>();
+                      // // creation of community;
+                      // snapshot.data.UpdateCommunityDetails(
+                      //   SevaCore.of(context).loggedInUser,
+                      //   globals.timebankAvatarURL,
+                      // );
+                      // // creation of default timebank;
+                      // snapshot.data.UpdateTimebankDetails(
+                      //   SevaCore.of(context).loggedInUser,
+                      //   globals.timebankAvatarURL,
+                      //   widget,
+                      // );
+                      // // updating the community with default timebank id
+                      // snapshot.data.community.timebanks =
+                      //     [snapshot.data.timebank.id].cast<String>();
 
-                              // snapshot.data.community.primary_timebank =
-                              //     snapshot.data.timebank.id;
+                      // snapshot.data.community.primary_timebank =
+                      //     snapshot.data.timebank.id;
 
-                              // createEditCommunityBloc.createCommunity(
-                              //   snapshot.data,
-                              //   SevaCore.of(context).loggedInUser,
-                              // );
+                      // createEditCommunityBloc.createCommunity(
+                      //   snapshot.data,
+                      //   SevaCore.of(context).loggedInUser,
+                      // );
 
-                              // await Firestore.instance
-                              //     .collection("users")
-                              //     .document(
-                              //         SevaCore.of(context).loggedInUser.email)
-                              //     .updateData({
-                              //   'communities': FieldValue.arrayUnion(
-                              //       [snapshot.data.community.id]),
-                              //   'currentCommunity': snapshot.data.community.id
-                              // });
+                      // await Firestore.instance
+                      //     .collection("users")
+                      //     .document(
+                      //         SevaCore.of(context).loggedInUser.email)
+                      //     .updateData({
+                      //   'communities': FieldValue.arrayUnion(
+                      //       [snapshot.data.community.id]),
+                      //   'currentCommunity': snapshot.data.community.id
+                      // });
 
-                              // setState(() {
-                              //   SevaCore.of(context)
-                              //           .loggedInUser
-                              //           .currentCommunity =
-                              //       snapshot.data.community.id;
-                              // });
+                      // setState(() {
+                      //   SevaCore.of(context)
+                      //           .loggedInUser
+                      //           .currentCommunity =
+                      //       snapshot.data.community.id;
+                      // });
 
-                              Navigator.pop(dialogContext);
-                              _formKey.currentState.reset();
-                            //  _billingInformationKey.currentState.reset();
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                    builder: (context1) => MainApplication(
-                                      skipToHomePage: true,
-                                    ),
-                                  ),
-                                  (Route<dynamic> route) => false);
-                            }
-                          } else {
-                            setState(() {
-                              this._billingDetailsError =
-                                  'Please configure your billing details';
-                            });
-                          }
-                        } else {}
-                      },
-                      shape: StadiumBorder(),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(fontSize: 16.0, color: Colors.white),
-                      ),
-                      textColor: FlavorConfig.values.buttonTextColor,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 50),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 50),
-                  child: Text(
-                    '',
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ],
-            );
+                      Navigator.pop(dialogContext);
+                      _formKey.currentState.reset();
+                      //  _billingInformationKey.currentState.reset();
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context1) => MainApplication(
+                              skipToHomePage: true,
+                            ),
+                          ),
+                          (Route<dynamic> route) => false);
+                    }
+                  } else {
+                    setState(() {
+                      this._billingDetailsError =
+                          'Please configure your billing details';
+                    });
+                  }
+                } else {}
+              },
+              shape: StadiumBorder(),
+              child: Text(
+                'Save',
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
+              ),
+              textColor: FlavorConfig.values.buttonTextColor,
+            ),
+          ),
+        ),
+        SizedBox(height: 50),
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 50),
+          child: Text(
+            '',
+            textAlign: TextAlign.center,
+          ),
+        )
+      ],
+    );
   }
+
   Widget get createSevaX {
     var colums = StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
@@ -436,7 +438,6 @@ class _EditTimeBankState extends State<EditTimeBank> {
                   .updateValueByKey('address', selectedAddress);
               createEditCommunityBloc.onChange(snapshot.data);
             }
-            
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
@@ -451,7 +452,7 @@ class _EditTimeBankState extends State<EditTimeBank> {
     );
   }
 
-BuildContext dialogContext;
+  BuildContext dialogContext;
   void showProgressDialog() {
     showDialog(
         barrierDismissible: false,
@@ -529,8 +530,6 @@ BuildContext dialogContext;
           ])),
     );
   }
-
-  
 
   Future _getLocation(data) async {
     print('Timebank value:$data');
@@ -887,7 +886,4 @@ BuildContext dialogContext;
       duration: const Duration(milliseconds: 300),
     );
   }
-
- 
- 
 }
