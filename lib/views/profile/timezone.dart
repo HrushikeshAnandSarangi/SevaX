@@ -563,15 +563,17 @@ class TimezoneListState extends State<TimezoneList> {
       ),
     ];
     timezonelist.sort((a, b) {
-      return a.timezoneName.toLowerCase().compareTo(b.timezoneName.toLowerCase());
+      return a.timezoneName
+          .toLowerCase()
+          .compareTo(b.timezoneName.toLowerCase());
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Object>(
-        future: FirestoreManager.getUserForId(
+    return StreamBuilder<Object>(
+        stream: FirestoreManager.getUserForIdStream(
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -592,10 +594,6 @@ class TimezoneListState extends State<TimezoneList> {
 
               DateTime localtime =
                   timeInUtc.add(Duration(hours: model.offsetFromUtc));
-              //     String color = 'white';
-              // if(isSelected==model.timezoneAbb){
-              //    color='green';
-              // }
               return Card(
                 child: ListTile(
                   leading: getIcon(isSelected, model.timezoneName),
@@ -608,11 +606,11 @@ class TimezoneListState extends State<TimezoneList> {
                   ),
                   title: Text('${model.timezoneName}'),
                   subtitle: Text('${format.format(localtime)}'),
-                  onTap: () {
-                    setState(() {
+                  onTap: () async {
+                    if (userModel.timezone != model.timezoneName) {
                       userModel.timezone = model.timezoneName;
-                      updateUser(user: userModel);
-                    });
+                      await updateUser(user: userModel);
+                    }
                   },
                 ),
               );
@@ -633,7 +631,6 @@ class TimezoneListState extends State<TimezoneList> {
         ),
       );
     } else {
-//      print("inside else card");
       return null;
     }
   }
