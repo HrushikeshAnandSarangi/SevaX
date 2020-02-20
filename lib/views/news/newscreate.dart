@@ -232,14 +232,31 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             controller: subheadingController,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              labelStyle:
-                                  prefix0.TextStyle(color: Colors.black),
+                              labelStyle: prefix0.TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
                               hintText: 'Text, URL and Hashtags ',
                               labelText: 'What would you like to share',
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
-                                  const Radius.circular(0.0),
+                                  const Radius.circular(12.0),
+                                ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(12.0),
+                                ),
+                                borderSide: new BorderSide(
+                                  color: Colors.black,
+                                  width: 0.5,
+                                ),
+                              ),
+                              disabledBorder: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(12.0),
                                 ),
                                 borderSide: new BorderSide(
                                   color: Colors.black,
