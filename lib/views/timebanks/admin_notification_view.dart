@@ -19,7 +19,6 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
-import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AdminNotificationViewHolder extends StatefulWidget {
@@ -1163,7 +1162,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                               sevaUserId: userModel.sevaUserID,
                             );
                             model.accepted = false;
-                            model.operationTaken = false;
+                            model.operationTaken = true;
                             await updateJoinRequest(model: model);
                             await readTimeBankNotification(
                                 notificationId, widget.timebankId);
