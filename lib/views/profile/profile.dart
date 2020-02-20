@@ -292,9 +292,12 @@ class _ProfilePageState extends State<ProfilePage>
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(
-                              'Select a Timebank',
-                              style: TextStyle(fontSize: 18),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                'Select a Timebank',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                             IconButton(
                               icon: Icon(Icons.add_circle_outline),
@@ -303,7 +306,8 @@ class _ProfilePageState extends State<ProfilePage>
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         CreateEditCommunityView(
-                                      timebankId: FlavorConfig.values.timebankId,
+                                      timebankId:
+                                          FlavorConfig.values.timebankId,
                                       isFromFind: false,
                                     ),
                                   ),
@@ -1261,7 +1265,7 @@ class CommunityCard extends StatelessWidget {
               ),
             ),
           ),
-         // Icon(Icons.navigate_next),
+          // Icon(Icons.navigate_next),
           SizedBox(width: 10),
         ],
       ),

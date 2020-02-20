@@ -261,7 +261,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                   ],
                 ),
               ),
-              onTap: () {
+              onTap: () async {
                 return showDialog(
                   context: context,
                   builder: (BuildContext viewContext) {
@@ -281,14 +281,14 @@ class _EditProfilePageState extends State<EditProfilePage>
                               //key: _formKey,
                               decoration:
                                   InputDecoration(hintText: 'Enter bio'),
+                              maxLength: 150,
+                              maxLengthEnforced: true,
                               keyboardType: TextInputType.text,
                               textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(fontSize: 17.0),
                               initialValue: widget.userModel.bio,
                               onChanged: (value) {
-//                            if (value.isEmpty == false) {
-//                              this.usermodel.bio = value;
-//                            }
+                                print("${value.length}");
                               },
                               validator: (value) {
                                 if (value.isEmpty) {
