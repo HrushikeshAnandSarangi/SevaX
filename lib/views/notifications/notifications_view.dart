@@ -1472,7 +1472,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           child: Text(
                             'Decline',
                             style: TextStyle(
-                                color: Colors.white, fontFamily: 'Europa'),
+                                color: Colors.white,),
                           ),
                           onPressed: () async {
                             // request declined
