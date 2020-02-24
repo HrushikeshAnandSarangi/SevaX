@@ -31,12 +31,8 @@ class ManageTimebankSeva extends StatelessWidget {
 
             manageTimebankCodes(context: context),
             vieweditPage(context: context),
-
-
           ],
-
         ),
-
       ),
     );
   }
@@ -89,7 +85,8 @@ class ManageTimebankSeva extends StatelessWidget {
       ),
     );
   }
-Widget vieweditPage({BuildContext context}) {
+
+  Widget vieweditPage({BuildContext context}) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -116,7 +113,6 @@ Widget vieweditPage({BuildContext context}) {
   }
 
   Widget manageTimebankCodes({BuildContext context}) {
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
