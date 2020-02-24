@@ -7,10 +7,10 @@ import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
-import 'package:sevaexchange/utils/user_config.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
@@ -548,20 +548,20 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToEULA(loggedInUser);
     }
 
-    print("===?${!(UserConfig.prefs.getBool(UserConfig.skip_skill) ?? false)}");
-    if (!(UserConfig.prefs.getBool(UserConfig.skip_skill) ?? false) &&
+    print("===?${!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false)}");
+    if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
         loggedInUser.skills == null) {
       print("reached here------->><><> skill");
       await _navigateToSkillsView(loggedInUser);
     }
 
-    if (!(UserConfig.prefs.getBool(UserConfig.skip_interest) ?? false) &&
+    if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
         loggedInUser.interests == null) {
       print("reached here------->><><> interest");
       await _navigateToInterestsView(loggedInUser);
     }
 
-    if (!(UserConfig.prefs.getBool(UserConfig.skip_bio) ?? false) &&
+    if (!(AppConfig.prefs.getBool(AppConfig.skip_bio) ?? false) &&
         loggedInUser.bio == null) {
       print("reached here------->><><> bio");
       await _navigateToBioView(loggedInUser);
@@ -694,7 +694,7 @@ class _SplashViewState extends State<SplashView> {
           },
           onSkipped: () {
             Navigator.pop(context);
-            UserConfig.prefs.setBool(UserConfig.skip_skill, true);
+            AppConfig.prefs.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping skills';
@@ -769,7 +769,7 @@ class _SplashViewState extends State<SplashView> {
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
-            UserConfig.prefs.setBool(UserConfig.skip_interest, true);
+            AppConfig.prefs.setBool(AppConfig.skip_interest, true);
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping interests';
           },
@@ -792,7 +792,7 @@ class _SplashViewState extends State<SplashView> {
         }, onSkipped: () {
           Navigator.pop(context);
           loggedInUser.bio = '';
-          UserConfig.prefs.setBool(UserConfig.skip_bio, true);
+          AppConfig.prefs.setBool(AppConfig.skip_bio, true);
           updateUserData(loggedInUser);
           loadingMessage = 'Skipping bio';
         }, onBacked: () {

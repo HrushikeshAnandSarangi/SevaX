@@ -67,9 +67,10 @@ class _CompletedListState extends State<CompletedList> {
     return ListView.builder(
       // physics: NeverScrollableScrollPhysics(),
       itemCount: requestList.length,
-      reverse: true,
+
       itemBuilder: (context, index) {
-        RequestModel model = requestList.elementAt(index);
+        RequestModel model =
+            requestList.elementAt(requestList.length - index - 1);
 
         return Card(
           child: ListTile(
