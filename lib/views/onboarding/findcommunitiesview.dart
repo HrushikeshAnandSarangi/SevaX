@@ -38,11 +38,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     super.initState();
     String _searchText = "";
     final _textUpdates = StreamController<String>();
-
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
-
-    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
     Observable(_textUpdates.stream)
         .debounceTime(Duration(milliseconds: 400))
         .forEach((s) {
@@ -146,16 +143,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         searchTextController.text == null) {
       return Container();
     }
-
-    /*if (searchTextController.text.trim().isEmpty) {
-      return Expanded(
-        child: ClipOval(
-          child: FadeInImage.assetNetwork(
-              placeholder: 'lib/assets/images/search.png',
-              image: 'lib/assets/images/search.png'),
-        ),
-      );
-    } else */
 
     if (searchTextController.text.trim().length < 3) {
       print('Search requires minimum 3 characters');
@@ -276,13 +263,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
-          /*else if(snapshot.data==null){
-            return Expanded(
-              child: Center(
-                child: Text('No Timebank found'),
-              ),
-            );
-          }*/
           return Expanded(
             child: Text(""),
           );
@@ -356,21 +336,6 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         child: Container(
           child: Column(
             children: <Widget>[
-              // SizedBox(
-              //   width: 134,
-              //   child: RaisedButton(
-              //     onPressed: () {},
-              //     child: Text(
-              //       'Next',
-              //       style: Theme.of(context).primaryTextTheme.button,
-              //     ),
-              //     // color: Theme.of(context).accentColor,
-              //     // textColor: FlavorConfig.values.buttonTextColor,
-              //     // shape: StadiumBorder(),
-              //   ),
-              // ),
-              // SizedBox(height: 5),
-              // Text('Or'),
               RaisedButton(
                 child: Text(
                   'Create a Timebank',
@@ -399,137 +364,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       ),
     );
   }
-
-  /*Widget buildList() {
-    // ListView contains a group of widgets that scroll inside the drawer
-    return StreamBuilder(
-        stream: communityBloc.allCommunities,
-        builder: (context, AsyncSnapshot<CommunityListModel> snapshot) {
-          if (snapshot.hasData) {
-
-            if (snapshot.data != null && snapshot.data.loading) {
-              return Expanded(
-                  child: Center(child: CircularProgressIndicator()));
-            } else {
-              return Expanded(
-                  child: Padding(
-                      padding: EdgeInsets.only(left: 0, right: 0, top: 12.0),
-                      child: ListView.builder(
-                          itemCount: snapshot.data.communities.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return ListTile(
-                              onTap: goToNext(snapshot.data),
-                              title: Text(snapshot.data.communities[index].name,
-                                  style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.w700)),
-                              // subtitle: Text("Created by " +
-                              //     snapshot.data.communities[index].created_by),
-                              subtitle: FutureBuilder(
-                                future: getUserForId(
-                                    sevaUserId: snapshot
-                                        .data.communities[index].created_by),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<UserModel> snapshot) {
-                                  if (snapshot.hasError) {
-                                    return Text(
-                                      "Not found",
-                                    );
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Text("...");
-                                  } else if (snapshot.hasData) {
-                                    return Text(
-                                      "Created by " + snapshot.data.fullname,
-                                    );
-                                  } else {
-                                    return Text(
-                                      "Community",
-                                    );
-                                  }
-                                },
-                              ),
-                              trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    RaisedButton(
-                                      onPressed: () {
-                                        var communityModel =
-                                            snapshot.data.communities[index];
-                                        createEditCommunityBloc
-                                            .selectCommunity(communityModel);
-                                        createEditCommunityBloc
-                                            .updateUserDetails(
-                                                SevaCore.of(context)
-                                                    .loggedInUser);
-                                        // snapshot.data.communities[index].
-
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (contexts) =>
-                                                OnBoardWithTimebank(
-                                              communityModel: communityModel,sevaUserId: SevaCore.of(context)
-                                                    .loggedInUser.sevaUserID
-                                            ),
-                                          ),
-                                        );
-                                        print('clicked ${communityModel.id}');
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(0.0),
-                                            child: Text('Join'),
-                                          ),
-                                        ],
-                                      ),
-                                      color: Theme.of(context).accentColor,
-                                      textColor:
-                                          FlavorConfig.values.buttonTextColor,
-                                      shape: StadiumBorder(),
-                                    )
-                                  ]),
-                            );
-                          })));
-            }
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }else if(snapshot.data==null){
-            return Expanded(
-              child: Center(
-                child: Text('No Timebank found'),
-              ),
-            );
-          }
-          return Expanded(
-            child: Text(""),
-          );
-        });
-  }*/
-
   goToNext(data) {
     print(data);
   }
-
-//  openDetailPage(ItemModel data, int index) {
-//    final page = MovieDetailBlocProvider(
-//      child: MovieDetail(
-//        title: data.results[index].title,
-//        posterUrl: data.results[index].backdrop_path,
-//        description: data.results[index].overview,
-//        releaseDate: data.results[index].release_date,
-//        voteAverage: data.results[index].vote_average.toString(),
-//        movieId: data.results[index].id,
-//      ),
-//    );
-//    Navigator.push(
-//      context,
-//      MaterialPageRoute(builder: (context) {
-//        return page;
-//      }),
-//    );
-//  }
 }
