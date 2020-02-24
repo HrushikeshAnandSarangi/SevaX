@@ -145,6 +145,14 @@ flutter:
     - lib/assets/images/add.png
     - lib/assets/images/add_.png
     - lib/assets/images/add__.png
+    - lib/assets/images/drawing-tablet.svg
+    - lib/assets/images/add-user.svg
+    - lib/assets/images/bars.svg
+    - lib/assets/images/megaphone.svg
+    - lib/assets/images/lightbulb.svg
+    - lib/assets/images/levels.svg
+    - lib/assets/images/color-palette.svg
+    - lib/assets/images/startup.png
     # - lib/assets/images/andrew_mic.jpg
     - lib/assets/images/yang_in_crowd.png
     - lib/assets/images/yang_speaking.jpg
