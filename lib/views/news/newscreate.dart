@@ -230,7 +230,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                           padding: EdgeInsets.only(bottom: 0.0),
                           child: TextFormField(
                             controller: subheadingController,
-                            autofocus: true,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
                               labelStyle: prefix0.TextStyle(color: Colors.grey),

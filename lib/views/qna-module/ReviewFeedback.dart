@@ -134,10 +134,12 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               children: <Widget>[
                 TextFormField(
                   controller: myCommentsController,
-                  style: TextStyle(fontSize: 18.0, color: Colors.black87),
+                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
                   decoration: InputDecoration(
                     errorText: _validate ? 'Field can\'t be left blank' : null,
+                    hintStyle: TextStyle(fontSize: 14),
                     hintText:
+                  
                         'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
