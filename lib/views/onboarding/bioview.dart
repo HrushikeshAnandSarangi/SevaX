@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/utils/user_config.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 
 typedef StringCallback = void Function(String bio);
 
@@ -131,7 +131,7 @@ class _BioViewState extends State<BioView> {
                   widget.onSkipped();
                 },
                 child: Text(
-                  UserConfig.prefs.getBool(UserConfig.skip_bio) == null
+                  AppConfig.prefs.getBool(AppConfig.skip_bio) == null
                       ? 'Skip'
                       : 'Cancel',
                   style: TextStyle(color: Theme.of(context).accentColor),

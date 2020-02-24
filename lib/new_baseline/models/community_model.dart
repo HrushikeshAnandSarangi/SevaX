@@ -124,8 +124,10 @@ class CommunityModel extends DataModel {
   List<String> admins;
   List<String> coordinators;
   List<String> members;
+  int transactionCount;
 
   CommunityModel(Map<String, dynamic> map) {
+    this.transactionCount = map['transactionCount'] ?? 0;
     this.id = map != null ? map.containsKey('id') ? map['id'] : '' : '';
     this.name = map.containsKey('name') ? map['name'] : '';
     this.primary_email =
