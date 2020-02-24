@@ -55,14 +55,14 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   }
 
   Widget get bodyWidget {
-    switch (indextab) {
-      case 0:
-        return TimeBankAboutView.of(
+    return IndexedStack(
+      index: indextab,
+      children: <Widget>[
+        TimeBankAboutView.of(
           timebankModel: widget.timebankModel,
           email: SevaCore.of(context).loggedInUser.email,
-        );
-      case 1:
-        return SingleChildScrollView(
+        ),
+        SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -128,12 +128,91 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               )
             ],
           ),
-        );
-      default:
-        return Center(
+        ),
+        Center(
           child: Text("Hello Flutter:$indextab"),
-        );
-    }
+        ),
+      ],
+    );
+//    switch (indextab) {
+//      case 0:
+//        return TimeBankAboutView.of(
+//          timebankModel: widget.timebankModel,
+//          email: SevaCore.of(context).loggedInUser.email,
+//        );
+//      case 1:
+//        return SingleChildScrollView(
+//          child: Column(
+//            crossAxisAlignment: CrossAxisAlignment.center,
+//            children: <Widget>[
+//              Padding(
+//                padding: EdgeInsets.all(40),
+//                child: Image.asset(
+//                  'lib/assets/images/startup.png',
+//                  height: 150,
+//                ),
+//              ),
+//              getTile(
+//                address: 'lib/assets/images/drawing-tablet.svg',
+//                title: 'Unlimited child timebanks',
+//                subtitle: 'No limit on timebanks your team can create',
+//              ),
+//              getTile(
+//                address: 'lib/assets/images/add-user.svg',
+//                title: 'Unlimited users',
+//                subtitle: 'No limit on users for your timebank',
+//              ),
+//              getTile(
+//                address: 'lib/assets/images/bars.svg',
+//                title: 'Pay as you go',
+//                subtitle: 'Pay as per total members in your team',
+//              ),
+//              getTile(
+//                address: 'lib/assets/images/megaphone.svg',
+//                title: 'Absolute control on public post',
+//                subtitle: 'Control on data your team public posts',
+//              ),
+//              getTile(
+//                address: 'lib/assets/images/lightbulb.svg',
+//                title: 'Organize your spendings',
+//                subtitle: 'Have a holistic view on your spending',
+//              ),
+//              getTile(
+//                address: 'lib/assets/images/levels.svg',
+//                title: 'Settings',
+//                subtitle: 'Manage your child timebanks',
+//              ),
+//              getTile(
+//                address: 'lib/assets/images/color-palette.svg',
+//                title: 'Themes',
+//                subtitle: 'Customize your own look',
+//              ),
+//              Padding(
+//                padding: EdgeInsets.only(top: 50, bottom: 50),
+//                child: Column(
+//                  children: <Widget>[
+//                    Text(
+//                      '5\$ \/ user \/ month',
+//                    ),
+//                    RaisedButton(
+//                      color: Colors.red,
+//                      child: Text(
+//                        'Upgrade',
+//                        style: TextStyle(color: Colors.white),
+//                      ),
+//                      onPressed: () async {},
+//                    ),
+//                  ],
+//                ),
+//              )
+//            ],
+//          ),
+//        );
+//      default:
+//        return Center(
+//          child: Text("Hello Flutter:$indextab"),
+//        );
+//    }
   }
 
   Widget getTile({String address, String title, String subtitle}) {
