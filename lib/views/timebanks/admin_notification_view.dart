@@ -973,8 +973,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       String notificationId,
       JoinRequestNotificationModel model,
       BuildContext context) {
-    // assert(user != null);
-
     return Dismissible(
         background: dismissibleBackground,
         key: Key(Utils.getUuid()),

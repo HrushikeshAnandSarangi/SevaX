@@ -4,7 +4,6 @@ import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
@@ -51,11 +50,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   List<Widget> tabs = [];
   List<Widget> pages = [];
   bool isAdmin = false;
-  UserDataBloc _user;
 
   @override
   void initState() {
-    _user = BlocProvider.of<UserDataBloc>(context);
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
         TabController(initialIndex: 0, length: 6, vsync: this);
@@ -71,14 +68,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     ];
     super.initState();
     Future.delayed(Duration.zero, () {
-      //print('---->${SevaCore.of(context).loggedInUser.currentCommunity}');
       _homeDashBoardBloc.getAllCommunities(SevaCore.of(context).loggedInUser);
     });
   }
 
   @override
   void dispose() {
-    _user.dispose();
     _homeDashBoardBloc.dispose();
     super.dispose();
   }
@@ -94,8 +89,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    //   print("currrrrrrr cominty-------- ${SevaCore.of(context).loggedInUser.currentCommunity}");
-
+    // final _user = BlocProvider.of<UserDataBloc>(context);
+    // print("user bloc ${_user.user.email}");
     return BlocProvider(
       bloc: _homeDashBoardBloc,
       child: Scaffold(
@@ -191,9 +186,28 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 );
               }
             }
-
             return Column(
               children: <Widget>[
+//                 Consumer<TransactionConfig>(
+//                   builder: (context, transConfig, child) {
+//                     print(
+//                         "$context ${transConfig.currentTransactionCount} $child");
+//                     return Offstage(
+// //                      offstage: transactionConfig.currentTransactionCount <
+// //                          AppConfig.maxTransactionLimit,
+//                       child: Container(
+//                         width: MediaQuery.of(context).size.width,
+//                         alignment: Alignment.center,
+//                         color: Colors.red,
+//                         height: 30,
+//                         child: Text(
+//                           'Transaction Limit Reached',
+//                           style: TextStyle(color: Colors.white),
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 ),
                 TabBar(
                   controller: _timebankController,
                   indicatorColor: Colors.black,
@@ -282,123 +296,3 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 }
-
-// SafeArea(
-//       child: ListView(
-//         children: <Widget>[
-//           Container(
-//             padding: EdgeInsets.symmetric(horizontal: 2),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: <Widget>[
-//                 Row(
-//                   children: <Widget>[
-//                     Padding(
-//                       padding: EdgeInsets.all(20),
-//                       child: FadeAnimation(
-//                         1,
-//                         Text(
-//                           "Your Groups",
-//                           style: TextStyle(
-//                               fontWeight: FontWeight.bold,
-//                               color: Colors.black87,
-//                               fontFamily: 'Europa',
-//                               fontSize: 20),
-//                         ),
-//                       ),
-//                     ),
-//                     Spacer(),
-//                     IconButton(
-//                         icon: Icon(Icons.add_circle_outline),
-//                         iconSize: 35,
-//                         color: Colors.grey,
-//                         alignment: Alignment.center,
-//                         onPressed: () {
-//                           createEditCommunityBloc.updateUserDetails(
-//                               SevaCore.of(context).loggedInUser);
-//                           Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                               builder: (context) => TimebankCreate(
-//                                 timebankId: SevaCore.of(context)
-//                                     .loggedInUser
-//                                     .currentTimebank,
-//                               ),
-//                             ),
-//                           );
-//                         }),
-//                   ],
-//                 ),
-//                 //SizedBox(height: 20,),
-//                 Column(
-//                   children: <Widget>[
-//                     getTimebanks(context: context),
-//                   ],
-//                 ),
-
-//                 SizedBox(
-//                   height: 30,
-//                 ),
-//                 Container(
-//                   height: 10,
-//                   color: Colors.grey[300],
-//                 ),
-//                 Container(
-//                   height: 15,
-//                   color: Colors.white,
-//                 ),
-//               ],
-//             ),
-//           ),
-//           StickyHeader(
-//             header: Container(
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: <Widget>[
-//                   Padding(
-//                     padding:
-//                         const EdgeInsets.only(left: 20, bottom: 10, top: 10),
-//                     child: Text(
-//                       'Your Calender',
-//                       textAlign: TextAlign.start,
-//                       style: TextStyle(
-//                         color: Colors.black,
-//                         fontFamily: 'Europa',
-//                         fontSize: 20,
-//                         fontWeight: FontWeight.bold,
-//                       ),
-//                     ),
-//                   ),
-//                   TabBar(
-//                     labelColor: Theme.of(context).primaryColor,
-//                     unselectedLabelStyle: TextStyle(color: Colors.grey),
-//                     labelStyle: TextStyle(fontWeight: FontWeight.bold),
-//                     //labelColor: Colors.white,
-//                     indicatorColor: Theme.of(context).primaryColor,
-//                     tabs: [
-//                       Tab(
-//                         child: Text('Pending '),
-//                       ),
-//                       Tab(
-//                         child: Text('Not Accepted '),
-//                       ),
-//                       Tab(
-//                         child: Text('Completed '),
-//                       ),
-//                     ],
-//                     controller: controller,
-//                     isScrollable: false,
-//                     unselectedLabelColor: Colors.black,
-//                   ),
-//                 ],
-//               ),
-//             ),
-//             content: Container(
-//               height: size.height - 180,
-//               // height: size.height - 10,
-//               child: MyTaskPage(controller),
-//             ),
-//           ),
-//         ],
-//       ),
-//     ),

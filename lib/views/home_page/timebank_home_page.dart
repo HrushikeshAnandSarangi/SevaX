@@ -52,6 +52,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
