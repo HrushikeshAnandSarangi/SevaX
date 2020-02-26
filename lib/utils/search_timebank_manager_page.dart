@@ -51,11 +51,6 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
     });
   }
 
-  void _search(String queryString) {
-    searchOnChange.add(queryString);
-    setState(() {});
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +63,10 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
         title: Container(
           padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: TextField(
-            onChanged: _search,
+            onChanged: (String queryString) {
+              searchOnChange.add(queryString);
+              setState(() {});
+            },
             style: TextStyle(color: Colors.white),
             controller: searchTextController,
             decoration: InputDecoration(
