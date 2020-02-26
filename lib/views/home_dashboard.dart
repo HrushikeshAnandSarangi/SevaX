@@ -226,7 +226,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       ...isAdmin
                           ? [
-                              ManageTimebankSeva.of(
+                              ManageTimebankSeva(
                                 timebankModel: primaryTimebank,
                               ),
                               TimebankNotificationsView(

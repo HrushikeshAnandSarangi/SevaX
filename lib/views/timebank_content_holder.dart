@@ -205,7 +205,7 @@ Widget createAdminTabBar(
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
-                ManageTimebankSeva.of(
+                ManageTimebankSeva(
                   timebankModel: timebankModel,
                 ),
                 TimebankNotificationsView(

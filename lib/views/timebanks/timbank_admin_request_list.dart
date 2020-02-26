@@ -275,9 +275,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     _requestsWidgets = [];
     _requestsWidgets.add(getSectionTitle(context, 'Requests'));
     for (var i = 0; i < modelItemList.length; i++) {
-      if (modelItemList[i].operationTaken) {
+      if (modelItemList[i] == null ||
+          modelItemList[i].operationTaken ||
+          modelItemList[i].userId == null) {
         continue;
       }
+      var isWidgetEmpty = false;
       var userWidget = FutureBuilder<UserModel>(
         future:
             FirestoreManager.getUserForId(sevaUserId: modelItemList[i].userId),
@@ -289,15 +292,19 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           }
 
           UserModel user = snapshot.data;
-
+          if (user == null || user.sevaUserID == null) {
+            isWidgetEmpty = true;
+            return Container();
+          }
           widget.listOfMembers[user.sevaUserID] = user;
           return getUserRequestWidget(
               user, context, timebankModel, requestModelItem);
         },
       );
-      _requestsWidgets.add(userWidget);
+      if (!isWidgetEmpty) {
+        _requestsWidgets.add(userWidget);
+      }
     }
-    ;
     if (_requestsWidgets.length == 1) {
       _requestsWidgets = [];
     }
