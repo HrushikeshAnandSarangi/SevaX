@@ -12,6 +12,8 @@ class ShowLimitBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
+    bool isAdmin =
+        _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
     // print(_userBloc.community.payment);
     return StreamBuilder<CommunityModel>(
       stream: _userBloc.comunityStream,
@@ -28,7 +30,12 @@ class ShowLimitBadge extends StatelessWidget {
             width: double.infinity,
             color: Colors.red,
             alignment: Alignment.center,
-            child: Text(_userBloc.community.payment['message']),
+            child: Text(
+              isAdmin
+                  ? _userBloc.community.payment['message']
+                  : "Actions not allowed, Please contact admin",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       },
@@ -39,8 +46,7 @@ class ShowLimitBadge extends StatelessWidget {
 class TransactionLimitCheck extends StatelessWidget {
   final Widget child;
 
-  const TransactionLimitCheck({Key key, this.child})
-      : super(key: key);
+  const TransactionLimitCheck({Key key, this.child}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
