@@ -82,6 +82,7 @@ class MainApplication extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: FlavorConfig.values.theme,
+        title: AppConfig.appName,
         // home: RequestStatusView(
         //   requestId: "anitha.beberg@gmail.com*1573268670404",
         // ),
