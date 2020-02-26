@@ -8,13 +8,13 @@ class PaymentsApiProvider {
   Client client = Client();
 
   Future<bool> addCard(String token, String timebankid, UserModel user) async {
-    Firestore.instance.collection('cards').document(user.sevaUserID)
+    Firestore.instance.collection('cards').document(timebankid)
         .collection('tokens')
         .add({'tokenId': token})
         .then((val) {
           print('saved');
     });
-    Firestore.instance.collection('cards').document(user.sevaUserID).setData({
+    Firestore.instance.collection('cards').document(timebankid).setData({
       'email': user.email,
       'timebankid': timebankid,
       'custId': ''
