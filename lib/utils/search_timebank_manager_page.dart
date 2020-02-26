@@ -52,13 +52,8 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
   }
 
   void _search(String queryString) {
-    if (queryString.length == 1) {
-      setState(() {
-        searchOnChange.add(queryString);
-      });
-    } else {
-      searchOnChange.add(queryString);
-    }
+    searchOnChange.add(queryString);
+    setState(() {});
   }
 
   Widget build(BuildContext context) {
