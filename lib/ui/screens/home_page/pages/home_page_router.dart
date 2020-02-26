@@ -1,6 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/models/user_model.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -20,30 +19,35 @@ class HomePageRouter extends StatefulWidget {
 }
 
 class _BottomNavBarRouterState extends State<HomePageRouter> {
-  List<Widget> pages;
-
+  // List<Widget> pages;
   int selected = 2;
-
   UserDataBloc _userBloc = UserDataBloc();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    pages = [
-      JoinSubTimeBankView(
-        isFromDash: true,
-        loggedInUserModel: SevaCore.of(context).loggedInUser,
-      ),
-      NotificationsPage(),
-      HomeDashBoard(),
-      ChatListView(),
-      ProfilePage(),
-    ];
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   pages = [
+  //     JoinSubTimeBankView(
+  //       isFromDash: true,
+  //       loggedInUserModel: SevaCore.of(context).loggedInUser,
+  //     ),
+  //     NotificationsPage(),
+  //     HomeDashBoard(),
+  //     ChatListView(),
+  //     ProfilePage(),
+  //   ];
+  // }
 
   @override
   void initState() {
     super.initState();
+
+    Future.delayed(
+      Duration.zero,
+      () => _userBloc.getData(
+        email: SevaCore.of(context).loggedInUser.email,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      ),
+    );
   }
 
   @override
@@ -62,17 +66,13 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
         child: Scaffold(
           body: StreamBuilder(
             // stream: _userBloc.getUser(SevaCore.of(context).loggedInUser.email),
-            stream: Firestore.instance
-                .collection("users")
-                .document(SevaCore.of(context).loggedInUser.email)
-                .snapshots(),
-            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            stream: CombineLatestStream.combine2(
+                _userBloc.userStream, _userBloc.comunityStream, (u, c) => true),
+            builder: (context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.hasData && snapshot.data != null) {
-                UserModel user = UserModel.fromMap(snapshot.data.data);
-                // _userBloc.updateUser.add(user);
-                SevaCore.of(context).loggedInUser = user;
-
-                if (user.communities == null || user.communities.isEmpty) {
+                SevaCore.of(context).loggedInUser = _userBloc.user;
+                if (_userBloc.user.communities == null ||
+                    _userBloc.user.communities.isEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => SplashView()),
@@ -83,7 +83,19 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                   children: <Widget>[
                     Container(
                       height: MediaQuery.of(context).size.height - 65,
-                      child: pages[selected],
+                      child: IndexedStack(
+                        index: selected,
+                        children: <Widget>[
+                          JoinSubTimeBankView(
+                            isFromDash: true,
+                            loggedInUserModel: _userBloc.user,
+                          ),
+                          NotificationsPage(),
+                          HomeDashBoard(),
+                          ChatListView(),
+                          ProfilePage(),
+                        ],
+                      ),
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,

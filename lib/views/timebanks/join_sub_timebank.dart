@@ -48,7 +48,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   static const String REJECTED = "Rejected";
 
   bool hasError = false;
-  String errorMessage1 = '';  
+  String errorMessage1 = '';
   List<JoinRequestModel> _joinRequestModels;
   bool isDataLoaded = false;
   @override
@@ -195,7 +195,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TimebankTabsViewHolder.of(
+            builder: (context) => TimebankRouter(
               timebankId: timebank.id,
               timebankModel: timebank,
             ),
@@ -280,8 +280,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                                   JoinRequestNotificationModel(
                                       timebankId: timebank.id,
                                       timebankTitle: timebank.name,
-                                      reasonToJoin: joinRequestModel.reason
-                                      );
+                                      reasonToJoin: joinRequestModel.reason);
 
                               NotificationsModel notification =
                                   NotificationsModel(

@@ -16,6 +16,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
@@ -71,23 +72,25 @@ class OffersState extends State<OffersModule> {
                       'My Offers',
                       style: (TextStyle(fontWeight: FontWeight.w500)),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateOffer(
-                              timebankId: timebankId,
+                    TransactionLimitCheck(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateOffer(
+                                timebankId: timebankId,
+                              ),
                             ),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 10,
+                            child: Image.asset("lib/assets/images/add.png"),
                           ),
-                        );
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 10),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 10,
-                          child: Image.asset("lib/assets/images/add.png"),
                         ),
                       ),
                     ),
@@ -537,11 +540,11 @@ class OfferListItems extends StatelessWidget {
                               padding: EdgeInsets.all(0),
                               color: Colors.green,
                               child: Text(
-                                    'Accepted',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                'Accepted',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
                               onPressed: () {},
                             ),
                           )),
@@ -833,7 +836,6 @@ class OfferCardViewState extends State<OfferCardView> {
                               'Are you sure you want to delete this offer?',
                             ),
                             actions: <Widget>[
-                             
                               FlatButton(
                                 padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                                 color: Theme.of(context).accentColor,
@@ -850,8 +852,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                   Navigator.pop(context);
                                 },
                               ),
-                               FlatButton(
-                                
+                              FlatButton(
                                 child: Text(
                                   'No',
                                   style: TextStyle(
@@ -893,7 +894,7 @@ class OfferCardViewState extends State<OfferCardView> {
               child: Column(
                 children: <Widget>[
                   Expanded(
-                                      child: ConstrainedBox(
+                    child: ConstrainedBox(
                       constraints: BoxConstraints(),
                       child: Container(
                         padding: EdgeInsets.all(14.0),
@@ -907,10 +908,12 @@ class OfferCardViewState extends State<OfferCardView> {
                               SafeArea(
                                 child: SingleChildScrollView(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
                                             widget.offerModel.title,
@@ -932,16 +935,18 @@ class OfferCardViewState extends State<OfferCardView> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             subtitle: Text(
-                                              DateFormat('EEEEEEE, MMMM dd h:mm a')
+                                              DateFormat(
+                                                      'EEEEEEE, MMMM dd h:mm a')
                                                   .format(
                                                 getDateTimeAccToUserTimezone(
                                                     dateTime: DateTime
                                                         .fromMillisecondsSinceEpoch(
                                                             widget.offerModel
                                                                 .timestamp),
-                                                    timezoneAbb: SevaCore.of(context)
-                                                        .loggedInUser
-                                                        .timezone),
+                                                    timezoneAbb:
+                                                        SevaCore.of(context)
+                                                            .loggedInUser
+                                                            .timezone),
                                               ),
                                               style: subTitleStyle,
                                               maxLines: 1,
@@ -950,29 +955,48 @@ class OfferCardViewState extends State<OfferCardView> {
                                             trailing: Container(
                                               height: 30,
                                               width: 80,
-                                              child: widget.offerModel.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID || widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID)
-                                      ? FlatButton(
-                                                      shape: RoundedRectangleBorder(
+                                              child: widget.offerModel
+                                                              .sevaUserId ==
+                                                          SevaCore.of(context)
+                                                              .loggedInUser
+                                                              .sevaUserID ||
+                                                      widget
+                                                          .timebankModel.admins
+                                                          .contains(SevaCore.of(
+                                                                  context)
+                                                              .loggedInUser
+                                                              .sevaUserID)
+                                                  ? FlatButton(
+                                                      shape:
+                                                          RoundedRectangleBorder(
                                                         borderRadius:
-                                                            BorderRadius.circular(20),
+                                                            BorderRadius
+                                                                .circular(20),
                                                       ),
                                                       color: Color.fromRGBO(
                                                           44, 64, 140, 1),
                                                       child: Text(
                                                         'Edit',
                                                         style: TextStyle(
-                                                            color: Colors.white),
+                                                            color:
+                                                                Colors.white),
                                                       ),
                                                       onPressed: () {
                                                         Navigator.push(
-            context,
-            MaterialPageRoute(
-                    builder: (context) => UpdateOffer(
-                      timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-                      offerModel: widget.offerModel,
-                    ),
-            ),
-          );
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    UpdateOffer(
+                                                              timebankId: SevaCore
+                                                                      .of(context)
+                                                                  .loggedInUser
+                                                                  .currentTimebank,
+                                                              offerModel: widget
+                                                                  .offerModel,
+                                                            ),
+                                                          ),
+                                                        );
                                                       },
                                                     )
                                                   : Container(),
@@ -990,12 +1014,15 @@ class OfferCardViewState extends State<OfferCardView> {
                                             ),
                                             subtitle: FutureBuilder<String>(
                                               future: _getLocation(
-                                                widget.offerModel.location.latitude,
-                                                widget.offerModel.location.longitude,
+                                                widget.offerModel.location
+                                                    .latitude,
+                                                widget.offerModel.location
+                                                    .longitude,
                                               ),
                                               builder: (context, snapshot) {
                                                 if (snapshot.hasError) {
-                                                  return Text("Unnamed Location");
+                                                  return Text(
+                                                      "Unnamed Location");
                                                 }
 
                                                 if (snapshot.connectionState ==
@@ -1034,7 +1061,8 @@ class OfferCardViewState extends State<OfferCardView> {
                                           Container(
                                             padding: EdgeInsets.all(8.0),
                                             child: RichTextView(
-                                                text: widget.offerModel.description),
+                                                text: widget
+                                                    .offerModel.description),
                                           ),
                                         ],
                                       ),
@@ -1139,8 +1167,7 @@ class OfferCardViewState extends State<OfferCardView> {
                       ),
                     ),
                   ),
-                                      getBottombar(),
-
+                  getBottombar(),
                 ],
               ),
             );
@@ -1219,11 +1246,11 @@ class OfferCardViewState extends State<OfferCardView> {
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(
         decoration: BoxDecoration(color: Colors.white54, boxShadow: [
-        BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
-      ]),
-       // margin: EdgeInsets.only(top: 10, left: 5),
+          BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
+        ]),
+        // margin: EdgeInsets.only(top: 10, left: 5),
         child: Padding(
-           padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
+          padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
@@ -1317,7 +1344,8 @@ class OfferCardViewState extends State<OfferCardView> {
                             );
                           });
                       var isAccepted = widget.offerModel.offerAcceptors
-                          .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+                          .contains(
+                              SevaCore.of(context).loggedInUser.sevaUserID);
 
                       Firestore.instance
                           .collection("offers")
@@ -1331,8 +1359,8 @@ class OfferCardViewState extends State<OfferCardView> {
                       });
 
                       widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
-                      var tempOutput =
-                          new List<String>.from(widget.offerModel.offerAcceptors);
+                      var tempOutput = new List<String>.from(
+                          widget.offerModel.offerAcceptors);
                       tempOutput
                           .add(SevaCore.of(context).loggedInUser.sevaUserID);
                       widget.offerModel.offerAcceptors = tempOutput;
