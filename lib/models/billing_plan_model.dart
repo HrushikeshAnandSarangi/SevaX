@@ -103,7 +103,7 @@ class Action {
 
 class Data {
   bool billable;
-  String freeLimit;
+  int freeLimit;
   double charge;
 
   Data({
@@ -114,7 +114,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
         billable: json["billable"],
-        freeLimit: json["free_limit"],
+        freeLimit: int.parse(json["free_limit"]),
         charge: json["charge"].toDouble(),
       );
 
