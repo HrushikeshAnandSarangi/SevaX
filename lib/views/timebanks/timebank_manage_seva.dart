@@ -75,8 +75,8 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               ),
               getTile(
                 address: 'lib/assets/images/drawing-tablet.svg',
-                title: 'Unlimited child timebanks',
-                subtitle: 'No limit on timebanks your team can create',
+                title: 'Unlimited groups',
+                subtitle: 'No limit on groups your team can create',
               ),
               getTile(
                 address: 'lib/assets/images/add-user.svg',
