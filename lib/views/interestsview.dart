@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/register_location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,10 +13,10 @@ import '../views/onboarding/bioview.dart';
 class InterestsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Create Your Bio';
+    // final appTitle = 'Create Your Bio';
 
     return MaterialApp(
-      title: appTitle,
+      title: AppConfig.appName,
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: ChipDemo(),

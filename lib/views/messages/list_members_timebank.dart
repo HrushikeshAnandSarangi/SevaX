@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
@@ -18,6 +19,7 @@ class ListMambersForNewChatState extends State<ListMambersForNewChat> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: AppConfig.appName,
       home: Scaffold(
         appBar: AppBar(
           title: Text("Title"),

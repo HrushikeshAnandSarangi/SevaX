@@ -177,8 +177,8 @@ Widget createAdminTabBar(
               ),
             ],
           ),
-          Container(
-            height: MediaQuery.of(context).size.height - 137,
+          Expanded(
+            // height: MediaQuery.of(context).size.height - 137,
             child: TabBarView(
               children: [
                 DiscussionList(

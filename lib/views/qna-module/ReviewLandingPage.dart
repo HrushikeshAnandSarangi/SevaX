@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/campaign_model.dart';
 import 'package:sevaexchange/models/news_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 
 class ReviewLandingPage extends StatefulWidget {
@@ -54,6 +55,7 @@ class ReviewLandingPageState extends State<ReviewLandingPage> {
     );
 
     return MaterialApp(
+      title: AppConfig.appName,
       home: Scaffold(
         appBar: AppBar(
           title: Text("Review Landing"),

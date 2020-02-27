@@ -209,7 +209,6 @@ class _ResultViewState extends State<ResultView> {
     if (widget == null ||
         widget.controller == null ||
         widget.controller.text == null) {
-
       return Container();
     }
 

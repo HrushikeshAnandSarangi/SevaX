@@ -47,12 +47,6 @@ class _ProfilePageState extends State<ProfilePage>
   // ScrollController scrollController;
   TimebankModel timebankModel;
   FirebaseUser firebaseUser;
-
-  // double appbarScale = 0.9;
-  // double flexibleScale = 1.0;
-
-  // AnimationController appbarAnimationController;
-  // AnimationController flexibleAnimationController;
   bool isAdminOrCoordinator = false;
   bool isVerifyAccountPressed = false;
   bool isUserLoaded = false;

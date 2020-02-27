@@ -121,6 +121,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     return ListView.separated(
       itemCount: 2,
       shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return getCardWidget();
       },
@@ -181,10 +182,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 "7777",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Europa",
-                    color: Colors.grey,
-                    fontSize: 18),
+                    fontFamily: "Europa", color: Colors.black, fontSize: 18),
               ),
             ),
             Padding(
