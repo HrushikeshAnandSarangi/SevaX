@@ -450,7 +450,6 @@ class _SplashViewState extends State<SplashView> {
 
     if ((loggedInUser.currentCommunity?.isEmpty ?? true) &&
         loggedInUser.communities.length > 0) {
-      print("-------------------------------------------------");
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
       await Firestore.instance
           .collection("users")
@@ -458,8 +457,6 @@ class _SplashViewState extends State<SplashView> {
           .updateData({
         'currentCommunity': loggedInUser.communities[0],
       });
-    } else {
-      print("---------------------NO----------------------------");
     }
     if (loggedInUser == null) {
       loadingMessage = 'Welcome to the world of communities';
