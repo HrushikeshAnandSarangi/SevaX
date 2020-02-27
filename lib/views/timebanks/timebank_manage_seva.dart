@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 import '../admin_viewe_requests.dart';
@@ -33,6 +34,7 @@ class ManageTimebankSeva extends StatelessWidget {
             manageTimebankCodes(context: context),
             vieweditPage(context: context),
             viewBillingPage(context: context),
+            billingView(context: context),
           ],
         ),
       ),
@@ -142,6 +144,30 @@ class ManageTimebankSeva extends StatelessWidget {
     );
   }
 
+  Widget billingView({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BillingView(timebankModel.communityId),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Billing',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget get getTitle {
     return Text(
       "Manage ${timebankModel.name}",
@@ -165,7 +191,7 @@ class ManageTimebankSeva extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(top: 20),
         child: Text(
-          'Billing',
+          'Admin Billing',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,

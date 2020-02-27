@@ -1,0 +1,116 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/widgets/credit_card/utils/card_type.dart';
+import 'package:sevaexchange/widgets/credit_card/utils/helper.dart';
+import 'package:sevaexchange/widgets/credit_card/utils/style.dart';
+
+
+class CreditCardView extends StatefulWidget {
+  final String cardNumber;
+  final String cardExpiry;
+  final String cardHolderName;
+  final String bankName;
+  final String brand;
+
+  final Color frontTextColor;
+  final Color backTextColor;
+
+  final Widget frontBackground;
+
+  final Widget frontLayout;
+
+  final bool showShadow;
+  final CardType cardType;
+  final double width;
+  final double height;
+
+  CreditCardView({
+    Key key,
+    this.cardNumber,
+    this.cardExpiry,
+    this.cardHolderName,
+    this.bankName = "",
+    this.brand,
+    @required this.frontBackground,
+    this.cardType,
+    this.frontLayout,
+    this.frontTextColor = Colors.white,
+    this.backTextColor = Colors.black,
+    this.showShadow = false,
+    this.width,
+    this.height,
+  })  : assert(frontBackground != null),
+        // assert(backBackground != null),
+        super(key: key);
+
+  @override
+  _CreditCardViewState createState() => _CreditCardViewState();
+}
+
+class _CreditCardViewState extends State<CreditCardView> {
+  double cardWidth;
+  double cardHeight;
+
+  @override
+  Widget build(BuildContext context) {
+    widget.width == null
+        ? cardWidth = MediaQuery.of(context).size.width - 40
+        : cardWidth = widget.width;
+    widget.height == null
+        ? cardHeight = (cardWidth / 2) + 10
+        : cardHeight = widget.height;
+    return Center(
+      child: Stack(
+        children: <Widget>[
+          _buildFrontCard(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFrontCard() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      width: cardWidth,
+      height: cardHeight,
+      decoration: BoxDecoration(
+        boxShadow: widget.showShadow
+            ? [
+                BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 12.0,
+                  spreadRadius: 0.2,
+                  offset: Offset(
+                    3.0,
+                    3.0,
+                  ),
+                )
+              ]
+            : [],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Stack(
+          children: <Widget>[
+            // Background for card
+            widget.frontBackground,
+
+            // Front Side Layout
+            widget.frontLayout ??
+                CardFrontLayout(
+                        bankName: widget.bankName,
+                        cardNumber: "XXXX XXXX ${widget.cardNumber}",
+                        cardExpiry: widget.cardExpiry,
+                        cardHolderName: widget.cardHolderName,
+                        cardTypeIcon: getCardTypeIcon(
+                            cardType: widget.cardType, brand: widget.brand),
+                        cardHeight: cardHeight,
+                        cardWidth: cardWidth,
+                        textColor: widget.frontTextColor)
+                    .layout1(),
+          ],
+        ),
+      ),
+    );
+  }
+}

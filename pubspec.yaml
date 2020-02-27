@@ -82,8 +82,9 @@ dependencies:
   firebase_remote_config: ^0.3.0+1
 
 
+  stripe_payment: ^1.0.6
   smooth_star_rating: 1.0.4+2
-
+# awesome_card: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -166,6 +167,10 @@ flutter:
     - lib/assets/images/image_01.png
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
+
+    # card images
+    - images/
+    - images/card_provider/
   fonts:
     - family: Montserrat
       fonts:
@@ -194,3 +199,11 @@ flutter:
         - asset: fonts/EuropaLightItalic.ttf
         - asset: fonts/EuropaRegular.ttf
         - asset: fonts/EuropaRegularItalic.ttf
+    - family: MavenPro
+      fonts:
+        - asset: fonts/MavenPro-Regular.ttf
+          weight: 400
+        - asset: fonts/MavenPro-Medium.ttf
+          weight: 500
+        - asset: fonts/MavenPro-Bold.ttf
+          weight: 700

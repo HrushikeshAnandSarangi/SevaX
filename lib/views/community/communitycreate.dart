@@ -289,10 +289,6 @@ class CreateEditCommunityViewFormState
                         enteredName = value;
                         snapshot.data.community.updateValueByKey('name', value);
                         createEditCommunityBloc.onChange(snapshot.data);
-                        //editCommunityModel.name = value;
-                        //editTimebankModel.name = value;
-                        //timebankModel.name = value;
-                        //communityModel.name = value;
                       }
 
                       return null;
@@ -314,7 +310,8 @@ class CreateEditCommunityViewFormState
                       if (value.isEmpty) {
                         return 'Tell us more about your timebank.';
                       }
-                      snapshot.data.community.updateValueBykey('about', value);
+                      snapshot.data.community.updateValueByKey('about', value);
+
                       snapshot.data.timebank
                           .updateValueByKey('missionStatement', value);
                       createEditCommunityBloc.onChange(snapshot.data);
@@ -579,7 +576,7 @@ class CreateEditCommunityViewFormState
                               }
                             } else {}
                           } else {
-                            //showProgressDialog('Updating timebank');
+                            showProgressDialog('Updating timebank');
                             if (globals.timebankAvatarURL != null) {
                               communityModel.logo_url =
                                   globals.timebankAvatarURL;
