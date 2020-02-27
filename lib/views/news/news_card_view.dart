@@ -10,6 +10,8 @@ import 'package:sevaexchange/views/news/update_feed.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../flavor_config.dart';
+
 class NewsCardView extends StatelessWidget {
   final NewsModel newsModel;
   final String timebankId;
@@ -25,11 +27,11 @@ class NewsCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         title: Text(
           newsModel.title == null ? newsModel.fullName : newsModel.title.trim(),
-          style: TextStyle(fontSize: 16.0, color: Colors.black),
+          style: TextStyle(fontSize: 16.0, color: Colors.white),
         ),
         actions: <Widget>[
           _getDeleteButton(context),
@@ -326,10 +328,16 @@ class NewsCardView extends StatelessWidget {
 
   Widget get newsImage {
     return newsModel.newsImageUrl == null
-        ? newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
-            ? Offstage()
-            : getImageView(url: newsModel.imageScraped, imageId: newsModel.id)
+        ? Offstage()
         : getImageView(url: newsModel.newsImageUrl, imageId: newsModel.id);
+  }
+
+  Widget get scrappedImage {
+    return newsModel.imageScraped == null || newsModel.imageScraped == "NoData"
+        ? Offstage()
+        //change tag to avoid hero widget issue
+        : getImageView(
+            url: newsModel.imageScraped, imageId: newsModel.id + "*");
   }
 
   Widget getImageView({
@@ -393,7 +401,10 @@ class NewsCardView extends StatelessWidget {
                 Text(
                   newsModel.subheading.trim(),
                   style: TextStyle(fontSize: 18.0, height: 1.4),
-                )
+                ),
+                Center(
+                  child: scrappedImage,
+                ),
               ],
             ),
           );
@@ -406,31 +417,43 @@ class NewsCardView extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           title: Text('Delete Feed'),
-          content: Text('Are you sure you want to delete this news feed?'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
+          content: Column(
+            children: <Widget>[
+              Text('Are you sure you want to delete this news feed?'),
+              SizedBox(
+                height: 15,
               ),
-              onPressed: () => Navigator.pop(context),
-            ),
-            RaisedButton(
-              child: Text(
-                'Delete',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: dialogButtonSize,
-                ),
+              Row(
+                children: <Widget>[
+                  RaisedButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: dialogButtonSize,
+                      ),
+                    ),
+                    onPressed: () {
+                      _deleteNews(context);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                        fontSize: dialogButtonSize,
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
               ),
-              onPressed: () {
-                _deleteNews(context);
-                Navigator.pop(context);
-              },
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:meta/meta.dart';
-import 'dart:async';
 import 'package:sevaexchange/models/news_model.dart';
 
 import '../location_utility.dart';
@@ -93,8 +94,7 @@ Stream<List<NewsModel>> getNearNewsStream(
 
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
 
-  var query = Firestore.instance.collection('news')
-  .where(
+  var query = Firestore.instance.collection('news').where(
     'entity',
     isEqualTo: {
       'entityType': 'timebanks',

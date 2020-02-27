@@ -10,11 +10,10 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/home_page_router.dart';
 
 import '../../flavor_config.dart';
 import '../core.dart';
@@ -82,27 +81,27 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   Widget build(BuildContext context) {
     return isDataLoaded
         ? Scaffold(
-            key: _scaffold,
-            appBar: AppBar(
-              centerTitle: true,
-              title: Text(
-                'Join Timebank',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  // fontWeight: FontWeight.w500,
-                ),
+          key: _scaffold,
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text(
+              'Join Timebank',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                // fontWeight: FontWeight.w500,
               ),
             ),
-            body: SingleChildScrollView(
-              child: Container(child: timebankStreamBuilder(context)),
-            ),
-          )
+          ),
+          body: SingleChildScrollView(
+            child: Container(child: timebankStreamBuilder(context)),
+          ),
+        )
         : Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
   }
 
   Widget timebankStreamBuilder(context) {
@@ -328,111 +327,131 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         return AlertDialog(
           title: new Text(
               "Why do you want to join the ${FlavorConfig.values.timebankTitle}? "),
-          content: Form(
-            key: formkey,
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: 'Reason',
-                labelText: 'Reason',
-                // labelStyle: textStyle,
-                // labelStyle: textStyle,
-                // labelText: 'Description',
-                border: OutlineInputBorder(
-                  borderRadius: const BorderRadius.all(
-                    const Radius.circular(20.0),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Form(
+                key: formkey,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Reason',
+                    // labelStyle: textStyle,
+                    // labelStyle: textStyle,
+                    // labelText: 'Description',
+                    border: OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(20.0),
+                      ),
+                      borderSide: new BorderSide(
+                        color: Colors.black,
+                        width: 1.0,
+                      ),
+                    ),
                   ),
-                  borderSide: new BorderSide(
-                    color: Colors.black,
-                    width: 1.0,
-                  ),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 1,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    joinRequestModel.reason = value;
+                  },
                 ),
               ),
-              keyboardType: TextInputType.multiline,
-              maxLines: 1,
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter some text';
-                }
-                joinRequestModel.reason = value;
-              },
-            ),
-          ),
-          actions: <Widget>[
-            new FlatButton(
-              child: new Text(
-                "Cancel",
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
+              SizedBox(
+                height: 15,
               ),
-              onPressed: () {
-                Navigator.of(dialogContext, rootNavigator: true).pop();
-              },
-            ),
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text(
-                "Send Join Request",
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () async {
-                Navigator.of(dialogContext).pop();
+              Row(
+                children: <Widget>[
+                  new FlatButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: new Text(
+                      "Send Request",
+                      style: TextStyle(
+                          fontSize: dialogButtonSize, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () async {
+                      print("Timebank Model $timebankModel");
+                      joinRequestModel.userId =
+                          communityCreateEditSnapshot.loggedinuser.sevaUserID;
+                      joinRequestModel.timestamp =
+                          DateTime.now().millisecondsSinceEpoch;
 
-                showProgressDialog();
+                      joinRequestModel.entityId = timebankModel.id;
+                      joinRequestModel.entityType = EntityType.Timebank;
+                      joinRequestModel.accepted = false;
 
-                print("Timebank Model $timebankModel");
-                joinRequestModel.userId =
-                    communityCreateEditSnapshot.loggedinuser.sevaUserID;
-                joinRequestModel.timestamp =
-                    DateTime.now().millisecondsSinceEpoch;
+                      if (formkey.currentState.validate()) {
+                        Navigator.of(dialogContext).pop();
 
-                joinRequestModel.entityId = timebankModel.id;
-                joinRequestModel.entityType = EntityType.Timebank;
-                joinRequestModel.accepted = false;
+                        showProgressDialog();
 
-                if (formkey.currentState.validate()) {
-                  await createJoinRequest(model: joinRequestModel);
+                        await updateJoinRequest(model: joinRequestModel);
 
-                  JoinRequestNotificationModel joinReqModel =
-                      JoinRequestNotificationModel(
+                        JoinRequestNotificationModel joinReqModel =
+                            JoinRequestNotificationModel(
                           timebankId: timebankModel.id,
-                          timebankTitle: timebankModel.name);
-                  NotificationsModel notification = NotificationsModel(
-                    timebankId: timebankModel.id,
-                    id: utils.Utils.getUuid(),
-                    targetUserId: timebankModel.creatorId,
-                    senderUserId:
-                        communityCreateEditSnapshot.loggedinuser.sevaUserID,
-                    type: prefix0.NotificationType.JoinRequest,
-                    data: joinReqModel.toMap(),
-                  );
+                          timebankTitle: timebankModel.name,
+                          reasonToJoin: joinRequestModel.reason,
+                        );
+                        NotificationsModel notification = NotificationsModel(
+                          timebankId: timebankModel.id,
+                          id: utils.Utils.getUuid(),
+                          targetUserId: timebankModel.creatorId,
+                          senderUserId: communityCreateEditSnapshot
+                              .loggedinuser.sevaUserID,
+                          type: prefix0.NotificationType.JoinRequest,
+                          data: joinReqModel.toMap(),
+                          directToMember: false,
+                        );
 
-                  notification.timebankId = FlavorConfig.values.timebankId;
+                        notification.timebankId =
+                            FlavorConfig.values.timebankId;
 
-                  UserModel timebankCreator =
-                      await FirestoreManager.getUserForId(
-                          sevaUserId: timebankModel.creatorId);
+                        // UserModel timebankCreator =
+                        //     await FirestoreManager.getUserForId(
+                        //         sevaUserId: timebankModel.creatorId);
 
-                  await Firestore.instance
-                      .collection('users')
-                      .document(timebankCreator.email)
-                      .collection("notifications")
-                      .document(notification.id)
-                      .setData(notification.toMap());
+                        await Firestore.instance
+                            .collection('timebanknew')
+                            .document(
+                              communityCreateEditSnapshot
+                                  .selectedCommunity.primary_timebank,
+                            )
+                            // .document(
+                            //   "785006d5-597c-464e-9f3a-edd6c342088f",
+                            // )
+                            .collection("notifications")
+                            .document(notification.id)
+                            .setData(notification.toMap());
 
-                  if (dialogLoadingContext != null) {
-                    Navigator.pop(dialogLoadingContext);
-                  }
-                  Navigator.of(context).pop();
+                        if (dialogLoadingContext != null) {
+                          Navigator.pop(dialogLoadingContext);
+                        }
+                        Navigator.of(context).pop();
 
-                  return;
-                }
-              },
-            ),
-          ],
+                        return;
+                      }
+                    },
+                  ),
+                  new FlatButton(
+                    child: new Text(
+                      "Cancel",
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                          fontFamily: 'Europa'),
+                    ),
+                    onPressed: () {
+                      Navigator.of(dialogContext, rootNavigator: true).pop();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );
@@ -552,6 +571,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                 "Close",
                 style: TextStyle(
                   fontSize: dialogButtonSize,
+                  color: Colors.red,
                 ),
               ),
               onPressed: () {
@@ -618,7 +638,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         builder: (createDialogContext) {
           dialogLoadingContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating Request'),
+            title: Text('Creating Join Request'),
             content: LinearProgressIndicator(),
           );
         });

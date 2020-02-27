@@ -12,6 +12,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -80,19 +81,34 @@ class RequestsState extends State<RequestsModule> {
                         'My Requests',
                         style: (TextStyle(fontWeight: FontWeight.w500)),
                       ),
-                      GestureDetector(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 10,
-                            child: Image.asset("lib/assets/images/add.png"),
+                      TransactionLimitCheck(
+                        child: GestureDetector(
+                          child: Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white,
+                              radius: 10,
+                              child: Image.asset("lib/assets/images/add.png"),
+                            ),
                           ),
-                        ),
-                        onTap: () {
-                          if (widget.timebankModel.protected) {
-                            if (widget.timebankModel.admins.contains(
-                                SevaCore.of(context).loggedInUser.sevaUserID)) {
+                          onTap: () {
+                            if (widget.timebankModel.protected) {
+                              if (widget.timebankModel.admins.contains(
+                                  SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID)) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateRequest(
+                                      timebankId: timebankId,
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              _showProtectedTimebankMessage();
+                            } else {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -101,20 +117,9 @@ class RequestsState extends State<RequestsModule> {
                                   ),
                                 ),
                               );
-                              return;
                             }
-                            _showProtectedTimebankMessage();
-                          } else {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateRequest(
-                                  timebankId: timebankId,
-                                ),
-                              ),
-                            );
-                          }
-                        },
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -228,6 +233,7 @@ class RequestsState extends State<RequestsModule> {
                   child: CupertinoSegmentedControl<int>(
                     selectedColor: Theme.of(context).primaryColor,
                     children: logoWidgets,
+                    borderColor: Colors.grey,
 
                     padding: EdgeInsets.only(left: 5.0, right: 5.0),
                     groupValue: sharedValue,
@@ -876,6 +882,8 @@ class NearRequestListItems extends StatelessWidget {
                     Text(
                       model.description,
                       style: Theme.of(parentContext).textTheme.subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 8),
                     Wrap(
@@ -1126,6 +1134,14 @@ class RequestListItemsState extends State<RequestListItems> {
 
   Widget getRequestListViewHolder(
       {RequestModel model, String loggedintimezone, String userEmail}) {
+//    bool isApplied =false;
+//    if(model.acceptors.contains(userEmail) ||
+//        model.approvedUsers.contains(userEmail) ||
+//        model.invitedUsers.contains(SevaCore.of(context)
+//            .loggedInUser
+//            .sevaUserID)){
+//      isApplied = true;
+//    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1230,28 +1246,30 @@ class RequestListItemsState extends State<RequestListItems> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
-                          Offstage(
-                            offstage: !model.acceptors.contains(userEmail),
-                            child: Container(
-                              margin: EdgeInsets.all(10),
-                              width: 100,
-                              height: 32,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                padding: EdgeInsets.all(0),
-                                color: Colors.green,
-                                child: Text(
-                                  'Applied',
-                                  style: TextStyle(
-                                    color: Colors.white,
+                          model.acceptors.contains(userEmail) ||
+                                  model.approvedUsers.contains(userEmail)
+                              ?
+//                          || model.invitedUsers.contains(userEmail) ?
+                              Container(
+                                  margin: EdgeInsets.all(10),
+                                  width: 100,
+                                  height: 32,
+                                  child: FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: EdgeInsets.all(0),
+                                    color: Colors.green,
+                                    child: Text(
+                                      'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {},
                                   ),
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                          ),
+                                )
+                              : Container(),
                         ],
                       ),
                     ],

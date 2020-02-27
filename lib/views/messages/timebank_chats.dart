@@ -546,67 +546,77 @@ class _ChatListViewState extends State<TimebankChatListView> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Delete chat'),
-          content: const Text('Are you sure you want to delete this chat'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const Text('Are you sure you want to delete this chat'),
+              Row(
+                children: <Widget>[
+                  FlatButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(
+                        fontSize: dialogButtonSize,
+                      ),
+                    ),
+                    onPressed: () async {
+                      var participants = [];
+                      participants.add(chatModel.user1);
+                      participants.add(chatModel.user2);
+
+                      participants.sort();
+
+                      var messageId =
+                          "${participants[0]}*${participants[1]}*${FlavorConfig.values.timebankId}*$communityId";
+
+                      Map<dynamic, dynamic> unreadCount = HashMap();
+                      unreadCount = chatModel.unreadStatus;
+                      unreadCount[email] = 0;
+
+                      Navigator.of(context).pop();
+                      await Firestore.instance
+                          .collection("chatsnew")
+                          .document(messageId)
+                          .updateData({
+                        'unread_status': unreadCount,
+                        'softDeletedBy': FieldValue.arrayUnion(
+                          [email],
+                        )
+                      });
+                      chatModel.deletedBy[email] =
+                          DateTime.now().millisecondsSinceEpoch;
+
+                      await Firestore.instance
+                          .collection("chatsnew")
+                          .document(messageId)
+                          .updateData({
+                        'deletedBy': chatModel.deletedBy,
+                      });
+
+                      setState(() {
+                        print("Update and remove the object from list");
+                      });
+                    },
+                  ),
+                  FlatButton(
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(
+                          fontSize: dialogButtonSize, color: Colors.red),
+                    ),
+                    onPressed: () {
+                      setState(() {});
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
               ),
-              onPressed: () {
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text(
-                'Delete',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () async {
-                var participants = [];
-                participants.add(chatModel.user1);
-                participants.add(chatModel.user2);
-
-                participants.sort();
-
-                var messageId =
-                    "${participants[0]}*${participants[1]}*${FlavorConfig.values.timebankId}*$communityId";
-
-                Map<dynamic, dynamic> unreadCount = HashMap();
-                unreadCount = chatModel.unreadStatus;
-                unreadCount[email] = 0;
-
-                Navigator.of(context).pop();
-                await Firestore.instance
-                    .collection("chatsnew")
-                    .document(messageId)
-                    .updateData({
-                  'unread_status': unreadCount,
-                  'softDeletedBy': FieldValue.arrayUnion(
-                    [email],
-                  )
-                });
-                chatModel.deletedBy[email] =
-                    DateTime.now().millisecondsSinceEpoch;
-
-                await Firestore.instance
-                    .collection("chatsnew")
-                    .document(messageId)
-                    .updateData({
-                  'deletedBy': chatModel.deletedBy,
-                });
-
-                setState(() {
-                  print("Update and remove the object from list");
-                });
-              },
-            ),
-          ],
+            ],
+          ),
+          actions: <Widget>[],
         );
       },
     );

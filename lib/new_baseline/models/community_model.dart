@@ -124,8 +124,14 @@ class CommunityModel extends DataModel {
   List<String> admins;
   List<String> coordinators;
   List<String> members;
+  int transactionCount;
+  Map<String, dynamic> billingQuota;
+  Map<String, dynamic> payment;
 
   CommunityModel(Map<String, dynamic> map) {
+    this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
+    this.transactionCount = map['transactionCount'] ?? 0;
+    this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});
     this.id = map != null ? map.containsKey('id') ? map['id'] : '' : '';
     this.name = map.containsKey('name') ? map['name'] : '';
     this.primary_email =

@@ -15,6 +15,15 @@ Future<bool> fetchProtectedStatus(String timebankId) async {
   return timebank.data['protected'];
 }
 
+Future<TimebankModel> fetchTimebankData(String timebankId) async {
+  DocumentSnapshot timebank = await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .get();
+
+  return TimebankModel.fromMap(timebank.data);
+}
+
 //Fetch timebank from timebank id
 Future<void> createAcceptRequestNotification({
   NotificationsModel notificationsModel,
@@ -23,7 +32,7 @@ Future<void> createAcceptRequestNotification({
       await getUserForId(sevaUserId: notificationsModel.targetUserId);
 
   await Firestore.instance
-      .collection('timebanknew')
+      .collection(notificationsModel.directToMember ? 'users' : 'timebanknew')
       .document(notificationsModel.directToMember
           ? user.email
           : notificationsModel.timebankId)
@@ -142,8 +151,16 @@ Future<void> createRequestApprovalNotification({
     sevaUserId: model.targetUserId,
   );
 
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
+  var timebankModel = await fetchTimebankData(model.timebankId);
+
+  if (timebankModel.protected) {
+    var requestModel = RequestModel.fromMap(model.data);
+    requestModel.fullName = timebankModel.name;
+    requestModel.photoUrl = timebankModel.photoUrl;
+    model.data = requestModel.toMap();
+  }
+
+  !model.directToMember
       ? Firestore.instance
           .collection('timebanknew')
           .document(model.timebankId)
@@ -160,10 +177,13 @@ Future<void> createRequestApprovalNotification({
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  
+
+  print('is Timebank protected  $isTimeBankNotification ');
+
   await Firestore.instance
-      .collection('timebanknew')
+      .collection(isTimeBankNotification ? 'timebanknew' : 'users')
       .document(isTimeBankNotification ? model.timebankId : user.email)
       .collection('notifications')
       .document(model.id)
@@ -175,20 +195,25 @@ Future<void> createTaskCompletedApprovedNotification({
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
 
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
-      ? await Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap())
-      : await Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
+  var timebankModel = await fetchTimebankData(model.timebankId);
+
+  if (timebankModel.protected) {
+    var requestModel = RequestModel.fromMap(model.data);
+    requestModel.fullName = timebankModel.name;
+    requestModel.photoUrl = timebankModel.photoUrl;
+    model.data = requestModel.toMap();
+    print("_______________________________________________${model.data}");
+  }
+
+  await Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .collection('notifications')
+      .document(model.id)
+      .setData(model.toMap());
+
+  print(
+      "Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
 }
 
 Future<void> createTransactionNotification({
@@ -305,11 +330,11 @@ Stream<List<NotificationsModel>> getNotifications({
       .document(userEmail)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
-      .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .where(
         'communityId',
         isEqualTo: communityId,
       )
+      .orderBy('timestamp', descending: true)
       .snapshots();
 
   yield* data.transform(
@@ -327,28 +352,32 @@ Stream<List<NotificationsModel>> getNotifications({
           } else
             notifications.add(model);
         });
+
+        notifications.sort((a, b) => b.timestamp > a.timestamp ? 1 : -1);
         notificationSink.add(notifications);
-        print(
-            "${notifications.length}----------------------------------------");
       },
     ),
   );
 }
 
+Future updateUserCommunity({
+  String communityId,
+  String userEmail,
+}) async {
+  await Firestore.instance.collection('users').document(userEmail).updateData({
+    'communities': FieldValue.arrayUnion([communityId]),
+  });
+}
+
 Stream<List<NotificationsModel>> getNotificationsForTimebank({
   String timebankId,
-  @required String communityId,
 }) async* {
   var data = Firestore.instance
       .collection('timebanknew')
       .document(timebankId)
       .collection('notifications')
       .where('isRead', isEqualTo: false)
-      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
-      // .where(
-      //   'communityId',
-      //   isEqualTo: communityId,
-      // )
+      .orderBy('timestamp', descending: true)
       .snapshots();
 
   yield* data.transform(
@@ -362,13 +391,19 @@ Stream<List<NotificationsModel>> getNotificationsForTimebank({
           );
           if (FlavorConfig.appFlavor != Flavor.APP) {
             if (model.type != NotificationType.TransactionDebit)
+              // for other falvour of the app except
               notifications.add(model);
-          } else
-            notifications.add(model);
+          } else {
+            if (model.type == NotificationType.RequestAccept ||
+                model.type == NotificationType.JoinRequest ||
+                model.type == NotificationType.RequestCompleted) {
+              notifications.add(model);
+            }
+          }
         });
+        notifications.sort((a, b) => b.timestamp > a.timestamp ? 1 : -1);
+
         notificationSink.add(notifications);
-        print(
-            "${notifications.length}----------------------------------------");
       },
     ),
   );

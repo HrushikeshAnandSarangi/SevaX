@@ -12,6 +12,8 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import 'notifications_data_manager.dart';
+
 Location location = new Location();
 Geoflutterfire geo = Geoflutterfire();
 
@@ -259,12 +261,17 @@ Future<void> approveRequestCompletion({
     }
   }
   model.accepted = approvalCount >= model.numberOfApprovals;
+
+  print("========================================================== Step1");
+
   await Firestore.instance
       .collection('requests')
       .document(model.id)
       .setData(model.toMap(), merge: true);
 
   UserModel user = await utils.getUserForId(sevaUserId: userId);
+
+  //check if protected
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -276,6 +283,8 @@ Future<void> approveRequestCompletion({
     communityId: communityId,
   );
 
+  print("========================================================== Step2");
+
   num transactionvalue = model.durationOfRequest / 60;
   String credituser = model.approvedUsers.toString();
   if (FlavorConfig.appFlavor == Flavor.APP) {
@@ -284,6 +293,8 @@ Future<void> approveRequestCompletion({
         .document(model.email)
         .updateData(
             {'currentBalance': FieldValue.increment(-(transactionvalue))});
+
+    print("========================================================== Step3");
 
     NotificationsModel debitnotification = NotificationsModel(
       timebankId: model.timebankId,
@@ -304,8 +315,12 @@ Future<void> approveRequestCompletion({
           .elementAt(0)
           .toMap(),
     );
+    print("========================================================== Step4");
+
     await utils.createTransactionNotification(model: debitnotification);
   }
+
+  print("========================================================== Step6");
 
   await Firestore.instance
       .collection('users')
@@ -331,6 +346,8 @@ Future<void> approveRequestCompletion({
         .toMap(),
   );
 
+  print("========================================================== Step7");
+
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
 }
@@ -340,6 +357,7 @@ Future<void> approveAcceptRequest({
   @required String approvedUserId,
   @required String notificationId,
   @required String communityId,
+  @required bool directToMember,
 }) async {
   var approvalCount = 0;
   if (requestModel.transactions != null) {
@@ -355,6 +373,14 @@ Future<void> approveAcceptRequest({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
+  var timebankModel = await fetchTimebankData(requestModel.timebankId);
+  var tempRequestModel = requestModel;
+
+  if (timebankModel.protected) {
+    tempRequestModel.photoUrl = timebankModel.photoUrl;
+    tempRequestModel.fullName = timebankModel.name;
+  }
+
   NotificationsModel model = NotificationsModel(
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
@@ -362,7 +388,53 @@ Future<void> approveAcceptRequest({
     communityId: communityId,
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestApprove,
-    data: requestModel.toMap(),
+    data: tempRequestModel.toMap(),
+    directToMember: directToMember,
+  );
+
+  await utils.removeAcceptRequestNotification(
+    model: model,
+    notificationId: notificationId,
+  );
+  await utils.createRequestApprovalNotification(model: model);
+}
+
+Future<void> approveAcceptRequestForTimebank({
+  @required RequestModel requestModel,
+  @required String approvedUserId,
+  @required String notificationId,
+  @required String communityId,
+  @required bool directToMember,
+}) async {
+  var approvalCount = 0;
+  if (requestModel.transactions != null) {
+    for (var i = 0; i < requestModel.transactions.length; i++) {
+      if (requestModel.transactions[i].isApproved) {
+        approvalCount++;
+      }
+    }
+  }
+  requestModel.accepted = approvalCount >= requestModel.numberOfApprovals;
+  await Firestore.instance
+      .collection('requests')
+      .document(requestModel.id)
+      .updateData(requestModel.toMap());
+
+  //timebankUpdateFullName
+  var timebankModel = await fetchTimebankData(requestModel.timebankId);
+  var tempTimebankModel = requestModel;
+  tempTimebankModel.photoUrl = timebankModel.photoUrl;
+  tempTimebankModel.fullName = timebankModel.name;
+
+  NotificationsModel model = NotificationsModel(
+    timebankId: requestModel.timebankId,
+    id: utils.Utils.getUuid(),
+    targetUserId: approvedUserId,
+    communityId: communityId,
+    senderUserId: tempTimebankModel.sevaUserId,
+    type: NotificationType.RequestApprove,
+    data: tempTimebankModel.toMap(),
+    directToMember: directToMember,
   );
 
   await utils.removeAcceptRequestNotification(
@@ -383,13 +455,21 @@ Future<void> rejectAcceptRequest({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
+  var timebankModel = await fetchTimebankData(requestModel.timebankId);
+  var tempRequestModel = requestModel;
+
+  if (timebankModel.protected) {
+    tempRequestModel.photoUrl = timebankModel.photoUrl;
+    tempRequestModel.fullName = timebankModel.name;
+  }
+
   NotificationsModel model = NotificationsModel(
     timebankId: requestModel.timebankId,
     id: utils.Utils.getUuid(),
     targetUserId: rejectedUserId,
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestReject,
-    data: requestModel.toMap(),
+    data: tempRequestModel.toMap(),
     communityId: communityId,
   );
 

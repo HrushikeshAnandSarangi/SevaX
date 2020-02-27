@@ -94,7 +94,7 @@ class MyTasksList extends StatelessWidget {
               }
               return ListView.builder(
                 itemCount: requestModelList.length,
-                physics: NeverScrollableScrollPhysics(),
+                // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (listContext, index) {
                   RequestModel model = requestModelList[index];
 
@@ -485,35 +485,39 @@ class TaskCardViewState extends State<TaskCardView> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Expanded(
-                            child: TextFormField(
-                              controller: hoursController,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                BlacklistingTextInputFormatter(
-                                  new RegExp('[\\.|\\,|\\ |\\-]'),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                TextFormField(
+                                  controller: hoursController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    BlacklistingTextInputFormatter(
+                                      new RegExp('[\\.|\\,|\\ |\\-]'),
+                                    ),
+                                  ],
+                                  decoration: InputDecoration(
+                                      contentPadding:
+                                          EdgeInsets.only(bottom: 20)),
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Enter hours';
+                                    }
+                                    if (value.isEmpty) {
+                                      return 'Select hours';
+                                    }
+                                    this.selectedHourValue = value;
+                                  },
                                 ),
+                                Text('Hours'),
                               ],
-                              decoration: InputDecoration(
-                                hintText: 'Hours',
-                                hasFloatingPlaceholder: true,
-                                labelText: 'Hours',
-                              ),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Select hours';
-                                }
-                                if (value.isEmpty) {
-                                  return 'Select hours';
-                                }
-                                this.selectedHourValue = value;
-                              },
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
                               left: 16,
                               right: 16,
-                              bottom: 16,
+                              bottom: 48,
                             ),
                             child: Text(
                               ' : ',
@@ -523,32 +527,32 @@ class TaskCardViewState extends State<TaskCardView> {
                             ),
                           ),
                           Expanded(
-                            child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                hasFloatingPlaceholder: true,
-                                labelText: 'Minutes',
-                                hintText: 'Minutes',
-                              ),
-                              validator: (value) {
-                                if (value == null) {
-                                  return 'Minutes cannot be null';
-                                }
-                                if (value.isEmpty) {
-                                  return 'Minutes cannot be Empty';
-                                }
-                                selectedMinuteValue = value;
-                              },
-                              items: minuteList.map((value) {
-                                return DropdownMenuItem(
-                                    child: Text(value), value: value);
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedMinuteValue = value;
-                                });
-                              },
-                              value: selectedMinuteValue,
-                              hint: Text('Minutes'),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                DropdownButtonFormField<String>(
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return 'Minutes cannot be null';
+                                    }
+                                    if (value.isEmpty) {
+                                      return 'Minutes cannot be Empty';
+                                    }
+                                    selectedMinuteValue = value;
+                                  },
+                                  items: minuteList.map((value) {
+                                    return DropdownMenuItem(
+                                        child: Text(value), value: value);
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedMinuteValue = value;
+                                    });
+                                  },
+                                  value: selectedMinuteValue,
+                                ),
+                                Text('Minutes'),
+                              ],
                             ),
                           ),
                         ],
@@ -643,7 +647,6 @@ class TaskCardViewState extends State<TaskCardView> {
 
       FirestoreManager.requestComplete(model: requestModel);
 
-
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(
           id: utils.Utils.getUuid(),
@@ -652,6 +655,7 @@ class TaskCardViewState extends State<TaskCardView> {
           senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
           targetUserId: requestModel.sevaUserId,
           communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+          timebankId: requestModel.timebankId,
         ),
       );
 

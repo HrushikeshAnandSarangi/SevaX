@@ -23,9 +23,8 @@ class TimeBankAboutView extends StatefulWidget {
   _TimeBankAboutViewState createState() => _TimeBankAboutViewState();
 }
 
-class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKeepAliveClientMixin{
-  String text =
-      "We provide full-cycle services in the areas of App development, web-based enterprise solutions, web application and portal development, We combine our solid business domain experience, technical expertise, profound knowledge of latest industry trends and quality-driven delivery model to offer progressive, end-to-end mobile and web solutions.Single app for all user-types: Teachers, Students & Parent Teachers can take attendance, students can view timetables, parents can view attendance, principal and admins can send messages & announcements, etc. using the same app,Though the traditional login mechanism with the username and password is preferred by the majority of users; the One Time Password (OTP) login via SMS and Emails is favored by all the app users. We have incorporated both of them in the school mobile app to choose the one that suits you the best.";
+class _TimeBankAboutViewState extends State<TimeBankAboutView>
+    with AutomaticKeepAliveClientMixin {
   bool descTextShowFlag = false;
   bool isUserJoined = false;
   String loggedInUser;
@@ -43,7 +42,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
 
   @override
   void getData() async {
-   // print('Admin id  ${widget.timebankModel.admins[0]}');
+    // print('Admin id  ${widget.timebankModel.admins[0]}');
 
     user = await FirestoreManager.getUserForId(
         sevaUserId: widget.timebankModel.admins[0]);
@@ -273,7 +272,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0,0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -443,7 +442,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView> with AutomaticKee
           // content: new Text("Khud he ko message kyu kar rha hai?"),
           actions: <Widget>[
             new FlatButton(
-              child: new Text("Close"),
+              child: new Text(
+                "Close",
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -478,7 +482,7 @@ void startChat(
 
     await createChat(chat: model).then(
       (_) {
-        Navigator.of(context).pop();
+//        Navigator.of(context).pop();
 
         Navigator.push(
           context,

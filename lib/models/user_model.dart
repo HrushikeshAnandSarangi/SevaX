@@ -229,6 +229,7 @@ class UserModel extends DataModel {
     this.sevaUserID = user['sevauserid'];
     this.bio = user['bio'];
     this.email = user['email'];
+    this.communities = List.castFrom(user['communities']);
   }
 
   UserModel setBlockedMembers(List<String> blockedMembers) {
@@ -284,6 +285,8 @@ class UserModel extends DataModel {
     }
     if (this.communities != null && this.communities.isNotEmpty) {
       object['communities'] = this.communities;
+    } else {
+      object['communities'] = [];
     }
     if (this.favoriteByTimeBank != null && this.favoriteByTimeBank.isNotEmpty) {
       object['favoriteByTimeBank'] = this.favoriteByTimeBank;
@@ -351,6 +354,23 @@ class UserModel extends DataModel {
       ${this.blockedBy.toString()},
       ${this.currentPosition.toString()},
       ${this.acceptedEULA.toString()},
+      Communities:${this.communities.toString()},
     ''';
   }
+}
+
+class UserListModel {
+  List<UserModel> users = [];
+  bool loading = false;
+  UserListModel();
+
+  add(user) {
+    this.users.add(user);
+  }
+
+  removeall() {
+    this.users = [];
+  }
+
+  List<UserModel> get getUsers => users;
 }

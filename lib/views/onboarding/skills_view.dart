@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/widgets/custom_chip.dart';
 
 typedef StringListCallback = void Function(List<String> skills);
@@ -24,15 +25,10 @@ class SkillViewNew extends StatefulWidget {
 
 class _SkillViewNewState extends State<SkillViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
+  TextEditingController _textEditingController = TextEditingController();
   bool autovalidate = false;
-  // List<String> suggestionText = [];
-  // List<String> suggestionID = [];
-  // List<String> selectedSkills = [];
-  // List<String> selectedID = [];
   Map<String, dynamic> skills = {};
-  // Map<String, dynamic> ids = {};
   Map<String, dynamic> _selectedSkills = {};
-  // List<Widget> selectedChips = [];
   @override
   void initState() {
     print(widget.userModel.skills);
@@ -54,6 +50,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
       }
       setState(() {});
     });
+
     super.initState();
   }
 
@@ -91,6 +88,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
               ),
               hideOnError: true,
               textFieldConfiguration: TextFieldConfiguration(
+                controller: _textEditingController,
                 decoration: InputDecoration(
                   hintText: 'Search',
                   filled: true,
@@ -107,6 +105,20 @@ class _SkillViewNewState extends State<SkillViewNew> {
                     Icons.search,
                     color: Colors.grey,
                   ),
+                  suffixIcon: InkWell(
+                    splashColor: Colors.transparent,
+                    child: Icon(
+                      Icons.clear,
+                      color: Colors.grey,
+                      // color: _textEditingController.text.length > 1
+                      //     ? Colors.black
+                      //     : Colors.grey,
+                    ),
+                    onTap: () {
+                      _textEditingController.clear();
+                      controller.close();
+                    },
+                  ),
                 ),
               ),
               suggestionsBoxController: controller,
@@ -115,6 +127,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 skills.forEach((id, skill) => dataCopy.add(skill));
                 dataCopy.retainWhere(
                     (s) => s.toLowerCase().contains(pattern.toLowerCase()));
+
                 return await Future.value(dataCopy);
               },
               itemBuilder: (context, suggestion) {
@@ -138,12 +151,12 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 );
               },
               onSuggestionSelected: (suggestion) {
+                _textEditingController.clear();
                 if (!_selectedSkills.containsValue(suggestion)) {
                   controller.close();
                   String id =
                       skills.keys.firstWhere((k) => skills[k] == suggestion);
                   _selectedSkills[id] = suggestion;
-                  // selectedChips.add(buildChip(id: id, value: suggestion));
                   setState(() {});
                 }
               },
@@ -158,15 +171,17 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   children: _selectedSkills.values
                       .toList()
                       .map(
-                        (value) => CustomChip(
-                          title: value,
-                          onDelete: () {
-                            String id = skills.keys
-                                .firstWhere((k) => skills[k] == value);
-                            _selectedSkills.remove(id);
-                            setState(() {});
-                          },
-                        ),
+                        (value) => value == null
+                            ? Container()
+                            : CustomChip(
+                                title: value,
+                                onDelete: () {
+                                  String id = skills.keys
+                                      .firstWhere((k) => skills[k] == value);
+                                  _selectedSkills.remove(id);
+                                  setState(() {});
+                                },
+                              ),
                       )
                       .toList(),
                 ),
@@ -194,7 +209,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
                       widget.onSkipped();
                     },
                     child: Text(
-                      'Skip',
+                      AppConfig.prefs.getBool(AppConfig.skip_skill) == null
+                          ? 'Skip'
+                          : 'Cancel',
                       style: TextStyle(
                         color: Theme.of(context).accentColor,
                       ),
@@ -1069,4 +1086,3 @@ class _SkillViewNewState extends State<SkillViewNew> {
 //     );
 //   }
 // }
-

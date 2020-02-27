@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
 class AuthRouter extends StatefulWidget {
@@ -257,6 +258,7 @@ class _AuthRouterState extends State<AuthRouter> {
 
   Widget getMaterialApp({@required Widget child}) {
     return MaterialApp(
+      title: AppConfig.appName,
       debugShowCheckedModeBanner: false,
       theme: FlavorConfig.values.theme,
       home: child,

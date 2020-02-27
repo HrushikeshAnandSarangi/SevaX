@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
@@ -18,7 +20,6 @@ import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
 import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
-import 'home_page_router.dart';
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
 
@@ -92,7 +93,6 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   void initState() {
-    print('------>> skip to homepage = ${widget.skipToHomePage}');
     super.initState();
   }
 
@@ -269,16 +269,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Text(
-              //   'Humanity\nFirst'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
               SizedBox(
                 height: 16,
               ),
@@ -398,7 +388,7 @@ class _SplashViewState extends State<SplashView> {
 
   Future<String> _getLoggedInUserId() async {
     String userId = await PreferenceManager.loggedInUserId;
-    print("user id: $userId");
+
     UserData.shared.userId = userId;
 
     return userId;
@@ -457,6 +447,20 @@ class _SplashViewState extends State<SplashView> {
     }
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
+
+    if ((loggedInUser.currentCommunity?.isEmpty ?? true) &&
+        loggedInUser.communities.length > 0) {
+      print("-------------------------------------------------");
+      loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
+      await Firestore.instance
+          .collection("users")
+          .document(loggedInUser.email)
+          .updateData({
+        'currentCommunity': loggedInUser.communities[0],
+      });
+    } else {
+      print("---------------------NO----------------------------");
+    }
     if (loggedInUser == null) {
       loadingMessage = 'Welcome to the world of communities';
       _navigateToLoginPage();
@@ -469,8 +473,6 @@ class _SplashViewState extends State<SplashView> {
       //check app version
       bool isLatestVersion =
           await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-        print("We met before");
-
         String appName = packageInfo.appName;
         String packageName = packageInfo.packageName;
         String version = packageInfo.version;
@@ -481,8 +483,6 @@ class _SplashViewState extends State<SplashView> {
             .document(Platform.isAndroid ? "vital_android" : "vital_ios")
             .get()
             .then((onValue) {
-          print("retrieved vitals from firebase");
-
           if (Platform.isAndroid) {
             // we are on android platform
             if (onValue.data.containsKey("latest_build_number")) {
@@ -538,26 +538,45 @@ class _SplashViewState extends State<SplashView> {
     // if (!loggedInUser.completedIntro) {
     //   await _navogateToIntro(loggedInUser);
     // }
-    if (widget.skipToHomePage) {
-      print('Navigating to home page');
-      _navigateToCoreView(loggedInUser);
-    }
 
+    // if (widget.skipToHomePage) {
+    //   print('Navigating to home page');
+    //   _navigateToCoreView(loggedInUser);
+    // }
+    print("reached here------->><><>");
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
     }
 
-    if (loggedInUser.skills == null) {
+    print("===?${!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false)}");
+    if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
+        loggedInUser.skills == null) {
+      print("reached here------->><><> skill");
       await _navigateToSkillsView(loggedInUser);
     }
 
-    if (loggedInUser.interests == null) {
+    if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
+        loggedInUser.interests == null) {
+      print("reached here------->><><> interest");
       await _navigateToInterestsView(loggedInUser);
     }
 
-    if (loggedInUser.bio == null) {
+    if (!(AppConfig.prefs.getBool(AppConfig.skip_bio) ?? false) &&
+        loggedInUser.bio == null) {
+      print("reached here------->><><> bio");
       await _navigateToBioView(loggedInUser);
     }
+    // if (loggedInUser.skills == null) {
+    //   await _navigateToSkillsView(loggedInUser);
+    // }
+
+    // if (loggedInUser.interests == null) {
+    //   await _navigateToInterestsView(loggedInUser);
+    // }
+
+    // if (loggedInUser.bio == null) {
+    //   await _navigateToBioView(loggedInUser);
+    // }
     loadingMessage = 'We met before';
 
     // print(loggedInUser.communities);
@@ -671,22 +690,11 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.skills = skills;
             updateUserData(loggedInUser);
-            // var batch = _firestore.batch();
-            // skills.forEach(
-            //   (id) => batch.updateData(
-            //     _firestore.collection('skills').document(id),
-            //     {
-            //       "users": FieldValue.arrayUnion(
-            //         [loggedInUser.sevaUserID],
-            //       ),
-            //     },
-            //   ),
-            // );
-            // batch.commit();
             loadingMessage = 'Updating skills';
           },
           onSkipped: () {
             Navigator.pop(context);
+            AppConfig.prefs.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping skills';
@@ -756,25 +764,17 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.interests = interests;
             updateUserData(loggedInUser);
-            //  var batch = _firestore.batch();
-            // interests.forEach(
-            //   (id) => batch.updateData(
-            //     _firestore.collection('interests').document(id),
-            //     {
-            //       "users": FieldValue.arrayUnion(
-            //         [loggedInUser.sevaUserID],
-            //       ),
-            //     },
-            //   ),
-            // );
-            // batch.commit();
             loadingMessage = 'Updating interests';
           },
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
+            AppConfig.prefs.setBool(AppConfig.skip_interest, true);
             updateUserData(loggedInUser);
             loadingMessage = 'Skipping interests';
+          },
+          onBacked: () {
+            _navigateToSkillsView(loggedInUser);
           },
         ),
       ),
@@ -784,20 +784,42 @@ class _SplashViewState extends State<SplashView> {
   Future _navigateToBioView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => BioView(
-          onSave: (bio) {
-            Navigator.pop(context);
-            loggedInUser.bio = bio;
-            updateUserData(loggedInUser);
-            loadingMessage = 'Updating bio';
-          },
-          onSkipped: () {
-            Navigator.pop(context);
-            loggedInUser.bio = '';
-            updateUserData(loggedInUser);
-            loadingMessage = 'Skipping bio';
-          },
-        ),
+        builder: (context) => BioView(onSave: (bio) {
+          Navigator.pop(context);
+          loggedInUser.bio = bio;
+          updateUserData(loggedInUser);
+          loadingMessage = 'Updating bio';
+        }, onSkipped: () {
+          Navigator.pop(context);
+          loggedInUser.bio = '';
+          AppConfig.prefs.setBool(AppConfig.skip_bio, true);
+          updateUserData(loggedInUser);
+          loadingMessage = 'Skipping bio';
+        }, onBacked: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => InterestViewNew(
+                automaticallyImplyLeading: false,
+                userModel: loggedInUser,
+                onSelectedInterests: (interests) {
+                  Navigator.pop(context);
+                  loggedInUser.interests = interests;
+                  updateUserData(loggedInUser);
+                  loadingMessage = 'Updating interests';
+                },
+                onSkipped: () {
+                  Navigator.pop(context);
+                  loggedInUser.interests = [];
+                  updateUserData(loggedInUser);
+                  loadingMessage = 'Skipping interests';
+                },
+                onBacked: () {
+                  _navigateToInterestsView(loggedInUser);
+                },
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -810,6 +832,7 @@ class _SplashViewState extends State<SplashView> {
           child: FindCommunitiesView(
             keepOnBackPress: false,
             loggedInUser: loggedInUser,
+            showBackBtn: false,
           ),
         ),
       ),
@@ -833,7 +856,7 @@ class _SplashViewState extends State<SplashView> {
 
   void _navigateToCoreView(UserModel loggedInUser) {
     assert(loggedInUser != null, 'Logged in User cannot be empty');
-    print('logg${loggedInUser}');
+
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (context) => SevaCore(

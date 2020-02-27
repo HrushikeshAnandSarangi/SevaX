@@ -9,9 +9,12 @@ import 'time_picker_widget.dart';
 
 class CalendarPicker extends StatefulWidget {
   final String title;
+  final DateTime startDate;
+  final DateTime endDate;
   //final void Function(DateTime dateTime) onDateSelected;
 
-  CalendarPicker(this.title, Key key) : super(key: key);
+  CalendarPicker(this.title, Key key, this.startDate, this.endDate)
+      : super(key: key);
 
   @override
   CalendarPickerState createState() => CalendarPickerState();
@@ -26,11 +29,23 @@ class CalendarPickerState extends State<CalendarPicker> {
   SelectionType selectionType = SelectionType.START_DATE;
 
   @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+    startDate = widget.startDate;
+    endDate = widget.endDate;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
           color: Colors.black,
+          onPressed: () {
+            Navigator.pop(context, [startDate, endDate]);
+          },
         ),
         title: Text(
           widget.title,
@@ -74,8 +89,9 @@ class CalendarPickerState extends State<CalendarPicker> {
               children: <Widget>[
                 CalendarWidget(
                     DateTime.now(), startDate, endDate, selectionType,
-                    (callbackDate) {
+                    (callbackDate, callbackSelectionType) {
                   setState(() {
+                    // selectionType = callbackSelectionType;
                     if (selectionType == SelectionType.START_DATE)
                       startDate = callbackDate;
                     else

@@ -54,6 +54,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   void initState() {
     super.initState();
     print("fullname ${widget.requestItem.fullName}");
+
   }
 
   @override
@@ -66,7 +67,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
       isApplied = widget.requestItem.acceptors
-          .contains(SevaCore.of(context).loggedInUser.email);
+              .contains(SevaCore.of(context).loggedInUser.email) ||
+          widget.requestItem.approvedUsers
+              .contains(SevaCore.of(context).loggedInUser.email) ||
+          widget.requestItem.invitedUsers
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID);
     } else {
       isApplied = false;
     }
@@ -196,7 +201,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     subtitle: FutureBuilder<String>(
                       future: _getLocation(
                         widget.requestItem.location.latitude,
-                        widget.requestItem.location.latitude,
+                        widget.requestItem.location.longitude,
                       ),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
@@ -393,7 +398,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding: EdgeInsets.all(0),
-                  color: isApplied ? Colors.red : Colors.green,
+                  color:
+                      isApplied ? Theme.of(context).accentColor : Colors.green,
                   child: Row(
                     children: <Widget>[
                       SizedBox(width: 1),
@@ -459,7 +465,10 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(
-              child: new Text("Close"),
+              textColor: Colors.red,
+              child: new Text(
+                "Close",
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },

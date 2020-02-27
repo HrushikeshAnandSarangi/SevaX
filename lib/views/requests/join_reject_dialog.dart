@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -86,6 +87,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                     "Description not yet updated",
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
               ),
             ),
             Center(
@@ -97,56 +99,64 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   textAlign: TextAlign.center),
             ),
             Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(5.0),
             ),
-            Row(
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                RaisedButton(
-                  color: Colors.red,
-                  child: Text(
-                    'Decline',
-                    style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                Container(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    color: FlavorConfig.values.theme.primaryColor,
+                    child: Text(
+                      'Approve',
+                      style:
+                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () async {
+                      //Once approved
+
+                      // showProgressDialog(context, 'Accepting Invitation');
+                      approveInvitationForVolunteerRequest(
+                          model: requestInvitationModel,
+                          notificationId: widget.notificationId,
+                          user: userModel);
+
+                      if (progressContext != null) {
+                        Navigator.pop(progressContext);
+                      }
+
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  onPressed: () async {
-                    // request declined
-                    //   showProgressDialog(context, 'Rejecting Invitation');
-
-                    declineInvitationbRequest(
-                        model: requestInvitationModel,
-                        notificationId: widget.notificationId,
-                        userModel: userModel);
-
-                    if (progressContext != null) {
-                      Navigator.pop(progressContext);
-                    }
-                    Navigator.of(context).pop();
-                  },
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(4.0),
                 ),
-                RaisedButton(
-                  color: Colors.green,
-                  child: Text(
-                    'Approve',
-                    style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                Container(
+                  width: double.infinity,
+                  child: RaisedButton(
+                    color: Theme.of(context).accentColor,
+                    child: Text(
+                      'Decline',
+                      style:
+                          TextStyle(color: Colors.white, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () async {
+                      // request declined
+                      //   showProgressDialog(context, 'Rejecting Invitation');
+
+                      declineInvitationbRequest(
+                          model: requestInvitationModel,
+                          notificationId: widget.notificationId,
+                          userModel: userModel);
+
+                      if (progressContext != null) {
+                        Navigator.pop(progressContext);
+                      }
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  onPressed: () async {
-                    //Once approved
-
-                    // showProgressDialog(context, 'Accepting Invitation');
-                    approveInvitationForVolunteerRequest(
-                        model: requestInvitationModel,
-                        notificationId: widget.notificationId,
-                        user: userModel);
-
-                    if (progressContext != null) {
-                      Navigator.pop(progressContext);
-                    }
-
-                    Navigator.of(context).pop();
-                  },
                 ),
               ],
             )

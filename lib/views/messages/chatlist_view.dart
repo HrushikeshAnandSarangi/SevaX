@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
@@ -96,41 +97,44 @@ class _ChatListViewState extends State<ChatListView> {
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: FloatingActionButton.extended(
-          icon: Icon(
-            Icons.chat,
-          ),
-          label: Text('New Message'),
-          foregroundColor: FlavorConfig.values.buttonTextColor,
-          onPressed: () {
-            if (SevaCore.of(context).loggedInUser.associatedWithTimebanks > 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SelectTimeBankForNewChat()),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectMembersFromTimebank(
-                    timebankId:
-                        SevaCore.of(context).loggedInUser.currentTimebank,
-                    newsModel: NewsModel(),
-                    isFromShare: false,
-                    selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
-                    userSelected: HashMap(),
+        child: TransactionLimitCheck(
+          child: FloatingActionButton.extended(
+            icon: Icon(
+              Icons.chat,
+            ),
+            label: Text('New Message'),
+            foregroundColor: FlavorConfig.values.buttonTextColor,
+            onPressed: () {
+              if (SevaCore.of(context).loggedInUser.associatedWithTimebanks >
+                  1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SelectTimeBankForNewChat()),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SelectMembersFromTimebank(
+                      timebankId:
+                          SevaCore.of(context).loggedInUser.currentTimebank,
+                      newsModel: NewsModel(),
+                      isFromShare: false,
+                      selectionMode: MEMBER_SELECTION_MODE.NEW_CHAT,
+                      userSelected: HashMap(),
+                    ),
                   ),
-                ),
-              );
-            }
-            // NewsModel news;
-            // Navigator.push(
-            //   context,
-            //   // MaterialPageRoute(builder: (context) => NewChat(false, news)),
-            //   MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
-            // );
-          },
+                );
+              }
+              // NewsModel news;
+              // Navigator.push(
+              //   context,
+              //   // MaterialPageRoute(builder: (context) => NewChat(false, news)),
+              //   MaterialPageRoute(builder: (context) => SelectTimeBankForNewChat()),
+              // );
+            },
+          ),
         ),
       ),
     );
@@ -582,18 +586,9 @@ class _ChatListViewState extends State<ChatListView> {
           content: const Text('Are you sure you want to delete this chat'),
           actions: <Widget>[
             FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  fontSize: dialogButtonSize,
-                ),
-              ),
-              onPressed: () {
-                setState(() {});
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
                 'Delete',
                 style: TextStyle(
@@ -637,6 +632,16 @@ class _ChatListViewState extends State<ChatListView> {
                 setState(() {
                   print("Update and remove the object from list");
                 });
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(fontSize: dialogButtonSize, color: Colors.red),
+              ),
+              onPressed: () {
+                setState(() {});
+                Navigator.of(context).pop();
               },
             ),
           ],

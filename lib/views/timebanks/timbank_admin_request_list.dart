@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -22,12 +23,15 @@ class TimebankRequestAdminPage extends StatefulWidget {
   final String timebankId;
   final String userEmail;
   final bool isUserAdmin;
+  final bool isCommunity;
   var listOfMembers = HashMap<String, UserModel>();
 
-  TimebankRequestAdminPage(
-      {@required this.isUserAdmin,
-      @required this.timebankId,
-      @required this.userEmail});
+  TimebankRequestAdminPage({
+    @required this.isUserAdmin,
+    @required this.timebankId,
+    @required this.userEmail,
+    @required this.isCommunity,
+  });
 
   @override
   _TimebankAdminPageState createState() => _TimebankAdminPageState();
@@ -271,9 +275,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     _requestsWidgets = [];
     _requestsWidgets.add(getSectionTitle(context, 'Requests'));
     for (var i = 0; i < modelItemList.length; i++) {
-      if (modelItemList[i].operationTaken) {
+      if (modelItemList[i] == null ||
+          modelItemList[i].operationTaken ||
+          modelItemList[i].userId == null) {
         continue;
       }
+      var isWidgetEmpty = false;
       var userWidget = FutureBuilder<UserModel>(
         future:
             FirestoreManager.getUserForId(sevaUserId: modelItemList[i].userId),
@@ -285,15 +292,19 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           }
 
           UserModel user = snapshot.data;
-
+          if (user == null || user.sevaUserID == null) {
+            isWidgetEmpty = true;
+            return Container();
+          }
           widget.listOfMembers[user.sevaUserID] = user;
           return getUserRequestWidget(
               user, context, timebankModel, requestModelItem);
         },
       );
-      _requestsWidgets.add(userWidget);
+      if (!isWidgetEmpty) {
+        _requestsWidgets.add(userWidget);
+      }
     }
-    ;
     if (_requestsWidgets.length == 1) {
       _requestsWidgets = [];
     }
@@ -350,7 +361,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             timebankModel.members = usersSet.toList();
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = true;
-                            await createJoinRequest(model: joinRequestModel);
+                            await updateJoinRequest(model: joinRequestModel);
+                            await updateUserCommunity(
+                                communityId: SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity,
+                                userEmail: user.email);
                             await _updateTimebank(timebankModel, admins: null);
                           },
                         ),
@@ -366,7 +382,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             });
                             joinRequestModel.operationTaken = true;
                             joinRequestModel.accepted = false;
-                            createJoinRequest(model: joinRequestModel)
+                            updateJoinRequest(model: joinRequestModel)
                                 .then((onValue) {
                               resetAndLoad();
                             });
@@ -605,13 +621,112 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                       List<String> members =
                           timebankModel.members.map((s) => s).toList();
                       members.remove(user.sevaUserID);
-                      _updateTimebank(timebankModel, members: members);
+                      if (widget.isCommunity != null && widget.isCommunity) {
+                        _removeUserFromCommunityAndUpdateUserCommunityList(
+                            model: timebankModel,
+                            members: members,
+                            userId: user.sevaUserID);
+                      } else {
+                        _updateTimebank(timebankModel, members: members);
+                      }
                     }
                   },
                 ),
               ),
             ],
           );
+  }
+
+  Future _addUserToCommunityAndUpdateUserCommunityList({
+    TimebankModel model,
+    List<UserModel> members,
+    String currentCommunity,
+  }) async {
+    if (model == null || members == null || members.length == 0) {
+      return;
+    }
+    if (model.members == null) {
+      model.members = List<String>();
+    }
+    var communityModel =
+        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
+    members.forEach((user) async {
+      //Update community members inside community collection
+      var communityMembers = List<String>();
+      if (!communityModel.members.contains(user)) {
+        communityMembers.addAll(communityModel.members);
+      }
+      communityMembers.add(user.sevaUserID);
+      communityModel.members = communityMembers;
+
+      //Update community inside user collections
+      var communities = List<String>();
+      if (user.communities.length > 0) {
+        communities.addAll(user.communities);
+      }
+      if (user.communities != null &&
+          !user.communities.contains(currentCommunity)) {
+        communities.add(currentCommunity);
+      }
+      user.communities = communities;
+      if (user.currentCommunity == '') {
+        user.currentCommunity =
+            SevaCore.of(context).loggedInUser.currentCommunity;
+      }
+      var insertMembers = model.members.contains(user.sevaUserID);
+      print("Itemqwerty:${user.sevaUserID} is present:$insertMembers");
+      var memberList = List<String>();
+      memberList.addAll(model.members);
+      if (!model.members.contains(user.sevaUserID)) {
+        memberList.add(user.sevaUserID);
+      }
+      model.members = memberList;
+      print(
+          "Itemqwerty:${user.sevaUserID} is listSize:${model.members.length}");
+      await updateUser(user: user);
+    });
+    await updateCommunity(communityModel: communityModel);
+    await FirestoreManager.updateTimebank(timebankModel: model);
+    resetAndLoad();
+  }
+
+  Future _removeUserFromCommunityAndUpdateUserCommunityList(
+      {TimebankModel model, List<String> members, String userId}) async {
+    if (model == null || members == null || members.length == 0) {
+      return;
+    }
+    UserModel user = await getUserForId(sevaUserId: userId);
+    var currentCommunity = SevaCore.of(context).loggedInUser.currentCommunity;
+    print("Current community:$currentCommunity");
+    var communities = List<String>();
+    if (user.communities != null && user.communities.length > 0) {
+      communities.addAll(user.communities);
+      communities.remove(currentCommunity);
+    }
+    user.communities = communities.length > 0 ? communities : null;
+
+    if (user.communities == null) {
+      user.currentCommunity = '';
+    } else if (user.communities.contains(currentCommunity)) {
+      user.currentCommunity =
+          user.communities.length > 0 ? user.communities[0] : '';
+    }
+    var communityModel =
+        await getCommunityDetailsByCommunityId(communityId: currentCommunity);
+    if (communityModel.members.contains(user.sevaUserID)) {
+      var newMembers = List<String>();
+      for (var i = 0; i < communityModel.members.length; i++) {
+        if (communityModel.members[i] != user.sevaUserID) {
+          newMembers.add(communityModel.members[i]);
+        }
+      }
+      communityModel.members = newMembers;
+    }
+    model.members = members;
+    await updateUser(user: user);
+    await updateCommunity(communityModel: communityModel);
+    await FirestoreManager.updateTimebank(timebankModel: model);
+    resetAndLoad();
   }
 
   Future loadCoordinators() async {
@@ -643,20 +758,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
       if (widget.isUserAdmin) {
-        var gesture = GestureDetector(
-          child: Row(
-            children: <Widget>[
-              getSectionTitle(context, 'Members '),
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 10,
-                child: Image.asset("lib/assets/images/add.png"),
-              ),
-            ],
+        var gesture = TransactionLimitCheck(
+          child: GestureDetector(
+            child: Row(
+              children: <Widget>[
+                getSectionTitle(context, 'Members '),
+                CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 10,
+                  child: Image.asset("lib/assets/images/add.png"),
+                ),
+              ],
+            ),
+            onTap: () async {
+              addVolunteers();
+            },
           ),
-          onTap: () async {
-            addVolunteers();
-          },
         );
         _membersWidgets.add(gesture);
       } else {
@@ -768,10 +885,21 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           isProgressBarActive = true;
         });
         List<String> members = timebankModel.members.map((s) => s).toList();
+        var users = List<UserModel>();
         selectedUsers.forEach((name, model) {
           members.add(model.sevaUserID);
+          users.add(model);
         });
-        _updateTimebank(timebankModel, members: members);
+        if (widget.isCommunity != null && widget.isCommunity) {
+          _addUserToCommunityAndUpdateUserCommunityList(
+            model: timebankModel,
+            members: users,
+            currentCommunity:
+                SevaCore.of(context).loggedInUser.currentCommunity,
+          );
+        } else {
+          _updateTimebank(timebankModel, members: members);
+        }
       }
     } else {
       print("No users where selected");
@@ -922,9 +1050,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     if (members != null) {
       model.members = members;
     }
-    await FirestoreManager.updateTimebank(timebankModel: model).then((onValue) {
-      resetAndLoad();
-    });
+    await FirestoreManager.updateTimebank(timebankModel: model);
+    resetAndLoad();
   }
 }
 

@@ -221,22 +221,13 @@ class InviteMembersState extends State<InviteMembers> {
             ],
           ),
           actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: dialogButtonSize),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
               child: Text(
                 'Publish code',
                 style: TextStyle(
-                  color: Colors.green,
                   fontSize: dialogButtonSize,
                 ),
               ),
@@ -251,6 +242,15 @@ class InviteMembersState extends State<InviteMembers> {
                   communityId: widget.communityId,
                 );
                 Navigator.of(context).pop("completed");
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red, fontSize: dialogButtonSize),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
               },
             ),
           ],

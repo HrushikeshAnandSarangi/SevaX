@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 
 class ReviewFeedback extends StatefulWidget {
@@ -27,6 +28,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: AppConfig.appName,
       home: Scaffold(
         appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
@@ -134,9 +136,10 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
               children: <Widget>[
                 TextFormField(
                   controller: myCommentsController,
-                  style: TextStyle(fontSize: 18.0, color: Colors.black87),
+                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
                   decoration: InputDecoration(
                     errorText: _validate ? 'Field can\'t be left blank' : null,
+                    hintStyle: TextStyle(fontSize: 14),
                     hintText:
                         'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
                     border: OutlineInputBorder(

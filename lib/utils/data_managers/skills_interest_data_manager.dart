@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -47,4 +48,39 @@ Future<List<String>> getInterestsForTimebank({
     log('getInterestsForTimebank: error: $error');
     return null;
   }
+}
+
+Future<Map<String, dynamic>> getUserSkillsInterests({
+  List<dynamic> skillsIdList,
+  List<dynamic> interestsIdList,
+}) async {
+  List<String> skillsarr, interestsarr;
+
+  skillsarr = List();
+  interestsarr = List();
+  QuerySnapshot queryData1, queryData2;
+  Map<String, dynamic> resultMap = HashMap();
+
+  if (skillsIdList.length != 0) {
+    queryData1 = await Firestore.instance.collection('skills').getDocuments();
+    queryData1.documents.forEach((docsnapshot) {
+      if (skillsIdList.contains(docsnapshot.documentID)) {
+        if (docsnapshot.data != null) skillsarr.add(docsnapshot.data["name"]);
+      }
+    });
+
+    resultMap["skills"] = skillsarr;
+  }
+
+  if (interestsIdList.length != 0) {
+    queryData2 =
+        await Firestore.instance.collection('interests').getDocuments();
+    queryData2.documents.forEach((docsnapshot) {
+      if (interestsIdList.contains(docsnapshot.documentID)) {
+        interestsarr.add(docsnapshot.data["name"]);
+      }
+    });
+    resultMap["interests"] = interestsarr;
+  }
+  return resultMap;
 }

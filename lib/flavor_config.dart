@@ -59,7 +59,7 @@ class FlavorConfig {
             primarySwatch: Colors.green,
             // primaryColor: Color.fromARGB(255, 255, 166, 35),
             primaryColor: Color(0x0FF766FE0),
-
+            scaffoldBackgroundColor: Colors.white,
             accentColor: Color.fromARGB(255, 255, 166, 35),
             secondaryHeaderColor: Colors.white,
             indicatorColor: Colors.amberAccent[100],

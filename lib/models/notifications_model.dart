@@ -11,6 +11,7 @@ class NotificationsModel extends DataModel {
   String timebankId;
   String communityId;
   bool directToMember;
+  int timestamp;
 
   NotificationsModel({
     this.id,
@@ -25,7 +26,6 @@ class NotificationsModel extends DataModel {
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
-
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
@@ -96,6 +96,10 @@ class NotificationsModel extends DataModel {
     if (map.containsKey('isRead')) {
       this.isRead = map['isRead'];
     }
+
+    if (map.containsKey('timestamp')) {
+      this.timestamp = map['timestamp'];
+    }
   }
 
   @override
@@ -138,6 +142,9 @@ class NotificationsModel extends DataModel {
     if (this.communityId != null) {
       map['communityId'] = this.communityId;
     }
+
+    map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
+
     return map;
   }
 }

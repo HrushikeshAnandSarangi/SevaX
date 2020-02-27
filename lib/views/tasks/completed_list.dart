@@ -65,10 +65,12 @@ class _CompletedListState extends State<CompletedList> {
       );
     }
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      // physics: NeverScrollableScrollPhysics(),
       itemCount: requestList.length,
+
       itemBuilder: (context, index) {
-        RequestModel model = requestList.elementAt(index);
+        RequestModel model =
+            requestList.elementAt(requestList.length - index - 1);
 
         return Card(
           child: ListTile(
@@ -105,7 +107,7 @@ class _CompletedListState extends State<CompletedList> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text('${transmodel.credits}'),
-                  Text('Yang bucks',
+                  Text('Seva Coins',
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w600,

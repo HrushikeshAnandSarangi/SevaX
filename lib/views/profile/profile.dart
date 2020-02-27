@@ -47,12 +47,6 @@ class _ProfilePageState extends State<ProfilePage>
   // ScrollController scrollController;
   TimebankModel timebankModel;
   FirebaseUser firebaseUser;
-
-  // double appbarScale = 0.9;
-  // double flexibleScale = 1.0;
-
-  // AnimationController appbarAnimationController;
-  // AnimationController flexibleAnimationController;
   bool isAdminOrCoordinator = false;
   bool isVerifyAccountPressed = false;
   bool isUserLoaded = false;
@@ -292,9 +286,12 @@ class _ProfilePageState extends State<ProfilePage>
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text(
-                              'Select a timebank',
-                              style: TextStyle(fontSize: 18),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Text(
+                                'Select a Timebank',
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                             IconButton(
                               icon: Icon(Icons.add_circle_outline),
@@ -303,7 +300,9 @@ class _ProfilePageState extends State<ProfilePage>
                                   MaterialPageRoute(
                                     builder: (context) =>
                                         CreateEditCommunityView(
-                                      timebankId: timebankModel.id,
+                                      timebankId:
+                                          FlavorConfig.values.timebankId,
+                                      isFromFind: false,
                                     ),
                                   ),
                                 );
@@ -458,6 +457,9 @@ class _ProfilePageState extends State<ProfilePage>
                                         builder: (context) {
                                           return FindCommunitiesView(
                                             keepOnBackPress: true,
+                                            loggedInUser: SevaCore.of(context)
+                                                .loggedInUser,
+                                            showBackBtn: true,
                                           );
                                         },
                                       ),
@@ -834,15 +836,6 @@ class _ProfilePageState extends State<ProfilePage>
           title: Text("Signing out"),
           content: Text("Acknowledge the verification mail and login back"),
           actions: <Widget>[
-            FlatButton(
-                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                child: Text(
-                  "No, I'll do it later",
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () => Navigator.of(context).pop()),
             RaisedButton(
               padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
               elevation: 5,
@@ -861,6 +854,13 @@ class _ProfilePageState extends State<ProfilePage>
                 });
               },
             ),
+            FlatButton(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: Text(
+                  "No, I'll do it later",
+                  style: TextStyle(fontSize: 16, color: Colors.red),
+                ),
+                onPressed: () => Navigator.of(context).pop()),
           ],
         );
       },
@@ -1259,7 +1259,7 @@ class CommunityCard extends StatelessWidget {
               ),
             ),
           ),
-          Icon(Icons.navigate_next),
+          // Icon(Icons.navigate_next),
           SizedBox(width: 10),
         ],
       ),

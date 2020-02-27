@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
@@ -181,77 +180,99 @@ class _LoginPageState extends State<LoginPage> {
                                             title: Text(
                                               'Enter email',
                                             ),
-                                            content: Form(
-                                              key: _formKeyDialog,
-                                              child: TextFormField(
-                                                validator: (value) {
-                                                  if (value.isEmpty) {
-                                                    return 'Please enter email to update';
-                                                  } else if (!validateEmail(
-                                                      value.trim())) {
-                                                    return 'Please enter a valid email';
-                                                  }
-                                                  _textFieldControllerResetEmail =
-                                                      value;
-                                                },
-                                                // validator: validateEmail,
-                                                onChanged: (value) {
-                                                  print("$value");
-                                                },
-                                                initialValue: "",
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                controller: null,
-                                                decoration: InputDecoration(
-                                                  hintText:
-                                                      "Your email address",
-                                                  // errorText: isEmailValidForReset
-                                                  //     ? null
-                                                  //     : validateEmail(
-                                                  //         _textFieldControllerResetEmail.text,
-                                                  //       ),
-                                                ),
-                                              ),
-                                            ),
-                                            actions: <Widget>[
-                                              new FlatButton(
-                                                child: new Text(
-                                                  'Cancel',
-                                                  style: TextStyle(
-                                                    fontSize: dialogButtonSize,
-                                                  ),
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                    {
-                                                      "sendResetLink": false,
-                                                      "userEmail": null
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Form(
+                                                  key: _formKeyDialog,
+                                                  child: TextFormField(
+                                                    validator: (value) {
+                                                      if (value.isEmpty) {
+                                                        return 'Please enter email to reset';
+                                                      } else if (!validateEmail(
+                                                          value.trim())) {
+                                                        return 'Please enter a valid email';
+                                                      }
+                                                      _textFieldControllerResetEmail =
+                                                          value;
                                                     },
-                                                  );
-                                                },
-                                              ),
-                                              new FlatButton(
-                                                child: new Text(
-                                                  'Reset Password',
-                                                  style: TextStyle(
-                                                    fontSize: dialogButtonSize,
+                                                    // validator: validateEmail,
+                                                    onChanged: (value) {
+                                                      print("$value");
+                                                    },
+                                                    initialValue: "",
+                                                    keyboardType: TextInputType
+                                                        .emailAddress,
+                                                    controller: null,
+                                                    decoration: InputDecoration(
+                                                      hintText:
+                                                          "Your email address",
+                                                      // errorText: isEmailValidForReset
+                                                      //     ? null
+                                                      //     : validateEmail(
+                                                      //         _textFieldControllerResetEmail.text,
+                                                      //       ),
+                                                    ),
                                                   ),
                                                 ),
-                                                onPressed: () {
-                                                  if (!_formKeyDialog
-                                                      .currentState
-                                                      .validate()) {
-                                                    return;
-                                                  }
-                                                  Navigator.of(context).pop({
-                                                    "sendResetLink": true,
-                                                    "userEmail":
-                                                        _textFieldControllerResetEmail
-                                                            .trim()
-                                                  });
-                                                },
-                                              )
-                                            ],
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Row(
+                                                  children: <Widget>[
+                                                    FlatButton(
+                                                      padding:
+                                                          EdgeInsets.fromLTRB(
+                                                              10, 5, 10, 5),
+                                                      color: Theme.of(context)
+                                                          .accentColor,
+                                                      textColor: FlavorConfig
+                                                          .values
+                                                          .buttonTextColor,
+                                                      child: Text(
+                                                        'Reset Password',
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        if (!_formKeyDialog
+                                                            .currentState
+                                                            .validate()) {
+                                                          return;
+                                                        }
+                                                        Navigator.of(context)
+                                                            .pop({
+                                                          "sendResetLink": true,
+                                                          "userEmail":
+                                                              _textFieldControllerResetEmail
+                                                                  .trim()
+                                                        });
+                                                      },
+                                                    ),
+                                                    FlatButton(
+                                                      child: Text(
+                                                        'Cancel',
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(
+                                                          {
+                                                            "sendResetLink":
+                                                                false,
+                                                            "userEmail": null
+                                                          },
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
                                           );
                                         }).then((onActivityResult) {
                                       if (onActivityResult != null &&
@@ -484,14 +505,14 @@ class _LoginPageState extends State<LoginPage> {
                     validator: _validatePassword,
                     onSaved: _savePassword,
                     decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black54)),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black54),
-                      ),
-                      labelText: 'PASSWORD',
-                      labelStyle: textStyle,
-                        suffix:   GestureDetector(
+                        enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54)),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black54),
+                        ),
+                        labelText: 'PASSWORD',
+                        labelStyle: textStyle,
+                        suffix: GestureDetector(
                           onTap: () {
                             _shouldObscurePassword = !_shouldObscurePassword;
                             setState(() {});
@@ -501,8 +522,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ? Icons.visibility_off
                                 : Icons.visibility,
                           ),
-                        )
-                    ),
+                        )),
                   ),
                   SizedBox(height: 22),
                   // SizedBox(height: 32),

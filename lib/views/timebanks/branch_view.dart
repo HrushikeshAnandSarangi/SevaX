@@ -224,13 +224,18 @@ class _BranchViewState extends State<BranchView> {
                                             actions: <Widget>[
                                               // usually buttons at the bottom of the dialog
                                               new FlatButton(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 5, 20, 5),
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                                textColor: FlavorConfig
+                                                    .values.buttonTextColor,
                                                 child: new Text(
                                                   "Send Join Request",
                                                   style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .accentColor,
-                                                    fontSize: dialogButtonSize,
-                                                  ),
+                                                      fontSize:
+                                                          dialogButtonSize,
+                                                      fontFamily: 'Europa'),
                                                 ),
                                                 onPressed: () async {
                                                   //For test
@@ -252,7 +257,7 @@ class _BranchViewState extends State<BranchView> {
 
                                                   if (formkey.currentState
                                                       .validate()) {
-                                                    await createJoinRequest(
+                                                    await updateJoinRequest(
                                                         model:
                                                             joinRequestModel);
                                                   }
@@ -262,8 +267,10 @@ class _BranchViewState extends State<BranchView> {
                                                 child: new Text(
                                                   "Close",
                                                   style: TextStyle(
-                                                    fontSize: dialogButtonSize,
-                                                  ),
+                                                      fontSize:
+                                                          dialogButtonSize,
+                                                      color: Colors.red,
+                                                      fontFamily: 'Europa'),
                                                 ),
                                                 onPressed: () {
                                                   Navigator.of(context).pop();

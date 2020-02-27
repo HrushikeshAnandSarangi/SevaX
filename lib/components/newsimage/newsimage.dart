@@ -15,21 +15,16 @@ class NewsImage extends StatefulWidget {
   String selectedAddress;
   GeoFirePoint geoFirePointLocation;
 
-  Function(String) onCreditsEntered;
+  final ValueChanged<String> onCreditsEntered;
   Function(GeoFirePoint) geoFirePointLocationCallback;
 
   NewsImage(
       {String photoCredits,
       GeoFirePoint geoFirePointLocation,
-      Function(String) onCreditsEntered,
-      Function(GeoFirePoint) geoFirePointLocationCallback}) {
-    this.onCreditsEntered = onCreditsEntered;
-    this.geoFirePointLocationCallback = geoFirePointLocationCallback;
-    this.photoCredits = photoCredits;
-  }
+      Function(GeoFirePoint) geoFirePointLocationCallback,
+      this.onCreditsEntered});
 
-  NewsImageState createState() =>
-      NewsImageState(onCreditsEntered, geoFirePointLocationCallback);
+  NewsImageState createState() => NewsImageState(geoFirePointLocationCallback);
 }
 
 @override
@@ -37,8 +32,7 @@ class NewsImageState extends State<NewsImage>
     with TickerProviderStateMixin, ImagePickerListener {
   bool _isImageBeingUploaded = false;
   Function(GeoFirePoint) geoFirePointLocationCallback;
-  Function(String) onCreditsEntered;
-  NewsImageState(this.onCreditsEntered, this.geoFirePointLocationCallback);
+  NewsImageState(this.geoFirePointLocationCallback);
 
   ImagePickerHandler imagePicker;
 
@@ -148,9 +142,8 @@ class NewsImageState extends State<NewsImage>
                                   textAlign: TextAlign.center,
                                   //style: textStyle,
                                   onChanged: (credits) {
-                                    onCreditsEntered(credits);
+                                    widget.onCreditsEntered(credits);
                                   },
-                                  validator: (value) {},
                                 ),
                               ),
                             ],
@@ -171,6 +164,7 @@ class NewsImageState extends State<NewsImage>
                       child: Container(
                         margin: EdgeInsets.only(left: 20),
                         child: FlatButton.icon(
+                          padding: EdgeInsets.only(left: 8),
                           icon: Icon(Icons.image),
                           color: Colors.grey[200],
                           label: Text(
@@ -187,6 +181,7 @@ class NewsImageState extends State<NewsImage>
                       child: Container(
                         margin: EdgeInsets.only(left: 20),
                         child: FlatButton.icon(
+                          padding: EdgeInsets.only(left: 8),
                           icon: Icon(Icons.add_location),
                           label: Text(
                             "",

@@ -303,10 +303,11 @@ class _ViewAcceptedOffers extends StatelessWidget {
                           // }
                         },
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                      ),
+//                      Padding(
+//                        padding: EdgeInsets.all(8.0),
+//                      ),
                       RaisedButton(
+                        color: Theme.of(context).accentColor,
                         child: Container(
                             width: double.infinity,
                             child: Center(

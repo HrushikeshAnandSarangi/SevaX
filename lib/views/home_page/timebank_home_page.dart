@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/widgets/no_group_placeholder.dart';
 import 'package:sevaexchange/views/home_page/widgets/timebank_card.dart';
@@ -52,6 +54,9 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   @override
   Widget build(BuildContext context) {
+    final _userBloc = BlocProvider.of<UserDataBloc>(context);
+    print("--> user details ${_userBloc.user.email}");
+    super.build(context);
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,16 +73,18 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  onPressed: navigateToCreateGroup,
+                TransactionLimitCheck(
+                  child: IconButton(
+                    icon: Icon(Icons.add_circle_outline),
+                    onPressed: navigateToCreateGroup,
+                  ),
                 ),
               ],
             ),
           ),
           Container(
             height: 210,
-            child: getTimebanks(),
+            child: getTimebanks(_userBloc),
           ),
           SizedBox(height: 10),
           Container(
@@ -123,7 +130,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     );
   }
 
-  Widget getTimebanks() {
+  Widget getTimebanks(UserDataBloc userBloc) {
     print("length ==> ${widget.selectedCommuntityGroup.timebanks.length}");
     if (widget.selectedCommuntityGroup.timebanks.length <= 1) {
       return NoGroupPlaceHolder(navigateToCreateGroup: navigateToCreateGroup);
@@ -139,6 +146,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 widget.selectedCommuntityGroup.currentCommunity
                     .primary_timebank) {
               return TimeBankCard(
+                userBloc: userBloc,
                 timebank: widget.selectedCommuntityGroup.timebanks[index],
               );
             }

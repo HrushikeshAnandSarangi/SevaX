@@ -119,7 +119,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   Widget getTimebanks({BuildContext context}) {
     Size size = MediaQuery.of(context).size;
-
     List<TimebankModel> timebankList = [];
     return StreamBuilder<CommunityCreateEditController>(
         stream: createEditCommunityBloc.createEditCommunity,
@@ -196,7 +195,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TimebankTabsViewHolder.of(
+            builder: (context) => TimebankRouter(
               timebankId: timebank.id,
               timebankModel: timebank,
             ),
@@ -275,12 +274,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               joinRequestModel.entityType = EntityType.Timebank;
                               joinRequestModel.accepted = false;
 
-                              await createJoinRequest(model: joinRequestModel);
+                              await updateJoinRequest(model: joinRequestModel);
 
                               JoinRequestNotificationModel joinReqModel =
                                   JoinRequestNotificationModel(
                                       timebankId: timebank.id,
-                                      timebankTitle: timebank.name);
+                                      timebankTitle: timebank.name,
+                                      reasonToJoin: joinRequestModel.reason);
 
                               NotificationsModel notification =
                                   NotificationsModel(

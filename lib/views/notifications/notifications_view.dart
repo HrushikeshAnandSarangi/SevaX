@@ -4,7 +4,6 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
@@ -19,7 +18,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
-import 'package:sevaexchange/views/timebanks/admin_view_request_status.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -55,9 +53,6 @@ class NotificationsView extends State<NotificationViewHolder> {
 
         SevaCore.of(context).loggedInUser.notificationsRead =
             notifications.length;
-
-        print(
-            "Unread notifications ${SevaCore.of(context).loggedInUser.notificationsRead}");
 
         if (notifications.length == 0) {
           return Center(
@@ -174,12 +169,14 @@ class NotificationsView extends State<NotificationViewHolder> {
                 // TODO: Handle this case.
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
+                //  return Text('jhb');
                 return getNotificationCredit(
                     model, notification.senderUserId, notification.id);
                 break;
               case NotificationType.TransactionDebit:
                 TransactionModel model =
                     TransactionModel.fromMap(notification.data);
+                // return Text('ko');
                 return getNotificationDebit(
                     model, notification.senderUserId, notification.id);
                 break;
@@ -275,8 +272,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-        stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+        future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -347,8 +344,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-        stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+        future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text(snapshot.error.toString());
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -388,7 +385,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                       ),
                       TextSpan(
-                        text: 'has been debited to ${user.fullname}',
+                        text: 'has been credited to ${user.fullname}',
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -407,61 +404,65 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-        UserModel user = snapshot.data;
-        TransactionModel transactionModel =
-            model.transactions.firstWhere((transaction) {
-          return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
-        });
-        return Dismissible(
-          key: Key(Utils.getUuid()),
-          background: dismissibleBackground,
-          onDismissed: (direction) {
-            FirestoreManager.readUserNotification(
-              notificationId,
-              SevaCore.of(context).loggedInUser.email,
-            );
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              title: Text(model.title),
-              subtitle: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text:
-                          '${user.fullname} approved the task completion for ',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                    TextSpan(
-                      text: () {
-                        return '${transactionModel.credits} hours';
-                      }(),
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+    // return
+
+    TransactionModel transactionModel =
+        model.transactions.firstWhere((transaction) {
+      return transaction.to == SevaCore.of(context).loggedInUser.sevaUserID;
+    });
+
+    return Dismissible(
+      key: Key(Utils.getUuid()),
+      background: dismissibleBackground,
+      onDismissed: (direction) {
+        FirestoreManager.readUserNotification(
+          notificationId,
+          SevaCore.of(context).loggedInUser.email,
         );
       },
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(model.photoUrl),
+          ),
+          title: Text(model.title),
+          subtitle: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '${model.fullName} approved the task completion for ',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                TextSpan(
+                  text: () {
+                    return '${transactionModel.credits} hours';
+                  }(),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
+
+    // return StreamBuilder<UserModel>(
+    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) return Text(snapshot.error.toString());
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return notificationShimmer;
+    //     }
+    //     UserModel user = snapshot.data;
+
+    //   },
+    // );
   }
 
   Widget getOfferAcceptNotification(
@@ -471,8 +472,8 @@ class NotificationsView extends State<NotificationViewHolder> {
       String notificationId,
       String requestid,
       List<NotificationsModel> notifications) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -512,7 +513,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                               communityId: SevaCore.of(context)
                                   .loggedInUser
                                   .currentCommunity,
-                                  
                             );
                             offermodel.associatedRequest = requestid;
                             updateOfferWithRequest(offer: offermodel);
@@ -672,8 +672,8 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) return Text(snapshot.error.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -803,7 +803,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             content: Form(
               //key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   _getCloseButton(viewContext),
                   Container(
@@ -864,46 +864,50 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                       )),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        child: Text(
-                          'Reject',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        onPressed: () async {
-                          // reject the claim
-                          rejectMemberClaimForEvent(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
-                          Navigator.pop(viewContext);
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                      ),
-                      RaisedButton(
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(color: Colors.green),
-                        ),
-                        onPressed: () async {
-                          // Once approved take for feeddback
-                          approveMemberClaim(
-                              context: context,
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel,
-                              userId: userId);
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // Once approved take for feeddback
+                            approveMemberClaim(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
 
-                          Navigator.pop(viewContext);
-                        },
+                            Navigator.pop(viewContext);
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            'Reject',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () async {
+                            // reject the claim
+                            rejectMemberClaimForEvent(
+                                context: context,
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel,
+                                userId: userId);
+                            Navigator.pop(viewContext);
+                          },
+                        ),
                       ),
                     ],
                   )
@@ -922,7 +926,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         );
       }
       return Container(
-        height: 200,
+        height: 150,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Text(
@@ -982,7 +986,9 @@ class NotificationsView extends State<NotificationViewHolder> {
     ChatModel chatModel = ChatModel();
     chatModel.user1 = users[0];
     chatModel.user2 = users[1];
+    chatModel.communityId = SevaCore.of(context).loggedInUser.currentCommunity;
     chatModel.timebankId = widget.timebankId;
+
     createChat(chat: chatModel);
 
     Navigator.push(
@@ -1087,7 +1093,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/approved.png")),
-          subtitle: Text('Request approved by ${model.fullName.toLowerCase()}'),
+          subtitle: Text('Request approved by ${model.fullName}'),
         ),
       ),
     );
@@ -1131,7 +1137,7 @@ class NotificationsView extends State<NotificationViewHolder> {
               backgroundImage: model.photoUrl != null
                   ? NetworkImage(model.photoUrl)
                   : AssetImage("lib/assets/images/profile.png")),
-          subtitle: Text('Request rejected by ${model.fullName.toLowerCase()}'),
+          subtitle: Text('Request rejected by ${model.fullName}'),
         ),
       ),
     );
@@ -1158,60 +1164,64 @@ class NotificationsView extends State<NotificationViewHolder> {
     String userId,
     String notificationId,
   ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(snapshot.error.toString()),
-          );
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return notificationShimmer;
-        }
-
-        UserModel user = snapshot.data;
-        return Dismissible(
-          background: dismissibleBackground,
-          key: Key(Utils.getUuid()),
-          onDismissed: (direction) {
-            String userEmail = SevaCore.of(context).loggedInUser.email;
-            FirestoreManager.readUserNotification(notificationId, userEmail);
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text(model.title),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              subtitle: Text('Task completion rejected by ${user.fullname}'),
-              onTap: () {
-                String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-                List users = [user.email, loggedInEmail];
-                users.sort();
-                ChatModel chatModel = ChatModel();
-                chatModel.user1 = users[0];
-                chatModel.user2 = users[1];
-                chatModel.timebankId = widget.timebankId;
-
-                createChat(chat: chatModel);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChatView(
-                            useremail: user.email,
-                            chatModel: chatModel,
-                          )),
-                );
-              },
-            ),
-          ),
-        );
+    return Dismissible(
+      background: dismissibleBackground,
+      key: Key(Utils.getUuid()),
+      onDismissed: (direction) {
+        String userEmail = SevaCore.of(context).loggedInUser.email;
+        FirestoreManager.readUserNotification(notificationId, userEmail);
       },
+      child: Container(
+        margin: notificationPadding,
+        decoration: notificationDecoration,
+        child: ListTile(
+          title: Text(model.title),
+          leading: CircleAvatar(
+            backgroundImage: NetworkImage(model.photoUrl),
+          ),
+          subtitle: Text('Task completion rejected by ${model.fullName}'),
+          onTap: () {
+            // hibernated for release, check timebank protection status
+            // String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+            // List users = [model.timebankId, loggedInEmail];
+            // users.sort();
+            // ChatModel chatModel = ChatModel();
+            // chatModel.communityId =
+            //     SevaCore.of(context).loggedInUser.currentCommunity;
+            // chatModel.user1 = users[0];
+            // chatModel.user2 = users[1];
+            // chatModel.timebankId = widget.timebankId;
+
+            // createChat(chat: chatModel);
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //       builder: (context) => ChatView(
+            //             useremail: model.timebankId,
+            //             chatModel: chatModel,
+            //           )),
+            // );
+          },
+        ),
+      ),
     );
+    // return StreamBuilder<UserModel>(
+    //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       return Center(
+    //         child: Text(snapshot.error.toString()),
+    //       );
+    //     }
+
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return notificationShimmer;
+    //     }
+
+    //     UserModel user = snapshot.data;
+
+    //   },
+    // );
   }
 
   Future<http.Response> scheduleNotification(
@@ -1236,8 +1246,8 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   Widget getNotificationAcceptedWidget(
       RequestModel model, String userId, String notificationId) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+    return FutureBuilder<UserModel>(
+      future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -1257,41 +1267,41 @@ class NotificationsView extends State<NotificationViewHolder> {
             secondaryActions: <Widget>[],
             child: GestureDetector(
               onTap: () {
-                // showDialogForApproval(
-                //     context: context,
-                //     userModel: user,
-                //     notificationId: notificationId,
-                //     requestModel: model);
-
-                BuildContext dialogContext;
-
-                showDialog(
-                    barrierDismissible: false,
+                showDialogForApproval(
                     context: context,
-                    builder: (createDialogContext) {
-                      dialogContext = createDialogContext;
-                      return AlertDialog(
-                        title: Text('Please wait'),
-                        content: LinearProgressIndicator(),
-                      );
-                    });
+                    userModel: user,
+                    notificationId: notificationId,
+                    requestModel: model);
 
-                Firestore.instance
-                    .collection("requests")
-                    .document(model.id)
-                    .get()
-                    .then((onValue) {
-                  var requestModel = RequestModel.fromMap(onValue.data);
-                  prefix0.Navigator.pop(dialogContext);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ViewRequestStatus(
-                        requestModel: requestModel,
-                      ),
-                    ),
-                  );
-                });
+                // BuildContext dialogContext;
+
+                // showDialog(
+                //     barrierDismissible: false,
+                //     context: context,
+                //     builder: (createDialogContext) {
+                //       dialogContext = createDialogContext;
+                //       return AlertDialog(
+                //         title: Text('Please wait'),
+                //         content: LinearProgressIndicator(),
+                //       );
+                //     });
+
+                // Firestore.instance
+                //     .collection("requests")
+                //     .document(model.id)
+                //     .get()
+                //     .then((onValue) {
+                //   var requestModel = RequestModel.fromMap(onValue.data);
+                //   prefix0.Navigator.pop(dialogContext);
+                //   Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => ViewRequestStatus(
+                //         requestModel: requestModel,
+                //       ),
+                //     ),
+                //   );
+                // });
               },
               child: Container(
                   margin: notificationPadding,
@@ -1352,6 +1362,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+      directToMember: true,
     );
   }
 
@@ -1427,43 +1438,53 @@ class NotificationsView extends State<NotificationViewHolder> {
                         textAlign: TextAlign.center),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(5.0),
                   ),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      RaisedButton(
-                        child: Text(
-                          'Decline',
-                          style: TextStyle(color: Colors.red),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: FlavorConfig.values.theme.primaryColor,
+                          child: Text(
+                            'Approve',
+                            style: TextStyle(
+                                color: Colors.white, fontFamily: 'Europa'),
+                          ),
+                          onPressed: () async {
+                            // Once approved
+                            approveMemberForVolunteerRequest(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // request declined
-
-                          declineRequestedMember(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-
-                          Navigator.pop(viewContext);
-                        },
                       ),
                       Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: EdgeInsets.all(3.0),
                       ),
-                      RaisedButton(
-                        child: Text(
-                          'Approve',
-                          style: TextStyle(color: Colors.green),
+                      Container(
+                        width: double.infinity,
+                        child: RaisedButton(
+                          color: Theme.of(context).accentColor,
+                          child: Text(
+                            '',
+                            style: TextStyle(
+                                color: Colors.white,),
+                          ),
+                          onPressed: () async {
+                            // request declined
+
+                            declineRequestedMember(
+                                model: requestModel,
+                                notificationId: notificationId,
+                                user: userModel);
+
+                            Navigator.pop(viewContext);
+                          },
                         ),
-                        onPressed: () async {
-                          // Once approved
-                          approveMemberForVolunteerRequest(
-                              model: requestModel,
-                              notificationId: notificationId,
-                              user: userModel);
-                          Navigator.pop(viewContext);
-                        },
                       ),
                     ],
                   )
