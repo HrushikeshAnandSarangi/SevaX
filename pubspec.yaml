@@ -80,7 +80,7 @@ dependencies:
   autocomplete_textfield: ^1.7.3
   stripe_payment: ^1.0.6
   smooth_star_rating: 1.0.4+2
-  # awesome_card: ^1.1.0
+  firebase_remote_config: ^0.3.0+1
 
 dev_dependencies:
   flutter_test:

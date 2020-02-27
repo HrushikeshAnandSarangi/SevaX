@@ -39,6 +39,6 @@ class Repository {
       requestApiProvider.updateInvitedUsersForRequest(requestID, sevauserid);
 
   // functions for payments
-  Future storeCard(token, timebankid, user) => paymentsApiProvider.addCard(token, timebankid, user);
+  Future storeCard(token, timebankid, user,planName) => paymentsApiProvider.addCard(token, timebankid, user,planName);
 //  Future<TrailerModel> fetchTrailers(int movieId) => moviesApiProvider.fetchTrailer(movieId);
 }

@@ -78,6 +78,7 @@ class MainApplication extends StatelessWidget {
             },
           );
         },
+        // home:BillingPlanDetails(),
         home: SplashView(
           skipToHomePage: skipToHomePage,
         ),

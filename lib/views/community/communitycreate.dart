@@ -16,9 +16,8 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
-import '../../main_app.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -310,117 +309,120 @@ class CreateEditCommunityViewFormState
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Container(
-                        alignment: Alignment.center,
-                        child: RaisedButton(
-                          onPressed: () async {
-                            // show a dialog
+                      alignment: Alignment.center,
+                      child: RaisedButton(
+                        onPressed: () async {
+                          // show a dialog
 
-                            print(_formKey.currentState.validate());
+                          print(_formKey.currentState.validate());
 
-                            if (_formKey.currentState.validate()) {
-                              if (_billingInformationKey.currentState
-                                  .validate()) {
+                          if (_formKey.currentState.validate()) {
+                            if (_billingInformationKey.currentState
+                                .validate()) {
+                              setState(() {
+                                this._billingDetailsError = '';
+                              });
+                              print(globals.timebankAvatarURL);
+                              if (globals.timebankAvatarURL == null) {
                                 setState(() {
-                                  this._billingDetailsError = '';
+                                  this.communityImageError =
+                                      'Community logo is mandatory';
                                 });
-                                print(globals.timebankAvatarURL);
-                                if (globals.timebankAvatarURL == null) {
-                                  setState(() {
-                                    this.communityImageError =
-                                        'Community logo is mandatory';
-                                  });
-                                } else {
-                                  showProgressDialog();
-
-                                  setState(() {
-                                    this.communityImageError = '';
-                                  });
-                                  communityFound =
-                                      await isCommunityFound(enteredName);
-                                  if (communityFound) {
-                                    print("Found:$communityFound");
-                                    return;
-                                  }
-                                  // creation of community;
-                                  snapshot.data.UpdateCommunityDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                  );
-                                  // creation of default timebank;
-                                  snapshot.data.UpdateTimebankDetails(
-                                    SevaCore.of(context).loggedInUser,
-                                    globals.timebankAvatarURL,
-                                    widget,
-                                  );
-                                  // updating the community with default timebank id
-                                  snapshot.data.community.timebanks = [
-                                    snapshot.data.timebank.id
-                                  ].cast<String>();
-
-                                  snapshot.data.community.primary_timebank =
-                                      snapshot.data.timebank.id;
-
-                                  createEditCommunityBloc.createCommunity(
-                                    snapshot.data,
-                                    SevaCore.of(context).loggedInUser,
-                                  );
-
-                                  await Firestore.instance
-                                      .collection("users")
-                                      .document(SevaCore.of(context)
-                                          .loggedInUser
-                                          .email)
-                                      .updateData({
-                                    'communities': FieldValue.arrayUnion([
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID
-                                    ]),
-                                    'currentCommunity':
-                                        snapshot.data.community.id
-                                  });
-
-                                  setState(() {
-                                    SevaCore.of(context)
-                                            .loggedInUser
-                                            .currentCommunity =
-                                        snapshot.data.community.id;
-                                  });
-
-                                  Navigator.pop(dialogContext);
-                                  _formKey.currentState.reset();
-                                  _billingInformationKey.currentState.reset();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                      MaterialPageRoute(
-                                        builder: (context1) => MainApplication(
-                                          skipToHomePage: true,
-                                        ),
-                                      ),
-                                      (Route<dynamic> route) => false);
-                                }
                               } else {
+                                showProgressDialog();
+
                                 setState(() {
-                                  this._billingDetailsError =
-                                      'Please configure your billing details';
+                                  this.communityImageError = '';
                                 });
+                                communityFound =
+                                    await isCommunityFound(enteredName);
+                                if (communityFound) {
+                                  print("Found:$communityFound");
+                                  return;
+                                }
+                                // creation of community;
+                                snapshot.data.UpdateCommunityDetails(
+                                  SevaCore.of(context).loggedInUser,
+                                  globals.timebankAvatarURL,
+                                );
+                                // creation of default timebank;
+                                snapshot.data.UpdateTimebankDetails(
+                                  SevaCore.of(context).loggedInUser,
+                                  globals.timebankAvatarURL,
+                                  widget,
+                                );
+                                // updating the community with default timebank id
+                                snapshot.data.community.timebanks =
+                                    [snapshot.data.timebank.id].cast<String>();
+
+                                snapshot.data.community.primary_timebank =
+                                    snapshot.data.timebank.id;
+
+                                createEditCommunityBloc.createCommunity(
+                                  snapshot.data,
+                                  SevaCore.of(context).loggedInUser,
+                                );
+
+                                await Firestore.instance
+                                    .collection("users")
+                                    .document(
+                                        SevaCore.of(context).loggedInUser.email)
+                                    .updateData({
+                                  'communities': FieldValue.arrayUnion([
+                                    SevaCore.of(context).loggedInUser.sevaUserID
+                                  ]),
+                                  'currentCommunity': snapshot.data.community.id
+                                });
+
+                                setState(() {
+                                  SevaCore.of(context)
+                                          .loggedInUser
+                                          .currentCommunity =
+                                      snapshot.data.community.id;
+                                });
+                                UserModel user =
+                                    SevaCore.of(context).loggedInUser;
+                                Navigator.pop(dialogContext);
+                                _formKey.currentState.reset();
+                                _billingInformationKey.currentState.reset();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        BillingPlanDetails(user: user),
+                                  ),
+                                );
+                                //   Navigator.of(context).pushAndRemoveUntil(
+                                //       MaterialPageRoute(
+                                //         builder: (context1) => MainApplication(
+                                //           skipToHomePage: true,
+                                //         ),
+                                //       ),
+                                //       (Route<dynamic> route) => false);
                               }
-                            } else {}
-                          },
-                          shape: StadiumBorder(),
-                          child: Text(
-                            'Create a Timebank',
-                            style:
-                                TextStyle(fontSize: 16.0, color: Colors.white),
-                          ),
-                          textColor: FlavorConfig.values.buttonTextColor,
-                        )),
+                            } else {
+                              setState(() {
+                                this._billingDetailsError =
+                                    'Please configure your billing details';
+                              });
+                            }
+                          } else {}
+                        },
+                        shape: StadiumBorder(),
+                        child: Text(
+                          'Create a Timebank',
+                          style: TextStyle(fontSize: 16.0, color: Colors.white),
+                        ),
+                        textColor: FlavorConfig.values.buttonTextColor,
+                      ),
+                    ),
                   ),
                   Padding(
-                      padding: EdgeInsets.symmetric(vertical: 50),
-                      child: Text(
-                        '',
-                        textAlign: TextAlign.center,
-                      ))
+                    padding: EdgeInsets.symmetric(vertical: 50),
+                    child: Text(
+                      '',
+                      textAlign: TextAlign.center,
+                    ),
+                  )
                 ]));
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
@@ -583,13 +585,12 @@ class CreateEditCommunityViewFormState
   Widget get _billingDetailsTitle {
     return Container(
 //        margin: EdgeInsets.fromLTRB(10, 0, 20, 10),
-        margin: EdgeInsets.fromLTRB(20,0,20,5),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Column(
               children: <Widget>[
-
                 Text(
                   'Billing Details',
                   style: TextStyle(
@@ -646,7 +647,7 @@ class CreateEditCommunityViewFormState
     print(focusNodes);
     Widget _stateWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
@@ -674,7 +675,7 @@ class CreateEditCommunityViewFormState
 
     Widget _pinCodeWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
@@ -734,7 +735,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
@@ -762,7 +763,7 @@ class CreateEditCommunityViewFormState
 
     Widget _streetAddressTwoWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
             onFieldSubmitted: (input) {
               FocusScope.of(context).requestFocus(focusNodes[4]);
@@ -786,7 +787,7 @@ class CreateEditCommunityViewFormState
 
     Widget _companyNameWidget(controller) {
       return Container(
-        margin: EdgeInsets.fromLTRB(20,10,20,10),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[5]);
@@ -813,7 +814,7 @@ class CreateEditCommunityViewFormState
 
     Widget _continueBtn(controller) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(100, 10, 100, 20 ),
+        padding: const EdgeInsets.fromLTRB(100, 10, 100, 20),
         child: RaisedButton(
           child: Text(
             "Continue",

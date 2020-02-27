@@ -7,7 +7,7 @@ import 'package:sevaexchange/models/models.dart';
 class PaymentsApiProvider {
   Client client = Client();
 
-  Future<bool> addCard(String token, String timebankid, UserModel user) async {
+  Future<bool> addCard(String token, String timebankid, UserModel user,String planName) async {
     Firestore.instance.collection('cards').document(timebankid)
         .collection('tokens')
         .add({'tokenId': token})
@@ -17,7 +17,8 @@ class PaymentsApiProvider {
     Firestore.instance.collection('cards').document(timebankid).setData({
       'email': user.email,
       'timebankid': timebankid,
-      'custId': ''
+      'custId': '',
+      'currentplan': planName
     }).then((val) {
       print('saved');
     });
