@@ -107,4 +107,7 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+googleServices {
+    disableVersionCheck = true
+}
 apply plugin: 'io.fabric'

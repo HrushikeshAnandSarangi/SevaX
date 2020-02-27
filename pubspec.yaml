@@ -80,7 +80,7 @@ dependencies:
   autocomplete_textfield: ^1.7.3
   stripe_payment: ^1.0.6
   smooth_star_rating: 1.0.4+2
-
+  # awesome_card: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -88,7 +88,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
 
   assets:
     - lib/assets/splash_images/1.jpg
@@ -150,13 +149,16 @@ flutter:
     - lib/assets/images/yang_speaking.jpg
     - lib/assets/images/yang_standing.jpg
 
-
     # - lib/assets/images/andrew_yang_three.jpg
 
     - lib/assets/images/recycle-bin.png
     - lib/assets/images/image_01.png
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
+
+    # card images
+    - images/
+    - images/card_provider/
   fonts:
     - family: Montserrat
       fonts:
@@ -185,3 +187,11 @@ flutter:
         - asset: fonts/EuropaLightItalic.ttf
         - asset: fonts/EuropaRegular.ttf
         - asset: fonts/EuropaRegularItalic.ttf
+    - family: MavenPro
+      fonts:
+        - asset: fonts/MavenPro-Regular.ttf
+          weight: 400
+        - asset: fonts/MavenPro-Medium.ttf
+          weight: 500
+        - asset: fonts/MavenPro-Bold.ttf
+          weight: 700
