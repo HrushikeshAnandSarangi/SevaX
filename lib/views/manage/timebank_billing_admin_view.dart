@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -98,7 +99,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         spendingsTextWidgettwo(
             "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}."),
 
-        changeButtonWidget(),
+        // changeButtonWidget(),
         headingText("Status"),
 
         //PlanStatusView(),
@@ -127,12 +128,34 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   Widget spendingsTextWidgettwo(String data) {
     return Padding(
       padding: EdgeInsets.only(bottom: 0, left: 20),
-      child: Text(
-        data,
-        style: TextStyle(
-          fontFamily: 'Europa',
-          fontSize: 16,
-          color: Colors.grey,
+      child: RichText(
+        textAlign: TextAlign.start,
+        text: TextSpan(
+          children: <TextSpan>[
+            TextSpan(
+              style: TextStyle(color: Colors.grey, fontSize: 16),
+              text: data,
+            ),
+            TextSpan(
+              text: ' change plan',
+              style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 16,
+                  fontFamily: 'Europa',
+                  decoration: TextDecoration.underline),
+              recognizer: new TapGestureRecognizer()
+                ..onTap = () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BillingPlanDetails(
+                          user: SevaCore.of(context).loggedInUser,
+                          planName: cardModel.currentPlan,
+                          isPlanActive: true,
+                        ),
+                      ),
+                    ),
+            ),
+          ],
         ),
       ),
     );
