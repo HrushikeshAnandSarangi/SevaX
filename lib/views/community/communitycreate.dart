@@ -354,18 +354,18 @@ class CreateEditCommunityViewFormState
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Europa'),
                         ),
-                        FlatButton(
-                          onPressed: () {
-                            print("clicked");
-                          },
-                          child: Text(
-                            "manage",
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontFamily: 'Europa',
-                                fontSize: 16),
-                          ),
-                        ),
+//                        FlatButton(
+//                          onPressed: () {
+//                            print("clicked");
+//                          },
+//                          child: Text(
+//                            "manage",
+//                            style: TextStyle(
+//                                color: Colors.grey,
+//                                fontFamily: 'Europa',
+//                                fontSize: 16),
+//                          ),
+//                        ),
                       ],
                     ),
                   ),
@@ -656,7 +656,7 @@ class CreateEditCommunityViewFormState
                       ),
                     ),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 100),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 50),
                     child: Text(

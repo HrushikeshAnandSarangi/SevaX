@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../flavor_config.dart';
@@ -25,85 +29,104 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   List<FocusNode> focusNodes;
   GlobalKey<FormState> _billingInformationKey = GlobalKey();
   CommunityModel communityModel = CommunityModel({});
+  CardModel cardModel;
   BuildContext parentContext;
+  var planData = [];
+  var transactionPaymentData;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
     focusNodes = List.generate(6, (_) => FocusNode());
+
+//    transactionPaymentData = Firestore.instance
+//        .collection("commnunites")
+//        .document(SevaCore.of(context).loggedInUser.currentCommunity)
+//        .collection("transactions").document("current_mon.toString() + "" + year.toString()");
+    //   .document(current_mon.toString() + "_" + year.toString())
+    //
   }
 
   @override
   Widget build(BuildContext context) {
     this.parentContext = context;
     return Scaffold(
-      body: StreamBuilder<CommunityModel>(
-        stream: FirestoreManager.getCommunityModelStream(
-            communityId: SevaCore.of(context).loggedInUser.currentCommunity),
-        builder: (parentContext, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasData && snapshot.data != null) {
-            communityModel = snapshot.data;
+      body: SingleChildScrollView(
+        child: StreamBuilder<CardModel>(
+          stream: FirestoreManager.getCardModelStream(
+              communityId: SevaCore.of(context).loggedInUser.currentCommunity),
+          builder: (parentContext, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasData && snapshot.data != null) {
+              cardModel = snapshot.data;
 
-            print('commmmmmm name ${communityModel.name}');
-            print('commmmmmm  ${communityModel}');
-            return SlidingUpPanel(
-              minHeight: 0,
-              maxHeight: 400,
-              color: Colors.white,
-              parallaxEnabled: true,
-              backdropEnabled: true,
-              controller: _pc,
-              panel: _scrollingList(focusNodes),
-              body: Form(
-                key: _formKey,
-                child: createBillingPage(),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          } else {
-            return Center(
-              child: Text('No data Found'),
-            );
-          }
-        },
+              //print('cardmodel ${cardModel.currentPlan}');
+              //print('subscription  ${cardModel.subscriptionModel['items']['data'][0]}');
+              planData = cardModel.subscriptionModel['items']['data'];
+              return createBillingPage();
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            } else {
+              return Center(
+                child: Text('No data Found'),
+              );
+            }
+          },
+        ),
       ),
     );
   }
 
   Widget createBillingPage() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-          ),
-          headingText("Spendings"),
-          SpendingsCardView(
-            communityModel: communityModel,
-          ),
-          headingText("Plan Spendings"),
-          spendingsTextWidget(
-              "Your community is on the Strater plan (Discounted  60%), paying Monthly. Your Plan will renew on March 19, 2020 for \$77."),
-          headingText("Status"),
-          statusWidget(),
-          cardsHeadingWidget(),
-          // cardsDetailWidget(),
-          configureBillingHeading(parentContext),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+//        Padding(
+//          padding: EdgeInsets.only(top: 10),
+//        ),
+//        headingText("Spendings"),
+//        SpendingsCardView(
+//          communityModel: communityModel,
+//        ),
+        headingText("Plan Details"),
+
+        spendingsTextWidgettwo(
+            "Your community is on the ${cardModel.currentPlan}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100}."),
+
+        changeButtonWidget(),
+        headingText("Status"),
+
+        //PlanStatusView(),
+        statusWidget(),
+        // cardsHeadingWidget(),
+        // cardsDetailWidget(),
+        configureBillingHeading(parentContext),
+      ],
     );
   }
 
   Widget spendingsTextWidget(String data) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20, left: 20),
+      child: Text(
+        data,
+        style: TextStyle(
+          fontFamily: 'Europa',
+          fontSize: 16,
+          color: Colors.grey,
+        ),
+      ),
+    );
+  }
+
+  Widget spendingsTextWidgettwo(String data) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 0, left: 20),
       child: Text(
         data,
         style: TextStyle(
@@ -130,16 +153,51 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   Widget statusWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        spendingsTextWidget(
-            "You are currenlty biller to the card ending in 7777."),
-        //spendingsTextWidget("you are paying for 4 users."),
-        spendingsTextWidget(
-            "Billing emails are sent to ${SevaCore.of(parentContext).loggedInUser.email}"),
-      ],
-    );
+    var now = new DateTime.now();
+    var month = now.month - 1 == 0 ? 12 : now.month - 1;
+    var year = now.year;
+    var pastPlans = [];
+    return StreamBuilder(
+        stream: Firestore.instance
+            .collection("communities")
+            .document(SevaCore.of(context).loggedInUser.currentCommunity)
+            .collection("transactions")
+            .document("${month}_$year")
+            .snapshots(),
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+            print(
+                'snap data ===>${snapshot.data.data['payment_state']["plans"]}');
+
+            pastPlans = snapshot.data.data['payment_state']["plans"];
+            return ListView.builder(
+                itemCount: pastPlans.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return spendingsTextWidget(
+                      "For the ${pastPlans[index]['nickname']} charged \$${pastPlans[index]['amount'] / 100} .");
+                });
+          } else {
+            return Center(
+              child: Text("No data available"),
+            );
+          }
+        });
+//    return Column(
+//      crossAxisAlignment: CrossAxisAlignment.start,
+//      children: <Widget>[
+////        spendingsTextWidget(
+////            "You are currenlty biller to the card ending in 7777."),
+//        //spendingsTextWidget("you are paying for 4 users."),
+//        spendingsTextWidget(
+//            "Billing emails are sent to ${SevaCore.of(parentContext).loggedInUser.email}"),
+//      ],
+//    );
   }
 
   Widget cardsHeadingWidget() {
@@ -155,6 +213,17 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             ),
             onPressed: () {
               print("clicked");
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => BillingView("", "")));
+//                builder: (context) => CustomCreditCard(
+//                  frontBackground: CardBackgrounds.white,
+//                  cardNumber: "7777",
+//                  cardExpiry: "03/22",
+//                  cardHolderName: "Umesh Raj",
+//                  cardType: CardType.masterCard,
+//                  bankName: "HDFC",
+//                ),
+//              ));
             },
           ),
         ),
@@ -176,14 +245,51 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             onPressed: () {
               print("clicked");
               FocusScope.of(buildContext).requestFocus(new FocusNode());
-              _pc.open();
-              scrollIsOpen = true;
+              _billingBottomsheet(buildContext);
+
+//              _pc.open();
+//              scrollIsOpen = true;
             },
           ),
         ),
       ],
     );
   }
+
+  void _billingBottomsheet(BuildContext mcontext) {
+    showModalBottomSheet(
+        context: mcontext,
+        builder: (BuildContext bc) {
+          return Container(
+            child: StreamBuilder<CommunityModel>(
+              stream: FirestoreManager.getCommunityModelStream(
+                  communityId:
+                      SevaCore.of(mcontext).loggedInUser.currentCommunity),
+              builder: (parentContext, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data != null) {
+                  communityModel = snapshot.data;
+
+                  // print('commmmmmm name ${communityModel.name}');
+                  //print('commmmmmm  ${communityModel}');
+                  return _scrollingList(focusNodes);
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                } else {
+                  return Center(
+                    child: Text('No data Found'),
+                  );
+                }
+              },
+            ),
+          );
+        });
+  }
+
 //
 //  Widget cardsDetailWidget() {
 //    return ListView.separated(
@@ -290,7 +396,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    _pc.close();
+                    Navigator.pop(context);
+                    //_pc.close();
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -495,8 +602,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 if (dialogContext != null) {
                   Navigator.pop(dialogContext);
                 }
-                _pc.close();
-                scrollIsOpen = false;
+                Navigator.pop(context);
+                // _pc.close();
+                //scrollIsOpen = false;
               }
             }
           },
@@ -560,6 +668,38 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       scollContainer.position.maxScrollExtent,
       curve: Curves.easeOut,
       duration: const Duration(milliseconds: 300),
+    );
+  }
+
+  Widget changeButtonWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            height: 30,
+            width: 100,
+            child: RaisedButton(
+              color: FlavorConfig.values.theme.accentColor,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BillingPlanDetails(
+                      user: SevaCore.of(context).loggedInUser,
+                    ),
+                  ),
+                );
+              },
+              child: Text(
+                "Change",
+                style: TextStyle(color: Colors.white, fontFamily: 'Europa'),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

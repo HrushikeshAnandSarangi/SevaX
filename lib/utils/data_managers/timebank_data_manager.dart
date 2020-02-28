@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
+import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
@@ -338,6 +339,24 @@ Stream<CommunityModel> getCommunityModelStream(
         CommunityModel model = CommunityModel(snapshot.data);
 
         model.id = snapshot.documentID;
+        modelSink.add(model);
+      },
+    ),
+  );
+}
+
+Stream<CardModel> getCardModelStream({@required String communityId}) async* {
+  // print('---->>> $communityId');
+  var data =
+      Firestore.instance.collection('cards').document(communityId).snapshots();
+
+  yield* data.transform(
+    StreamTransformer<DocumentSnapshot, CardModel>.fromHandlers(
+      handleData: (snapshot, modelSink) {
+        CardModel model = CardModel(snapshot.data);
+        //print("card dataaaaa ${model}");
+
+        model.timebankid = snapshot.documentID;
         modelSink.add(model);
       },
     ),

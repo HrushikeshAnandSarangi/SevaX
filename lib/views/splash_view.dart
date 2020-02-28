@@ -458,6 +458,7 @@ class _SplashViewState extends State<SplashView> {
         'currentCommunity': loggedInUser.communities[0],
       });
     }
+
     if (loggedInUser == null) {
       loadingMessage = 'Welcome to the world of communities';
       _navigateToLoginPage();
