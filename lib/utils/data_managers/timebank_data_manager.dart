@@ -228,7 +228,7 @@ Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
 }
 
 Future<void> updateTimebankDetails(
-    {@required TimebankModel timebankModel}) async {
+    {@required TimebankModel timebankModel, List members}) async {
   if (timebankModel == null) {
     return;
   }
@@ -241,6 +241,7 @@ Future<void> updateTimebankDetails(
     'location': timebankModel.location.data,
     'protected': timebankModel.protected,
     'photo_url': timebankModel.photoUrl,
+    'members': FieldValue.arrayUnion(members),
   });
 }
 
@@ -278,6 +279,7 @@ Future updateCommunityDetails({@required CommunityModel communityModel}) async {
     'name': communityModel.name,
     'about': communityModel.about,
     'logo_url': communityModel.logo_url,
+    'billing_address': communityModel.billing_address.toMap(),
   });
 }
 
@@ -331,7 +333,10 @@ Stream<CommunityModel> getCommunityModelStream(
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
+        print("billing ${snapshot.data}");
+
         CommunityModel model = CommunityModel(snapshot.data);
+
         model.id = snapshot.documentID;
         modelSink.add(model);
       },

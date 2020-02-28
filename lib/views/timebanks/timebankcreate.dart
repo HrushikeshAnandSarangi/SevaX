@@ -624,7 +624,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         else
           memberAssignment = "${selectedUsers.length} volunteers selected";
       });
-      print("Data is present Selected users ${selectedUsers.length}");
+      // print("Data is present Selected users ${selectedUsers.length}");
+      print("Data is present Selected users ${selectedUsers.toString()}");
     } else {
       print("No users where selected");
       //no users where selected

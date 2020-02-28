@@ -81,7 +81,7 @@ class BillingAddress {
 
   @override
   String toString() {
-    return "Billing information provided : {countryName : $companyname, stateName : $state, pincode : $pincode, streetAddressOne : $street_address1, streetAddressTwo : $street_address2, companyName  : $companyname, additionalNotes : $additionalnotes }";
+    return 'BillingAddress{companyname: $companyname, street_address1: $street_address1, street_address2: $street_address2, city: $city, state: $state, country: $country, pincode: $pincode, additionalnotes: $additionalnotes}';
   }
 }
 
@@ -141,7 +141,7 @@ class CommunityModel extends DataModel {
     this.about = map.containsKey('about') ? map['about'] : '';
     this.primary_email =
         map.containsKey('primary_email') ? map['primary_email'] : '';
-    this.billing_address = map.containsKey(['billing_address'])
+    this.billing_address = map.containsKey('billing_address')
         ? BillingAddress(map['billing_address'].cast<String, dynamic>())
         : BillingAddress({});
     this.payment_records = map.containsKey('payment_records')

@@ -20,6 +20,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../main_app.dart';
@@ -90,6 +91,8 @@ class CreateEditCommunityViewFormState
   TextEditingController searchTextController = new TextEditingController();
   TimebankModel timebankModel = TimebankModel({});
   TimebankModel editTimebankModel = TimebankModel({});
+  String memberAssignment = "+ Add Members";
+  List members = [];
 
   bool protectedVal = false;
   GeoFirePoint location;
@@ -334,6 +337,7 @@ class CreateEditCommunityViewFormState
                               Icons.add_circle_outline,
                             ),
                             onPressed: () {
+                              addVolunteers();
                               print("clicked");
                             },
                           ),
@@ -588,6 +592,20 @@ class CreateEditCommunityViewFormState
 //
 //                            print("time add${timebankModel.address}");
                             timebankModel.location = location;
+                            if (selectedUsers != null) {
+                              selectedUsers.forEach((key, user) {
+                                print("Selected member with key $key");
+                                if (timebankModel.members
+                                    .contains(user.sevaUserID)) {
+                                  selectedUsers.remove(user);
+                                }
+                              });
+                              selectedUsers.forEach((key, user) {
+                                print("Selected member with key $key");
+
+                                members.add(user.sevaUserID);
+                              });
+                            }
 
                             print("time ${timebankModel.photoUrl}");
                             print("time ${communityModel.logo_url}");
@@ -595,7 +613,8 @@ class CreateEditCommunityViewFormState
 
                             // updating timebank with latest values
                             await FirestoreManager.updateTimebankDetails(
-                                    timebankModel: timebankModel)
+                                    timebankModel: timebankModel,
+                                    members: members)
                                 .then((onValue) {
                               print("timebank updated");
                             });
@@ -609,11 +628,11 @@ class CreateEditCommunityViewFormState
 //
 //
 //
-//                            if (dialogContext != null) {
-//                              Navigator.pop(dialogContext);
-//                            }
-//                            _formKey.currentState.reset();
-//                            Navigator.of(context).pop();
+                            if (dialogContext != null) {
+                              Navigator.pop(dialogContext);
+                            }
+                            _formKey.currentState.reset();
+                            Navigator.of(context).pop();
                           }
                         },
                         shape: StadiumBorder(),
@@ -1149,5 +1168,37 @@ class CreateEditCommunityViewFormState
       });
     }
     return communities;
+  }
+
+  void addVolunteers() async {
+    print(
+        " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
+
+    onActivityResult = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SelectMembersInGroup(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          userSelected:
+              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
+          userEmail: SevaCore.of(context).loggedInUser.email,
+          listOfalreadyExistingMembers: [],
+        ),
+      ),
+    );
+
+    if (onActivityResult != null &&
+        onActivityResult.containsKey("membersSelected")) {
+      selectedUsers = onActivityResult['membersSelected'];
+      setState(() {
+        if (selectedUsers.length == 0)
+          memberAssignment = "Assign to volunteers";
+        else
+          memberAssignment = "${selectedUsers.length} volunteers selected";
+      });
+      print("Data is present Selected users ${selectedUsers.length}");
+    } else {
+      print("No users where selected");
+      //no users where selected
+    }
   }
 }
