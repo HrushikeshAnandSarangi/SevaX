@@ -96,7 +96,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         headingText("Plan Details"),
 
         spendingsTextWidgettwo(
-            "Your community is on the ${cardModel.currentPlan}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100}."),
+            "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}."),
 
         changeButtonWidget(),
         headingText("Status"),
@@ -180,7 +180,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   return spendingsTextWidget(
-                      "For the ${pastPlans[index]['nickname']} charged \$${pastPlans[index]['amount'] / 100} .");
+                      "For the ${pastPlans[index]['nickname'] ?? ""} charged \$${pastPlans[index]['amount'] / 100 ?? ""} .");
                 });
           } else {
             return Center(
@@ -688,6 +688,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   MaterialPageRoute(
                     builder: (context) => BillingPlanDetails(
                       user: SevaCore.of(context).loggedInUser,
+                      planName: cardModel.currentPlan,
+                      isPlanActive: true,
                     ),
                   ),
                 );
