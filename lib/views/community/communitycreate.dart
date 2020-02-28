@@ -18,8 +18,8 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
@@ -435,8 +435,11 @@ class CreateEditCommunityViewFormState
                                 _billingInformationKey.currentState.reset();
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        BillingPlanDetails(user: user),
+                                    builder: (context) => BillingPlanDetails(
+                                      user: user,
+                                      isPlanActive: false,
+                                      planName: "",
+                                    ),
                                   ),
                                 );
                                 // Navigator.of(context).pushAndRemoveUntil(

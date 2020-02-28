@@ -117,7 +117,7 @@ class UserModel extends DataModel {
     if (map.containsKey('currentCommunity')) {
       this.currentCommunity = map['currentCommunity'];
     } else {
-      currentCommunity = "";
+      currentCommunity = " ";
     }
 
     if (map.containsKey('communities')) {

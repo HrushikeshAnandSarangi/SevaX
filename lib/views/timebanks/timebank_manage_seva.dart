@@ -2,9 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/models.dart';
-import 'package:sevaexchange/views/invitation/InviteMembers.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 
 import '../core.dart';
@@ -26,7 +23,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
@@ -35,12 +32,12 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
             automaticallyImplyLeading: false,
             backgroundColor: Colors.white,
             bottom: TabBar(
-              unselectedLabelStyle: TextStyle(
-                fontSize: 10,
-              ),
+              indicatorColor: Colors.black,
+              labelColor: Colors.black,
+              isScrollable: false,
               tabs: <Widget>[
                 Tab(text: "About"),
-                Tab(text: "Upgrade"),
+                // Tab(text: "Upgrade"),
                 Tab(text: "Billings"),
               ],
               onTap: (index) {
@@ -65,73 +62,73 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           timebankModel: widget.timebankModel,
           email: SevaCore.of(context).loggedInUser.email,
         ),
-        SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(40),
-                child: Image.asset(
-                  'lib/assets/images/startup.png',
-                  height: 150,
-                ),
-              ),
-              getTile(
-                address: 'lib/assets/images/drawing-tablet.svg',
-                title: 'Unlimited groups',
-                subtitle: 'No limit on groups your team can create',
-              ),
-              getTile(
-                address: 'lib/assets/images/add-user.svg',
-                title: 'Unlimited users',
-                subtitle: 'No limit on users for your timebank',
-              ),
-              getTile(
-                address: 'lib/assets/images/bars.svg',
-                title: 'Pay as you go',
-                subtitle: 'Pay as per total members in your team',
-              ),
-              getTile(
-                address: 'lib/assets/images/megaphone.svg',
-                title: 'Absolute control on public post',
-                subtitle: 'Control on data your team public posts',
-              ),
-              getTile(
-                address: 'lib/assets/images/lightbulb.svg',
-                title: 'Organize your spendings',
-                subtitle: 'Have a holistic view on your spending',
-              ),
-              getTile(
-                address: 'lib/assets/images/levels.svg',
-                title: 'Settings',
-                subtitle: 'Manage your child timebanks',
-              ),
-              getTile(
-                address: 'lib/assets/images/color-palette.svg',
-                title: 'Themes',
-                subtitle: 'Customize your own look',
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 50, bottom: 50),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      '5\$ \/ user \/ month',
-                    ),
-                    RaisedButton(
-                      color: Colors.red,
-                      child: Text(
-                        'Upgrade',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () async {},
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
+        // SingleChildScrollView(
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: <Widget>[
+        //       Padding(
+        //         padding: EdgeInsets.all(40),
+        //         child: Image.asset(
+        //           'lib/assets/images/startup.png',
+        //           height: 150,
+        //         ),
+        //       ),
+        //       getTile(
+        //         address: 'lib/assets/images/drawing-tablet.svg',
+        //         title: 'Unlimited groups',
+        //         subtitle: 'No limit on groups your team can create',
+        //       ),
+        //       getTile(
+        //         address: 'lib/assets/images/add-user.svg',
+        //         title: 'Unlimited users',
+        //         subtitle: 'No limit on users for your timebank',
+        //       ),
+        //       getTile(
+        //         address: 'lib/assets/images/bars.svg',
+        //         title: 'Pay as you go',
+        //         subtitle: 'Pay as per total members in your team',
+        //       ),
+        //       getTile(
+        //         address: 'lib/assets/images/megaphone.svg',
+        //         title: 'Absolute control on public post',
+        //         subtitle: 'Control on data your team public posts',
+        //       ),
+        //       getTile(
+        //         address: 'lib/assets/images/lightbulb.svg',
+        //         title: 'Organize your spendings',
+        //         subtitle: 'Have a holistic view on your spending',
+        //       ),
+        //       getTile(
+        //         address: 'lib/assets/images/levels.svg',
+        //         title: 'Settings',
+        //         subtitle: 'Manage your child timebanks',
+        //       ),
+        //       getTile(
+        //         address: 'lib/assets/images/color-palette.svg',
+        //         title: 'Themes',
+        //         subtitle: 'Customize your own look',
+        //       ),
+        //       Padding(
+        //         padding: EdgeInsets.only(top: 50, bottom: 50),
+        //         child: Column(
+        //           children: <Widget>[
+        //             Text(
+        //               '5\$ \/ user \/ month',
+        //             ),
+        //             RaisedButton(
+        //               color: Colors.red,
+        //               child: Text(
+        //                 'Upgrade',
+        //                 style: TextStyle(color: Colors.white),
+        //               ),
+        //               onPressed: () async {},
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        //     ],
+        //   ),
+        // ),
         Center(
           child: Text("Hello Flutter:$indextab"),
         ),

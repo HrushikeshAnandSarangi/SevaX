@@ -29,7 +29,7 @@ class BillingViewState extends State<BillingView> {
 
     StripePayment.setOptions(
       StripeOptions(
-        publishableKey: 'pk_test_T7u8J9XqipbkTR6p5pdThS7i',
+        publishableKey: 'pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832',
         merchantId: 'acct_1BuMJNIPTZX4UEIO',
         androidPayMode: 'test',
       ),
@@ -76,12 +76,10 @@ class BillingViewState extends State<BillingView> {
           child: const Text(
             'Subscriptions',
             style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'ProximaNovaSemiBold',
+              fontSize: 20,
             ),
           ),
         ),
-        backgroundColor: Theme.of(context).accentColor,
       ),
       body: SafeArea(
         child: Container(
