@@ -5,21 +5,30 @@ import 'package:sevaexchange/models/user_model.dart';
 import '../billing_view.dart';
 
 class BillingPlanCard extends StatelessWidget {
+  final bool isSelected;
+  final bool isPlanActive;
   final UserModel user;
   final BillingPlanDetailsModel billingDetails;
-  const BillingPlanCard({Key key, this.billingDetails, this.user})
-      : super(key: key);
+  const BillingPlanCard({
+    Key key,
+    this.billingDetails,
+    this.user,
+    this.isSelected = false,
+    this.isPlanActive = false,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final textColor = isSelected ? Colors.white : Colors.black;
     print("co id ==>> ${user.currentCommunity}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
       child: Container(
         width: MediaQuery.of(context).size.width - 100,
         child: Card(
-          elevation: 5,
+          color: isSelected ? Theme.of(context).primaryColor : Colors.white,
+          elevation: 3, //isSelected ? 5 : 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(36),
+            borderRadius: BorderRadius.circular(18),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
@@ -28,7 +37,7 @@ class BillingPlanCard extends StatelessWidget {
               children: <Widget>[
                 RichText(
                   text: TextSpan(
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(color: textColor),
                     children: [
                       TextSpan(
                         text: "${billingDetails.planName}\n",
@@ -46,7 +55,7 @@ class BillingPlanCard extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     style: TextStyle(
-                      color: Colors.black,
+                      color: textColor,
                       fontWeight: FontWeight.bold,
                     ),
                     children: [
@@ -71,7 +80,7 @@ class BillingPlanCard extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       "${billingDetails.note1}",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(width: 4),
                     InkWell(
@@ -92,13 +101,16 @@ class BillingPlanCard extends StatelessWidget {
                 ),
                 Text(
                   "${billingDetails.note2}",
-                  style: TextStyle(fontSize: 10),
+                  style: TextStyle(fontSize: 10, color: textColor),
                 ),
                 Spacer(),
                 ListView.separated(
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return Text(billingDetails.freeTransaction[index]);
+                    return Text(
+                      billingDetails.freeTransaction[index],
+                      style: TextStyle(color: textColor),
+                    );
                   },
                   separatorBuilder: (context, index) => Divider(),
                   itemCount: billingDetails.freeTransaction.length,
@@ -108,19 +120,34 @@ class BillingPlanCard extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  color: Colors.black,
-                  child: Text('Choose'),
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => BillingView(
-                          user.currentCommunity,
-                          billingDetails.id,
-                          user: user,
-                        ),
-                      ),
-                    );
-                  },
+                  color: textColor,
+                  child: Text(
+                    isPlanActive
+                        ? isSelected ? 'Currently Active' : 'Change'
+                        : 'Choose',
+                    style: TextStyle(
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
+                    ),
+                  ),
+                  onPressed: isSelected
+                      ? () {}
+                      : () {
+                          if (isPlanActive) {
+                            _changePlanAlert(context);
+                          } else {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => BillingView(
+                                  user.currentCommunity,
+                                  billingDetails.id,
+                                  user: user,
+                                ),
+                              ),
+                            );
+                          }
+                        },
                 )
               ],
             ),
@@ -148,6 +175,28 @@ class BillingPlanCard extends StatelessWidget {
               separatorBuilder: (context, index) => Divider(),
               itemCount: billingDetails.billableTransaction.length,
             ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _changePlanAlert(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Plan change"),
+          content: Container(
+            child: Text('Please contact SevaX support to change the plans'),
           ),
           actions: <Widget>[
             new FlatButton(

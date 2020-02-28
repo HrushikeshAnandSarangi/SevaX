@@ -42,6 +42,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   TabController controller;
+  TabController manageController;
   TabController _timebankController;
   TimebankModel primaryTimebank;
   HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
@@ -296,3 +297,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 }
+
+
+// class HomePageTabControllerBloc

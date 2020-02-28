@@ -447,9 +447,10 @@ class _SplashViewState extends State<SplashView> {
     }
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
-
-    if ((loggedInUser.currentCommunity?.isEmpty ?? true) &&
-        loggedInUser.communities.length > 0) {
+    print("---> ${loggedInUser.currentCommunity}");
+    if ((loggedInUser.currentCommunity == "" ||
+            loggedInUser.currentCommunity == null) &&
+        loggedInUser.communities.length != 0) {
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
       await Firestore.instance
           .collection("users")

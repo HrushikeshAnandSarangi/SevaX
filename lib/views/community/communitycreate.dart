@@ -570,8 +570,11 @@ class CreateEditCommunityViewFormState
                                   _billingInformationKey.currentState.reset();
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          BillingPlanDetails(user: user),
+                                      builder: (context) => BillingPlanDetails(
+                                        user: user,
+                                        isPlanActive: false,
+                                        planName: "",
+                                      ),
                                     ),
                                   );
                                   //Navigator.of(context).pushAndRemoveUntil(
