@@ -282,6 +282,13 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
           }
+          /*else if(snapshot.data==null){
+            return Expanded(
+              child: Center(
+                child: Text('No Timebank found'),
+              ),
+            );
+          }*/
           return Text("");
         });
   }

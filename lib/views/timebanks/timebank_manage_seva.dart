@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
@@ -150,7 +151,11 @@ class ManageTimebankSeva extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BillingView(timebankModel.communityId),
+            builder: (context) => BillingView(
+              timebankModel.id,
+              '',
+              user: SevaCore.of(context).loggedInUser,
+            ),
           ),
         );
       },

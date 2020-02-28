@@ -78,13 +78,11 @@ dependencies:
   cached_network_image: ^2.0.0
   curved_navigation_bar: ^0.3.1
   autocomplete_textfield: ^1.7.3
-  badges: ^1.1.0
-  firebase_remote_config: ^0.3.0+1
-
-
   stripe_payment: ^1.0.6
+  firebase_remote_config: ^0.3.0+1
+  badges: ^1.1.0
   smooth_star_rating: 1.0.4+2
-# awesome_card: ^1.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

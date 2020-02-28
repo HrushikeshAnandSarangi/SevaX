@@ -1,13 +1,19 @@
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:stripe_payment/stripe_payment.dart';
+
+import '../../../main_app.dart';
+
 class BillingView extends StatefulWidget {
-  BillingView(this.timebankid);
+  BillingView(this.timebankid, this.planId, {this.user});
   final timebankid;
+  final String planId;
+  final UserModel user;
   @override
   State<StatefulWidget> createState() {
     return BillingViewState();
@@ -15,24 +21,12 @@ class BillingView extends StatefulWidget {
 }
 
 class BillingViewState extends State<BillingView> {
-  final cards = [
-    {
-      'cardNo': 'xxxx xxxx xxxx 3875',
-      'cardType': 'master',
-      'expiryDate': '12/24',
-      'paymentMethodId': 'pm_visa',
-    },
-    {
-      'cardNo': 'xxxx xxxx xxxx 7275',
-      'cardType': 'visa',
-      'expiryDate': '1/28',
-      'paymentMethodId': 'pm_master',
-    }
-  ];
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
+    print(widget.planId);
+
     StripePayment.setOptions(
       StripeOptions(
         publishableKey: 'pk_test_T7u8J9XqipbkTR6p5pdThS7i',
@@ -49,7 +43,6 @@ class BillingViewState extends State<BillingView> {
   }
 
   Future<void> connectToStripe(String paymentMethodId) async {
-
     print(paymentMethodId);
     const String url = 'YOUR_SERVER_URL';
     PaymentMethod paymentMethod = PaymentMethod();
@@ -58,15 +51,18 @@ class BillingViewState extends State<BillingView> {
         CardFormPaymentRequest(),
       ).then((PaymentMethod paymentMethod) {
         return paymentMethod;
-      }).catchError((setError) => {
-        print(setError)
-      });
+      }).catchError((setError) => {print(setError)});
 //      StripePayment.createTokenWithCard(paymentMethod.card).then((token) {
-        var paymentbloc = PaymentsBloc();
-        paymentbloc.storeNewCard(paymentMethod.id, widget.timebankid,  SevaCore.of(context).loggedInUser);
-//      }).catchError((setError) => {
-//        print(setError)
-//      });
+      var paymentbloc = PaymentsBloc();
+      paymentbloc.storeNewCard(paymentMethod.id, widget.timebankid,
+          widget.user ?? SevaCore.of(context).loggedInUser, widget.planId);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context1) => MainApplication(
+              skipToHomePage: true,
+            ),
+          ),
+          (Route<dynamic> route) => false);
     }
   }
 
@@ -91,15 +87,11 @@ class BillingViewState extends State<BillingView> {
         child: Container(
           width: double.infinity,
           decoration: const BoxDecoration(color: Colors.white),
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 24.0,
-              top: 24.0,
-              right: 24.0,
-            ),
-            child: ListView(
-              children: <Widget>[
-                Row(
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     const Text(
@@ -123,95 +115,45 @@ class BillingViewState extends State<BillingView> {
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
-                ListView.separated(
-                  separatorBuilder: (BuildContext context, int index) {
-                    return SizedBox(height: 20);
-                  },
-                  shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
-                  itemCount: cards.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () {
-                        connectToStripe(cards[index]['paymentMethodId']);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.grey.withOpacity(0.5))),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    cards[index]['cardNo'],
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontFamily: 'ProximaNova',
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  checkCardType(cards[index]['cardType']),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    'EXPIRY DATE: ',
-                                  ),
-                                  SizedBox(
-                                    width: 16,
-                                  ),
-                                  Text(
-                                    cards[index]['expiryDate'],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 100,
-                ),
-              ],
-            ),
+              ),
+              // FutureBuilder(builder: ,)
+              // ListView.separated(
+              //   separatorBuilder: (BuildContext context, int index) {
+              //     return SizedBox(height: 20);
+              //   },
+              //   shrinkWrap: true,
+              //   physics: ClampingScrollPhysics(),
+              //   itemCount: cards.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return InkWell(
+              //       onTap: () {
+              //         connectToStripe(cards[index]['paymentMethodId']);
+              //       },
+              //       child: CreditCardView(
+              //         bankName: "Axis Bank",
+              //         cardNumber: cards[index]["cardNo"],
+              //         frontBackground: CardBackgrounds.black,
+              //         brand: "MasterCard",
+              //         cardExpiry: cards[index]["expiryDate"],
+              //       ),
+              //     );
+              //   },
+              // ),
+              SizedBox(
+                height: 100,
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
 
-  Icon checkCardType(card) {
-    switch (card) {
-      case 'master':
-        return Icon(
-          Icons.map,
-          size: 24,
-        );
-      case 'visa':
-        return Icon(
-          Icons.credit_card,
-          size: 24,
-        );
-      default:
-        return Icon(
-          Icons.credit_card,
-          size: 24,
-        );
-    }
-  }
+Future getUserCard(String communityId) async {
+  var result = await http.post(
+      "https://us-central1-sevaxproject4sevax.cloudfunctions.net/getCardsOfCustomer",
+      body: {"communityId": communityId});
+
+  print(result.body);
 }

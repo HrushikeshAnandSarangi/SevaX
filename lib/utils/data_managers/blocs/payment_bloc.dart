@@ -27,10 +27,10 @@ class PaymentsBloc {
     _paymentsController.add(PaymentsController());
   }
 
-  storeNewCard(token, timebankid, UserModel user) {
+  storeNewCard(token, timebankid, UserModel user,String planName) {
     // storing a new card
     print("hey" + token);
-    _repository.storeCard(token, timebankid, user);
+    _repository.storeCard(token, timebankid, user,planName);
     //
   }
 
