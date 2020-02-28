@@ -18,8 +18,8 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
@@ -102,7 +102,7 @@ class CreateEditCommunityViewFormState
     var _searchText = "";
     final _textUpdates = StreamController<String>();
 
-    focusNodes = List.generate(6, (_) => FocusNode());
+    focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
@@ -719,7 +719,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[1]);
+            FocusScope.of(context).requestFocus(focusNodes[2]);
           },
           onChanged: (value) {
             print(controller.community.billing_address);
@@ -733,10 +733,38 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
-          focusNode: focusNodes[0],
+          focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "State",
+          ),
+        ),
+      );
+    }
+
+    Widget _cityWidget(controller) {
+      return Container(
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            FocusScope.of(context).requestFocus(focusNodes[1]);
+          },
+          onChanged: (value) {
+            print(controller.community.billing_address);
+            controller.community.billing_address
+                .updateValueByKey('city', value);
+            createEditCommunityBloc.onChange(controller);
+          },
+//          initialValue: controller.community.billing_address.state != null
+//              ? controller.community.billing_address.state
+//              : '',
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank' : null;
+          },
+          focusNode: focusNodes[0],
+          textInputAction: TextInputAction.next,
+          decoration: getInputDecoration(
+            fieldTitle: "City",
           ),
         ),
       );
@@ -747,7 +775,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[2]);
+            FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             print(value);
@@ -761,7 +789,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
-          focusNode: focusNodes[1],
+          focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -794,7 +822,7 @@ class CreateEditCommunityViewFormState
           // onSaved: (value) {
 
           // },
-          focusNode: focusNodes[5],
+          focusNode: focusNodes[7],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Additional Notes",
@@ -808,7 +836,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[3]);
+            FocusScope.of(context).requestFocus(focusNodes[5]);
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -818,7 +846,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank' : null;
           },
-          focusNode: focusNodes[2],
+          focusNode: focusNodes[4],
           textInputAction: TextInputAction.next,
 //          initialValue:
 //              controller.community.billing_address.street_address1 != null
@@ -836,14 +864,14 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
             onFieldSubmitted: (input) {
-              FocusScope.of(context).requestFocus(focusNodes[4]);
+              FocusScope.of(context).requestFocus(focusNodes[6]);
             },
             onChanged: (value) {
               controller.community.billing_address
                   .updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
             },
-            focusNode: focusNodes[3],
+            focusNode: focusNodes[5],
             textInputAction: TextInputAction.next,
 //            initialValue:
 //                controller.community.billing_address.street_address2 != null
@@ -860,7 +888,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[5]);
+            FocusScope.of(context).requestFocus(focusNodes[7]);
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -873,10 +901,37 @@ class CreateEditCommunityViewFormState
           // validator: (value) {
           //   return value.isEmpty ? 'Field cannot be left blank' : null;
           // },
-          focusNode: focusNodes[4],
+          focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Company Name",
+          ),
+        ),
+      );
+    }
+
+    Widget _countryNameWidget(controller) {
+      return Container(
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            FocusScope.of(context).requestFocus(focusNodes[3]);
+          },
+          onChanged: (value) {
+            controller.community.billing_address
+                .updateValueByKey('country', value);
+            createEditCommunityBloc.onChange(controller);
+          },
+//          initialValue: controller.community.billing_address.companyname != null
+//              ? controller.community.billing_address.companyname
+//              : '',
+          // validator: (value) {
+          //   return value.isEmpty ? 'Field cannot be left blank' : null;
+          // },
+          focusNode: focusNodes[2],
+          textInputAction: TextInputAction.next,
+          decoration: getInputDecoration(
+            fieldTitle: "Country Name",
           ),
         ),
       );
@@ -922,7 +977,9 @@ class CreateEditCommunityViewFormState
                       controller: scollContainer,
                       children: <Widget>[
                         _billingDetailsTitle,
+                        _cityWidget(snapshot.data),
                         _stateWidget(snapshot.data),
+                        _countryNameWidget(snapshot.data),
                         _pinCodeWidget(snapshot.data),
                         _streetAddressWidget(snapshot.data),
                         _streetAddressTwoWidget(snapshot.data),
