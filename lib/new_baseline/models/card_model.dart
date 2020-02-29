@@ -1,0 +1,25 @@
+import 'package:sevaexchange/models/data_model.dart';
+
+class CardModel extends DataModel {
+  String currentPlan;
+  String custId;
+  String email;
+  String timebankid;
+  Map<dynamic, dynamic> subscriptionModel;
+
+  CardModel(Map<String, dynamic> map) {
+    this.currentPlan = map.containsKey("currentplan") ? map["currentplan"] : '';
+    this.custId = map.containsKey("custId") ? map["custId"] : '';
+    this.email = map.containsKey("email") ? map["email"] : '';
+    this.timebankid = map.containsKey("timebankid") ? map["timebankid"] : '';
+    this.subscriptionModel = map.containsKey('subscription')
+        ? (map['subscription'].cast<dynamic, dynamic>())
+        : ({});
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    // TODO: implement toMap
+    return null;
+  }
+}

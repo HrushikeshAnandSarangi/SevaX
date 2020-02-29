@@ -303,6 +303,7 @@ class _ProfilePageState extends State<ProfilePage>
                                       timebankId:
                                           FlavorConfig.values.timebankId,
                                       isFromFind: false,
+                                      isCreateTimebank: true,
                                     ),
                                   ),
                                 );

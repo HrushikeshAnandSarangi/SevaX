@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 
 import '../bloc_provider.dart';
 
@@ -19,7 +21,7 @@ class ShowLimitBadge extends StatelessWidget {
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         return Offstage(
-          offstage: _userBloc.community.payment['payment_success'],
+          offstage: _userBloc.community.payment['payment_success'] ?? false,
           // offstage: snapshot.data != null
           //     ? snapshot.data.transactionCount <
           //         AppConfig
@@ -32,7 +34,8 @@ class ShowLimitBadge extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               isAdmin
-                  ? _userBloc.community.payment['message']
+                  ? _userBloc.community.payment['message'] ??
+                      "Payment Data Syncing"
                   : "Actions not allowed, Please contact admin",
               style: TextStyle(color: Colors.white),
             ),
@@ -58,10 +61,11 @@ class TransactionLimitCheck extends StatelessWidget {
             _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
         return GestureDetector(
           onTap: () {
-            _showDialog(context, isAdmin);
+            _showDialog(context, isAdmin, _userBloc.user);
           },
           child: AbsorbPointer(
-            absorbing: !_userBloc.community.payment['payment_success'],
+            absorbing:
+                !(_userBloc.community.payment['payment_success'] ?? false),
             child: child,
           ),
         );
@@ -69,7 +73,7 @@ class TransactionLimitCheck extends StatelessWidget {
     );
   }
 
-  void _showDialog(context, bool isAdmin) {
+  void _showDialog(context, bool isAdmin, UserModel user) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -106,7 +110,17 @@ class TransactionLimitCheck extends StatelessWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
+                    Navigator.of(context).pop();
                     //TOdo redirect to billing page
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => BillingPlanDetails(
+                          user: user,
+                          isPlanActive: true,
+                          planName: "grande_plan",
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),

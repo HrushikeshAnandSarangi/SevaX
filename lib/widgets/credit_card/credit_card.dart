@@ -4,8 +4,7 @@ import 'package:sevaexchange/widgets/credit_card/utils/card_type.dart';
 import 'package:sevaexchange/widgets/credit_card/utils/helper.dart';
 import 'package:sevaexchange/widgets/credit_card/utils/style.dart';
 
-
-class CreditCardView extends StatefulWidget {
+class CustomCreditCard extends StatefulWidget {
   final String cardNumber;
   final String cardExpiry;
   final String cardHolderName;
@@ -24,15 +23,15 @@ class CreditCardView extends StatefulWidget {
   final double width;
   final double height;
 
-  CreditCardView({
+  CustomCreditCard({
     Key key,
-    this.cardNumber,
-    this.cardExpiry,
-    this.cardHolderName,
-    this.bankName = "",
-    this.brand,
+    @required this.cardNumber,
+    @required this.cardExpiry,
+    @required this.cardHolderName,
+    @required this.bankName = "",
+    @required this.brand,
     @required this.frontBackground,
-    this.cardType,
+    @required this.cardType,
     this.frontLayout,
     this.frontTextColor = Colors.white,
     this.backTextColor = Colors.black,
@@ -44,10 +43,10 @@ class CreditCardView extends StatefulWidget {
         super(key: key);
 
   @override
-  _CreditCardViewState createState() => _CreditCardViewState();
+  _CustomCreditCardState createState() => _CustomCreditCardState();
 }
 
-class _CreditCardViewState extends State<CreditCardView> {
+class _CustomCreditCardState extends State<CustomCreditCard> {
   double cardWidth;
   double cardHeight;
 

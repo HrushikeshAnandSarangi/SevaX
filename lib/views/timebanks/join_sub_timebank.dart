@@ -195,7 +195,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TimebankRouter(
+            builder: (context) => TimebankTabsViewHolder.of(
               timebankId: timebank.id,
               timebankModel: timebank,
             ),

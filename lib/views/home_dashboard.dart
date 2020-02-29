@@ -4,11 +4,9 @@ import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -22,6 +20,8 @@ import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
 import 'messages/timebank_chats.dart';
+// import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
+// import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 
 class HomeDashBoard extends StatelessWidget {
   HomeDashBoard();
@@ -42,6 +42,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   TabController controller;
+  TabController manageController;
   TabController _timebankController;
   TimebankModel primaryTimebank;
   HomeDashBoardBloc _homeDashBoardBloc = HomeDashBoardBloc();
@@ -89,8 +90,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // final _userBloc = BlocProvider.of<UserDataBloc>(context);
-
+    // final _user = BlocProvider.of<UserDataBloc>(context);
+    // print("user bloc ${_user.user.email}");
     return BlocProvider(
       bloc: _homeDashBoardBloc,
       child: Scaffold(
@@ -151,10 +152,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               return Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasData && snapshot.data != null) {
+              print("asd" + snapshot.data.timebanks.length.toString());
               snapshot.data.timebanks.forEach(
                 (TimebankModel data) {
+                  print(
+                      "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
                   if (data.id ==
                       snapshot.data.currentCommunity.primary_timebank) {
+                    print("inside if" + data.toString());
                     primaryTimebank = data;
                     timeBankModelSingleton.model = primaryTimebank;
                   }
@@ -184,8 +189,26 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             }
             return Column(
               children: <Widget>[
-                ShowLimitBadge(),
-                // _userBloc, TransactionType.admin_reviews_completed),
+//                 Consumer<TransactionConfig>(
+//                   builder: (context, transConfig, child) {
+//                     print(
+//                         "$context ${transConfig.currentTransactionCount} $child");
+//                     return Offstage(
+// //                      offstage: transactionConfig.currentTransactionCount <
+// //                          AppConfig.maxTransactionLimit,
+//                       child: Container(
+//                         width: MediaQuery.of(context).size.width,
+//                         alignment: Alignment.center,
+//                         color: Colors.red,
+//                         height: 30,
+//                         child: Text(
+//                           'Transaction Limit Reached',
+//                           style: TextStyle(color: Colors.white),
+//                         ),
+//                       ),
+//                     );
+//                   },
+//                 ),
                 TabBar(
                   controller: _timebankController,
                   indicatorColor: Colors.black,
@@ -226,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       ...isAdmin
                           ? [
-                              ManageTimebankSeva(
+                              ManageTimebankSeva.of(
                                 timebankModel: primaryTimebank,
                               ),
                               TimebankNotificationsView(
@@ -262,8 +285,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         }
         var unreadCount = 0;
         snapshot.data.forEach((model) {
-          if (model.unreadStatus.containsKey(timebankId))
-            unreadCount += model.unreadStatus[timebankId];
+          model.unreadStatus.containsKey(timebankId)
+              ? unreadCount += model.unreadStatus[timebankId]
+              : print("not found");
         });
 
         return Tab(
@@ -273,3 +297,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
   }
 }
+
+
+// class HomePageTabControllerBloc

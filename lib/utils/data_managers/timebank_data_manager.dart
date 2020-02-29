@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
 import 'package:sevaexchange/models/reports_model.dart';
+import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
@@ -72,7 +73,7 @@ Stream<List<TimebankModel>> getTimebanksForUserStream(
   );
 }
 
-/// Get all timebanknew associated with a User as a Stream_umesh
+/// Get all timebanknew associated with a User as a Stream_
 Future<List<TimebankModel>> getSubTimebanksForUserStream(
     {@required String communityId}) async {
   List<dynamic> timeBankIdList = [];
@@ -86,6 +87,7 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
     Map<String, dynamic> dataMap = documentSnaphot.data;
     print("hey ${dataMap}");
     timeBankIdList = dataMap["timebanks"];
+    print("timebankssssss ${dataMap['timebanks']}");
   });
 
   var comm = await getCommunityDetailsByCommunityId(communityId: communityId);
@@ -99,7 +101,7 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
         timebankId: timeBankIdList[i],
       );
       timeBankModelList.add(timeBankModel);
-      print("hey ${timeBankModel.admins}");
+      print("heyyyy ${timeBankModel.admins}");
     }
     /*if(timeBankModel.members.contains(sevaUserId)){
       timeBankModel.joinStatus=CompareToTimeBank.JOIN;
@@ -111,6 +113,58 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
 
   }
   return timeBankModelList;
+}
+
+/// Get all timebanknew associated with a User as a Stream_
+Future<List<TimebankModel>> getMembersCount(
+    {@required String communityId}) async {
+  List<dynamic> timeBankIdList = [];
+  List<TimebankModel> timeBankModelList = [];
+
+  await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get()
+      .then((DocumentSnapshot documentSnaphot) {
+    Map<String, dynamic> dataMap = documentSnaphot.data;
+    timeBankIdList = dataMap["timebanks"];
+  });
+
+  var comm = await getCommunityDetailsByCommunityId(communityId: communityId);
+
+  print(timeBankIdList);
+  for (int i = 0; i < timeBankIdList.length; i += 1) {
+    TimebankModel timeBankModel = await getTimeBankForId(
+      timebankId: timeBankIdList[i],
+    );
+    timeBankModelList.add(timeBankModel);
+    /*if(timeBankModel.members.contains(sevaUserId)){
+      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
+    } else if(timeBankModel.admins.contains(sevaUserId)){
+      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
+    }else{
+      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
+    }*/
+
+  }
+  return timeBankModelList;
+}
+
+/// Get all timebanknew associated with a User as a Stream_
+Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
+  int totalCount = 0;
+  print("com id ----- ${communityId}");
+
+  List<TimebankModel> timeBankModelList =
+      await getMembersCount(communityId: communityId);
+  print("list is ----- ${timeBankModelList.length}");
+
+  timeBankModelList.forEach((timebankModel) {
+    totalCount += timebankModel.members.length;
+  });
+  print("count is ----- $totalCount");
+
+  return totalCount;
 }
 
 /// Get all timebanknew associated with a User as a Stream
@@ -174,6 +228,24 @@ Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
       .updateData(timebankModel.toMap());
 }
 
+Future<void> updateTimebankDetails(
+    {@required TimebankModel timebankModel, List members}) async {
+  if (timebankModel == null) {
+    return;
+  }
+  return await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankModel.id)
+      .updateData({
+    'name': timebankModel.name,
+    'missionStatement': timebankModel.missionStatement,
+    'location': timebankModel.location.data,
+    'protected': timebankModel.protected,
+    'photo_url': timebankModel.photoUrl,
+    'members': FieldValue.arrayUnion(members),
+  });
+}
+
 /// Get a particular Timebank by it's ID
 Future<TimebankModel> getTimeBankForId({@required String timebankId}) async {
   assert(timebankId != null && timebankId.isNotEmpty,
@@ -198,6 +270,18 @@ Future updateCommunity({@required CommunityModel communityModel}) async {
       .collection('communities')
       .document(communityModel.id)
       .updateData({'members': communityModel.members});
+}
+
+Future updateCommunityDetails({@required CommunityModel communityModel}) async {
+  await Firestore.instance
+      .collection('communities')
+      .document(communityModel.id)
+      .updateData({
+    'name': communityModel.name,
+    'about': communityModel.about,
+    'logo_url': communityModel.logo_url,
+    'billing_address': communityModel.billing_address.toMap(),
+  });
 }
 
 Future<CommunityModel> getCommunityDetailsByCommunityId(
@@ -237,7 +321,8 @@ Stream<TimebankModel> getTimebankModelStream(
     ),
   );
 }
-  /// Get a community data as a Stream
+
+/// Get a community data as a Stream
 Stream<CommunityModel> getCommunityModelStream(
     {@required String communityId}) async* {
   print('---->>> $communityId');
@@ -249,13 +334,35 @@ Stream<CommunityModel> getCommunityModelStream(
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, CommunityModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
+        print("billing ${snapshot.data}");
+
         CommunityModel model = CommunityModel(snapshot.data);
+
         model.id = snapshot.documentID;
         modelSink.add(model);
       },
     ),
   );
 }
+
+Stream<CardModel> getCardModelStream({@required String communityId}) async* {
+  // print('---->>> $communityId');
+  var data =
+      Firestore.instance.collection('cards').document(communityId).snapshots();
+
+  yield* data.transform(
+    StreamTransformer<DocumentSnapshot, CardModel>.fromHandlers(
+      handleData: (snapshot, modelSink) {
+        CardModel model = CardModel(snapshot.data);
+        //print("card dataaaaa ${model}");
+
+        model.timebankid = snapshot.documentID;
+        modelSink.add(model);
+      },
+    ),
+  );
+}
+
 Future<List<String>> getAllTimebankIdStream(
     {@required String timebankId}) async {
   return Firestore.instance

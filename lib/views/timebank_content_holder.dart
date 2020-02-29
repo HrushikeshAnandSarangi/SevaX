@@ -11,7 +11,6 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
@@ -33,31 +32,30 @@ import '../flavor_config.dart';
 import 'core.dart';
 import 'messages/timebank_chats.dart';
 
-// class TimebankTabsViewHolder extends StatelessWidget {
+class TimebankTabsViewHolder extends StatelessWidget {
+  final String timebankId;
+  final TimebankModel timebankModel;
+  TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
 
-//   final String timebankId;
-//   final TimebankModel timebankModel;
-//   TimebankTabsViewHolder.of({this.timebankId, this.timebankModel});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return TabarView(
-//       // loggedInUser: loggedInUser,
-//       timebankId: timebankId,
-//       timebankModel: timebankModel,
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return TabarView(
+      // loggedInUser: loggedInUser,
+      timebankId: timebankId,
+      timebankModel: timebankModel,
+    );
+  }
+}
 
 enum AboutUserRole { ADMIN, JOINED_USER, NORMAL_USER }
 
-class TimebankRouter extends StatelessWidget {
+class TabarView extends StatelessWidget {
   final String timebankId;
   TimebankModel timebankModel;
 
   //final UserModel loggedInUser;
   //TabarView({this.loggedInUser, this.timebankId, this.timebankModel});
-  TimebankRouter({this.timebankId, this.timebankModel});
+  TabarView({this.timebankId, this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +145,6 @@ Widget createAdminTabBar(
       ),
       body: Column(
         children: <Widget>[
-          ShowLimitBadge(),
           TabBar(
             labelColor: Theme.of(context).primaryColor,
             indicatorColor: Theme.of(context).primaryColor,
@@ -205,7 +202,7 @@ Widget createAdminTabBar(
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
                 ),
-                ManageTimebankSeva(
+                ManageTimebankSeva.of(
                   timebankModel: timebankModel,
                 ),
                 TimebankNotificationsView(
@@ -523,49 +520,44 @@ class DiscussionListState extends State<DiscussionList> {
           color: Colors.white,
           height: 0,
         ),
-        TransactionLimitCheck(
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => NewsCreate(
-                    timebankId: widget.timebankId,
-                  ),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NewsCreate(
+                      timebankId: widget.timebankId,
+                    )));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      SevaCore.of(context).loggedInUser.photoURL ??
+                          defaultUserImageURL),
                 ),
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        SevaCore.of(context).loggedInUser.photoURL ??
-                            defaultUserImageURL),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: new BorderRadius.circular(10.7),
-                        color: Colors.grey[200],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          ' Start a new feed....',
-                          maxLines: 1,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 16),
-                        ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: new BorderRadius.circular(10.7),
+                      color: Colors.grey[200],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        ' Start a new feed....',
+                        maxLines: 1,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

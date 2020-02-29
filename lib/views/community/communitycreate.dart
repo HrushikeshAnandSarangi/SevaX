@@ -15,39 +15,47 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
+import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
   final bool isFromFind;
+  final bool isCreateTimebank;
 
   CreateEditCommunityView({
     @required this.timebankId,
     this.isFromFind,
+    this.isCreateTimebank,
   });
 
   @override
   Widget build(BuildContext context) {
     var title = 'Create a Timebank';
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.5,
-        automaticallyImplyLeading: true,
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 18,
-          ),
-        ),
-      ),
+      appBar: isCreateTimebank
+          ? AppBar(
+              elevation: 0.5,
+              automaticallyImplyLeading: true,
+              title: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            )
+          : null,
       body: CreateEditCommunityViewForm(
         timebankId: timebankId,
         isFromFind: isFromFind,
+        isCreateTimebank: isCreateTimebank,
       ),
     );
   }
@@ -57,8 +65,10 @@ class CreateEditCommunityView extends StatelessWidget {
 class CreateEditCommunityViewForm extends StatefulWidget {
   final String timebankId;
   final bool isFromFind;
+  final bool isCreateTimebank;
 
-  CreateEditCommunityViewForm({@required this.timebankId, this.isFromFind});
+  CreateEditCommunityViewForm(
+      {@required this.timebankId, this.isFromFind, this.isCreateTimebank});
 
   @override
   CreateEditCommunityViewFormState createState() {
@@ -74,10 +84,16 @@ class CreateEditCommunityViewFormState
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
+
+  CommunityModel communityModel = CommunityModel({});
+  CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController searchTextController =
-      new TextEditingController();
+  TextEditingController searchTextController = new TextEditingController();
   TimebankModel timebankModel = TimebankModel({});
+  TimebankModel editTimebankModel = TimebankModel({});
+  String memberAssignment = "+ Add Members";
+  List members = [];
+
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress = '';
@@ -96,10 +112,17 @@ class CreateEditCommunityViewFormState
   var communityFound = false;
   List<FocusNode> focusNodes;
   String errTxt;
+  int totalMembersCount = 0;
 
   void initState() {
     super.initState();
     var _searchText = "";
+    Future.delayed(Duration.zero, () {
+      createEditCommunityBloc.getChildTimeBanks(context);
+    });
+    if (widget.isCreateTimebank == false) {
+      getModelData();
+    }
     final _textUpdates = StreamController<String>();
 
     focusNodes = List.generate(8, (_) => FocusNode());
@@ -141,6 +164,29 @@ class CreateEditCommunityViewFormState
     });
   }
 
+  void getModelData() async {
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getCommunityDetailsByCommunityId(
+              communityId: SevaCore.of(context).loggedInUser.currentCommunity)
+          .then((onValue) {
+        communityModel = onValue;
+        searchTextController.text = communityModel.name;
+      });
+    });
+
+    timebankModel =
+        await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
+
+    totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity);
+//    setState(() {
+//      searchTextController =
+//          new TextEditingController(text: communityModel.name);
+//
+//      //  searchTextController.text = communityModel.name;
+//    });
+  }
+
   HashMap<String, UserModel> selectedUsers = HashMap();
 
   Map onActivityResult;
@@ -175,6 +221,8 @@ class CreateEditCommunityViewFormState
                   .updateValueByKey('address', selectedAddress);
               createEditCommunityBloc.onChange(snapshot.data);
             }
+            print("  snapshots data   ${snapshot.data.timebanks}");
+
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +239,11 @@ class CreateEditCommunityViewFormState
                       padding: EdgeInsets.all(5.0),
                       child: Column(
                         children: <Widget>[
-                          TimebankAvatar(),
+                          widget.isCreateTimebank
+                              ? TimebankAvatar()
+                              : TimebankAvatar(
+                                  photoUrl: communityModel.logo_url,
+                                ),
                           Text(''),
                           Text(
                             'Timebank Logo',
@@ -215,6 +267,9 @@ class CreateEditCommunityViewFormState
                     controller: searchTextController,
                     onChanged: (value) {
                       enteredName = value;
+                      print("name ------ $value");
+                      communityModel.name = value;
+                      timebankModel.name = value;
                     },
                     decoration: InputDecoration(
                       errorText: errTxt,
@@ -222,8 +277,12 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    // initialValue: snapshot.data.community.name ?? '',
-                    onSaved: (value) => enteredName = value,
+                    //initialValue: snapshot.data.community.name ?? '',
+
+                    onSaved: (value) {
+                      enteredName = value;
+                    },
+                    // onSaved: (value) => enteredName = value,
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Timebank name cannot be empty';
@@ -245,17 +304,73 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    //   initialValue: snapshot.data.timebank.missionStatement,
+                    initialValue: timebankModel.missionStatement,
+                    onChanged: (value) {
+                      timebankModel.missionStatement = value;
+                      communityModel.about = value;
+                    },
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Tell us more about your timebank.';
                       }
+                      snapshot.data.community.updateValueByKey('about', value);
+
                       snapshot.data.timebank
                           .updateValueByKey('missionStatement', value);
                       createEditCommunityBloc.onChange(snapshot.data);
                       return null;
                     },
                   ),
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                  ),
+
+                  Offstage(
+                    offstage: widget.isCreateTimebank,
+                    child: Row(
+                      children: <Widget>[
+                        headingText('Timebank Members'),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, top: 15),
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.add_circle_outline,
+                            ),
+                            onPressed: () {
+                              addVolunteers();
+                              print("clicked");
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Offstage(
+                    offstage: widget.isCreateTimebank,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          totalMembersCount.toString() ?? "0",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Europa'),
+                        ),
+//                        FlatButton(
+//                          onPressed: () {
+//                            print("clicked");
+//                          },
+//                          child: Text(
+//                            "manage",
+//                            style: TextStyle(
+//                                color: Colors.grey,
+//                                fontFamily: 'Europa',
+//                                fontSize: 16),
+//                          ),
+//                        ),
+                      ],
+                    ),
+                  ),
+
                   Row(
                     children: <Widget>[
                       headingText('Protected Timebank'),
@@ -263,9 +378,12 @@ class CreateEditCommunityViewFormState
                         children: <Widget>[
                           Divider(),
                           Checkbox(
-                            value: snapshot.data.timebank.protected,
+                            value: widget.isCreateTimebank
+                                ? snapshot.data.timebank.protected
+                                : timebankModel.protected,
                             onChanged: (bool value) {
                               print(value);
+                              timebankModel.protected = value;
                               snapshot.data.timebank
                                   .updateValueByKey('protected', value);
                               createEditCommunityBloc.onChange(snapshot.data);
@@ -297,17 +415,20 @@ class CreateEditCommunityViewFormState
                   Center(
                     child: FlatButton.icon(
                       icon: Icon(Icons.add_location),
-                      label: Text(
-                        (snapshot.data.timebank.address == null ||
-                                    snapshot.data.timebank.address.isEmpty) &&
-                                selectedAddress == ''
-                            ? 'Add Location'
-                            : snapshot.data.timebank.address,
+                      label: Container(
+                        child: Text(
+                          (snapshot.data.timebank.address == null ||
+                                      snapshot.data.timebank.address.isEmpty) &&
+                                  selectedAddress == ''
+                              ? 'Add Location'
+                              : snapshot.data.timebank.address,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       color: Colors.grey[200],
-                      onPressed: () {
+                      onPressed: () async {
                         print("Location opened : $location");
-                        Navigator.push(
+                        await Navigator.push(
                           context,
                           MaterialPageRoute<GeoFirePoint>(
                             builder: (context) => LocationPicker(
@@ -317,6 +438,7 @@ class CreateEditCommunityViewFormState
                         ).then((point) {
                           if (point != null) {
                             location = snapshot.data.timebank.location = point;
+
                             print(
                                 "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                           }
@@ -327,29 +449,40 @@ class CreateEditCommunityViewFormState
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: tappableAddBillingDetails,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Looking for existing timebank',
-                            style: TextStyle(
-                              color: Colors.grey,
+                  widget.isCreateTimebank
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: tappableAddBillingDetails,
+                        )
+                      : Container(),
+//                  Offstage(
+//                    offstage: !widget.isCreateTimebank,
+//                    child: Padding(
+//                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+//                      child: tappableAddBillingDetails,
+//                    ),
+//                  ),
+                  widget.isCreateTimebank
+                      ? Container(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Looking for existing timebank',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                tappableFindYourTeam,
+                              ],
                             ),
                           ),
-                          tappableFindYourTeam,
-                        ],
-                      ),
-                    ),
-                  ),
+                        )
+                      : Container(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Container(
@@ -357,8 +490,8 @@ class CreateEditCommunityViewFormState
                       child: RaisedButton(
                         onPressed: () async {
                           // show a dialog
-
-                          print(_formKey.currentState.validate());
+                          if (widget.isCreateTimebank) {
+                            print(_formKey.currentState.validate());
 
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
@@ -366,105 +499,168 @@ class CreateEditCommunityViewFormState
 //                              print("Found:$communityFound");
 //                              return;
 //                            }
-                          if (_formKey.currentState.validate()) {
-                            if (_billingInformationKey.currentState
-                                .validate()) {
-                              setState(() {
-                                this._billingDetailsError = '';
-                              });
-                              print(globals.timebankAvatarURL);
-                              if (globals.timebankAvatarURL == null) {
+                            if (_formKey.currentState.validate()) {
+                              if (_billingInformationKey.currentState
+                                  .validate()) {
                                 setState(() {
-                                  this.communityImageError =
-                                      'Timebank logo is mandatory';
+                                  this._billingDetailsError = '';
                                 });
-                              } else {
-                                showProgressDialog();
+                                print(globals.timebankAvatarURL);
+                                if (globals.timebankAvatarURL == null) {
+                                  setState(() {
+                                    this.communityImageError =
+                                        'Timebank logo is mandatory';
+                                  });
+                                } else {
+                                  showProgressDialog('Creating timebank');
 
-                                setState(() {
-                                  this.communityImageError = '';
-                                });
+                                  setState(() {
+                                    this.communityImageError = '';
+                                  });
 
-                                // creation of community;
-                                snapshot.data.UpdateCommunityDetails(
-                                  SevaCore.of(context).loggedInUser,
-                                  globals.timebankAvatarURL,
-                                );
-                                // creation of default timebank;
-                                snapshot.data.UpdateTimebankDetails(
-                                  SevaCore.of(context).loggedInUser,
-                                  globals.timebankAvatarURL,
-                                  widget,
-                                );
-                                // updating the community with default timebank id
-                                snapshot.data.community.timebanks =
-                                    [snapshot.data.timebank.id].cast<String>();
+                                  // creation of community;
+                                  snapshot.data.UpdateCommunityDetails(
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                  );
+                                  // creation of default timebank;
+                                  snapshot.data.UpdateTimebankDetails(
+                                    SevaCore.of(context).loggedInUser,
+                                    globals.timebankAvatarURL,
+                                    widget,
+                                  );
+                                  // updating the community with default timebank id
+                                  snapshot.data.community.timebanks = [
+                                    snapshot.data.timebank.id
+                                  ].cast<String>();
 
-                                snapshot.data.community.primary_timebank =
-                                    snapshot.data.timebank.id;
+                                  snapshot.data.community.primary_timebank =
+                                      snapshot.data.timebank.id;
 
-                                createEditCommunityBloc.createCommunity(
-                                  snapshot.data,
-                                  SevaCore.of(context).loggedInUser,
-                                );
+                                  createEditCommunityBloc.createCommunity(
+                                    snapshot.data,
+                                    SevaCore.of(context).loggedInUser,
+                                  );
 
-                                await Firestore.instance
-                                    .collection("users")
-                                    .document(
-                                        SevaCore.of(context).loggedInUser.email)
-                                    .updateData({
-                                  'communities': FieldValue.arrayUnion(
-                                      [snapshot.data.community.id]),
-                                  'currentCommunity': snapshot.data.community.id
-                                });
-
-                                setState(() {
-                                  SevaCore.of(context)
+                                  await Firestore.instance
+                                      .collection("users")
+                                      .document(SevaCore.of(context)
                                           .loggedInUser
-                                          .currentCommunity =
-                                      snapshot.data.community.id;
-                                });
+                                          .email)
+                                      .updateData({
+                                    'communities': FieldValue.arrayUnion(
+                                        [snapshot.data.community.id]),
+                                    'currentCommunity':
+                                        snapshot.data.community.id
+                                  });
 
-                                Navigator.pop(dialogContext);
-                                _formKey.currentState.reset();
-                                _billingInformationKey.currentState.reset();
-                                UserModel user =
-                                    SevaCore.of(context).loggedInUser;
-//                                  Navigator.pop(dialogContext);
+                                  setState(() {
+                                    SevaCore.of(context)
+                                            .loggedInUser
+                                            .currentCommunity =
+                                        snapshot.data.community.id;
+                                  });
+
+                                  Navigator.pop(dialogContext);
+                                  _formKey.currentState.reset();
+                                  _billingInformationKey.currentState.reset();
+                                  UserModel user =
+                                      SevaCore.of(context).loggedInUser;
+  //                                  Navigator.pop(dialogContext);
                                 _formKey.currentState.reset();
                                 _billingInformationKey.currentState.reset();
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        BillingPlanDetails(user: user),
-                                  ),
-                                );
-                                // Navigator.of(context).pushAndRemoveUntil(
-                                //     MaterialPageRoute(
-                                //       builder: (context1) => MainApplication(
-                                //         skipToHomePage: true,
-                                //       ),
-                                //     ),
-                                //     (Route<dynamic> route) => false);
+                                        BillingPlanDetails(user: user,
+                                        isPlanActive: false,
+                                        planName: "",
+                                      ),
+                                    ),
+                                  );
+                                  //Navigator.of(context).pushAndRemoveUntil(
+                                  //    MaterialPageRoute(
+                                  //      builder: (context1) => MainApplication(
+                                  //        skipToHomePage: true,
+                                  //      ),
+                                  //    ),
+                                  //    (Route<dynamic> route) => false);
+                                }
+                              } else {
+                                setState(() {
+                                  this._billingDetailsError =
+                                      'Please configure your billing details';
+                                });
                               }
-                            } else {
-                              setState(() {
-                                this._billingDetailsError =
-                                    'Please configure your billing details';
+                            } else {}
+                          } else {
+                            showProgressDialog('Updating timebank');
+                            if (globals.timebankAvatarURL != null) {
+                              communityModel.logo_url =
+                                  globals.timebankAvatarURL;
+                              timebankModel.photoUrl =
+                                  globals.timebankAvatarURL;
+                            }
+
+//                            print("comm ${communityModel}");
+//
+//                            print("time add${timebankModel.address}");
+                            timebankModel.location = location;
+                            if (selectedUsers != null) {
+                              selectedUsers.forEach((key, user) {
+                                print("Selected member with key $key");
+                                if (timebankModel.members
+                                    .contains(user.sevaUserID)) {
+                                  selectedUsers.remove(user);
+                                }
+                              });
+                              selectedUsers.forEach((key, user) {
+                                print("Selected member with key $key");
+
+                                members.add(user.sevaUserID);
                               });
                             }
-                          } else {}
+
+                            print("time ${timebankModel.photoUrl}");
+                            print("time ${communityModel.logo_url}");
+                            // creation of community;
+
+                            // updating timebank with latest values
+                            await FirestoreManager.updateTimebankDetails(
+                                    timebankModel: timebankModel,
+                                    members: members)
+                                .then((onValue) {
+                              print("timebank updated");
+                            });
+
+//                            //updating community with latest values
+                            await FirestoreManager.updateCommunityDetails(
+                                    communityModel: communityModel)
+                                .then((onValue) {
+                              print("community updated");
+                            });
+//
+//
+//
+                            if (dialogContext != null) {
+                              Navigator.pop(dialogContext);
+                            }
+                            _formKey.currentState.reset();
+                            Navigator.of(context).pop();
+                          }
                         },
                         shape: StadiumBorder(),
                         child: Text(
-                          'Create a Timebank',
+                          widget.isCreateTimebank
+                              ? 'Create a Timebank'
+                              : 'Save',
                           style: TextStyle(fontSize: 16.0, color: Colors.white),
                         ),
                         textColor: FlavorConfig.values.buttonTextColor,
                       ),
                     ),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 100),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 50),
                     child: Text(
@@ -490,14 +686,15 @@ class CreateEditCommunityViewFormState
   }
 
   BuildContext dialogContext;
-  void showProgressDialog() {
+
+  void showProgressDialog(String message) {
     showDialog(
         barrierDismissible: false,
         context: context,
         builder: (createDialogContext) {
           dialogContext = createDialogContext;
           return AlertDialog(
-            title: Text('Creating timebank'),
+            title: Text(message),
             content: LinearProgressIndicator(),
           );
         });
@@ -609,6 +806,7 @@ class CreateEditCommunityViewFormState
     });
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
+    timebankModel.address = address;
     data.timebank.updateValueByKey('address', address);
     createEditCommunityBloc.onChange(data);
   }
@@ -1041,5 +1239,37 @@ class CreateEditCommunityViewFormState
       });
     }
     return communities;
+  }
+
+  void addVolunteers() async {
+    print(
+        " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
+
+    onActivityResult = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => SelectMembersInGroup(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          userSelected:
+              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
+          userEmail: SevaCore.of(context).loggedInUser.email,
+          listOfalreadyExistingMembers: [],
+        ),
+      ),
+    );
+
+    if (onActivityResult != null &&
+        onActivityResult.containsKey("membersSelected")) {
+      selectedUsers = onActivityResult['membersSelected'];
+      setState(() {
+        if (selectedUsers.length == 0)
+          memberAssignment = "Assign to volunteers";
+        else
+          memberAssignment = "${selectedUsers.length} volunteers selected";
+      });
+      print("Data is present Selected users ${selectedUsers.length}");
+    } else {
+      print("No users where selected");
+      //no users where selected
+    }
   }
 }
