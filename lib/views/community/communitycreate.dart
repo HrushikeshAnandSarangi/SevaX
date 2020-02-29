@@ -430,7 +430,7 @@ class CreateEditCommunityViewFormState
                                 _billingInformationKey.currentState.reset();
                                 UserModel user =
                                     SevaCore.of(context).loggedInUser;
-                                Navigator.pop(dialogContext);
+//                                  Navigator.pop(dialogContext);
                                 _formKey.currentState.reset();
                                 _billingInformationKey.currentState.reset();
                                 Navigator.of(context).push(
