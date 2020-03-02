@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                                 if (user != null) _processLogin(user);
                               },
                               child: Text(
-                                "Sign Up",
+                                "Sign up",
                                 style: TextStyle(
                                   color: Theme.of(context).accentColor,
                                 ),
@@ -805,7 +805,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String _validateEmailId(String value) {
-    if (value.isEmpty) return 'Enter Email Address';
+    if (value.isEmpty) return 'Enter an email';
     return null;
   }
 
