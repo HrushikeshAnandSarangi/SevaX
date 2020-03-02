@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
 
 class ChatModel extends DataModel {
@@ -19,6 +20,8 @@ class ChatModel extends DataModel {
 
   bool isBlocked = false;
   String communityId;
+
+  GeoFirePoint candidateLocation;
 
   ChatModel({
     this.user1,
@@ -124,12 +127,14 @@ class ChatModel extends DataModel {
     if (this.timebankId != null) {
       map['timebankId'] = timebankId;
     }
-    
+
     map['timestamp'] = DateTime.now().millisecondsSinceEpoch;
 
     map['unread_status'] = this.unreadStatus;
 
     map['communityId'] = this.communityId;
+
+    if (candidateLocation != null) map['location'] = candidateLocation.data;
 
     return map;
   }

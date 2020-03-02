@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -28,6 +30,7 @@ class ChatView extends StatefulWidget {
   bool isFromShare;
   NewsModel news;
   IsFromNewChat isFromNewChat;
+  GeoFirePoint candidateLocation;
 
   ChatView({
     Key key,
@@ -87,6 +90,17 @@ class _ChatViewState extends State<ChatView> {
       });
     });
     super.initState();
+    getCurrentLocation();
+  }
+
+  void getCurrentLocation() {
+    Location().getLocation().then((onValue) {
+      widget.chatModel.candidateLocation =
+          GeoFirePoint(onValue.latitude, onValue.longitude);
+
+      print(
+          "-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
+    });
   }
 
   Widget appBar({String imageUrl, String appbarTitle}) {
@@ -233,6 +247,7 @@ class _ChatViewState extends State<ChatView> {
                     var email = SevaCore.of(context).loggedInUser.email;
                     widget.chatModel.communityId =
                         SevaCore.of(context).loggedInUser.currentCommunity;
+
                     updateMessagingReadStatusForMe(
                       chat: widget.chatModel,
                       email: email,
