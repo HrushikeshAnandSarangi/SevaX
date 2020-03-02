@@ -54,62 +54,56 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     this.parentContext = context;
     return Scaffold(
       body: SingleChildScrollView(
-        child: StreamBuilder<CardModel>(
-          stream: FirestoreManager.getCardModelStream(
-              communityId: SevaCore.of(context).loggedInUser.currentCommunity),
-          builder: (parentContext, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasData && snapshot.data != null) {
-              cardModel = snapshot.data;
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            headingText("Plan Details"),
+            StreamBuilder<CardModel>(
+              stream: FirestoreManager.getCardModelStream(
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity),
+              builder: (parentContext, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data != null) {
+                  cardModel = snapshot.data;
 
-              //print('cardmodel ${cardModel.currentPlan}');
-              //print('subscription  ${cardModel.subscriptionModel['items']['data'][0]}');
-              planData = cardModel.subscriptionModel['items']['data']
-                  ? cardModel.subscriptionModel['items']['data'] ?? []
-                  : [];
-              return createBillingPage();
-            } else if (snapshot.hasError) {
-              return Text(snapshot.error.toString());
-            } else {
-              return Center(
-                child: Text('No data Found'),
-              );
-            }
-          },
+                  //print('cardmodel ${cardModel.currentPlan}');
+                  //  print('subscription  ${cardModel.toString()}');
+                  //print('subscription  ${cardModel.subscriptionModel}');
+                  if (cardModel.subscriptionModel != null &&
+                      cardModel.subscriptionModel.containsKey("items")) {
+                    planData = cardModel.subscriptionModel['items']['data']
+                        ? cardModel.subscriptionModel['items']['data'] ?? []
+                        : [];
+                    return spendingsTextWidgettwo(
+                        "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.");
+                  } else {
+                    return Center(
+                      child: Text('No data Found'),
+                    );
+                  }
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error.toString());
+                } else {
+                  return Center(
+                    child: Text('No data Found'),
+                  );
+                }
+              },
+            ),
+            headingText("Status"),
+
+            statusWidget(),
+            cardsHeadingWidget(),
+            // cardsDetailWidget(),
+            configureBillingHeading(parentContext),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget createBillingPage() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-//        Padding(
-//          padding: EdgeInsets.only(top: 10),
-//        ),
-//        headingText("Spendings"),
-//        SpendingsCardView(
-//          communityModel: communityModel,
-//        ),
-        headingText("Plan Details"),
-
-        spendingsTextWidgettwo(
-            "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}."),
-
-        // changeButtonWidget(),
-        headingText("Status"),
-
-        //PlanStatusView(),
-        statusWidget(),
-        // cardsHeadingWidget(),
-        // cardsDetailWidget(),
-        configureBillingHeading(parentContext),
-      ],
     );
   }
 
@@ -196,21 +190,23 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             );
           }
           if (snapshot.hasData && snapshot.data != null) {
-            print(
-                'snap data ===>${snapshot.data.data['payment_state']["plans"]}');
+            print('snap data ===>${snapshot.data.data}');
 
-            pastPlans = snapshot.data.data['payment_state']["plans"] ?? [];
-            return ListView.builder(
-                itemCount: pastPlans.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return spendingsTextWidget(
-                      "For the ${pastPlans[index]['nickname'] ?? ""} charged \$${pastPlans[index]['amount'] / 100 ?? ""} .");
-                });
+            if (snapshot.data.data != null &&
+                snapshot.data.data['payment_state'].notnull) {
+              pastPlans = snapshot.data.data['payment_state']['plans'] ?? [];
+              return ListView.builder(
+                  itemCount: pastPlans.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return spendingsTextWidget(
+                        "For the ${pastPlans[index]['nickname'] ?? " "} charged \$${pastPlans[index]['amount'] / 100 ?? ""} .");
+                  });
+            } else {
+              return emptyText();
+            }
           } else {
-            return Center(
-              child: Text("No data available"),
-            );
+            return emptyText();
           }
         });
 //    return Column(
@@ -223,6 +219,12 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 //            "Billing emails are sent to ${SevaCore.of(parentContext).loggedInUser.email}"),
 //      ],
 //    );
+  }
+
+  Widget emptyText() {
+    return Center(
+      child: Text("No data available"),
+    );
   }
 
   Widget cardsHeadingWidget() {
@@ -305,9 +307,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                 } else if (snapshot.hasError) {
                   return Text(snapshot.error.toString());
                 } else {
-                  return Center(
-                    child: Text('No data Found'),
-                  );
+                  return emptyText();
                 }
               },
             ),
