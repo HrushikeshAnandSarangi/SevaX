@@ -21,7 +21,6 @@ import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -566,13 +565,13 @@ class CreateEditCommunityViewFormState
                                   _billingInformationKey.currentState.reset();
                                   UserModel user =
                                       SevaCore.of(context).loggedInUser;
-  //                                  Navigator.pop(dialogContext);
-                                _formKey.currentState.reset();
-                                _billingInformationKey.currentState.reset();
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        BillingPlanDetails(user: user,
+                                  //                                  Navigator.pop(dialogContext);
+                                  _formKey.currentState.reset();
+                                  _billingInformationKey.currentState.reset();
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => BillingPlanDetails(
+                                        user: user,
                                         isPlanActive: false,
                                         planName: "",
                                       ),
