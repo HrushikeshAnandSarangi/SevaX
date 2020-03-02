@@ -173,13 +173,20 @@ class _ProfilePageState extends State<ProfilePage>
                           onTap: navigateToSettings,
                           child: Hero(
                             tag: "ProfileImage",
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                user.photoURL ??
-                                    'https://www.searchpng.com/wp-content/uploads/2019/02/Men-Profile-Image-715x657.png',
+                            child: Container(
+                              padding: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.grey[200],
                               ),
-                              backgroundColor: Colors.white,
-                              radius: MediaQuery.of(context).size.width / 4.5,
+                              child: CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  user.photoURL ??
+                                      'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+                                ),
+                                backgroundColor: Colors.white,
+                                radius: MediaQuery.of(context).size.width / 4.5,
+                              ),
                             ),
                           ),
                         ),
