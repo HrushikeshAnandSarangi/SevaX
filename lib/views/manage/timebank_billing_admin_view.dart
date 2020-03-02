@@ -72,8 +72,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   cardModel = snapshot.data;
 
                   //print('cardmodel ${cardModel.currentPlan}');
-                  print('subscription  ${cardModel.toString()}');
-                  print('subscription  ${cardModel.subscriptionModel}');
+                  //  print('subscription  ${cardModel.toString()}');
+                  //print('subscription  ${cardModel.subscriptionModel}');
                   if (cardModel.subscriptionModel != null &&
                       cardModel.subscriptionModel.containsKey("items")) {
                     planData = cardModel.subscriptionModel['items']['data']
@@ -192,7 +192,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           if (snapshot.hasData && snapshot.data != null) {
             print('snap data ===>${snapshot.data.data}');
 
-            if (snapshot.data.data['payment_state'] != null) {
+            if (snapshot.data.data != null &&
+                snapshot.data.data['payment_state'].notnull) {
               pastPlans = snapshot.data.data['payment_state']['plans'] ?? [];
               return ListView.builder(
                   itemCount: pastPlans.length,
