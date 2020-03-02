@@ -175,7 +175,8 @@ class _ProfilePageState extends State<ProfilePage>
                             tag: "ProfileImage",
                             child: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                user.photoURL,
+                                user.photoURL ??
+                                    'https://www.searchpng.com/wp-content/uploads/2019/02/Men-Profile-Image-715x657.png',
                               ),
                               backgroundColor: Colors.white,
                               radius: MediaQuery.of(context).size.width / 4.5,
@@ -184,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         SizedBox(height: 10),
                         Text(
-                          user.fullname,
+                          user.fullname ?? "",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,

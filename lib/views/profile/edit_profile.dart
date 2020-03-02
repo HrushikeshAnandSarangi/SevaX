@@ -127,7 +127,7 @@ class _EditProfilePageState extends State<EditProfilePage>
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 30.0, top: 10.0),
-                        child: Text(widget.userModel.fullname),
+                        child: Text(widget.userModel.fullname ?? ""),
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 30.0, top: 5.0),
@@ -587,7 +587,10 @@ class _EditProfilePageState extends State<EditProfilePage>
               image: DecorationImage(
                 image: selectedImage != null
                     ? FileImage(selectedImage)
-                    : NetworkImage(widget.userModel.photoURL),
+                    : NetworkImage(
+                        widget.userModel.photoURL ??
+                            'https://www.searchpng.com/wp-content/uploads/2019/02/Men-Profile-Image-715x657.png',
+                      ),
               ),
             ),
           ),

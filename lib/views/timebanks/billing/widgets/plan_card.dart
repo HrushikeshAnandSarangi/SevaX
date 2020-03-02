@@ -104,16 +104,19 @@ class BillingPlanCard extends StatelessWidget {
                   style: TextStyle(fontSize: 10, color: textColor),
                 ),
                 Spacer(),
-                ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Text(
-                      billingDetails.freeTransaction[index],
-                      style: TextStyle(color: textColor),
-                    );
-                  },
-                  separatorBuilder: (context, index) => Divider(),
-                  itemCount: billingDetails.freeTransaction.length,
+                Expanded(
+                  flex: 8,
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Text(
+                        billingDetails.freeTransaction[index],
+                        style: TextStyle(color: textColor),
+                      );
+                    },
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: billingDetails.freeTransaction.length,
+                  ),
                 ),
                 Spacer(),
                 FlatButton(

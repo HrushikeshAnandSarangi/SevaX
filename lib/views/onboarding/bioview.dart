@@ -60,9 +60,9 @@ class _BioViewState extends State<BioView> {
                       child: Text(
                         'Please tell us a little about yourself in a few sentences. For example, what makes you unique.',
                         style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          color: Colors.black54,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -74,7 +74,7 @@ class _BioViewState extends State<BioView> {
                         children: <Widget>[
                           TextFormField(
                               style: TextStyle(
-                                  fontSize: 16.0, color: Colors.black87),
+                                  fontSize: 16.0, color: Colors.black54),
                               decoration: InputDecoration(
                                 fillColor: Colors.grey[300],
                                 filled: true,

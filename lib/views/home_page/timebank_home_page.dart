@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -52,6 +53,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
 
   @override
   Widget build(BuildContext context) {
+    final user = BlocProvider.of<UserDataBloc>(context);
     super.build(context);
     return Container(
       child: Column(
@@ -78,7 +80,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           ),
           Container(
             height: 210,
-            child: getTimebanks(),
+            child: getTimebanks(user),
           ),
           SizedBox(height: 10),
           Container(
@@ -124,7 +126,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     );
   }
 
-  Widget getTimebanks() {
+  Widget getTimebanks(UserDataBloc user) {
     print("length ==> ${widget.selectedCommuntityGroup.timebanks.length}");
     if (widget.selectedCommuntityGroup.timebanks.length <= 1) {
       return NoGroupPlaceHolder(navigateToCreateGroup: navigateToCreateGroup);
@@ -140,6 +142,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 widget.selectedCommuntityGroup.currentCommunity
                     .primary_timebank) {
               return TimeBankCard(
+                user: user,
                 timebank: widget.selectedCommuntityGroup.timebanks[index],
               );
             }

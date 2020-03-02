@@ -222,14 +222,6 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
     );
   }
 
-  Widget loadItems() {
-    return Container(
-      width: double.infinity,
-      height: 80,
-      child: circularBar,
-    );
-  }
-
   Widget get circularBar {
     return Center(
       child: CircularProgressIndicator(),
