@@ -117,14 +117,21 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           style: TextStyle(color: Colors.black),
           controller: searchTextController,
           decoration: InputDecoration(
-              suffixIcon: IconButton(
+              suffixIcon: Offstage(
+                offstage: searchTextController.text.length == 0,
+                child: IconButton(
+                  splashColor: Colors.transparent,
                   icon: Icon(
                     Icons.clear,
                     color: Colors.black54,
                   ),
                   onPressed: () {
-                    searchTextController.clear();
-                  }),
+                    //searchTextController.clear();
+                    WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => searchTextController.clear());
+                  },
+                ),
+              ),
               hasFloatingPlaceholder: false,
               alignLabelWithHint: true,
               isDense: true,
