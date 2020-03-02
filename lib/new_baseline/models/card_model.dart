@@ -22,4 +22,17 @@ class CardModel extends DataModel {
     // TODO: implement toMap
     return null;
   }
+
+  @override
+  String toString() {
+    return 'CardModel{currentPlan: $currentPlan, custId: $custId, email: $email, timebankid: $timebankid, subscriptionModel: $subscriptionModel}';
+  }
+}
+
+class PaymentStateModel extends DataModel {
+  @override
+  Map<String, dynamic> toMap() {
+    // TODO: implement toMap
+    return null;
+  }
 }
