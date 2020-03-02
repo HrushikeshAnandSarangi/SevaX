@@ -192,8 +192,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           if (snapshot.hasData && snapshot.data != null) {
             print('snap data ===>${snapshot.data.data}');
 
-            if (snapshot.data.data.containsKey('payment_state')) {
-              pastPlans = snapshot.data.data['payment_state']["plans"] ?? [];
+            if (snapshot.data.data['payment_state'] != null) {
+              pastPlans = snapshot.data.data['payment_state']['plans'] ?? [];
               return ListView.builder(
                   itemCount: pastPlans.length,
                   shrinkWrap: true,
