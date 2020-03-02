@@ -187,19 +187,15 @@ class CreateEditCommunityViewFormState
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
+  BuildContext parentContext;
 
   Map onActivityResult;
 
   @override
   Widget build(BuildContext context) {
-    return SlidingUpPanel(
-      minHeight: 0,
-      maxHeight: 400,
-      color: Colors.white,
-      parallaxEnabled: true,
-      backdropEnabled: true,
-      controller: _pc,
-      panel: _scrollingList(focusNodes),
+    this.parentContext = context;
+
+    return Scaffold(
       body: Form(
         key: _formKey,
         child: createSevaX,
@@ -715,9 +711,8 @@ class CreateEditCommunityViewFormState
   Widget get tappableAddBillingDetails {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
-        _pc.open();
-        scrollIsOpen = true;
+        FocusScope.of(parentContext).requestFocus(new FocusNode());
+        _billingBottomsheet(parentContext);
       },
       child: Container(
           margin: EdgeInsets.only(top: 20),
@@ -762,6 +757,16 @@ class CreateEditCommunityViewFormState
             ),
           ])),
     );
+  }
+
+  void _billingBottomsheet(BuildContext mcontext) {
+    showModalBottomSheet(
+        context: mcontext,
+        builder: (BuildContext bc) {
+          return Container(
+            child: _scrollingList(focusNodes),
+          );
+        });
   }
 
   Widget get tappableFindYourTeam {
@@ -870,7 +875,8 @@ class CreateEditCommunityViewFormState
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    _pc.close();
+                    Navigator.of(context).pop();
+                    //_pc.close();
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -1149,8 +1155,9 @@ class CreateEditCommunityViewFormState
                 scrollToTop();
               } else {
                 print("All Good");
-                _pc.close();
-                scrollIsOpen = false;
+                Navigator.pop(context);
+                //   _pc.close();
+                // scrollIsOpen = false;
               }
             }
           },
