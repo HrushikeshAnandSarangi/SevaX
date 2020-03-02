@@ -1,28 +1,20 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
-//import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/views/core.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
 
+import './image_picker_handler.dart';
 import '../../flavor_config.dart';
 import '../../globals.dart' as globals;
-// import '../../auth/auth_provider.dart';
-// import '../../auth/auth_router.dart';
-// import '../../components/loader/seva_loader.dart';
-// import '../../views/mytasks.dart';
-// import '../../views/profileedit.dart';
-
-// import '../services/seva_firestore_service.dart';
-
-import 'dart:io';
-import './image_picker_handler.dart';
 
 class TimebankAvatar extends StatefulWidget {
+  final String photoUrl;
+
+  TimebankAvatar({this.photoUrl});
+
   _TimebankAvatarState createState() => _TimebankAvatarState();
 }
 
@@ -68,6 +60,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -134,7 +127,10 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(defaultCameraImageURL), fit: BoxFit.cover),
+                image: NetworkImage(widget.photoUrl != null
+                    ? widget.photoUrl
+                    : defaultCameraImageURL),
+                fit: BoxFit.cover),
             borderRadius: BorderRadius.all(Radius.circular(75.0)),
             boxShadow: [BoxShadow(blurRadius: 7.0, color: Colors.black12)]));
   }

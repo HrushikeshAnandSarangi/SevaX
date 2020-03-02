@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
-import 'package:sevaexchange/views/manage/edit_timebank_view.dart';
+import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_view.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 import '../admin_viewe_requests.dart';
@@ -31,12 +34,10 @@ class ManageTimebankSeva extends StatelessWidget {
 
             manageTimebankCodes(context: context),
             vieweditPage(context: context),
-
-
+            viewBillingPage(context: context),
+            billingView(context: context),
           ],
-
         ),
-
       ),
     );
   }
@@ -89,14 +90,16 @@ class ManageTimebankSeva extends StatelessWidget {
       ),
     );
   }
-Widget vieweditPage({BuildContext context}) {
+
+  Widget vieweditPage({BuildContext context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
+        Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => EditTimeBank(
+            builder: (context) => CreateEditCommunityView(
               timebankId: timebankModel.id,
+              isFromFind: false,
+              isCreateTimebank: false,
             ),
           ),
         );
@@ -116,7 +119,6 @@ Widget vieweditPage({BuildContext context}) {
   }
 
   Widget manageTimebankCodes({BuildContext context}) {
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -143,6 +145,34 @@ Widget vieweditPage({BuildContext context}) {
     );
   }
 
+  Widget billingView({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BillingView(
+              timebankModel.id,
+              '',
+              user: SevaCore.of(context).loggedInUser,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Billing',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget get getTitle {
     return Text(
       "Manage ${timebankModel.name}",
@@ -150,6 +180,29 @@ Widget vieweditPage({BuildContext context}) {
         fontSize: 20,
         color: Colors.black,
         fontWeight: FontWeight.w700,
+      ),
+    );
+  }
+
+  viewBillingPage({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TimeBankBillingAdminView(),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Admin Billing',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
       ),
     );
   }

@@ -1,20 +1,15 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart' as prefix0;
-import 'package:html/parser.dart' show urlscraper;
-import 'package:html/dom.dart' show domHtml;
-import 'package:http/http.dart' as http;
-
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';
-import 'package:sevaexchange/components/location_picker.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -108,7 +103,8 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       entityType: EntityType.timebank,
     );
 
-    newsObject.entity = entityModel;
+    newsObject.entity.entityType = entityModel.entityType;
+    newsObject.entity.entityName = entityModel.entityName;
 
     // await FirestoreManager.createNews(newsObject: newsObject);
     await FirestoreManager.updateNews(newsObject: newsObject);

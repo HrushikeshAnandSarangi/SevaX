@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/utils/user_config.dart';
+import 'package:sevaexchange/models/billing_plan_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +26,15 @@ Future<void> main() async {
     ),
   );
 
-  UserConfig.prefs = await SharedPreferences.getInstance();
+  AppConfig.prefs = await SharedPreferences.getInstance();
+  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  await remoteConfig.fetch(expiration: const Duration(hours: 5));
+  await remoteConfig.activateFetched();
+
+  AppConfig.billing =
+      BillingPlanModel.fromJson(json.decode(remoteConfig.getString("plans")));
+  print(
+      "--->plans ${AppConfig.billing.freePlan.action.adminReviewsCompleted.billable}");
 
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
@@ -70,6 +82,7 @@ class MainApplication extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: FlavorConfig.values.theme,
+        title: AppConfig.appName,
         // home: RequestStatusView(
         //   requestId: "anitha.beberg@gmail.com*1573268670404",
         // ),
@@ -81,6 +94,7 @@ class MainApplication extends StatelessWidget {
             },
           );
         },
+        // home:BillingPlanDetails(),
         home: SplashView(
           skipToHomePage: skipToHomePage,
         ),

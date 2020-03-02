@@ -173,6 +173,13 @@ class TimebankModel extends DataModel {
     }
     return map;
   }
+
+  @override
+  String toString() {
+    return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location}';
+  }
+
+
 }
 
 class Member extends DataModel {

@@ -51,39 +51,34 @@ class _SearchTimebankMemberElastic extends State<SearchTimebankMemberElastic> {
     });
   }
 
-  void _search(String queryString) {
-    if (queryString.length == 1) {
-      setState(() {
-        searchOnChange.add(queryString);
-      });
-    } else {
-      searchOnChange.add(queryString);
-    }
-  }
-
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Theme.of(context).primaryColor,
         leading: new IconButton(
-          icon: new Icon(Icons.arrow_back, color: Colors.black),
+          icon: new Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Container(
           padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: TextField(
-            onChanged: _search,
-            style: TextStyle(color: Colors.black),
+            onChanged: (String queryString) {
+              searchOnChange.add(queryString);
+              setState(() {});
+            },
+            style: TextStyle(color: Colors.white),
             controller: searchTextController,
             decoration: InputDecoration(
                 hasFloatingPlaceholder: false,
                 alignLabelWithHint: true,
                 isDense: true,
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white)),
                 enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black)),
+                    borderSide: BorderSide(color: Colors.white)),
                 hintText: 'Search members',
-                hintStyle: TextStyle(color: Colors.black)),
+                hintStyle: TextStyle(color: Colors.white)),
             // controller: searchTextController,
           ),
         ),

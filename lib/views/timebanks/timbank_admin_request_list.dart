@@ -11,6 +11,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/services/firestore_service/firestore_service.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
@@ -274,9 +275,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     _requestsWidgets = [];
     _requestsWidgets.add(getSectionTitle(context, 'Requests'));
     for (var i = 0; i < modelItemList.length; i++) {
-      if (modelItemList[i].operationTaken) {
+      if (modelItemList[i] == null ||
+          modelItemList[i].operationTaken ||
+          modelItemList[i].userId == null) {
         continue;
       }
+      var isWidgetEmpty = false;
       var userWidget = FutureBuilder<UserModel>(
         future:
             FirestoreManager.getUserForId(sevaUserId: modelItemList[i].userId),
@@ -288,15 +292,19 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           }
 
           UserModel user = snapshot.data;
-
+          if (user == null || user.sevaUserID == null) {
+            isWidgetEmpty = true;
+            return Container();
+          }
           widget.listOfMembers[user.sevaUserID] = user;
           return getUserRequestWidget(
               user, context, timebankModel, requestModelItem);
         },
       );
-      _requestsWidgets.add(userWidget);
+      if (!isWidgetEmpty) {
+        _requestsWidgets.add(userWidget);
+      }
     }
-    ;
     if (_requestsWidgets.length == 1) {
       _requestsWidgets = [];
     }
@@ -750,20 +758,22 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
       if (widget.isUserAdmin) {
-        var gesture = GestureDetector(
-          child: Row(
-            children: <Widget>[
-              getSectionTitle(context, 'Members '),
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 10,
-                child: Image.asset("lib/assets/images/add.png"),
-              ),
-            ],
+        var gesture = TransactionLimitCheck(
+          child: GestureDetector(
+            child: Row(
+              children: <Widget>[
+                getSectionTitle(context, 'Members '),
+                CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 10,
+                  child: Image.asset("lib/assets/images/add.png"),
+                ),
+              ],
+            ),
+            onTap: () async {
+              addVolunteers();
+            },
           ),
-          onTap: () async {
-            addVolunteers();
-          },
         );
         _membersWidgets.add(gesture);
       } else {

@@ -78,8 +78,9 @@ dependencies:
   cached_network_image: ^2.0.0
   curved_navigation_bar: ^0.3.1
   autocomplete_textfield: ^1.7.3
+  stripe_payment: ^1.0.6
+  firebase_remote_config: ^0.3.0+1
   badges: ^1.1.0
-
   smooth_star_rating: 1.0.4+2
 
 dev_dependencies:
@@ -145,6 +146,14 @@ flutter:
     - lib/assets/images/add.png
     - lib/assets/images/add_.png
     - lib/assets/images/add__.png
+    - lib/assets/images/drawing-tablet.svg
+    - lib/assets/images/add-user.svg
+    - lib/assets/images/bars.svg
+    - lib/assets/images/megaphone.svg
+    - lib/assets/images/lightbulb.svg
+    - lib/assets/images/levels.svg
+    - lib/assets/images/color-palette.svg
+    - lib/assets/images/startup.png
     # - lib/assets/images/andrew_mic.jpg
     - lib/assets/images/yang_in_crowd.png
     - lib/assets/images/yang_speaking.jpg
@@ -156,6 +165,10 @@ flutter:
     - lib/assets/images/image_01.png
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
+
+    # card images
+    - images/
+    - images/card_provider/
   fonts:
     - family: Montserrat
       fonts:
@@ -184,3 +197,11 @@ flutter:
         - asset: fonts/EuropaLightItalic.ttf
         - asset: fonts/EuropaRegular.ttf
         - asset: fonts/EuropaRegularItalic.ttf
+    - family: MavenPro
+      fonts:
+        - asset: fonts/MavenPro-Regular.ttf
+          weight: 400
+        - asset: fonts/MavenPro-Medium.ttf
+          weight: 500
+        - asset: fonts/MavenPro-Bold.ttf
+          weight: 700

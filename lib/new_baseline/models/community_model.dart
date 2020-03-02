@@ -81,7 +81,7 @@ class BillingAddress {
 
   @override
   String toString() {
-    return "Billing information provided : {countryName : $companyname, stateName : $state, pincode : $pincode, streetAddressOne : $street_address1, streetAddressTwo : $street_address2, companyName  : $companyname, additionalNotes : $additionalnotes }";
+    return 'BillingAddress{companyname: $companyname, street_address1: $street_address1, street_address2: $street_address2, city: $city, state: $state, country: $country, pincode: $pincode, additionalnotes: $additionalnotes}';
   }
 }
 
@@ -112,6 +112,7 @@ class CommunityModel extends DataModel {
   String id;
   String name;
   String primary_email;
+  String about;
   BillingAddress billing_address;
   List<PaymentRecord> payment_records;
   String logo_url;
@@ -124,13 +125,23 @@ class CommunityModel extends DataModel {
   List<String> admins;
   List<String> coordinators;
   List<String> members;
+  int transactionCount;
+  Map<String, dynamic> billingQuota;
+  Map<String, dynamic> payment;
 
   CommunityModel(Map<String, dynamic> map) {
+    this.transactionCount = map.containsKey('transactionCount')
+        ? map['transactionCount'] ?? 0
+        : null;
+    this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
+    this.transactionCount = map['transactionCount'] ?? 0;
+    this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});
     this.id = map != null ? map.containsKey('id') ? map['id'] : '' : '';
     this.name = map.containsKey('name') ? map['name'] : '';
+    this.about = map.containsKey('about') ? map['about'] : '';
     this.primary_email =
         map.containsKey('primary_email') ? map['primary_email'] : '';
-    this.billing_address = map.containsKey(['billing_address'])
+    this.billing_address = map.containsKey('billing_address')
         ? BillingAddress(map['billing_address'].cast<String, dynamic>())
         : BillingAddress({});
     this.payment_records = map.containsKey('payment_records')
@@ -160,6 +171,9 @@ class CommunityModel extends DataModel {
     }
     if (key == 'name') {
       this.name = value;
+    }
+    if (key == 'about') {
+      this.about = value;
     }
 
     if (key == 'primary_email') {
@@ -204,6 +218,10 @@ class CommunityModel extends DataModel {
     if (this.name != null && this.name.isNotEmpty) {
       object['name'] = this.name;
     }
+
+    if (this.about != null && this.about.isNotEmpty) {
+      object['about'] = this.about;
+    }
     if (this.primary_email != null && this.primary_email.isNotEmpty) {
       object['primary_email'] = this.primary_email;
     }
@@ -242,6 +260,27 @@ class CommunityModel extends DataModel {
       object['primary_timebank'] = this.primary_timebank;
     }
     return object;
+  }
+
+  @override
+  String toString() {
+    return 'CommunityModel{id: $id, '
+        'name: $name, '
+        'primary_email: $primary_email, '
+        'about: $about, '
+        'billing_address: $billing_address,'
+        ' payment_records: $payment_records, '
+        ' logo_url: $logo_url, '
+        ' cover_url: $cover_url,'
+        ' creator_email: $creator_email,'
+        ' created_by: $created_by, '
+        'created_at: $created_at, '
+        'primary_timebank: $primary_timebank, '
+        'timebanks: $timebanks, '
+        'admins: $admins, '
+        'coordinators: $coordinators,'
+        ' members: $members, '
+        'transactionCount: $transactionCount}';
   }
 }
 
