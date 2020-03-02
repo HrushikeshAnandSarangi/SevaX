@@ -102,12 +102,12 @@ class ProfileViewerState extends State<ProfileViewer> {
                             name: snapshot.data['fullname'],
                             email: snapshot.data['email'],
                             isBlocked: isBlocked,
-                            message: widget.userEmail == loggedInEmail ||
-                                    isBlocked
-                                ? null
-                                : () => onMessageClick(
-                                      loggedInEmail,
-                                    ),
+                            message:
+                                widget.userEmail == loggedInEmail || isBlocked
+                                    ? null
+                                    : () => onMessageClick(
+                                          loggedInEmail,
+                                        ),
                             block: widget.userEmail == loggedInEmail
                                 ? null
                                 : onBlockClick,
