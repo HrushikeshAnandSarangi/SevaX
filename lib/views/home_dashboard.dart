@@ -152,14 +152,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               return Center(child: CircularProgressIndicator());
             }
             if (snapshot.hasData && snapshot.data != null) {
-              print("asd" + snapshot.data.timebanks.length.toString());
+              // print("asd" + snapshot.data.timebanks.length.toString());
               snapshot.data.timebanks.forEach(
                 (TimebankModel data) {
-                  print(
-                      "timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
+                  //print("timebank ->> ${data.id}  current primary - >${snapshot.data.currentCommunity.primary_timebank}");
                   if (data.id ==
                       snapshot.data.currentCommunity.primary_timebank) {
-                    print("inside if" + data.toString());
+                    //   print("inside if" + data.toString());
                     primaryTimebank = data;
                     timeBankModelSingleton.model = primaryTimebank;
                   }

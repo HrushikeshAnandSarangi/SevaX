@@ -4,6 +4,7 @@ import 'dart:core' as prefix0;
 import 'dart:core';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -18,8 +19,6 @@ Future<void> createChat({
   // log.i('createChat: MessageModel: ${chat.toMap()}');
   chat.rootTimebank = FlavorConfig.values.timebankId;
   print("creating a new chat for ${chat}");
-
-
 
   return await Firestore.instance
       .collection('chatsnew')
@@ -63,12 +62,11 @@ Future<void> updateReadStatus(ChatModel chat, String email) async {
 //tested and working
 /// Update a [chat]
 
-Future<void> updateMessagingReadStatus({
-  @required ChatModel chat,
-  @required String email,
-  @required String userEmail,
-  bool isAdmin = false
-}) async {
+Future<void> updateMessagingReadStatus(
+    {@required ChatModel chat,
+    @required String email,
+    @required String userEmail,
+    bool isAdmin = false}) async {
   await Firestore.instance
       .collection("chatsnew")
       .document(
@@ -121,7 +119,11 @@ Future<void> updateMessagingReadStatusForMe({
         .collection('chatsnew')
         .document(
             "${chat.user1}*${chat.user2}*${FlavorConfig.values.timebankId}*${chat.communityId}")
-        .updateData({'unread_status': unreadStatus});
+        .updateData({
+      'unread_status': unreadStatus,
+      'location': chat.candidateLocation.data ??
+          GeoFirePoint(40.754387, -73.984291).data
+    });
   });
 }
 
