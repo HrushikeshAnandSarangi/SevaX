@@ -61,7 +61,8 @@ class TransactionLimitCheck extends StatelessWidget {
             _showDialog(context, isAdmin);
           },
           child: AbsorbPointer(
-            absorbing: !_userBloc.community.payment['payment_success'],
+            absorbing:
+                !(_userBloc.community.payment['payment_success'] ?? false),
             child: child,
           ),
         );
