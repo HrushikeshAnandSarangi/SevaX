@@ -537,7 +537,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
         model.transactions.map((t) => t).toList();
 
     model.transactions = transactions.map((t) {
-      if (t.to == userId && t.from == sevaCore.loggedInUser.sevaUserID) {
+      if (t.to == userId) {
         TransactionModel editedTransaction = t;
         editedTransaction.isApproved = true;
         return editedTransaction;
@@ -913,12 +913,13 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   }) {
     //request for feedback;
     checkForFeedback(
-        userId: userId,
-        user: user,
-        context: context,
-        model: model,
-        notificationId: notificationId,
-        sevaCore: SevaCore.of(context));
+      userId: userId,
+      user: user,
+      context: context,
+      model: model,
+      notificationId: notificationId,
+      sevaCore: SevaCore.of(context),
+    );
   }
 
   void rejectMemberClaimForEvent(
