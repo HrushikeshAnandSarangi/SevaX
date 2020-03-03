@@ -15,13 +15,14 @@ class TimeBankCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _user = BlocProvider.of<UserDataBloc>(context);
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => BlocProvider(
-              bloc: user,
+              bloc: _user,
               child: TimebankTabsViewHolder.of(
                 timebankId: timebank.id,
                 timebankModel: timebank,

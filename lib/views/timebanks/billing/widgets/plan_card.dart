@@ -23,7 +23,7 @@ class BillingPlanCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20),
       child: Container(
-        width: MediaQuery.of(context).size.width - 100,
+        width: MediaQuery.of(context).size.width - 90,
         child: Card(
           color: isSelected ? Theme.of(context).primaryColor : Colors.white,
           elevation: 3, //isSelected ? 5 : 2,

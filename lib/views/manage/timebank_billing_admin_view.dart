@@ -76,9 +76,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   //print('subscription  ${cardModel.subscriptionModel}');
                   if (cardModel.subscriptionModel != null &&
                       cardModel.subscriptionModel.containsKey("items")) {
-                    planData = cardModel.subscriptionModel['items']['data']
-                        ? cardModel.subscriptionModel['items']['data'] ?? []
-                        : [];
+                    if (cardModel.subscriptionModel['items']['data'] != null)
+                      planData =
+                          cardModel.subscriptionModel['items']['data'] ?? [];
                     return spendingsTextWidgettwo(
                         "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.");
                   } else {
@@ -187,7 +187,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             print('snap data ===>${snapshot.data.data}');
 
             if (snapshot.data.data != null &&
-                snapshot.data.data['payment_state'].notnull) {
+                snapshot.data.data['payment_state'] != null) {
               pastPlans = snapshot.data.data['payment_state']['plans'] ?? [];
               return ListView.builder(
                   itemCount: pastPlans.length,
