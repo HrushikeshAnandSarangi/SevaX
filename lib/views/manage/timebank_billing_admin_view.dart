@@ -235,7 +235,11 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             onPressed: () {
               print("clicked");
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => BillingView("", "")));
+                MaterialPageRoute(
+                  builder: (context) => BillingView("", "",
+                      user: SevaCore.of(context).loggedInUser),
+                ),
+              );
 //                builder: (context) => CustomCreditCard(
 //                  frontBackground: CardBackgrounds.white,
 //                  cardNumber: "7777",
