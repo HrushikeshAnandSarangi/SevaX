@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -99,11 +102,12 @@ class CreateEditCommunityViewFormState
   String _billingDetailsError = '';
   String communityImageError = '';
   String enteredName = '';
+  FirebaseUser firebaseUser;
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
   GlobalKey<FormState> _billingInformationKey = GlobalKey();
-  // GlobalKey<FormState> _stateSelectorKey = GlobalKey();
+  GlobalKey<FormState> _stateSelectorKey = GlobalKey();
 
   String selectedCountryValue = "Select your country";
 
@@ -116,6 +120,8 @@ class CreateEditCommunityViewFormState
   void initState() {
     super.initState();
     var _searchText = "";
+    checkEmailVerified();
+
     Future.delayed(Duration.zero, () {
       createEditCommunityBloc.getChildTimeBanks(context);
     });
@@ -486,6 +492,10 @@ class CreateEditCommunityViewFormState
                         onPressed: () async {
                           // show a dialog
                           if (widget.isCreateTimebank) {
+                            if (!firebaseUser.isEmailVerified) {
+                              _showVerificationAndLogoutDialogue();
+                            }
+
                             print(_formKey.currentState.validate());
 
 //                            communityFound =
@@ -561,7 +571,7 @@ class CreateEditCommunityViewFormState
                                   _billingInformationKey.currentState.reset();
                                   UserModel user =
                                       SevaCore.of(context).loggedInUser;
-                                  //                                  Navigator.pop(dialogContext);
+                                  // Navigator.pop(dialogContext);
                                   _formKey.currentState.reset();
                                   _billingInformationKey.currentState.reset();
                                   Navigator.of(context).push(
@@ -681,6 +691,71 @@ class CreateEditCommunityViewFormState
   }
 
   BuildContext dialogContext;
+
+  void checkEmailVerified() {
+    FirebaseAuth.instance.currentUser().then((FirebaseUser firebaseUser) {
+      if (this.firebaseUser != null && this.firebaseUser == firebaseUser) {
+        return;
+      }
+      setState(() {
+        print('Is email verified:${firebaseUser.isEmailVerified}');
+        this.firebaseUser = firebaseUser;
+      });
+    });
+  }
+
+  void _showVerificationAndLogoutDialogue() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text("Signing out"),
+          content: Text("Acknowledge the verification mail and login back"),
+          actions: <Widget>[
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+              elevation: 5,
+              color: Theme.of(context).accentColor,
+              textColor: FlavorConfig.values.buttonTextColor,
+              child: Text(
+                "Ok, Sign out",
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              onPressed: () {
+                firebaseUser.sendEmailVerification().then((value) {
+                  _signOut(context);
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+            FlatButton(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: Text(
+                  "No, I'll do it later",
+                  style: TextStyle(fontSize: 16, color: Colors.red),
+                ),
+                onPressed: () => Navigator.of(context).pop()),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    Navigator.pop(context);
+    var auth = AuthProvider.of(context).auth;
+    await auth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => AuthRouter(),
+      ),
+    );
+  }
 
   void showProgressDialog(String message) {
     showDialog(
