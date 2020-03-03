@@ -78,6 +78,8 @@ class CreateEditCommunityViewForm extends StatefulWidget {
   }
 }
 
+GlobalKey<FormState> _billingInformationKey = GlobalKey();
+
 // Create a corresponding State class. This class will hold the data related to
 // the form.
 class CreateEditCommunityViewFormState
@@ -96,6 +98,8 @@ class CreateEditCommunityViewFormState
   String memberAssignment = "+ Add Members";
   List members = [];
 
+  bool isBillingDetailsProvided = false;
+
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress = '';
@@ -106,7 +110,6 @@ class CreateEditCommunityViewFormState
 
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
-  GlobalKey<FormState> _billingInformationKey = GlobalKey();
   GlobalKey<FormState> _stateSelectorKey = GlobalKey();
 
   String selectedCountryValue = "Select your country";
@@ -492,9 +495,9 @@ class CreateEditCommunityViewFormState
                         onPressed: () async {
                           // show a dialog
                           if (widget.isCreateTimebank) {
-                            if (!firebaseUser.isEmailVerified) {
-                              _showVerificationAndLogoutDialogue();
-                            }
+//                            if (!firebaseUser.isEmailVerified) {
+//                              _showVerificationAndLogoutDialogue();
+//                            }
 
                             print(_formKey.currentState.validate());
 
@@ -505,8 +508,7 @@ class CreateEditCommunityViewFormState
 //                              return;
 //                            }
                             if (_formKey.currentState.validate()) {
-                              if (_billingInformationKey.currentState
-                                  .validate()) {
+                              if (isBillingDetailsProvided) {
                                 setState(() {
                                   this._billingDetailsError = '';
                                 });
@@ -567,13 +569,13 @@ class CreateEditCommunityViewFormState
                                   });
 
                                   Navigator.pop(dialogContext);
-                                  _formKey.currentState.reset();
-                                  _billingInformationKey.currentState.reset();
+                                  //   _formKey.currentState.reset();
+                                  // _billingInformationKey.currentState.reset();
                                   UserModel user =
                                       SevaCore.of(context).loggedInUser;
                                   // Navigator.pop(dialogContext);
                                   _formKey.currentState.reset();
-                                  _billingInformationKey.currentState.reset();
+                                  // _billingInformationKey.currentState.reset();
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => BillingPlanDetails(
@@ -992,6 +994,7 @@ class CreateEditCommunityViewFormState
 
   Widget _scrollingList(List<FocusNode> focusNodes) {
     print(focusNodes);
+
     Widget _stateWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -1229,6 +1232,8 @@ class CreateEditCommunityViewFormState
               if (controller.community.billing_address.country == null) {
                 scrollToTop();
               } else {
+                _billingInformationKey.currentState.save();
+                isBillingDetailsProvided = true;
                 print("All Good");
                 Navigator.pop(context);
                 //   _pc.close();
