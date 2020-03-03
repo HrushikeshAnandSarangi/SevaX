@@ -805,12 +805,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String _validateEmailId(String value) {
-    if (value.isEmpty) return 'Enter an email';
+    RegExp emailPattern = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    if (value.isEmpty) return 'Enter email';
+    if (!emailPattern.hasMatch(value)) return 'Email is not valid';
     return null;
   }
 
   String _validatePassword(String value) {
     if (value.isEmpty) return 'Enter password';
+    if (value.length < 6) return 'Password must be 6 characters long';
     return null;
   }
 

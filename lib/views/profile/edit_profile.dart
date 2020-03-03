@@ -85,7 +85,9 @@ class _EditProfilePageState extends State<EditProfilePage>
                   Stack(
                     children: <Widget>[
                       new Container(
-                          padding: EdgeInsets.zero, child: _imagePicker),
+                        padding: EdgeInsets.zero,
+                        child: _imagePicker,
+                      ),
                       Positioned(
                           width: 50,
                           height: 50,
@@ -577,24 +579,48 @@ class _EditProfilePageState extends State<EditProfilePage>
         child: Hero(
           tag: "ProfileImage",
           child: Container(
-            decoration: ShapeDecoration(
-              shape: CircleBorder(
-                side: BorderSide(
-                  color: Colors.white,
-                  width: 2.0,
-                ),
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[200],
+            ),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(
+                widget.userModel.photoURL ??
+                    'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
               ),
-              image: DecorationImage(
-                image: selectedImage != null
-                    ? FileImage(selectedImage)
-                    : NetworkImage(
-                        widget.userModel.photoURL ??
-                            'https://www.searchpng.com/wp-content/uploads/2019/02/Men-Profile-Image-715x657.png',
-                      ),
-              ),
+              backgroundColor: Colors.white,
+              radius: MediaQuery.of(context).size.width / 4.5,
             ),
           ),
         ),
+        // child: Hero(
+        //   tag: "ProfileImage",
+        //   child: Container(
+        //     decoration: widget.userModel.photoURL != null
+        //         ? ShapeDecoration(
+        //             shape: CircleBorder(
+        //               side: BorderSide(
+        //                 color: Colors.white,
+        //                 width: 2.0,
+        //               ),
+        //             ),
+        //             image: DecorationImage(
+        //               image: selectedImage != null
+        //                   ? FileImage(selectedImage)
+        //                   : NetworkImage(
+        //                       widget.userModel.photoURL,
+        //                     ),
+        //             ),
+        //           )
+        //         : BoxDecoration(),
+        //     child: widget.userModel.photoURL == null
+        //         ? Center(
+        //             child: Text("Upload Profile Pic"),
+        //           )
+        //         : Container(),
+        //   ),
+        // ),
       ),
     );
   }
