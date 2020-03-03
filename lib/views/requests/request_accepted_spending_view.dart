@@ -839,7 +839,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         model.transactions.map((t) => t).toList();
 
     model.transactions = transactions.map((t) {
-      if (t.to == userId && t.from == sevaCore.loggedInUser.sevaUserID) {
+      if (t.to == userId ) {
         TransactionModel editedTransaction = t;
         editedTransaction.isApproved = true;
         return editedTransaction;
