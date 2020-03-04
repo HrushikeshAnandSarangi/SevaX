@@ -314,9 +314,11 @@ Stream<TimebankModel> getTimebankModelStream(
   yield* data.transform(
     StreamTransformer<DocumentSnapshot, TimebankModel>.fromHandlers(
       handleData: (snapshot, modelSink) {
-        TimebankModel model = TimebankModel.fromMap(snapshot.data);
-        model.id = snapshot.documentID;
-        modelSink.add(model);
+        if (snapshot.data != null) {
+          TimebankModel model = TimebankModel.fromMap(snapshot.data);
+          model.id = snapshot.documentID;
+          modelSink.add(model);
+        }
       },
     ),
   );

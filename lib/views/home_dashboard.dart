@@ -229,6 +229,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       RequestsModule.of(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
+                        isFromSettings: false,
                       ),
                       OffersModule.of(
                         timebankId: primaryTimebank.id,

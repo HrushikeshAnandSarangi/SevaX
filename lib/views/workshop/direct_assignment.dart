@@ -200,68 +200,70 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
   Future loadNextBatchItems() async {
     if (!_isLoading && !_lastReached && nullcount < 3) {
       _isLoading = true;
-      FirestoreManager.getUsersForTimebankId(
-              _timebankId, _pageIndex, widget.userEmail)
-          .then((onValue) {
-        var userModelList = onValue.userModelList;
-        if (userModelList == null || userModelList.length == 0) {
-          nullcount++;
-          _isLoading = false;
-          _pageIndex = _pageIndex + 1;
-          loadNextBatchItems();
-        } else {
-          nullcount = 0;
-          var addItems = userModelList.map((memberObject) {
-            var member = memberObject.sevaUserID;
-            if (widget.listOfMembers != null &&
-                widget.listOfMembers.containsKey(member)) {
-              return getUserWidget(widget.listOfMembers[member], context);
-            }
-            return FutureBuilder<UserModel>(
-              future: FirestoreManager.getUserForId(sevaUserId: member),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) return Text(snapshot.error.toString());
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return shimmerWidget;
-                }
-                UserModel user = snapshot.data;
-                if (user.email == widget.userEmail) {
-                  return Offstage();
-                }
-                widget.listOfMembers[user.sevaUserID] = user;
-                return getUserWidget(user, context);
-              },
-            );
-          }).toList();
-          if (addItems.length > 0) {
-            var lastIndex = _avtars.length;
-            setState(() {
-              var iterationCount = 0;
-              for (int i = 0; i < addItems.length; i++) {
-                if (emailIndexMap[userModelList[i].email] == null &&
-                    checkAlreadyExistingMembersContains(
-                        userModelList[i].sevaUserID.trim())) {
-                  // Filtering duplicates
-                  _avtars.add(addItems[i]);
-                  indexToModelMap[lastIndex] = userModelList[i];
-                  emailIndexMap[userModelList[i].email] = lastIndex++;
-                  iterationCount++;
-                }
-              }
-              _indexSoFar = _indexSoFar + iterationCount;
-              _pageIndex = _pageIndex + 1;
-            });
+      var onValue = await FirestoreManager.getUsersForTimebankId(
+          _timebankId, _pageIndex, widget.userEmail);
+      var userModelList = onValue.userModelList;
+      if (userModelList == null || userModelList.length == 0) {
+        nullcount++;
+        _isLoading = false;
+        _pageIndex = _pageIndex + 1;
+        loadNextBatchItems();
+      } else {
+        nullcount = 0;
+        var addItems = userModelList.map((memberObject) {
+          var member = memberObject.sevaUserID;
+          if (widget.listOfMembers != null &&
+              widget.listOfMembers.containsKey(member)) {
+            return getUserWidget(widget.listOfMembers[member], context);
           }
-          _isLoading = false;
-        }
-        if (onValue.lastPage) {
+          return FutureBuilder<UserModel>(
+            future: FirestoreManager.getUserForId(sevaUserId: member),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) return Text(snapshot.error.toString());
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return shimmerWidget;
+              }
+              UserModel user = snapshot.data;
+              print("User:${user.fullname}");
+              if (user == null) {
+                return Offstage();
+              }
+              if (user.email == widget.userEmail) {
+                return Offstage();
+              }
+              widget.listOfMembers[user.sevaUserID] = user;
+              return getUserWidget(user, context);
+            },
+          );
+        }).toList();
+        if (addItems.length > 0) {
+          var lastIndex = _avtars.length;
           setState(() {
-            _lastReached = onValue.lastPage;
+            var iterationCount = 0;
+            for (int i = 0; i < addItems.length; i++) {
+              if (emailIndexMap[userModelList[i].email] == null &&
+                  checkAlreadyExistingMembersContains(
+                      userModelList[i].sevaUserID.trim())) {
+                // Filtering duplicates
+                _avtars.add(addItems[i]);
+                indexToModelMap[lastIndex] = userModelList[i];
+                emailIndexMap[userModelList[i].email] = lastIndex++;
+                iterationCount++;
+              }
+            }
+            _indexSoFar = _indexSoFar + iterationCount;
+            _pageIndex = _pageIndex + 1;
           });
-        } else if (_avtars.length < 20) {
-          loadNextBatchItems();
         }
-      });
+        _isLoading = false;
+      }
+      if (onValue.lastPage) {
+        setState(() {
+          _lastReached = onValue.lastPage;
+        });
+      } else if (_avtars.length < 20) {
+        loadNextBatchItems();
+      }
     } else {
       setState(() {
         _lastReached = true;
