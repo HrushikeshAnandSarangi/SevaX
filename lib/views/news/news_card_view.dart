@@ -94,8 +94,8 @@ class NewsCardView extends StatelessWidget {
         return IconButton(
           icon: Icon(Icons.delete),
           onPressed: () {
-            _deleteNews(context);
-            // _showDeleteConfirmationDialog(context);
+            //_deleteNews(context);
+            _showDeleteConfirmationDialog(context);
           },
         );
       },
@@ -410,14 +410,29 @@ class NewsCardView extends StatelessWidget {
           );
   }
 
-  void _showDeleteConfirmationDialog(BuildContext context) {
+  BuildContext dialogContext;
+  void showProgressDialog(String message, BuildContext context) {
     showDialog(
-      context: context,
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext parentContext) {
+    showDialog(
+      context: parentContext,
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
           title: Text('Delete Feed'),
           content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text('Are you sure you want to delete this news feed?'),
               SizedBox(
@@ -425,6 +440,7 @@ class NewsCardView extends StatelessWidget {
               ),
               Row(
                 children: <Widget>[
+                  Spacer(),
                   RaisedButton(
                     padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                     color: Theme.of(context).accentColor,
@@ -437,14 +453,16 @@ class NewsCardView extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      _deleteNews(context);
                       Navigator.pop(context);
+                      showProgressDialog("Deleting Feed", parentContext);
+                      _deleteNews(parentContext);
                     },
                   ),
                   FlatButton(
                     child: Text(
                       'Cancel',
                       style: TextStyle(
+                        color: Colors.red,
                         fontSize: dialogButtonSize,
                       ),
                     ),
@@ -477,7 +495,11 @@ class NewsCardView extends StatelessWidget {
 
   void _deleteNews(BuildContext context) async {
     await deleteNews(newsModel);
+    if (dialogContext != null) {
+      Navigator.pop(dialogContext);
+    }
+    Navigator.of(context).pop();
+
     // Navigator.pop(context);
-    Navigator.pop(context);
   }
 }
