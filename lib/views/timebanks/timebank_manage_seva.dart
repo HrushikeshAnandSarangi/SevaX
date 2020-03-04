@@ -5,9 +5,8 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
-
-import '../admin_viewe_requests.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -90,8 +89,10 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ViewRequestsForAdmin(
-              widget.timebankModel.id,
+            builder: (context) => RequestsModule.of(
+              timebankId: widget.timebankModel.id,
+              timebankModel: widget.timebankModel,
+              isFromSettings: true,
             ),
           ),
         );
