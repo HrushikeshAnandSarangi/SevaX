@@ -177,7 +177,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                     ),
                   ),
                   // Icon(
-                  
+
                   //   Icons.chat_bubble,
                   //   color: Colors.blueGrey,
                   //   size: 35,
@@ -354,7 +354,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                       child: Text(
                         "About ${userModel.fullname}",
                         style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   Padding(
@@ -411,7 +413,9 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
                           child: Text(
                             'Decline',
                             style: TextStyle(
-                                color: Colors.white, fontFamily: 'Europa'),
+                              color: Colors.white,
+                              fontFamily: 'Europa',
+                            ),
                           ),
                           onPressed: () async {
                             // request declined
@@ -468,11 +472,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;
     approveAcceptRequest(
-      requestModel: model,
-      approvedUserId: user.sevaUserID,
-      notificationId: notificationId,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-    );
+        requestModel: model,
+        approvedUserId: user.sevaUserID,
+        notificationId: notificationId,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        directToMember: true);
   }
 
   Widget _getCloseButton(BuildContext context) {

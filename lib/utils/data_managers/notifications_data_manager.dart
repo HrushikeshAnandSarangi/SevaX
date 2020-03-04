@@ -129,6 +129,8 @@ Future<void> removeAcceptRequestNotification({
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.senderUserId);
   bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+
+  print("Inside remove accepted notification -> ${isTimeBankNotification}" );
   isTimeBankNotification
       ? await Firestore.instance
           .collection('timebanknew')

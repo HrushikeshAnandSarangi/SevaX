@@ -855,5 +855,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void showTermsPage() {}
   void showPrivacyPolicyPage() {}
-  void showCookiePolicyPage() {}
+  void showCookiePolicyPage() {
+    print('cookies clicked');
+  }
 }
