@@ -867,7 +867,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     onActivityResult = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SelectMembersInGroup(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+          timebankId: widget.timebankId,
           userSelected:
               selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
           userEmail: SevaCore.of(context).loggedInUser.email,
