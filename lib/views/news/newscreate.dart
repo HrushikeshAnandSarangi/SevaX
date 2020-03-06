@@ -235,7 +235,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                               labelStyle: prefix0.TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
                               hintText: 'Text, URL and Hashtags ',
-                              labelText: 'What would you like to share',
+                              labelText: 'What would you like to share*',
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
                                   const Radius.circular(12.0),

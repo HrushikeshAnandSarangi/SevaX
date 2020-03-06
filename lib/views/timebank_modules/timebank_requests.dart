@@ -12,7 +12,9 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -83,6 +85,49 @@ class RequestsState extends State<RequestsModule> {
                         'My Requests',
                         style: (TextStyle(fontWeight: FontWeight.w500)),
                       ),
+                      widget.isFromSettings
+                          ? Container()
+                          : TransactionLimitCheck(
+                              child: GestureDetector(
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  child: CircleAvatar(
+                                    backgroundColor: Colors.white,
+                                    radius: 10,
+                                    child: Image.asset(
+                                        "lib/assets/images/add.png"),
+                                  ),
+                                ),
+                                onTap: () {
+                                  if (widget.timebankModel.protected) {
+                                    if (widget.timebankModel.admins.contains(
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID)) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CreateRequest(
+                                            timebankId: timebankId,
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                    _showProtectedTimebankMessage();
+                                  } else {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateRequest(
+                                          timebankId: timebankId,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
                     ],
                   ),
                 ),
