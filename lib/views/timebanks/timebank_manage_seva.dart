@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
@@ -21,8 +24,65 @@ class ManageTimebankSeva extends StatefulWidget {
 
 class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   var _indextab = 0;
+
+  CommunityModel communityModel = CommunityModel({});
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("creator id ${widget.timebankModel.communityId}");
+
+    FirestoreManager.getCommunityDetailsByCommunityId(
+            communityId: widget.timebankModel.communityId)
+        .then((onValue) {
+      communityModel = onValue;
+
+      print("creator id ${communityModel.created_by}");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("seva id ${SevaCore.of(context).loggedInUser.sevaUserID}");
+
+    if (SevaCore.of(context).loggedInUser.sevaUserID ==
+        communityModel.created_by) {
+      return superAdminView();
+    } else {
+      return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(50.0),
+            child: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.white,
+              bottom: TabBar(
+                indicatorColor: Colors.black,
+                labelColor: Colors.black,
+                isScrollable: false,
+                tabs: <Widget>[
+                  Tab(text: "About"),
+                  Tab(text: "Settings"),
+                ],
+                onTap: (index) {
+                  if (_indextab != index) {
+                    _indextab = index;
+                    setState(() {});
+                  }
+                },
+              ),
+            ),
+          ),
+          body: normalAdminWidget,
+        ),
+      );
+    }
+  }
+
+  Widget superAdminView() {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -53,6 +113,20 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         ),
         body: bodyWidget,
       ),
+    );
+  }
+
+  Widget get normalAdminWidget {
+    return IndexedStack(
+      index: _indextab,
+      children: <Widget>[
+        CreateEditCommunityView(
+          isCreateTimebank: false,
+          isFromFind: false,
+          timebankId: widget.timebankModel.id,
+        ),
+        Settings,
+      ],
     );
   }
 

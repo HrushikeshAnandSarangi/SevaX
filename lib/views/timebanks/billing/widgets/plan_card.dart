@@ -36,6 +36,7 @@ class BillingPlanCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 RichText(
+                  overflow: TextOverflow.ellipsis,
                   text: TextSpan(
                     style: TextStyle(color: textColor),
                     children: [
@@ -80,6 +81,7 @@ class BillingPlanCard extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       "${billingDetails.note1}",
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(width: 4),
