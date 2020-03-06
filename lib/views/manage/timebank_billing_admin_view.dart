@@ -236,7 +236,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               print("clicked");
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => BillingView("", "",
+                  builder: (context) => BillingView(SevaCore.of(context).loggedInUser.currentCommunity, "",
                       user: SevaCore.of(context).loggedInUser),
                 ),
               );
