@@ -75,23 +75,23 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
               if (snapshot.hasData && snapshot.data != null) {
                 SevaCore.of(context).loggedInUser = _userBloc.user;
 
-                if (_userBloc.community.admins
-                        .contains(_userBloc.user.sevaUserID) &&
-                    (_userBloc.community.payment.isEmpty
-                    //     _userBloc.community.payment['payment_success'] ??
-                    // false
-                    )) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => BillingPlanDetails(
-                            user: _userBloc.user,
-                            isPlanActive: false,
-                          ),
-                        ),
-                        ((Route<dynamic> route) => false));
-                  });
-                }
+                // if (_userBloc.community.admins
+                //         .contains(_userBloc.user.sevaUserID) &&
+                //     (_userBloc.community.payment.isEmpty
+                //     //     _userBloc.community.payment['payment_success'] ??
+                //     // false
+                //     )) {
+                //   WidgetsBinding.instance.addPostFrameCallback((_) {
+                //     Navigator.of(context).pushAndRemoveUntil(
+                //         MaterialPageRoute(
+                //           builder: (context) => BillingPlanDetails(
+                //             user: _userBloc.user,
+                //             isPlanActive: false,
+                //           ),
+                //         ),
+                //         ((Route<dynamic> route) => false));
+                //   });
+                // }
 
                 if (_userBloc.user.communities == null ||
                     _userBloc.user.communities.isEmpty) {
