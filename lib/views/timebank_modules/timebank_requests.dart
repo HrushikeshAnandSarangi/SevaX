@@ -12,9 +12,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
@@ -27,8 +25,9 @@ import '../core.dart';
 class RequestsModule extends StatefulWidget {
   final String timebankId;
   final TimebankModel timebankModel;
+  final bool isFromSettings;
 
-  RequestsModule.of({this.timebankId, this.timebankModel});
+  RequestsModule.of({this.timebankId, this.timebankModel, this.isFromSettings});
 
   @override
   RequestsState createState() => RequestsState();
@@ -63,7 +62,10 @@ class RequestsState extends State<RequestsModule> {
     timebankId = widget.timebankModel.id;
     print("----------->>>$timebankId");
 
-    return Container(
+//    return Scaffold(
+//      body: Text("Hello"),
+//    );
+    var body = Container(
       margin: EdgeInsets.only(left: 0, right: 0, top: 10),
       child: Column(
         children: <Widget>[
@@ -80,46 +82,6 @@ class RequestsState extends State<RequestsModule> {
                       Text(
                         'My Requests',
                         style: (TextStyle(fontWeight: FontWeight.w500)),
-                      ),
-                      TransactionLimitCheck(
-                        child: GestureDetector(
-                          child: Container(
-                            margin: EdgeInsets.only(left: 10),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 10,
-                              child: Image.asset("lib/assets/images/add.png"),
-                            ),
-                          ),
-                          onTap: () {
-                            if (widget.timebankModel.protected) {
-                              if (widget.timebankModel.admins.contains(
-                                  SevaCore.of(context)
-                                      .loggedInUser
-                                      .sevaUserID)) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => CreateRequest(
-                                      timebankId: timebankId,
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-                              _showProtectedTimebankMessage();
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CreateRequest(
-                                    timebankId: timebankId,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                        ),
                       ),
                     ],
                   ),
@@ -141,6 +103,9 @@ class RequestsState extends State<RequestsModule> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.data == null) {
+                          return Container();
                         }
                         timebankList = snapshot.data;
                         List<String> dropdownList = [];
@@ -213,6 +178,11 @@ class RequestsState extends State<RequestsModule> {
                                         }
                                         TimebankModel timebankModel =
                                             snapshot.data;
+                                        if (timebankModel == null ||
+                                            timebankModel.name == null ||
+                                            timebankModel.name == "") {
+                                          return Container();
+                                        }
                                         return Text(
                                           timebankModel.name,
                                           style: TextStyle(fontSize: 15.0),
@@ -277,6 +247,38 @@ class RequestsState extends State<RequestsModule> {
         ],
       ),
     );
+    if (widget.isFromSettings) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Select Request",
+            style: TextStyle(
+              fontSize: 18,
+            ),
+          ),
+        ),
+        body: body,
+      );
+    }
+    return body;
+//    if (widget.isFromSettings) {
+//      return Scaffold(
+//        body: body,
+//      );
+//    }
+//    return Scaffold(
+//      appBar: AppBar(
+//        elevation: 0.5,
+//        automaticallyImplyLeading: true,
+//        title: Text(
+//          "hello",
+//          style: TextStyle(
+//            fontSize: 18,
+//          ),
+//        ),
+//      ),
+//      body: Text("hello"),
+//    );
   }
 
   void _showProtectedTimebankMessage() {
