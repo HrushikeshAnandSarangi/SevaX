@@ -33,7 +33,7 @@ class SevaCore extends InheritedWidget {
 //    }
 //    return false;
 //  }
-  Future<bool> _checkInternet() async {
+  Future<bool> get _checkInternet async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -45,8 +45,8 @@ class SevaCore extends InheritedWidget {
     return false;
   }
 
-  Future<Widget> getErrorDialogueBox() async {
-    var status = await _checkInternet();
+  Future<Widget> get errorDialogueBox async {
+    var status = await _checkInternet;
     if (status) {
       return null;
     }

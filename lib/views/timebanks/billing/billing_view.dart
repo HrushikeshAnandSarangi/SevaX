@@ -117,13 +117,42 @@ class BillingViewState extends State<BillingView> {
                   ],
                 ),
               ),
+              Divider(),
+              SizedBox(height: 20),
+              // GestureDetector(
+              //   onDoubleTap: () {
+              //     print("made default");
+              //   },
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: <Widget>[
+              //       Padding(
+              //         padding: const EdgeInsets.only(left: 20),
+              //         child: Text('Default card'),
+              //       ),
+              //       CustomCreditCard(
+              //         bankName: "Bank Name",
+              //         cardNumber: "xxxxxx",
+              //         frontBackground: CardBackgrounds.black,
+              //         brand: "mastercard",
+              //         cardExpiry: "22/24",
+              //         cardHolderName: "Shubham",
+              //       ),
+              //     ],
+              //   ),
+              // ),
               FutureBuilder<UserCardsModel>(
                 future: getUserCard(widget.user.currentCommunity),
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text("No cards available"),
+                    );
+                  }
                   if (snapshot.data != null && snapshot.hasData) {
-                    if (snapshot.data.data.isEmpty) {
-                      return Text("No Card");
-                    }
+                    // if (snapshot.data.data.isEmpty) {
+                    //   return Text("No Card");
+                    // }
                     return ListView.separated(
                       separatorBuilder: (BuildContext context, int index) {
                         return SizedBox(height: 20);
@@ -135,12 +164,13 @@ class BillingViewState extends State<BillingView> {
                         return InkWell(
                           onTap: () {
                             // connectToStripe(cards[index]['paymentMethodId']);
+                            connectToStripe(snapshot.data.data[index].id);
                           },
                           child: CustomCreditCard(
-                            bankName: "",
+                            bankName: "Bank Name",
                             cardNumber: snapshot.data.data[index].card.last4,
                             frontBackground: CardBackgrounds.black,
-                            brand: "MasterCard",
+                            brand: "${snapshot.data.data[index].card.brand}",
                             cardExpiry:
                                 "${snapshot.data.data[index].card.expMonth}/${snapshot.data.data[index].card.expYear}",
                             cardHolderName:
@@ -168,6 +198,14 @@ Future<UserCardsModel> getUserCard(String communityId) async {
   var result = await http.post(
       "https://us-central1-sevaxproject4sevax.cloudfunctions.net/getCardsOfCustomer",
       body: {"communityId": communityId});
-  return userCardsModelFromJson(result.body);
-  // print(result.body);
+  print(result.body);
+  if (result.statusCode == 200) {
+    return userCardsModelFromJson(result.body);
+  } else {
+    throw Exception('No cards available');
+  }
+}
+
+Future<void> setDefaultCard() async {
+  var result = await http.post('');
 }

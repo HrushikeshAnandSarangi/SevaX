@@ -17,9 +17,8 @@ class PaymentsApiProvider {
     Firestore.instance.collection('cards').document(timebankid).setData({
       'email': user.email,
       'timebankid': timebankid,
-      'custId': '',
       'currentplan': planName
-    }).then((val) {
+    }, merge: true).then((val) {
       print('saved');
     });
   }
