@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +13,7 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
+import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
@@ -465,8 +467,58 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
-    print('logger${loggedInUser}');
+    // print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
+
+    // AppConfig.remoteConfig = await RemoteConfig.instance;
+
+    await AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 3));
+    await AppConfig.remoteConfig.activateFetched();
+
+    //// ################################    TEST ################################# /////
+    // var sampleJson =
+    //     '{"android":{"build":70,"version_name":"7.0.0","forceUpdate":false},"ios":{"build":70,"version_name":"7.0.0","forceUpdate":false}}';
+    // Map<String, dynamic> versionInfo = json.decode(sampleJson);
+
+    Map<String, dynamic> versionInfo =
+        json.decode(AppConfig.remoteConfig.getString('app_version'));
+
+    if (Platform.isAndroid) {
+      await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
+        if (int.parse(packageInfo.buildNumber) <
+            versionInfo['android']['build']) {
+          print("New version available");
+          // await _navigateToAboutPage();
+
+          if (versionInfo['android']['forceUpdate']) {
+            print("User must update the app");
+            await _navigateToUpdatePage(loggedInUser, true);
+            // await _navigateToAboutPage();
+          } else {
+            await _navigateToUpdatePage(loggedInUser, false);
+          }
+        } else {
+          print("You are using the latest version of the application");
+        }
+      });
+    } else if (Platform.isIOS) {
+      await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
+        if (int.parse(packageInfo.buildNumber) < versionInfo['ios']['build']) {
+          print("New version available");
+          if (versionInfo['ios']['forceUpdate']) {
+            await _navigateToUpdatePage(loggedInUser, true);
+          } else {
+            await _navigateToUpdatePage(loggedInUser, false);
+          }
+        } else {
+          print("You are using the latest version of the application");
+        }
+      });
+    }
+
+    // return;
+
+    // json.decode(AppConfig.remoteConfig.getString('app_version'))
 
     if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
       //check app version
@@ -566,7 +618,7 @@ class _SplashViewState extends State<SplashView> {
       await _navigateToBioView(loggedInUser);
     }
     // if (loggedInUser.skills == null) {
-    //   await _navigateToSkillsView(loggedInUser);
+    //   await _navigateToSkillsView(loggedInUsesr);
     // }
 
     // if (loggedInUser.interests == null) {
@@ -629,6 +681,12 @@ class _SplashViewState extends State<SplashView> {
           //this.isLatestVersion = !this.isLatestVersion;
         },
       ),
+    ));
+  }
+
+  Future _navigateToAboutPage() async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AboutApp(),
     ));
   }
 

@@ -27,12 +27,12 @@ Future<void> main() async {
   );
 
   AppConfig.prefs = await SharedPreferences.getInstance();
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  await remoteConfig.fetch(expiration: const Duration(hours: 5));
-  await remoteConfig.activateFetched();
+  AppConfig.remoteConfig = await RemoteConfig.instance;
+  AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 5));
+  AppConfig.remoteConfig.activateFetched();
 
-  AppConfig.billing =
-      BillingPlanModel.fromJson(json.decode(remoteConfig.getString("plans")));
+  AppConfig.billing = BillingPlanModel.fromJson(
+      json.decode(AppConfig.remoteConfig.getString("plans")));
   print(
       "--->plans ${AppConfig.billing.freePlan.action.adminReviewsCompleted.billable}");
 

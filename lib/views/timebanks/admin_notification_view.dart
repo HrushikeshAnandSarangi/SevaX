@@ -567,13 +567,14 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     //
   }
 
-  void checkForFeedback(
-      {String userId,
-      UserModel user,
-      RequestModel model,
-      String notificationId,
-      BuildContext context,
-      SevaCore sevaCore}) async {
+  void checkForFeedback({
+    String userId,
+    UserModel user,
+    RequestModel model,
+    String notificationId,
+    BuildContext context,
+    SevaCore sevaCore,
+  }) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
         return ReviewFeedback.forVolunteer(

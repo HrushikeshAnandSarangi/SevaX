@@ -28,6 +28,8 @@ class RequestModel extends DataModel {
   Color color;
   bool isNotified = false;
 
+  RequestMode requestMode;
+
   RequestModel({
     this.id,
     this.title,
@@ -56,6 +58,18 @@ class RequestModel extends DataModel {
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
       this.id = map['id'];
+    }
+
+    if (map.containsKey('requestMode')) {
+      if (map['requestMode'] == "PERSONAL_REQUEST") {
+        this.requestMode = RequestMode.PERSONAL_REQUEST;
+      } else if (map['requestMode'] == "TIMEBANK_REQUEST") {
+        this.requestMode = RequestMode.TIMEBANK_REQUEST;
+      } else {
+        this.requestMode = RequestMode.PERSONAL_REQUEST;
+      }
+    } else {
+      this.requestMode = RequestMode.PERSONAL_REQUEST;
     }
 
     if (map.containsKey('title')) {
@@ -141,6 +155,18 @@ class RequestModel extends DataModel {
   }
 
   RequestModel.fromMapElasticSearch(Map<String, dynamic> map) {
+    if (map.containsKey('requestMode')) {
+      if (map['requestMode'] == "PERSONAL_REQUEST") {
+        this.requestMode = RequestMode.PERSONAL_REQUEST;
+      } else if (map['requestMode'] == "TIMEBANK_REQUEST") {
+        this.requestMode = RequestMode.TIMEBANK_REQUEST;
+      } else {
+        this.requestMode = RequestMode.PERSONAL_REQUEST;
+      }
+    } else {
+      this.requestMode = RequestMode.PERSONAL_REQUEST;
+    }
+
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
@@ -227,6 +253,20 @@ class RequestModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
 
+    if (requestMode != null) {
+      switch (requestMode) {
+        case RequestMode.PERSONAL_REQUEST:
+          object['requestMode'] = "PERSONAL_REQUEST";
+          break;
+
+        case RequestMode.TIMEBANK_REQUEST:
+          object['requestMode'] = "TIMEBANK_REQUEST";
+          break;
+      }
+    } else {
+      object['requestMode'] = "PERSONAL_REQUEST";
+    }
+
     if (this.title != null && this.title.isNotEmpty) {
       object['title'] = this.title;
     }
@@ -306,4 +346,9 @@ class RequestModel extends DataModel {
   String toString() {
     return 'RequestModel{id: $id, title: $title, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, photoUrl: $photoUrl, acceptors: $acceptors, durationOfRequest: $durationOfRequest, postTimestamp: $postTimestamp, requestEnd: $requestEnd, requestStart: $requestStart, accepted: $accepted, rejectedReason: $rejectedReason, transactions: $transactions, timebankId: $timebankId, numberOfApprovals: $numberOfApprovals, approvedUsers: $approvedUsers, invitedUsers: $invitedUsers, location: $location, root_timebank_id: $root_timebank_id, color: $color, isNotified: $isNotified}';
   }
+}
+
+enum RequestMode {
+  PERSONAL_REQUEST,
+  TIMEBANK_REQUEST,
 }

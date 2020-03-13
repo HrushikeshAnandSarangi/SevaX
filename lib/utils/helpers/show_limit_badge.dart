@@ -65,6 +65,7 @@ class TransactionLimitCheck extends StatelessWidget {
           },
           child: AbsorbPointer(
             absorbing:
+                // Actual code  !(_userBloc.community.payment['payment_success'] ?? false),
                 !(_userBloc.community.payment['payment_success'] ?? false),
             child: child,
           ),
