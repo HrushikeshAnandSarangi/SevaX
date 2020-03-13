@@ -147,7 +147,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang gang request title"
-                      : "Request title",
+                      : "Request title*",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -286,7 +286,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang Gang Request description"
-                      : "Request description",
+                      : "Request description*",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -311,7 +311,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  'No. of volunteers',
+                  'No. of volunteers*',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

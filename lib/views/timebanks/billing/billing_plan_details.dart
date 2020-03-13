@@ -7,12 +7,17 @@ import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/widgets/NoGlowScrollBehavior.dart';
 
 class BillingPlanDetails extends StatefulWidget {
+  final bool autoImplyLeading;
   final UserModel user;
   final bool isPlanActive;
   final String planName;
 
   const BillingPlanDetails(
-      {Key key, this.user, this.isPlanActive, this.planName})
+      {Key key,
+      this.user,
+      this.isPlanActive,
+      this.planName,
+      this.autoImplyLeading = false})
       : super(key: key);
   @override
   _BillingPlanDetailsState createState() => _BillingPlanDetailsState();
@@ -46,7 +51,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
           style: TextStyle(fontSize: 20),
         ),
         centerTitle: !widget.isPlanActive,
-        automaticallyImplyLeading: widget.isPlanActive,
+        automaticallyImplyLeading: widget.autoImplyLeading,
       ),
       body: plans.isEmpty
           ? Center(child: CircularProgressIndicator())
@@ -54,13 +59,6 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 20.0),
-                //   child: Text(
-                //     "Choose a suitable plan",
-                //     style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                //   ),
-                // ),
                 Container(
                   height: MediaQuery.of(context).size.height - 200,
                   child: ScrollConfiguration(

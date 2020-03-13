@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
+import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -17,11 +20,11 @@ class ManageTimebankSeva extends StatefulWidget {
 }
 
 class _ManageTimebankSeva extends State<ManageTimebankSeva> {
-  var indextab = 0;
+  var _indextab = 0;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: PreferredSize(
@@ -37,10 +40,11 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 Tab(text: "About"),
                 // Tab(text: "Upgrade"),
                 Tab(text: "Billings"),
+                Tab(text: "Settings"),
               ],
               onTap: (index) {
-                if (indextab != index) {
-                  indextab = index;
+                if (_indextab != index) {
+                  _indextab = index;
                   setState(() {});
                 }
               },
@@ -79,109 +83,111 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 //    );
 //  }
 //
-//  Widget viewRequests({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//            builder: (context) => ViewRequestsForAdmin(
-//              timebankModel.id,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Text(
-//        'View requests',
-//        style: TextStyle(
-//          fontSize: 14,
-//          fontWeight: FontWeight.bold,
-//          color: Colors.blue,
-//        ),
-//      ),
-//    );
-//  }
-//
-//  Widget viewAcceptedOffers({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//            builder: (context) => AcceptedOffers(
-//              timebankId: timebankModel.id,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'View accepted offers',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//
-//  Widget vieweditPage({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.of(context).push(
-//          MaterialPageRoute(
-//            builder: (context) => CreateEditCommunityView(
-//              timebankId: timebankModel.id,
-//              isFromFind: false,
-//              isCreateTimebank: false,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'Edit Timebank',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//
-//  Widget manageTimebankCodes({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.push(
-//          context,
-//          MaterialPageRoute(
-//            builder: (context) => InviteMembers(
-//              timebankModel.id,
-//              timebankModel.communityId,
-//            ),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'Invite members via code',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
-//
+  Widget viewRequests({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RequestsModule.of(
+              timebankId: widget.timebankModel.id,
+              timebankModel: widget.timebankModel,
+              isFromSettings: true,
+            ),
+          ),
+        );
+      },
+      child: Text(
+        'View requests',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+          color: Colors.blue,
+        ),
+      ),
+    );
+  }
+
+  Widget viewAcceptedOffers({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AcceptedOffers(
+              timebankId: widget.timebankModel.id,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'View accepted offers',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget vieweditPage({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CreateEditCommunityView(
+              timebankId: widget.timebankModel.id,
+              isFromFind: false,
+              isCreateTimebank: false,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Edit Timebank',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget manageTimebankCodes({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InviteMembers(
+              widget.timebankModel.id,
+              widget.timebankModel.communityId,
+            ),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Invite members via code',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
 //  Widget billingView({BuildContext context}) {
 //    return GestureDetector(
 //      onTap: () {
@@ -189,7 +195,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 //          context,
 //          MaterialPageRoute(
 //            builder: (context) => BillingView(
-//              timebankModel.id,
+//              widget.timebankModel.id,
 //              '',
 //              user: SevaCore.of(context).loggedInUser,
 //            ),
@@ -210,43 +216,43 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 //    );
 //  }
 
-//  Widget get getTitle {
-//    return Text(
-//      "Manage ${timebankModel.name}",
-//      style: TextStyle(
-//        fontSize: 20,
-//        color: Colors.black,
-//        fontWeight: FontWeight.w700,
-//      ),
-//    );
-//  }
+  Widget get getTitle {
+    return Text(
+      "Manage ${widget.timebankModel.name}",
+      style: TextStyle(
+        fontSize: 20,
+        color: Colors.black,
+        fontWeight: FontWeight.w700,
+      ),
+    );
+  }
 
-//  viewBillingPage({BuildContext context}) {
-//    return GestureDetector(
-//      onTap: () {
-//        Navigator.of(context).push(
-//          MaterialPageRoute(
-//            builder: (context) => TimeBankBillingAdminView(),
-//          ),
-//        );
-//      },
-//      child: Container(
-//        margin: EdgeInsets.only(top: 20),
-//        child: Text(
-//          'Admin Billing',
-//          style: TextStyle(
-//            fontSize: 14,
-//            fontWeight: FontWeight.bold,
-//            color: Colors.blue,
-//          ),
-//        ),
-//      ),
-//    );
-//  }
+  viewBillingPage({BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => TimeBankBillingAdminView(),
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(top: 20),
+        child: Text(
+          'Admin Billing',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget get bodyWidget {
     return IndexedStack(
-      index: indextab,
+      index: _indextab,
       children: <Widget>[
         CreateEditCommunityView(
           isCreateTimebank: false,
@@ -321,7 +327,28 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         //   ),
         // ),
         TimeBankBillingAdminView(),
+        Settings,
       ],
+    );
+  }
+
+  Widget get Settings {
+    return Container(
+      margin: EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          getTitle,
+          SizedBox(
+            height: 30,
+          ),
+          viewRequests(context: context),
+          viewAcceptedOffers(context: context),
+          manageTimebankCodes(context: context),
+//          billingView(context: context),
+        ],
+      ),
     );
   }
 

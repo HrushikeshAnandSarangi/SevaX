@@ -235,7 +235,11 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             onPressed: () {
               print("clicked");
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => BillingView("", "")));
+                MaterialPageRoute(
+                  builder: (context) => BillingView(SevaCore.of(context).loggedInUser.currentCommunity, "",
+                      user: SevaCore.of(context).loggedInUser),
+                ),
+              );
 //                builder: (context) => CustomCreditCard(
 //                  frontBackground: CardBackgrounds.white,
 //                  cardNumber: "7777",
@@ -429,12 +433,36 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 //        borderSide: BorderSide(color: Colors.green, width: 1.0),
 //      ),
       hintText: fieldTitle,
-      alignLabelWithHint: false,
+
+      alignLabelWithHint: true,
     );
   }
 
   Widget _scrollingList(List<FocusNode> focusNodes) {
     print(focusNodes);
+    Widget _cityWidget(String city) {
+      return Container(
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: TextFormField(
+          onFieldSubmitted: (input) {
+            FocusScope.of(parentContext).requestFocus(focusNodes[2]);
+          },
+          onChanged: (value) {
+            print(value);
+            communityModel.billing_address.city = value;
+          },
+          initialValue: city != null ? city : '',
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
+          },
+          focusNode: focusNodes[1],
+          textInputAction: TextInputAction.next,
+          decoration: getInputDecoration(
+            fieldTitle: "City",
+          ),
+        ),
+      );
+    }
 
     Widget _stateWidget(String state) {
       return Container(
@@ -448,36 +476,12 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           },
           initialValue: state != null ? state : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "State",
-          ),
-        ),
-      );
-    }
-
-    Widget _cityWidget(String city) {
-      return Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
-        child: TextFormField(
-          onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[2]);
-          },
-          onChanged: (value) {
-            print(value);
-            communityModel.billing_address.city = value;
-          },
-          initialValue: city != null ? city : '',
-          validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
-          },
-          focusNode: focusNodes[1],
-          textInputAction: TextInputAction.next,
-          decoration: getInputDecoration(
-            fieldTitle: "City",
           ),
         ),
       );
@@ -496,7 +500,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           },
           initialValue: pinCode != null ? pinCode.toString() : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[2],
           keyboardType: TextInputType.number,
@@ -546,7 +550,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             communityModel.billing_address.street_address1 = value;
           },
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[3],
           textInputAction: TextInputAction.next,
@@ -582,15 +586,15 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[6]);
+            FocusScope.of(parentContext).requestFocus(focusNodes[6]);
           },
           onChanged: (value) {
             communityModel.billing_address.country = value;
           },
           initialValue: country != null ? country : '',
-          // validator: (value) {
-          //   return value.isEmpty ? 'Field cannot be left blank' : null;
-          // },
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
+          },
           focusNode: focusNodes[5],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
@@ -612,7 +616,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           },
           initialValue: companyname != null ? companyname : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,

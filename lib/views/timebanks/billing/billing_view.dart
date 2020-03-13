@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/models/user_cards_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/widgets/credit_card/utils/card_background.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../../main_app.dart';
+import '../../../widgets/credit_card/credit_card.dart';
 
 class BillingView extends StatefulWidget {
   BillingView(this.timebankid, this.planId, {this.user});
@@ -114,29 +117,72 @@ class BillingViewState extends State<BillingView> {
                   ],
                 ),
               ),
-              // FutureBuilder(builder: ,)
-              // ListView.separated(
-              //   separatorBuilder: (BuildContext context, int index) {
-              //     return SizedBox(height: 20);
+              Divider(),
+              SizedBox(height: 20),
+              // GestureDetector(
+              //   onDoubleTap: () {
+              //     print("made default");
               //   },
-              //   shrinkWrap: true,
-              //   physics: ClampingScrollPhysics(),
-              //   itemCount: cards.length,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return InkWell(
-              //       onTap: () {
-              //         connectToStripe(cards[index]['paymentMethodId']);
-              //       },
-              //       child: CreditCardView(
-              //         bankName: "Axis Bank",
-              //         cardNumber: cards[index]["cardNo"],
-              //         frontBackground: CardBackgrounds.black,
-              //         brand: "MasterCard",
-              //         cardExpiry: cards[index]["expiryDate"],
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: <Widget>[
+              //       Padding(
+              //         padding: const EdgeInsets.only(left: 20),
+              //         child: Text('Default card'),
               //       ),
-              //     );
-              //   },
+              //       CustomCreditCard(
+              //         bankName: "Bank Name",
+              //         cardNumber: "xxxxxx",
+              //         frontBackground: CardBackgrounds.black,
+              //         brand: "mastercard",
+              //         cardExpiry: "22/24",
+              //         cardHolderName: "Shubham",
+              //       ),
+              //     ],
+              //   ),
               // ),
+              FutureBuilder<UserCardsModel>(
+                future: getUserCard(widget.user.currentCommunity),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text("No cards available"),
+                    );
+                  }
+                  if (snapshot.data != null && snapshot.hasData) {
+                    // if (snapshot.data.data.isEmpty) {
+                    //   return Text("No Card");
+                    // }
+                    return ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 20);
+                      },
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: snapshot.data.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () {
+                            // connectToStripe(cards[index]['paymentMethodId']);
+                            connectToStripe(snapshot.data.data[index].id);
+                          },
+                          child: CustomCreditCard(
+                            bankName: "Bank Name",
+                            cardNumber: snapshot.data.data[index].card.last4,
+                            frontBackground: CardBackgrounds.black,
+                            brand: "${snapshot.data.data[index].card.brand}",
+                            cardExpiry:
+                                "${snapshot.data.data[index].card.expMonth}/${snapshot.data.data[index].card.expYear}",
+                            cardHolderName:
+                                snapshot.data.data[index].billingDetails.name,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
               SizedBox(
                 height: 100,
               ),
@@ -148,10 +194,18 @@ class BillingViewState extends State<BillingView> {
   }
 }
 
-Future getUserCard(String communityId) async {
+Future<UserCardsModel> getUserCard(String communityId) async {
   var result = await http.post(
       "https://us-central1-sevaxproject4sevax.cloudfunctions.net/getCardsOfCustomer",
       body: {"communityId": communityId});
-
   print(result.body);
+  if (result.statusCode == 200) {
+    return userCardsModelFromJson(result.body);
+  } else {
+    throw Exception('No cards available');
+  }
+}
+
+Future<void> setDefaultCard() async {
+  var result = await http.post('');
 }

@@ -187,6 +187,7 @@ Widget createAdminTabBar(
                 RequestsModule.of(
                   timebankId: timebankId,
                   timebankModel: timebankModel,
+                  isFromSettings: false,
                 ),
                 OffersModule.of(
                   timebankId: timebankId,
@@ -361,6 +362,7 @@ Widget createJoinedUserTabBar(
                 RequestsModule.of(
                   timebankId: timebankId,
                   timebankModel: timebankModel,
+                  isFromSettings: false,
                 ),
                 OffersModule.of(
                   timebankId: timebankId,

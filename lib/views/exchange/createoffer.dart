@@ -67,7 +67,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     _selectedTimebankId = widget.timebankId;
     this.timebankId = _selectedTimebankId;
     if (FlavorConfig.appFlavor == Flavor.APP) {
-      fetchCurrentlocation();
+      _fetchCurrentlocation;
     }
   }
 
@@ -114,12 +114,13 @@ class MyCustomFormState extends State<MyCustomForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Title',
+                  'Title*',
                   style: titleStyle,
                   // style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
+                  decoration:
+                      InputDecoration(hintText: 'Ex: Tutoring, painting..'),
                   keyboardType: TextInputType.text,
                   // style: finalStyle,
                   style: subTitleStyle,
@@ -132,7 +133,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  'Offer description',
+                  'Offer description*',
                   style: titleStyle,
                 ),
                 TextFormField(
@@ -147,12 +148,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                     if (value.isEmpty) {
                       return 'Please enter some text';
                     }
-                    description = value;
                   },
                 ),
                 SizedBox(height: 20),
-                Text('Availability',
-                    style: titleStyle),
+                Text('Availability', style: titleStyle),
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: 'Describe my availability',
@@ -248,7 +247,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     });
   }
 
-  void fetchCurrentlocation() {
+  void get _fetchCurrentlocation {
     Location().getLocation().then((onValue) {
       print("Location1:$onValue");
       location = GeoFirePoint(onValue.latitude, onValue.longitude);

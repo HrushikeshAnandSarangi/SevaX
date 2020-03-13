@@ -58,26 +58,26 @@ Widget getCardTypeIcon({CardType cardType, String brand}) {
 }
 
 CardType getCardType(String brand) {
-  switch (brand) {
-    case "American Express":
+  switch (brand.toLowerCase()) {
+    case "american express":
       return CardType.americanExpress;
       break;
-    case "Diners Club":
+    case "diners club":
       return CardType.dinersClub;
       break;
-    case "Discover":
+    case "discover":
       return CardType.discover;
       break;
-    case "JCB":
+    case "jcb":
       return CardType.jcb;
       break;
-    case "MasterCard":
+    case "mastercard":
       return CardType.masterCard;
       break;
     // case "UnionPay":
     //   return CardType.;
     // break;
-    case "Visa":
+    case "visa":
       return CardType.visa;
       break;
     default:

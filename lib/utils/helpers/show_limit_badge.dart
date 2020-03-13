@@ -7,26 +7,17 @@ import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import '../bloc_provider.dart';
 
 class ShowLimitBadge extends StatelessWidget {
-  // final UserDataBloc _userBloc;
-  // final TransactionType type;
-
-  // const ShowLimitBadge(this._userBloc, this.type);
   @override
   Widget build(BuildContext context) {
     final _userBloc = BlocProvider.of<UserDataBloc>(context);
     bool isAdmin =
         _userBloc.community.admins.contains(_userBloc.user.sevaUserID);
-    // print(_userBloc.community.payment);
+
     return StreamBuilder<CommunityModel>(
       stream: _userBloc.comunityStream,
       builder: (context, AsyncSnapshot<CommunityModel> snapshot) {
         return Offstage(
           offstage: _userBloc.community.payment['payment_success'] ?? false,
-          // offstage: snapshot.data != null
-          //     ? snapshot.data.transactionCount <
-          //         AppConfig
-          //             .billing.freePlan.action.adminReviewsCompleted.freeLimit
-          //     : true,
           child: Container(
             height: 20,
             width: double.infinity,
@@ -112,13 +103,14 @@ class TransactionLimitCheck extends StatelessWidget {
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    //TOdo redirect to billing page
+
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => BillingPlanDetails(
+                          autoImplyLeading: true,
                           user: user,
-                          isPlanActive: true,
-                          planName: "grande_plan",
+                          isPlanActive: false,
+                          // planName: "grande_plan",
                         ),
                       ),
                     );

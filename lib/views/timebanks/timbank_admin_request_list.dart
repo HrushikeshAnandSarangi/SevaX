@@ -14,7 +14,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'edit_super_admins_view.dart';
@@ -67,8 +67,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
   @override
   void initState() {
-    print(
-        "----> ${widget.timebankId} | ${widget.isUserAdmin} | ${widget.userEmail}");
     _listController = ScrollController();
     _pageScrollController = ScrollController();
     _pageScrollController.addListener(_scrollListener);
@@ -582,7 +580,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 //    print("user.sevaUserID:${user.sevaUserID}");
 
     return SevaCore.of(context).loggedInUser.sevaUserID == user.sevaUserID ||
-            !widget.isUserAdmin
+            !widget.isUserAdmin ||
+            user.sevaUserID == timebankModel.creatorId
         ? Offstage()
         : Row(
             children: <Widget>[
@@ -771,7 +770,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
               ],
             ),
             onTap: () async {
-              addVolunteers();
+              print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTimebankCode");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InviteAddMembers(
+                    timebankModel.id,
+                    timebankModel.communityId,
+                  ),
+                ),
+              );
             },
           ),
         );
@@ -857,53 +865,6 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           _lastReached = onValue.lastPage;
         });
       }
-    }
-  }
-
-  void addVolunteers() async {
-    print(
-        " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
-
-    onActivityResult = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SelectMembersInGroup(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-          userSelected:
-              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
-          userEmail: SevaCore.of(context).loggedInUser.email,
-          listOfalreadyExistingMembers: timebankModel.members,
-        ),
-      ),
-    );
-
-    if (onActivityResult != null &&
-        onActivityResult.containsKey("membersSelected")) {
-      selectedUsers = onActivityResult['membersSelected'];
-      print("Data is present Selected users ${selectedUsers.length}");
-      if (selectedUsers != null && selectedUsers.length > 0) {
-        setState(() {
-          isProgressBarActive = true;
-        });
-        List<String> members = timebankModel.members.map((s) => s).toList();
-        var users = List<UserModel>();
-        selectedUsers.forEach((name, model) {
-          members.add(model.sevaUserID);
-          users.add(model);
-        });
-        if (widget.isCommunity != null && widget.isCommunity) {
-          _addUserToCommunityAndUpdateUserCommunityList(
-            model: timebankModel,
-            members: users,
-            currentCommunity:
-                SevaCore.of(context).loggedInUser.currentCommunity,
-          );
-        } else {
-          _updateTimebank(timebankModel, members: members);
-        }
-      }
-    } else {
-      print("No users where selected");
-      //no users where selected
     }
   }
 

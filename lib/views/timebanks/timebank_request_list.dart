@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
-import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'timbank_admin_request_list.dart';
-import 'package:sevaexchange/views/timebanks/timebank_view.dart';
-import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 
 import '../core.dart';
+import 'timbank_admin_request_list.dart';
 
 class TimeBankRequestList extends StatelessWidget {
   final String timebankid;
@@ -19,15 +13,13 @@ class TimeBankRequestList extends StatelessWidget {
   TimebankModel superAdminTimebankModel;
   TimeBankRequestList(
       {@required this.timebankid,
-        @required this.title,
-        @required this.superAdminTimebankModel});
+      @required this.title,
+      @required this.superAdminTimebankModel});
 
   //Removing app bar
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: getSubTimebanks(timebankid)
-    );
+    return Scaffold(body: getSubTimebanks(timebankid));
   }
 
   Widget getSubTimebanks(String timebankId) {
@@ -63,15 +55,13 @@ class TimeBankRequestList extends StatelessWidget {
   }
 
   Widget getDataScrollView(
-      BuildContext context,
-      List<TimebankModel> reportedList,
-      ) {
-
+    BuildContext context,
+    List<TimebankModel> reportedList,
+  ) {
     return getContent(context, reportedList);
   }
 
   Widget getContent(BuildContext context, List<TimebankModel> timebankList) {
-
     return Column(
       children: <Widget>[
         ...timebankList.map((model) {
@@ -81,52 +71,52 @@ class TimeBankRequestList extends StatelessWidget {
 
           return model.id != FlavorConfig.values.timebankId
               ? GestureDetector(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      child: CircleAvatar(
-                        minRadius: 32.0,
-                        backgroundColor: Colors.grey,
-                        backgroundImage: _getImage(model),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Container(
-                      child: Expanded(
-                        child: Text(
-                          model.name,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18.0,
-                            color: Colors.black,
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            child: CircleAvatar(
+                              minRadius: 32.0,
+                              backgroundColor: Colors.grey,
+                              backgroundImage: _getImage(model),
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Container(
+                            child: Expanded(
+                              child: Text(
+                                model.name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TimebankRequestAdminPage(
-                      isUserAdmin: model.admins.contains(UserData.shared.user.sevaUserID),
-                      timebankId: model.id,
-                      userEmail: SevaCore.of(context)
-                          .loggedInUser
-                          .email,
-                    )),
-              );
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TimebankRequestAdminPage(
+                                isUserAdmin: model.admins
+                                    .contains(UserData.shared.user.sevaUserID),
+                                timebankId: model.id,
+                                userEmail:
+                                    SevaCore.of(context).loggedInUser.email,
+                              )),
+                    );
 //              Navigator.of(context).push(s
-            },
-          )
+                  },
+                )
               : Offstage();
         })
       ],

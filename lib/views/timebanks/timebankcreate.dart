@@ -164,7 +164,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ],
             ),
           )),
-          headingText('Name your group'),
+          headingText('Name your group', true),
           TextFormField(
             decoration: InputDecoration(
               hintText: "Ex: Pets-in-town, Citizen collab",
@@ -178,7 +178,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               timebankModel.name = value;
             },
           ),
-          headingText('About'),
+          headingText('About', true),
           TextFormField(
             decoration: InputDecoration(
               hintText: 'Ex: A bit more about your group',
@@ -195,7 +195,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           tappableInviteMembers,
           Row(
             children: <Widget>[
-              headingText('Protected group'),
+              headingText('Protected group', false),
               Column(
                 children: <Widget>[
                   Divider(),
@@ -220,7 +220,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               color: Colors.grey,
             ),
           ),
-          headingText('Is this pin at a right place?'),
+          headingText('Is this pin at a right place?', false),
           Center(
             child: FlatButton.icon(
               icon: Icon(Icons.add_location),
@@ -294,7 +294,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ]);
   }
 
-  Widget headingText(String name) {
+  Widget headingText(String name, bool isMandatory) {
+    if (isMandatory) {
+      name = name + "*";
+    }
     return Padding(
       padding: EdgeInsets.only(top: 15),
       child: Text(

@@ -97,6 +97,7 @@ class CreateEditCommunityViewFormState
   TimebankModel editTimebankModel = TimebankModel({});
   String memberAssignment = "+ Add Members";
   List members = [];
+  String communitynName = '';
 
   bool isBillingDetailsProvided = false;
 
@@ -159,7 +160,20 @@ class CreateEditCommunityViewFormState
           if (v) {
             setState(() {
               communityFound = true;
-              errTxt = 'Timebank name already exist';
+              print(
+                  "name ----- ${communitynName}  ${searchTextController.text}");
+
+              if (!widget.isCreateTimebank) {
+                if (searchTextController.text != null &&
+                    communitynName != searchTextController.text) {
+                  //  errTxt = null;
+                  errTxt = 'Timebank name already exist';
+
+                  print("name is equal");
+                }
+              } else {
+                errTxt = 'Timebank name already exist';
+              }
             });
           } else {
             setState(() {
@@ -178,6 +192,8 @@ class CreateEditCommunityViewFormState
               communityId: SevaCore.of(context).loggedInUser.currentCommunity)
           .then((onValue) {
         communityModel = onValue;
+        communitynName = communityModel.name;
+
         searchTextController.text = communityModel.name;
       });
     });
@@ -217,7 +233,7 @@ class CreateEditCommunityViewFormState
         stream: createEditCommunityBloc.createEditCommunity,
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data != null) {
-            print(snapshot.data.timebank.address);
+            //print(snapshot.data.timebank.address);
             if ((selectedAddress.length > 0 &&
                     snapshot.data.timebank.address.length == 0) ||
                 (snapshot.data.timebank.address != selectedAddress)) {
@@ -225,7 +241,7 @@ class CreateEditCommunityViewFormState
                   .updateValueByKey('address', selectedAddress);
               createEditCommunityBloc.onChange(snapshot.data);
             }
-            print("  snapshots data   ${snapshot.data.timebanks}");
+            // print("  snapshots data   ${snapshot.data.timebanks}");
 
             return SingleChildScrollView(
               child: Column(
@@ -1012,7 +1028,7 @@ class CreateEditCommunityViewFormState
 //              ? controller.community.billing_address.state
 //              : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
@@ -1040,7 +1056,7 @@ class CreateEditCommunityViewFormState
 //              ? controller.community.billing_address.state
 //              : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
@@ -1068,7 +1084,7 @@ class CreateEditCommunityViewFormState
 //              ? controller.community.billing_address.pincode.toString()
 //              : '',
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
@@ -1125,7 +1141,7 @@ class CreateEditCommunityViewFormState
             createEditCommunityBloc.onChange(controller);
           },
           validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank' : null;
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.next,
@@ -1179,9 +1195,9 @@ class CreateEditCommunityViewFormState
 //          initialValue: controller.community.billing_address.companyname != null
 //              ? controller.community.billing_address.companyname
 //              : '',
-          // validator: (value) {
-          //   return value.isEmpty ? 'Field cannot be left blank' : null;
-          // },
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
+          },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
@@ -1206,9 +1222,9 @@ class CreateEditCommunityViewFormState
 //          initialValue: controller.community.billing_address.companyname != null
 //              ? controller.community.billing_address.companyname
 //              : '',
-          // validator: (value) {
-          //   return value.isEmpty ? 'Field cannot be left blank' : null;
-          // },
+          validator: (value) {
+            return value.isEmpty ? 'Field cannot be left blank*' : null;
+          },
           focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
