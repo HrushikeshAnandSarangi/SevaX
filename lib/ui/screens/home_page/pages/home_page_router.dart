@@ -10,7 +10,6 @@ import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 
 import '../../../../flavor_config.dart';

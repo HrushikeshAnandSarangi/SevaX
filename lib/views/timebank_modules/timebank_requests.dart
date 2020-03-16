@@ -134,112 +134,112 @@ class RequestsState extends State<RequestsModule> {
                 Padding(
                   padding: EdgeInsets.only(left: 10),
                 ),
-                Offstage(
-                  offstage: true,
-                  child: StreamBuilder<Object>(
-                      stream: FirestoreManager.getTimebanksForUserStream(
-                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
-                        communityId:
-                            SevaCore.of(context).loggedInUser.currentCommunity,
-                      ),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError)
-                          return new Text('Error: ${snapshot.error}');
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                        if (snapshot.data == null) {
-                          return Container();
-                        }
-                        timebankList = snapshot.data;
-                        List<String> dropdownList = [];
-                        int adminOfCount = 0;
-                        if (FlavorConfig.values.timebankName == "Yang 2020") {
-                          dropdownList.add("Create Yang Gang");
-                        }
-                        timebankList.forEach((t) {
-                          dropdownList.add(t.id);
+                // Offstage(
+                //   offstage: true,
+                //   child: StreamBuilder<Object>(
+                //       stream: FirestoreManager.getTimebanksForUserStream(
+                //         userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                //         communityId:
+                //             SevaCore.of(context).loggedInUser.currentCommunity,
+                //       ),
+                //       builder: (context, snapshot) {
+                //         if (snapshot.hasError)
+                //           return new Text('Error: ${snapshot.error}');
+                //         if (snapshot.connectionState ==
+                //             ConnectionState.waiting) {
+                //           return Center(child: CircularProgressIndicator());
+                //         }
+                //         if (snapshot.data == null) {
+                //           return Container();
+                //         }
+                //         timebankList = snapshot.data;
+                //         List<String> dropdownList = [];
+                //         int adminOfCount = 0;
+                //         if (FlavorConfig.values.timebankName == "Yang 2020") {
+                //           dropdownList.add("Create Yang Gang");
+                //         }
+                //         timebankList.forEach((t) {
+                //           dropdownList.add(t.id);
 
-                          if (t.admins.contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID)) {
-                            adminOfCount++;
+                //           if (t.admins.contains(
+                //               SevaCore.of(context).loggedInUser.sevaUserID)) {
+                //             adminOfCount++;
 
-                            SevaCore.of(context)
-                                .loggedInUser
-                                .timebankIdForYangGangAdmin = t.id;
-                          }
-                        });
-                        SevaCore.of(context)
-                            .loggedInUser
-                            .associatedWithTimebanks = dropdownList.length;
-                        SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-                            adminOfCount;
-                        return DropdownButton<String>(
-                          value: timebankId,
-                          onChanged: (String newValue) {
-                            if (newValue == "Create Yang Gang") {
-                              {
-                                this.createSubTimebank(context);
-                              }
-                            } else {
-                              setState(() {
-                                SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentTimebank = newValue;
-                                timebankId = newValue;
-                              });
-                            }
-                          },
-                          items: dropdownList
-                              .map<DropdownMenuItem<String>>((String value) {
-                            if (value == "Create Yang Gang") {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              );
-                            } else {
-                              if (value == 'All') {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              } else {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: FutureBuilder<Object>(
-                                      future: FirestoreManager.getTimeBankForId(
-                                          timebankId: value),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasError)
-                                          return new Text(
-                                              'Error: ${snapshot.error}');
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return Offstage();
-                                        }
-                                        TimebankModel timebankModel =
-                                            snapshot.data;
-                                        if (timebankModel == null ||
-                                            timebankModel.name == null ||
-                                            timebankModel.name == "") {
-                                          return Container();
-                                        }
-                                        return Text(
-                                          timebankModel.name,
-                                          style: TextStyle(fontSize: 15.0),
-                                        );
-                                      }),
-                                );
-                              }
-                            }
-                          }).toList(),
-                        );
-                      }),
-                ),
+                //             SevaCore.of(context)
+                //                 .loggedInUser
+                //                 .timebankIdForYangGangAdmin = t.id;
+                //           }
+                //         });
+                //         SevaCore.of(context)
+                //             .loggedInUser
+                //             .associatedWithTimebanks = dropdownList.length;
+                //         SevaCore.of(context).loggedInUser.adminOfYanagGangs =
+                //             adminOfCount;
+                //         return DropdownButton<String>(
+                //           value: timebankId,
+                //           onChanged: (String newValue) {
+                //             if (newValue == "Create Yang Gang") {
+                //               {
+                //                 this.createSubTimebank(context);
+                //               }
+                //             } else {
+                //               setState(() {
+                //                 SevaCore.of(context)
+                //                     .loggedInUser
+                //                     .currentTimebank = newValue;
+                //                 timebankId = newValue;
+                //               });
+                //             }
+                //           },
+                //           items: dropdownList
+                //               .map<DropdownMenuItem<String>>((String value) {
+                //             if (value == "Create Yang Gang") {
+                //               return DropdownMenuItem<String>(
+                //                 value: value,
+                //                 child: Text(
+                //                   value,
+                //                   style: TextStyle(color: Colors.red),
+                //                 ),
+                //               );
+                //             } else {
+                //               if (value == 'All') {
+                //                 return DropdownMenuItem<String>(
+                //                   value: value,
+                //                   child: Text(value),
+                //                 );
+                //               } else {
+                //                 return DropdownMenuItem<String>(
+                //                   value: value,
+                //                   child: FutureBuilder<Object>(
+                //                       future: FirestoreManager.getTimeBankForId(
+                //                           timebankId: value),
+                //                       builder: (context, snapshot) {
+                //                         if (snapshot.hasError)
+                //                           return new Text(
+                //                               'Error: ${snapshot.error}');
+                //                         if (snapshot.connectionState ==
+                //                             ConnectionState.waiting) {
+                //                           return Offstage();
+                //                         }
+                //                         TimebankModel timebankModel =
+                //                             snapshot.data;
+                //                         if (timebankModel == null ||
+                //                             timebankModel.name == null ||
+                //                             timebankModel.name == "") {
+                //                           return Container();
+                //                         }
+                //                         return Text(
+                //                           timebankModel.name,
+                //                           style: TextStyle(fontSize: 15.0),
+                //                         );
+                //                       }),
+                //                 );
+                //               }
+                //             }
+                //           }).toList(),
+                //         );
+                //       }),
+                // ),
                 Expanded(
                   child: Container(),
                 ),

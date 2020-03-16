@@ -251,6 +251,7 @@ Future<void> approveRequestCompletion({
   @required RequestModel model,
   @required String userId,
   @required String communityId,
+  // @required num taxPercentage,
 }) async {
   var approvalCount = 0;
   if (model.transactions != null) {
@@ -263,6 +264,13 @@ Future<void> approveRequestCompletion({
   model.accepted = approvalCount >= model.numberOfApprovals;
 
   print("========================================================== Step1");
+
+  DocumentSnapshot data = await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get();
+  double taxPercentage = data.data['taxPercentage'];
+  print('---->tax percentage $taxPercentage');
 
   await Firestore.instance
       .collection('requests')
@@ -285,14 +293,19 @@ Future<void> approveRequestCompletion({
 
   print("========================================================== Step2");
 
-  num transactionvalue = model.durationOfRequest / 60;
+  double transactionvalue = (model.durationOfRequest / 60);
+  double afterTaxDeducation =
+      transactionvalue - transactionvalue * taxPercentage;
+  print('===>after tax  $afterTaxDeducation');
   String credituser = model.approvedUsers.toString();
+
   if (FlavorConfig.appFlavor == Flavor.APP) {
     await Firestore.instance
         .collection('users')
         .document(model.email)
-        .updateData(
-            {'currentBalance': FieldValue.increment(-(transactionvalue))});
+        .updateData({
+      'currentBalance': FieldValue.increment((afterTaxDeducation.toDouble()))
+    });
 
     print("========================================================== Step3");
 

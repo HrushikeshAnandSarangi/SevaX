@@ -610,6 +610,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       model: model,
       userId: userId,
       communityId: sevaCore.loggedInUser.currentCommunity,
+      
     );
 
     FirestoreManager.readUserNotification(
@@ -1470,9 +1471,10 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            '',
+                            'Cancel',
                             style: TextStyle(
-                                color: Colors.white,),
+                              color: Colors.white,
+                            ),
                           ),
                           onPressed: () async {
                             // request declined
