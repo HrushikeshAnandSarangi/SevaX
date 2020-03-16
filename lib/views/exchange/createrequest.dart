@@ -87,16 +87,17 @@ class RequestCreateForm extends StatefulWidget {
 }
 
 class RequestCreateFormState extends State<RequestCreateForm> {
-  final GlobalKey<_CreateRequestState> _offerState = GlobalKey();
-  final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
+//  final GlobalKey<_CreateRequestState> _offerState = GlobalKey();
+//  final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
 
   final _formKey = GlobalKey<FormState>();
 
   RequestModel requestModel = RequestModel();
   GeoFirePoint location;
 
-  String _dateMessageStart = ' START date and time ';
-  String _dateMessageEnd = '  END date and time ';
+//  String _dateMessageStart = ' START date and time ';
+//  String _dateMessageEnd = '  END date and time ';
+  var sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
   String selectedAddress;
 
@@ -107,7 +108,25 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
-
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getCompletedRequestStream(
+              userEmail: SevaCore.of(context).loggedInUser.email,
+              userId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .listen(
+        (requestList) {
+          if (!mounted) return;
+          sevaCoinsValue = 0;
+          requestList.forEach((requestObj) {
+            requestObj.transactions?.forEach((transaction) {
+              if (transaction.isApproved &&
+                  transaction.to ==
+                      SevaCore.of(context).loggedInUser.sevaUserID)
+                sevaCoinsValue += transaction.credits;
+            });
+          });
+        },
+      );
+    });
     print(location);
   }
 
@@ -398,6 +417,32 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       selectedUsers.forEach((k, v) => arrayOfSelectedMembers.add(k));
     }
     requestModel.approvedUsers = arrayOfSelectedMembers;
+
+    if (!_checkValidityForSevaCoins) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext viewContext) {
+            return AlertDialog(
+              title:
+                  Text('Insufficient seva coins for user to process requests'),
+//              content: Text(''),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(viewContext).pop();
+                  },
+                ),
+              ],
+            );
+          });
+    }
+
     //adding some members for humanity first
     if (_formKey.currentState.validate()) {
       showDialog(
@@ -504,6 +549,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         },
       ),
     );
+  }
+
+  bool get _checkValidityForSevaCoins {
+    var diffDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd)
+        .difference(
+            DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart));
+    var requestCoins = diffDate.inHours * requestModel.numberOfApprovals;
+    print("Hours:${diffDate.inHours}");
+    print("Number of seva coins:${requestCoins.abs()}");
+    print("Seva coin available:${sevaCoinsValue.abs()}");
+    return requestCoins.abs() <= sevaCoinsValue.abs();
   }
 
   Future _writeToDB() async {
