@@ -328,7 +328,6 @@ class _EditProfilePageState extends State<EditProfilePage>
               Form(
                 key: _formKey,
                 child: TextFormField(
-                  
                   decoration: InputDecoration(hintText: 'Enter name'),
                   keyboardType: TextInputType.text,
                   textCapitalization: TextCapitalization.sentences,

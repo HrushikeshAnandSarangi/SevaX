@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/models/models.dart';
 
 class NotificationsModel extends DataModel {
   String id;
@@ -12,6 +13,7 @@ class NotificationsModel extends DataModel {
   String communityId;
   bool directToMember;
   int timestamp;
+  bool personalRequest = true;
 
   NotificationsModel({
     this.id,
@@ -23,6 +25,7 @@ class NotificationsModel extends DataModel {
     @required this.timebankId,
     @required this.communityId,
     this.directToMember = true,
+    @required this.personalRequest,
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {

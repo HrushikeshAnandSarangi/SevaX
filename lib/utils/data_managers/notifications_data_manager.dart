@@ -28,17 +28,30 @@ Future<TimebankModel> fetchTimebankData(String timebankId) async {
 Future<void> createAcceptRequestNotification({
   NotificationsModel notificationsModel,
 }) async {
-  UserModel user =
-      await getUserForId(sevaUserId: notificationsModel.targetUserId);
+  var requestModel = RequestModel.fromMap(notificationsModel.data);
 
-  await Firestore.instance
-      .collection(notificationsModel.directToMember ? 'users' : 'timebanknew')
-      .document(notificationsModel.directToMember
-          ? user.email
-          : notificationsModel.timebankId)
-      .collection('notifications')
-      .document(notificationsModel.id)
-      .setData(notificationsModel.toMap());
+  switch (requestModel.requestMode) {
+    case RequestMode.PERSONAL_REQUEST:
+      UserModel user =
+          await getUserForId(sevaUserId: notificationsModel.targetUserId);
+      await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(notificationsModel.id)
+          .setData(notificationsModel.toMap());
+      break;
+
+    case RequestMode.TIMEBANK_REQUEST:
+      await Firestore.instance
+          .collection(
+              notificationsModel.directToMember ? 'users' : 'timebanknew')
+          .document(notificationsModel.timebankId)
+          .collection('notifications')
+          .document(notificationsModel.id)
+          .setData(notificationsModel.toMap());
+      break;
+  }
 }
 
 Future<void> withdrawAcceptRequestNotification({
@@ -127,85 +140,103 @@ Future<void> removeAcceptRequestNotification({
   NotificationsModel model,
   String notificationId,
 }) async {
-  UserModel user = await getUserForId(sevaUserId: model.senderUserId);
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-
-  print("Inside remove accepted notification -> ${isTimeBankNotification}" );
-  isTimeBankNotification
-      ? await Firestore.instance
+  var requestModel = RequestModel.fromMap(model.data);
+  switch (requestModel.requestMode) {
+    case RequestMode.TIMEBANK_REQUEST:
+      await Firestore.instance
           .collection('timebanknew')
           .document(model.timebankId)
           .collection('notifications')
           .document(notificationId)
-          .delete()
-      : await Firestore.instance
+          .delete();
+      break;
+
+    case RequestMode.PERSONAL_REQUEST:
+      UserModel user = await getUserForId(sevaUserId: model.senderUserId);
+      await Firestore.instance
           .collection('users')
           .document(user.email)
           .collection('notifications')
           .document(notificationId)
           .delete();
+
+      break;
+  }
 }
 
 Future<void> createRequestApprovalNotification({
   NotificationsModel model,
 }) async {
-  UserModel user = await getUserForId(
-    sevaUserId: model.targetUserId,
-  );
+  var requestModel = RequestModel.fromMap(model.data);
 
-  var timebankModel = await fetchTimebankData(model.timebankId);
-
-  if (timebankModel.protected) {
-    var requestModel = RequestModel.fromMap(model.data);
-    requestModel.fullName = timebankModel.name;
-    requestModel.photoUrl = timebankModel.photoUrl;
-    model.data = requestModel.toMap();
-  }
-
-  !model.directToMember
-      ? Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap())
-      : Firestore.instance
+  switch (requestModel.requestMode) {
+    case RequestMode.PERSONAL_REQUEST:
+      UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+      Firestore.instance
           .collection('users')
           .document(user.email)
           .collection('notifications')
           .document(model.id)
           .setData(model.toMap());
+      break;
+
+    case RequestMode.TIMEBANK_REQUEST:
+      // var timebankModel = await fetchTimebankData(model.timebankId);
+      // requestModel.fullName = timebankModel.name;
+      // requestModel.photoUrl = timebankModel.photoUrl;
+      model.data = requestModel.toMap();
+      Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap());
+      break;
+  }
 }
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
-  UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  var requestModel = RequestModel.fromMap(model.data);
 
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
+  switch (requestModel.requestMode) {
+    case RequestMode.PERSONAL_REQUEST:
+      UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+      await Firestore.instance
+          .collection('users')
+          .document(user.email)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap(), merge: true);
+      break;
 
-  print('is Timebank protected  $isTimeBankNotification ');
-
-  await Firestore.instance
-      .collection(isTimeBankNotification ? 'timebanknew' : 'users')
-      .document(isTimeBankNotification ? model.timebankId : user.email)
-      .collection('notifications')
-      .document(model.id)
-      .setData(model.toMap(), merge: true);
+    case RequestMode.TIMEBANK_REQUEST:
+      await Firestore.instance
+          .collection('timebanknew')
+          .document(model.timebankId)
+          .collection('notifications')
+          .document(model.id)
+          .setData(model.toMap(), merge: true);
+      break;
+  }
 }
 
 Future<void> createTaskCompletedApprovedNotification({
   NotificationsModel model,
 }) async {
+  var requestModel = RequestModel.fromMap(model.data);
+
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
 
-  var timebankModel = await fetchTimebankData(model.timebankId);
-
-  if (timebankModel.protected) {
-    var requestModel = RequestModel.fromMap(model.data);
-    requestModel.fullName = timebankModel.name;
-    requestModel.photoUrl = timebankModel.photoUrl;
-    model.data = requestModel.toMap();
-    print("_______________________________________________${model.data}");
-  }
+  // switch (requestModel.requestMode) {
+  //   case RequestMode.PERSONAL_REQUEST:
+  //     break;
+  //   case RequestMode.TIMEBANK_REQUEST:
+  //     var timebankModel = await fetchTimebankData(model.timebankId);
+  //     requestModel.fullName = timebankModel.name;
+  //     requestModel.photoUrl = timebankModel.photoUrl;
+  //     model.data = requestModel.toMap();
+  //     break;
+  // }
 
   await Firestore.instance
       .collection('users')
@@ -213,30 +244,32 @@ Future<void> createTaskCompletedApprovedNotification({
       .collection('notifications')
       .document(model.id)
       .setData(model.toMap());
-
-  print(
-      "Creating task completion notification  ::::::::::::::::::::::::: ${model.toMap()}");
 }
 
 Future<void> createTransactionNotification({
   NotificationsModel model,
 }) async {
-  UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  var requestModel = RequestModel.fromMap(model.data);
 
-  bool isTimeBankNotification = await fetchProtectedStatus(model.timebankId);
-  isTimeBankNotification
-      ? await Firestore.instance
+  switch (requestModel.requestMode) {
+    case RequestMode.PERSONAL_REQUEST:
+      await Firestore.instance
           .collection('timebanknew')
           .document(model.timebankId)
           .collection('notifications')
           .document(model.id)
-          .setData(model.toMap())
-      : await Firestore.instance
+          .setData(model.toMap());
+      break;
+    case RequestMode.TIMEBANK_REQUEST:
+      UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+      await Firestore.instance
           .collection('users')
           .document(user.email)
           .collection('notifications')
           .document(model.id)
           .setData(model.toMap());
+      break;
+  }
 }
 
 Future saveRequestFinalAction({ClaimedRequestStatusModel model}) async {

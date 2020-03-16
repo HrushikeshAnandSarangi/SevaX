@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
@@ -11,6 +12,8 @@ class AboutApp extends StatelessWidget {
   AboutMode aboutMode;
   var dynamicLinks;
   final formkey = GlobalKey<FormState>();
+
+  String feedbackValue;
 
   @override
   Future<void> initState() async {
@@ -26,9 +29,7 @@ class AboutApp extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           "About",
-          style: TextStyle(
-            fontSize: 18
-          ),
+          style: TextStyle(fontSize: 18),
         ),
       ),
       body: Column(
@@ -178,8 +179,9 @@ class AboutApp extends StatelessWidget {
                       maxLines: 1,
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter youur feedback';
+                          return 'Please enter your feedback';
                         }
+                        feedbackValue = value;
                       },
                     ),
                   ),
@@ -197,7 +199,18 @@ class AboutApp extends StatelessWidget {
                       onPressed: () async {
                         //For test
                         if (formkey.currentState.validate()) {
-                          print("------------------------------------");
+                          String url =
+                              "https://us-central1-sevaxproject4sevax.cloudfunctions.net/sendFeedbackToTimebank";
+
+                          await http.post(
+                            url,
+                            body: json.encode({
+                              // "memberEmail":SevaCore.of(context).loggedInUser.email,
+                              "memberEmail": "sample@example.com",
+                              "feedbackBody": feedbackValue,
+                            }),
+                          );
+
                           Navigator.of(context).pop();
                         }
                       },

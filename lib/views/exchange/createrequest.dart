@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -107,6 +108,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
+    this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
 
     print(location);
   }
@@ -144,6 +146,37 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  width: double.infinity,
+                  child: CupertinoSegmentedControl<int>(
+                    selectedColor: Theme.of(context).primaryColor,
+                    children: logoWidgets,
+                    borderColor: Colors.grey,
+
+                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                    groupValue: sharedValue,
+                    onValueChanged: (int val) {
+                      print(val);
+                      if (val != sharedValue) {
+                        setState(() {});
+                        setState(() {
+                          print("$sharedValue -- $val");
+                          if (sharedValue == 0) {
+                            requestModel.requestMode =
+                                RequestMode.TIMEBANK_REQUEST;
+                          } else {
+                            requestModel.requestMode =
+                                RequestMode.PERSONAL_REQUEST;
+                          }
+                          sharedValue = val;
+                        });
+                      }
+                    },
+                    //groupValue: sharedValue,
+                  ),
+                ),
+
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang gang request title"
@@ -385,9 +418,23 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
+  int sharedValue = 0;
+
+  final Map<int, Widget> logoWidgets = const <int, Widget>{
+    0: Text(
+      'Personal Request',
+      style: TextStyle(fontSize: 15.0),
+    ),
+    1: Text(
+      'Timebank Request',
+      style: TextStyle(fontSize: 15.0),
+    ),
+  };
+
   BuildContext dialogContext;
 
   void createRequest() async {
+
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
@@ -400,6 +447,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.approvedUsers = arrayOfSelectedMembers;
     //adding some members for humanity first
     if (_formKey.currentState.validate()) {
+      if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+        var timebankDetails = await FirestoreManager.getTimeBankForId(
+            timebankId: requestModel.timebankId);
+        requestModel.fullName = timebankDetails.name;
+        requestModel.photoUrl = timebankDetails.photoUrl;
+      }
+
       showDialog(
           barrierDismissible: false,
           context: context,
