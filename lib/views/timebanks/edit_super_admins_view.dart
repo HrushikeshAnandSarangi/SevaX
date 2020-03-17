@@ -17,7 +17,6 @@ import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_requests_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankedit.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 import '../../flavor_config.dart';
 import 'edit_timebank_view.dart';
@@ -627,24 +626,24 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             );
                           },
                         ),
-                        FlatButton(
-                          child: Text(
-                            'View Accepted Offers',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Theme.of(context).accentColor),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AcceptedOffers(
-                                  timebankId: timebankModel.id,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                        // FlatButton(
+                        //   child: Text(
+                        //     'View Accepted Offers',
+                        //     style: TextStyle(
+                        //         fontWeight: FontWeight.w700,
+                        //         color: Theme.of(context).accentColor),
+                        //   ),
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => AcceptedOffers(
+                        //           timebankId: timebankModel.id,
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        // ),
                         FlatButton(
                           child: Text(
                             'Invite memebers via code',

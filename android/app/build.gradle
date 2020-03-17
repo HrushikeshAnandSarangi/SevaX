@@ -44,7 +44,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         // versionCode flutterVersionCode.toInteger()
-        versionCode 69
+        versionCode 71
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -53,8 +53,8 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-//          storeFile file(keystoreProperties['storeFile'])
-//          storePassword keystoreProperties['storePassword']
+         storeFile file(keystoreProperties['storeFile'])
+         storePassword keystoreProperties['storePassword']
             //signingConfig signingConfigs.debug
         }   
     }

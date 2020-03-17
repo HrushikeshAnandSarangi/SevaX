@@ -6,7 +6,6 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 class ManageTimebankSeva extends StatefulWidget {
   final TimebankModel timebankModel;
@@ -111,14 +110,14 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   Widget viewAcceptedOffers({BuildContext context}) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AcceptedOffers(
-              timebankId: widget.timebankModel.id,
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => AcceptedOffers(
+        //       timebankId: widget.timebankModel.id,
+        //     ),
+        //   ),
+        // );
       },
       child: Container(
         margin: EdgeInsets.only(top: 20),

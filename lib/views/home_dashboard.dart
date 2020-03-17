@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
+import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
 import 'messages/timebank_chats.dart';
@@ -57,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
-        TabController(initialIndex: 0, length: 6, vsync: this);
+        TabController(initialIndex: 0, length: 7, vsync: this);
     tabs = [
       Tab(
           text:
@@ -66,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       Tab(text: "Requests"),
       Tab(text: "Offers"),
       Tab(text: "About"),
+      Tab(text: "Accepted Offers"),
       Tab(text: "Members")
     ];
     super.initState();
@@ -242,6 +244,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         timebankModel: primaryTimebank,
                         email: SevaCore.of(context).loggedInUser.email,
                       ),
+                      AcceptedOffers(
+                          sevaUserId:
+                              SevaCore.of(context).loggedInUser.sevaUserID),
                       TimebankRequestAdminPage(
                         isUserAdmin: primaryTimebank.admins.contains(
                           SevaCore.of(context).loggedInUser.sevaUserID,
