@@ -74,20 +74,35 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   //print('cardmodel ${cardModel.currentPlan}');
                   //  print('subscription  ${cardModel.toString()}');
                   //print('subscription  ${cardModel.subscriptionModel}');
-                  if (cardModel.subscriptionModel != null &&
-                      cardModel.subscriptionModel.containsKey("items")) {
-                    if (cardModel.subscriptionModel['items']['data'] != null)
-                      planData =
-                          cardModel.subscriptionModel['items']['data'] ?? [];
-                    return spendingsTextWidgettwo(
-                        "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.");
-                  } else {
-                    return emptyText();
-                  }
-                } else {
-                  return emptyText();
-                }
-              },
+                  if (cardModel.subscriptionModel != null) {	
+                    String data = "";	
+                    cardModel.subscriptionModel.forEach((subscritpion) {	
+                      if (subscritpion.containsKey("items")) {	
+                        if (subscritpion['items']['data'] != null) {	
+                          planData = subscritpion['items']['data'] ?? [];	
+                          if (cardModel.currentPlan == "grande_plan") {	
+                            data =	
+                                "Your community is on the ${cardModel.currentPlan ?? ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";	
+                          } else {	
+                            data =	
+                                "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";	
+                          }	
+                          return spendingsTextWidgettwo(data ?? "");	
+                        } else {	
+                          return emptyText();	
+                        }	
+                      } else {	
+                        return emptyText();	
+                      }	
+                    });	
+                    return spendingsTextWidgettwo(data ?? "");	
+                  } else {	
+                    return emptyText();	
+                  }	
+                } else {	
+                  return emptyText();	
+                }	
+              },	
             ),
             headingText("Status"),
 
@@ -222,24 +237,50 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
   }
 
   Widget cardsHeadingWidget() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        headingText("Monthly subscriptions"),
-        Padding(
-          padding: EdgeInsets.only(left: 10, top: 15, right: 10),
-          child: IconButton(
-            icon: Icon(
-              Icons.edit,
-            ),
-            onPressed: () {
-              print("clicked");
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => BillingView(SevaCore.of(context).loggedInUser.currentCommunity, "",
-                      user: SevaCore.of(context).loggedInUser),
-                ),
-              );
+    return FutureBuilder(
+        future: Firestore.instance
+            .collection('cards')
+            .document(SevaCore.of(context).loggedInUser.currentCommunity)
+            .get(),
+        builder: (context, snapshot) {
+          String planName = '';
+          if (snapshot.hasData && snapshot.data.data != null) {
+            planName = snapshot.data.data['currentplan'];
+          }
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              headingText("Monthly subscriptions"),
+              Padding(
+                padding: EdgeInsets.only(left: 10, top: 15, right: 10),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                  ),
+                  onPressed: () {
+                    print("clicked");
+                    if (planName == '') {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BillingPlanDetails(
+                            user: SevaCore.of(context).loggedInUser,
+                            isPlanActive: false,
+                            autoImplyLeading: true,
+                          ),
+                        ),
+                      );
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BillingView(
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity,
+                              planName,
+                              user: SevaCore.of(context).loggedInUser),
+                        ),
+                      );
+                    }
 //                builder: (context) => CustomCreditCard(
 //                  frontBackground: CardBackgrounds.white,
 //                  cardNumber: "7777",
@@ -249,11 +290,12 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 //                  bankName: "HDFC",
 //                ),
 //              ));
-            },
-          ),
-        ),
-      ],
-    );
+                  },
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   Widget configureBillingHeading(BuildContext buildContext) {

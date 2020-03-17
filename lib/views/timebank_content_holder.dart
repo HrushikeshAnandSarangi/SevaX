@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -133,7 +134,7 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 8,
+    length: 9,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -163,6 +164,9 @@ Widget createAdminTabBar(
               ),
               Tab(
                 text: "About",
+              ),
+              Tab(
+                text: "Accepted Offers",
               ),
               Tab(
                 text: "Members",
@@ -196,6 +200,10 @@ Widget createAdminTabBar(
                 TimeBankAboutView.of(
                   timebankModel: timebankModel,
                   email: SevaCore.of(context).loggedInUser.email,
+                ),
+                AcceptedOffers(
+                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  timebankId: timebankModel.id,
                 ),
                 TimebankRequestAdminPage(
                   isUserAdmin: timebankModel.admins
@@ -290,7 +298,7 @@ Widget createJoinedUserTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 5,
+    length: 6,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -349,6 +357,9 @@ Widget createJoinedUserTabBar(
                 text: "About",
               ),
               Tab(
+                text: "Accepted Offers",
+              ),
+              Tab(
                 text: "Members",
               ),
             ],
@@ -371,6 +382,10 @@ Widget createJoinedUserTabBar(
                 TimeBankAboutView.of(
                   timebankModel: timebankModel,
                   email: SevaCore.of(context).loggedInUser.email,
+                ),
+                AcceptedOffers(
+                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                  timebankId: timebankModel.id,
                 ),
                 TimebankRequestAdminPage(
                   isUserAdmin: timebankModel.admins.contains(

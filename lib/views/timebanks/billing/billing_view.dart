@@ -11,7 +11,6 @@ import 'package:stripe_payment/stripe_payment.dart';
 
 import '../../../main_app.dart';
 import '../../../widgets/credit_card/credit_card.dart';
-
 class BillingView extends StatefulWidget {
   BillingView(this.timebankid, this.planId, {this.user});
   final timebankid;
@@ -22,29 +21,26 @@ class BillingView extends StatefulWidget {
     return BillingViewState();
   }
 }
-
 class BillingViewState extends State<BillingView> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
   @override
   void initState() {
     print(widget.planId);
-
     StripePayment.setOptions(
       StripeOptions(
+        // publishableKey: 'pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN',
         publishableKey: 'pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832',
         merchantId: 'acct_1BuMJNIPTZX4UEIO',
+        // androidPayMode: 'live',
         androidPayMode: 'test',
       ),
     );
     super.initState();
   }
-
   void setError(Error error) {
     //Handle failed transactions and errors in this method
     print('Error---------- ${error.toString()}');
   }
-
   Future<void> connectToStripe(String paymentMethodId) async {
     print(paymentMethodId);
     const String url = 'YOUR_SERVER_URL';
@@ -68,7 +64,6 @@ class BillingViewState extends State<BillingView> {
           (Route<dynamic> route) => false);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +113,14 @@ class BillingViewState extends State<BillingView> {
                 ),
               ),
               Divider(),
-              SizedBox(height: 20),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 22, vertical: 5),
+                child: Text(
+                  'Note : long press to make a card default',
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ),
               // GestureDetector(
               //   onDoubleTap: () {
               //     print("made default");
@@ -161,20 +163,51 @@ class BillingViewState extends State<BillingView> {
                       physics: ClampingScrollPhysics(),
                       itemCount: snapshot.data.data.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
+                        return GestureDetector(
                           onTap: () {
                             // connectToStripe(cards[index]['paymentMethodId']);
                             connectToStripe(snapshot.data.data[index].id);
                           },
-                          child: CustomCreditCard(
-                            bankName: "Bank Name",
-                            cardNumber: snapshot.data.data[index].card.last4,
-                            frontBackground: CardBackgrounds.black,
-                            brand: "${snapshot.data.data[index].card.brand}",
-                            cardExpiry:
-                                "${snapshot.data.data[index].card.expMonth}/${snapshot.data.data[index].card.expYear}",
-                            cardHolderName:
-                                snapshot.data.data[index].billingDetails.name,
+                          onLongPress: () => _showDialog(
+                            token: snapshot.data.data[index].id,
+                            communityId: widget.user.currentCommunity,
+                          ),
+                          child: Stack(
+                            // crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              CustomCreditCard(
+                                bankName: "Bank Name",
+                                cardNumber:
+                                    snapshot.data.data[index].card.last4,
+                                frontBackground: CardBackgrounds.black,
+                                brand:
+                                    "${snapshot.data.data[index].card.brand}",
+                                cardExpiry:
+                                    "${snapshot.data.data[index].card.expMonth}/${snapshot.data.data[index].card.expYear}",
+                                cardHolderName: snapshot
+                                    .data.data[index].billingDetails.name,
+                              ),
+                              Offstage(
+                                offstage: true,
+                                child: Align(
+                                  alignment: Alignment.topCenter,
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 10),
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(4),
+                                          bottomRight: Radius.circular(4),
+                                        )),
+                                    child: Text(
+                                      'Default',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -192,8 +225,44 @@ class BillingViewState extends State<BillingView> {
       ),
     );
   }
+  void _showDialog({String token, String communityId}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text("Make this card as default"),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
+                      setDefaultCard(token: token, communityId: communityId);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  FlatButton(
+                    color: Colors.white,
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
-
 Future<UserCardsModel> getUserCard(String communityId) async {
   var result = await http.post(
       "https://us-central1-sevaxproject4sevax.cloudfunctions.net/getCardsOfCustomer",
@@ -205,7 +274,10 @@ Future<UserCardsModel> getUserCard(String communityId) async {
     throw Exception('No cards available');
   }
 }
-
-Future<void> setDefaultCard() async {
-  var result = await http.post('');
+Future<void> setDefaultCard({String communityId, String token}) async {
+  var result = await http.post(
+    "https://us-central1-sevaxproject4sevax.cloudfunctions.net/setDefaultCardForCustomer",
+    body: {"communityId": communityId, "token": token},
+  );
+  print(result.body);
 }

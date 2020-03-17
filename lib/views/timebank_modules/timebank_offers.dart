@@ -956,16 +956,10 @@ class OfferCardViewState extends State<OfferCardView> {
                                               height: 30,
                                               width: 80,
                                               child: widget.offerModel
-                                                              .sevaUserId ==
-                                                          SevaCore.of(context)
-                                                              .loggedInUser
-                                                              .sevaUserID ||
-                                                      widget
-                                                          .timebankModel.admins
-                                                          .contains(SevaCore.of(
-                                                                  context)
-                                                              .loggedInUser
-                                                              .sevaUserID)
+                                                          .sevaUserId ==
+                                                      SevaCore.of(context)
+                                                          .loggedInUser
+                                                          .sevaUserID
                                                   ? FlatButton(
                                                       shape:
                                                           RoundedRectangleBorder(
@@ -1190,6 +1184,7 @@ class OfferCardViewState extends State<OfferCardView> {
       'timebankId': FlavorConfig.values.timebankId,
       'sevaUserId': offerModel.sevaUserId,
       'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
+      'acceptorEmailId': SevaCore.of(context).loggedInUser.email,
     };
 
     setState(() {
@@ -1316,7 +1311,7 @@ class OfferCardViewState extends State<OfferCardView> {
                               ? 'Withdraw'
                               : 'Accept',
                           style: TextStyle(
-                            color: isAccepted ? Colors.red : Colors.green,
+                            color: isAccepted ? Colors.red : Colors.white,
                           ),
                         ),
                         Spacer(
@@ -1367,37 +1362,6 @@ class OfferCardViewState extends State<OfferCardView> {
                       await _makePostRequest(widget.offerModel);
                       Navigator.of(dialogContext).pop();
                       Navigator.of(context).pop();
-
-                      // FirestoreManager.getTimeBankForId(
-                      //         timebankId: widget.offerModel.timebankId)
-                      //     .then((timebank) async {
-                      //   // print("recieved details");
-                      //   if (timebank.admins.contains(
-                      //           SevaCore.of(context).loggedInUser.sevaUserID) ||
-                      //       timebank.coordinators.contains(
-                      //           SevaCore.of(context).loggedInUser.sevaUserID)) {
-
-                      //   } else {
-                      //     showDialog(
-                      //       context: context,
-                      //       builder: (BuildContext context) {
-                      //         return AlertDialog(
-                      //           title: new Text("Permission Denied"),
-                      //           content: new Text(
-                      //               "You need to be an Admin or Coordinator to have permission to send request to offers"),
-                      //           actions: <Widget>[
-                      //             new FlatButton(
-                      //               child: new Text("Close"),
-                      //               onPressed: () {
-                      //                 Navigator.of(context).pop();
-                      //               },
-                      //             ),
-                      //           ],
-                      //         );
-                      //       },
-                      //     );
-                      //   }
-                      // });
                     },
                   ),
                 ),
