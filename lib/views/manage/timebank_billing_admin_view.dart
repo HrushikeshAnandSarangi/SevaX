@@ -74,35 +74,35 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   //print('cardmodel ${cardModel.currentPlan}');
                   //  print('subscription  ${cardModel.toString()}');
                   //print('subscription  ${cardModel.subscriptionModel}');
-                  if (cardModel.subscriptionModel != null) {	
-                    String data = "";	
-                    cardModel.subscriptionModel.forEach((subscritpion) {	
-                      if (subscritpion.containsKey("items")) {	
-                        if (subscritpion['items']['data'] != null) {	
-                          planData = subscritpion['items']['data'] ?? [];	
-                          if (cardModel.currentPlan == "grande_plan") {	
-                            data =	
-                                "Your community is on the ${cardModel.currentPlan ?? ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";	
-                          } else {	
-                            data =	
-                                "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";	
-                          }	
-                          return spendingsTextWidgettwo(data ?? "");	
-                        } else {	
-                          return emptyText();	
-                        }	
-                      } else {	
-                        return emptyText();	
-                      }	
-                    });	
-                    return spendingsTextWidgettwo(data ?? "");	
-                  } else {	
-                    return emptyText();	
-                  }	
-                } else {	
-                  return emptyText();	
-                }	
-              },	
+                  if (cardModel.subscriptionModel != null) {
+                    String data = "";
+                    cardModel.subscriptionModel.forEach((subscritpion) {
+                      if (subscritpion.containsKey("items")) {
+                        if (subscritpion['items']['data'] != null) {
+                          planData = subscritpion['items']['data'] ?? [];
+                          if (cardModel.currentPlan == "grande_plan") {
+                            data =
+                                "Your community is on the ${cardModel.currentPlan != null ? cardModel.currentPlan.replaceAll('_', ' ').toUpperCase() : ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";
+                          } else {
+                            data =
+                                "Your community is on the ${cardModel.currentPlan != null ? cardModel.currentPlan.replaceAll('_', ' ').toUpperCase() : ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";
+                          }
+                          return spendingsTextWidgettwo(data ?? "");
+                        } else {
+                          return emptyText();
+                        }
+                      } else {
+                        return emptyText();
+                      }
+                    });
+                    return spendingsTextWidgettwo(data ?? "");
+                  } else {
+                    return emptyText();
+                  }
+                } else {
+                  return emptyText();
+                }
+              },
             ),
             headingText("Status"),
 
@@ -156,6 +156,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           user: SevaCore.of(context).loggedInUser,
                           planName: cardModel.currentPlan,
                           isPlanActive: true,
+                          autoImplyLeading: true,
                         ),
                       ),
                     ),
