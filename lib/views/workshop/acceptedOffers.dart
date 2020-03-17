@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/timebanks/timebank_existing_requests.dart';
 
 class AcceptedOffers extends StatefulWidget {
   final String timebankId;
@@ -303,9 +304,37 @@ class _ViewAcceptedOffers extends StatelessWidget {
                           // }
                         },
                       ),
+
 //                      Padding(
 //                        padding: EdgeInsets.all(8.0),
 //                      ),
+                      RaisedButton(
+                        child: Container(
+                          width: double.infinity,
+                          child: Text(
+                            'Add to Existing Request',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        onPressed: () async {
+                          // Once approved
+                          print("UserModel ${userModel.fullname}");
+                          Navigator.pop(viewContext);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TimeBankExistingRequests(
+                                timebankId: timebankId,
+                                isAdmin: true,
+                                parentContext: context,
+                                userModel: userModel,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                       RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Container(

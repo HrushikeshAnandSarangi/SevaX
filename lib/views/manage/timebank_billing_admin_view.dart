@@ -74,13 +74,20 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   //print('cardmodel ${cardModel.currentPlan}');
                   //  print('subscription  ${cardModel.toString()}');
                   //print('subscription  ${cardModel.subscriptionModel}');
-                  if (cardModel.subscriptionModel != null &&
-                      cardModel.subscriptionModel.containsKey("items")) {
-                    if (cardModel.subscriptionModel['items']['data'] != null)
-                      planData =
-                          cardModel.subscriptionModel['items']['data'] ?? [];
-                    return spendingsTextWidgettwo(
-                        "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.");
+                  if (cardModel.subscriptionModel != null) {
+                    cardModel.subscriptionModel.forEach((subscritpion) {
+                      if (subscritpion.containsKey("items")) {
+                        if (subscritpion['items']['data'] != null) {
+                          planData = subscritpion['items']['data'] ?? [];
+                          return spendingsTextWidgettwo(
+                              "Your community is on the ${cardModel.currentPlan ?? ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.");
+                        } else {
+                          return emptyText();
+                        }
+                      } else {
+                        return emptyText();
+                      }
+                    });
                   } else {
                     return emptyText();
                   }
@@ -236,7 +243,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               print("clicked");
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => BillingView(SevaCore.of(context).loggedInUser.currentCommunity, "",
+                  builder: (context) => BillingView(
+                      SevaCore.of(context).loggedInUser.currentCommunity, "",
                       user: SevaCore.of(context).loggedInUser),
                 ),
               );
