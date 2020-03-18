@@ -15,9 +15,9 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 
 import 'edit_profile.dart';
@@ -440,44 +440,45 @@ class _ProfilePageState extends State<ProfilePage>
                         //     ),
                         //   ),
                         // ),
-                        SizedBox(height: 10),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            children: [
-                              // TextSpan(
-                              //   text: 'or \n\n',
-                              //   style: TextStyle(
-                              //     color: Colors.black,
-                              //   ),
-                              // ),
-                              TextSpan(
-                                text: 'Discover more Timebanks',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    //Navigate to discover teams
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return FindCommunitiesView(
-                                            keepOnBackPress: true,
-                                            loggedInUser: SevaCore.of(context)
-                                                .loggedInUser,
-                                            showBackBtn: true,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
+//                        SizedBox(height: 10),
+//                        RichText(
+//                          textAlign: TextAlign.center,
+//                          text: TextSpan(
+//                            children: [
+//                              // TextSpan(
+//                              //   text: 'or \n\n',
+//                              //   style: TextStyle(
+//                              //     color: Colors.black,
+//                              //   ),
+//                              // ),
+//                              TextSpan(
+//                                text: 'Discover more Timebanks',
+//                                style: TextStyle(
+//                                  color: Colors.grey,
+//                                  fontWeight: FontWeight.bold,
+//                                  decoration: TextDecoration.underline,
+//                                ),
+//                                recognizer: TapGestureRecognizer()
+//                                  ..onTap = () {
+//                                    //Navigate to discover teams
+//                                    Navigator.of(context).push(
+//                                      MaterialPageRoute(
+//                                        builder: (context) {
+//                                          return FindCommunitiesView(
+//                                            keepOnBackPress: true,
+//                                            loggedInUser: SevaCore.of(context)
+//                                                .loggedInUser,
+//                                            showBackBtn: true,
+//                                            isFromHome: false,
+//                                          );
+//                                        },
+//                                      ),
+//                                    );
+//                                  },
+//                              ),
+//                            ],
+//                          ),
+//                        ),
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {
@@ -499,6 +500,44 @@ class _ProfilePageState extends State<ProfilePage>
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
                                       'My Timezone',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Icon(Icons.navigate_next),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return AboutApp();
+                                },
+                              ),
+                            );
+                          },
+                          child: Card(
+                            elevation: 2,
+                            child: Container(
+                              height: 60,
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 15),
+                                    child: Text(
+                                      'Help',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,

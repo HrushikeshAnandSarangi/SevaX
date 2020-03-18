@@ -49,6 +49,11 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     });
   }
 
+  String planName(String text) {
+    List<String> x = text.split('_');
+    return '${x[0][0].toUpperCase() + x[0].substring(1)} ${x[1][0].toUpperCase() + x[1].substring(1)}';
+  }
+
   @override
   Widget build(BuildContext context) {
     this.parentContext = context;
@@ -82,10 +87,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           planData = subscritpion['items']['data'] ?? [];
                           if (cardModel.currentPlan == "grande_plan") {
                             data =
-                                "Your community is on the ${cardModel.currentPlan != null ? cardModel.currentPlan.replaceAll('_', ' ').toUpperCase() : ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";
+                                "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";
                           } else {
                             data =
-                                "Your community is on the ${cardModel.currentPlan != null ? cardModel.currentPlan.replaceAll('_', ' ').toUpperCase() : ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";
+                                "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";
                           }
                           return spendingsTextWidgettwo(data ?? "");
                         } else {
