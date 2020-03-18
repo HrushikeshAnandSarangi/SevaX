@@ -875,6 +875,7 @@ class CreateEditCommunityViewFormState
                   keepOnBackPress: true,
                   loggedInUser: SevaCore.of(context).loggedInUser,
                   showBackBtn: true,
+                  isFromHome: false,
                 );
               },
             ),
