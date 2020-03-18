@@ -318,6 +318,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
+                  initialValue:
+                      widget.isOfferRequest != null && widget.isOfferRequest
+                          ? widget.offer.description
+                          : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
                   validator: (value) {
