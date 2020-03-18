@@ -23,8 +23,10 @@ import 'edit_timebank_view.dart';*/
 class OnBoardWithTimebank extends StatefulWidget {
   final CommunityModel communityModel;
   final String sevauserId;
+  final bool isFromExplore;
 
-  OnBoardWithTimebank({this.communityModel, this.sevauserId});
+  OnBoardWithTimebank(
+      {this.communityModel, this.sevauserId, this.isFromExplore});
 
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
@@ -81,27 +83,29 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   Widget build(BuildContext context) {
     return isDataLoaded
         ? Scaffold(
-          key: _scaffold,
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              'Join Timebank',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                // fontWeight: FontWeight.w500,
-              ),
+            key: _scaffold,
+            appBar: !widget.isFromExplore
+                ? AppBar(
+                    centerTitle: true,
+                    title: Text(
+                      'Join Timebank',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        // fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                : null,
+            body: SingleChildScrollView(
+              child: Container(child: timebankStreamBuilder(context)),
             ),
-          ),
-          body: SingleChildScrollView(
-            child: Container(child: timebankStreamBuilder(context)),
-          ),
-        )
+          )
         : Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
   }
 
   Widget timebankStreamBuilder(context) {

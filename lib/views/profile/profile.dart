@@ -470,6 +470,7 @@ class _ProfilePageState extends State<ProfilePage>
                                             loggedInUser: SevaCore.of(context)
                                                 .loggedInUser,
                                             showBackBtn: true,
+                                            isFromHome: false,
                                           );
                                         },
                                       ),
