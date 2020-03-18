@@ -83,6 +83,34 @@ class BillingPlanCard extends StatelessWidget {
                       style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(width: 4),
+                    // InkWell(
+                    //   onTap: () {
+                    //     _showDialog(context);
+                    //   },
+                    //   child: CircleAvatar(
+                    //     radius: 8,
+                    //     backgroundColor: Colors.blue,
+                    //     foregroundColor: Colors.white,
+                    //     child: Text(
+                    //       "i",
+                    //       style: TextStyle(fontSize: 12),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+                Text(
+                  "${billingDetails.note2}",
+                  style: TextStyle(fontSize: 10, color: textColor),
+                ),
+                SizedBox(height: 4),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      "Click here for more info",
+                      style: TextStyle(fontSize: 10, color: textColor),
+                    ),
+                    SizedBox(width: 8),
                     InkWell(
                       onTap: () {
                         _showDialog(context);
@@ -98,10 +126,6 @@ class BillingPlanCard extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-                Text(
-                  "${billingDetails.note2}",
-                  style: TextStyle(fontSize: 10, color: textColor),
                 ),
                 Spacer(),
                 Expanded(
