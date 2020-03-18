@@ -13,9 +13,9 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/home_dashboard.dart';
 
 import '../timebank_content_holder.dart';
 
@@ -78,35 +78,35 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Group",
-            style: TextStyle(
-              fontSize: 20,
-              fontFamily: "Europa",
-            )),
-        centerTitle: true,
-        actions: <Widget>[
-          Offstage(
-            offstage: true,
-            child: widget.isFromDash
-                ? FlatButton(
-                    child: Text(
-                      "Continue",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Europa",
-                      ),
-                    ),
-                    textColor: Colors.lightBlue,
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => HomeDashBoard()));
-                    },
-                  )
-                : Text(""),
-          )
-        ],
-      ),
+//      appBar: AppBar(
+//        title: Text("Group",
+//            style: TextStyle(
+//              fontSize: 20,
+//              fontFamily: "Europa",
+//            )),
+//        centerTitle: true,
+//        actions: <Widget>[
+//          Offstage(
+//            offstage: true,
+//            child: widget.isFromDash
+//                ? FlatButton(
+//                    child: Text(
+//                      "Continue",
+//                      style: TextStyle(
+//                        fontSize: 16,
+//                        fontFamily: "Europa",
+//                      ),
+//                    ),
+//                    textColor: Colors.lightBlue,
+//                    onPressed: () {
+//                      Navigator.of(context).push(MaterialPageRoute(
+//                          builder: (context) => HomeDashBoard()));
+//                    },
+//                  )
+//                : Text(""),
+//          )
+//        ],
+//      ),
       body: isDataLoaded
           ? SingleChildScrollView(
               child: getTimebanks(context: context),
@@ -120,17 +120,20 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget getTimebanks({BuildContext context}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
-    return StreamBuilder<CommunityCreateEditController>(
-        stream: createEditCommunityBloc.createEditCommunity,
+    return FutureBuilder<List<TimebankModel>>(
+        future: getSubTimebanksForUserStream(
+            communityId: widget.loggedInUserModel.currentCommunity),
         builder: (context, snapshot) {
-          print('timee${snapshot.data}');
+          print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          timebankList = snapshot.data.timebanks;
+          timebankList = snapshot.data;
+
           timebankList.forEach((t) {
             dropdownList.add(t.id);
+            print('timee  banks  ${t}');
           });
 
           // Navigator.pop(context);

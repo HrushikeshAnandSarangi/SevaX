@@ -832,6 +832,7 @@ class _SplashViewState extends State<SplashView> {
             keepOnBackPress: false,
             loggedInUser: loggedInUser,
             showBackBtn: false,
+            isFromHome: false,
           ),
         ),
       ),

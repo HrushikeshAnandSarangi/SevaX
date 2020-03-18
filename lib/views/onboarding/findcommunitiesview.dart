@@ -18,11 +18,13 @@ class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
   final UserModel loggedInUser;
   final bool showBackBtn;
+  final bool isFromHome;
 
   FindCommunitiesView(
       {@required this.keepOnBackPress,
       @required this.loggedInUser,
-      @required this.showBackBtn});
+      @required this.showBackBtn,
+      @required this.isFromHome});
 
   @override
   State<StatefulWidget> createState() {
@@ -37,6 +39,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       new TextEditingController();
   static const String JOIN = "Join";
   static const String JOINED = "Joined";
+  bool showAppbar = false;
   @override
   void initState() {
     super.initState();
@@ -69,29 +72,33 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   @override
   Widget build(BuildContext context) {
     bool showBachBtn = widget.showBackBtn;
+    showAppbar = widget.isFromHome;
+    print("isdash trueee ---${widget.isFromHome}");
     return MaterialApp(
       title: AppConfig.appName,
       theme: FlavorConfig.values.theme,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          // automaticallyImplyLeading: widget.keepOnBackPress,
-          automaticallyImplyLeading: false,
-          elevation: 0.5,
+        appBar: !showAppbar
+            ? AppBar(
+                // automaticallyImplyLeading: widget.keepOnBackPress,
+                automaticallyImplyLeading: false,
+                elevation: 0.5,
 
-          leading: showBachBtn
-              ? BackButton(
-                  onPressed: () => Navigator.pop(context),
-                )
-              : Offstage(),
-          title: Text(
-            'Find your Timebank',
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-          centerTitle: true,
-        ),
+                leading: showBachBtn
+                    ? BackButton(
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    : Offstage(),
+                title: Text(
+                  'Find your Timebank',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+                centerTitle: true,
+              )
+            : null,
         body: searchTeams(),
       ),
     ); // );
