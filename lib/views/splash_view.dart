@@ -488,12 +488,10 @@ class _SplashViewState extends State<SplashView> {
         if (int.parse(packageInfo.buildNumber) <
             versionInfo['android']['build']) {
           print("New version available");
-          // await _navigateToAboutPage();
 
           if (versionInfo['android']['forceUpdate']) {
             print("User must update the app");
             await _navigateToUpdatePage(loggedInUser, true);
-            // await _navigateToAboutPage();
           } else {
             await _navigateToUpdatePage(loggedInUser, false);
           }
