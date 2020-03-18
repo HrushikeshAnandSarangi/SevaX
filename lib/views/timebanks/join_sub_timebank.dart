@@ -129,6 +129,11 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
+//          if (snapshot.data == null) {
+//            return Center(
+//              child: Text('No groups available'),
+//            );
+//          }
           timebankList = snapshot.data;
 
           timebankList.forEach((t) {
