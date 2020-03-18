@@ -18,7 +18,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 
 import 'edit_profile.dart';
@@ -441,45 +440,45 @@ class _ProfilePageState extends State<ProfilePage>
                         //     ),
                         //   ),
                         // ),
-                        SizedBox(height: 10),
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            children: [
-                              // TextSpan(
-                              //   text: 'or \n\n',
-                              //   style: TextStyle(
-                              //     color: Colors.black,
-                              //   ),
-                              // ),
-                              TextSpan(
-                                text: 'Discover more Timebanks',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    //Navigate to discover teams
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return FindCommunitiesView(
-                                            keepOnBackPress: true,
-                                            loggedInUser: SevaCore.of(context)
-                                                .loggedInUser,
-                                            showBackBtn: true,
-                                            isFromHome: false,
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
+//                        SizedBox(height: 10),
+//                        RichText(
+//                          textAlign: TextAlign.center,
+//                          text: TextSpan(
+//                            children: [
+//                              // TextSpan(
+//                              //   text: 'or \n\n',
+//                              //   style: TextStyle(
+//                              //     color: Colors.black,
+//                              //   ),
+//                              // ),
+//                              TextSpan(
+//                                text: 'Discover more Timebanks',
+//                                style: TextStyle(
+//                                  color: Colors.grey,
+//                                  fontWeight: FontWeight.bold,
+//                                  decoration: TextDecoration.underline,
+//                                ),
+//                                recognizer: TapGestureRecognizer()
+//                                  ..onTap = () {
+//                                    //Navigate to discover teams
+//                                    Navigator.of(context).push(
+//                                      MaterialPageRoute(
+//                                        builder: (context) {
+//                                          return FindCommunitiesView(
+//                                            keepOnBackPress: true,
+//                                            loggedInUser: SevaCore.of(context)
+//                                                .loggedInUser,
+//                                            showBackBtn: true,
+//                                            isFromHome: false,
+//                                          );
+//                                        },
+//                                      ),
+//                                    );
+//                                  },
+//                              ),
+//                            ],
+//                          ),
+//                        ),
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {

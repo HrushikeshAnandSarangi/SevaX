@@ -1,14 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 
 class ExploreTabView extends StatefulWidget {
+  ExploreTabView();
+
   @override
   _ExploreTabViewState createState() => _ExploreTabViewState();
 }
 
 class _ExploreTabViewState extends State<ExploreTabView> {
+  CommunityModel communityModel = CommunityModel({});
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getModelData();
+    setState(() {});
+  }
+
+  void getModelData() async {
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getCommunityDetailsByCommunityId(
+              communityId: SevaCore.of(context).loggedInUser.currentCommunity)
+          .then((onValue) {
+        communityModel = onValue;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -32,10 +55,10 @@ class _ExploreTabViewState extends State<ExploreTabView> {
               isScrollable: true,
               tabs: [
                 Tab(
-                  text: "Find Timebanks",
+                  text: "Discover more Timebanks",
                 ),
                 Tab(
-                  text: "Explore Groups",
+                  text: "Groups within ${communityModel.name ?? "Timabank"}",
                 ),
               ],
             ),
