@@ -422,30 +422,30 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
     requestModel.approvedUsers = arrayOfSelectedMembers;
 
-    if (!_checkValidityForSevaCoins) {
-      return showDialog(
-          context: context,
-          builder: (BuildContext viewContext) {
-            return AlertDialog(
-              title:
-                  Text('Insufficient seva coins for user to process requests'),
-//              content: Text(''),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(viewContext).pop();
-                  },
-                ),
-              ],
-            );
-          });
-    }
+//     if (!_checkValidityForSevaCoins) {
+//       return showDialog(
+//           context: context,
+//           builder: (BuildContext viewContext) {
+//             return AlertDialog(
+//               title:
+//                   Text('Insufficient seva coins for user to process requests'),
+// //              content: Text(''),
+//               actions: <Widget>[
+//                 FlatButton(
+//                   child: Text(
+//                     'OK',
+//                     style: TextStyle(
+//                       fontSize: 16,
+//                     ),
+//                   ),
+//                   onPressed: () {
+//                     Navigator.of(viewContext).pop();
+//                   },
+//                 ),
+//               ],
+//             );
+//           });
+//     }
 
     //adding some members for humanity first
     if (_formKey.currentState.validate()) {
