@@ -865,13 +865,13 @@ class CreateEditCommunityViewFormState
 
   void _billingBottomsheet(BuildContext mcontext) {
     showModalBottomSheet(
-      
       context: mcontext,
       builder: (BuildContext bc) {
         return Container(
           child: Builder(builder: (context) {
             return Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
               child: _scrollingList(context, focusNodes),
             );
           }),
@@ -1041,9 +1041,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.state != null
-//              ? controller.community.billing_address.state
-//              : '',
+         initialValue: controller.community.billing_address.state != null
+             ? controller.community.billing_address.state
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1069,9 +1069,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.state != null
-//              ? controller.community.billing_address.state
-//              : '',
+         initialValue: controller.community.billing_address.state != null
+             ? controller.community.billing_address.state
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1097,9 +1097,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.pincode != null
-//              ? controller.community.billing_address.pincode.toString()
-//              : '',
+         initialValue: controller.community.billing_address.pincode != null
+             ? controller.community.billing_address.pincode.toString()
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1126,10 +1126,10 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('additionalnotes', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue:
-//              controller.community.billing_address.additionalnotes != null
-//                  ? controller.community.billing_address.additionalnotes
-//                  : '',
+          initialValue:
+              controller.community.billing_address.additionalnotes != null
+                  ? controller.community.billing_address.additionalnotes
+                  : '',
 //          validator: (value) {
 //            return value.isEmpty ? 'Field cannot be left blank' : null;
 //          },
@@ -1162,10 +1162,10 @@ class CreateEditCommunityViewFormState
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.next,
-//          initialValue:
-//              controller.community.billing_address.street_address1 != null
-//                  ? controller.community.billing_address.street_address1
-//                  : '',
+          initialValue:
+              controller.community.billing_address.street_address1 != null
+                  ? controller.community.billing_address.street_address1
+                  : '',
           decoration: getInputDecoration(
             fieldTitle: "Street Address 1",
           ),
@@ -1187,10 +1187,10 @@ class CreateEditCommunityViewFormState
             },
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.next,
-//            initialValue:
-//                controller.community.billing_address.street_address2 != null
-//                    ? controller.community.billing_address.street_address2
-//                    : '',
+            initialValue:
+                controller.community.billing_address.street_address2 != null
+                    ? controller.community.billing_address.street_address2
+                    : '',
             decoration: getInputDecoration(
               fieldTitle: "Street Address 2",
             )),
@@ -1209,9 +1209,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('companyname', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.companyname != null
-//              ? controller.community.billing_address.companyname
-//              : '',
+          initialValue: controller.community.billing_address.companyname != null
+              ? controller.community.billing_address.companyname
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1236,9 +1236,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.companyname != null
-//              ? controller.community.billing_address.companyname
-//              : '',
+         initialValue: controller.community.billing_address.companyname != null
+             ? controller.community.billing_address.companyname
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
