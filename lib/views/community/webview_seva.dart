@@ -28,9 +28,7 @@ class _WebViewExampleState extends State<SevaWebView> {
       appBar: AppBar(
         title: Text(
           widget.aboutMode.title,
-          style: TextStyle(
-            fontSize: 18
-          ),
+          style: TextStyle(fontSize: 18),
         ),
         // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
         actions: <Widget>[],
@@ -58,10 +56,12 @@ class _WebViewExampleState extends State<SevaWebView> {
             return NavigationDecision.navigate;
           },
           onPageStarted: (String url) {
+            showDialogForProgress();
             print('Page started loading: $url');
           },
           onPageFinished: (String url) {
             print('Page finished loading: $url');
+            Navigator.pop(dialogContext);
           },
           gestureNavigationEnabled: true,
         );
@@ -75,6 +75,21 @@ class _WebViewExampleState extends State<SevaWebView> {
         onMessageReceived: (JavascriptMessage message) {
           Scaffold.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
+          );
+        });
+  }
+
+  BuildContext dialogContext;
+
+  void showDialogForProgress() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          dialogContext = context;
+          return AlertDialog(
+            title: Text('Loading'),
+            content: LinearProgressIndicator(),
           );
         });
   }
