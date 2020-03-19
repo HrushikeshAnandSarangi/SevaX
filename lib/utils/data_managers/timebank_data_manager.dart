@@ -436,7 +436,7 @@ Stream<List<TimebankModel>> getChildTimebanks(
 }
 
 Stream<List<prefix0.OfferModel>> getOffersApprovedByAdmin(
-    {@required String sevaUserId} ) async* {
+    {@required String sevaUserId}) async* {
   var data = Firestore.instance
       .collection('offers')
       .where('offerAcceptors', arrayContains: sevaUserId)
