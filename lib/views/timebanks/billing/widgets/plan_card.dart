@@ -158,23 +158,23 @@ class BillingPlanCard extends StatelessWidget {
                           : Colors.white,
                     ),
                   ),
-                  onPressed: isSelected
-                      ? () {}
-                      : () {
-                          if (isPlanActive) {
-                            _changePlanAlert(context);
-                          } else {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BillingView(
-                                  user.currentCommunity,
-                                  billingDetails.id,
-                                  user: user,
-                                ),
-                              ),
-                            );
-                          }
-                        },
+                  onPressed:
+                      // ? () {}
+                      () {
+                    if (isPlanActive) {
+                      _changePlanAlert(context);
+                    } else {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BillingView(
+                            user.currentCommunity,
+                            billingDetails.id,
+                            user: user,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 )
               ],
             ),

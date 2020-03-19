@@ -66,6 +66,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
       home: BlocProvider(
         bloc: _userBloc,
         child: Scaffold(
+          resizeToAvoidBottomPadding: false,
           body: StreamBuilder(
             // stream: _userBloc.getUser(SevaCore.of(context).loggedInUser.email),
             stream: CombineLatestStream.combine2(
