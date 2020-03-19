@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 
 class VerifyEmail extends StatefulWidget {
   final FirebaseUser firebaseUser;
@@ -96,7 +97,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   child: FlatButton(
                     child: Text('Resend mail'),
                     onPressed: () {
-                      widget.firebaseUser.sendEmailVerification();
+                      widget.firebaseUser
+                          .sendEmailVerification()
+                          .then((onValue) {
+                            showVerificationEmailDialog();
+                          })
+                          .catchError((onError) {
+                        print("Exception $onError");
+                      });
                     },
                   ),
                 ),
@@ -143,5 +151,32 @@ class _VerifyEmailState extends State<VerifyEmail> {
             ),
           ),
         );
+  }
+
+  void showVerificationEmailDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Verification email sent'),
+          content: Text('Verification email was sent to your registered email'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  fontSize: dialogButtonSize,
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ].reversed.toList(),
+        );
+      },
+      barrierDismissible: false,
+    );
   }
 }
