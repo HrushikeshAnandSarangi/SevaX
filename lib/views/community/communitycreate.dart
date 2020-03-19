@@ -865,10 +865,16 @@ class CreateEditCommunityViewFormState
 
   void _billingBottomsheet(BuildContext mcontext) {
     showModalBottomSheet(
+      
       context: mcontext,
       builder: (BuildContext bc) {
         return Container(
-          child: _scrollingList(focusNodes),
+          child: Builder(builder: (context) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: _scrollingList(context, focusNodes),
+            );
+          }),
         );
       },
     );
@@ -1021,9 +1027,7 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Widget _scrollingList(List<FocusNode> focusNodes) {
-    print(focusNodes);
-
+  Widget _scrollingList(BuildContext context, List<FocusNode> focusNodes) {
     Widget _stateWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -1085,7 +1089,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[5]);
+            FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             print(value);
@@ -1099,7 +1103,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[4],
+          focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -1225,7 +1229,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[4]);
+            FocusScope.of(context).requestFocus(focusNodes[3]);
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -1238,7 +1242,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[3],
+          focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Country Name",
