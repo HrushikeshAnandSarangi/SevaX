@@ -521,7 +521,7 @@ class OfferListItems extends StatelessWidget {
                       style: Theme.of(parentContext).textTheme.subhead,
                     ),
                     Text(
-                      model.description.trim(),
+                      model.description,
                       style: Theme.of(parentContext).textTheme.subtitle,
                     ),
                     Offstage(
@@ -738,11 +738,11 @@ class NearOfferListItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        model.title.trim(),
+                        model.title,
                         style: Theme.of(parentContext).textTheme.subhead,
                       ),
                       Text(
-                        model.description.trim(),
+                        model.description,
                         style: Theme.of(parentContext).textTheme.subtitle,
                       ),
                     ],
