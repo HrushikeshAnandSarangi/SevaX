@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
+import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
@@ -591,6 +593,24 @@ class _SplashViewState extends State<SplashView> {
     // if (widget.skipToHomePage) {
     //   print('Navigating to home page');
     //   _navigateToCoreView(loggedInUser);
+
+    await FirebaseAuth.instance
+        .currentUser()
+        .then((FirebaseUser firebaseUser) async {
+      if (firebaseUser != null) {
+        if (!firebaseUser.isEmailVerified) {
+          await Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => VerifyEmail(
+                  firebaseUser: firebaseUser,
+                  email: loggedInUser.email,
+                  emailSent: loggedInUser.emailSent,
+                ),
+              ),
+              (Route<dynamic> route) => false);
+        }
+      }
+    });
     // }
     print("reached here------->><><>");
     if (!loggedInUser.acceptedEULA) {

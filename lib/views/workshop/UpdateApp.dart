@@ -11,7 +11,7 @@ class UpdateView extends StatefulWidget {
     @required this.onSkipped,
     @required this.isForced,
   });
-
+  
   @override
   UpdateAppState createState() => UpdateAppState();
 }

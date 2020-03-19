@@ -215,6 +215,7 @@ class CreateEditCommunityViewFormState
   BuildContext parentContext;
 
   Map onActivityResult;
+  ScrollController _controller = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -225,6 +226,16 @@ class CreateEditCommunityViewFormState
         key: _formKey,
         child: createSevaX,
       ),
+    );
+  }
+
+  moveToTop() {
+    print("move to top");
+    // _controller.jumpTo(0.0);
+    _controller.animateTo(
+      -100,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
     );
   }
 
@@ -244,6 +255,8 @@ class CreateEditCommunityViewFormState
             // print("  snapshots data   ${snapshot.data.timebanks}");
 
             return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              controller: _controller,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -469,9 +482,10 @@ class CreateEditCommunityViewFormState
                       },
                     ),
                   ),
+                  SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          padding: const EdgeInsets.symmetric(vertical: 0),
                           child: tappableAddBillingDetails,
                         )
                       : Container(),
@@ -482,11 +496,12 @@ class CreateEditCommunityViewFormState
 //                      child: tappableAddBillingDetails,
 //                    ),
 //                  ),
+                  SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Container(
                           width: double.infinity,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            padding: const EdgeInsets.symmetric(vertical: 0.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -503,6 +518,7 @@ class CreateEditCommunityViewFormState
                           ),
                         )
                       : Container(),
+                  SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5.0),
                     child: Container(
@@ -533,6 +549,7 @@ class CreateEditCommunityViewFormState
                                   setState(() {
                                     this.communityImageError =
                                         'Timebank logo is mandatory';
+                                    moveToTop();
                                   });
                                 } else {
                                   showProgressDialog('Creating timebank');
@@ -703,9 +720,7 @@ class CreateEditCommunityViewFormState
       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: colums,
     );
-    return SingleChildScrollView(
-      child: contain,
-    );
+    return contain;
   }
 
   BuildContext dialogContext;
@@ -807,59 +822,62 @@ class CreateEditCommunityViewFormState
         FocusScope.of(parentContext).requestFocus(new FocusNode());
         _billingBottomsheet(parentContext);
       },
-      child: Container(
-          margin: EdgeInsets.only(top: 20),
-          width: double.infinity,
-          height: 50,
-          child: Column(children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Configure billing details',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                    fontSize: 14,
-                  ),
-                ),
-                Divider(),
-                Text(
-                  '+',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Colors.blue,
-                  ),
-                )
-              ],
+      child: Column(children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Configure billing details',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+                fontSize: 14,
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  _billingDetailsError,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                    fontSize: 12,
-                  ),
-                )
-              ],
-            ),
-          ])),
+            Divider(),
+            Text(
+              '+',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: Colors.blue,
+              ),
+            )
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              _billingDetailsError,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            )
+          ],
+        ),
+      ]),
     );
   }
 
   void _billingBottomsheet(BuildContext mcontext) {
     showModalBottomSheet(
-        context: mcontext,
-        builder: (BuildContext bc) {
-          return Container(
-            child: _scrollingList(focusNodes),
-          );
-        });
+      context: mcontext,
+      builder: (BuildContext bc) {
+        return Container(
+          child: Builder(builder: (context) {
+            return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: _scrollingList(context, focusNodes),
+            );
+          }),
+        );
+      },
+    );
   }
 
   Widget get tappableFindYourTeam {
@@ -1009,9 +1027,7 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Widget _scrollingList(List<FocusNode> focusNodes) {
-    print(focusNodes);
-
+  Widget _scrollingList(BuildContext context, List<FocusNode> focusNodes) {
     Widget _stateWidget(controller) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -1025,9 +1041,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.state != null
-//              ? controller.community.billing_address.state
-//              : '',
+         initialValue: controller.community.billing_address.state != null
+             ? controller.community.billing_address.state
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1053,9 +1069,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.state != null
-//              ? controller.community.billing_address.state
-//              : '',
+         initialValue: controller.community.billing_address.state != null
+             ? controller.community.billing_address.state
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1073,7 +1089,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[5]);
+            FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             print(value);
@@ -1081,13 +1097,13 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.pincode != null
-//              ? controller.community.billing_address.pincode.toString()
-//              : '',
+         initialValue: controller.community.billing_address.pincode != null
+             ? controller.community.billing_address.pincode.toString()
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[4],
+          focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -1110,10 +1126,10 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('additionalnotes', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue:
-//              controller.community.billing_address.additionalnotes != null
-//                  ? controller.community.billing_address.additionalnotes
-//                  : '',
+          initialValue:
+              controller.community.billing_address.additionalnotes != null
+                  ? controller.community.billing_address.additionalnotes
+                  : '',
 //          validator: (value) {
 //            return value.isEmpty ? 'Field cannot be left blank' : null;
 //          },
@@ -1146,10 +1162,10 @@ class CreateEditCommunityViewFormState
           },
           focusNode: focusNodes[4],
           textInputAction: TextInputAction.next,
-//          initialValue:
-//              controller.community.billing_address.street_address1 != null
-//                  ? controller.community.billing_address.street_address1
-//                  : '',
+          initialValue:
+              controller.community.billing_address.street_address1 != null
+                  ? controller.community.billing_address.street_address1
+                  : '',
           decoration: getInputDecoration(
             fieldTitle: "Street Address 1",
           ),
@@ -1171,10 +1187,10 @@ class CreateEditCommunityViewFormState
             },
             focusNode: focusNodes[5],
             textInputAction: TextInputAction.next,
-//            initialValue:
-//                controller.community.billing_address.street_address2 != null
-//                    ? controller.community.billing_address.street_address2
-//                    : '',
+            initialValue:
+                controller.community.billing_address.street_address2 != null
+                    ? controller.community.billing_address.street_address2
+                    : '',
             decoration: getInputDecoration(
               fieldTitle: "Street Address 2",
             )),
@@ -1193,9 +1209,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('companyname', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.companyname != null
-//              ? controller.community.billing_address.companyname
-//              : '',
+          initialValue: controller.community.billing_address.companyname != null
+              ? controller.community.billing_address.companyname
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1213,20 +1229,20 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[4]);
+            FocusScope.of(context).requestFocus(focusNodes[3]);
           },
           onChanged: (value) {
             controller.community.billing_address
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-//          initialValue: controller.community.billing_address.companyname != null
-//              ? controller.community.billing_address.companyname
-//              : '',
+         initialValue: controller.community.billing_address.companyname != null
+             ? controller.community.billing_address.companyname
+             : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[3],
+          focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Country Name",
@@ -1263,37 +1279,40 @@ class CreateEditCommunityViewFormState
     }
 
     return Container(
-        // var scrollController = Sc
-        //adding a margin to the top leaves an area where the user can swipe
-        //to open/close the sliding panel
-        margin: const EdgeInsets.only(top: 15.0),
-        color: Colors.white,
-        child: Form(
-            key: _billingInformationKey,
-            child: StreamBuilder(
-                stream: createEditCommunityBloc.createEditCommunity,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView(
-                      controller: scollContainer,
-                      children: <Widget>[
-                        _billingDetailsTitle,
-                        _cityWidget(snapshot.data),
-                        _stateWidget(snapshot.data),
-                        _countryNameWidget(snapshot.data),
-                        _pinCodeWidget(snapshot.data),
-                        _streetAddressWidget(snapshot.data),
-                        _streetAddressTwoWidget(snapshot.data),
-                        _companyNameWidget(snapshot.data),
-                        _additionalNotesWidget(snapshot.data),
-                        _continueBtn(snapshot.data),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text(snapshot.error.toString());
-                  }
-                  return Text("");
-                })));
+      // var scrollController = Sc
+      //adding a margin to the top leaves an area where the user can swipe
+      //to open/close the sliding panel
+      margin: const EdgeInsets.only(top: 15.0),
+      color: Colors.white,
+      child: Form(
+        key: _billingInformationKey,
+        child: StreamBuilder(
+          stream: createEditCommunityBloc.createEditCommunity,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                controller: scollContainer,
+                children: <Widget>[
+                  _billingDetailsTitle,
+                  _cityWidget(snapshot.data),
+                  _stateWidget(snapshot.data),
+                  _countryNameWidget(snapshot.data),
+                  _pinCodeWidget(snapshot.data),
+                  _streetAddressWidget(snapshot.data),
+                  _streetAddressTwoWidget(snapshot.data),
+                  _companyNameWidget(snapshot.data),
+                  _additionalNotesWidget(snapshot.data),
+                  _continueBtn(snapshot.data),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error.toString());
+            }
+            return Text("");
+          },
+        ),
+      ),
+    );
   }
 
   void scrollToTop() {

@@ -27,6 +27,7 @@ class UserModel extends DataModel {
   String requestStatus;
   String locationName;
   String lat_lng;
+  bool emailSent;
 
   int notificationsRead;
   Map<dynamic, dynamic> notificationsReadCount;
@@ -77,7 +78,8 @@ class UserModel extends DataModel {
       this.blockedBy,
       this.currentPosition,
       this.currentCommunity,
-      this.communities}) {}
+      this.communities,
+      this.emailSent}) {}
 
   UserModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('tokens')) {
@@ -95,7 +97,11 @@ class UserModel extends DataModel {
     } else {
       this.pastHires = [];
     }
-
+    if (map.containsKey('emailSent')) {
+      this.emailSent = map['emailSent']??false;
+    }else{
+      this.emailSent = false;
+    }
     if (map.containsKey('acceptedEULA')) {
       this.acceptedEULA = map['acceptedEULA'];
     }
