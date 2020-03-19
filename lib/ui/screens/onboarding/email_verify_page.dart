@@ -124,10 +124,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
             child: RaisedButton(
               child: Text('Log in'),
               onPressed: () {
-                widget.firebaseUser.sendEmailVerification().then((value) {
-                  _signOut(context);
-                  Navigator.of(context).pop();
-                });
+                _signOut(context);
               },
             ),
           ),
