@@ -14,6 +14,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
@@ -257,16 +258,7 @@ class _ProfilePageState extends State<ProfilePage>
                                   ],
                                 ),
                                 SizedBox(width: 8),
-                                Text(
-                                  '${sevaCoinsValue} Seva Coins',
-                                  style: TextStyle(
-                                    color: user.currentBalance > 0
-                                        ? Colors.blue
-                                        : Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
+                                getMembersSevaCoinBalance()
                               ],
                             ),
                             onPressed: () {
@@ -873,6 +865,50 @@ class _ProfilePageState extends State<ProfilePage>
   //     ),
   //   );
   // }
+
+  Widget getMembersSevaCoinBalance() {
+    return FutureBuilder<double>(
+      future: getMemberBalance(
+        SevaCore.of(context).loggedInUser.email,
+        SevaCore.of(context).loggedInUser.sevaUserID,
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('',
+              style: TextStyle(
+                color: user.currentBalance > 0 ? Colors.blue : Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ));
+        }
+        if (snapshot.hasError) {
+          return Text('couldn\'t load balance',
+              style: TextStyle(
+                color: user.currentBalance > 0 ? Colors.blue : Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ));
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text('fetching balance...',
+              style: TextStyle(
+                color: user.currentBalance > 0 ? Colors.blue : Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ));
+        }
+        return Text(
+          "${snapshot.data} Seva Coins",
+          style: TextStyle(
+            color: user.currentBalance > 0 ? Colors.blue : Colors.red,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        );
+      },
+    );
+  }
 
   void _showVerificationAndLogoutDialogue() {
     // flutter defined function

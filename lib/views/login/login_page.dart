@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +12,8 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/app_config.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/login/register_page.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
@@ -30,6 +35,16 @@ class _LoginPageState extends State<LoginPage> {
   String password;
   bool _shouldObscurePassword = true;
   Color enabled = Colors.white.withAlpha(120);
+
+  void initState() {
+    fetchRemoteConfig();
+  }
+
+  Future<void> fetchRemoteConfig() async {
+    AppConfig.remoteConfig = await RemoteConfig.instance;
+    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 5));
+    AppConfig.remoteConfig.activateFetched();
+  }
 
   Widget horizontalLine() => Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -106,11 +121,11 @@ class _LoginPageState extends State<LoginPage> {
                                 ..onTap = showPrivacyPolicyPage),
                           TextSpan(text: ' and'),
                           TextSpan(
-                              text: ' Cookie Policy',
+                              text: ' Payment Policy.',
                               style: TextStyle(
                                   color: Theme.of(context).accentColor),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = showCookiePolicyPage),
+                                ..onTap = showPaymentPolicyPage),
                         ],
                       ),
                     ),
@@ -853,9 +868,48 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  void showTermsPage() {}
-  void showPrivacyPolicyPage() {}
-  void showCookiePolicyPage() {
-    print('cookies clicked');
+  void showTermsPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    print('terms page clicked ' + dynamicLinks['termsAndConditionsLink']);
+
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Terms of Service",
+          urlToHit: dynamicLinks['termsAndConditionsLink']),
+      context: context,
+    );
+  }
+
+  void showPrivacyPolicyPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    print('privacy policy clicked ' + dynamicLinks['privacyPolicyLink']);
+
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Privacy Policy", urlToHit: dynamicLinks['privacyPolicyLink']),
+      context: context,
+    );
+  }
+
+  void showPaymentPolicyPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    print('payment clicked ' + dynamicLinks['paymentPolicyLink']);
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Payment Policy", urlToHit: dynamicLinks['paymentPolicyLink']),
+      context: context,
+    );
+  }
+
+  void navigateToWebView({
+    BuildContext context,
+    AboutMode aboutMode,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SevaWebView(aboutMode),
+      ),
+    );
   }
 }
