@@ -23,13 +23,17 @@ class ShowLimitBadge extends StatelessWidget {
             width: double.infinity,
             color: Colors.red,
             alignment: Alignment.center,
-            child: Text(
-              isAdmin
-                  ? 'Payment Failed : ' +
-                          _userBloc.community.payment['message'] ??
-                      "Payment Data Syncing"
-                  : "Actions not allowed, Please contact admin",
-              style: TextStyle(color: Colors.white),
+            child: Center(
+              child: Text(
+                isAdmin
+                    ? (_userBloc.community.payment['message'] != null
+                        ? 'Payment Failed : ' +
+                            _userBloc.community.payment['message']
+                        : "Payment Data Syncing")
+                    : "Actions not allowed, Please contact admin",
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         );
