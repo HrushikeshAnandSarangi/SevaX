@@ -147,7 +147,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
               text: data,
             ),
             TextSpan(
-              text: ' change plan',
+              text: data != "" ? ' change plan' : 'View selected plans',
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 16,
@@ -160,8 +160,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                         builder: (context) => BillingPlanDetails(
                           user: SevaCore.of(context).loggedInUser,
                           planName: cardModel.currentPlan,
-                          isPlanActive: true,
+                          isPlanActive: data != "",
                           autoImplyLeading: true,
+                          
                         ),
                       ),
                     ),

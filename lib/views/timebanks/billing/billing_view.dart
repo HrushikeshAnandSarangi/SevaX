@@ -298,7 +298,7 @@ class BillingViewState extends State<BillingView> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text('Card Added'),
-              Text('Loading Timebank ...'),
+              Text('It may take couple of minutes to synchronize your payment'),
             ],
           ),
         );
