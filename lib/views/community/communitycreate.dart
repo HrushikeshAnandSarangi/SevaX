@@ -1085,7 +1085,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[4]);
+            FocusScope.of(context).requestFocus(focusNodes[5]);
           },
           onChanged: (value) {
             print(value);
@@ -1099,7 +1099,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[3],
+          focusNode: focusNodes[4],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -1225,7 +1225,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[3]);
+            FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -1238,7 +1238,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[2],
+          focusNode: focusNodes[3],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Country Name",
