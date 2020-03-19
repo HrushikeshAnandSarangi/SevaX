@@ -33,7 +33,7 @@ class BillingViewState extends State<BillingView> {
         publishableKey: 'pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN',
         // publishableKey: 'pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832',
         merchantId: 'acct_1BuMJNIPTZX4UEIO',
-        androidPayMode: 'live',
+        androidPayMode: 'production',
         // androidPayMode: 'test',
       ),
     );
