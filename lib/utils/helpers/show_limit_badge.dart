@@ -25,7 +25,8 @@ class ShowLimitBadge extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               isAdmin
-                  ? _userBloc.community.payment['message'] ??
+                  ? 'Payment Failed : ' +
+                          _userBloc.community.payment['message'] ??
                       "Payment Data Syncing"
                   : "Actions not allowed, Please contact admin",
               style: TextStyle(color: Colors.white),
