@@ -15,17 +15,17 @@ import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import '../../flavor_config.dart';
 import '../core.dart';
 
-class TimeBankExistingRequests extends StatefulWidget {
+class AdminPersonalRequests extends StatefulWidget {
   final String timebankId;
   final BuildContext parentContext;
   final UserModel userModel;
-  bool isAdmin;
+  final bool isTimebankRequest;
 
-  TimeBankExistingRequests(
+  AdminPersonalRequests(
       {Key key,
       this.timebankId,
       this.parentContext,
-      this.isAdmin,
+      this.isTimebankRequest,
       this.userModel});
 
   @override
@@ -33,7 +33,7 @@ class TimeBankExistingRequests extends StatefulWidget {
       _TimeBankExistingRequestsState();
 }
 
-class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
+class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   TimebankModel timebankModel;
 
   @override
@@ -51,12 +51,14 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(
-//        title: Text(
-//          "Existing Requests",
-//          style: TextStyle(fontSize: 18),
-//        ),
-//      ),
+      appBar: !widget.isTimebankRequest
+          ? AppBar(
+              title: Text(
+                "Existing Requests",
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+          : null,
       body: FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -68,8 +70,8 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
               return Center(child: CircularProgressIndicator());
             }
             return StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getTimebankRequestListStream(
-                  timebankId: widget.timebankId),
+              stream: FirestoreManager.getPersonalRequestListStream(
+                  sevauserid: SevaCore.of(context).loggedInUser.sevaUserID),
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
                 if (requestListSnapshot.hasError) {

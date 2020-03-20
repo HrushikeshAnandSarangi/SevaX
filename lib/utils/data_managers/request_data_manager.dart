@@ -136,6 +136,35 @@ Stream<List<RequestModel>> getTimebankRequestListStream(
   );
 }
 
+Stream<List<RequestModel>> getPersonalRequestListStream(
+    {String sevauserid}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('sevauserid', isEqualTo: sevauserid)
+      .where('accepted', isEqualTo: false);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
 Stream<List<RequestModel>> getNearRequestListStream(
     {String timebankId}) async* {
   // LocationData pos = await location.getLocation();
