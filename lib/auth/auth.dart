@@ -15,6 +15,7 @@ import 'package:sevaexchange/utils/preference_manager.dart';
 class Auth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final AppleSignIn _appleSignIn = AppleSignIn();
 
   /// Initiate the Google SignIn process and save the signed in user to
   /// the Shared Preferences
@@ -43,6 +44,43 @@ class Auth {
     )) as FirebaseUser;
 
     return _processGoogleUser(user);
+  }
+
+  Future<UserModel> signInWithApple() async {
+    if (await AppleSignIn.isAvailable()) {
+      final AuthorizationResult result = await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+      print("Result:${AuthorizationStatus.error}");
+      switch (result.status) {
+        case AuthorizationStatus.authorized:
+          final AppleIdCredential _auth = result.credential;
+          final OAuthProvider oAuthProvider =
+              new OAuthProvider(providerId: "apple.com");
+          final AuthCredential credential = oAuthProvider.getCredential(
+            idToken: String.fromCharCodes(_auth.identityToken),
+            accessToken: String.fromCharCodes(_auth.authorizationCode),
+          );
+          FirebaseUser user = (await _firebaseAuth.signInWithCredential(
+            credential,
+          )) as FirebaseUser;
+
+          return _processGoogleUser(user);
+//          FirebaseAuth.instance.signInWithCredential(credential);
+//          FirebaseAuth.instance.currentUser().then((value) async {});
+//          break;
+        case AuthorizationStatus.error:
+          print("Sign in failed");
+          break;
+        case AuthorizationStatus.cancelled:
+          print("Sign in cancelled");
+          break;
+        default:
+          break;
+      }
+    } else {
+      print("AppleSignIn.isNotAvailable");
+    }
   }
 
   /// SignIn a User with his [email] and [password]
@@ -91,43 +129,6 @@ class Auth {
     }
   }
 
-  Future<UserModel> signInWithApple() async {
-    if (await AppleSignIn.isAvailable()) {
-      final AuthorizationResult result = await AppleSignIn.performRequests([
-        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-      ]);
-      print("Result:${AuthorizationStatus.error}");
-      switch (result.status) {
-        case AuthorizationStatus.authorized:
-          final AppleIdCredential _auth = result.credential;
-          final OAuthProvider oAuthProvider =
-              new OAuthProvider(providerId: "apple.com");
-          final AuthCredential credential = oAuthProvider.getCredential(
-            idToken: String.fromCharCodes(_auth.identityToken),
-            accessToken: String.fromCharCodes(_auth.authorizationCode),
-          );
-          FirebaseUser user = (await _firebaseAuth.signInWithCredential(
-            credential,
-          )) as FirebaseUser;
-
-          return _processGoogleUser(user);
-//          FirebaseAuth.instance.signInWithCredential(credential);
-//          FirebaseAuth.instance.currentUser().then((value) async {});
-//          break;
-        case AuthorizationStatus.error:
-          print("Sign in failed");
-          break;
-        case AuthorizationStatus.cancelled:
-          print("Sign in cancelled");
-          break;
-        default:
-          break;
-      }
-    } else {
-      print("AppleSignIn.isNotAvailable");
-    }
-  }
-
   // /// Register a User with [email] and [password]
   // Future<UserModel> createUserWithEmailAndPassword({
   //   @required String email,
@@ -163,6 +164,7 @@ class Auth {
   /// Sign out the logged in user and clear all user preferences
   Future<void> signOut() async {
     await _googleSignIn.signOut();
+    await _appleSignIn.signOut();
     await _firebaseAuth.signOut();
     await PreferenceManager.logout();
     return;
