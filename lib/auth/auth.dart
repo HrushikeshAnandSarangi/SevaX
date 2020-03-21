@@ -48,9 +48,10 @@ class Auth {
 
   Future<UserModel> signInWithApple() async {
     if (await AppleSignIn.isAvailable()) {
-      final AuthorizationResult result = await AppleSignIn.performRequests([
-        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
-      ]);
+      final AppleIdRequest request =
+          AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName]);
+      final AuthorizationResult result =
+          await AppleSignIn.performRequests([request]);
       print("Result:${AuthorizationStatus.error}");
       switch (result.status) {
         case AuthorizationStatus.authorized:
