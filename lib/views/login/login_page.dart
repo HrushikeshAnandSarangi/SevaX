@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
-import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
@@ -850,14 +849,6 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget get signInWithApple {
     if (Platform.isIOS) {
-      //check for ios if developing for both android & ios
-////      AppleSignIn.onCredentialRevoked.listen((_) {
-//        return AppleSignInButton(
-//          style: ButtonStyle.black,
-//          type: ButtonType.continueButton,
-//          onPressed: appleLogIn,
-//        );
-//      });
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -872,27 +863,22 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(
             height: ScreenUtil.getInstance().setHeight(20),
           ),
-          AppleSignInButton(
-            style: ButtonStyle.black,
-            type: ButtonType.continueButton,
-            onPressed: appleLogIn,
+          Material(
+            color: Colors.white,
+            shape: CircleBorder(),
+            child: InkWell(
+              customBorder: CircleBorder(),
+              onTap: appleLogIn,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Image.asset('lib/assets/images/apple-logo.jpg'),
+                ),
+              ),
+            ),
           ),
-//          Material(
-//            color: Colors.white,
-//            shape: CircleBorder(),
-//            child: InkWell(
-//              customBorder: CircleBorder(),
-//              onTap: appleLogIn,
-//              child: Padding(
-//                padding: const EdgeInsets.all(8.0),
-//                child: SizedBox(
-//                  height: 24,
-//                  width: 24,
-//                  child: Image.asset('lib/assets/images/apple-logo.jpg'),
-//                ),
-//              ),
-//            ),
-//          ),
         ],
       );
     }

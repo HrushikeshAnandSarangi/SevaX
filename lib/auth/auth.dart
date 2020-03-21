@@ -62,11 +62,10 @@ class Auth {
             idToken: String.fromCharCodes(_auth.identityToken),
             accessToken: String.fromCharCodes(_auth.authorizationCode),
           );
-          FirebaseUser user = (await _firebaseAuth.signInWithCredential(
-            credential,
-          )) as FirebaseUser;
+          AuthResult _result =
+              await _firebaseAuth.signInWithCredential(credential);
 
-          return _processGoogleUser(user);
+          return _processGoogleUser(_result.user);
         case AuthorizationStatus.error:
           print("Sign in failed");
           break;
