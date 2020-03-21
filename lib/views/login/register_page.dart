@@ -82,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage>
           children: <Widget>[
             SingleChildScrollView(
                 child: FadeAnimation(
-                    1.4,  
+                    1.4,
                     Padding(
                         padding:
                             EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
@@ -491,7 +491,7 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-        
+
       log('createUser: error: ${error.toString()}');
       return null;
     }
@@ -601,24 +601,79 @@ class _RegisterPageState extends State<RegisterPage>
         SizedBox(
           height: ScreenUtil.getInstance().setHeight(20),
         ),
-        Material(
-          color: Colors.white,
-          shape: CircleBorder(),
-          child: InkWell(
-            customBorder: CircleBorder(),
-            onTap: useGoogleSignIn,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 24,
-                width: 24,
-                child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
-              ),
-            ),
-          ),
-        ),
+        socialMediaLogin,
       ],
     );
+  }
+
+  Widget get socialMediaLogin {
+    if (Platform.isIOS) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Divider(),
+          googleLogin,
+          Divider(),
+          appleLogin,
+          Divider(),
+        ],
+      );
+    }
+    return Center(
+      child: googleLogin,
+    );
+  }
+
+  Widget get googleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: useGoogleSignIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get appleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: appleLogIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/images/apple-logo.jpg'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void appleLogIn() async {
+    isLoading = true;
+    Auth auth = AuthProvider.of(context).auth;
+    UserModel user;
+    try {
+      user = await auth.signInWithApple();
+      print("User apple:$user");
+    } on PlatformException catch (erorr) {
+      handlePlatformException(erorr);
+    } on Exception catch (error) {}
+    isLoading = false;
+    _processLogin(user);
   }
 
   Widget horizontalLine() => Padding(
@@ -638,21 +693,20 @@ class _RegisterPageState extends State<RegisterPage>
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
       if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-      
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text("This email already registered"),
-          action: SnackBarAction(
-            label: 'Dismiss',
-            onPressed: () {
-              _scaffoldKey.currentState.hideCurrentSnackBar();
-            },
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text("This email already registered"),
+            action: SnackBarAction(
+              label: 'Dismiss',
+              onPressed: () {
+                _scaffoldKey.currentState.hideCurrentSnackBar();
+              },
+            ),
           ),
-        ),
-      );
-    
-       print(" ${email} already registered");
-     }
+        );
+
+        print(" ${email} already registered");
+      }
       print("Platform Exception --->  $erorr");
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -713,7 +767,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
       );
-    } 
+    }
   }
 
   Future<void> resetPassword(String email) async {
@@ -732,4 +786,3 @@ class _RegisterPageState extends State<RegisterPage>
     });
   }
 }
-

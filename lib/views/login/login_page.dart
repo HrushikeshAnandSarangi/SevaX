@@ -41,10 +41,11 @@ class _LoginPageState extends State<LoginPage> {
 
   void initState() {
 //    checkLoggedInState();
-
-    AppleSignIn.onCredentialRevoked.listen((_) {
-      print("Credentials revoked");
-    });
+    if (Platform.isIOS) {
+      AppleSignIn.onCredentialRevoked.listen((_) {
+        print("Credentials revoked");
+      });
+    }
     fetchRemoteConfig();
   }
 
@@ -428,11 +429,8 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 8),
                     Text('or'),
                     SizedBox(height: 8),
-                    signInWithGoogle,
+                    signInWithSocialMedia,
                     SizedBox(height: 8),
-                    Text('or'),
-                    SizedBox(height: 8),
-                    signInWithApple,
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
@@ -812,7 +810,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Widget get signInWithGoogle {
+  Widget get signInWithSocialMedia {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -827,62 +825,65 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: ScreenUtil.getInstance().setHeight(20),
         ),
-        Material(
-          color: Colors.white,
-          shape: CircleBorder(),
-          child: InkWell(
-            customBorder: CircleBorder(),
-            onTap: useGoogleSignIn,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 24,
-                width: 24,
-                child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
-              ),
-            ),
-          ),
-        ),
+        socialMediaLogin,
       ],
     );
   }
 
-  Widget get signInWithApple {
+  Widget get socialMediaLogin {
     if (Platform.isIOS) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              horizontalLine(),
-              Text("Sign in with"),
-              horizontalLine()
-            ],
-          ),
-          SizedBox(
-            height: ScreenUtil.getInstance().setHeight(20),
-          ),
-          Material(
-            color: Colors.white,
-            shape: CircleBorder(),
-            child: InkWell(
-              customBorder: CircleBorder(),
-              onTap: appleLogIn,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: Image.asset('lib/assets/images/apple-logo.jpg'),
-                ),
-              ),
-            ),
-          ),
+          Divider(),
+          googleLogin,
+          Divider(),
+          appleLogin,
+          Divider(),
         ],
       );
     }
-    return Container();
+    return Center(
+      child: googleLogin,
+    );
+  }
+
+  Widget get googleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: useGoogleSignIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get appleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: appleLogIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/images/apple-logo.jpg'),
+          ),
+        ),
+      ),
+    );
   }
 
   void appleLogIn() async {
