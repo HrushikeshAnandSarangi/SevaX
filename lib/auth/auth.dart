@@ -66,9 +66,6 @@ class Auth {
           )) as FirebaseUser;
 
           return _processGoogleUser(user);
-//          FirebaseAuth.instance.signInWithCredential(credential);
-//          FirebaseAuth.instance.currentUser().then((value) async {});
-//          break;
         case AuthorizationStatus.error:
           print("Sign in failed");
           break;
@@ -164,7 +161,6 @@ class Auth {
   /// Sign out the logged in user and clear all user preferences
   Future<void> signOut() async {
     await _googleSignIn.signOut();
-    await _appleSignIn.signOut();
     await _firebaseAuth.signOut();
     await PreferenceManager.logout();
     return;
