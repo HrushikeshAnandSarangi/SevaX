@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -389,6 +390,10 @@ class _LoginPageState extends State<LoginPage> {
                     Text('or'),
                     SizedBox(height: 8),
                     signInWithGoogle,
+                    SizedBox(height: 8),
+                    Text('or'),
+                    SizedBox(height: 8),
+                    signInWithApple,
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
@@ -730,6 +735,66 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
     );
+  }
+
+  Widget get signInWithApple {
+    if (Platform.isIOS) {
+      //check for ios if developing for both android & ios
+////      AppleSignIn.onCredentialRevoked.listen((_) {
+//        return AppleSignInButton(
+//          style: ButtonStyle.black,
+//          type: ButtonType.continueButton,
+//          onPressed: appleLogIn,
+//        );
+//      });
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              horizontalLine(),
+              Text("Sign in with"),
+              horizontalLine()
+            ],
+          ),
+          SizedBox(
+            height: ScreenUtil.getInstance().setHeight(20),
+          ),
+          Material(
+            color: Colors.white,
+            shape: CircleBorder(),
+            child: InkWell(
+              customBorder: CircleBorder(),
+              onTap: appleLogIn,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: Image.asset('lib/assets/images/apple-logo.jpg'),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    return Container();
+  }
+
+  void appleLogIn() async {
+    isLoading = true;
+    Auth auth = AuthProvider.of(context).auth;
+    UserModel user;
+    try {
+      user = await auth.signInWithApple();
+      print("User apple:$user");
+    } on PlatformException catch (erorr) {
+      handlePlatformException(erorr);
+    } on Exception catch (error) {}
+    isLoading = false;
+    _processLogin(user);
   }
 
   Widget get poweredBySevaLogo {

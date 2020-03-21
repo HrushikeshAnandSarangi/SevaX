@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -63,36 +64,69 @@ class Auth {
     return _processGoogleUser(user);
   }
 
+  /// Register a User with [email] and [password]
+  Future<UserModel> createUserWithEmailAndPassword({
+    @required String email,
+    @required String password,
+    @required String displayName,
+  }) async {
+    try {
+      FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      ) as FirebaseUser);
+      return _processEmailPasswordUser(user, displayName);
+    } on PlatformException catch (error) {
+      if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
+        print(" ${email} already registered");
+      }
+      print("signup error $error");
+      throw error;
+    } catch (error) {
+      log('createUserWithEmailAndPassword: error: ${error.toString()}');
+      print(" ${email} already registered");
+      print("signup error $error");
 
- /// Register a User with [email] and [password]
- Future<UserModel> createUserWithEmailAndPassword({
-   @required String email,
-   @required String password,
-   @required String displayName,
- }) async {
-   try {
-     FirebaseUser user = (await _firebaseAuth
-         .createUserWithEmailAndPassword(
-           email: email,
-           password: password,
-         ) as FirebaseUser);
-     return _processEmailPasswordUser(user, displayName);
-   } on PlatformException catch (error) {
-     if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-       
-       print(" ${email} already registered");
-     }
-     print("signup error $error");
-     throw error;
-   } catch (error) {
-     log('createUserWithEmailAndPassword: error: ${error.toString()}');
-     print(" ${email} already registered");
-     print("signup error $error");
+      return null;
+    }
+  }
 
-     return null;
-   }
- }
+  Future<UserModel> signInWithApple() async {
+    if (await AppleSignIn.isAvailable()) {
+      final AuthorizationResult result = await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+      print("Result:${AuthorizationStatus.error}");
+      switch (result.status) {
+        case AuthorizationStatus.authorized:
+          final AppleIdCredential _auth = result.credential;
+          final OAuthProvider oAuthProvider =
+              new OAuthProvider(providerId: "apple.com");
+          final AuthCredential credential = oAuthProvider.getCredential(
+            idToken: String.fromCharCodes(_auth.identityToken),
+            accessToken: String.fromCharCodes(_auth.authorizationCode),
+          );
+          FirebaseUser user = (await _firebaseAuth.signInWithCredential(
+            credential,
+          )) as FirebaseUser;
 
+          return _processGoogleUser(user);
+//          FirebaseAuth.instance.signInWithCredential(credential);
+//          FirebaseAuth.instance.currentUser().then((value) async {});
+//          break;
+        case AuthorizationStatus.error:
+          print("Sign in failed");
+          break;
+        case AuthorizationStatus.cancelled:
+          print("Sign in cancelled");
+          break;
+        default:
+          break;
+      }
+    } else {
+      print("AppleSignIn.isNotAvailable");
+    }
+  }
 
   // /// Register a User with [email] and [password]
   // Future<UserModel> createUserWithEmailAndPassword({
