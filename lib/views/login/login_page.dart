@@ -839,9 +839,13 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             googleLoginiPhone,
-            Divider(),
+            Container(
+              height: 10,
+            ),
             appleLoginiPhone,
-            Divider(),
+            Container(
+              height: 10,
+            ),
           ],
         ),
       );
@@ -871,25 +875,46 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget get googleLoginiPhone {
-    return Material(
-      color: Colors.white,
-      shape: CircleBorder(),
-      child: Center(
-        child: GoogleSignInButton(
-          onPressed: useGoogleSignIn,
+    return Container(
+      width: 220,
+      height: 40,
+      child: Material(
+        color: Colors.white,
+        shape: CircleBorder(),
+        child: Center(
+          child: GoogleSignInButton(
+            onPressed: useGoogleSignIn,
+          ),
         ),
       ),
     );
   }
 
   Widget get appleLoginiPhone {
-    return Material(
-      color: Colors.white,
-      shape: CircleBorder(),
-      child: AppleSignInButton(
-        style: ButtonStyle.black,
-        type: ButtonType.continueButton,
-        onPressed: appleLogIn,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 2.0, // has the effect of softening the shadow
+            spreadRadius: 1.0, // has the effect of extending the shadow
+            offset: Offset(
+              2.0, // horizontal, move right 10
+              2.0, // vertical, move down 10
+            ),
+          )
+        ],
+      ),
+      width: 210,
+      height: 40,
+      child: Material(
+        color: Colors.black,
+        shape: CircleBorder(),
+        child: AppleSignInButton(
+          style: ButtonStyle.white,
+          type: ButtonType.continueButton,
+          onPressed: appleLogIn,
+        ),
       ),
     );
   }
