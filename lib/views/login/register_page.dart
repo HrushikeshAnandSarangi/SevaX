@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -608,13 +610,12 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get socialMediaLogin {
     if (Platform.isIOS) {
-      return Row(
+      return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          googleLoginiPhone,
           Divider(),
-          googleLogin,
-          Divider(),
-          appleLogin,
+          appleLoginiPhone,
           Divider(),
         ],
       );
@@ -643,21 +644,24 @@ class _RegisterPageState extends State<RegisterPage>
     );
   }
 
-  Widget get appleLogin {
+  Widget get googleLoginiPhone {
     return Material(
       color: Colors.white,
       shape: CircleBorder(),
-      child: InkWell(
-        customBorder: CircleBorder(),
-        onTap: appleLogIn,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: Image.asset('lib/assets/images/apple-logo.jpg'),
-          ),
-        ),
+      child: GoogleSignInButton(
+        onPressed: useGoogleSignIn,
+      ),
+    );
+  }
+
+  Widget get appleLoginiPhone {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: AppleSignInButton(
+        style: ButtonStyle.black,
+        type: ButtonType.continueButton,
+        onPressed: appleLogIn,
       ),
     );
   }
