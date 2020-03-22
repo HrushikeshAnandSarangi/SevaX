@@ -39,11 +39,14 @@ class Auth {
 
     //AuthResult user = await _firebaseAuth.signInWithCredential(credential);
 
-    FirebaseUser user = (await _firebaseAuth.signInWithCredential(
-      credential,
-    )) as FirebaseUser;
+//    FirebaseUser user = (await _firebaseAuth.signInWithCredential(
+//      credential,
+//    )) as FirebaseUser;
+//
+//    return _processGoogleUser(user);
+    AuthResult _result = await _firebaseAuth.signInWithCredential(credential);
 
-    return _processGoogleUser(user);
+    return _processGoogleUser(_result.user);
   }
 
   Future<UserModel> signInWithApple() async {
