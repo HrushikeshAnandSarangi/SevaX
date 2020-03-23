@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/communitycreate.dart';
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
@@ -21,18 +24,126 @@ class ManageTimebankSeva extends StatefulWidget {
 
 class _ManageTimebankSeva extends State<ManageTimebankSeva> {
   var _indextab = 0;
+
+  CommunityModel communityModel = CommunityModel({});
+  bool isSuperAdmin = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("creator id ${widget.timebankModel.communityId}");
+    Future.delayed(Duration.zero, () {
+      FirestoreManager.getCommunityDetailsByCommunityId(
+              communityId: widget.timebankModel.communityId)
+          .then((onValue) {
+        communityModel = onValue;
+        if (SevaCore.of(context).loggedInUser.sevaUserID ==
+            communityModel.created_by) {
+          isSuperAdmin = true;
+          setState(() {});
+        }
+        print("creator id -----> ${communityModel.created_by}");
+      });
+    });
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("seva id ${SevaCore.of(context).loggedInUser.sevaUserID}");
+
+    if (isSuperAdmin) {
+      return DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
+            children: <Widget>[
+              TabBar(
+                indicatorColor: Colors.black,
+                labelColor: Colors.black,
+                isScrollable: false,
+                tabs: <Widget>[
+                  Tab(text: "About"),
+                  // Tab(text: "Upgrade"),
+                  Tab(text: "Billings"),
+                  Tab(text: "Settings"),
+                ],
+//              onTap: (index) {
+//                if (_indextab != index) {
+//                  _indextab = index;
+//                  setState(() {});
+//                }
+//              },
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    CreateEditCommunityView(
+                      isCreateTimebank: false,
+                      isFromFind: false,
+                      timebankId: widget.timebankModel.id,
+                    ),
+                    TimeBankBillingAdminView(),
+                    Settings,
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Column(
+            children: <Widget>[
+              TabBar(
+                indicatorColor: Colors.black,
+                labelColor: Colors.black,
+                isScrollable: false,
+                tabs: <Widget>[
+                  Tab(text: "About"),
+                  Tab(text: "Settings"),
+                ],
+//                onTap: (index) {
+//                  if (_indextab != index) {
+//                    _indextab = index;
+//                    setState(() {});
+//                  }
+//                },
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    CreateEditCommunityView(
+                      isCreateTimebank: false,
+                      isFromFind: false,
+                      timebankId: widget.timebankModel.id,
+                    ),
+                    Settings,
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget superAdminView() {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.white,
-            bottom: TabBar(
+        body: Column(
+          children: <Widget>[
+            TabBar(
               indicatorColor: Colors.black,
               labelColor: Colors.black,
               isScrollable: false,
@@ -42,17 +153,43 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 Tab(text: "Billings"),
                 Tab(text: "Settings"),
               ],
-              onTap: (index) {
-                if (_indextab != index) {
-                  _indextab = index;
-                  setState(() {});
-                }
-              },
+//              onTap: (index) {
+//                if (_indextab != index) {
+//                  _indextab = index;
+//                  setState(() {});
+//                }
+//              },
             ),
-          ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  CreateEditCommunityView(
+                    isCreateTimebank: false,
+                    isFromFind: false,
+                    timebankId: widget.timebankModel.id,
+                  ),
+                  TimeBankBillingAdminView(),
+                  Settings,
+                ],
+              ),
+            ),
+          ],
         ),
-        body: bodyWidget,
       ),
+    );
+  }
+
+  Widget get normalAdminWidget {
+    return IndexedStack(
+      index: _indextab,
+      children: <Widget>[
+        CreateEditCommunityView(
+          isCreateTimebank: false,
+          isFromFind: false,
+          timebankId: widget.timebankModel.id,
+        ),
+        Settings,
+      ],
     );
   }
 
@@ -227,28 +364,28 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
     );
   }
 
-  viewBillingPage({BuildContext context}) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => TimeBankBillingAdminView(),
-          ),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Text(
-          'Admin Billing',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-          ),
-        ),
-      ),
-    );
-  }
+//  viewBillingPage({BuildContext context}) {
+//    return GestureDetector(
+//      onTap: () {
+//        Navigator.of(context).push(
+//          MaterialPageRoute(
+//            builder: (context) => TimeBankBillingAdminView(),
+//          ),
+//        );
+//      },
+//      child: Container(
+//        margin: EdgeInsets.only(top: 20),
+//        child: Text(
+//          'Admin Billing',
+//          style: TextStyle(
+//            fontSize: 14,
+//            fontWeight: FontWeight.bold,
+//            color: Colors.blue,
+//          ),
+//        ),
+//      ),
+//    );
+//  }
 
   Widget get bodyWidget {
     return IndexedStack(
@@ -344,7 +481,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
             height: 30,
           ),
           viewRequests(context: context),
-          viewAcceptedOffers(context: context),
+          // viewAcceptedOffers(context: context),
           manageTimebankCodes(context: context),
 //          billingView(context: context),
         ],

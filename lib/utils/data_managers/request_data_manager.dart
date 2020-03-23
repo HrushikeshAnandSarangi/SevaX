@@ -607,7 +607,6 @@ Stream<List<RequestModel>> getCompletedRequestStream({
         List<RequestModel> requestList = [];
         snapshot.documents.forEach((document) {
           RequestModel model = RequestModel.fromMap(document.data);
-
           model.id = document.documentID;
           bool isRequestCompleted = false;
 
@@ -619,10 +618,56 @@ Stream<List<RequestModel>> getCompletedRequestStream({
           if (isRequestCompleted) requestList.add(model);
         });
         requestSink.add(requestList);
-        //  print("request model --- ${requestList.toString()}");
+
+        print("request model --->>> ${requestList.toString()}");
       },
     ),
   );
+}
+
+Future<double> getMemberBalance(userEmail, userId) {
+  double sevaCoins = 0;
+  return Firestore.instance
+      .collection('requests')
+      .where('approvedUsers', arrayContains: userEmail)
+      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+      .getDocuments()
+      .then((QuerySnapshot querySnapshot) async {
+    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+      model.transactions?.forEach((transaction) {
+        if (transaction.isApproved && transaction.to == userId)
+          sevaCoins += transaction.credits;
+      });
+    });
+
+    double myDebits = await getMyDebits(userEmail, userId);
+
+    return sevaCoins - myDebits;
+  }).catchError((onError) {
+    return sevaCoins;
+  });
+}
+
+Future<double> getMyDebits(userEmail, userId) {
+  double myDebits = 0;
+  return Firestore.instance
+      .collection('requests')
+      .where('email', isEqualTo: userEmail)
+      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+      .getDocuments()
+      .then((QuerySnapshot querySnapshot) {
+    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+      model.transactions?.forEach((transaction) {
+        if (transaction.isApproved && transaction.from == userId)
+          myDebits += transaction.credits;
+      });
+    });
+    return myDebits;
+  }).catchError((onError) {
+    return myDebits;
+  });
 }
 
 Stream<List<RequestModel>> getNotAcceptedRequestStream({

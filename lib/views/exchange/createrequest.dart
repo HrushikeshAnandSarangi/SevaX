@@ -1,15 +1,21 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -88,16 +94,17 @@ class RequestCreateForm extends StatefulWidget {
 }
 
 class RequestCreateFormState extends State<RequestCreateForm> {
-  final GlobalKey<_CreateRequestState> _offerState = GlobalKey();
-  final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
+//  final GlobalKey<_CreateRequestState> _offerState = GlobalKey();
+//  final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
 
   final _formKey = GlobalKey<FormState>();
 
   RequestModel requestModel = RequestModel();
   GeoFirePoint location;
 
-  String _dateMessageStart = ' START date and time ';
-  String _dateMessageEnd = '  END date and time ';
+//  String _dateMessageStart = ' START date and time ';
+//  String _dateMessageEnd = '  END date and time ';
+  double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
   String selectedAddress;
 
@@ -109,6 +116,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+
+    // print("Email goes like this " + SevaCore.of(context).loggedInUser.email);
+    fetchRemoteConfig();
 
     print(location);
   }
@@ -332,6 +342,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
+                  initialValue:
+                      widget.isOfferRequest != null && widget.isOfferRequest
+                          ? widget.offer.description
+                          : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
                   validator: (value) {
@@ -445,6 +459,36 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       selectedUsers.forEach((k, v) => arrayOfSelectedMembers.add(k));
     }
     requestModel.approvedUsers = arrayOfSelectedMembers;
+
+    sevaCoinsValue = await getMemberBalance(
+      SevaCore.of(context).loggedInUser.email,
+      SevaCore.of(context).loggedInUser.sevaUserID,
+    );
+
+    if (_formKey.currentState.validate() && !_checkValidityForSevaCoins) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext viewContext) {
+            return AlertDialog(
+              title:
+                  Text('Insufficient seva coins for user to process requests'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(viewContext).pop();
+                  },
+                ),
+              ],
+            );
+          });
+    }
+
     //adding some members for humanity first
     if (_formKey.currentState.validate()) {
       if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
@@ -560,6 +604,46 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
+  String getTimeInFormat(int timeStamp) {
+    return DateFormat('EEEEEEE, MMMM dd yyyy').format(
+      getDateTimeAccToUserTimezone(
+          dateTime: DateTime.fromMillisecondsSinceEpoch(timeStamp),
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone),
+    );
+  }
+
+  bool get _checkValidityForSevaCoins {
+    if (requestModel.requestStart == null) {
+      requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
+    }
+
+    if (requestModel.requestEnd == null) {
+      requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
+    }
+
+    print(getTimeInFormat(requestModel.requestStart) +
+        " <- Start   -> End " +
+        getTimeInFormat(requestModel.requestEnd));
+
+    var diffDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd)
+        .difference(
+            DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart));
+    var requestCoins = diffDate.inHours * requestModel.numberOfApprovals;
+    print("Hours:${diffDate.inHours} --> " +
+        requestModel.numberOfApprovals.toString());
+    print("Number of seva coins:${requestCoins.abs()}");
+    print("Seva coin available:${sevaCoinsValue.abs()}");
+
+    var lowerLimit =
+        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+
+    var finalbalance = (sevaCoinsValue.abs() + lowerLimit ?? 10).abs();
+
+    print("Final amount in hand:${finalbalance}");
+
+    return requestCoins.abs() <= finalbalance;
+  }
+
   Future _writeToDB() async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
@@ -593,5 +677,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     setState(() {
       this.selectedAddress = address;
     });
+  }
+
+  Future<void> fetchRemoteConfig() async {
+    AppConfig.remoteConfig = await RemoteConfig.instance;
+    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
+    AppConfig.remoteConfig.activateFetched();
   }
 }

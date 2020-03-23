@@ -5,7 +5,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -18,11 +17,13 @@ class FindCommunitiesView extends StatefulWidget {
   final bool keepOnBackPress;
   final UserModel loggedInUser;
   final bool showBackBtn;
+  final bool isFromHome;
 
   FindCommunitiesView(
       {@required this.keepOnBackPress,
       @required this.loggedInUser,
-      @required this.showBackBtn});
+      @required this.showBackBtn,
+      @required this.isFromHome});
 
   @override
   State<StatefulWidget> createState() {
@@ -69,31 +70,29 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   @override
   Widget build(BuildContext context) {
     bool showBachBtn = widget.showBackBtn;
-    return MaterialApp(
-      title: AppConfig.appName,
-      theme: FlavorConfig.values.theme,
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          // automaticallyImplyLeading: widget.keepOnBackPress,
-          automaticallyImplyLeading: false,
-          elevation: 0.5,
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: !widget.isFromHome
+          ? AppBar(
+              // automaticallyImplyLeading: widget.keepOnBackPress,
+              automaticallyImplyLeading: false,
+              elevation: 0.5,
 
-          leading: showBachBtn
-              ? BackButton(
-                  onPressed: () => Navigator.pop(context),
-                )
-              : Offstage(),
-          title: Text(
-            'Find your Timebank',
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-          centerTitle: true,
-        ),
-        body: searchTeams(),
-      ),
+              leading: showBachBtn
+                  ? BackButton(
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  : Offstage(),
+              title: Text(
+                'Find your Timebank',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              centerTitle: true,
+            )
+          : null,
+      body: searchTeams(),
     ); // );
   }
 
@@ -248,11 +247,12 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                           MaterialPageRoute(
                                             builder: (contexts) =>
                                                 OnBoardWithTimebank(
-                                                    communityModel:
-                                                        communityModel,
-                                                    sevauserId: widget
-                                                        .loggedInUser
-                                                        .sevaUserID),
+                                              communityModel: communityModel,
+                                              sevauserId: widget
+                                                  .loggedInUser.sevaUserID,
+                                              user: SevaCore.of(context)
+                                                  .loggedInUser,
+                                            ),
                                           ),
                                         );
                                         print('clicked ${communityModel.id}');

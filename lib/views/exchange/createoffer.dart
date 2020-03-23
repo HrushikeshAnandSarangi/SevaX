@@ -148,6 +148,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                     if (value.isEmpty) {
                       return 'Please enter some text';
                     }
+                    description = value;
                   },
                 ),
                 SizedBox(height: 20),

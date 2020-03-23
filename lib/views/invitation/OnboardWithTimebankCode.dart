@@ -23,8 +23,11 @@ import 'edit_timebank_view.dart';*/
 class OnBoardWithTimebank extends StatefulWidget {
   final CommunityModel communityModel;
   final String sevauserId;
+  final bool isFromExplore;
+  final UserModel user;
 
-  OnBoardWithTimebank({this.communityModel, this.sevauserId});
+  OnBoardWithTimebank(
+      {this.communityModel, this.sevauserId, this.isFromExplore = false, this.user});
 
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
@@ -81,27 +84,29 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   Widget build(BuildContext context) {
     return isDataLoaded
         ? Scaffold(
-          key: _scaffold,
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text(
-              'Join Timebank',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                // fontWeight: FontWeight.w500,
-              ),
+            key: _scaffold,
+            appBar: !widget.isFromExplore
+                ? AppBar(
+                    centerTitle: true,
+                    title: Text(
+                      'Join Timebank',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 18,
+                        // fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                : null,
+            body: SingleChildScrollView(
+              child: Container(child: timebankStreamBuilder(context)),
             ),
-          ),
-          body: SingleChildScrollView(
-            child: Container(child: timebankStreamBuilder(context)),
-          ),
-        )
+          )
         : Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
   }
 
   Widget timebankStreamBuilder(context) {
@@ -134,7 +139,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     // globals.timebankAvatarURL = timebankModel.photoUrl;
     CompareToTimeBank requestStatus;
     requestStatus = compareTimeBanks(_joinRequestModelList, timebankModel,
-        SevaCore.of(context).loggedInUser.sevaUserID);
+        widget.user.sevaUserID);
 
     return Container(
       height: MediaQuery.of(context).size.height - 90,
@@ -491,14 +496,14 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   // Navigator.popUntil(context, ModalRoute.withName(Navigator.));
                   // Navigator.popUntil(context, ModalRoute.withName(Navigator.defaultRouteName));
                   // Navigator.of(context).pop();
-                  // print(SevaCore.of(context).loggedInUser);
+                  // print(widget.user);
 
                   //widget.communityModel.id
                   //here is the thing
 
                   await Firestore.instance
                       .collection("users")
-                      .document(SevaCore.of(context).loggedInUser.email)
+                      .document(widget.user.email)
                       .updateData({
                     'communities':
                         FieldValue.arrayUnion([widget.communityModel.id]),
@@ -506,14 +511,14 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   });
 
                   setState(() {
-                    SevaCore.of(context).loggedInUser.currentCommunity =
+                    widget.user.currentCommunity =
                         widget.communityModel.id;
                   });
 
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context1) => SevaCore(
-                          loggedInUser: SevaCore.of(context).loggedInUser,
+                          loggedInUser: widget.user,
                           child: HomePageRouter(),
                         ),
                       ),
@@ -522,7 +527,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   // Navigator.of(context).pushReplacement(
                   //   MaterialPageRoute(
                   //     builder: (context1) => HomePageRouter(
-                  //         // sevaUserID: SevaCore.of(context).loggedInUser.sevaUserID,
+                  //         // sevaUserID: widget.user.sevaUserID,
                   //         ),
                   //   ),
                   // );

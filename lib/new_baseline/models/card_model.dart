@@ -5,7 +5,7 @@ class CardModel extends DataModel {
   String custId;
   String email;
   String timebankid;
-  Map<dynamic, dynamic> subscriptionModel;
+  List<Map> subscriptionModel;
 
   CardModel(Map<String, dynamic> map) {
     this.currentPlan = map.containsKey("currentplan") ? map["currentplan"] : '';
@@ -13,8 +13,8 @@ class CardModel extends DataModel {
     this.email = map.containsKey("email") ? map["email"] : '';
     this.timebankid = map.containsKey("timebankid") ? map["timebankid"] : '';
     this.subscriptionModel = map.containsKey('subscription')
-        ? (map['subscription'].cast<dynamic, dynamic>())
-        : ({});
+        ? List.castFrom(map['subscription'])
+        : [];
   }
 
   @override

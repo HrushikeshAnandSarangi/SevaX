@@ -7,11 +7,12 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 
 class AcceptedOffers extends StatefulWidget {
+  final String sevaUserId;
   final String timebankId;
 
-  AcceptedOffers({@required this.timebankId});
+  AcceptedOffers({@required this.sevaUserId, @required this.timebankId});
 
-  AcceptedOffers.shareFeed({this.timebankId});
+  // AcceptedOffers.shareFeed({this.timebankId});
 
   @override
   State<StatefulWidget> createState() {
@@ -23,15 +24,16 @@ class AcceptedOffersViewState extends State<AcceptedOffers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Accepted Offers',
-          style: TextStyle(fontSize: 18),
-        ),
-        elevation: 0,
-        actions: <Widget>[],
-      ),
+      // appBar: AppBar(
+      //   title: Text(
+      //     'Accepted Offers',
+      //     style: TextStyle(fontSize: 18),
+      //   ),
+      //   elevation: 0,
+      //   actions: <Widget>[],
+      // ),
       body: _ViewAcceptedOffers(
+        sevaUserId: widget.sevaUserId,
         timebankId: widget.timebankId,
       ),
     );
@@ -39,15 +41,16 @@ class AcceptedOffersViewState extends State<AcceptedOffers> {
 }
 
 class _ViewAcceptedOffers extends StatelessWidget {
+  final String sevaUserId;
   final String timebankId;
 
-  _ViewAcceptedOffers({@required this.timebankId});
+  _ViewAcceptedOffers({@required this.sevaUserId, @required this.timebankId});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<OfferModel>>(
       stream: FirestoreManager.getOffersApprovedByAdmin(
-        timebankId: timebankId,
+        sevaUserId: sevaUserId,
       ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -84,7 +87,10 @@ class _ViewAcceptedOffers extends StatelessWidget {
       child: InkWell(
         onTap: () {
           showDialogForMakingAnOffer(
-              userModel: user, model: model, context: parentContext);
+              userModel: user,
+              model: model,
+              context: parentContext,
+              timebankId: timebankId);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -203,9 +209,9 @@ class _ViewAcceptedOffers extends StatelessWidget {
     UserModel userModel,
     OfferModel model,
     BuildContext context,
+    String timebankId,
   }) {
     // show dialog here for new offer;
-
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {

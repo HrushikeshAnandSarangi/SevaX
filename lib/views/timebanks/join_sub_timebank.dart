@@ -15,7 +15,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
-import 'package:sevaexchange/views/home_dashboard.dart';
 
 import '../timebank_content_holder.dart';
 
@@ -78,35 +77,35 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Group",
-            style: TextStyle(
-              fontSize: 20,
-              fontFamily: "Europa",
-            )),
-        centerTitle: true,
-        actions: <Widget>[
-          Offstage(
-            offstage: true,
-            child: widget.isFromDash
-                ? FlatButton(
-                    child: Text(
-                      "Continue",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Europa",
-                      ),
-                    ),
-                    textColor: Colors.lightBlue,
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => HomeDashBoard()));
-                    },
-                  )
-                : Text(""),
-          )
-        ],
-      ),
+//      appBar: AppBar(
+//        title: Text("Group",
+//            style: TextStyle(
+//              fontSize: 20,
+//              fontFamily: "Europa",
+//            )),
+//        centerTitle: true,
+//        actions: <Widget>[
+//          Offstage(
+//            offstage: true,
+//            child: widget.isFromDash
+//                ? FlatButton(
+//                    child: Text(
+//                      "Continue",
+//                      style: TextStyle(
+//                        fontSize: 16,
+//                        fontFamily: "Europa",
+//                      ),
+//                    ),
+//                    textColor: Colors.lightBlue,
+//                    onPressed: () {
+//                      Navigator.of(context).push(MaterialPageRoute(
+//                          builder: (context) => HomeDashBoard()));
+//                    },
+//                  )
+//                : Text(""),
+//          )
+//        ],
+//      ),
       body: isDataLoaded
           ? SingleChildScrollView(
               child: getTimebanks(context: context),
@@ -142,7 +141,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 10.0),
                   child: Text(
-                    "Join the group to contribute to the timebank for the change",
+                    "Groups within a Timebank allow for granular activities. You can join one of the groups below or create your own group",
                   ),
                 ),
                 ListView.separated(

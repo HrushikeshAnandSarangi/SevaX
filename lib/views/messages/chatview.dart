@@ -98,8 +98,7 @@ class _ChatViewState extends State<ChatView> {
       widget.chatModel.candidateLocation =
           GeoFirePoint(onValue.latitude, onValue.longitude);
 
-      print(
-          "-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
+      print("-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
     });
   }
 

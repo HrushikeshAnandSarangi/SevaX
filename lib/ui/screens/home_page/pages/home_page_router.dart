@@ -10,8 +10,7 @@ import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
-import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
+import 'package:sevaexchange/views/timebanks/explore_tabview.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -67,6 +66,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
       home: BlocProvider(
         bloc: _userBloc,
         child: Scaffold(
+          resizeToAvoidBottomPadding: false,
           body: StreamBuilder(
             // stream: _userBloc.getUser(SevaCore.of(context).loggedInUser.email),
             stream: CombineLatestStream.combine2(
@@ -108,10 +108,11 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                       child: IndexedStack(
                         index: selected,
                         children: <Widget>[
-                          JoinSubTimeBankView(
-                            isFromDash: true,
-                            loggedInUserModel: _userBloc.user,
-                          ),
+                          ExploreTabView(),
+//                          JoinSubTimeBankView(
+//                            isFromDash: true,
+//                            loggedInUserModel: _userBloc.user,
+//                          ),
                           NotificationsPage(),
                           HomeDashBoard(),
                           ChatListView(),

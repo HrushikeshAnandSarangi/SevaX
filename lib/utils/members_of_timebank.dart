@@ -122,6 +122,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   @override
   Widget build(BuildContext context) {
+    print("${SevaCore.of(context).loggedInUser.currentTimebank}  -------------------");
+
     if (_avtars.length == 0 && !_isLoading) {
       loadNextBatchItems();
     }

@@ -436,11 +436,10 @@ Stream<List<TimebankModel>> getChildTimebanks(
 }
 
 Stream<List<prefix0.OfferModel>> getOffersApprovedByAdmin(
-    {@required String timebankId}) async* {
+    {@required String sevaUserId}) async* {
   var data = Firestore.instance
       .collection('offers')
-      .where('offerAccepted', isEqualTo: true)
-      .where('timebankId', isEqualTo: timebankId)
+      .where('offerAcceptors', arrayContains: sevaUserId)
       .snapshots();
 
   yield* data.transform(

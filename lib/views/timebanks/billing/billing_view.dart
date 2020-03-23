@@ -25,16 +25,16 @@ class BillingView extends StatefulWidget {
 
 class BillingViewState extends State<BillingView> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
   @override
   void initState() {
     print(widget.planId);
-
     StripePayment.setOptions(
       StripeOptions(
-        publishableKey: 'pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832',
+        publishableKey: 'pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN',
+        // publishableKey: 'pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832',
         merchantId: 'acct_1BuMJNIPTZX4UEIO',
-        androidPayMode: 'test',
+        androidPayMode: 'production',
+        // androidPayMode: 'test',
       ),
     );
     super.initState();
@@ -59,13 +59,16 @@ class BillingViewState extends State<BillingView> {
       var paymentbloc = PaymentsBloc();
       paymentbloc.storeNewCard(paymentMethod.id, widget.timebankid,
           widget.user ?? SevaCore.of(context).loggedInUser, widget.planId);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context1) => MainApplication(
-              skipToHomePage: true,
-            ),
-          ),
-          (Route<dynamic> route) => false);
+
+      _cardSuccessMessage();
+
+      //   Navigator.of(context).pushAndRemoveUntil(
+      //       MaterialPageRoute(
+      //         builder: (context1) => MainApplication(
+      //           skipToHomePage: true,
+      //         ),
+      //       ),
+      //       (Route<dynamic> route) => false);
     }
   }
 
@@ -91,7 +94,8 @@ class BillingViewState extends State<BillingView> {
           child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.all(24),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
@@ -118,7 +122,7 @@ class BillingViewState extends State<BillingView> {
                 ),
               ),
               Divider(),
-              SizedBox(height: 20),
+
               // GestureDetector(
               //   onDoubleTap: () {
               //     print("made default");
@@ -153,31 +157,74 @@ class BillingViewState extends State<BillingView> {
                     // if (snapshot.data.data.isEmpty) {
                     //   return Text("No Card");
                     // }
-                    return ListView.separated(
-                      separatorBuilder: (BuildContext context, int index) {
-                        return SizedBox(height: 20);
-                      },
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      itemCount: snapshot.data.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            // connectToStripe(cards[index]['paymentMethodId']);
-                            connectToStripe(snapshot.data.data[index].id);
-                          },
-                          child: CustomCreditCard(
-                            bankName: "Bank Name",
-                            cardNumber: snapshot.data.data[index].card.last4,
-                            frontBackground: CardBackgrounds.black,
-                            brand: "${snapshot.data.data[index].card.brand}",
-                            cardExpiry:
-                                "${snapshot.data.data[index].card.expMonth}/${snapshot.data.data[index].card.expYear}",
-                            cardHolderName:
-                                snapshot.data.data[index].billingDetails.name,
+                    return Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 22, vertical: 10),
+                          child: Text(
+                            'Note : long press to make a card default',
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
                           ),
-                        );
-                      },
+                        ),
+                        ListView.separated(
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(height: 20);
+                          },
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          itemCount: snapshot.data.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                // connectToStripe(cards[index]['paymentMethodId']);
+                                connectToStripe(snapshot.data.data[index].id);
+                              },
+                              onLongPress: () => _showDialog(
+                                token: snapshot.data.data[index].id,
+                                communityId: widget.user.currentCommunity,
+                              ),
+                              child: Stack(
+                                // crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  CustomCreditCard(
+                                    bankName: "Bank Name",
+                                    cardNumber:
+                                        snapshot.data.data[index].card.last4,
+                                    frontBackground: CardBackgrounds.black,
+                                    brand:
+                                        "${snapshot.data.data[index].card.brand}",
+                                    cardExpiry:
+                                        "${snapshot.data.data[index].card.expMonth}/${snapshot.data.data[index].card.expYear}",
+                                    cardHolderName: snapshot
+                                        .data.data[index].billingDetails.name,
+                                  ),
+                                  Offstage(
+                                    offstage: true,
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(4),
+                                              bottomRight: Radius.circular(4),
+                                            )),
+                                        child: Text(
+                                          'Default',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     );
                   }
                   return Center(child: CircularProgressIndicator());
@@ -190,6 +237,72 @@ class BillingViewState extends State<BillingView> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showDialog({String token, String communityId}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text("Make this card as default"),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                    child: Text('Confirm'),
+                    onPressed: () {
+                      setDefaultCard(token: token, communityId: communityId);
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(width: 10),
+                  FlatButton(
+                    color: Colors.white,
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _cardSuccessMessage() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(milliseconds: 600), () {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context1) => MainApplication(
+                  skipToHomePage: true,
+                ),
+              ),
+              (Route<dynamic> route) => false);
+        });
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text('Card Added'),
+              Text('It may take couple of minutes to synchronize your payment'),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -206,6 +319,10 @@ Future<UserCardsModel> getUserCard(String communityId) async {
   }
 }
 
-Future<void> setDefaultCard() async {
-  var result = await http.post('');
+Future<void> setDefaultCard({String communityId, String token}) async {
+  var result = await http.post(
+    "https://us-central1-sevaxproject4sevax.cloudfunctions.net/setDefaultCardForCustomer",
+    body: {"communityId": communityId, "token": token},
+  );
+  print(result.body);
 }

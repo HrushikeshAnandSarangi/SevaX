@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/billing_plan_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,11 +25,11 @@ Future<void> main() async {
 
   AppConfig.prefs = await SharedPreferences.getInstance();
   AppConfig.remoteConfig = await RemoteConfig.instance;
-  AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 5));
+  AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
   AppConfig.remoteConfig.activateFetched();
-
-  AppConfig.billing = BillingPlanModel.fromJson(
-      json.decode(AppConfig.remoteConfig.getString("plans")));
+  // print(AppConfig.remoteConfig.getString("plans"));
+  // AppConfig.billing = BillingPlanModel.fromJson(
+  //     json.decode(AppConfig.remoteConfig.getString("plans")));
   // print(
   //     "--->plans ${AppConfig.billing.freePlan.action.adminReviewsCompleted.billable}");
 

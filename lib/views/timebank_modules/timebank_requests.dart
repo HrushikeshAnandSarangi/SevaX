@@ -1298,7 +1298,7 @@ class RequestListItemsState extends State<RequestListItems> {
                               ?
 //                          || model.invitedUsers.contains(userEmail) ?
                               Container(
-                                  margin: EdgeInsets.all(10),
+                                  margin: EdgeInsets.only(top: 10, bottom: 10),
                                   width: 100,
                                   height: 32,
                                   child: FlatButton(
