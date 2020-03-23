@@ -7,7 +7,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -874,48 +873,69 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget get googleLoginiPhone {
+  Widget signInButton({String imageRef, String msg, Function operation}) {
     return Container(
-      width: 220,
-      height: 40,
-      child: Material(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black45),
         color: Colors.white,
-        shape: CircleBorder(),
-        child: Center(
-          child: GoogleSignInButton(
-            onPressed: useGoogleSignIn,
-          ),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      width: 220,
+      height: 56,
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: operation,
+        child: Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Container(
+                  height: 18,
+                ),
+                Container(
+                  width: 17,
+                  height: 17,
+                  margin: EdgeInsets.only(
+                    left: 12,
+                    right: 12,
+                  ),
+                  child: Image.asset(imageRef),
+                ),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Container(
+                  height: 15,
+                ),
+                Text(
+                  msg,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
+  Widget get googleLoginiPhone {
+    return signInButton(
+      imageRef: 'lib/assets/google-logo-png-open-2000.png',
+      msg: 'Sign in with Google',
+      operation: useGoogleSignIn,
+    );
+  }
+
   Widget get appleLoginiPhone {
-    return Container(
-      width: 220,
-      height: 55,
-      child: Material(
-        child: InkWell(
-          customBorder: CircleBorder(),
-          onTap: appleLogIn,
-          child: Padding(
-            padding: const EdgeInsets.all(0.0),
-            child: SizedBox(
-              height: 24,
-              width: 24,
-              child: Container(
-                child: Image.asset(
-                    'lib/assets/images/apple-id-outline-yes_2x.png'),
-              ),
-            ),
-          ),
-        ),
-//        AppleSignInButton(
-//          style: ButtonStyle.white,
-//          type: ButtonType.continueButton,
-//          onPressed: appleLogIn,
-//        ),
-      ),
+    return signInButton(
+      imageRef: 'lib/assets/images/apple-logo.png',
+      msg: 'Sign in with Apple',
+      operation: appleLogIn,
     );
   }
 
