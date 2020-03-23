@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/user_info/utils/custom_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -55,7 +58,7 @@ class _SkillViewNewState extends State<SkillsPage> {
         if (widget.isFromProfilePage) {
           Navigator.pop(context);
         } else {
-          print("exit the app");
+          _showDialog();
         }
         return false;
       },
@@ -226,6 +229,61 @@ class _SkillViewNewState extends State<SkillsPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 200,
+                child: RaisedButton(
+                  child: Text("Log out"),
+                  onPressed: () {
+                    _signOut(context);
+                  },
+                ),
+              ),
+              Container(
+                width: 200,
+                child: RaisedButton(
+                  child: Text("Exit app"),
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  },
+                ),
+              ),
+              Container(
+                width: 200,
+                child: RaisedButton(
+                  color: Theme.of(context).accentColor,
+                  child: Text("Cancel"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    var auth = AuthProvider.of(context).auth;
+    await auth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => AuthRouter(),
       ),
     );
   }
