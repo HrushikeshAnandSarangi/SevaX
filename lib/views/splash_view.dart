@@ -6,41 +6,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
-import 'package:sevaexchange/utils/app_config.dart';
-import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/ui/screens/user_info/utils/custom_router.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
-import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
-import 'package:sevaexchange/views/onboarding/bioview.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
-import 'package:sevaexchange/views/timebanks/eula_agreememnt.dart';
-import 'package:sevaexchange/views/timebanks/waiting_admin_accept.dart';
 import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
-import 'onboarding/interests_view.dart';
-import 'onboarding/skills_view.dart';
-
-//class UserData {
-//  static UserModel user;
-//
-//  UserData({
-//   this.user;
-//  });
-//
-//  Future updateUserData(UserModel user) async {
-//    await fireStoreManager.updateUser(user: user);
-//  }
-//  Future<UserModel> _getSignedInUserDocs(String userId) async {
-//    UserModel userModel = await fireStoreManager.getUserForId(
-//      sevaUserId: userId,
-//    );
-//    user = userModel;
-//    return user;
-//  }
-//}
 class UserData {
   // singleton
   static final UserData _singleton = UserData._internal();
@@ -64,13 +35,6 @@ class UserData {
     await fireStoreManager.updateUser(user: user);
   }
 
-  Future _getSignedInUserDocs(String userId) async {
-    UserModel userModel = await fireStoreManager.getUserForId(
-      sevaUserId: userId,
-    );
-    user = userModel;
-  }
-
   Future<String> _getLoggedInUserId() async {
     userId = await PreferenceManager.loggedInUserId;
     return userId;
@@ -89,7 +53,6 @@ class _SplashViewState extends State<SplashView> {
   String _loadingMessage = '';
   bool _initialized = false;
   bool mainForced = false;
-  final _firestore = Firestore();
 
   @override
   void initState() {
@@ -147,19 +110,6 @@ class _SplashViewState extends State<SplashView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              // Text(
-              //   'Seva\nExchange'.toUpperCase(),
-              //   textAlign: TextAlign.center,
-              //   style: TextStyle(
-              //     letterSpacing: 5,
-              //     fontSize: 24,
-              //     color: Colors.white,
-              //     fontWeight: FontWeight.w700,
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 16,
-              // ),
               Image.asset(
                 'lib/assets/images/seva-x-logo.png',
                 height: 140,
@@ -394,51 +344,6 @@ class _SplashViewState extends State<SplashView> {
     return userId;
   }
 
-//  Future checkVersion() async {
-//    await PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
-//      String appName = packageInfo.appName;
-//      String packageName = packageInfo.packageName;
-//      String version = packageInfo.version;
-//
-//      String buildNumber = packageInfo.buildNumber;
-//
-//      Firestore.instance
-//          .collection("vitals")
-//          .document(Platform.isAndroid ? "vital_android" : "vital_ios")
-//          .get()
-//          .then((onValue) {
-//        if (Platform.isAndroid) {
-//          // we are on android platform
-//          if (onValue.data.containsKey("latest_build_number")) {
-//            var latestBuildNumber = onValue.data['latest_build_number'];
-//            if (int.parse(buildNumber) < latestBuildNumber) {
-//              print("App is Out of date");
-//              _navigateToUpdatePage();
-//            } else {
-//              print("App is up to date");
-//            }
-//          }
-//        } else {
-//          //This is an IOS PLatform data you get from here onValue.data.containsKey("latest_build_number")
-//
-//          if (onValue.data.containsKey("latest_version_number")) {
-//            var latestBuildNumber = onValue.data['latest_version_number'];
-//            if (int.parse(buildNumber) < latestBuildNumber) {
-//              print("App is Out of date");
-//              _navigateToUpdatePage();
-//            } else {
-//              print("App is up to date");
-//            }
-//          }
-//
-////          _navigateToUpdatePage();
-////          onValue.data.containsKey("latest_build_number");
-////          print(onValue.data.containsKey("latest_build_number"));
-//        }
-//      });
-//    });
-//  }
-
   Future<void> handleLoggedInUserIdResponse(String userId) async {
     if (userId == null || userId.isEmpty) {
       loadingMessage = 'Hang on tight';
@@ -447,25 +352,14 @@ class _SplashViewState extends State<SplashView> {
     }
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
-    print("---> ${loggedInUser.currentCommunity}");
-    if ((loggedInUser.currentCommunity == "" ||
-            loggedInUser.currentCommunity == null) &&
-        loggedInUser.communities.length != 0) {
-      loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
-      await Firestore.instance
-          .collection("users")
-          .document(loggedInUser.email)
-          .updateData({
-        'currentCommunity': loggedInUser.communities[0],
-      });
-    }
+    
 
     if (loggedInUser == null) {
       loadingMessage = 'Welcome to the world of communities';
       _navigateToLoginPage();
       return;
     }
-    print('logger${loggedInUser}');
+    
     UserData.shared.user = loggedInUser;
 
     if (FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST) {
@@ -533,77 +427,7 @@ class _SplashViewState extends State<SplashView> {
         await _navigateToUpdatePage(loggedInUser, mainForced);
       }
     }
-
-    // if (!loggedInUser.completedIntro) {
-    //   await _navogateToIntro(loggedInUser);
-    // }
-
-    // if (widget.skipToHomePage) {
-    //   print('Navigating to home page');
-    //   _navigateToCoreView(loggedInUser);
-    // }
-    print("reached here------->><><>");
-    if (!loggedInUser.acceptedEULA) {
-      await _navigateToEULA(loggedInUser);
-    }
-
-    print("===?${!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false)}");
-    if (!(AppConfig.prefs.getBool(AppConfig.skip_skill) ?? false) &&
-        loggedInUser.skills == null) {
-      print("reached here------->><><> skill");
-      await _navigateToSkillsView(loggedInUser);
-    }
-
-    if (!(AppConfig.prefs.getBool(AppConfig.skip_interest) ?? false) &&
-        loggedInUser.interests == null) {
-      print("reached here------->><><> interest");
-      await _navigateToInterestsView(loggedInUser);
-    }
-
-    if (!(AppConfig.prefs.getBool(AppConfig.skip_bio) ?? false) &&
-        loggedInUser.bio == null) {
-      print("reached here------->><><> bio");
-      await _navigateToBioView(loggedInUser);
-    }
-    // if (loggedInUser.skills == null) {
-    //   await _navigateToSkillsView(loggedInUser);
-    // }
-
-    // if (loggedInUser.interests == null) {
-    //   await _navigateToInterestsView(loggedInUser);
-    // }
-
-    // if (loggedInUser.bio == null) {
-    //   await _navigateToBioView(loggedInUser);
-    // }
-    loadingMessage = 'We met before';
-
-    // print(loggedInUser.communities);
-    if (loggedInUser.communities == null || loggedInUser.communities.isEmpty) {
-      await _navigateToFindCommunitiesView(loggedInUser);
-    } else {
-      _navigateToCoreView(loggedInUser);
-//      await _navigateToxxxview();
-    }
-
-    // _navigateToCoreView(loggedInUser);
-
-    // if (loggedInUser.currentCommunity != null ||
-    //     loggedInUser.currentCommunity != "") {
-    //   await _navigateToHome_DashBoardView(loggedInUser);
-    // }
-
-    // if ()
-
-//    String location = loggedInUser.availability.location;
-//    print(location);
-//     if (loggedInUser.availability == null) {
-//       await _navigateToCalendarView(loggedInUser);
-//     }
-
-//     if (loggedInUser.requestStatus == "pending") {
-//       await _navigateToWaitingView(loggedInUser);
-//     }
+    customRouter(context: context, user: loggedInUser);
   }
 
   Future<UserModel> _getSignedInUserDocs(String userId) async {
@@ -632,238 +456,8 @@ class _SplashViewState extends State<SplashView> {
     ));
   }
 
-  Future _navigateToEULA(UserModel loggedInUser) async {
-    print("EULA -> ${loggedInUser.toString()}");
-
-    Map results = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => EulaAgreement(),
-      ),
-    );
-
-    if (results != null && results['response'] == "ACCEPTED") {
-      //UPDATE THE DB HERE
-      //print("${SevaCore.of(context).loggedInUser.email} User has agreed to EULA");
-
-      await Firestore.instance
-          .collection('users')
-          .document(loggedInUser.email)
-          .updateData({'acceptedEULA': true}).then((onValue) {
-        print("Updating completed");
-      }).catchError((onError) {
-        print("Error Updating introduction");
-      });
-    }
-  }
-
-  Future _navogateToIntro(UserModel loggedInUser) async {
-    print("Intro -> ${loggedInUser.toString()}");
-
-    Map results = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => IntroScreenHukanityFirst(),
-      ),
-    );
-
-    if (results != null &&
-        (results['response'] == "ACCEPTED" ||
-            results['response'] == "SKIPPED")) {
-      await Firestore.instance
-          .collection('users')
-          .document(loggedInUser.email)
-          .updateData({'completedIntro': true}).then((onValue) {
-        print("Updating Introcuction part");
-      }).catchError((onError) {
-        print("Error in introdution part");
-      });
-    }
-  }
-
-  Future _navigateToSkillsView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SkillViewNew(
-          automaticallyImplyLeading: false,
-          userModel: loggedInUser,
-          onSelectedSkills: (skills) {
-            Navigator.pop(context);
-            loggedInUser.skills = skills;
-            updateUserData(loggedInUser);
-            loadingMessage = 'Updating skills';
-          },
-          onSkipped: () {
-            Navigator.pop(context);
-            AppConfig.prefs.setBool(AppConfig.skip_skill, true);
-            loggedInUser.skills = [];
-            updateUserData(loggedInUser);
-            loadingMessage = 'Skipping skills';
-          },
-        ),
-      ),
-    );
-  }
-
-  Future _navigateToWaitingView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => WaitingView(),
-      ),
-    );
-  }
-
-//  Future _navigateToCalendarView(UserModel loggedInUser) async {
-//    await Navigator.of(context).push(
-//      MaterialPageRoute(
-//        builder: (context) => LocationView(
-//          onSelectedCalendar: (availability) {
-//            Navigator.pop(context);
-//            loggedInUser.availability = availability;
-//            updateUserAvailableData(loggedInUser);
-//           // updateUserWeekDay(loggedInUser);
-//            loadingMessage = 'Updating Calendar';
-//          },
-//          onSkipped: () {
-//            Navigator.pop(context);
-//            loggedInUser.availability = null;
-//            updateUserData(loggedInUser);
-//            loadingMessage = 'Skipping Calendar';
-//          },
-//        ),
-//      ),
-//    );
-//  }
-//   Future _navigateToPinView(UserModel loggedInUser) async {
-//     await Navigator.of(context).push(
-//       MaterialPageRoute(
-//         builder: (context) => PinView(
-//           onSelectedOtp: (otp) {
-// //            Navigator.pop(context);
-// //            loggedInUser.otp = otp;
-// //            updateUserData(loggedInUser);
-// //            loadingMessage = 'Checking Otp';
-//           },
-//           onSkipped: () {
-// //            Navigator.pop(context);
-// //            loggedInUser.otp = null;
-// //            updateUserData(loggedInUser);
-// //            loadingMessage = 'Skipping Otp';
-//           },
-//         ),
-//       ),
-//     );
-//   }
-
-  Future _navigateToInterestsView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => InterestViewNew(
-          automaticallyImplyLeading: false,
-          userModel: loggedInUser,
-          onSelectedInterests: (interests) {
-            Navigator.pop(context);
-            loggedInUser.interests = interests;
-            updateUserData(loggedInUser);
-            loadingMessage = 'Updating interests';
-          },
-          onSkipped: () {
-            Navigator.pop(context);
-            loggedInUser.interests = [];
-            AppConfig.prefs.setBool(AppConfig.skip_interest, true);
-            updateUserData(loggedInUser);
-            loadingMessage = 'Skipping interests';
-          },
-          onBacked: () {
-            _navigateToSkillsView(loggedInUser);
-          },
-        ),
-      ),
-    );
-  }
-
-  Future _navigateToBioView(UserModel loggedInUser) async {
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => BioView(onSave: (bio) {
-          Navigator.pop(context);
-          loggedInUser.bio = bio;
-          updateUserData(loggedInUser);
-          loadingMessage = 'Updating bio';
-        }, onSkipped: () {
-          Navigator.pop(context);
-          loggedInUser.bio = '';
-          AppConfig.prefs.setBool(AppConfig.skip_bio, true);
-          updateUserData(loggedInUser);
-          loadingMessage = 'Skipping bio';
-        }, onBacked: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => InterestViewNew(
-                automaticallyImplyLeading: false,
-                userModel: loggedInUser,
-                onSelectedInterests: (interests) {
-                  Navigator.pop(context);
-                  loggedInUser.interests = interests;
-                  updateUserData(loggedInUser);
-                  loadingMessage = 'Updating interests';
-                },
-                onSkipped: () {
-                  Navigator.pop(context);
-                  loggedInUser.interests = [];
-                  updateUserData(loggedInUser);
-                  loadingMessage = 'Skipping interests';
-                },
-                onBacked: () {
-                  _navigateToInterestsView(loggedInUser);
-                },
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Future _navigateToFindCommunitiesView(UserModel loggedInUser) async {
-    await Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => SevaCore(
-          loggedInUser: loggedInUser,
-          child: FindCommunitiesView(
-            keepOnBackPress: false,
-            loggedInUser: loggedInUser,
-            showBackBtn: false,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future _navigateToHome_DashBoardView(UserModel loggedInUser) async {
-    print('hai');
-    userBloc.updateUserDetails(loggedInUser);
-    print('hey');
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) =>
-              SevaCore(loggedInUser: loggedInUser, child: HomePageRouter())),
-    );
-  }
-
   Future updateUserData(UserModel user) async {
     await fireStoreManager.updateUser(user: user);
-  }
-
-  void _navigateToCoreView(UserModel loggedInUser) {
-    assert(loggedInUser != null, 'Logged in User cannot be empty');
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => SevaCore(
-          loggedInUser: loggedInUser,
-          child: HomePageRouter(),
-        ),
-      ),
-    );
   }
 
   Future<void> _precacheImage() async {

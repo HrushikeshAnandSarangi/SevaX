@@ -72,6 +72,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     return MaterialApp(
       title: AppConfig.appName,
       theme: FlavorConfig.values.theme,
+    debugShowCheckedModeBanner: false,
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
