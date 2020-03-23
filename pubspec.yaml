@@ -170,6 +170,7 @@ flutter:
     - lib/assets/images/image_01.png
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
+    - lib/assets/images/apple-id-outline-yes_2x.png
 
     # card images
     - images/

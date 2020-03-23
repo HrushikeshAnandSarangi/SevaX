@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -666,28 +665,23 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get appleLoginiPhone {
     return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            blurRadius: 2.0, // has the effect of softening the shadow
-            spreadRadius: 1.0, // has the effect of extending the shadow
-            offset: Offset(
-              2.0, // horizontal, move right 10
-              2.0, // vertical, move down 10
-            ),
-          )
-        ],
-      ),
-      width: 210,
-      height: 40,
+      width: 220,
+      height: 55,
       child: Material(
-        color: Colors.black,
-        shape: CircleBorder(),
-        child: AppleSignInButton(
-          style: ButtonStyle.white,
-          type: ButtonType.continueButton,
-          onPressed: appleLogIn,
+        child: InkWell(
+          customBorder: CircleBorder(),
+          onTap: appleLogIn,
+          child: Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: SizedBox(
+              height: 24,
+              width: 24,
+              child: Container(
+                child: Image.asset(
+                    'lib/assets/images/apple-id-outline-yes_2x.png'),
+              ),
+            ),
+          ),
         ),
       ),
     );
