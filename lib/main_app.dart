@@ -33,8 +33,8 @@ Future<void> main() async {
 
   AppConfig.billing = BillingPlanModel.fromJson(
       json.decode(AppConfig.remoteConfig.getString("plans")));
-  print(
-      "--->plans ${AppConfig.billing.freePlan.action.adminReviewsCompleted.billable}");
+  // print(
+  //     "--->plans ${AppConfig.billing.freePlan.action.adminReviewsCompleted.billable}");
 
   _firebaseMessaging.configure(
     onMessage: (Map<String, dynamic> message) {
