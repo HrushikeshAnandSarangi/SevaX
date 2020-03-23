@@ -19,6 +19,7 @@ import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
+import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -225,61 +226,16 @@ class _ProfilePageState extends State<ProfilePage>
                           ),
                         ),
                         SizedBox(height: 20),
-                        Container(
-                          height: 60,
-                          padding: EdgeInsets.all(5),
-                          child: RaisedButton(
-                            shape: StadiumBorder(),
-                            color: Colors.white,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 2.0),
-                                      child: sevaCoinIcon,
-                                    ),
-                                    SizedBox(height: 1),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: sevaCoinIcon,
-                                    ),
-                                    SizedBox(height: 1),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 6.0),
-                                      child: sevaCoinIcon,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  '${sevaCoinsValue} Seva Coins',
-                                  style: TextStyle(
-                                    color: user.currentBalance > 0
-                                        ? Colors.blue
-                                        : Colors.red,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
+                        SevaCoinWidget(
+                          amount: sevaCoinsValue ?? 0,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ReviewEarningsPage();
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return ReviewEarningsPage();
-                                  },
-                                ),
-                              );
-                            },
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -1202,18 +1158,6 @@ class _ProfilePageState extends State<ProfilePage>
   //   }));
   // }
 
-  Widget get sevaCoinIcon {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(2),
-        ),
-        color: Color.fromARGB(255, 255, 197, 75),
-      ),
-      width: 20,
-      height: 5,
-    );
-  }
 }
 
 class CommunityCard extends StatelessWidget {

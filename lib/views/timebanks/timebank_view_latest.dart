@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
 
 // import 'package:sevaexchange/views/core.dart';
 
@@ -129,6 +130,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
+            Offstage(
+                offstage: !widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                child: TimeBankSevaCoin(
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity,
+                )),
             SizedBox(
               height: 15,
             ),
