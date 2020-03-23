@@ -25,7 +25,7 @@ Future<void> main() async {
 
   AppConfig.prefs = await SharedPreferences.getInstance();
   AppConfig.remoteConfig = await RemoteConfig.instance;
-  AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 5));
+  AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
   AppConfig.remoteConfig.activateFetched();
   // print(AppConfig.remoteConfig.getString("plans"));
   // AppConfig.billing = BillingPlanModel.fromJson(

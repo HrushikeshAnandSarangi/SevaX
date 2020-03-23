@@ -42,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
-    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 5));
+    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
     AppConfig.remoteConfig.activateFetched();
   }
 
