@@ -53,8 +53,8 @@ android {
         release {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
-         storeFile file(keystoreProperties['storeFile'])
-         storePassword keystoreProperties['storePassword']
+//         storeFile file(keystoreProperties['storeFile'])
+//         storePassword keystoreProperties['storePassword']
             //signingConfig signingConfigs.debug
         }   
     }
@@ -100,9 +100,10 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 }
-
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
+
+
 googleServices {
     disableVersionCheck = true
 }
-apply plugin: 'io.fabric'

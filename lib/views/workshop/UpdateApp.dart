@@ -53,7 +53,10 @@ class UpdateAppState extends State<UpdateView> {
                 String buildNumber = packageInfo.buildNumber;
                 print("Package info --> $packageName");
                 StoreRedirect.redirect(
-                    androidAppId: packageName, iOSAppId: "1466915003");
+                    androidAppId: packageName,
+                    iOSAppId: "456DU6XRWC.com.sevaexchange.app");
+//                StoreRedirect.redirect(
+//                    androidAppId: packageName, iOSAppId: "1466915003");
               });
 
               // OpenAppstore.launch(

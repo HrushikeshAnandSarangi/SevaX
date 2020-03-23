@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -82,7 +84,7 @@ class _RegisterPageState extends State<RegisterPage>
           children: <Widget>[
             SingleChildScrollView(
                 child: FadeAnimation(
-                    1.4,  
+                    1.4,
                     Padding(
                         padding:
                             EdgeInsets.only(left: 28.0, right: 28.0, top: 40.0),
@@ -491,7 +493,7 @@ class _RegisterPageState extends State<RegisterPage>
       if (dialogContext != null) {
         Navigator.pop(dialogContext);
       }
-        
+
       log('createUser: error: ${error.toString()}');
       return null;
     }
@@ -601,24 +603,81 @@ class _RegisterPageState extends State<RegisterPage>
         SizedBox(
           height: ScreenUtil.getInstance().setHeight(20),
         ),
-        Material(
-          color: Colors.white,
-          shape: CircleBorder(),
-          child: InkWell(
-            customBorder: CircleBorder(),
-            onTap: useGoogleSignIn,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 24,
-                width: 24,
-                child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
-              ),
-            ),
-          ),
-        ),
+        socialMediaLogin,
       ],
     );
+  }
+
+  Widget get socialMediaLogin {
+    if (Platform.isIOS) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          googleLoginiPhone,
+          Divider(),
+          appleLoginiPhone,
+          Divider(),
+        ],
+      );
+    }
+    return Center(
+      child: googleLogin,
+    );
+  }
+
+  Widget get googleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: useGoogleSignIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get googleLoginiPhone {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: GoogleSignInButton(
+        onPressed: useGoogleSignIn,
+      ),
+    );
+  }
+
+  Widget get appleLoginiPhone {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: AppleSignInButton(
+        style: ButtonStyle.black,
+        type: ButtonType.continueButton,
+        onPressed: appleLogIn,
+      ),
+    );
+  }
+
+  void appleLogIn() async {
+    isLoading = true;
+    Auth auth = AuthProvider.of(context).auth;
+    UserModel user;
+    try {
+      user = await auth.signInWithApple();
+      print("User apple:$user");
+    } on PlatformException catch (erorr) {
+      handlePlatformException(erorr);
+    } on Exception catch (error) {}
+    isLoading = false;
+    _processLogin(user);
   }
 
   Widget horizontalLine() => Padding(
@@ -638,21 +697,20 @@ class _RegisterPageState extends State<RegisterPage>
       user = await auth.handleGoogleSignIn();
     } on PlatformException catch (erorr) {
       if (erorr.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
-      
-      _scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text("This email already registered"),
-          action: SnackBarAction(
-            label: 'Dismiss',
-            onPressed: () {
-              _scaffoldKey.currentState.hideCurrentSnackBar();
-            },
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text("This email already registered"),
+            action: SnackBarAction(
+              label: 'Dismiss',
+              onPressed: () {
+                _scaffoldKey.currentState.hideCurrentSnackBar();
+              },
+            ),
           ),
-        ),
-      );
-    
-       print(" ${email} already registered");
-     }
+        );
+
+        print(" ${email} already registered");
+      }
       print("Platform Exception --->  $erorr");
       handlePlatformException(erorr);
     } on Exception catch (error) {
@@ -713,7 +771,7 @@ class _RegisterPageState extends State<RegisterPage>
           ),
         ),
       );
-    } 
+    }
   }
 
   Future<void> resetPassword(String email) async {
@@ -732,4 +790,3 @@ class _RegisterPageState extends State<RegisterPage>
     });
   }
 }
-

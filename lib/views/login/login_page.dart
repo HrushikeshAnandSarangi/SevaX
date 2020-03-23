@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -25,6 +28,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final Future<bool> _isAvailableFuture = AppleSignIn.isAvailable();
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<FormState> _formKeyDialog = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
@@ -37,8 +41,46 @@ class _LoginPageState extends State<LoginPage> {
   Color enabled = Colors.white.withAlpha(120);
 
   void initState() {
+//    checkLoggedInState();
+    if (Platform.isIOS) {
+      AppleSignIn.onCredentialRevoked.listen((_) {
+        print("Credentials revoked");
+      });
+    }
     fetchRemoteConfig();
   }
+
+//  void checkLoggedInState() async {
+//    final userId = await FlutterSecureStorage().read(key: "userId");
+//    if (userId == null) {
+//      print("No stored user ID");
+//      return;
+//    }
+//
+//    final credentialState = await AppleSignIn.getCredentialState(userId);
+//    switch (credentialState.status) {
+//      case CredentialStatus.authorized:
+//        print("getCredentialState returned authorized");
+//        break;
+//
+//      case CredentialStatus.error:
+//        print(
+//            "getCredentialState returned an error: ${credentialState.error.localizedDescription}");
+//        break;
+//
+//      case CredentialStatus.revoked:
+//        print("getCredentialState returned revoked");
+//        break;
+//
+//      case CredentialStatus.notFound:
+//        print("getCredentialState returned not found");
+//        break;
+//
+//      case CredentialStatus.transferred:
+//        print("getCredentialState returned not transferred");
+//        break;
+//    }
+//  }
 
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
@@ -388,10 +430,12 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 8),
                     Text('or'),
                     SizedBox(height: 8),
-                    signInWithGoogle,
+                    signInWithSocialMedia,
+                    SizedBox(height: 8),
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
+//                    futureLoginBtn,
                     FlavorConfig.appFlavor == Flavor.APP
                         ? Offstage()
                         : poweredBySevaLogo,
@@ -422,6 +466,76 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+//  Widget get futureLoginBtn {
+//    return FutureBuilder<bool>(
+//      future: _isAvailableFuture,
+//      builder: (context, isAvailableSnapshot) {
+//        if (!isAvailableSnapshot.hasData) {
+//          return Container(child: Text('Loading...'));
+//        }
+//
+//        return isAvailableSnapshot.data
+//            ? Column(
+//                mainAxisAlignment: MainAxisAlignment.center,
+//                crossAxisAlignment: CrossAxisAlignment.center,
+//                children: [
+//                    SizedBox(
+//                      height: 10,
+//                    ),
+//                    AppleSignInButton(
+//                      onPressed: logIn,
+//                    ),
+////                    if (errorMessage != null) Text(errorMessage),
+//                    SizedBox(
+//                      height: 500,
+//                    ),
+//                    RaisedButton(
+//                      child: Text("Button Test Page"),
+//                      onPressed: () {
+////                        Navigator.push(
+////                            context,
+////                            MaterialPageRoute(
+////                                builder: (_) => ButtonTestPage()));
+//                      },
+//                    )
+//                  ])
+//            : Text('Sign in With Apple not available. Must be run on iOS 13+');
+//      },
+//    );
+//  }
+//
+//  void logIn() async {
+//    final AuthorizationResult result = await AppleSignIn.performRequests([
+//      AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+//    ]);
+//
+//    switch (result.status) {
+//      case AuthorizationStatus.authorized:
+//
+//        // Store user ID
+//        await FlutterSecureStorage()
+//            .write(key: "userId", value: result.credential.user);
+//        print("Hello correct authorized");
+//        // Navigate to secret page (shhh!)
+////        Navigator.of(context).pushReplacement(MaterialPageRoute(
+////            builder: (_) =>
+////                SecretMembersOnlyPage(credential: result.credential)));
+//        break;
+//
+//      case AuthorizationStatus.error:
+//        print("Sign in failed: ${result.error.localizedDescription}");
+//        print("Hello correct authorized");
+////        setState(() {
+////          errorMessage = "Sign in failed 😿";
+////        });
+//        break;
+//
+//      case AuthorizationStatus.cancelled:
+//        print('User cancelled');
+//        break;
+//    }
+//  }
 
   bool get isLoading => this._isLoading;
 
@@ -697,7 +811,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Widget get signInWithGoogle {
+  Widget get signInWithSocialMedia {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -712,24 +826,86 @@ class _LoginPageState extends State<LoginPage> {
         SizedBox(
           height: ScreenUtil.getInstance().setHeight(20),
         ),
-        Material(
-          color: Colors.white,
-          shape: CircleBorder(),
-          child: InkWell(
-            customBorder: CircleBorder(),
-            onTap: useGoogleSignIn,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 24,
-                width: 24,
-                child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
-              ),
-            ),
-          ),
-        ),
+        socialMediaLogin,
       ],
     );
+  }
+
+  Widget get socialMediaLogin {
+    if (Platform.isIOS) {
+      return Container(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            googleLoginiPhone,
+            Divider(),
+            appleLoginiPhone,
+            Divider(),
+          ],
+        ),
+      );
+    }
+    return Center(
+      child: googleLogin,
+    );
+  }
+
+  Widget get googleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: useGoogleSignIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get googleLoginiPhone {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: Center(
+        child: GoogleSignInButton(
+          onPressed: useGoogleSignIn,
+        ),
+      ),
+    );
+  }
+
+  Widget get appleLoginiPhone {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: AppleSignInButton(
+        style: ButtonStyle.black,
+        type: ButtonType.continueButton,
+        onPressed: appleLogIn,
+      ),
+    );
+  }
+
+  void appleLogIn() async {
+    isLoading = true;
+    Auth auth = AuthProvider.of(context).auth;
+    UserModel user;
+    try {
+      user = await auth.signInWithApple();
+      print("User apple:$user");
+    } on PlatformException catch (erorr) {
+      handlePlatformException(erorr);
+    } on Exception catch (error) {}
+    isLoading = false;
+    _processLogin(user);
   }
 
   Widget get poweredBySevaLogo {
