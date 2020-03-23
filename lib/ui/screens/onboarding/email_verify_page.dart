@@ -27,7 +27,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
           .collection('users')
           .document(widget.email)
           .setData({'emailSent': true}, merge: true).then(
-        (_) => widget.firebaseUser.sendEmailVerification(),
+        (_) => widget.firebaseUser
+            .sendEmailVerification()
+            .then((onValue) =>
+                {print("Email successfully sent ${widget.firebaseUser.email}")})
+            .catchError((err) => {print("Email not sent due to $err")}),
       );
     }
     super.initState();
@@ -97,12 +101,12 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   child: FlatButton(
                     child: Text('Resend mail'),
                     onPressed: () {
+                      print("Sending email for verification");
                       widget.firebaseUser
                           .sendEmailVerification()
                           .then((onValue) {
-                            showVerificationEmailDialog();
-                          })
-                          .catchError((onError) {
+                        showVerificationEmailDialog();
+                      }).catchError((onError) {
                         print("Exception $onError");
                       });
                     },
