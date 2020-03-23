@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main_app.dart';
 
@@ -28,7 +29,7 @@ class EulaAgreementState extends State<EulaAgreement> {
             leading: BackButton(
               color: Colors.white,
               onPressed: () async {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
                 await _signOut(context);
                 return true;
               },
@@ -136,11 +137,13 @@ class EulaAgreementState extends State<EulaAgreement> {
     var auth = AuthProvider.of(context).auth;
     await auth.signOut();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => MainApplication(),
+          builder: (BuildContext context) => AuthRouter(),
+
         ),
+        (Route<dynamic> route)=>false
       );
     });
   }
