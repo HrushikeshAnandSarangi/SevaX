@@ -1,4 +1,6 @@
-class ProjectModel {
+import 'package:sevaexchange/models/data_model.dart';
+
+class ProjectModel extends DataModel {
   String id;
   String name;
   String timebankId;
