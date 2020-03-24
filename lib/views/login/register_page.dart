@@ -617,7 +617,7 @@ class _RegisterPageState extends State<RegisterPage>
           children: <Widget>[
             appleLogin,
             Container(
-              width: 10,
+              width: 16,
             ),
             googleLogin,
 //            Container(
