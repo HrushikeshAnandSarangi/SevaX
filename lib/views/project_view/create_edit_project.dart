@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
+
+import '../../flavor_config.dart';
 
 class CreateEditProject extends StatefulWidget {
   final bool isCreateProject;
@@ -18,6 +24,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   TextEditingController searchTextController = new TextEditingController();
   String errTxt;
   ProjectModel projectModel = ProjectModel();
+  GeoFirePoint location;
+  String selectedAddress = '';
+  TimebankModel timebankModel = TimebankModel({});
+  BuildContext dialogContext;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +37,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
-          'Create Project',
+          'Create a Project',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -178,10 +188,135 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             Padding(
               padding: EdgeInsets.all(8),
             ),
+            headingText('Your timebank location.'),
+            Text(
+              'Project location will help your members to locate',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+            ),
+            Center(
+              child: FlatButton.icon(
+                icon: Icon(Icons.add_location),
+                label: Container(
+                  child: Text('Add Location'),
+//                  child: Text(
+//                    (snapshot.data.timebank.address == null ||
+//                        snapshot.data.timebank.address.isEmpty) &&
+//                        selectedAddress == ''
+//                        ? 'Add Location'
+//                        : snapshot.data.timebank.address,
+//                    overflow: TextOverflow.ellipsis,
+//                  ),
+                ),
+                color: Colors.grey[200],
+                onPressed: () async {
+                  print("Location opened : $location");
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute<GeoFirePoint>(
+                      builder: (context) => LocationPicker(
+                        selectedLocation: location,
+                      ),
+                    ),
+                  ).then((point) {
+                    if (point != null) {
+                      //  location = snapshot.data.timebank.location = point;
+
+                      print(
+                          "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                    }
+                    _getLocation('');
+                    //print('ReceivedLocation: $snapshot.data.timebank.address');
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Container(
+                alignment: Alignment.center,
+                child: RaisedButton(
+                  onPressed: () async {
+                    // show a dialog
+                    if (widget.isCreateProject) {
+//                            if (!firebaseUser.isEmailVerified) {
+//                              _showVerificationAndLogoutDialogue();
+//                            }
+
+                      print(_formKey.currentState.validate());
+
+//                            communityFound =
+//                                await isCommunityFound(enteredName);
+//                            if (communityFound) {
+//                              print("Found:$communityFound");
+//                              return;
+//                            }
+                      if (_formKey.currentState.validate()) {
+                      } else {}
+                    } else {
+                      showProgressDialog('Updating project');
+
+                      if (dialogContext != null) {
+                        Navigator.pop(dialogContext);
+                      }
+                      _formKey.currentState.reset();
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  shape: StadiumBorder(),
+                  child: Text(
+                    widget.isCreateProject ? 'Next' : 'Save',
+                    style: TextStyle(fontSize: 16.0, color: Colors.white),
+                  ),
+                  textColor: FlavorConfig.values.buttonTextColor,
+                ),
+              ),
+            ),
+            SizedBox(height: 100),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 50),
+              child: Text(
+                '',
+                textAlign: TextAlign.center,
+              ),
+            )
           ],
         ),
       ),
     );
+  }
+
+  void showProgressDialog(String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text(message),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+
+  Future _getLocation(data) async {
+    print('Timebank value:$data');
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+    setState(() {
+      this.selectedAddress = address;
+    });
+//    timebank.updateValueByKey('locationAddress', address);
+    print('_getLocation: $address');
+    projectModel.address = address;
+    data.timebank.updateValueByKey('address', address);
   }
 
   Widget headingText(String name) {
