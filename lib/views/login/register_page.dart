@@ -97,7 +97,9 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 8),
                             Text('or'),
                             SizedBox(height: 8),
-                            signUpWithGoogle
+                            signUpWithGoogle,
+                            SizedBox(height: 8),
+                            Text(''),
                           ],
                         ))))
           ],
@@ -608,22 +610,44 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get socialMediaLogin {
     if (Platform.isIOS) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          googleLoginiPhone,
-          Container(
-            height: 10,
-          ),
-          appleLoginiPhone,
-          Container(
-            height: 10,
-          ),
-        ],
+      return Container(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            googleLogin,
+            Container(
+              width: 10,
+            ),
+            appleLogin,
+//            Container(
+//              height: 10,
+//            ),
+          ],
+        ),
       );
     }
     return Center(
       child: googleLogin,
+    );
+  }
+
+  Widget get appleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: appleLogIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/images/apple-logo.png'),
+          ),
+        ),
+      ),
     );
   }
 

@@ -834,23 +834,41 @@ class _LoginPageState extends State<LoginPage> {
     if (Platform.isIOS) {
       return Container(
         width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            googleLoginiPhone,
+            googleLogin,
             Container(
-              height: 10,
+              width: 10,
             ),
-            appleLoginiPhone,
-            Container(
-              height: 10,
-            ),
+            appleLogin,
+//            Container(
+//              height: 10,
+//            ),
           ],
         ),
       );
     }
     return Center(
       child: googleLogin,
+    );
+  }
+  Widget get appleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: appleLogIn,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: Image.asset('lib/assets/images/apple-logo.png'),
+          ),
+        ),
+      ),
     );
   }
 
@@ -880,7 +898,7 @@ class _LoginPageState extends State<LoginPage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(4),
       ),
-      width: 220,
+      width: MediaQuery.of(context).size.width - 50,
       height: 56,
       child: InkWell(
         customBorder: CircleBorder(),
