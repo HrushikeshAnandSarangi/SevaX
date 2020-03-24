@@ -615,11 +615,11 @@ class _RegisterPageState extends State<RegisterPage>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            googleLogin,
+            appleLogin,
             Container(
               width: 10,
             ),
-            appleLogin,
+            googleLogin,
 //            Container(
 //              height: 10,
 //            ),
@@ -639,13 +639,10 @@ class _RegisterPageState extends State<RegisterPage>
       child: InkWell(
         customBorder: CircleBorder(),
         onTap: appleLogIn,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: Image.asset('lib/assets/images/apple-logo.png'),
-          ),
+        child:  SizedBox(
+          height: 44,
+          width: 44,
+          child: Image.asset('lib/assets/images/signin_apple.png'),
         ),
       ),
     );
@@ -658,13 +655,10 @@ class _RegisterPageState extends State<RegisterPage>
       child: InkWell(
         customBorder: CircleBorder(),
         onTap: useGoogleSignIn,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
-          ),
+        child: SizedBox(
+          height: 44,
+          width: 44,
+          child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
         ),
       ),
     );

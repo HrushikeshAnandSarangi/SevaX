@@ -837,11 +837,12 @@ class _LoginPageState extends State<LoginPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            googleLogin,
-            Container(
-              width: 10,
-            ),
             appleLogin,
+            Container(
+              width: 16,
+            ),
+            googleLogin,
+
 //            Container(
 //              height: 10,
 //            ),
@@ -860,13 +861,10 @@ class _LoginPageState extends State<LoginPage> {
       child: InkWell(
         customBorder: CircleBorder(),
         onTap: appleLogIn,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: Image.asset('lib/assets/images/apple-logo.png'),
-          ),
+        child:  SizedBox(
+          height: 44,
+          width: 44,
+          child: Image.asset('lib/assets/images/signin_apple.png'),
         ),
       ),
     );
@@ -879,13 +877,10 @@ class _LoginPageState extends State<LoginPage> {
       child: InkWell(
         customBorder: CircleBorder(),
         onTap: useGoogleSignIn,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
-          ),
+        child: SizedBox(
+          height: 44,
+          width: 44,
+          child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
         ),
       ),
     );
