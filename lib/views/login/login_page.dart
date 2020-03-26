@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void initState() {
 //    checkLoggedInState();
+    super.initState();
     if (Platform.isIOS) {
       AppleSignIn.onCredentialRevoked.listen((_) {
         print("Credentials revoked");
@@ -84,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
-    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
+    AppConfig.remoteConfig.fetch(expiration: Duration.zero);
     AppConfig.remoteConfig.activateFetched();
   }
 

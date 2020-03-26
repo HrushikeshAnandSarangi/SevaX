@@ -88,18 +88,18 @@ class Auth {
     @required String email,
     @required String password,
   }) async {
-    FirebaseUser user;
+    AuthResult result;
     try {
-      user = (await _firebaseAuth.signInWithEmailAndPassword(
+      result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      )) as FirebaseUser;
+      );
     } on Exception catch (error) {
       throw error;
     } catch (error) {
       log('Auth: signInWithEmailAndPassword: $error');
     }
-    return _processGoogleUser(user);
+    return _processGoogleUser(result.user);
   }
 
   /// Register a User with [email] and [password]
