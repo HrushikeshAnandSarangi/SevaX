@@ -88,20 +88,19 @@ class Auth {
     @required String email,
     @required String password,
   }) async {
-    FirebaseUser user;
+    AuthResult result;
     try {
-      user = await _firebaseAuth.signInWithEmailAndPassword(
+      result = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      ) as FirebaseUser;
+      );
     } on Exception catch (error) {
       throw error;
     } catch (error) {
       log('Auth: signInWithEmailAndPassword: $error');
     }
-    return _processGoogleUser(user);
+    return _processGoogleUser(result.user);
   }
-
 
   /// Register a User with [email] and [password]
   Future<UserModel> createUserWithEmailAndPassword({
@@ -110,11 +109,11 @@ class Auth {
     @required String displayName,
   }) async {
     try {
-      AuthResult user = (await _firebaseAuth.createUserWithEmailAndPassword(
+      FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
-      ) );
-      return _processEmailPasswordUser(user.user, displayName);
+      ) as FirebaseUser);
+      return _processEmailPasswordUser(user, displayName);
     } on PlatformException catch (error) {
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
         print(" ${email} already registered");
