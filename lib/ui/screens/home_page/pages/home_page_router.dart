@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/ui/screens/explore/pages/explore_page.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/utils/app_config.dart';
@@ -10,7 +11,6 @@ import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
-import 'package:sevaexchange/views/timebanks/explore_tabview.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -108,7 +108,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                       child: IndexedStack(
                         index: selected,
                         children: <Widget>[
-                          ExploreTabView(),
+                          ExplorePage(),
 //                          JoinSubTimeBankView(
 //                            isFromDash: true,
 //                            loggedInUserModel: _userBloc.user,
