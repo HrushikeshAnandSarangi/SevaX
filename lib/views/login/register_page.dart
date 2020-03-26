@@ -1,12 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sevaexchange/auth/auth.dart';
@@ -99,7 +97,9 @@ class _RegisterPageState extends State<RegisterPage>
                             SizedBox(height: 8),
                             Text('or'),
                             SizedBox(height: 8),
-                            signUpWithGoogle
+                            signUpWithGoogle,
+                            SizedBox(height: 8),
+                            Text(''),
                           ],
                         ))))
           ],
@@ -610,18 +610,41 @@ class _RegisterPageState extends State<RegisterPage>
 
   Widget get socialMediaLogin {
     if (Platform.isIOS) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          googleLoginiPhone,
-          Divider(),
-          appleLoginiPhone,
-          Divider(),
-        ],
+      return Container(
+        width: double.infinity,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            appleLogin,
+            Container(
+              width: 16,
+            ),
+            googleLogin,
+//            Container(
+//              height: 10,
+//            ),
+          ],
+        ),
       );
     }
     return Center(
       child: googleLogin,
+    );
+  }
+
+  Widget get appleLogin {
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(),
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: appleLogIn,
+        child:  SizedBox(
+          height: 44,
+          width: 44,
+          child: Image.asset('lib/assets/images/signin_apple.png'),
+        ),
+      ),
     );
   }
 
@@ -632,37 +655,78 @@ class _RegisterPageState extends State<RegisterPage>
       child: InkWell(
         customBorder: CircleBorder(),
         onTap: useGoogleSignIn,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
-          ),
+        child: SizedBox(
+          height: 44,
+          width: 44,
+          child: Image.asset('lib/assets/google-logo-png-open-2000.png'),
+        ),
+      ),
+    );
+  }
+
+  Widget signInButton({String imageRef, String msg, Function operation}) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black45),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      width: 220,
+      height: 56,
+      child: InkWell(
+        customBorder: CircleBorder(),
+        onTap: operation,
+        child: Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Container(
+                  height: 18,
+                ),
+                Container(
+                  width: 17,
+                  height: 17,
+                  margin: EdgeInsets.only(
+                    left: 12,
+                    right: 12,
+                  ),
+                  child: Image.asset(imageRef),
+                ),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Container(
+                  height: 15,
+                ),
+                Text(
+                  msg,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget get googleLoginiPhone {
-    return Material(
-      color: Colors.white,
-      shape: CircleBorder(),
-      child: GoogleSignInButton(
-        onPressed: useGoogleSignIn,
-      ),
+    return signInButton(
+      imageRef: 'lib/assets/google-logo-png-open-2000.png',
+      msg: 'Sign in with Google',
+      operation: useGoogleSignIn,
     );
   }
 
   Widget get appleLoginiPhone {
-    return Material(
-      color: Colors.white,
-      shape: CircleBorder(),
-      child: AppleSignInButton(
-        style: ButtonStyle.black,
-        type: ButtonType.continueButton,
-        onPressed: appleLogIn,
-      ),
+    return signInButton(
+      imageRef: 'lib/assets/images/apple-logo.png',
+      msg: 'Sign in with Apple',
+      operation: appleLogIn,
     );
   }
 
