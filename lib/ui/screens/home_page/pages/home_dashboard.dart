@@ -5,6 +5,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
+import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
@@ -21,9 +22,6 @@ import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
-
-// import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
-// import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 
 class HomeDashBoard extends StatelessWidget {
   HomeDashBoard();
@@ -101,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          centerTitle: true,
+          centerTitle: false,
           title: StreamBuilder<List<CommunityModel>>(
             stream: _homeDashBoardBloc.communities,
             builder: (context, snapshot) {
@@ -112,49 +110,63 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         canvasColor: Theme.of(context).primaryColor,
                       ),
                       child: DropdownButtonHideUnderline(
-                          child: DropdownButton<CommunityModel>(
-                        style: TextStyle(color: Colors.white),
-                        focusColor: Colors.white,
-                        iconEnabledColor: Colors.white,
-                        value: selectedCommunity,
-                        onChanged: (v) {
-                          if (v.id != selectedCommunity.id) {
-                            SevaCore.of(context).loggedInUser.currentCommunity =
-                                v.id;
-                            _homeDashBoardBloc
-                                .setDefaultCommunity(
-                              context: context,
-                              community: v,
-                              //oldCommunityId: selectedCommunity.id,
-                            )
-                                .then((_) {
+                        child: DropdownButton<CommunityModel>(
+                          style: TextStyle(color: Colors.white),
+                          focusColor: Colors.white,
+                          iconEnabledColor: Colors.white,
+                          value: selectedCommunity,
+                          onChanged: (v) {
+                            if (v.id != selectedCommunity.id) {
                               SevaCore.of(context)
                                   .loggedInUser
                                   .currentCommunity = v.id;
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SwitchTimebank(),
-                                ),
-                              );
-                            });
-                          }
-                        },
-                        items: List.generate(
-                          snapshot.data.length,
-                          (index) => DropdownMenuItem(
-                            value: snapshot.data[index],
-                            child: Text(
-                              snapshot.data[index].name,
-                              style: TextStyle(fontSize: 18),
+                              _homeDashBoardBloc
+                                  .setDefaultCommunity(
+                                context: context,
+                                community: v,
+                                //oldCommunityId: selectedCommunity.id,
+                              )
+                                  .then((_) {
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity = v.id;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SwitchTimebank(),
+                                  ),
+                                );
+                              });
+                            }
+                          },
+                          items: List.generate(
+                            snapshot.data.length,
+                            (index) => DropdownMenuItem(
+                              value: snapshot.data[index],
+                              child: Text(
+                                snapshot.data[index].name,
+                                style: TextStyle(fontSize: 18),
+                              ),
                             ),
                           ),
                         ),
-                      )),
+                      ),
                     )
                   : Text('Loading');
             },
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SearchPage(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: StreamBuilder<SelectedCommuntityGroup>(
           stream: _homeDashBoardBloc

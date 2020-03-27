@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/ui/screens/explore/widgets/group_card.dart';
+
+import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 
 class GroupTabView extends StatelessWidget {

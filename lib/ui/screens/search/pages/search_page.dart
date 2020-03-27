@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/ui/screens/explore/bloc/explore_bloc.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/feeds_tab_view.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/group_tab_view.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/projects_tab_view.dart';
-import 'package:sevaexchange/ui/screens/explore/pages/requests_tab_view.dart';
-import 'package:sevaexchange/ui/screens/explore/widgets/explore_tab_bar.dart';
-import 'package:sevaexchange/ui/screens/explore/widgets/search_field.dart';
+import 'package:sevaexchange/ui/screens/search/bloc/explore_bloc.dart';
+import 'package:sevaexchange/ui/screens/search/pages/projects_tab_view.dart';
+import 'package:sevaexchange/ui/screens/search/pages/requests_tab_view.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/explore_tab_bar.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/search_field.dart';
+
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
+import 'feeds_tab_view.dart';
+import 'group_tab_view.dart';
 import 'members_tab_view.dart';
 import 'offers_tab_view.dart';
 
-class ExplorePage extends StatefulWidget {
+class SearchPage extends StatefulWidget {
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
 
-class _ExplorePageState extends State<ExplorePage>
+class _ExplorePageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
-  ExploreBloc _bloc = ExploreBloc();
+  SearchBloc _bloc = SearchBloc();
   TextEditingController _controller = TextEditingController();
   TabController _tabController;
 

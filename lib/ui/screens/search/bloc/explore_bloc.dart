@@ -3,7 +3,7 @@ import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
-class ExploreBloc extends BlocBase {
+class SearchBloc extends BlocBase {
   final _searchText = BehaviorSubject<String>();
   final _debouncer = Debouncer(milliseconds: 500);
 

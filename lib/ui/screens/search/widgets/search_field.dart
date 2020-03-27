@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/ui/screens/explore/bloc/explore_bloc.dart';
+import 'package:sevaexchange/ui/screens/search/bloc/explore_bloc.dart';
 
 class SearchField extends StatelessWidget {
   SearchField({
     Key key,
-    @required ExploreBloc bloc,
+    @required SearchBloc bloc,
     @required TextEditingController controller,
   })  : _bloc = bloc,
         _controller = controller,
         super(key: key);
 
-  final ExploreBloc _bloc;
+  final SearchBloc _bloc;
   final TextEditingController _controller;
   final OutlineInputBorder border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8),
