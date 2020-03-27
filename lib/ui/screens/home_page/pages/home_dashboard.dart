@@ -161,7 +161,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SearchPage(),
+                    builder: (context) => Builder(builder: (context) {
+                      return SearchPage(bloc: _homeDashBoardBloc);
+                    }),
                   ),
                 );
               },
