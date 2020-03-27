@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
+import 'package:sevaexchange/views/messages/timebank_chats.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
@@ -21,7 +22,6 @@ import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
-import 'messages/timebank_chats.dart';
 // import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
 // import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
 
@@ -101,49 +101,57 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
           centerTitle: true,
           title: StreamBuilder<List<CommunityModel>>(
             stream: _homeDashBoardBloc.communities,
             builder: (context, snapshot) {
               setCurrentCommunity(snapshot.data);
               return snapshot.data != null
-                  ? DropdownButtonHideUnderline(
-                      child: DropdownButton<CommunityModel>(
-                      value: selectedCommunity,
-                      onChanged: (v) {
-                        if (v.id != selectedCommunity.id) {
-                          SevaCore.of(context).loggedInUser.currentCommunity =
-                              v.id;
-                          _homeDashBoardBloc
-                              .setDefaultCommunity(
-                            context: context,
-                            community: v,
-                            //oldCommunityId: selectedCommunity.id,
-                          )
-                              .then((_) {
+                  ? Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: Theme.of(context).primaryColor,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                          child: DropdownButton<CommunityModel>(
+                        style: TextStyle(color: Colors.white),
+                        focusColor: Colors.white,
+                        iconEnabledColor: Colors.white,
+                        value: selectedCommunity,
+                        onChanged: (v) {
+                          if (v.id != selectedCommunity.id) {
                             SevaCore.of(context).loggedInUser.currentCommunity =
                                 v.id;
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SwitchTimebank(),
-                              ),
-                            );
-                          });
-                        }
-                      },
-                      items: List.generate(
-                        snapshot.data.length,
-                        (index) => DropdownMenuItem(
-                          value: snapshot.data[index],
-                          child: Text(
-                            snapshot.data[index].name,
-                            style: TextStyle(fontSize: 18),
+                            _homeDashBoardBloc
+                                .setDefaultCommunity(
+                              context: context,
+                              community: v,
+                              //oldCommunityId: selectedCommunity.id,
+                            )
+                                .then((_) {
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity = v.id;
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SwitchTimebank(),
+                                ),
+                              );
+                            });
+                          }
+                        },
+                        items: List.generate(
+                          snapshot.data.length,
+                          (index) => DropdownMenuItem(
+                            value: snapshot.data[index],
+                            child: Text(
+                              snapshot.data[index].name,
+                              style: TextStyle(fontSize: 18),
+                            ),
                           ),
                         ),
-                      ),
-                    ))
+                      )),
+                    )
                   : Text('Loading');
             },
           ),
@@ -193,26 +201,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             return Column(
               children: <Widget>[
                 ShowLimitBadge(),
-//                 Consumer<TransactionConfig>(
-//                   builder: (context, transConfig, child) {
-//                     print(
-//                         "$context ${transConfig.currentTransactionCount} $child");
-//                     return Offstage(
-// //                      offstage: transactionConfig.currentTransactionCount <
-// //                          AppConfig.maxTransactionLimit,
-//                       child: Container(
-//                         width: MediaQuery.of(context).size.width,
-//                         alignment: Alignment.center,
-//                         color: Colors.red,
-//                         height: 30,
-//                         child: Text(
-//                           'Transaction Limit Reached',
-//                           style: TextStyle(color: Colors.white),
-//                         ),
-//                       ),
-//                     );
-//                   },
-//                 ),
                 TabBar(
                   controller: _timebankController,
                   indicatorColor: Colors.black,

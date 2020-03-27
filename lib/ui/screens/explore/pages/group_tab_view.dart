@@ -22,7 +22,7 @@ class GroupTabView extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GroupCard(
                   image:
-                      "https://lh3.googleusercontent.com/proxy/QW6EdU3ubrUmfTHkcnX4yuuPusr9UYzHxrUJnWG6XnLidEKem-pqE4TGIJLywfFZI2Vt-t7mRrn74A_c0hLCoHwmCuNwAHe-NF453nOl4UERFFPkWagvZsiaiAEpCygPcgY",
+                      "https://www.pandotrip.com/wp-content/uploads/2017/03/Hintersee-lake-2-740x485.jpg",
                   title: "Class Standard 6 Technology",
                   subtitle: "Chicago, Illionis 6700 members",
                   onPressed: () {},

@@ -21,9 +21,12 @@ class GroupCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         children: <Widget>[
-          CachedNetworkImage(
-            imageUrl: image,
-            fit: BoxFit.fitWidth,
+          AspectRatio(
+            aspectRatio: 3 / 2,
+            child: CachedNetworkImage(
+              imageUrl: image,
+              fit: BoxFit.fitWidth,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),

@@ -6,13 +6,13 @@ import 'package:sevaexchange/ui/screens/home_page/widgets/bottom_nav_bar.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/home_dashboard.dart';
 import 'package:sevaexchange/views/messages/chatlist_view.dart';
 import 'package:sevaexchange/views/notifications/notifications_page.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 
 import '../../../../flavor_config.dart';
+import 'home_dashboard.dart';
 
 class HomePageRouter extends StatefulWidget {
   @override
