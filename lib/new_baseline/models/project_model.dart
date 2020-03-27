@@ -1,9 +1,11 @@
 import 'package:sevaexchange/models/data_model.dart';
+import 'package:sevaexchange/models/models.dart';
 
 class ProjectModel extends DataModel {
   String id;
   String name;
   String timebankId;
+  String communityId;
   String description;
   String emailId;
   String phoneNumber;
@@ -14,27 +16,32 @@ class ProjectModel extends DataModel {
   int startTime;
   int endTime;
   List<String> members;
+  List<String> pendingRequests;
+  List<String> completedRequests;
 
-  ProjectModel({
-    this.id,
-    this.name,
-    this.timebankId,
-    this.description,
-    this.emailId,
-    this.phoneNumber,
-    this.creatorId,
-    this.address,
-    this.photoUrl,
-    this.createdAt,
-    this.startTime,
-    this.endTime,
-    this.members,
-  });
+  ProjectModel(
+      {this.id,
+      this.name,
+      this.timebankId,
+      this.communityId,
+      this.description,
+      this.emailId,
+      this.phoneNumber,
+      this.creatorId,
+      this.address,
+      this.photoUrl,
+      this.createdAt,
+      this.startTime,
+      this.endTime,
+      this.members,
+      this.pendingRequests,
+      this.completedRequests});
 
   factory ProjectModel.fromMap(Map<String, dynamic> json) => new ProjectModel(
         id: json["id"] == null ? null : json["id"],
         name: json["name"] == null ? null : json["name"],
         timebankId: json["timebank_id"] == null ? null : json["timebank_id"],
+        communityId: json["communityId"] == null ? null : json["communityId"],
         description: json["description"] == null ? null : json["description"],
         emailId: json["email_id"] == null ? null : json["email_id"],
         phoneNumber: json["phone_number"] == null ? null : json["phone_number"],
@@ -47,6 +54,12 @@ class ProjectModel extends DataModel {
         members: json["members"] == null
             ? null
             : new List<String>.from(json["members"].map((x) => x)),
+        pendingRequests: json["pendingRequests"] == null
+            ? null
+            : new List<String>.from(json["pendingRequests"].map((x) => x)),
+        completedRequests: json["completedRequests"] == null
+            ? null
+            : new List<String>.from(json["completedRequests"].map((x) => x)),
       );
 
   Map<String, dynamic> toMap() => {
@@ -65,5 +78,11 @@ class ProjectModel extends DataModel {
         "members": members == null
             ? null
             : new List<dynamic>.from(members.map((x) => x)),
+        "pendingRequests": pendingRequests == null
+            ? null
+            : new List<dynamic>.from(pendingRequests.map((x) => x)),
+        "completedRequests": completedRequests == null
+            ? null
+            : new List<dynamic>.from(completedRequests.map((x) => x)),
       };
 }

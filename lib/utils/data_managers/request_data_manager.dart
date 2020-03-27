@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import 'notifications_data_manager.dart';
@@ -643,6 +644,37 @@ Stream<RequestModel> getRequestStreamById({
       },
     ),
   );
+}
+
+Stream<ProjectModel> getProjectStream({
+  @required String projectId,
+}) async* {
+  var data =
+      Firestore.instance.collection('projects').document(projectId).snapshots();
+
+  yield* data.transform(
+    StreamTransformer<DocumentSnapshot, ProjectModel>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        ProjectModel model = ProjectModel.fromMap(snapshot.data);
+        model.id = snapshot.documentID;
+        requestSink.add(model);
+      },
+    ),
+  );
+}
+
+Future<void> createProject({@required ProjectModel projectModel}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectModel.id)
+      .setData(projectModel.toMap());
+}
+
+Future<void> updateProject({@required ProjectModel projectModel}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectModel.id)
+      .updateData(projectModel.toMap());
 }
 
 Stream<List<RequestModel>> getCompletedRequestStream({

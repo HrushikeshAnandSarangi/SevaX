@@ -59,7 +59,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       context,
       MaterialPageRoute(
         builder: (context) => CreateEditProject(
-          isCreateProject: false,
+          isCreateProject: true,
         ),
       ),
     );

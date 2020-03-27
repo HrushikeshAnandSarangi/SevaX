@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
+import 'package:sevaexchange/utils/utils.dart';
+import 'package:sevaexchange/views/core.dart';
 
 import '../../flavor_config.dart';
 
@@ -28,6 +32,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   String selectedAddress = '';
   TimebankModel timebankModel = TimebankModel({});
   BuildContext dialogContext;
+  String dateTimeEroor = '';
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +42,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
-          'Create a Project',
+          widget.isCreateProject ? 'Create a Project' : 'Edit Project',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
@@ -103,22 +108,31 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               //initialValue: snapshot.data.community.name ?? '',
 
               onSaved: (value) {
-                //  enteredName = value;
+                projectModel.name = value;
               },
               // onSaved: (value) => enteredName = value,
               validator: (value) {
-//                      if (value.isEmpty) {
-//                        return 'Timebank name cannot be empty';
-//                      } else if (communityFound) {
-//                        return 'Timebank name already exist';
-//                      } else {
-//                        enteredName = value;
-//                        snapshot.data.community.updateValueByKey('name', value);
-//                        createEditCommunityBloc.onChange(snapshot.data);
-//                      }
+                if (value.isEmpty) {
+                  return 'Project name cannot be empty';
+                } else {
+                  projectModel.name = value;
+                }
 
                 return null;
               },
+            ),
+            OfferDurationWidget(
+              title: ' Project duration',
+              //startTime: CalendarWidgetState.startDate,
+              //endTime: CalendarWidgetState.endDate
+            ),
+            Text(
+              dateTimeEroor,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 12,
+              ),
             ),
             headingText('Mission Statement'),
             TextFormField(
@@ -130,12 +144,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               maxLines: null,
               //  initialValue: timebankModel.missionStatement,
               onChanged: (value) {
-//                      timebankModel.missionStatement = value;
-//                      communityModel.about = value;
+                projectModel.description = value;
               },
               validator: (value) {
                 if (value.isEmpty) {
-                  return 'Tell us more about your project.';
+                  return 'Mission statement cannot be empty.';
+                } else {
+                  projectModel.description = value;
                 }
 //                      snapshot.data.community.updateValueByKey('about', value);
 //
@@ -153,7 +168,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               style: textStyle,
               cursorColor: Colors.black54,
               validator: _validateEmailId,
-              onSaved: null,
+              onSaved: (value) {
+                projectModel.emailId = value;
+              },
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
@@ -172,8 +189,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             TextFormField(
               style: textStyle,
               cursorColor: Colors.black54,
-              validator: _validateEmailId,
-              onSaved: null,
+              //  validator: _validateEmailId,
+              keyboardType: TextInputType.number,
+              onSaved: (value) {
+                projectModel.phoneNumber = value;
+              },
+              onChanged: (value) {
+                projectModel.phoneNumber = value;
+              },
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
@@ -225,12 +248,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     ),
                   ).then((point) {
                     if (point != null) {
-                      //  location = snapshot.data.timebank.location = point;
-
+                      location = point;
                       print(
                           "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                     }
-                    _getLocation('');
+                    _getLocation(location);
                     //print('ReceivedLocation: $snapshot.data.timebank.address');
                   });
                 },
@@ -257,6 +279,40 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                              return;
 //                            }
                       if (_formKey.currentState.validate()) {
+                        projectModel.startTime =
+                            OfferDurationWidgetState.starttimestamp;
+                        projectModel.endTime =
+                            OfferDurationWidgetState.endtimestamp;
+                        projectModel.communityId =
+                            SevaCore.of(context).loggedInUser.currentCommunity;
+                        projectModel.completedRequests = [];
+                        projectModel.pendingRequests = [];
+                        projectModel.timebankId = '';
+                        projectModel.creatorId =
+                            SevaCore.of(context).loggedInUser.sevaUserID;
+                        projectModel.members = [];
+                        projectModel.id = Utils.getUuid();
+                        if (globals.timebankAvatarURL == null) {
+                          setState(() {
+                            this.communityImageError =
+                                'Timebank logo is mandatory';
+                          });
+                        }
+
+                        if (projectModel.startTime == null ||
+                            projectModel.endTime == null) {
+                          setState(() {
+                            this.communityImageError = 'Duration is Mandatory';
+                          });
+                        }
+
+                        showProgressDialog('Updating project');
+
+                        if (dialogContext != null) {
+                          Navigator.pop(dialogContext);
+                        }
+                        _formKey.currentState.reset();
+                        Navigator.of(context).pop();
                       } else {}
                     } else {
                       showProgressDialog('Updating project');
@@ -284,7 +340,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 '',
                 textAlign: TextAlign.center,
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -316,7 +372,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
     projectModel.address = address;
-    data.timebank.updateValueByKey('address', address);
   }
 
   Widget headingText(String name) {
