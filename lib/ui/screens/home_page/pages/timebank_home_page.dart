@@ -8,6 +8,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/project_view/create_edit_project.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 
@@ -51,6 +52,19 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     );
   }
 
+  void navigateToCreateProjectGroup() {
+    createEditCommunityBloc
+        .updateUserDetails(SevaCore.of(context).loggedInUser);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateEditProject(
+          isCreateProject: true,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = BlocProvider.of<UserDataBloc>(context);
@@ -73,7 +87,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
-                  onPressed: navigateToCreateGroup,
+                  onPressed: navigateToCreateProjectGroup,
                 ),
               ],
             ),

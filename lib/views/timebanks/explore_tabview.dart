@@ -55,10 +55,10 @@ class _ExploreTabViewState extends State<ExploreTabView> {
               isScrollable: true,
               tabs: [
                 Tab(
-                  text: "Discover more Timebanks",
+                  text: "Find Timebanks",
                 ),
                 Tab(
-                  text: "Groups within ${communityModel.name ?? "Timabank"}",
+                  text: "Explore Groups",
                 ),
               ],
             ),
