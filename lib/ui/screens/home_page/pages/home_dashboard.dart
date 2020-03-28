@@ -196,9 +196,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               if (primaryTimebank != null &&
                   primaryTimebank.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
-                  tabs.length == 7) {
+                  tabs.length == 8) {
                 isAdmin = true;
-                _timebankController = TabController(length: 10, vsync: this);
+                _timebankController = TabController(length: 11, vsync: this);
 
                 tabs.add(Tab(text: 'Manage'));
                 tabs.add(

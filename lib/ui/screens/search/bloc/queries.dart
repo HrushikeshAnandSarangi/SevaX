@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class Searches {
@@ -28,12 +27,12 @@ class Searches {
       json.encode(
         {
           'authorization':
-          'basic ' + base64Encode(utf8.encode('$username:$password'))
+              'basic ' + base64Encode(utf8.encode('$username:$password'))
         },
       ),
     );
     http.Response response =
-    await makePostRequest(url: url, body: body, headers: {
+        await makePostRequest(url: url, body: body, headers: {
       'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=',
       "Accept": "application/json",
       "Content-Type": "application/json"
@@ -51,7 +50,6 @@ class Searches {
 //    log("loggg - "+hitList.toString());
     return hitList;
   }
-
 
   static Stream<List<NewsModel>> searchFeeds({
     @required queryString,
@@ -86,7 +84,7 @@ class Searches {
       },
     );
     List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+        await _makeElasticSearchPostRequest(url, body);
     List<NewsModel> newsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -120,7 +118,7 @@ class Searches {
       }
     });
     List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+        await _makeElasticSearchPostRequest(url, body);
     List<TimebankModel> timeBankList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -158,14 +156,14 @@ class Searches {
       },
     );
     List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+        await _makeElasticSearchPostRequest(url, body);
     List<UserModel> userList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       UserModel user = UserModel.fromMap(sourceMap);
 
 //      if (validItems.contains(user.sevaUserID)) {
-        userList.add(user);
+      userList.add(user);
 //      }
     });
     yield userList;
@@ -174,7 +172,8 @@ class Searches {
   static Stream<List<OfferModel>> searchOffers({
     @required queryString,
   }) async* {
-    String url = baseURL + 'http://35.227.18.55//elasticsearch/offers/offer/_search';
+    String url =
+        baseURL + 'http://35.227.18.55//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -198,7 +197,7 @@ class Searches {
       },
     );
     List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+        await _makeElasticSearchPostRequest(url, body);
 
     List<OfferModel> offerList = [];
     hitList.forEach((map) {
@@ -237,7 +236,7 @@ class Searches {
       },
     );
     List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+        await _makeElasticSearchPostRequest(url, body);
     List<RequestModel> offerList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -246,7 +245,4 @@ class Searches {
     });
     yield offerList;
   }
-
-
-
 }
