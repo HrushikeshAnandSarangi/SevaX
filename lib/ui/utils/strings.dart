@@ -10,4 +10,5 @@ class ExplorePageLabels {
 
   static const String groupInfo =
       "Join a group to contribute place holder for users to help what groups are about.";
+
 }
