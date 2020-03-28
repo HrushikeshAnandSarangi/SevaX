@@ -26,6 +26,11 @@ class _FeedsTabViewState extends State<FeedsTabView>
           return StreamBuilder<List<NewsModel>>(
             stream: Searches.searchFeeds(queryString: search.data),
             builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
