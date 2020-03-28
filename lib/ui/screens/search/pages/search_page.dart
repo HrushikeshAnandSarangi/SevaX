@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
-import 'package:sevaexchange/ui/screens/search/bloc/explore_bloc.dart';
+import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/pages/projects_tab_view.dart';
 import 'package:sevaexchange/ui/screens/search/pages/requests_tab_view.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/explore_tab_bar.dart';
