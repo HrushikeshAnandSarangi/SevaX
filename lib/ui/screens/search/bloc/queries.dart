@@ -134,7 +134,6 @@ class Searches {
     @required queryString,
 //    @required List<String> validItems,
   }) async* {
-    print("searchForUser :: ---------------");
     String url = baseURL + '/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
       {
