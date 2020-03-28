@@ -430,7 +430,7 @@ class NewsCardView extends StatelessWidget {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          title: Text('Delete Feed'),
+          title: Text('Delete feed'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -454,7 +454,7 @@ class NewsCardView extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      showProgressDialog("Deleting Feed", parentContext);
+                      showProgressDialog("Deleting feed", parentContext);
                       _deleteNews(parentContext);
                     },
                   ),

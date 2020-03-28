@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
-import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 //import 'package:collection/ lib\views\timebank_content_holder.dart';
 
 class TimebankModel extends DataModel {
@@ -125,7 +124,7 @@ class TimebankModel extends DataModel {
     if (key == 'balance') {
       this.balance = value;
     }
-    if (key == 'community_id'){
+    if (key == 'community_id') {
       this.communityId = value;
     }
   }
@@ -178,8 +177,6 @@ class TimebankModel extends DataModel {
   String toString() {
     return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location}';
   }
-
-
 }
 
 class Member extends DataModel {

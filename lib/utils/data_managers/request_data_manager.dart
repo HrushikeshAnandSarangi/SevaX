@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import 'notifications_data_manager.dart';
@@ -83,6 +84,64 @@ Stream<List<RequestModel>> getRequestListStream({String timebankId}) async* {
 Stream<List<RequestModel>> getAllRequestListStream() async* {
   var query = Firestore.instance
       .collection('requests')
+      .where('accepted', isEqualTo: false);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getTimebankRequestListStream(
+    {String timebankId}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('timebankId', isEqualTo: timebankId)
+      .where('accepted', isEqualTo: false);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getPersonalRequestListStream(
+    {String sevauserid}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('sevauserid', isEqualTo: sevauserid)
       .where('accepted', isEqualTo: false);
 
   var data = query.snapshots();
@@ -585,6 +644,37 @@ Stream<RequestModel> getRequestStreamById({
       },
     ),
   );
+}
+
+Stream<ProjectModel> getProjectStream({
+  @required String projectId,
+}) async* {
+  var data =
+      Firestore.instance.collection('projects').document(projectId).snapshots();
+
+  yield* data.transform(
+    StreamTransformer<DocumentSnapshot, ProjectModel>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        ProjectModel model = ProjectModel.fromMap(snapshot.data);
+        model.id = snapshot.documentID;
+        requestSink.add(model);
+      },
+    ),
+  );
+}
+
+Future<void> createProject({@required ProjectModel projectModel}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectModel.id)
+      .setData(projectModel.toMap());
+}
+
+Future<void> updateProject({@required ProjectModel projectModel}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectModel.id)
+      .updateData(projectModel.toMap());
 }
 
 Stream<List<RequestModel>> getCompletedRequestStream({
