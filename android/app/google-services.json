@@ -13,9 +13,23 @@
           "package_name": "com.sevaexchange.app"
         }
       },
-
-
       "oauth_client": [
+        {
+          "client_id": "1030900930316-medoo46po7dk5pn4uad3qeord0eufr3q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.app",
+            "certificate_hash": "86ac8b9c985b44c14253675fac394173bf457496"
+          }
+        },
+        {
+          "client_id": "1030900930316-s9t7chf2npvkebgojd275qeqvfmojdof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sevaexchange.app",
+            "certificate_hash": "3b9f911a93dc84743cc09a2ea5a14614cacc075b"
+          }
+        },
         {
           "client_id": "1030900930316-80jubfdre1241f0agsk38e0rfu16if76.apps.googleusercontent.com",
           "client_type": 1,
@@ -24,6 +38,42 @@
             "certificate_hash": "3be468344c03dce92cfb72b2d3fd8201afc5a2f0"
           }
         },
+        {
+          "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_vek04VOXi_4bgXq9TxKLRI4ZQ_Nj7s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1030900930316-9snjq6ul9adnkjbtagrvriqlnmq144ao.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sevaexchange.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1030900930316:android:08909c71ea1e73fb4bdb29",
+        "android_client_info": {
+          "package_name": "com.sevaexchange.sevax"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "1030900930316-u6dg264s5rvigc0ah1kj3rs8ivpu0r1c.apps.googleusercontent.com",
           "client_type": 3

@@ -516,7 +516,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                             );
                             offermodel.associatedRequest = requestid;
                             updateOfferWithRequest(offer: offermodel);
-
                             notifications.forEach((_notification) {
                               OfferModel _offer =
                                   OfferModel.fromMap(_notification.data);
