@@ -68,31 +68,29 @@ class OffersState extends State<OffersModule> {
                 margin: EdgeInsets.only(top: 12, bottom: 12),
                 child: Row(
                   children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateOffer(
+                              timebankId: timebankId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 10,
+                          child: Image.asset("lib/assets/images/add.png"),
+                        ),
+                      ),
+                    ),
                     Text(
                       'My Offers',
                       style: (TextStyle(fontWeight: FontWeight.w500)),
-                    ),
-                    TransactionLimitCheck(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateOffer(
-                                timebankId: timebankId,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(left: 10),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 10,
-                            child: Image.asset("lib/assets/images/add.png"),
-                          ),
-                        ),
-                      ),
                     ),
                   ],
                 ),
