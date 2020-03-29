@@ -881,7 +881,7 @@ class _SpendingsCardViewState extends State<SpendingsCardView> {
                   color: Colors.grey,
                   size: 45,
                 ),
-                headingText("Seva Coins left"),
+                headingText("Seva Credits left"),
                 valueText(" \$125.00"),
                 Align(
                   alignment: Alignment.bottomLeft,

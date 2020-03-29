@@ -899,7 +899,7 @@ class _ProfilePageState extends State<ProfilePage>
               ));
         }
         return Text(
-          "${snapshot.data} Seva Coins",
+          "${snapshot.data} Seva Credits",
           style: TextStyle(
             color: user.currentBalance > 0 ? Colors.blue : Colors.red,
             fontWeight: FontWeight.bold,

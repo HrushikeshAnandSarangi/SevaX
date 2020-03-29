@@ -1164,7 +1164,7 @@ class CompletedList extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text('${transmodel.credits}'),
-                      Text('Seva Coins',
+                      Text('Seva Credits',
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w600,

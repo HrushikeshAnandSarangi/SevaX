@@ -315,7 +315,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                                   ? '${model.credits} Yang Bucks'
                                   : FlavorConfig.appFlavor == Flavor.TULSI
                                       ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Coins';
+                                      : '${model.credits} Seva Credits';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -378,7 +378,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               ? '${model.credits} Yang Bucks '
                               : FlavorConfig.appFlavor == Flavor.TULSI
                                   ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Coins ';
+                                  : '${model.credits} Seva Credits ';
                         }(),
                         style: TextStyle(
                           color: Colors.black,

@@ -23,7 +23,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
-import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -430,7 +429,7 @@ class CreateEditCommunityViewFormState
                     ],
                   ),
                   Text(
-                    'With protected timebank, user to user transactions are disabled.',
+                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -438,7 +437,7 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Your timebank location.'),
                   Text(
-                    'Timebank location will help your members to locate',
+                    'List the place or address where your community meets (such as a cafe, library, or church.).',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -1214,9 +1213,6 @@ class CreateEditCommunityViewFormState
           initialValue: controller.community.billing_address.companyname != null
               ? controller.community.billing_address.companyname
               : '',
-          validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
-          },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
