@@ -87,47 +87,45 @@ class RequestsState extends State<RequestsModule> {
                       ),
                       widget.isFromSettings
                           ? Container()
-                          : TransactionLimitCheck(
-                              child: GestureDetector(
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 10,
-                                    child: Image.asset(
-                                        "lib/assets/images/add.png"),
-                                  ),
-                                ),
-                                onTap: () {
-                                  if (widget.timebankModel.protected) {
-                                    if (widget.timebankModel.admins.contains(
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID)) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => CreateRequest(
-                                            timebankId: timebankId,
-                                          ),
-                                        ),
-                                      );
-                                      return;
-                                    }
-                                    _showProtectedTimebankMessage();
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => CreateRequest(
-                                          timebankId: timebankId,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
+                          : GestureDetector(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 10),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                radius: 10,
+                                child: Image.asset(
+                                    "lib/assets/images/add.png"),
                               ),
                             ),
+                            onTap: () {
+                              if (widget.timebankModel.protected) {
+                                if (widget.timebankModel.admins.contains(
+                                    SevaCore.of(context)
+                                        .loggedInUser
+                                        .sevaUserID)) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateRequest(
+                                        timebankId: timebankId,
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
+                                _showProtectedTimebankMessage();
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateRequest(
+                                      timebankId: timebankId,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
                     ],
                   ),
                 ),

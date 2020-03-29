@@ -56,7 +56,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
     if (isSuperAdmin) {
       return DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           backgroundColor: Colors.white,
           body: Column(
@@ -66,9 +66,9 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 labelColor: Colors.black,
                 isScrollable: false,
                 tabs: <Widget>[
-                  Tab(text: "About"),
+                  Tab(text: "Edit Timebank"),
                   // Tab(text: "Upgrade"),
-                  Tab(text: "Billings"),
+                  // Tab(text: "Billings"),
                   Tab(text: "Settings"),
                 ],
 //              onTap: (index) {
@@ -86,7 +86,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                       isFromFind: false,
                       timebankId: widget.timebankModel.id,
                     ),
-                    TimeBankBillingAdminView(),
+                    // TimeBankBillingAdminView(),
                     Settings,
                   ],
                 ),
@@ -107,7 +107,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 labelColor: Colors.black,
                 isScrollable: false,
                 tabs: <Widget>[
-                  Tab(text: "About"),
+                  Tab(text: "Edit Timebank"),
                   Tab(text: "Settings"),
                 ],
 //                onTap: (index) {
@@ -138,7 +138,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   Widget superAdminView() {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Column(
@@ -150,7 +150,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               tabs: <Widget>[
                 Tab(text: "About"),
                 // Tab(text: "Upgrade"),
-                Tab(text: "Billings"),
+                // Tab(text: "Billings"),
                 Tab(text: "Settings"),
               ],
 //              onTap: (index) {
@@ -168,7 +168,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                     isFromFind: false,
                     timebankId: widget.timebankModel.id,
                   ),
-                  TimeBankBillingAdminView(),
+                  // TimeBankBillingAdminView(),
                   Settings,
                 ],
               ),
