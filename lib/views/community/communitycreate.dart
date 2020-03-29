@@ -428,7 +428,7 @@ class CreateEditCommunityViewFormState
                     ],
                   ),
                   Text(
-                    'With protected timebank, user to user transactions are disabled.',
+                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled.',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -1212,9 +1212,9 @@ class CreateEditCommunityViewFormState
           initialValue: controller.community.billing_address.companyname != null
               ? controller.community.billing_address.companyname
               : '',
-          validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
-          },
+          // validator: (value) {
+          //   return value.isEmpty ? 'Field cannot be left blank*' : null;
+          // },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(

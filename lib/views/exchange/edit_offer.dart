@@ -4,12 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
-import 'package:sevaexchange/main.dart' as prefix0;
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/main.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
@@ -78,14 +74,12 @@ class MyCustomOfferFormState extends State<MyCustomOfferForm> {
     OfferModel model = OfferModel(
         email: SevaCore.of(context).loggedInUser.email,
         fullName: SevaCore.of(context).loggedInUser.fullname,
-        title: title,
         id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
         sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-        description: description,
-        schedule: schedule,
         timebankId: widget.timebankId,
         timestamp: timestamp,
         location: location);
+        
     await createOffer(offerModel: model);
   }
 

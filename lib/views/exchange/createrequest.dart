@@ -112,6 +112,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   String _selectedTimebankId;
 
   Future<TimebankModel> getTimebankAdminStatus;
+  TimebankModel timebankModel;
 
   @override
   void initState() {
@@ -123,7 +124,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
     );
-    
+
     fetchRemoteConfig();
 
     print(location);
@@ -162,37 +163,52 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(bottom: 20),
-                  width: double.infinity,
-                  child: CupertinoSegmentedControl<int>(
-                    selectedColor: Theme.of(context).primaryColor,
-                    children: logoWidgets,
-                    borderColor: Colors.grey,
+                FutureBuilder<TimebankModel>(
+                  future: getTimebankAdminStatus,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return Text(snapshot.error.toString());
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    }
+                    timebankModel = snapshot.data;
+                    if (snapshot.data.admins.contains(
+                        SevaCore.of(context).loggedInUser.sevaUserID)) {
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 20),
+                        width: double.infinity,
+                        child: CupertinoSegmentedControl<int>(
+                          selectedColor: Theme.of(context).primaryColor,
+                          children: logoWidgets,
+                          borderColor: Colors.grey,
 
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    groupValue: sharedValue,
-                    onValueChanged: (int val) {
-                      print(val);
-                      if (val != sharedValue) {
-                        setState(() {});
-                        setState(() {
-                          print("$sharedValue -- $val");
-                          if (sharedValue == 0) {
-                            requestModel.requestMode =
-                                RequestMode.TIMEBANK_REQUEST;
-                          } else {
-                            requestModel.requestMode =
-                                RequestMode.PERSONAL_REQUEST;
-                          }
-                          sharedValue = val;
-                        });
-                      }
-                    },
-                    //groupValue: sharedValue,
-                  ),
+                          padding: EdgeInsets.only(left: 0.0, right: 0),
+                          groupValue: sharedValue,
+                          onValueChanged: (int val) {
+                            print(val);
+                            if (val != sharedValue) {
+                              setState(() {});
+                              setState(() {
+                                print("$sharedValue -- $val");
+                                if (sharedValue == 0) {
+                                  requestModel.requestMode =
+                                      RequestMode.TIMEBANK_REQUEST;
+                                } else {
+                                  requestModel.requestMode =
+                                      RequestMode.PERSONAL_REQUEST;
+                                }
+                                sharedValue = val;
+                              });
+                            }
+                          },
+                          //groupValue: sharedValue,
+                        ),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
                 ),
-
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang gang request title"
@@ -227,110 +243,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   //endTime: CalendarWidgetState.endDate
                 ),
                 SizedBox(height: 12),
-
-                // FlatButton(
-                //   //Request Date and Time
-                //   color: Color.fromRGBO(112, 196, 147, 1.0),
-                //   onPressed: () {
-                //     DateTime selectedDate;
-                //     if (requestModel.requestStart == null) {
-                //       selectedDate = DateTime.now();
-                //     } else {
-                //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
-                //         requestModel.requestStart,
-                //       );
-                //     }
-
-                //     DatePicker.showDateTimePicker(
-                //       context,
-                //       showTitleActions: true,
-                //       onChanged: (date) {
-                //         requestModel.requestStart = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageStart = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                 requestModel.requestStart,
-                //               ).toString();
-                //         });
-                //       },
-                //       onConfirm: (date) {
-                //         requestModel.requestStart = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageStart = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                 requestModel.requestStart,
-                //               ).toString();
-                //         });
-                //       },
-                //       currentTime: DateTime(
-                //         selectedDate.year,
-                //         selectedDate.month,
-                //         selectedDate.day,
-                //         selectedDate.hour,
-                //         selectedDate.minute,
-                //         00,
-                //       ),
-                //     );
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.calendar_today, size: 24.0),
-                //       Text(_dateMessageStart),
-                //     ],
-                //   ),
-                // ),
-                // Text(' '),
-                // FlatButton(
-                //   color: Color.fromRGBO(112, 196, 0, 1.0),
-                //   onPressed: () {
-                //     DateTime selectedDate;
-
-                //     if (requestModel.requestEnd == null) {
-                //       selectedDate = DateTime.now();
-                //     } else {
-                //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
-                //         requestModel.requestEnd,
-                //       );
-                //     }
-
-                //     DatePicker.showDateTimePicker(
-                //       context,
-                //       showTitleActions: true,
-                //       onChanged: (date) {
-                //         requestModel.requestEnd = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageEnd = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                       requestModel.requestEnd)
-                //                   .toString();
-                //         });
-                //       },
-                //       onConfirm: (date) {
-                //         requestModel.requestEnd = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageEnd = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                       requestModel.requestEnd)
-                //                   .toString();
-                //         });
-                //       },
-                //       currentTime: DateTime(
-                //         selectedDate.year,
-                //         selectedDate.month,
-                //         selectedDate.day,
-                //         selectedDate.hour,
-                //         selectedDate.minute,
-                //         00,
-                //       ),
-                //     );
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.calendar_today, size: 24.0),
-                //       Text(_dateMessageEnd),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 20),
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -350,7 +262,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                   initialValue:
                       widget.isOfferRequest != null && widget.isOfferRequest
-                          ? widget.offer.description
+                          ? ""
                           : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 4,
@@ -364,7 +276,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  'No. of volunteers*',
+                  'No. of hours *',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -374,20 +286,46 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'No. of approvals',
+                      hintText: 'No. of hours required',
                       hintStyle: textStyle,
                       // labelText: 'No. of volunteers',
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter the number of volunteers needed';
+                        return 'Please enter the number of hours needed';
                       } else {
-                        requestModel.numberOfApprovals = int.parse(value);
+                        requestModel.numberOfHours = int.parse(value);
                         return null;
                       }
                     }),
                 SizedBox(height: 20),
+                Text(
+                  'No. of volunteers*',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.grey,
+                  ),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'No. of approvals',
+                    hintStyle: textStyle,
+                    // labelText: 'No. of volunteers',
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the number of volunteers needed';
+                    } else {
+                      requestModel.numberOfApprovals = int.parse(value);
+                      return null;
+                    }
+                  },
+                ),
+                SizedBox(height: 40),
                 if (FlavorConfig.appFlavor != Flavor.APP)
                   addVolunteersForAdmin(),
                 Center(
@@ -454,93 +392,51 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
-
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
-    //adding some members for humanity first
-    List<String> arrayOfSelectedMembers = List();
-
-    if (selectedUsers != null) {
-      selectedUsers.forEach((k, v) => arrayOfSelectedMembers.add(k));
-    }
-    requestModel.approvedUsers = arrayOfSelectedMembers;
-
-    sevaCoinsValue = await getMemberBalance(
-      SevaCore.of(context).loggedInUser.email,
-      SevaCore.of(context).loggedInUser.sevaUserID,
-    );
-
-    if (_formKey.currentState.validate() && !_checkValidityForSevaCoins) {
-      return showDialog(
-          context: context,
-          builder: (BuildContext viewContext) {
-            return AlertDialog(
-              title:
-                  Text('Insufficient seva coins for user to process requests'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(viewContext).pop();
-                  },
-                ),
-              ],
-            );
-          });
-    }
-
-    //adding some members for humanity first
     if (_formKey.currentState.validate()) {
-      if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-        var timebankDetails = await FirestoreManager.getTimeBankForId(
-            timebankId: requestModel.timebankId);
-        requestModel.fullName = timebankDetails.name;
-        requestModel.photoUrl = timebankDetails.photoUrl;
+      // validate request start and end date
+      if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
+        showDialogForTitle(
+            dialogTitle:
+                "Please mention the start and end date of the request");
+        return;
       }
 
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (createDialogContext) {
-            dialogContext = createDialogContext;
-            return AlertDialog(
-              title: Text('Creating Request..'),
-              content: LinearProgressIndicator(),
-            );
-          });
+      if (!hasRegisteredLocation()) {
+        showDialogForTitle(dialogTitle: "Please add location to your request");
+      }
 
-      print("Select Members");
+      //in case the request is created for an accepted offer
       if (widget.isOfferRequest == true && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
         requestModel.approvedUsers.add(widget.userModel.email);
       }
 
+      //Form and date is valid
+      switch (requestModel.requestMode) {
+        case RequestMode.PERSONAL_REQUEST:
+          sevaCoinsValue = await getMemberBalance(
+            SevaCore.of(context).loggedInUser.email,
+            SevaCore.of(context).loggedInUser.sevaUserID,
+          );
+
+          if (!hasSufficientBalance()) {
+            showInsufficientBalance();
+            return;
+          }
+          break;
+
+        case RequestMode.TIMEBANK_REQUEST:
+          requestModel.fullName = timebankModel.name;
+          requestModel.photoUrl = timebankModel.photoUrl;
+          break;
+      }
+      linearProgressForCreatingRequest();
       await _writeToDB();
 
       if (widget.isOfferRequest == true && widget.userModel != null) {
-        print(
-            "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        // OfferModel offer = widget.offer;
-        // Set<String> offerRequestList = () {
-        //   if (offer.requestList == null) return [];
-        //   return offer.requestList;
-        // }()
-        //     .toSet();
-        // offerRequestList.add(requestModel.id);
-        // offer.requestList = offerRequestList.toList();
-        // FirestoreManager.updateOfferWithRequest(offer: offer);
-        // sendOfferRequest(
-        //     offerModel: widget.offer,
-        //     requestSevaID: requestModel.sevaUserId);
-
-        // Navigator.pop(dialogContext);
-        // Navigator.pop(context);
         Navigator.pop(dialogContext);
         Navigator.pop(context, {'response': 'ACCEPTED'});
       } else {
@@ -548,6 +444,70 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         Navigator.pop(context);
       }
     }
+  }
+
+  bool hasRegisteredLocation() {
+    return requestModel.location != null;
+  }
+
+  void linearProgressForCreatingRequest() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text('Creating Request..'),
+            content: LinearProgressIndicator(),
+          );
+        });
+  }
+
+  void showInsufficientBalance() {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(
+                'Your seva credits are not sufficient to create the request.'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void showDialogForTitle({String dialogTitle}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogTitle),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Map<String, UserModel> selectedUsers;
@@ -618,7 +578,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
-  bool get _checkValidityForSevaCoins {
+  bool hasSufficientBalance() {
     if (requestModel.requestStart == null) {
       requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
     }
@@ -634,7 +594,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     var diffDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd)
         .difference(
             DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart));
-    var requestCoins = diffDate.inHours * requestModel.numberOfApprovals;
+    var requestCoins =
+        requestModel.numberOfHours * requestModel.numberOfApprovals;
     print("Hours:${diffDate.inHours} --> " +
         requestModel.numberOfApprovals.toString());
     print("Number of seva coins:${requestCoins.abs()}");
@@ -660,15 +621,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
-    //requestModel.r
-
-    if (requestModel.requestStart == null) {
-      requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
-    }
-
-    if (requestModel.requestEnd == null) {
-      requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
-    }
 
     if (requestModel.id == null) return;
     await FirestoreManager.createRequest(requestModel: requestModel);

@@ -24,7 +24,7 @@ String getNotificationMessage(NotificationType type) {
       return "Task completion rejected by *name ";
       break;
     case NotificationType.TransactionCredit:
-      return "Congrats, *credits Seva Coins have been credited to your account.";
+      return "Congrats, *credits Seva Credits have been credited to your account.";
       break;
     case NotificationType.TransactionDebit:
       return "Request ";

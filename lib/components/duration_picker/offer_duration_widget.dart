@@ -84,7 +84,8 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
 
   Widget get startWidget {
     if (startTime == null)
-      starttimestamp = DateTime.now().millisecondsSinceEpoch;
+      starttimestamp = 0;
+    // throw ("START_DATE_NOT_DEFINED");
     else
       starttimestamp = startTime.millisecondsSinceEpoch;
 
@@ -93,11 +94,11 @@ class OfferDurationWidgetState extends State<OfferDurationWidget> {
 
   Widget get endWidget {
     if (endTime == null) {
-      var endTime = DateTime.now();
-      endtimestamp = endTime.add(new Duration(days: 1)).millisecondsSinceEpoch;
-    }
-    // endtimestamp = 1609412400000;
-    else
+      endtimestamp = 0;
+      // var endTime = DateTime.now();
+      // endtimestamp = endTime.add(new Duration(days: 1)).millisecondsSinceEpoch;
+      // throw ("END_DATE_NOT_DEFINED");
+    } else
       endtimestamp = endTime.millisecondsSinceEpoch;
     return getDateTimeWidget(endTime, DurationType.END);
   }

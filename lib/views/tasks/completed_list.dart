@@ -107,7 +107,7 @@ class _CompletedListState extends State<CompletedList> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text('${transmodel.credits}'),
-                  Text('Seva Coins',
+                  Text('Seva Credits',
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w600,

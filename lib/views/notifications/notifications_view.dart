@@ -181,21 +181,22 @@ class NotificationsView extends State<NotificationViewHolder> {
                     model, notification.senderUserId, notification.id);
                 break;
               case NotificationType.OfferAccept:
-                OfferModel offerModel = OfferModel.fromMap(notification.data);
+                return Container();
+                //   OfferModel offerModel = OfferModel.fromMap(notification.data);
 
-                List<NotificationsModel> offerAcceptNotificationList =
-                    notifications.where((noti) {
-                  if (noti.type == NotificationType.OfferAccept) return true;
-                  return false;
-                }).toList();
-                return getOfferAcceptNotification(
-                  offerModel,
-                  notification.senderUserId,
-                  notification.targetUserId,
-                  notification.id,
-                  offerModel.requestList.elementAt(0),
-                  offerAcceptNotificationList,
-                );
+                //   List<NotificationsModel> offerAcceptNotificationList =
+                //       notifications.where((noti) {
+                //     if (noti.type == NotificationType.OfferAccept) return true;
+                //     return false;
+                //   }).toList();
+                //   return getOfferAcceptNotification(
+                //     offerModel,
+                //     notification.senderUserId,
+                //     notification.targetUserId,
+                //     notification.id,
+                //     offerModel.requestList.elementAt(0),
+                //     offerAcceptNotificationList,
+                //   );
                 // return Column(
                 //   children: offerModel.requestList.map<Widget>((value) {
                 //     return getOfferAcceptNotification(
@@ -315,7 +316,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                                   ? '${model.credits} Yang Bucks'
                                   : FlavorConfig.appFlavor == Flavor.TULSI
                                       ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Coins';
+                                      : '${model.credits} Seva Credits';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -378,7 +379,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               ? '${model.credits} Yang Bucks '
                               : FlavorConfig.appFlavor == Flavor.TULSI
                                   ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Coins ';
+                                  : '${model.credits} Seva Credits ';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
@@ -564,7 +565,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${user.fullname} sent request for your offer: ${offermodel.title} ',
+                                      '${user.fullname} sent request for your offer ', 
                                   style: TextStyle(
                                     color: Colors.grey,
                                   ),
@@ -1472,7 +1473,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                           child: Text(
                             '',
                             style: TextStyle(
-                                color: Colors.white,),
+                              color: Colors.white,
+                            ),
                           ),
                           onPressed: () async {
                             // request declined

@@ -1,56 +1,73 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/flavor_config.dart';
 
 import 'models.dart';
-import 'package:flutter/material.dart';
 
-class OfferModel extends DataModel {
-  String id;
+enum OfferType {
+  INDIVIDUAL_OFFER,
+  GROUP_OFFER,
+}
+
+class GroupOfferDataModel {
+  String classTitle;
+  int startDate;
+  int endDate;
+  int numberOfPreperationHours;
+  int numberOfClassHours;
+  String classDescription;
+  List<String> signedUpMembers;
+
+  GroupOfferDataModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('classTitle')) {
+      this.classTitle = map['classTitle'];
+    }
+
+    if (map.containsKey('startDate')) {
+      this.startDate = map['startDate'];
+    }
+
+    if (map.containsKey('endDate')) {
+      this.endDate = map['endDate'];
+    }
+
+    if (map.containsKey('numberOfPreperationHours')) {
+      this.numberOfPreperationHours = map['numberOfPreperationHours'];
+    }
+
+    if (map.containsKey('numberOfClassHours')) {
+      this.numberOfClassHours = map['numberOfClassHours'];
+    }
+
+    if (map.containsKey('classDescription')) {
+      this.classDescription = map['classDescription'];
+    }
+
+    if (map.containsKey('signedUpMembers')) {
+      List<String> signedUpMembers = List.castFrom(map['signedUpMembers']);
+      this.signedUpMembers = signedUpMembers;
+    } else {
+      this.signedUpMembers = [];
+    }
+  }
+}
+
+class IndividualOfferDataModel {
   String title;
   String description;
   String schedule;
-  String email;
-  String fullName;
-  String sevaUserId;
-  String associatedRequest;
-  List<String> requestList;
   List<String> offerAcceptors;
-  int timestamp;
-  String timebankId;
-  GeoFirePoint location;
-  bool acceptedOffer = false;
-  String root_timebank_id;
 
-  String photoUrlImage = "";
-
-  Color color;
-
-  OfferModel({
-    this.id,
-    this.title,
-    this.description,
-    this.email,
-    this.fullName,
-    this.sevaUserId,
-    this.schedule,
-    this.associatedRequest,
-    this.color,
-    this.requestList,
-    this.timestamp,
-    this.timebankId,
-    this.location,
-  }) {
-    this.root_timebank_id = FlavorConfig.values.timebankId;
-  }
-
-  OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
-    if (map.containsKey('id')) {
-      this.id = map['id'];
+  IndividualOfferDataModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('title')) {
+      this.title = map['title'];
     }
-
-    if (map.containsKey("offerAccepted")) {
-      this.acceptedOffer = map['offerAccepted'];
+    if (map.containsKey('description')) {
+      this.description = map['description'];
+    }
+    if (map.containsKey('schedule')) {
+      this.schedule = map['schedule'];
     }
 
     if (map.containsKey("offerAcceptors")) {
@@ -59,14 +76,66 @@ class OfferModel extends DataModel {
     } else {
       this.offerAcceptors = [];
     }
+  }
+}
 
-    if (map.containsKey('title')) {
-      this.title = map['title'];
+class OfferModel extends DataModel {
+  String id;
+  String email;
+  String fullName;
+  String sevaUserId;
+  String associatedRequest;
+  int timestamp;
+  String timebankId;
+  GeoFirePoint location;
+  bool acceptedOffer = false;
+  String root_timebank_id;
+  OfferType offerType;
+  String photoUrlImage;
+  Color color;
+
+  GroupOfferDataModel groupOfferDataModel;
+  IndividualOfferDataModel individualOfferDataModel;
+
+  OfferModel({
+    this.id,
+    this.email,
+    this.fullName,
+    this.sevaUserId,
+    this.associatedRequest,
+    this.color,
+    this.timestamp,
+    this.timebankId,
+    this.location,
+    this.groupOfferDataModel,
+    this.individualOfferDataModel,
+  }) {
+    this.root_timebank_id = FlavorConfig.values.timebankId;
+  }
+
+  OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
+    if (map.containsKey('offerType')) {
+      this.offerType = map['offerType'];
+
+      if (map['offerType'] == OfferType.GROUP_OFFER.toString()) {
+        this.offerType = OfferType.GROUP_OFFER;
+      } else {
+        this.offerType = OfferType.INDIVIDUAL_OFFER;
+      }
     }
 
-    if (map.containsKey('description')) {
-      this.description = map['description'];
+    if (map.containsKey('id')) {
+      this.id = map['id'];
     }
+
+    if (map.containsKey('offerType')) {
+      this.offerType = map['offerType'];
+    }
+
+    if (map.containsKey("offerAccepted")) {
+      this.acceptedOffer = map['offerAccepted'];
+    }
+
     if (map.containsKey('email')) {
       this.email = map['email'];
     }
@@ -79,18 +148,11 @@ class OfferModel extends DataModel {
     if (map.containsKey('associatedRequest')) {
       this.associatedRequest = map['associatedRequest'];
     }
-    if (map.containsKey('schedule')) {
-      this.schedule = map['schedule'];
-    }
+
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
     }
-    if (map.containsKey('requestList')) {
-      List<String> requests = List.castFrom(map['requestList']);
-      this.requestList = requests;
-    } else {
-      this.requestList = [];
-    }
+
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
     }
@@ -103,20 +165,20 @@ class OfferModel extends DataModel {
   }
 
   OfferModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('offerType')) {
+      this.offerType = map['offerType'];
+
+      if (map['offerType'] == OfferType.GROUP_OFFER.toString()) {
+        this.offerType = OfferType.GROUP_OFFER;
+      } else {
+        this.offerType = OfferType.INDIVIDUAL_OFFER;
+      }
+    }
+
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
-    if (map.containsKey("offerAccepted")) {
-      this.acceptedOffer = map['offerAccepted'];
-    } else {
-      this.offerAcceptors = [];
-    }
-    if (map.containsKey('title')) {
-      this.title = map['title'];
-    }
-    if (map.containsKey('description')) {
-      this.description = map['description'];
-    }
+
     if (map.containsKey('email')) {
       this.email = map['email'];
     }
@@ -126,31 +188,20 @@ class OfferModel extends DataModel {
     if (map.containsKey('sevaUserId')) {
       this.sevaUserId = map['sevaUserId'];
     }
+
     if (map.containsKey('associatedRequest')) {
       this.associatedRequest = map['associatedRequest'];
     }
-    if (map.containsKey('schedule')) {
-      this.schedule = map['schedule'];
-    }
+
     if (map.containsKey('timestamp')) {
       this.timestamp = map['timestamp'];
-    }
-    if (map.containsKey('requestList')) {
-      List<String> requests = List.castFrom(map['requestList']);
-      this.requestList = requests;
-    } else {
-      this.requestList = [];
-    }
-    if (map.containsKey("offerAcceptors")) {
-      List<String> offerAcceptors = List.castFrom(map['offerAcceptors']);
-      this.offerAcceptors = offerAcceptors;
     }
 
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
     }
+
     if (map.containsKey('location')) {
-      // GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'], map['location']['geopoint']['_longitude']);
       GeoPoint geoPoint = map['location']['geopoint'];
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
@@ -161,6 +212,10 @@ class OfferModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {};
 
+    if (this.offerType != null) {
+      map['offerType'] = this.offerType.toString();
+    }
+
     if (this.id != null && this.id.isNotEmpty) {
       map['id'] = this.id;
     }
@@ -169,12 +224,12 @@ class OfferModel extends DataModel {
       map['root_timebank_id'] = this.root_timebank_id;
     }
 
-    if (this.title != null && this.title.isNotEmpty) {
-      map['title'] = this.title;
-    }
-    if (this.description != null && this.description.isNotEmpty) {
-      map['description'] = this.description;
-    }
+    // if (this.title != null && this.title.isNotEmpty) {
+    //   map['title'] = this.title;
+    // }
+    // if (this.description != null && this.description.isNotEmpty) {
+    //   map['description'] = this.description;
+    // }
     if (this.email != null && this.email.isNotEmpty) {
       map['email'] = this.email;
     }
@@ -189,25 +244,18 @@ class OfferModel extends DataModel {
     } else {
       map['assossiatedRequest'] = null;
     }
-    if (this.schedule != null && this.schedule.isNotEmpty) {
-      map['schedule'] = this.schedule;
-    }
+    // if (this.schedule != null && this.schedule.isNotEmpty) {
+    //   map['schedule'] = this.schedule;
+    // }
     if (this.timestamp != null) {
       map['timestamp'] = this.timestamp;
     }
-    if (this.requestList != null) {
-      map['requestList'] = this.requestList;
-    }
+
     if (this.timebankId != null) {
       map['timebankId'] = this.timebankId;
     }
     if (this.location != null) {
       map['location'] = this.location.data;
-    }
-    if (this.offerAcceptors != null) {
-      map['offerAcceptors'] = this.offerAcceptors;
-    } else {
-      map['offerAcceptors'] = [];
     }
 
     return map;
@@ -220,18 +268,23 @@ class OfferModel extends DataModel {
     if (this.id != null && this.id.isNotEmpty) {
       map['id'] = this.id;
     }
-    if (this.title != null && this.title.isNotEmpty) {
-      map['title'] = this.title;
-    }
-    if (this.description != null && this.description.isNotEmpty) {
-      map['description'] = this.description;
-    }
+    // if (this.title != null && this.title.isNotEmpty) {
+    //   map['title'] = this.title;
+    // }
+    // if (this.description != null && this.description.isNotEmpty) {
+    //   map['description'] = this.description;
+    // }
     if (this.email != null && this.email.isNotEmpty) {
       map['email'] = this.email;
     }
     if (this.fullName != null && this.fullName.isNotEmpty) {
       map['fullName'] = this.fullName;
     }
+
+    if (this.offerType != null) {
+      map['offerType'] = this.offerType.toString();
+    }
+
     if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
       map['sevaUserId'] = this.sevaUserId;
     }
@@ -240,14 +293,11 @@ class OfferModel extends DataModel {
     } else {
       map['assossiatedRequest'] = null;
     }
-    if (this.schedule != null && this.schedule.isNotEmpty) {
-      map['schedule'] = this.schedule;
-    }
+    // if (this.schedule != null && this.schedule.isNotEmpty) {
+    //   map['schedule'] = this.schedule;
+    // }
     if (this.timestamp != null) {
       map['timestamp'] = this.timestamp;
-    }
-    if (this.requestList != null) {
-      map['requestList'] = this.requestList;
     }
     if (this.timebankId != null) {
       map['timebankId'] = this.timebankId;

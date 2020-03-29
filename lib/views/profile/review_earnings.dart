@@ -134,7 +134,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
                               )),
-                          Text('Seva Coins',
+                          Text('Seva Credits',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,

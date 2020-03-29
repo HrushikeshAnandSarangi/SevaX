@@ -664,9 +664,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             communityModel.billing_address.companyname = value;
           },
           initialValue: companyname != null ? companyname : '',
-          validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
-          },
+          // validator: (value) {
+          //   return value.isEmpty ? 'Field cannot be left blank*' : null;
+          // },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
@@ -881,7 +881,7 @@ class _SpendingsCardViewState extends State<SpendingsCardView> {
                   color: Colors.grey,
                   size: 45,
                 ),
-                headingText("Seva Coins left"),
+                headingText("Seva Credits left"),
                 valueText(" \$125.00"),
                 Align(
                   alignment: Alignment.bottomLeft,
