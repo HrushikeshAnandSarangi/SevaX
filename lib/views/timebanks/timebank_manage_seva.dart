@@ -66,7 +66,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 labelColor: Colors.black,
                 isScrollable: false,
                 tabs: <Widget>[
-                  Tab(text: "About"),
+                  Tab(text: "Edit Timebank"),
                   // Tab(text: "Upgrade"),
                   // Tab(text: "Billings"),
                   Tab(text: "Settings"),
@@ -107,7 +107,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 labelColor: Colors.black,
                 isScrollable: false,
                 tabs: <Widget>[
-                  Tab(text: "About"),
+                  Tab(text: "Edit Timebank"),
                   Tab(text: "Settings"),
                 ],
 //                onTap: (index) {
