@@ -16,7 +16,6 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
@@ -68,6 +67,10 @@ class OffersState extends State<OffersModule> {
                 margin: EdgeInsets.only(top: 12, bottom: 12),
                 child: Row(
                   children: <Widget>[
+                    Text(
+                      'My Offers',
+                      style: (TextStyle(fontWeight: FontWeight.w500)),
+                    ),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -87,10 +90,6 @@ class OffersState extends State<OffersModule> {
                           child: Image.asset("lib/assets/images/add.png"),
                         ),
                       ),
-                    ),
-                    Text(
-                      'My Offers',
-                      style: (TextStyle(fontWeight: FontWeight.w500)),
                     ),
                   ],
                 ),
