@@ -1,8 +1,8 @@
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/timebanks/billing/widgets/plan_card.dart';
 import 'package:sevaexchange/widgets/NoGlowScrollBehavior.dart';
 
@@ -24,14 +24,14 @@ class BillingPlanDetails extends StatefulWidget {
 }
 
 class _BillingPlanDetailsState extends State<BillingPlanDetails> {
-  List<BillingPlanDetailsModel> plans = [];
+  BillingPlanDetailsModel _billingPlanDetailsModel;
 
-  void getPlanData() async {
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(expiration: Duration.zero);
-    await remoteConfig.activateFetched();
-    plans = billingPlanDetailsModelFromJson(
-      remoteConfig.getString("billing_plan_details"),
+  void getPlanData() {
+    // final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    // await remoteConfig.fetch(expiration: Duration.zero);
+    // await remoteConfig.activateFetched();
+    _billingPlanDetailsModel = billingPlanDetailsModelFromJson(
+      AppConfig.remoteConfig.getString("new_plans"),
     );
     setState(() {});
   }
@@ -53,7 +53,7 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
         centerTitle: !widget.isPlanActive,
         automaticallyImplyLeading: widget.autoImplyLeading,
       ),
-      body: plans.isEmpty
+      body: _billingPlanDetailsModel == null
           ? Center(child: CircularProgressIndicator())
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -68,13 +68,24 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                       shrinkWrap: true,
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       scrollDirection: Axis.horizontal,
-                      itemCount: 3,
+                      itemCount: _billingPlanDetailsModel.plans.length,
                       itemBuilder: (context, index) {
-                        return BillingPlanCard(
-                          billingDetails: plans[index],
-                          user: widget.user,
-                          isSelected: plans[index].id == widget.planName,
-                          isPlanActive: widget.isPlanActive,
+                        return Offstage(
+                          offstage: _billingPlanDetailsModel
+                                      .isCommunityPlanActive &&
+                                  _billingPlanDetailsModel.plans[index].id ==
+                                      "tall_plan" ||
+                              !_billingPlanDetailsModel.isCommunityPlanActive &&
+                                  _billingPlanDetailsModel.plans[index].id ==
+                                      "community_plan",
+                          child: BillingPlanCard(
+                            plan: _billingPlanDetailsModel.plans[index],
+                            user: widget.user,
+                            isSelected:
+                                _billingPlanDetailsModel.plans[index].id ==
+                                    widget.planName,
+                            isPlanActive: widget.isPlanActive,
+                          ),
                         );
                       },
                     ),

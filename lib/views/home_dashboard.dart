@@ -7,6 +7,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -195,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             }
             return Column(
               children: <Widget>[
-                // ShowLimitBadge(),
+                ShowLimitBadge(),
 //                 Consumer<TransactionConfig>(
 //                   builder: (context, transConfig, child) {
 //                     print(
