@@ -757,29 +757,31 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   Future loadNextMembers() async {
     if (_membersWidgets.length == 0) {
       if (widget.isUserAdmin) {
-        var gesture = GestureDetector(
-          child: Row(
-            children: <Widget>[
-              getSectionTitle(context, 'Members '),
-              CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 10,
-                child: Image.asset("lib/assets/images/add.png"),
-              ),
-            ],
-          ),
-          onTap: () async {
-            print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTimebankCode");
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => InviteAddMembers(
-                  timebankModel.id,
-                  timebankModel.communityId,
+        var gesture = TransactionLimitCheck(
+          child: GestureDetector(
+            child: Row(
+              children: <Widget>[
+                getSectionTitle(context, 'Members '),
+                CircleAvatar(
+                  backgroundColor: Colors.white,
+                  radius: 10,
+                  child: Image.asset("lib/assets/images/add.png"),
                 ),
-              ),
-            );
-          },
+              ],
+            ),
+            onTap: () async {
+              print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTimebankCode");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InviteAddMembers(
+                    timebankModel.id,
+                    timebankModel.communityId,
+                  ),
+                ),
+              );
+            },
+          ),
         );
         _membersWidgets.add(gesture);
       } else {

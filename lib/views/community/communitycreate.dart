@@ -23,10 +23,9 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
+import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
-import '../../main_app.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
   final String timebankId;
@@ -609,23 +608,23 @@ class CreateEditCommunityViewFormState
                                       SevaCore.of(context).loggedInUser;
                                   // Navigator.pop(dialogContext);
                                   _formKey.currentState.reset();
-                                  // _billingInformationKey.currentState.reset();
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => BillingPlanDetails(
-                                  //       user: user,
-                                  //       isPlanActive: false,
-                                  //       planName: "",
-                                  //     ),
-                                  //   ),
-                                  // );
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                     MaterialPageRoute(
-                                       builder: (context1) => MainApplication(
-                                         skipToHomePage: true,
-                                       ),
-                                     ),
-                                     (Route<dynamic> route) => false);
+                                  _billingInformationKey.currentState.reset();
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => BillingPlanDetails(
+                                        user: user,
+                                        isPlanActive: false,
+                                        planName: "",
+                                      ),
+                                    ),
+                                  );
+                                  // Navigator.of(context).pushAndRemoveUntil(
+                                  //    MaterialPageRoute(
+                                  //      builder: (context1) => MainApplication(
+                                  //        skipToHomePage: true,
+                                  //      ),
+                                  //    ),
+                                  //    (Route<dynamic> route) => false);
                                 }
                               } else {
                                 setState(() {
