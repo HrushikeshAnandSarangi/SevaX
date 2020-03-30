@@ -4,7 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
@@ -56,62 +58,89 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   @override
   Widget build(BuildContext context) {
+    final _bloc = BlocProvider.of<UserDataBloc>(context);
+    print("---->community model ${_bloc.community}");
     this.parentContext = context;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            headingText("Plan Details"),
-            StreamBuilder<CardModel>(
-              stream: FirestoreManager.getCardModelStream(
-                  communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity),
-              builder: (parentContext, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (snapshot.hasData && snapshot.data != null) {
-                  cardModel = snapshot.data;
-
-                  //print('cardmodel ${cardModel.currentPlan}');
-                  //  print('subscription  ${cardModel.toString()}');
-                  //print('subscription  ${cardModel.subscriptionModel}');
-                  if (cardModel.subscriptionModel != null) {
-                    String data = "";
-                    cardModel.subscriptionModel.forEach((subscritpion) {
-                      if (subscritpion.containsKey("items")) {
-                        if (subscritpion['items']['data'] != null) {
-                          planData = subscritpion['items']['data'] ?? [];
-                          if (cardModel.currentPlan == "grande_plan") {
-                            data =
-                                "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";
-                          } else {
-                            data =
-                                "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";
+            _bloc.community.payment.containsKey("planId")
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      headingText("Plan Details"),
+                      _bloc.community.payment["planId"] == "community_plan"
+                          ? Padding(
+                              padding: const EdgeInsets.only(left: 20.0),
+                              child: Text(
+                                "You are on Community Plan",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                            )
+                          : emptyText(),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      headingText("Plan Details"),
+                      StreamBuilder<CardModel>(
+                        stream: FirestoreManager.getCardModelStream(
+                            communityId: SevaCore.of(context)
+                                .loggedInUser
+                                .currentCommunity),
+                        builder: (parentContext, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
                           }
-                          return spendingsTextWidgettwo(data ?? "");
-                        } else {
-                          return emptyText();
-                        }
-                      } else {
-                        return emptyText();
-                      }
-                    });
-                    return spendingsTextWidgettwo(data ?? "");
-                  } else {
-                    return emptyText();
-                  }
-                } else {
-                  return emptyText();
-                }
-              },
-            ),
-            headingText("Status"),
+                          if (snapshot.hasData && snapshot.data != null) {
+                            cardModel = snapshot.data;
 
-            statusWidget(),
+                            //print('cardmodel ${cardModel.currentPlan}');
+                            //  print('subscription  ${cardModel.toString()}');
+                            //print('subscription  ${cardModel.subscriptionModel}');
+                            if (cardModel.subscriptionModel != null) {
+                              String data = "";
+                              cardModel.subscriptionModel
+                                  .forEach((subscritpion) {
+                                if (subscritpion.containsKey("items")) {
+                                  if (subscritpion['items']['data'] != null) {
+                                    planData =
+                                        subscritpion['items']['data'] ?? [];
+                                    if (cardModel.currentPlan ==
+                                        "grande_plan") {
+                                      data =
+                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";
+                                    } else {
+                                      data =
+                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";
+                                    }
+                                    return spendingsTextWidgettwo(data ?? "");
+                                  } else {
+                                    return emptyText();
+                                  }
+                                } else {
+                                  return emptyText();
+                                }
+                              });
+                              return spendingsTextWidgettwo(data ?? "");
+                            } else {
+                              return emptyText();
+                            }
+                          } else {
+                            return emptyText();
+                          }
+                        },
+                      ),
+                      headingText("Status"),
+                      statusWidget(),
+                    ],
+                  ),
             cardsHeadingWidget(),
             // cardsDetailWidget(),
             configureBillingHeading(parentContext),
@@ -162,7 +191,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                           planName: cardModel.currentPlan,
                           isPlanActive: data != "",
                           autoImplyLeading: true,
-                          
                         ),
                       ),
                     ),
