@@ -74,9 +74,37 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                       _bloc.community.payment["planId"] == "community_plan"
                           ? Padding(
                               padding: const EdgeInsets.only(left: 20.0),
-                              child: Text(
-                                "You are on Community Plan",
-                                style: TextStyle(fontSize: 14),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: TextStyle(color: Colors.black),
+                                  children: [
+                                    TextSpan(
+                                        text: "You are on Community Plan  "),
+                                    TextSpan(
+                                      text: 'change plan',
+                                      style: TextStyle(
+                                          color: Theme.of(context).primaryColor,
+                                          fontSize: 16,
+                                          fontFamily: 'Europa',
+                                          decoration: TextDecoration.underline),
+                                      recognizer: new TapGestureRecognizer()
+                                        ..onTap = () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    BillingPlanDetails(
+                                                  user: SevaCore.of(context)
+                                                      .loggedInUser,
+                                                  planName: _bloc.community
+                                                      .payment["planId"],
+                                                  isPlanActive: true,
+                                                  autoImplyLeading: true,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             )
                           : emptyText(),
@@ -141,7 +169,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                       statusWidget(),
                     ],
                   ),
-            cardsHeadingWidget(),
+            cardsHeadingWidget(_bloc),
             // cardsDetailWidget(),
             configureBillingHeading(parentContext),
           ],
@@ -271,7 +299,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     );
   }
 
-  Widget cardsHeadingWidget() {
+  Widget cardsHeadingWidget(UserDataBloc _bloc) {
     return FutureBuilder(
         future: Firestore.instance
             .collection('cards')
@@ -282,6 +310,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           if (snapshot.hasData && snapshot.data.data != null) {
             planName = snapshot.data.data['currentplan'];
           }
+          // if (planName == '' && _bloc.community.payment["planId"] != null) {
+          //   planName = _bloc.community.payment["planId"];
+          // }
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -308,11 +339,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => BillingView(
-                              SevaCore.of(context)
-                                  .loggedInUser
-                                  .currentCommunity,
-                              planName,
-                              user: SevaCore.of(context).loggedInUser),
+                            SevaCore.of(context).loggedInUser.currentCommunity,
+                            planName,
+                            user: SevaCore.of(context).loggedInUser,
+                          ),
                         ),
                       );
                     }
