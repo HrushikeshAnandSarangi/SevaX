@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/globals.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class Searches {
@@ -28,12 +27,12 @@ class Searches {
       json.encode(
         {
           'authorization':
-          'basic ' + base64Encode(utf8.encode('$username:$password'))
+              'basic ' + base64Encode(utf8.encode('$username:$password'))
         },
       ),
     );
     http.Response response =
-    await makePostRequest(url: url, body: body, headers: {
+        await makePostRequest(url: url, body: body, headers: {
       'authorization': 'basic dXNlcjpDaU4zNlVOaXhKeXE=',
       "Accept": "application/json",
       "Content-Type": "application/json"
@@ -43,7 +42,6 @@ class Searches {
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
     return hitList;
   }
-
 
   static Stream<List<NewsModel>> searchFeeds({
     @required queryString,
@@ -123,6 +121,8 @@ class Searches {
     await _makeElasticSearchPostRequest(url, body);
 
     List<OfferModel> offerList = [];
+        await _makeElasticSearchPostRequest(url, body);
+    List<TimebankModel> timeBankList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if(!loggedInUser.blockedBy.contains(sourceMap["sevauserId"])){

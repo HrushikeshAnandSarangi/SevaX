@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/ui/screens/search/bloc/explore_bloc.dart';
+import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 
 class SearchField extends StatelessWidget {
   SearchField({
