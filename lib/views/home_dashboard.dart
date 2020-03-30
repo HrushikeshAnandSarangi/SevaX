@@ -90,8 +90,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               model.primary_timebank;
           SevaCore.of(context).loggedInUser.associatedWithTimebanks =
               model.timebanks.length;
-
-              print("+++++++++++++++++++++++++++++");
         }
       });
   }

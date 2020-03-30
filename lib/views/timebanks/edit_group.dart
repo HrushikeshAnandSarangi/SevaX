@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -12,54 +11,40 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 
-class TimebankCreate extends StatelessWidget {
-  final String timebankId;
-  TimebankCreate({@required this.timebankId});
+class EditGroupView extends StatelessWidget {
+  final TimebankModel timebankModel;
+  EditGroupView({@required this.timebankModel});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0.5,
-        // leading: BackButton(color: Colors.black54),
-        title: Text(
-          // 'Create a ${FlavorConfig.values.timebankTitle}',
-          'Create Group',
-          style: TextStyle(
-            fontSize: 20,
-          ),
-        ),
-      ),
-      body: TimebankCreateForm(
-        timebankId: timebankId,
+      body: EditGroupForm(
+        timebankModel: timebankModel,
       ),
     );
   }
 }
 
 // Create a Form Widget
-class TimebankCreateForm extends StatefulWidget {
-  final String timebankId;
-  TimebankCreateForm({@required this.timebankId});
+class EditGroupForm extends StatefulWidget {
+  final TimebankModel timebankModel;
+  EditGroupForm({@required this.timebankModel});
   @override
-  TimebankCreateFormState createState() {
-    return TimebankCreateFormState();
+  EditGroupFormState createState() {
+    return EditGroupFormState();
   }
 }
 
 // Create a corresponding State class. This class will hold the data related to
 // the form.
-class TimebankCreateFormState extends State<TimebankCreateForm> {
+class EditGroupFormState extends State<EditGroupForm> {
   // Create a global key that will uniquely identify the Form widget and allow
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
 
-  TimebankModel timebankModel = TimebankModel({});
+  // TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;
@@ -67,58 +52,28 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   void initState() {
     super.initState();
 
-    globals.timebankAvatarURL = null;
-    globals.addedMembersId = [];
-    globals.addedMembersFullname = [];
-    globals.addedMembersPhotoURL = [];
-    selectedUsers = HashMap();
-    if (FlavorConfig.appFlavor == Flavor.APP) {
-      fetchCurrentlocation();
+    if (widget.timebankModel.location != null) {
+      location = widget.timebankModel.location;
+      _getLocation();
     }
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
   String memberAssignment = "+ Add Members";
 
-  void _writeToDB() {
-    // _checkTimebankName();
-    // if (!_exists) {
-
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    List<String> members = [SevaCore.of(context).loggedInUser.sevaUserID];
-    globals.addedMembersId.forEach((m) {
-      members.add(m);
-    });
-
-    selectedUsers.forEach((key, user) {
-      print("Selected member with key $key");
-      members.add(user.sevaUserID);
-    });
-
-    print("Final arrray $members");
-
-    timebankModel.id = Utils.getUuid();
-    timebankModel.communityId =
-        SevaCore.of(context).loggedInUser.currentCommunity;
-    timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
-    timebankModel.photoUrl = globals.timebankAvatarURL;
-    timebankModel.createdAt = timestamp;
-    timebankModel.admins = [SevaCore.of(context).loggedInUser.sevaUserID];
-    timebankModel.coordinators = [];
-    timebankModel.members = members;
-    timebankModel.children = [];
-    timebankModel.balance = 0;
-    timebankModel.protected = protectedVal;
-    timebankModel.parentTimebankId = widget.timebankId;
-    timebankModel.rootTimebankId = FlavorConfig.values.timebankId;
-    timebankModel.address = selectedAddress;
-    timebankModel.location =
+  void updateGroupDetails() {
+    widget.timebankModel.photoUrl =
+        globals.timebankAvatarURL ?? widget.timebankModel.photoUrl;
+    // widget.timebankModel.protected = protectedVal;
+    widget.timebankModel.address = selectedAddress;
+    widget.timebankModel.location =
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
 
-    createTimebank(timebankModel: timebankModel);
-
+    updateTimebank(timebankModel: widget.timebankModel).then((onValue) {
+      showDialogForSuccess(dialogTitle: "Details updated successfully.");
+    });
     globals.timebankAvatarURL = null;
-    globals.addedMembersId = [];
+    //print("Update Group details ---- ${widget.timebankModel.protected}");
   }
 
   Map onActivityResult;
@@ -126,33 +81,32 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: _formKey,
-        child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-            child: SingleChildScrollView(
-              child: FlavorConfig.appFlavor == Flavor.APP
-                  ? createSevaX
-                  : createTimebankHumanityFirst,
-            )));
+      key: _formKey,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+        child: SingleChildScrollView(
+          child: FlavorConfig.appFlavor == Flavor.APP
+              ? createSevaX
+              : createTimebankHumanityFirst,
+        ),
+      ),
+    );
   }
 
+//umesha@uipep.com
+//upnsd143 uipep
   Widget get createSevaX {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text(
-              'Group is a subset of a timebank that may be temporary. Ex: committees, project teams.',
-              textAlign: TextAlign.center,
-            ),
-          ),
           Center(
               child: Padding(
             padding: EdgeInsets.all(5.0),
             child: Column(
               children: <Widget>[
-                TimebankAvatar(),
+                TimebankAvatar(
+                  photoUrl: widget.timebankModel.photoUrl ?? "",
+                ),
                 SizedBox(height: 5),
                 Text(
                   'Group logo',
@@ -166,6 +120,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
+            initialValue: widget.timebankModel.name ?? "",
             decoration: InputDecoration(
               hintText: "Ex: Pets-in-town, Citizen collab",
             ),
@@ -175,11 +130,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               if (value.isEmpty) {
                 return 'Please enter some text';
               }
-              timebankModel.name = value;
+              widget.timebankModel.name = value;
             },
           ),
           headingText('About', true),
           TextFormField(
+            initialValue: widget.timebankModel.missionStatement ?? "",
             decoration: InputDecoration(
               hintText: 'Ex: A bit more about your group',
             ),
@@ -189,10 +145,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               if (value.isEmpty) {
                 return 'Please enter some text';
               }
-              timebankModel.missionStatement = value;
+              widget.timebankModel.missionStatement = value;
             },
           ),
-          tappableInviteMembers,
           Row(
             children: <Widget>[
               headingText('Protected group', false),
@@ -202,10 +157,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                   Checkbox(
                     checkColor: Colors.white,
                     activeColor: Colors.green,
-                    value: protectedVal,
+                    value: widget.timebankModel.protected,
                     onChanged: (bool value) {
                       setState(() {
-                        protectedVal = value;
+                        widget.timebankModel.protected = value;
                       });
                     },
                   ),
@@ -214,7 +169,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ],
           ),
           Text(
-            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled..',
+            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey,
@@ -249,47 +204,23 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: Container(
-                alignment: Alignment.center,
-                child: FutureBuilder<Object>(
-                    future: getTimeBankForId(timebankId: widget.timebankId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) return Text('Error');
-                      if (snapshot.connectionState == ConnectionState.waiting)
-                        return Offstage();
-                      TimebankModel parentTimebank = snapshot.data;
-                      return RaisedButton(
-                        // color: Colors.blue,
-
-                        onPressed: () {
-                          // Validate will return true if the form is valid, or false if
-                          // the form is invalid.
-                          //if (location != null) {
-                          if (_formKey.currentState.validate()) {
-//                            print("Hello");
-//                            // If the form is valid, we want to show a Snackbar
-                            _writeToDB();
-//                            // return;
-//
-                            try {
-                              parentTimebank.children.add(timebankModel.id);
-                            } catch (e) {
-                              print("Error:$e");
-                            }
-                            updateTimebank(timebankModel: parentTimebank);
-                            Navigator.pop(context);
-                          }
-                        },
-
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Text(
-                            'Save',
-                            style: Theme.of(context).primaryTextTheme.button,
-                          ),
-                        ),
-                        textColor: Colors.blue,
-                      );
-                    })),
+              alignment: Alignment.center,
+              child: RaisedButton(
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    updateGroupDetails();
+                  }
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Update',
+                    style: Theme.of(context).primaryTextTheme.button,
+                  ),
+                ),
+                textColor: Colors.blue,
+              ),
+            ),
           ),
         ]);
   }
@@ -349,7 +280,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            timebankModel.name = value;
+            widget.timebankModel.name = value;
           },
         ),
         Text(' '),
@@ -376,7 +307,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            timebankModel.missionStatement = value;
+            widget.timebankModel.missionStatement = value;
           },
         ),
         Text(''),
@@ -403,7 +334,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            timebankModel.emailId = value;
+            widget.timebankModel.emailId = value;
           },
         ),
         Text(''),
@@ -430,7 +361,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            timebankModel.phoneNumber = value;
+            widget.timebankModel.phoneNumber = value;
           },
         ),
         Text(''),
@@ -457,7 +388,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            timebankModel.address = value;
+            widget.timebankModel.address = value;
           },
         ),
         Row(
@@ -480,11 +411,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ],
         ),
         // Text(sevaUserID),
-        tappableInviteMembers,
-        Padding(
-          padding: EdgeInsets.only(top: 10.0),
-          child: _showMembers(),
-        ),
         Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -520,151 +446,33 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             style: TextStyle(fontStyle: FontStyle.italic),
           ),
         ),
-
-//              Padding(
-//                padding: const EdgeInsets.all(8.0),
-//                child: GestureDetector(
-//                  onTap: () {
-//                    Navigator.push(
-//                      context,
-//                      MaterialPageRoute<GeoFirePoint>(
-//                          builder: (context) => LocationPicker(
-//                              selectedLocation: location
-//                          )),
-//                    ).then((point) {
-//                      if (point != null) location = point;
-//                      _getLocation();
-//                      //log('ReceivedLocation: $selectedAddress');
-//                    });
-//                  },
-//                  child: SizedBox(
-//                    width: 140,
-//                    height: 30,
-//                    child: Container(
-//                      color: Colors.grey[200],
-//                      child: Row(
-//                        children: <Widget>[
-//                          Padding(
-//                            padding: const EdgeInsets.all(2.0),
-//                            child: Icon(Icons.add_location),
-//                          ),
-//                          Text('  '),
-//                          Text(
-//                            selectedAddress == null || selectedAddress.isEmpty
-//                                ? 'Add Location'
-//                                : selectedAddress,
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                  ),
-//                ),
-//              ),
         Divider(),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: Container(
-              alignment: Alignment.center,
-              child: FutureBuilder<Object>(
-                  future: getTimeBankForId(timebankId: widget.timebankId),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) return Text('Error');
-                    if (snapshot.connectionState == ConnectionState.waiting)
-                      return Offstage();
-                    TimebankModel parentTimebank = snapshot.data;
-                    return RaisedButton(
-                      // color: Colors.blue,
-                      color: Colors.red,
-                      onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          // If the form is valid, we want to show a Snackbar
-                          try {
-                            _writeToDB();
-                            if (parentTimebank.children == null)
-                              parentTimebank.children = [];
-                            parentTimebank.children.add(timebankModel.id);
-                            updateTimebank(timebankModel: parentTimebank);
-                          } catch (e) {
-                            print("Error is:$e");
-                          }
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Text(
-                        'Create ${FlavorConfig.values.timebankTitle}',
-                        style: TextStyle(fontSize: 16.0, color: Colors.white),
-                      ),
-                      textColor: Colors.blue,
-                    );
-                  })),
+            alignment: Alignment.center,
+            child: RaisedButton(
+              // color: Colors.blue,
+              color: Colors.red,
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  // If the form is valid, we want to show a Snackbar
+                }
+              },
+              child: Text(
+                'Create ${FlavorConfig.values.timebankTitle}',
+                style: TextStyle(fontSize: 16.0, color: Colors.white),
+              ),
+              textColor: Colors.blue,
+            ),
+          ),
         ),
       ],
     );
   }
 
-  void addVolunteers() async {
-    print(
-        " Selected users before ${selectedUsers.length} with timebank id as ${SevaCore.of(context).loggedInUser.currentTimebank}");
-
-    onActivityResult = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SelectMembersInGroup(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-          userSelected:
-              selectedUsers == null ? selectedUsers = HashMap() : selectedUsers,
-          userEmail: SevaCore.of(context).loggedInUser.email,
-          listOfalreadyExistingMembers: [],
-        ),
-      ),
-    );
-
-    if (onActivityResult != null &&
-        onActivityResult.containsKey("membersSelected")) {
-      selectedUsers = onActivityResult['membersSelected'];
-      setState(() {
-        if (selectedUsers.length == 0)
-          memberAssignment = "Assign to volunteers";
-        else
-          memberAssignment = "${selectedUsers.length} volunteers selected";
-      });
-      // print("Data is present Selected users ${selectedUsers.length}");
-      print("Data is present Selected users ${selectedUsers.toString()}");
-    } else {
-      print("No users where selected");
-      //no users where selected
-    }
-  }
-
-  Widget get tappableInviteMembers {
-    return FlavorConfig.appFlavor == Flavor.APP
-        ? GestureDetector(
-            onTap: () async {
-              addVolunteers();
-            },
-            child: Padding(
-              padding: EdgeInsets.only(top: 15),
-              child: Text(
-                'Invite members +',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-            ))
-        : Padding(
-            padding: EdgeInsets.only(top: 8.0),
-            child: FlatButton(
-              onPressed: () async {
-                addVolunteers();
-              },
-              child: Text(
-                memberAssignment,
-                style: TextStyle(fontSize: 16.0, color: Colors.blue),
-              ),
-            ));
-  }
-
   Future _getLocation() async {
+    if (location == null) return;
     String address = await LocationUtility().getFormattedAddress(
       location.latitude,
       location.longitude,
@@ -675,28 +483,26 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     });
   }
 
-  _showMembers() {
-    if (globals.addedMembersId == []) {
-      Text('');
-    } else {
-      Text(globals.addedMembersId.toString());
-    }
-  }
-
-  void fetchCurrentlocation() {
-    Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
+  void showDialogForSuccess({String dialogTitle}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogTitle),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
         });
-      });
-    });
   }
 }
