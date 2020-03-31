@@ -140,7 +140,7 @@ class CreateEditCommunityViewFormState
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    if (FlavorConfig.appFlavor == Flavor.APP) {
+    if (FlavorConfig.appFlavor == Flavor.APP && !widget.isCreateTimebank) {
       fetchCurrentlocation();
     }
 
@@ -201,6 +201,7 @@ class CreateEditCommunityViewFormState
     timebankModel =
         await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
 
+    location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
 //    setState(() {
@@ -551,7 +552,6 @@ class CreateEditCommunityViewFormState
                                 Map<String, bool> onActivityResult =
                                     await showTimebankAdvisory(
                                         dialogTitle: timebankAdvisory);
-
                                 if (onActivityResult['PROCEED']) {
                                   print("YES PROCEED WITH TIMEBANK CREATION");
                                 } else {
@@ -653,6 +653,13 @@ class CreateEditCommunityViewFormState
                               }
                             } else {}
                           } else {
+                            if (location == null) {
+                              showDialogForSuccess(
+                                  dialogTitle:
+                                      "Please add your timebank location");
+                              return;
+                            }
+
                             showProgressDialog('Updating timebank');
                             if (globals.timebankAvatarURL != null) {
                               communityModel.logo_url =
@@ -664,7 +671,9 @@ class CreateEditCommunityViewFormState
 //                            print("comm ${communityModel}");
 //
 //                            print("time add${timebankModel.address}");
+
                             timebankModel.location = location;
+
                             if (selectedUsers != null) {
                               selectedUsers.forEach((key, user) {
                                 print("Selected member with key $key");
@@ -675,13 +684,9 @@ class CreateEditCommunityViewFormState
                               });
                               selectedUsers.forEach((key, user) {
                                 print("Selected member with key $key");
-
                                 members.add(user.sevaUserID);
                               });
                             }
-
-                            print("time ${timebankModel.photoUrl}");
-                            print("time ${communityModel.logo_url}");
                             // creation of community;
 
                             // updating timebank with latest values

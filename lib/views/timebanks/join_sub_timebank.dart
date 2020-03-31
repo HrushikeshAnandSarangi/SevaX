@@ -4,6 +4,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
@@ -229,7 +230,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               AspectRatio(
                 aspectRatio: 3.3 / 2.3,
                 child: CachedNetworkImage(
-                  imageUrl: timebank.photoUrl,
+                  imageUrl: timebank.photoUrl ?? defaultUserImageURL,
                   fit: BoxFit.fitWidth,
                   errorWidget: (context, url, error) =>
                       Center(child: Text('No Image Avaialable')),
@@ -315,7 +316,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               notification.timebankId =
                                   FlavorConfig.values.timebankId;
                               //  print('creator id ${notification.timebankId}');
-
+                              
                               UserModel timebankCreator =
                                   await FirestoreManager.getUserForId(
                                       sevaUserId: timebank.creatorId);

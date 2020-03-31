@@ -748,13 +748,12 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                                   Map<String, bool> onActivityResult =
                                       await showAdvisory(
                                           dialogTitle:
-                                              "Are you sure you want to remove ${userModel.fullname ?? "member"} from members?");
+                                              "Are you sure you want to remove ${userModel.fullname ?? "member"} from timebank members?");
                                   if (onActivityResult['PROCEED']) {
                                     removeFromTimebank(model, userModel);
                                   } else {
                                     return;
                                   }
-
                                   Navigator.pop(viewContext);
                                 },
                               ),

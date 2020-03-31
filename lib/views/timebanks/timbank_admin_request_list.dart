@@ -608,26 +608,35 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                   debouncer: debounceValue,
                   action: Actions.Remove,
                   onTap: () async {
-                    setState(() {
-                      isProgressBarActive = true;
-                    });
-                    if (isAdmin) {
-                      List<String> admins =
-                          timebankModel.admins.map((s) => s).toList();
-                      admins.remove(user.sevaUserID);
-                      _updateTimebank(timebankModel, admins: admins);
-                    } else {
-                      List<String> members =
-                          timebankModel.members.map((s) => s).toList();
-                      members.remove(user.sevaUserID);
-                      if (widget.isCommunity != null && widget.isCommunity) {
-                        _removeUserFromCommunityAndUpdateUserCommunityList(
-                            model: timebankModel,
-                            members: members,
-                            userId: user.sevaUserID);
+                    //Here we need to put dialog
+
+                    Map<String, bool> onActivityResult = await showAdvisory(
+                        dialogTitle:
+                            "Are you sure you want to remove ${user.fullname} from ${timebankModel.name}?");
+                    if (onActivityResult['PROCEED']) {
+                      setState(() {
+                        isProgressBarActive = true;
+                      });
+                      if (isAdmin) {
+                        List<String> admins =
+                            timebankModel.admins.map((s) => s).toList();
+                        admins.remove(user.sevaUserID);
+                        _updateTimebank(timebankModel, admins: admins);
                       } else {
-                        _updateTimebank(timebankModel, members: members);
+                        List<String> members =
+                            timebankModel.members.map((s) => s).toList();
+                        members.remove(user.sevaUserID);
+                        if (widget.isCommunity != null && widget.isCommunity) {
+                          _removeUserFromCommunityAndUpdateUserCommunityList(
+                              model: timebankModel,
+                              members: members,
+                              userId: user.sevaUserID);
+                        } else {
+                          _updateTimebank(timebankModel, members: members);
+                        }
                       }
+                    } else {
+                      return;
                     }
                   },
                 ),
@@ -752,6 +761,42 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       });
       setState(() {});
     }
+  }
+
+  Future<Map> showAdvisory({String dialogTitle, String confirmationTitle}) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(
+              dialogTitle,
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop({'PROCEED': false});
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  confirmationTitle ?? "Yes",
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Future loadNextMembers() async {

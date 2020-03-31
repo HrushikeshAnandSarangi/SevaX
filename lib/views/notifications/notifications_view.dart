@@ -218,8 +218,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                 // TODO: Handle this case.
                 return Container(width: 50, height: 50, color: Colors.red);
                 break;
+              
               case NotificationType.AcceptedOffer:
-                print("Offere accepted");
                 OfferAcceptedNotificationModel acceptedOffer =
                     OfferAcceptedNotificationModel.fromMap(notification.data);
                 return FutureBuilder<UserModel>(
@@ -1471,7 +1471,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                           child: Text(
                             '',
                             style: TextStyle(
-                                color: Colors.white,),
+                              color: Colors.white,
+                            ),
                           ),
                           onPressed: () async {
                             // request declined
