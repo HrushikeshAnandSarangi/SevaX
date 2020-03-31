@@ -8,7 +8,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/project_view/create_edit_project.dart';
+import 'package:sevaexchange/views/project_view/about_project_view.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 
@@ -58,8 +58,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CreateEditProject(
-          isCreateProject: true,
+        builder: (context) => AboutProjectView(
+          projectId: '52827441-9a8b-4207-b28a-5aa1ef30d659',
         ),
       ),
     );

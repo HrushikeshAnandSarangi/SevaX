@@ -629,6 +629,15 @@ Future<RequestModel> getRequestFutureById({
   return RequestModel.fromMap(documentsnapshot.data);
 }
 
+Future<ProjectModel> getProjectFutureById({
+  @required String projectId,
+}) async {
+  var documentsnapshot =
+      await Firestore.instance.collection('projects').document(projectId).get();
+
+  return ProjectModel.fromMap(documentsnapshot.data);
+}
+
 Stream<RequestModel> getRequestStreamById({
   @required String requestId,
 }) async* {
