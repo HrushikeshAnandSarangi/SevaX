@@ -35,6 +35,9 @@ class RequestsState extends State<ProjectRequests> {
         children: <Widget>[
           requestStatusBar,
           addRequest,
+          Container(
+            height: 10,
+          ),
           requestCards,
         ],
       ),
@@ -187,7 +190,7 @@ class RequestsState extends State<ProjectRequests> {
                                 Flexible(
                                   flex: 10,
                                   child: Text(
-                                    'Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Electronic and Communication Design',
+                                    'Design Principal - Electronic and Communication Design',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 17,
