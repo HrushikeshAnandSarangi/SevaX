@@ -35,6 +35,7 @@ class RequestsState extends State<ProjectRequests> {
         children: <Widget>[
           requestStatusBar,
           addRequest,
+          requestCards,
         ],
       ),
     );
@@ -45,7 +46,7 @@ class RequestsState extends State<ProjectRequests> {
       height: 75,
       width: MediaQuery.of(context).size.width,
       alignment: Alignment.center,
-      color: Colors.green,
+      color: Color.fromRGBO(250, 231, 53, 0.2),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -56,6 +57,131 @@ class RequestsState extends State<ProjectRequests> {
               setTitle(num: '7', title: 'Completed'),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget get requestCards{
+//    return ListView.builder(
+//        itemCount: 1,
+//        itemBuilder: (_context , int index) {
+//          return getListTile();
+//        }
+//    );
+    return getListTile();
+  }
+
+  Widget getListTile(){
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            spreadRadius: 1,
+            offset: Offset(0.2, 1),
+          ),
+        ],
+      ),
+      margin: EdgeInsets.only(top: 20),
+      width: MediaQuery.of(context).size.width - 30,
+      height: 150,
+      child: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(right: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    FlatButton.icon(
+                      icon: Icon(
+                        Icons.add_location,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      label: Container(
+                        width: MediaQuery.of(context).size.width - 170,
+                        child: Text(
+                          "Manchester",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 17,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Text(
+                  'an hour ago',
+                  style: TextStyle(
+                    color: Colors.black38,
+                  ),
+                )
+              ],
+            ),
+          ),
+        Container(
+//          width: MediaQuery.of(context).size.width-50,
+          margin: EdgeInsets.only(right: 10,left: 10),
+          child: Row(
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.all(5),
+                height: 40,
+                width: 40,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+                  ),
+                  minRadius: 40.0,
+                ),
+              ),
+              Container(
+
+                margin: EdgeInsets.only(left: 10),
+                child: Container(
+
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Experienced Designer',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        ),
+                      ),
+                      Text(
+                        '17 Jan 10:00 AM - 17 Jan 11:00 PM',
+                        style: TextStyle(
+                          color: Colors.black38,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 80),
+          child: Text(
+            'Design Principal - Electronic and Communication Design',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 17,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
         ],
       ),
     );
