@@ -452,7 +452,7 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     print("---> ${loggedInUser.currentCommunity}");
-    if ((loggedInUser.currentCommunity == "" ||
+    if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == null) &&
         loggedInUser.communities.length != 0) {
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
@@ -586,13 +586,13 @@ class _SplashViewState extends State<SplashView> {
       }
     }
 
-    // if (!loggedInUser.completedIntro) {
-    //   await _navogateToIntro(loggedInUser);
-    // }
+    if (!loggedInUser.completedIntro) {
+      await _navogateToIntro(loggedInUser);
+    }
 
-    // if (widget.skipToHomePage) {
-    //   print('Navigating to home page');
-    //   _navigateToCoreView(loggedInUser);
+    if (widget.skipToHomePage) {
+      print('Navigating to home page');
+      _navigateToCoreView(loggedInUser);
 
     await FirebaseAuth.instance
         .currentUser()
@@ -611,7 +611,7 @@ class _SplashViewState extends State<SplashView> {
         }
       }
     });
-    // }
+    }
     print("reached here------->><><>");
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
