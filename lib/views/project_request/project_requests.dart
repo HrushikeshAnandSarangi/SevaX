@@ -63,130 +63,163 @@ class RequestsState extends State<ProjectRequests> {
   }
 
   Widget get requestCards{
-//    return ListView.builder(
-//        itemCount: 1,
-//        itemBuilder: (_context , int index) {
-//          return getListTile();
-//        }
-//    );
-    return getListTile();
-  }
-
-  Widget getListTile(){
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            spreadRadius: 1,
-            offset: Offset(0.2, 1),
-          ),
-        ],
-      ),
-      margin: EdgeInsets.only(top: 20),
-      width: MediaQuery.of(context).size.width - 30,
-      height: 150,
-      child: Column(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    FlatButton.icon(
-                      icon: Icon(
-                        Icons.add_location,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      label: Container(
-                        width: MediaQuery.of(context).size.width - 170,
-                        child: Text(
-                          "Manchester",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 17,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                Text(
-                  'an hour ago',
-                  style: TextStyle(
-                    color: Colors.black38,
-                  ),
-                )
-              ],
-            ),
-          ),
-        Container(
-//          width: MediaQuery.of(context).size.width-50,
-          margin: EdgeInsets.only(right: 10,left: 10),
-          child: Row(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.all(5),
-                height: 40,
-                width: 40,
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
-                  ),
-                  minRadius: 40.0,
-                ),
-              ),
-              Container(
-
-                margin: EdgeInsets.only(left: 10),
-                child: Container(
-
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Experienced Designer',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                      ),
-                      Text(
-                        '17 Jan 10:00 AM - 17 Jan 11:00 PM',
-                        style: TextStyle(
-                          color: Colors.black38,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
+    var count = 100;
+    return Expanded(
+      child: SizedBox(
+        height: 200.0,
+        child: ListView.builder(
+            itemCount: count,
+            itemBuilder: ( _context, index) {
+              return index < count-1 ?
+                  getListTile()
+                  : SizedBox(
+                    height: 50,
+                  );
+            }
         ),
-        Container(
-          margin: EdgeInsets.only(left: 80),
-          child: Text(
-            'Design Principal - Electronic and Communication Design',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 17,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        ],
       ),
     );
   }
 
+  BoxDecoration get containerDecorationR {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black.withAlpha(2),
+            spreadRadius: 6,
+            offset: Offset(0, 3),
+            blurRadius: 6)
+      ],
+      color: Colors.white,
+    );
+  }
+
+  Widget getListTile(){
+    return Container(
+      decoration: containerDecorationR,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+      child: Card(
+        color: Colors.white,
+        elevation: 2,
+        child: InkWell(
+          onTap: () {
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          FlatButton.icon(
+                            icon: Icon(
+                              Icons.add_location,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            label: Container(
+                              width: MediaQuery.of(context).size.width - 170,
+                              child: Text(
+                                "Manchester",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Text(
+                        'an hour ago',
+                        style: TextStyle(
+                          color: Colors.black38,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 10,left: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        height: 40,
+                        width: 40,
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+                          ),
+                          minRadius: 40.0,
+                        ),
+                      ),
+                      Container(
+                        child: Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              getSpacerItem(
+                                Text(
+                                  'Experienced Designer',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              getSpacerItem(
+                                  Text(
+                                    '17 Jan 10:00 AM - 17 Jan 11:00 PM',
+                                    style: TextStyle(
+                                      color: Colors.black38,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                              ),
+                              getSpacerItem(
+                                Flexible(
+                                  flex: 10,
+                                  child: Text(
+                                    'Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Design Principal - Electronic and Communication Design',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                    ),
+//                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getSpacerItem(Widget item){
+    return Row(
+      children: <Widget>[
+        item,
+        Spacer(),
+      ],
+    );
+  }
   Widget get addRequest {
     return Container(
       margin: EdgeInsets.only(top: 15),
