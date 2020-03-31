@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
@@ -146,6 +147,7 @@ Widget createAdminTabBar(
       ),
       body: Column(
         children: <Widget>[
+          ShowLimitBadge(),
           TabBar(
             labelColor: Theme.of(context).primaryColor,
             indicatorColor: Theme.of(context).primaryColor,
