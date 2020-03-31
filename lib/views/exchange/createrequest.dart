@@ -430,6 +430,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             SevaCore.of(context).loggedInUser.sevaUserID,
           );
 
+          print("Seva Coins $sevaCoinsValue -------------------------------------------");
+
           if (!hasSufficientBalance()) {
             showInsufficientBalance();
             return;
@@ -606,17 +608,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     var requestCoins = requestModel.numberOfHours;
     print("Hours:${diffDate.inHours} --> " +
         requestModel.numberOfApprovals.toString());
-    print("Number of seva coins:${requestCoins.abs()}");
-    print("Seva coin available:${sevaCoinsValue.abs()}");
+    print("Number of seva coins:${requestCoins}");
+    print("Seva coin available:${sevaCoinsValue}");
 
     var lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 
-    var finalbalance = (sevaCoinsValue.abs() + lowerLimit ?? 10).abs();
+    var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
 
     print("Final amount in hand:${finalbalance}");
 
-    return requestCoins.abs() <= finalbalance;
+    return requestCoins <= finalbalance;
   }
 
   Future _writeToDB() async {
