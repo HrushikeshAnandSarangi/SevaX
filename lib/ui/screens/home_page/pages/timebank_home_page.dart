@@ -58,9 +58,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AboutProjectView(
-          projectId: '52827441-9a8b-4207-b28a-5aa1ef30d659',
-        ),
+        builder: (context) => AboutProjectView(),
       ),
     );
   }

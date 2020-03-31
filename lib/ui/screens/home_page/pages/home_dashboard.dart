@@ -237,6 +237,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       CreateEditProject(
                         timebankId: primaryTimebank.id,
                         isCreateProject: true,
+                        projectId: '',
                       ),
                       // TimebankFeeds(),
                       RequestsModule.of(

@@ -195,6 +195,7 @@ Widget createAdminTabBar(
                 CreateEditProject(
                   isCreateProject: true,
                   timebankId: timebankId,
+                  projectId: '',
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,
@@ -384,6 +385,7 @@ Widget createJoinedUserTabBar(
                 CreateEditProject(
                   timebankId: timebankId,
                   isCreateProject: true,
+                  projectId: '',
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,
