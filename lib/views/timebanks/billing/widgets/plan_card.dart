@@ -10,7 +10,7 @@ class BillingPlanCard extends StatelessWidget {
   final bool isSelected;
   final bool isPlanActive;
   final UserModel user;
-  final Plan plan;
+  final BillingPlanDetailsModel plan;
   const BillingPlanCard({
     Key key,
     this.plan,
