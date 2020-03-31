@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 
-class GroupTabView extends StatelessWidget {
+class GroupTabView extends StatefulWidget {
+  @override
+  _GroupTabViewState createState() => _GroupTabViewState();
+}
+
+class _GroupTabViewState extends State<GroupTabView> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
