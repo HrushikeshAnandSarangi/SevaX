@@ -586,9 +586,9 @@ class _SplashViewState extends State<SplashView> {
       }
     }
 
-    if (!loggedInUser.completedIntro) {
-      await _navogateToIntro(loggedInUser);
-    }
+    // if (!loggedInUser.completedIntro) {
+    //   await _navogateToIntro(loggedInUser);
+    // }
 
     if (widget.skipToHomePage) {
       print('Navigating to home page');

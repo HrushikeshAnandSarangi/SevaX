@@ -24,6 +24,7 @@ class TimebankRequestAdminPage extends StatefulWidget {
   final String userEmail;
   final bool isUserAdmin;
   final bool isCommunity;
+  final bool isFromGroup;
   var listOfMembers = HashMap<String, UserModel>();
 
   TimebankRequestAdminPage({
@@ -31,6 +32,7 @@ class TimebankRequestAdminPage extends StatefulWidget {
     @required this.timebankId,
     @required this.userEmail,
     @required this.isCommunity,
+    @required this.isFromGroup,
   });
 
   @override
@@ -296,7 +298,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
           }
           widget.listOfMembers[user.sevaUserID] = user;
           return getUserRequestWidget(
-              user, context, timebankModel, requestModelItem);
+            user,
+            context,
+            timebankModel,
+            requestModelItem,
+            SevaCore.of(context).loggedInUser.currentCommunity,
+          );
         },
       );
       if (!isWidgetEmpty) {
@@ -309,8 +316,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
     setState(() {});
   }
 
-  Widget getUserRequestWidget(UserModel user, BuildContext context,
-      TimebankModel model, JoinRequestModel joinRequestModel) {
+  Widget getUserRequestWidget(
+      UserModel user,
+      BuildContext context,
+      TimebankModel model,
+      JoinRequestModel joinRequestModel,
+      String communityId) {
     user.photoURL = user.photoURL == null ? defaultUserImageURL : user.photoURL;
     user.fullname = user.fullname == null ? defaultUsername : user.fullname;
     var item = Padding(
@@ -361,9 +372,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             joinRequestModel.accepted = true;
                             await updateJoinRequest(model: joinRequestModel);
                             await updateUserCommunity(
-                                communityId: SevaCore.of(context)
-                                    .loggedInUser
-                                    .currentCommunity,
+                                communityId: communityId,
                                 userEmail: user.email);
                             await _updateTimebank(timebankModel, admins: null);
                           },
@@ -807,11 +816,13 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
             child: Row(
               children: <Widget>[
                 getSectionTitle(context, 'Members '),
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 10,
-                  child: Image.asset("lib/assets/images/add.png"),
-                ),
+                !widget.isFromGroup
+                    ? CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 10,
+                        child: Image.asset("lib/assets/images/add.png"),
+                      )
+                    : Container(),
               ],
             ),
             onTap: () async {

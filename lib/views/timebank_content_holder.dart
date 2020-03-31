@@ -212,6 +212,7 @@ Widget createAdminTabBar(
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
+                  isFromGroup: true,
                 ),
                 ManageGroupView.of(
                   timebankModel: timebankModel,
@@ -395,6 +396,7 @@ Widget createJoinedUserTabBar(
                   ),
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
+                  isFromGroup: true,
                 ),
               ],
             ),
@@ -441,6 +443,7 @@ Widget createNormalUserTabBar(
               isUserAdmin: false,
               timebankId: timebankModel.id,
               userEmail: SevaCore.of(context).loggedInUser.email,
+              isFromGroup: true,
             ),
           ],
         )),

@@ -71,7 +71,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   Widget build(BuildContext context) {
     bool showBachBtn = widget.showBackBtn;
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       appBar: !widget.isFromHome
           ? AppBar(
               // automaticallyImplyLeading: widget.keepOnBackPress,
@@ -188,7 +188,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
                 return Padding(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 12.0),
+                    padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
                     child: ListView.builder(
                         itemCount: communityList.length,
                         itemBuilder: (BuildContext context, int index) {

@@ -37,6 +37,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0.5,
           centerTitle: true,
