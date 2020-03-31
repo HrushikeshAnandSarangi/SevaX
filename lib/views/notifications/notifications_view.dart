@@ -218,7 +218,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                 // TODO: Handle this case.
                 return Container(width: 50, height: 50, color: Colors.red);
                 break;
-              
+
               case NotificationType.AcceptedOffer:
                 OfferAcceptedNotificationModel acceptedOffer =
                     OfferAcceptedNotificationModel.fromMap(notification.data);
@@ -882,7 +882,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                                 model: requestModel,
                                 notificationId: notificationId,
                                 user: userModel,
-                                userId: userId);
+                                userId: userId,
+                                credits: credits);
 
                             Navigator.pop(viewContext);
                           },
@@ -943,14 +944,39 @@ class NotificationsView extends State<NotificationViewHolder> {
     );
   }
 
-  void approveMemberClaim({
+  Future<void> approveMemberClaim({
     String userId,
     UserModel user,
     BuildContext context,
     RequestModel model,
     String notificationId,
-  }) {
+    double credits,
+  }) async {
     //request for feedback;
+    // if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+    //   var sevaCoinsValue = await FirestoreManager.getMemberBalance(
+    //     SevaCore.of(context).loggedInUser.email,
+    //     SevaCore.of(context).loggedInUser.sevaUserID,
+    //   );
+
+    //   var lowerLimit = json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+
+    //   var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
+
+    //   print("----------- My Balance ${finalbalance}");
+
+    //   if (credits <= finalbalance) {
+    //     //show dialog for insuffcient balance
+    //     print("Insufficient balance ${}");
+    //   } else {
+    //     //let it go
+    //     print("Good to go balance ----------------");
+
+    //   }
+    // }
+
+    // return;
+
     checkForFeedback(
         userId: userId,
         user: user,
