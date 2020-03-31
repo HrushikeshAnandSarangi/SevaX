@@ -110,11 +110,11 @@ class Auth {
     @required String displayName,
   }) async {
     try {
-      FirebaseUser user = (await _firebaseAuth.createUserWithEmailAndPassword(
+      AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
-      ) as FirebaseUser);
-      return _processEmailPasswordUser(user, displayName);
+      );
+      return _processEmailPasswordUser(result.user, displayName);
     } on PlatformException catch (error) {
       if (error.code == 'ERROR_EMAIL_ALREADY_IN_USE') {
         print(" ${email} already registered");

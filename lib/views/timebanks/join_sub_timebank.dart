@@ -260,9 +260,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 //                                maxLines: 1,
                         ),
                         Text(
-                          timebank.address +
-                                  ' .' +
-                                  timebank.members.length.toString() ??
+                          timebank.address ??
+                              "" + ' .' + timebank.members.length.toString() ??
                               " ",
                           style: TextStyle(
                               fontFamily: "Europa",
