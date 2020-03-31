@@ -155,7 +155,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         // buildList(),
         Expanded(child: buildList()),
         // This container holds the align
-        createCommunity(),
+        widget.isFromHome ? Container() : createCommunity(),
       ]),
     );
   }
