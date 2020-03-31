@@ -1469,14 +1469,13 @@ class NotificationsView extends State<NotificationViewHolder> {
                         child: RaisedButton(
                           color: Theme.of(context).accentColor,
                           child: Text(
-                            '',
+                            'Decline',
                             style: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                           onPressed: () async {
                             // request declined
-
                             declineRequestedMember(
                                 model: requestModel,
                                 notificationId: notificationId,
