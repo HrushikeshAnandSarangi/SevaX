@@ -24,14 +24,15 @@ class BillingPlanDetails extends StatefulWidget {
 }
 
 class _BillingPlanDetailsState extends State<BillingPlanDetails> {
-  BillingPlanDetailsModel _billingPlanDetailsModel;
+  List<BillingPlanDetailsModel> _billingPlanDetailsModels;
 
   void getPlanData() {
     // final RemoteConfig remoteConfig = await RemoteConfig.instance;
     // await remoteConfig.fetch(expiration: Duration.zero);
     // await remoteConfig.activateFetched();
-    _billingPlanDetailsModel = billingPlanDetailsModelFromJson(
-      AppConfig.remoteConfig.getString("new_plans"),
+    // print("====> ${AppConfig.remoteConfig.getString("billing_plans")}");
+    _billingPlanDetailsModels = billingPlanDetailsModelFromJson(
+      AppConfig.remoteConfig.getString("billing_plans"),
     );
     setState(() {});
   }
@@ -53,7 +54,8 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
         centerTitle: !widget.isPlanActive,
         automaticallyImplyLeading: widget.autoImplyLeading,
       ),
-      body: _billingPlanDetailsModel == null
+      body: _billingPlanDetailsModels == null ||
+              _billingPlanDetailsModels.isEmpty
           ? Center(child: CircularProgressIndicator())
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -68,22 +70,15 @@ class _BillingPlanDetailsState extends State<BillingPlanDetails> {
                       shrinkWrap: true,
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       scrollDirection: Axis.horizontal,
-                      itemCount: _billingPlanDetailsModel.plans.length,
+                      itemCount: _billingPlanDetailsModels.length,
                       itemBuilder: (context, index) {
                         return Offstage(
-                          offstage: _billingPlanDetailsModel
-                                      .isCommunityPlanActive &&
-                                  _billingPlanDetailsModel.plans[index].id ==
-                                      "tall_plan" ||
-                              !_billingPlanDetailsModel.isCommunityPlanActive &&
-                                  _billingPlanDetailsModel.plans[index].id ==
-                                      "community_plan",
+                          offstage: _billingPlanDetailsModels[index].hidden,
                           child: BillingPlanCard(
-                            plan: _billingPlanDetailsModel.plans[index],
+                            plan: _billingPlanDetailsModels[index],
                             user: widget.user,
-                            isSelected:
-                                _billingPlanDetailsModel.plans[index].id ==
-                                    widget.planName,
+                            isSelected: _billingPlanDetailsModels[index].id ==
+                                widget.planName,
                             isPlanActive: widget.isPlanActive,
                           ),
                         );
