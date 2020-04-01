@@ -29,12 +29,12 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
             default:
               List<ProjectModel> projectModelList = requestListSnapshot.data;
 
-              if (projectModelList.length == 0) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(child: Text('No Requests')),
-                );
-              }
+//              if (projectModelList.length == 0) {
+//                return Padding(
+//                  padding: const EdgeInsets.all(16.0),
+//                  child: Center(child: Text('No Projects')),
+//                );
+//              }
               return requestCards(projectModelList);
             //  return formatListFrom(consolidatedList: projectModelList);
           }
@@ -54,19 +54,23 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   Widget requestCards(List<ProjectModel> projectlist) {
     var count = 100;
-    return Expanded(
-      child: SizedBox(
-        height: 200.0,
-        child: ListView.builder(
-            itemCount: projectlist.length,
-            itemBuilder: (_context, index) {
-              return index < projectlist.length - 1
-                  ? getListTile(projectlist[index])
-                  : SizedBox(
-                      height: 50,
-                    );
-            }),
-      ),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: SizedBox(
+            height: 200.0,
+            child: ListView.builder(
+                itemCount: 1,
+                itemBuilder: (_context, index) {
+                  return index < projectlist.length - 1
+                      ? getListTile(projectlist[index])
+                      : SizedBox(
+                          height: 50,
+                        );
+                }),
+          ),
+        ),
+      ],
     );
   }
 

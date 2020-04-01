@@ -90,7 +90,7 @@ class Auth {
   }) async {
     AuthResult user;
     try {
-      result = await _firebaseAuth.signInWithEmailAndPassword(
+      user = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -100,7 +100,7 @@ class Auth {
       print(error);
       log('Auth: signInWithEmailAndPassword: $error');
     }
-    return _processGoogleUser(result.user.user);
+    return _processGoogleUser(user.user);
   }
 
   /// Register a User with [email] and [password]

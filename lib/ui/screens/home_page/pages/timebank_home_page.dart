@@ -9,7 +9,7 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_request/project_requests.dart';
-import 'package:sevaexchange/views/project_view/about_project_view.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 
@@ -70,7 +70,9 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AboutProjectView(),
+        builder: (context) => TimeBankProjectsView(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+        ),
       ),
     );
   }
