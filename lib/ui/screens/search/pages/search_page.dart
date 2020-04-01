@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/pages/projects_tab_view.dart';
@@ -17,21 +19,25 @@ import 'offers_tab_view.dart';
 
 class SearchPage extends StatefulWidget {
   final HomeDashBoardBloc bloc;
+  final TimebankModel timebank;
+  final UserModel user;
 
-  const SearchPage({Key key, this.bloc}) : super(key: key);
+  const SearchPage({Key key, this.bloc, this.timebank, this.user})
+      : super(key: key);
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
 
 class _ExplorePageState extends State<SearchPage>
     with SingleTickerProviderStateMixin {
-  SearchBloc _bloc = SearchBloc();
+  SearchBloc _bloc;
   TextEditingController _controller = TextEditingController();
   TabController _tabController;
   String selectedCommunity;
 
   @override
   void initState() {
+    _bloc = SearchBloc(user: widget.user, timebank: widget.timebank);
     _bloc.searchAfterDelay();
     _tabController = TabController(
       length: ExplorePageLabels.tabContent.length,
@@ -102,6 +108,13 @@ class _ExplorePageState extends State<SearchPage>
                 SizedBox(width: 20),
                 Expanded(
                   child: SearchField(bloc: _bloc, controller: _controller),
+                ),
+                FlatButton(
+                  child: Text("Cancel"),
+                  textColor: Colors.black,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
                 SizedBox(width: 20),
               ],
