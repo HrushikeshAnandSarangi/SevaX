@@ -8,6 +8,7 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/project_request/project_requests.dart';
 import 'package:sevaexchange/views/project_view/about_project_view.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -37,6 +38,17 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   void dispose() {
     _homeDashBoardBloc.dispose();
     super.dispose();
+  }
+
+  void navigateToProjectRequest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectRequests(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+        ),
+      ),
+    );
   }
 
   void navigateToCreateGroup() {
@@ -82,6 +94,10 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+                RaisedButton(
+                  child: Text("Project Request"),
+                  onPressed: navigateToProjectRequest,
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),

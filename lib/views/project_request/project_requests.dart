@@ -1,71 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 
-class TimeBankProjectsView extends StatefulWidget {
+class ProjectRequests extends StatefulWidget {
   final String timebankId;
-
-  TimeBankProjectsView({this.timebankId});
-
-  @override
-  _TimeBankProjectsViewState createState() => _TimeBankProjectsViewState();
+  ProjectRequests({@required this.timebankId});
+  State<StatefulWidget> createState() {
+    return RequestsState();
+  }
 }
 
-class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
+// Create a Form Widget
+
+class RequestsState extends State<ProjectRequests> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<List<ProjectModel>>(
-        stream: FirestoreManager.getAllProjectListStream(
-            timebankid: widget.timebankId),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<ProjectModel>> requestListSnapshot) {
-          if (requestListSnapshot.hasError) {
-            return new Text('Error: ${requestListSnapshot.error}');
-          }
-          switch (requestListSnapshot.connectionState) {
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            default:
-              List<ProjectModel> projectModelList = requestListSnapshot.data;
-
-              if (projectModelList.length == 0) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(child: Text('No Requests')),
-                );
-              }
-              return requestCards(projectModelList);
-            //  return formatListFrom(consolidatedList: projectModelList);
-          }
-        },
+      appBar: AppBar(
+        centerTitle: true,
+        elevation: 0.5,
+        title: Column(
+          children: <Widget>[
+            Text(
+              'Requests',
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: Column(
+        children: <Widget>[
+          requestStatusBar,
+          addRequest,
+          Container(
+            height: 10,
+          ),
+          requestCards,
+        ],
       ),
     );
   }
 
-  Widget getSpacerItem(Widget item) {
-    return Row(
-      children: <Widget>[
-        item,
-        Spacer(),
-      ],
+  Widget get requestStatusBar {
+    return Container(
+      height: 75,
+      width: MediaQuery.of(context).size.width,
+      alignment: Alignment.center,
+      color: Color.fromRGBO(250, 231, 53, 0.2),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              setTitle(num: '10', title: 'Requests'),
+              setTitle(num: '3', title: 'Pending'),
+              setTitle(num: '7', title: 'Completed'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget requestCards(List<ProjectModel> projectlist) {
+  Widget get requestCards{
     var count = 100;
     return Expanded(
       child: SizedBox(
         height: 200.0,
         child: ListView.builder(
-            itemCount: projectlist.length,
-            itemBuilder: (_context, index) {
-              return index < projectlist.length - 1
-                  ? getListTile(projectlist[index])
+            itemCount: count,
+            itemBuilder: ( _context, index) {
+              return index < count-1 ?
+                  getListTile()
                   : SizedBox(
-                      height: 50,
-                    );
-            }),
+                    height: 50,
+                  );
+            }
+        ),
       ),
     );
   }
@@ -84,7 +98,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     );
   }
 
-  Widget getListTile(ProjectModel projectModel) {
+  Widget getListTile(){
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -92,7 +106,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
         color: Colors.white,
         elevation: 2,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Column(
@@ -134,7 +149,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(right: 10, left: 10),
+                  margin: EdgeInsets.only(right: 10,left: 10),
                   child: Row(
                     children: <Widget>[
                       Container(
@@ -163,13 +178,13 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                                 ),
                               ),
                               getSpacerItem(
-                                Text(
-                                  '17 Jan 10:00 AM - 17 Jan 11:00 PM',
-                                  style: TextStyle(
-                                    color: Colors.black38,
-                                    fontSize: 13,
+                                  Text(
+                                    '17 Jan 10:00 AM - 17 Jan 11:00 PM',
+                                    style: TextStyle(
+                                      color: Colors.black38,
+                                      fontSize: 13,
+                                    ),
                                   ),
-                                ),
                               ),
                               getSpacerItem(
                                 Flexible(
@@ -188,6 +203,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                           ),
                         ),
                       ),
+
                     ],
                   ),
                 ),
@@ -195,6 +211,77 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget getSpacerItem(Widget item){
+    return Row(
+      children: <Widget>[
+        item,
+        Spacer(),
+      ],
+    );
+  }
+  Widget get addRequest {
+    return Container(
+      margin: EdgeInsets.only(top: 15),
+      width: MediaQuery.of(context).size.width - 20,
+      child: Row(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Text(
+                "Add request",
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          Spacer(),
+          Column(
+            children: <Widget>[
+              Container(
+                height: 10,
+              ),
+              GestureDetector(
+                child: Container(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 10,
+                    child: Image.asset("lib/assets/images/add.png"),
+                  ),
+                ),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget setTitle({String num, String title}) {
+    return Expanded(
+      child: Column(
+        children: <Widget>[
+          Text(
+            num,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+            ),
+          ),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 15,
+            ),
+          ),
+        ],
       ),
     );
   }

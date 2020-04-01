@@ -17,7 +17,7 @@ import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart'
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/project_view/create_edit_project.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
@@ -192,10 +192,8 @@ Widget createAdminTabBar(
                 DiscussionList(
                   timebankId: timebankId,
                 ),
-                CreateEditProject(
-                  isCreateProject: true,
+                TimeBankProjectsView(
                   timebankId: timebankId,
-                  projectId: '',
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,
@@ -382,10 +380,8 @@ Widget createJoinedUserTabBar(
                 DiscussionList(
                   timebankId: timebankId,
                 ),
-                CreateEditProject(
+                TimeBankProjectsView(
                   timebankId: timebankId,
-                  isCreateProject: true,
-                  projectId: '',
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,
