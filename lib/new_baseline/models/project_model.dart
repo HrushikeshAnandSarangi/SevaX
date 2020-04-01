@@ -12,6 +12,7 @@ class ProjectModel extends DataModel {
   String creatorId;
   String address;
   String photoUrl;
+  String mode;
   int createdAt;
   int startTime;
   int endTime;
@@ -30,6 +31,7 @@ class ProjectModel extends DataModel {
       this.creatorId,
       this.address,
       this.photoUrl,
+      this.mode,
       this.createdAt,
       this.startTime,
       this.endTime,
@@ -48,6 +50,7 @@ class ProjectModel extends DataModel {
         creatorId: json["creator_id"] == null ? null : json["creator_id"],
         address: json["address"] == null ? null : json["address"],
         photoUrl: json["photo_url"] == null ? null : json["photo_url"],
+        mode: json["mode"] == null ? null : json["mode"],
         createdAt: json["created_at"] == null ? null : json["created_at"],
         startTime: json["start_time"] == null ? null : json["start_time"],
         endTime: json["end_time"] == null ? null : json["end_time"],
@@ -72,6 +75,7 @@ class ProjectModel extends DataModel {
         "creator_id": creatorId == null ? null : creatorId,
         "address": address == null ? null : address,
         "photo_url": photoUrl == null ? null : photoUrl,
+        "mode": mode == null ? null : mode,
         "created_at": createdAt == null ? null : createdAt,
         "start_time": startTime == null ? null : startTime,
         "end_time": endTime == null ? null : endTime,
@@ -86,3 +90,5 @@ class ProjectModel extends DataModel {
             : new List<dynamic>.from(completedRequests.map((x) => x)),
       };
 }
+
+enum ProjectMode { PERSONAL, TIMEBANK }

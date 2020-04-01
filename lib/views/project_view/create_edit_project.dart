@@ -7,6 +7,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
@@ -17,8 +18,9 @@ import '../../flavor_config.dart';
 class CreateEditProject extends StatefulWidget {
   final bool isCreateProject;
   final String timebankId;
+  final String projectId;
 
-  CreateEditProject({this.isCreateProject, this.timebankId});
+  CreateEditProject({this.isCreateProject, this.timebankId, this.projectId});
 
   @override
   _CreateEditProjectState createState() => _CreateEditProjectState();
@@ -35,9 +37,40 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   TimebankModel timebankModel = TimebankModel({});
   BuildContext dialogContext;
   String dateTimeEroor = '';
+  var startDate;
+  var endDate;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (!widget.isCreateProject) {
+      getData();
+    }
+  }
+
+  void getData() async {
+    await FirestoreManager.getProjectFutureById(projectId: widget.projectId)
+        .then((onValue) {
+      projectModel = onValue;
+      print("projectttttt ${projectModel}");
+      selectedAddress = projectModel.address;
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.isCreateProject) {
+      startDate = getUpdatedDateTimeAccToUserTimezone(
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+          dateTime:
+              DateTime.fromMillisecondsSinceEpoch(projectModel.startTime));
+      endDate = getUpdatedDateTimeAccToUserTimezone(
+          timezoneAbb: SevaCore.of(context).loggedInUser.timezone,
+          dateTime: DateTime.fromMillisecondsSinceEpoch(projectModel.endTime));
+    }
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -70,7 +103,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     widget.isCreateProject
                         ? TimebankAvatar()
                         : TimebankAvatar(
-                            photoUrl: defaultCameraImageURL,
+                            photoUrl: projectModel.photoUrl != null
+                                ? projectModel.photoUrl ?? defaultCameraImageURL
+                                : defaultCameraImageURL,
                           ),
                     Text(''),
                     Text(
@@ -94,13 +129,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             headingText('Project Name'),
             TextFormField(
-              controller: searchTextController,
               onChanged: (value) {
                 //  enteredName = value;
                 print("name ------ $value");
-                //communityModel.name = value;
-                //timebankModel.name = value;
+                projectModel.name = value;
               },
+              initialValue:
+                  widget.isCreateProject ? "" : projectModel.name ?? "",
               decoration: InputDecoration(
                 errorText: errTxt,
                 hintText: "Ex: Pets-in-town, Citizen collab",
@@ -123,11 +158,17 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 return null;
               },
             ),
-            OfferDurationWidget(
-              title: ' Project duration',
-              //startTime: CalendarWidgetState.startDate,
-              //endTime: CalendarWidgetState.endDate
-            ),
+            widget.isCreateProject
+                ? OfferDurationWidget(
+                    title: ' Project duration',
+                    //startTime: CalendarWidgetState.startDate,
+                    //endTime: CalendarWidgetState.endDate
+                  )
+                : OfferDurationWidget(
+                    title: ' Project duration',
+                    startTime: startDate,
+                    endTime: endDate,
+                  ),
             Text(
               dateTimeEroor,
               style: TextStyle(
@@ -142,6 +183,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 hintText:
                     'Ex: A bit more about your project which will help to associate with',
               ),
+              initialValue: projectModel.description ?? "",
               keyboardType: TextInputType.multiline,
               maxLines: null,
               //  initialValue: timebankModel.missionStatement,
@@ -167,7 +209,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             headingText('Email'),
             TextFormField(
-              style: textStyle,
               cursorColor: Colors.black54,
               validator: _validateEmailId,
               onSaved: (value) {
@@ -178,7 +219,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               },
               initialValue: widget.isCreateProject
                   ? SevaCore.of(context).loggedInUser.email
-                  : '',
+                  : projectModel.emailId ??
+                      SevaCore.of(context).loggedInUser.email,
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
@@ -195,7 +237,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             headingText('Phone Number'),
             TextFormField(
-              style: textStyle,
               cursorColor: Colors.black54,
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
@@ -205,6 +246,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               onChanged: (value) {
                 projectModel.phoneNumber = value;
               },
+              initialValue: projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
@@ -292,6 +334,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.pendingRequests = [];
                         projectModel.timebankId = widget.timebankId;
                         projectModel.photoUrl = globals.timebankAvatarURL;
+                        projectModel.mode = 'TimeBank';
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -325,13 +368,32 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         Navigator.of(context).pop();
                       } else {}
                     } else {
-                      showProgressDialog('Updating project');
-
-                      if (dialogContext != null) {
-                        Navigator.pop(dialogContext);
+                      if (_formKey.currentState.validate()) {
+                        if (globals.timebankAvatarURL == null) {
+                          setState(() {
+                            this.communityImageError =
+                                'Timebank logo is mandatory';
+                          });
+                        }
+                        projectModel.startTime =
+                            OfferDurationWidgetState.starttimestamp;
+                        projectModel.endTime =
+                            OfferDurationWidgetState.endtimestamp;
+                        if (projectModel.startTime == null ||
+                            projectModel.endTime == null) {
+                          setState(() {
+                            this.communityImageError = 'Duration is Mandatory';
+                          });
+                        }
+                        showProgressDialog('Updating project');
+                        await FirestoreManager.updateProject(
+                            projectModel: projectModel);
+                        if (dialogContext != null) {
+                          Navigator.pop(dialogContext);
+                        }
+                        _formKey.currentState.reset();
+                        Navigator.of(context).pop();
                       }
-                      _formKey.currentState.reset();
-                      Navigator.of(context).pop();
                     }
                   },
                   shape: StadiumBorder(),
