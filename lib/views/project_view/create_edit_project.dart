@@ -54,7 +54,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         .then((onValue) {
       projectModel = onValue;
       print("projectttttt ${projectModel}");
-      selectedAddress =projectModel.address;
+      selectedAddress = projectModel.address;
       setState(() {});
     });
   }
@@ -103,8 +103,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                     widget.isCreateProject
                         ? TimebankAvatar()
                         : TimebankAvatar(
-                            photoUrl:
-                                projectModel.photoUrl ?? defaultCameraImageURL,
+                            photoUrl: projectModel.photoUrl != null
+                                ? projectModel.photoUrl ?? defaultCameraImageURL
+                                : defaultCameraImageURL,
                           ),
                     Text(''),
                     Text(
@@ -276,7 +277,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 icon: Icon(Icons.add_location),
                 label: Container(
                   child: Text(
-             selectedAddress == '' ? 'Add Location' : selectedAddress,
+                    selectedAddress == '' ? 'Add Location' : selectedAddress,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -374,7 +375,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                                 'Timebank logo is mandatory';
                           });
                         }
-
+                        projectModel.startTime =
+                            OfferDurationWidgetState.starttimestamp;
+                        projectModel.endTime =
+                            OfferDurationWidgetState.endtimestamp;
                         if (projectModel.startTime == null ||
                             projectModel.endTime == null) {
                           setState(() {
