@@ -108,6 +108,30 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
   );
 }
 
+Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
+  var query = Firestore.instance
+      .collection('projects')
+      .where('timebank_id', isEqualTo: timebankid);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<ProjectModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<ProjectModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            requestList.add(model);
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
 Stream<List<RequestModel>> getTimebankRequestListStream(
     {String timebankId}) async* {
   var query = Firestore.instance
