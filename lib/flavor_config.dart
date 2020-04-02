@@ -201,6 +201,11 @@ class FlavorConfig {
         break;
       case Flavor.HUMANITY_FIRST:
         return FlavorValues(
+          elasticSearchBaseURL: "http://35.227.68.255",
+          stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
+          androidPayMode: "test",
+          cloudFunctionBaseURL:
+              "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
           appName: 'Humanity First',
           timebankTitle: 'Yang Gang',
           timebankId: 'ab7c6033-8b82-42df-9f41-3c09bae6c3a2',
@@ -229,6 +234,11 @@ class FlavorConfig {
         break;
       case Flavor.TULSI:
         return FlavorValues(
+          elasticSearchBaseURL: "http://35.227.68.255",
+          stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
+          androidPayMode: "test",
+          cloudFunctionBaseURL:
+              "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
           appName: 'Tulsi 2020',
           timebankId: '6897fefc-9380-4ca6-8373-5e7760bb31be',
           timebankName: 'Tulsi 2020',
@@ -257,6 +267,11 @@ class FlavorConfig {
         break;
       case Flavor.TOM:
         return FlavorValues(
+            elasticSearchBaseURL: "http://35.227.68.255",
+            stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
+            androidPayMode: "test",
+            cloudFunctionBaseURL:
+                "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
             appName: 'Tom 2020',
             timebankId: 'f4b0b4c4-3d37-4514-b00b-ee424950c038',
             timebankName: 'Tom 2020',
@@ -284,6 +299,11 @@ class FlavorConfig {
         break;
       default:
         return FlavorValues(
+          elasticSearchBaseURL: "http://35.227.68.255",
+          stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
+          androidPayMode: "test",
+          cloudFunctionBaseURL:
+              "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
           appName: 'Seva Exchange',
           timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
           timebankName: 'Seva Exchange',

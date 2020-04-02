@@ -19,6 +19,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AdminNotificationViewHolder extends StatefulWidget {
@@ -504,7 +505,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${user.fullname} sent request for your offer: ${offermodel.title} ',
+                                      '${user.fullname} sent request for your offer: ${getOfferTitle(offerDataModel: offermodel)} ',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontFamily: 'Europa',

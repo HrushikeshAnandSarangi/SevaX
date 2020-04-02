@@ -460,6 +460,7 @@ class _ResultViewState extends State<ResultView> {
                   );
                 }
                 OfferModel model = offerList.elementAt(index - 1);
+
                 return Card(
                   child: ListTile(
                     onTap: () {
@@ -471,8 +472,14 @@ class _ResultViewState extends State<ResultView> {
                         ),
                       );
                     },
-                    title: Text(model.title),
-                    subtitle: Text(model.description),
+                    title: Text(model.offerType == OfferType.INDIVIDUAL_OFFER
+                        ? model.individualOfferDataModel.title
+                        : model.individualOfferDataModel.title),
+                    subtitle: Text(
+                      model.offerType == OfferType.INDIVIDUAL_OFFER
+                          ? model.individualOfferDataModel.description
+                          : model.groupOfferDataModel.classDescription,
+                    ),
                   ),
                 );
               },

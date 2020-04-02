@@ -68,12 +68,10 @@ class MyCustomFormState extends State<MyCustomForm> {
     color: titleStyle.color,
   );
 
-  String title = '';
-  String schedule = '';
-  String description = '';
-  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
   String selectedAddress;
   String timebankId;
+
+  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
 
   OfferType offerType;
   GroupOfferDataModel groupOfferDataModel;
@@ -85,29 +83,19 @@ class MyCustomFormState extends State<MyCustomForm> {
   void initState() {
     super.initState();
     _selectedTimebankId = widget.timebankId;
+    offerType = OfferType.INDIVIDUAL_OFFER;
+    groupOfferDataModel = GroupOfferDataModel();
+
     this.timebankId = _selectedTimebankId;
     if (FlavorConfig.appFlavor == Flavor.APP) {
       _fetchCurrentlocation;
     }
   }
 
-  void _writeToDB() async {
+  void _writeToDB({OfferModel model}) async {
     int timestamp = DateTime.now().millisecondsSinceEpoch;
     String timestampString = timestamp.toString();
-    var id = '${SevaCore.of(context).loggedInUser.email}*$timestampString';
 
-
-
-
-    OfferModel model = OfferModel(
-      email: SevaCore.of(context).loggedInUser.email,
-      fullName: SevaCore.of(context).loggedInUser.fullname,
-      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      timebankId: widget.timebankId,
-      timestamp: timestamp,
-      location:
-          location == null ? GeoFirePoint(40.754387, -73.984291) : location,
-    );
     await createOffer(offerModel: model);
   }
 
@@ -129,8 +117,12 @@ class MyCustomFormState extends State<MyCustomForm> {
               print("$sharedValue -- $val");
               if (sharedValue == 0) {
                 offerType = OfferType.GROUP_OFFER;
+                groupOfferDataModel =
+                    groupOfferDataModel ?? GroupOfferDataModel();
               } else {
                 offerType = OfferType.INDIVIDUAL_OFFER;
+                individualOfferDataModel =
+                    individualOfferDataModel ?? IndividualOfferDataModel();
               }
               sharedValue = val;
             });
@@ -149,7 +141,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       style: TextStyle(fontSize: 15.0),
     ),
     1: Text(
-      'Group Offer',
+      'One to many',
       style: TextStyle(fontSize: 15.0),
     ),
   };
@@ -173,7 +165,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             if (value.isEmpty) {
               return 'Please enter the subject of your Offer';
             }
-            title = value;
+            individualOfferDataModel.title = value;
           },
         ),
         SizedBox(height: 40),
@@ -193,7 +185,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            description = value;
+            individualOfferDataModel.description = value;
           },
         ),
         SizedBox(height: 20),
@@ -210,7 +202,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            schedule = value;
+            individualOfferDataModel.schedule = value;
           },
         ),
       ],
@@ -273,32 +265,38 @@ class MyCustomFormState extends State<MyCustomForm> {
                           //if (location != null) {
 
                           if (_formKey.currentState.validate()) {
-                            if (OfferDurationWidgetState.starttimestamp == 0) {
+                            if (location == null) {
                               showDialogForDate(
-                                  dialogTitle:
-                                      "Please mention the start and end date");
+                                  dialogTitle: "Please add location to your offer");
                               return;
                             }
-                            if (OfferDurationWidgetState.starttimestamp == 0) {
-                              showDialogForDate(
-                                  dialogTitle:
-                                      "Please mention the start and end date");
-                              return;
+                            OfferModel model;
+                            switch (offerType) {
+                              case OfferType.INDIVIDUAL_OFFER:
+                                model = gatherIndividualOfferData();
+                                break;
+
+                              case OfferType.GROUP_OFFER:
+                                if (!isClassStartDateSelected()) {
+                                  return;
+                                }
+                                model = gatherGroupOffer();
+                                break;
                             }
+
                             Scaffold.of(context).showSnackBar(
                               SnackBar(content: Text('Creating Offer')),
                             );
-                            return;
-                            _writeToDB();
+                            _writeToDB(model: model);
                             Navigator.pop(context);
                           } else {
                             print("Invalid data");
                           }
-//                      } else {
-//                        Scaffold.of(context).showSnackBar(SnackBar(
-//                          content: Text('Location not added'),
-//                        ));
-//                      }
+                          //                      } else {
+                          //                        Scaffold.of(context).showSnackBar(SnackBar(
+                          //                          content: Text('Location not added'),
+                          //                        ));
+                          //                      }
                         },
                         child: Text(
                           '  Create Offer  ',
@@ -391,7 +389,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             if (value.isEmpty) {
               return 'Please enter the subject of your Offer';
             }
-            title = value;
+            groupOfferDataModel.classTitle = value;
           },
         ),
         SizedBox(height: 20),
@@ -421,7 +419,7 @@ class MyCustomFormState extends State<MyCustomForm> {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            description = value;
+            groupOfferDataModel.classDescription = value;
           },
         ),
       ],
@@ -453,7 +451,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               if (value.isEmpty) {
                 return 'Please enter the your preperation time';
               } else {
-                preperationTime = int.parse(value);
+                groupOfferDataModel.numberOfPreperationHours = int.parse(value);
                 return null;
               }
             }),
@@ -488,7 +486,7 @@ class MyCustomFormState extends State<MyCustomForm> {
               if (value.isEmpty) {
                 return 'No. of class hours';
               } else {
-                preperationTime = int.parse(value);
+                groupOfferDataModel.numberOfClassHours = int.parse(value);
                 return null;
               }
             }),
@@ -523,5 +521,54 @@ class MyCustomFormState extends State<MyCustomForm> {
         });
       });
     });
+  }
+
+  OfferModel gatherIndividualOfferData() {
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
+    var id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
+
+    return OfferModel(
+      id: id,
+      email: SevaCore.of(context).loggedInUser.email,
+      fullName: SevaCore.of(context).loggedInUser.fullname,
+      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      timebankId: widget.timebankId,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      location:
+          location == null ? GeoFirePoint(40.754387, -73.984291) : location,
+      groupOfferDataModel: null,
+      individualOfferDataModel: individualOfferDataModel,
+      offerType: OfferType.INDIVIDUAL_OFFER,
+    );
+  }
+
+  OfferModel gatherGroupOffer() {
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
+    var id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
+
+    groupOfferDataModel.startDate = OfferDurationWidgetState.starttimestamp;
+    groupOfferDataModel.endDate = OfferDurationWidgetState.endtimestamp;
+
+    return OfferModel(
+      id: id,
+      email: SevaCore.of(context).loggedInUser.email,
+      fullName: SevaCore.of(context).loggedInUser.fullname,
+      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      timebankId: widget.timebankId,
+      timestamp: timestamp,
+      location:
+          location == null ? GeoFirePoint(40.754387, -73.984291) : location,
+      groupOfferDataModel: groupOfferDataModel,
+      individualOfferDataModel: null,
+      offerType: OfferType.GROUP_OFFER,
+    );
+  }
+
+  bool isClassStartDateSelected() {
+    if (OfferDurationWidgetState.starttimestamp == 0) {
+      showDialogForDate(dialogTitle: "Please mention the start and end date");
+      return false;
+    }
+    return true;
   }
 }

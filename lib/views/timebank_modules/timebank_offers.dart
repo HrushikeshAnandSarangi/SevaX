@@ -21,8 +21,8 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
-import 'package:sevaexchange/views/exchange/edit_offer.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
@@ -31,16 +31,13 @@ import '../core.dart';
 class OffersModule extends StatefulWidget {
   final String timebankId;
   TimebankModel timebankModel;
-
   OffersModule.of({this.timebankId, this.timebankModel});
-
   @override
   OffersState createState() => OffersState();
 }
 
 class OffersState extends State<OffersModule> {
   String timebankId;
-
   _setORValue() {
     globals.orCreateSelector = 1;
   }
@@ -49,12 +46,10 @@ class OffersState extends State<OffersModule> {
   List<TimebankModel> timebankList = [];
   bool isNearme = false;
   int sharedValue = 0;
-
   @override
   Widget build(BuildContext context) {
     _setORValue();
     timebankId = widget.timebankModel.id;
-
     return Column(
       children: <Widget>[
         Offstage(
@@ -97,108 +92,12 @@ class OffersState extends State<OffersModule> {
                   ],
                 ),
               ),
-
               Padding(
                 padding: EdgeInsets.only(left: 10),
               ),
               Expanded(
                 child: Container(),
               ),
-              // StreamBuilder<List<TimebankModel>>(
-              //     stream: FirestoreManager.getTimebanksForUserStream(
-              //       userId: SevaCore.of(context).loggedInUser.sevaUserID,
-              //     ),
-              //     builder: (context, snapshot) {
-              //       if (snapshot.hasError)
-              //         return new Text('Error: ${snapshot.error}');
-              //       if (snapshot.connectionState == ConnectionState.waiting) {
-              //         return Center(child: CircularProgressIndicator());
-              //       }
-              //       timebankList = snapshot.data;
-              //       List<String> dropdownList = [];
-
-              //       int adminOfCount = 0;
-              //       if (FlavorConfig.values.timebankName == "Yang 2020") {
-              //         dropdownList.add("Create Yang Gang");
-              //       }
-
-              //       timebankList.forEach((t) {
-              //         dropdownList.add(t.id);
-              //         if (t.admins.contains(
-              //             SevaCore.of(context).loggedInUser.sevaUserID)) {
-              //           adminOfCount++;
-
-              //           SevaCore.of(context)
-              //               .loggedInUser
-              //               .timebankIdForYangGangAdmin = t.id;
-              //         }
-              //       });
-
-              //       SevaCore.of(context).loggedInUser.associatedWithTimebanks =
-              //           dropdownList.length;
-
-              //       SevaCore.of(context).loggedInUser.adminOfYanagGangs =
-              //           adminOfCount;
-
-              //       return Expanded(
-              //         child: DropdownButton<String>(
-              //           value: timebankId,
-              //           onChanged: (String newValue) {
-              //             if (newValue == "Create Yang Gang") {
-              //               createSubTimebank(context);
-              //             } else {
-              //               setState(() {
-              //                 timebankId = newValue;
-              //                 SevaCore.of(context)
-              //                     .loggedInUser
-              //                     .currentTimebank = newValue;
-              //               });
-              //             }
-              //           },
-              //           items: dropdownList
-              //               .map<DropdownMenuItem<String>>((String value) {
-              //             if (value == "Create Yang Gang") {
-              //               return DropdownMenuItem<String>(
-              //                 value: value,
-              //                 child: Text(
-              //                   value,
-              //                   style: TextStyle(color: Colors.red),
-              //                 ),
-              //               );
-              //             } else {
-              //               if (value == 'All') {
-              //                 return DropdownMenuItem<String>(
-              //                   value: value,
-              //                   child: Text(value),
-              //                 );
-              //               } else {
-              //                 return DropdownMenuItem<String>(
-              //                   value: value,
-              //                   child: FutureBuilder<Object>(
-              //                       future: FirestoreManager.getTimeBankForId(
-              //                           timebankId: value),
-              //                       builder: (context, snapshot) {
-              //                         if (snapshot.hasError)
-              //                           return new Text(
-              //                               'Error: ${snapshot.error}');
-              //                         if (snapshot.connectionState ==
-              //                             ConnectionState.waiting) {
-              //                           return Offstage();
-              //                         }
-              //                         TimebankModel timebankModel =
-              //                             snapshot.data;
-              //                         return Text(
-              //                           timebankModel.name,
-              //                           style: TextStyle(fontSize: 15.0),
-              //                         );
-              //                       }),
-              //                 );
-              //               }
-              //             }
-              //           }).toList(),
-              //         ),
-              //       );
-              //     }),
               Container(
                 width: 120,
                 child: CupertinoSegmentedControl<int>(
@@ -206,7 +105,6 @@ class OffersState extends State<OffersModule> {
                   children: logoWidgets,
                   borderColor: Colors.grey,
                   padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                  //selectedColor: Colors.deepOrange,
                   groupValue: sharedValue,
                   onValueChanged: (int val) {
                     print(val);
@@ -222,22 +120,8 @@ class OffersState extends State<OffersModule> {
                       });
                     }
                   },
-                  //groupValue: sharedValue,
                 ),
               ),
-//              RaisedButton(
-//                onPressed: () {
-//                  setState(() {
-//                    if (isNearme == true)
-//                      isNearme = false;
-//                    else
-//                      isNearme = true;
-//                  });
-//                },
-//                child: isNearme == false ? Text('Near Me') : Text('All'),
-//                color: Theme.of(context).accentColor,
-//                textColor: Colors.white,
-//              ),
               Padding(
                 padding: EdgeInsets.only(right: 5),
               ),
@@ -288,11 +172,8 @@ class OfferCardView extends StatefulWidget {
   final OfferModel offerModel;
   TimebankModel timebankModel;
   String sevaUserIdOffer;
-
   bool isAdmin = false;
-
   OfferCardView({this.offerModel, this.timebankModel});
-
   @override
   State<StatefulWidget> createState() {
     return OfferCardViewState();
@@ -303,13 +184,11 @@ class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
   String sevaUserId;
-
   OfferListItems({
     Key key,
     this.parentContext,
     this.timebankId,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -328,7 +207,6 @@ class OfferListItems extends StatelessWidget {
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(
                   context: context, requestModelList: offersList);
-
               if (offersList.length == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -337,20 +215,16 @@ class OfferListItems extends StatelessWidget {
                   ),
                 );
               }
-              //Here we apply grouping startegy
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-
               print("============== $consolidatedList");
-
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
       );
     } else {
       print("set stream for offers");
-
       return StreamBuilder<List<OfferModel>>(
         stream: getAllOffersStream(),
         builder:
@@ -363,10 +237,8 @@ class OfferListItems extends StatelessWidget {
               );
             default:
               List<OfferModel> offersList = snapshot.data;
-
               offersList = filterBlockedOffersContent(
                   context: context, requestModelList: offersList);
-
               if (offersList.length == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -375,11 +247,9 @@ class OfferListItems extends StatelessWidget {
                   ),
                 );
               }
-
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
-
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -390,7 +260,6 @@ class OfferListItems extends StatelessWidget {
   List<OfferModel> filterBlockedOffersContent(
       {List<OfferModel> requestModelList, BuildContext context}) {
     List<OfferModel> filteredList = [];
-
     requestModelList.forEach((request) => SevaCore.of(context)
                 .loggedInUser
                 .blockedMembers
@@ -401,7 +270,6 @@ class OfferListItems extends StatelessWidget {
                 .contains(request.sevaUserId)
         ? "Filtering blocked content"
         : filteredList.add(request));
-
     return filteredList;
   }
 
@@ -418,11 +286,7 @@ class OfferListItems extends StatelessWidget {
                 );
               }
               return getOfferWidget(consolidatedList[index]);
-            }
-            // children: consolidatedList.map((OfferModelList offerModel) {
-            //   return getOfferWidget(offerModel);
-            // }).toList(),
-            ),
+            }),
       ),
     );
   }
@@ -448,7 +312,6 @@ class OfferListItems extends StatelessWidget {
                 groupKey: (offerModelList as OfferTitle).groupTitle),
           ),
         );
-
       case OfferModelList.OFFER:
         return getOfferViewHolder((offerModelList as OfferItem).offerModel);
     }
@@ -477,59 +340,31 @@ class OfferListItems extends StatelessWidget {
                   width: 40,
                   child: FadeInImage.assetNetwork(
                     placeholder: 'lib/assets/images/profile.png',
-                    // image: user.photoURL,
                     image: model.photoUrlImage == null
                         ? defaultUserImageURL
                         : model.photoUrlImage,
                   ),
                 ),
-              )
-
-              // StreamBuilder<UserModel>(
-              //   stream: FirestoreManager.getUserForIdStream(
-              //     sevaUserId: model.sevaUserId,
-              //   ),
-              //   builder: (context, snapshot) {
-              //     if (snapshot.hasError) {
-              //       return CircleAvatar(foregroundColor: Colors.red);
-              //     }
-              //     if (snapshot.connectionState == ConnectionState.waiting) {
-              //       return CircleAvatar();
-              //     }
-              //     UserModel user = snapshot.data;
-              //     return ClipOval(
-              //       child: SizedBox(
-              //         height: 40,
-              //         width: 40,
-              //         child: FadeInImage.assetNetwork(
-              //             placeholder: 'lib/assets/images/profile.png',
-              //             // image: user.photoURL,
-              //             image:
-              //                 "https://media.wired.com/photos/5c1ae77ae91b067f6d57dec0/master/pass/Comparison-City-MAIN-ART.jpg"),
-              //       ),
-              //     );
-              //   },
-              // ),
-              ,
+              ),
               SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      model.title,
+                      getOfferTitle(offerDataModel: model),
                       style: Theme.of(parentContext).textTheme.subhead,
                     ),
                     Text(
-                      model.description,
+                      getOfferDescription(offerDataModel: model),
                       style: Theme.of(parentContext).textTheme.subtitle,
                     ),
                     Offstage(
-                      offstage: !model.offerAcceptors.contains(sevaUserId),
+                      offstage: getOfferParticipants(offerDataModel: model)
+                          .contains(sevaUserId),
                       child: Container(
                           alignment: Alignment.topRight,
                           margin: EdgeInsets.all(12),
-                          // width: double.infinity,
                           child: Container(
                             width: 100,
                             height: 32,
@@ -587,7 +422,6 @@ class NearOfferListItems extends StatelessWidget {
   final BuildContext parentContext;
   const NearOfferListItems({Key key, this.parentContext, this.timebankId})
       : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     if (timebankId != 'All') {
@@ -605,7 +439,6 @@ class NearOfferListItems extends StatelessWidget {
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(
                   context: context, requestModelList: offersList);
-
               if (offersList.length == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -644,7 +477,6 @@ class NearOfferListItems extends StatelessWidget {
               List<OfferModel> offersList = snapshot.data;
               offersList = filterBlockedOffersContent(
                   context: context, requestModelList: offersList);
-
               if (offersList.length == 0) {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -674,7 +506,6 @@ class NearOfferListItems extends StatelessWidget {
   List<OfferModel> filterBlockedOffersContent(
       {List<OfferModel> requestModelList, BuildContext context}) {
     List<OfferModel> filteredList = [];
-
     requestModelList.forEach((request) => SevaCore.of(context)
                 .loggedInUser
                 .blockedMembers
@@ -685,14 +516,11 @@ class NearOfferListItems extends StatelessWidget {
                 .contains(request.sevaUserId)
         ? "Filtering blocked content"
         : filteredList.add(request));
-
     return filteredList;
   }
 
   Widget getOfferWidget(OfferModel model) {
     return Container(
-      // decoration: containerDecoration,
-      // margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Card(
         elevation: 2,
         child: InkWell(
@@ -738,11 +566,11 @@ class NearOfferListItems extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        model.title,
+                        getOfferTitle(offerDataModel: model),
                         style: Theme.of(parentContext).textTheme.subhead,
                       ),
                       Text(
-                        model.description,
+                        getOfferDescription(offerDataModel: model),
                         style: Theme.of(parentContext).textTheme.subtitle,
                       ),
                     ],
@@ -782,7 +610,6 @@ class NearOfferListItems extends StatelessWidget {
 class OfferCardViewState extends State<OfferCardView> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     FirestoreManager.getTimeBankForId(timebankId: widget.offerModel.timebankId)
         .then((timebank) {
@@ -805,7 +632,6 @@ class OfferCardViewState extends State<OfferCardView> {
     fontSize: 18,
     color: Colors.black,
   );
-
   TextStyle subTitleStyle = TextStyle(
     fontSize: 14,
     color: Colors.grey,
@@ -823,8 +649,7 @@ class OfferCardViewState extends State<OfferCardView> {
       appBar: AppBar(
         actions: <Widget>[
           widget.offerModel.sevaUserId ==
-                      SevaCore.of(context).loggedInUser.sevaUserID &&
-                  widget.offerModel.requestList.length == 0
+                  SevaCore.of(context).loggedInUser.sevaUserID
               ? IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () {
@@ -889,7 +714,6 @@ class OfferCardViewState extends State<OfferCardView> {
             }
             UserModel userModel = snapshot.data;
             String usertimezone = userModel.timezone;
-
             return SafeArea(
               child: Column(
                 children: <Widget>[
@@ -904,7 +728,6 @@ class OfferCardViewState extends State<OfferCardView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              //adding sample calss tarts here
                               SafeArea(
                                 child: SingleChildScrollView(
                                   child: Column(
@@ -916,7 +739,9 @@ class OfferCardViewState extends State<OfferCardView> {
                                             CrossAxisAlignment.start,
                                         children: <Widget>[
                                           Text(
-                                            widget.offerModel.title,
+                                            getOfferTitle(
+                                                offerDataModel:
+                                                    widget.offerModel),
                                             style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -976,21 +801,21 @@ class OfferCardViewState extends State<OfferCardView> {
                                                                 Colors.white),
                                                       ),
                                                       onPressed: () {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    UpdateOffer(
-                                                              timebankId: SevaCore
-                                                                      .of(context)
-                                                                  .loggedInUser
-                                                                  .currentTimebank,
-                                                              offerModel: widget
-                                                                  .offerModel,
-                                                            ),
-                                                          ),
-                                                        );
+                                                        // Navigator.push(
+                                                        //   context,
+                                                        //   MaterialPageRoute(
+                                                        //     builder:
+                                                        //         (context) =>
+                                                        //             UpdateOffer(
+                                                        //       timebankId: SevaCore
+                                                        //               .of(context)
+                                                        //           .loggedInUser
+                                                        //           .currentTimebank,
+                                                        //       offerModel: widget
+                                                        //           .offerModel,
+                                                        //     );
+                                                        //   ),
+                                                        // );
                                                       },
                                                     )
                                                   : Container(),
@@ -1018,7 +843,6 @@ class OfferCardViewState extends State<OfferCardView> {
                                                   return Text(
                                                       "Unnamed Location");
                                                 }
-
                                                 if (snapshot.connectionState ==
                                                     ConnectionState.waiting) {
                                                   return Text(
@@ -1033,7 +857,6 @@ class OfferCardViewState extends State<OfferCardView> {
                                             ),
                                           ),
                                           CustomListTile(
-                                            // contentPadding: EdgeInsets.all(0),
                                             leading: Icon(
                                               Icons.person,
                                               color: Colors.grey,
@@ -1044,19 +867,12 @@ class OfferCardViewState extends State<OfferCardView> {
                                               maxLines: 1,
                                             ),
                                           ),
-                                          // SizedBox(height: 20),
-                                          // Text(
-                                          //   '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} people Approved',
-                                          //   style: TextStyle(
-                                          //     fontSize: 16,
-                                          //     fontWeight: FontWeight.w500,
-                                          //   ),
-                                          // ),
                                           Container(
                                             padding: EdgeInsets.all(8.0),
                                             child: RichTextView(
-                                                text: widget
-                                                    .offerModel.description),
+                                                text: getOfferDescription(
+                                                    offerDataModel:
+                                                        widget.offerModel)),
                                           ),
                                         ],
                                       ),
@@ -1064,97 +880,10 @@ class OfferCardViewState extends State<OfferCardView> {
                                   ),
                                 ),
                               ),
-
-                              //addding sample class here ends
-
-                              // Container(
-                              //   padding: EdgeInsets.all(8.0),
-                              //   alignment: Alignment(-1.0, 0.0),
-                              //   child:
-                              //       Text('Posted By: ' + widget.offerModel.fullName),
-                              // ),
-                              // Container(
-                              //   padding: EdgeInsets.all(8.0),
-                              //   alignment: Alignment(-1.0, 0.0),
-                              //   child: Text(
-                              //     'PostDate:  ' +
-                              //         DateFormat('MMMM dd, yyyy @ h:mm a').format(
-                              //           getDateTimeAccToUserTimezone(
-                              //               dateTime:
-                              //                   DateTime.fromMillisecondsSinceEpoch(
-                              //                       widget.offerModel.timestamp),
-                              //               timezoneAbb: usertimezone),
-                              //         ),
-                              //   ),
-                              // ),
                               Container(
                                 padding: EdgeInsets.all(8.0),
                                 child: Text(' '),
                               ),
-                              // Container(
-                              //   padding: EdgeInsets.all(8.0),
-                              //   child: RaisedButton(
-                              //     color: Theme.of(context).accentColor,
-                              //     onPressed: widget.offerModel.sevaUserId ==
-                              //                 SevaCore.of(context)
-                              //                     .loggedInUser
-                              //                     .sevaUserID ||
-                              //             (widget.isAdmin &&
-                              //                 widget.offerModel.acceptedOffer)
-                              //         ? null
-                              //         : () {
-                              //             widget.sevaUserIdOffer =
-                              //                 widget.offerModel.sevaUserId;
-
-                              //             FirestoreManager.getTimeBankForId(
-                              //                     timebankId:
-                              //                         widget.offerModel.timebankId)
-                              //                 .then((timebank) {
-                              //               if (timebank.admins.contains(
-                              //                       SevaCore.of(context)
-                              //                           .loggedInUser
-                              //                           .sevaUserID) ||
-                              //                   timebank.coordinators.contains(
-                              //                       SevaCore.of(context)
-                              //                           .loggedInUser
-                              //                           .sevaUserID)) {
-                              //                 setState(() {
-                              //                   widget.isAdmin = true;
-                              //                 });
-
-                              //                 _makePostRequest(widget.offerModel);
-                              //               } else {
-                              //                 showDialog(
-                              //                   context: context,
-                              //                   builder: (BuildContext context) {
-                              //                     return AlertDialog(
-                              //                       title:
-                              //                           new Text("Permission Denied"),
-                              //                       content: new Text(
-                              //                           "You need to be an Admin or Coordinator to have permission to send request to offers"),
-                              //                       actions: <Widget>[
-                              //                         new FlatButton(
-                              //                           child: new Text("Close"),
-                              //                           onPressed: () {
-                              //                             Navigator.of(context).pop();
-                              //                           },
-                              //                         ),
-                              //                       ],
-                              //                     );
-                              //                   },
-                              //                 );
-                              //               }
-                              //             });
-                              //           },
-                              //     child: Text(
-                              //       !widget.offerModel.acceptedOffer ||
-                              //               !widget.isAdmin
-                              //           ? 'Accepts'
-                              //           : 'Accepted',
-                              //       style: TextStyle(color: Colors.white),
-                              //     ),
-                              //   ),
-                              // )
                             ],
                           ),
                         ),
@@ -1170,11 +899,8 @@ class OfferCardViewState extends State<OfferCardView> {
   }
 
   String offerStatusLabel;
-
   Future _makePostRequest(OfferModel offerModel) async {
-    // set up POST request arguments
-    String url =
-        '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
+    String url = '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
     Map<String, String> headers = {"Content-type": "application/json"};
     Map<String, String> body = {
       'id': offerModel.id,
@@ -1186,64 +912,32 @@ class OfferCardViewState extends State<OfferCardView> {
       'communityId': SevaCore.of(context).loggedInUser.currentCommunity,
       'acceptorEmailId': SevaCore.of(context).loggedInUser.email,
     };
-
     setState(() {
       widget.offerModel.acceptedOffer = true;
     });
-
-    // make POST request
     Response response =
         await post(url, headers: headers, body: json.encode(body));
-    // check the status code for the result
     int statusCode = response.statusCode;
-
     if (statusCode == 200) {
       print("Request completed successfully");
     } else {
       print("Request failed");
     }
-    // this API passes back the id of the new item added to the body
-    // String body = response.body;
-    // {
-    //   "title": "Hello",
-    //   "body": "body text",
-    //   "userId": 1,
-    //   "id": 101
-    // }
   }
 
   bool isAccepted = false;
   BuildContext dialogContext;
   Widget getBottombar() {
-    isAccepted = widget.offerModel.offerAcceptors.contains(
+    isAccepted =
+        getOfferParticipants(offerDataModel: widget.offerModel).contains(
       SevaCore.of(context).loggedInUser.sevaUserID,
     );
-    // var textSpan = TextSpan(
-    //   style: TextStyle(
-    //     fontWeight: FontWeight.bold,
-    //     color: Colors.blue,
-    //   ),
-    //   text: '\nEdit Offer',
-    //   recognizer: TapGestureRecognizer()
-    //     ..onTap = () {
-    //       Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //           builder: (context) => UpdateOffer(
-    //             timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-    //             offerModel: widget.offerModel,
-    //           ),
-    //         ),
-    //       );
-    //     },
-    // );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Container(
         decoration: BoxDecoration(color: Colors.white54, boxShadow: [
           BoxShadow(color: Colors.grey[300], offset: Offset(2.0, 2.0))
         ]),
-        // margin: EdgeInsets.only(top: 10, left: 5),
         child: Padding(
           padding: const EdgeInsets.only(top: 20.0, left: 20, bottom: 20),
           child: Row(
@@ -1266,10 +960,6 @@ class OfferCardViewState extends State<OfferCardView> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        // widget.offerModel.sevaUserId ==
-                        //         SevaCore.of(context).loggedInUser.sevaUserID
-                        //     ? textSpan
-                        //     : TextSpan(),
                       ],
                     ),
                   ),
@@ -1278,7 +968,7 @@ class OfferCardViewState extends State<OfferCardView> {
               Offstage(
                 offstage: widget.offerModel.sevaUserId ==
                         SevaCore.of(context).loggedInUser.sevaUserID ||
-                    widget.offerModel.offerAcceptors
+                    getOfferParticipants(offerDataModel: widget.offerModel)
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                 child: Container(
                   width: 100,
@@ -1306,8 +996,11 @@ class OfferCardViewState extends State<OfferCardView> {
                         ),
                         Spacer(),
                         Text(
-                          widget.offerModel.offerAcceptors.contains(
-                                  SevaCore.of(context).loggedInUser.sevaUserID)
+                          getOfferParticipants(
+                                      offerDataModel: widget.offerModel)
+                                  .contains(SevaCore.of(context)
+                                      .loggedInUser
+                                      .sevaUserID)
                               ? 'Withdraw'
                               : 'Accept',
                           style: TextStyle(
@@ -1327,7 +1020,6 @@ class OfferCardViewState extends State<OfferCardView> {
                         _showProtectedTimebankMessage();
                         return;
                       }
-
                       showDialog(
                           barrierDismissible: false,
                           context: context,
@@ -1338,10 +1030,10 @@ class OfferCardViewState extends State<OfferCardView> {
                               content: LinearProgressIndicator(),
                             );
                           });
-                      var isAccepted = widget.offerModel.offerAcceptors
+                      var isAccepted = getOfferParticipants(
+                              offerDataModel: widget.offerModel)
                           .contains(
                               SevaCore.of(context).loggedInUser.sevaUserID);
-
                       Firestore.instance
                           .collection("offers")
                           .document(widget.offerModel.id)
@@ -1352,13 +1044,17 @@ class OfferCardViewState extends State<OfferCardView> {
                             : FieldValue.arrayUnion(
                                 [SevaCore.of(context).loggedInUser.sevaUserID])
                       });
-
                       widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
                       var tempOutput = new List<String>.from(
-                          widget.offerModel.offerAcceptors);
+                        getOfferParticipants(offerDataModel: widget.offerModel),
+                      );
                       tempOutput
                           .add(SevaCore.of(context).loggedInUser.sevaUserID);
-                      widget.offerModel.offerAcceptors = tempOutput;
+                      widget.offerModel.offerType == OfferType.GROUP_OFFER
+                          ? widget
+                              .offerModel.groupOfferDataModel.signedUpMembers
+                          : widget.offerModel.individualOfferDataModel
+                              .offerAcceptors = tempOutput;
                       await _makePostRequest(widget.offerModel);
                       Navigator.of(dialogContext).pop();
                       Navigator.of(context).pop();
@@ -1379,17 +1075,14 @@ class OfferCardViewState extends State<OfferCardView> {
   }
 
   void _showProtectedTimebankMessage() {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return AlertDialog(
           title: new Text("Protected Timebank"),
           content: new Text(
               "Admins or Co-Ordinators can only accept offers in a protected timebank"),
           actions: <Widget>[
-            // usually buttons at the bottom of the dialog
             new FlatButton(
               child: new Text("Close"),
               onPressed: () {

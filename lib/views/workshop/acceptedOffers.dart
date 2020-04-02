@@ -5,6 +5,7 @@ import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 
 class AcceptedOffers extends StatefulWidget {
   final String sevaUserId;
@@ -129,7 +130,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: Text(
-                                model.title,
+                                getOfferTitle(offerDataModel: model),
                                 style:
                                     Theme.of(parentContext).textTheme.subhead,
                               ),
@@ -137,7 +138,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: Text(
-                                model.description,
+                                getOfferDescription(offerDataModel: model),
                                 overflow: TextOverflow.ellipsis,
                                 style:
                                     Theme.of(parentContext).textTheme.subtitle,

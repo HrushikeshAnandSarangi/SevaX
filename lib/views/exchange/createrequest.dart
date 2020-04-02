@@ -330,8 +330,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   },
                 ),
                 SizedBox(height: 40),
-                if (FlavorConfig.appFlavor != Flavor.APP)
-                  addVolunteersForAdmin(),
                 Center(
                   child: FlatButton.icon(
                     icon: Icon(Icons.add_location),
@@ -430,7 +428,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             SevaCore.of(context).loggedInUser.sevaUserID,
           );
 
-          print("Seva Coins $sevaCoinsValue -------------------------------------------");
+          print(
+              "Seva Coins $sevaCoinsValue -------------------------------------------");
 
           if (!hasSufficientBalance()) {
             showInsufficientBalance();
