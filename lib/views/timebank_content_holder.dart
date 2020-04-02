@@ -194,6 +194,7 @@ Widget createAdminTabBar(
                 ),
                 TimeBankProjectsView(
                   timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,
@@ -382,6 +383,7 @@ Widget createJoinedUserTabBar(
                 ),
                 TimeBankProjectsView(
                   timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,

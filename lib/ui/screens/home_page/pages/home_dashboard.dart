@@ -165,7 +165,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => Builder(builder: (context) {
-                      return SearchPage(bloc: _homeDashBoardBloc,user: SevaCore.of(context).loggedInUser,timebank: primaryTimebank,);
+                      return SearchPage(
+                        bloc: _homeDashBoardBloc,
+                        user: SevaCore.of(context).loggedInUser,
+                        timebank: primaryTimebank,
+                      );
                     }),
                   ),
                 );
@@ -237,6 +241,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       TimeBankProjectsView(
                         timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
                       ),
                       // TimebankFeeds(),
                       RequestsModule.of(
