@@ -17,11 +17,10 @@ class NewsCardView extends StatelessWidget {
   final String timebankId;
 
   NewsCardView({Key key, @required this.newsModel, @required this.timebankId})
-      : super(key: key) {
-    // assert(newsModel.title != null, 'News title cannot be null');
-    // assert(newsModel.description != null, 'News description cannot be null');
-    // assert(newsModel.fullName != null, 'Full name cannot be null');
-  }
+      : super(key: key);
+  // assert(newsModel.title != null, 'News title cannot be null');
+  // assert(newsModel.description != null, 'News description cannot be null');
+  // assert(newsModel.fullName != null, 'Full name cannot be null');
 
   @override
   Widget build(BuildContext context) {

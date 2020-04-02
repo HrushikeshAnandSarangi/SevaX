@@ -4,6 +4,7 @@ import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
@@ -93,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // final _user = BlocProvider.of<UserDataBloc>(context);
+    final _user = BlocProvider.of<UserDataBloc>(context);
     // print("user bloc ${_user.user.email}");
 
     return BlocProvider(
@@ -164,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => Builder(builder: (context) {
-                      return SearchPage(bloc: _homeDashBoardBloc);
+                      return SearchPage(bloc: _homeDashBoardBloc,user: SevaCore.of(context).loggedInUser,timebank: primaryTimebank,);
                     }),
                   ),
                 );
