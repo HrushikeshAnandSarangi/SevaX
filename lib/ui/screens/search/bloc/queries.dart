@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class Searches {
   static const baseURL = 'http://35.227.18.55//elasticsearch';
@@ -44,13 +45,15 @@ class Searches {
   }
 
 
-
+// Feeds done
 
   static Stream<List<NewsModel>> searchFeeds({
     @required  String queryString,
     @required UserModel loggedInUser,
-    String timebankId
+    @required CommunityModel currentCommunityOfUser
   }) async* {
+   List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+
     String url = baseURL + '/newsfeed/_doc/_search';
     dynamic body = json.encode(
       {
@@ -64,8 +67,8 @@ class Searches {
                   "query": {
                     "bool": {
                       "must": {
-                        "match": {
-                          "entity.entityId": timebankId
+                        "terms": {
+                          "entity.entityId.keyword": myTimebanks
                         }
                       }
                     }
@@ -115,12 +118,15 @@ class Searches {
     yield feedsList;
   }
 
+// Offers done
+
   static Stream<List<OfferModel>> searchOffers({
     @required queryString,
     @required loggedInUser,
-    String timebankId
+    @required CommunityModel currentCommunityOfUser
   }) async* {
-    String url = baseURL + 'http://35.227.18.55//elasticsearch/offers/offer/_search';
+    List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    String url = baseURL + '/offers/offer/_search';
     dynamic body = json.encode(
       {
         "size":3000,
@@ -133,8 +139,8 @@ class Searches {
                 }
               },
               {
-                "match": {
-                  "timebankId": timebankId
+                "terms": {
+                  "timebankId.keyword": myTimebanks
                 }
               },
               {
@@ -179,8 +185,9 @@ class Searches {
 //  static Stream<List<RequestModel>> searchProjects({
 //    @required String queryString,
 //    @required loggedInUser,
-//    String timebankId
+//    @required CommunityModel currentCommunityOfUser
 //  }) async* {
+//  List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
 //    String url = baseURL + '/sevaxprojects/_doc/_search';
 //    dynamic body = json.encode(
 //      {
@@ -189,8 +196,8 @@ class Searches {
 //          "bool": {
 //            "must": [
 //              {
-//                "match": {
-//                  "timebank_id": timebankId
+//                "terms": {
+//                  "timebank_id.keyword": myTimebanks
 //                }
 //              },
 //              {
@@ -225,11 +232,14 @@ class Searches {
 //    yield projectsList;
 //  }
 
+  // Requests done
+
   static Stream<List<RequestModel>> searchRequests({
     @required String queryString,
     @required loggedInUser,
-    String timebankId
+    @required CommunityModel currentCommunityOfUser
   }) async* {
+    List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/requests/request/_search';
     dynamic body = json.encode(
       {
@@ -243,13 +253,13 @@ class Searches {
                 }
               },
               {
-                "match": {
-                  "timebankId": timebankId
+                "terms": {
+                  "timebankId.keyword": myTimebanks
                 }
               },
               {
                 "multi_match": {
-                  "query": "$queryString",
+                  "query": queryString,
                   "fields": ["description", "email", "fullname", "title"],
                   "type": "phrase_prefix"
                 }
@@ -278,10 +288,12 @@ class Searches {
     yield requestsList;
   }
 
+  // group Timebanks
+
   static Stream<List<TimebankModel>> searchGroups({
     @required queryString,
     @required loggedInUser,
-    String timebankId
+    @required CommunityModel currentCommunityOfUser
   }) async* {
     String url = baseURL + "/sevaxtimebanks/sevaxtimebank/_search";
     dynamic body = json.encode(
@@ -291,8 +303,8 @@ class Searches {
         "bool": {
           "must": [
             {
-              "match": {
-                "parent_timebank_id": timebankId
+              "term": {
+                "parent_timebank_id.keyword": currentCommunityOfUser.primary_timebank
               }
             },
             {
@@ -328,10 +340,12 @@ class Searches {
     yield timeBanksList;
   }
 
+  // Users of a timebank done
+
   static Stream<List<UserModel>> searchMembersOfTimebank({
     @required queryString,
     @required loggedInUser,
-    String timebankId
+    @required CommunityModel currentCommunityOfUser
   }) async* {
     String url = baseURL + '/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
@@ -346,8 +360,13 @@ class Searches {
                 }
               },
               {
+                "match":{
+                  "communities": loggedInUser.currentCommunity
+                }
+              },
+              {
                 "multi_match": {
-                  "query": "$queryString",
+                  "query": queryString,
                   "fields": ["email", "fullname", "bio"],
                   "type": "phrase_prefix"
                 }
@@ -357,16 +376,15 @@ class Searches {
         }
       },
     );
-    List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
     List<UserModel> usersList = [];
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if(loggedInUser.blockedBy != null){
-        if(sourceMap['membershipTimebanks'].contains(timebankId) && !loggedInUser.blockedBy.contains(sourceMap['sevauserid'])){
-        UserModel user = UserModel.fromMap(sourceMap);
-        usersList.add(user);
+        if(!loggedInUser.blockedBy.contains(sourceMap['sevauserid'])){
+          UserModel user = UserModel.fromMap(sourceMap);
+          usersList.add(user);
         }
       }else{
         UserModel user = UserModel.fromMap(sourceMap);
@@ -378,6 +396,16 @@ class Searches {
   }
 
 
+
+  static List<TimebankModel> getTimebanksAndGroupsOfUser(timebanksOfCommunity, timebanksOfUser){
+      List<TimebankModel> timebankarr = new List();
+      timebanksOfCommunity.forEach( (tb) {
+        if(timebanksOfUser.contains(tb)){
+          timebankarr.add(tb);
+        }
+      });
+      return timebankarr;
+  }
 
 
 }
