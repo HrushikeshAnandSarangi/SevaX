@@ -26,7 +26,8 @@ class _MembersTabViewState extends State<MembersTabView> {
             stream: Searches.searchMembersOfTimebank(
               queryString: search.data,
               loggedInUser: _bloc.user,
-              timebankId: _bloc.timebank.id,
+              currentCommunityOfUser: _bloc.community,
+              
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

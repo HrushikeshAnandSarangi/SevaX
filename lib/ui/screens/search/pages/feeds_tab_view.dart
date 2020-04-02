@@ -34,7 +34,7 @@ class _FeedsTabViewState extends State<FeedsTabView>
             stream: Searches.searchFeeds(
               queryString: search.data,
               loggedInUser: _bloc.user,
-              timebankId: _bloc.timebank.id,
+              currentCommunityOfUser: _bloc.community,
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {

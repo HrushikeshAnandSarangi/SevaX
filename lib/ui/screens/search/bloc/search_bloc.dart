@@ -1,14 +1,16 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/utils/debouncer.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class SearchBloc extends BlocBase {
   final TimebankModel timebank;
+  final CommunityModel community;
   final UserModel user;
-  SearchBloc({this.timebank, this.user})
+  SearchBloc({this.community, this.timebank, this.user})
       : assert(timebank != null),
         assert(user != null);
 
