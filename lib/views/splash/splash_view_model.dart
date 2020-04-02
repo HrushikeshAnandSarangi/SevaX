@@ -40,7 +40,7 @@ class SplashViewModel extends BaseViewModel {
     busy = false;
     return;
   }
-
+  
   /// Pre-cache images
   Future preCacheImage(BuildContext context) async {
     log.i('preCacheImage: ');
@@ -56,7 +56,6 @@ class SplashViewModel extends BaseViewModel {
   /// Check if user is logged in and return a [bool]
   Future<bool> isUserLoggedIn() async {
     log.i('isUserLoggedIn: ');
-
     loadingMessage = 'Checking if user is logged in';
     busy = true;
     String userEmail = await _localStorageService.loggedInEmailId;

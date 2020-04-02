@@ -1174,7 +1174,7 @@ class OfferCardViewState extends State<OfferCardView> {
   Future _makePostRequest(OfferModel offerModel) async {
     // set up POST request arguments
     String url =
-        'https://us-central1-sevaxproject4sevax.cloudfunctions.net/acceptOffer';
+        '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
     Map<String, String> headers = {"Content-type": "application/json"};
     Map<String, String> body = {
       'id': offerModel.id,

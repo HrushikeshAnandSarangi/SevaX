@@ -250,7 +250,7 @@ class AboutApp extends StatelessWidget {
                     showProgressDialog(context, "Sending feedback");
 
                     await http.post(
-                        "https://us-central1-sevaxproject4sevax.cloudfunctions.net/sendFeedbackToTimebank",
+                        "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
                         body: {
                           "memberEmail": SevaCore.of(context).loggedInUser.email,
                           "feedbackBody": feedbackText

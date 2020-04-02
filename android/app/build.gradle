@@ -88,6 +88,17 @@ android {
             applicationIdSuffix ".tom_2020"
             resValue "string", "app_name", "Tom 2020"
         }
+
+        dev {
+            dimension "flavor-type"
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "Seva Dev"
+
+        }
+        prod {
+            dimension "flavor-type"
+
+        }
     }
 }
 

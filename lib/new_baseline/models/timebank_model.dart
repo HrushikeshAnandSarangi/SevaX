@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
-import 'package:sevaexchange/views/timebanks/join_sub_timebank.dart';
 //import 'package:collection/ lib\views\timebank_content_holder.dart';
 
 class TimebankModel extends DataModel {

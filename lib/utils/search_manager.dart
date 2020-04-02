@@ -30,7 +30,8 @@ class SearchManager {
     @required queryString,
   }) async* {
 //    sevaxuser
-    String url = 'http://35.227.18.55//elasticsearch/users/user/_search';
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/users/user/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -75,7 +76,7 @@ class SearchManager {
   }) async* {
     print("searchForUser :: ---------------");
     String url =
-        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
@@ -119,7 +120,7 @@ class SearchManager {
   static Future<bool> searchCommunityForDuplicate(
       {@required queryString}) async {
     String url =
-        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_count';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_count';
     dynamic body = json.encode({
       "query": {
         "term": {"name.keyword": queryString}
@@ -139,7 +140,7 @@ class SearchManager {
   }) async* {
     print("searchForUser :: ---------------");
     String url =
-        'http://35.227.18.55//elasticsearch/sevaxcommunities/_doc/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
     dynamic body = json.encode({
       "query": {
         "bool": {
@@ -180,7 +181,7 @@ class SearchManager {
   }) async* {
     print("searchForUser :: ---------------");
     String url =
-        'http://35.227.18.55//elasticsearch/sevaxusers/sevaxuser/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -223,7 +224,7 @@ class SearchManager {
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {
-    String url = 'http://35.227.18.55//elasticsearch/newsfeed/news/_search';
+    String url = '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/newsfeed/news/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -299,7 +300,7 @@ class SearchManager {
   static Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
-    String url = 'http://35.227.18.55//elasticsearch/offers/offer/_search';
+    String url = '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -338,7 +339,7 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url = 'http://35.227.18.55//elasticsearch/requests/request/_search';
+    String url = '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/requests/request/_search';
     dynamic body = json.encode(
       {
         "query": {
