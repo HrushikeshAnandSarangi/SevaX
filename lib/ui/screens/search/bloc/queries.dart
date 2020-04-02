@@ -54,6 +54,7 @@ class Searches {
     String url = baseURL + '/newsfeed/_doc/_search';
     dynamic body = json.encode(
       {
+        "size":3000,
         "query": {
           "bool": {
             "must": [
@@ -122,6 +123,7 @@ class Searches {
     String url = baseURL + 'http://35.227.18.55//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
+        "size":3000,
         "query": {
           "bool": {
             "must": [
@@ -182,6 +184,7 @@ class Searches {
 //    String url = baseURL + '/sevaxprojects/_doc/_search';
 //    dynamic body = json.encode(
 //      {
+//        "size":3000,
 //        "query": {
 //          "bool": {
 //            "must": [
@@ -230,6 +233,7 @@ class Searches {
     String url = baseURL + '/requests/request/_search';
     dynamic body = json.encode(
       {
+        "size":3000,
         "query": {
           "bool": {
             "must": [
@@ -280,7 +284,9 @@ class Searches {
     String timebankId
   }) async* {
     String url = baseURL + "/sevaxtimebanks/sevaxtimebank/_search";
-    dynamic body = json.encode({
+    dynamic body = json.encode(
+    {
+      "size":3000,
       "query": {
         "bool": {
           "must": [
@@ -329,7 +335,8 @@ class Searches {
   }) async* {
     String url = baseURL + '/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
-      {
+    {
+      "size":3000,
         "query": {
           "bool": {
             "must": [
@@ -357,7 +364,7 @@ class Searches {
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if(loggedInUser.blockedBy != null){
-        if(!loggedInUser.blockedBy.contains(sourceMap['sevauserid']) && sourceMap['membershipTimebanks'].contains(timebankId)){
+        if(sourceMap['membershipTimebanks'].contains(timebankId) && !loggedInUser.blockedBy.contains(sourceMap['sevauserid'])){
         UserModel user = UserModel.fromMap(sourceMap);
         usersList.add(user);
         }
