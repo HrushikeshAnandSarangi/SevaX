@@ -5,6 +5,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
+import 'package:sevaexchange/views/project_request/project_requests.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -51,29 +52,21 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 //                      ),
                     ),
                     onTap: () {
-                      if (widget.timebankModel.protected) {
-                        if (widget.timebankModel.admins.contains(
-                            SevaCore.of(context).loggedInUser.sevaUserID)) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateEditProject(
-                                timebankId: widget.timebankId,
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-                        // _showProtectedTimebankMessage();
-                      } else {
+                      if (widget.timebankModel.admins.contains(
+                          SevaCore.of(context).loggedInUser.sevaUserID)) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => CreateEditProject(
                               timebankId: widget.timebankId,
+                              isCreateProject: true,
+                              projectId: '',
                             ),
                           ),
                         );
+                        return;
+                      } else {
+                        _showAdminAccessMessage();
                       }
                     },
                   ),
@@ -111,6 +104,29 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showAdminAccessMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Projects"),
+          content: new Text("Only admin can create projects"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -163,7 +179,16 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
         color: Colors.white,
         elevation: 2,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProjectRequests(
+                  timebankId: widget.timebankId,
+                ),
+              ),
+            );
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Column(

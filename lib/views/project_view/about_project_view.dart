@@ -11,6 +11,10 @@ import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'create_edit_project.dart';
 
 class AboutProjectView extends StatefulWidget {
+  final String project_id;
+
+  AboutProjectView({this.project_id});
+
   @override
   _AboutProjectViewState createState() => _AboutProjectViewState();
 }
@@ -29,8 +33,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
   }
 
   void getData() async {
-    await FirestoreManager.getProjectFutureById(
-            projectId: '52827441-9a8b-4207-b28a-5aa1ef30d659')
+    await FirestoreManager.getProjectFutureById(projectId: widget.project_id)
         .then((onValue) {
       projectModel = onValue;
       print("projectttttt ${projectModel}");
