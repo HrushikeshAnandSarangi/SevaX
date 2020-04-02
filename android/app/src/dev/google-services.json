@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "726382185793",
+    "firebase_url": "https://sevax-dev-project-for-sevax.firebaseio.com",
+    "project_id": "sevax-dev-project-for-sevax",
+    "storage_bucket": "sevax-dev-project-for-sevax.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726382185793:android:ceb9618625ad5fcff3a5c0",
+        "android_client_info": {
+          "package_name": "com.sevaexchange.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "726382185793-ul1b5alinkfqs1262abiehim6grn7jb3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5tzHTLpOoyYDbgSTKqEasrJs_O3zESdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "726382185793-ul1b5alinkfqs1262abiehim6grn7jb3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

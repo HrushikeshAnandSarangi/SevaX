@@ -9,6 +9,7 @@ String billingPlanDetailsModelToJson(List<BillingPlanDetailsModel> data) =>
 
 class BillingPlanDetailsModel {
   String id;
+  bool hidden;
   String planName;
   String planDescription;
   String price;
@@ -21,6 +22,7 @@ class BillingPlanDetailsModel {
 
   BillingPlanDetailsModel({
     this.id,
+    this.hidden,
     this.planName,
     this.planDescription,
     this.price,
@@ -35,6 +37,7 @@ class BillingPlanDetailsModel {
   factory BillingPlanDetailsModel.fromJson(Map<String, dynamic> json) =>
       BillingPlanDetailsModel(
         id: json["id"],
+        hidden: json["hidden"] ?? false,
         planName: json["plan_name"],
         planDescription: json["plan_description"],
         price: json["price"],
@@ -50,6 +53,7 @@ class BillingPlanDetailsModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "hidden": hidden,
         "plan_name": planName,
         "plan_description": planDescription,
         "price": price,

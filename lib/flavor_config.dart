@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-enum Flavor { APP, HUMANITY_FIRST, TULSI, TOM }
+enum Flavor { APP, HUMANITY_FIRST, TULSI, TOM, SEVA_DEV }
 
 class FlavorValues {
   final String appName;
@@ -12,16 +12,25 @@ class FlavorValues {
   final ThemeData theme;
   final Color buttonTextColor;
   final String timebankTitle;
+  final String cloudFunctionBaseURL;
+  final String elasticSearchBaseURL;
+  final String stripePublishableKey;
+  final String androidPayMode;
 
-  FlavorValues(
-      {@required this.appName,
-      @required this.timebankName,
-      @required this.timebankId,
-      this.requestTitle = 'Request',
-      this.offertitle = 'Offer',
-      this.theme,
-      this.buttonTextColor = Colors.white,
-      this.timebankTitle = 'Timebank'});
+  FlavorValues({
+    @required this.appName,
+    @required this.timebankName,
+    @required this.timebankId,
+    this.requestTitle = 'Request',
+    this.offertitle = 'Offer',
+    this.theme,
+    this.buttonTextColor = Colors.white,
+    this.timebankTitle = 'Timebank',
+    @required this.cloudFunctionBaseURL,
+    @required this.elasticSearchBaseURL,
+    @required this.stripePublishableKey,
+    @required this.androidPayMode,
+  });
 }
 
 class FlavorConfig {
@@ -29,8 +38,94 @@ class FlavorConfig {
 
   static FlavorValues get values {
     switch (appFlavor) {
+      case Flavor.SEVA_DEV:
+        return FlavorValues(
+          elasticSearchBaseURL: "http://35.227.68.255",
+          stripePublishableKey: "pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832",
+          androidPayMode: "test",
+          cloudFunctionBaseURL:
+              "https://us-central1-sevax-dev-project-for-sevax.cloudfunctions.net",
+          appName: 'Seva Dev',
+          timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
+          timebankName: 'Seva Exchange',
+          offertitle: 'Offer',
+          requestTitle: 'Request',
+          buttonTextColor: Colors.black,
+          theme: ThemeData(
+            appBarTheme: AppBarTheme(
+              brightness: Brightness.light,
+              // color: Color.fromARGB(255, 255, 166, 35),
+              color: Color(0x0FF766FE0),
+              // color: Colors.black,
+
+              textTheme: TextTheme(
+                title: TextStyle(color: Colors.white),
+              ),
+
+              iconTheme: IconThemeData(
+                color: Colors.white,
+              ),
+              // iconTheme: IconThemeData(color: Colors.white),
+              elevation: 0.7,
+              actionsIconTheme: IconThemeData(color: Colors.white),
+            ),
+            brightness: Brightness.light,
+            primarySwatch: Colors.green,
+            // primaryColor: Color.fromARGB(255, 255, 166, 35),
+            primaryColor: Color(0x0FF766FE0),
+            scaffoldBackgroundColor: Colors.white,
+            accentColor: Color.fromARGB(255, 255, 166, 35),
+            secondaryHeaderColor: Colors.white,
+            indicatorColor: Colors.amberAccent[100],
+            primaryColorBrightness: Brightness.light,
+            accentColorBrightness: Brightness.light,
+            fontFamily: 'Europa',
+            splashColor: Colors.grey,
+            bottomAppBarColor: Colors.white,
+            inputDecorationTheme: InputDecorationTheme(
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  style: BorderStyle.solid,
+                ),
+              ),
+            ),
+            buttonTheme: ButtonThemeData(
+              buttonColor: Color(0x0FF766FE0),
+              textTheme: ButtonTextTheme.primary,
+              height: 39,
+              shape: StadiumBorder(),
+            ),
+
+            primaryTextTheme: TextTheme(
+              button: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        );
+        break;
+
       case Flavor.APP:
         return FlavorValues(
+          elasticSearchBaseURL: "http://35.227.18.55",
+          cloudFunctionBaseURL:
+              "https://us-central1-sevaxproject4sevax.cloudfunctions.net",
+          androidPayMode: "production",
+          stripePublishableKey: "pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN",
           appName: 'Seva Exchange',
           timebankId: '73d0de2c-198b-4788-be64-a804700a88a4',
           timebankName: 'Seva Exchange',

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -127,6 +128,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     fetchRemoteConfig();
 
+    if (FlavorConfig.appFlavor == Flavor.APP) {
+      _fetchCurrentlocation;
+    }
+
     print(location);
   }
 
@@ -185,7 +190,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           padding: EdgeInsets.only(left: 0.0, right: 0),
                           groupValue: sharedValue,
                           onValueChanged: (int val) {
-                            print(val);
                             if (val != sharedValue) {
                               setState(() {});
                               setState(() {
@@ -265,7 +269,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                           ? ""
                           : "",
                   keyboardType: TextInputType.multiline,
-                  maxLines: 4,
+                  maxLines: 2,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter some text';
@@ -293,7 +297,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter the number of hours needed';
+                        return 'Please enter the number of hours required';
                       } else {
                         requestModel.numberOfHours = int.parse(value);
                         return null;
@@ -406,12 +410,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
       if (!hasRegisteredLocation()) {
         showDialogForTitle(dialogTitle: "Please add location to your request");
+        return;
       }
 
       //in case the request is created for an accepted offer
       if (widget.isOfferRequest == true && widget.userModel != null) {
         if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
-        requestModel.approvedUsers.add(widget.userModel.email);
+
+        List<String> approvedUsers = [];
+        approvedUsers.add(widget.userModel.email);
+        requestModel.approvedUsers = approvedUsers;
       }
 
       //Form and date is valid
@@ -421,6 +429,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             SevaCore.of(context).loggedInUser.email,
             SevaCore.of(context).loggedInUser.sevaUserID,
           );
+
+          print("Seva Coins $sevaCoinsValue -------------------------------------------");
 
           if (!hasSufficientBalance()) {
             showInsufficientBalance();
@@ -447,7 +457,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   bool hasRegisteredLocation() {
-    return requestModel.location != null;
+    print("Location ---========================= ${requestModel.location}");
+    return location != null;
   }
 
   void linearProgressForCreatingRequest() {
@@ -594,21 +605,20 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     var diffDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd)
         .difference(
             DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart));
-    var requestCoins =
-        requestModel.numberOfHours * requestModel.numberOfApprovals;
+    var requestCoins = requestModel.numberOfHours;
     print("Hours:${diffDate.inHours} --> " +
         requestModel.numberOfApprovals.toString());
-    print("Number of seva coins:${requestCoins.abs()}");
-    print("Seva coin available:${sevaCoinsValue.abs()}");
+    print("Number of seva coins:${requestCoins}");
+    print("Seva coin available:${sevaCoinsValue}");
 
     var lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 
-    var finalbalance = (sevaCoinsValue.abs() + lowerLimit ?? 10).abs();
+    var finalbalance = (sevaCoinsValue + lowerLimit ?? 10);
 
     print("Final amount in hand:${finalbalance}");
 
-    return requestCoins.abs() <= finalbalance;
+    return requestCoins <= finalbalance;
   }
 
   Future _writeToDB() async {
@@ -641,5 +651,22 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     AppConfig.remoteConfig = await RemoteConfig.instance;
     AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
     AppConfig.remoteConfig.activateFetched();
+  }
+
+  void get _fetchCurrentlocation {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
   }
 }

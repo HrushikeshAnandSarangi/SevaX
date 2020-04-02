@@ -357,7 +357,6 @@ Stream<List<NotificationsModel>> getNotifications({
   @required String communityId,
 }) async* {
   print("userEmail " + userEmail);
-  print("timebankId " + FlavorConfig.values.timebankId);
   print("communityId " + communityId);
 
   var data = Firestore.instance
@@ -369,14 +368,12 @@ Stream<List<NotificationsModel>> getNotifications({
         'communityId',
         isEqualTo: communityId,
       )
-      .orderBy('timestamp', descending: true)
       .snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<NotificationsModel>>.fromHandlers(
       handleData: (querySnapshot, notificationSink) {
         List<NotificationsModel> notifications = [];
-
         querySnapshot.documents.forEach((documentSnapshot) {
           NotificationsModel model = NotificationsModel.fromMap(
             documentSnapshot.data,

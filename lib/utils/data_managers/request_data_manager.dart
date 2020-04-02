@@ -294,8 +294,6 @@ Future<void> approveRequestCompletion({
         .updateData(
             {'currentBalance': FieldValue.increment(-(transactionvalue))});
 
-    print("========================================================== Step3");
-
     NotificationsModel debitnotification = NotificationsModel(
       timebankId: model.timebankId,
       id: utils.Utils.getUuid(),
@@ -315,9 +313,10 @@ Future<void> approveRequestCompletion({
           .elementAt(0)
           .toMap(),
     );
-    print("========================================================== Step4");
-
-    await utils.createTransactionNotification(model: debitnotification);
+  
+    if (model.requestMode == RequestMode.PERSONAL_REQUEST)
+      await utils.createTransactionNotification(model: debitnotification);
+  
   }
 
   print("========================================================== Step6");
@@ -636,8 +635,9 @@ Future<double> getMemberBalance(userEmail, userId) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.transactions?.forEach((transaction) {
-        if (transaction.isApproved && transaction.to == userId)
-          sevaCoins += transaction.credits;
+        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
+            transaction.isApproved &&
+            transaction.to == userId) sevaCoins += transaction.credits;
       });
     });
 

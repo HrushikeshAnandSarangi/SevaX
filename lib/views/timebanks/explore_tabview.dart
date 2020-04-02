@@ -37,6 +37,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 0.5,
           centerTitle: true,
@@ -58,7 +59,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
                   text: "Discover more Timebanks",
                 ),
                 Tab(
-                  text: "Groups within ${communityModel.name ?? "Timabank"}",
+                  text: "Groups within ${communityModel.name ?? "Timebank"}",
                 ),
               ],
             ),
@@ -74,6 +75,8 @@ class _ExploreTabViewState extends State<ExploreTabView> {
                   JoinSubTimeBankView(
                     isFromDash: true,
                     loggedInUserModel: SevaCore.of(context).loggedInUser,
+                    communityId: communityModel.id,
+                    communityPrimaryTimebankId: communityModel.primary_timebank,
                   ),
                 ],
               ),

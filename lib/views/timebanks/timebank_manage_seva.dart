@@ -66,7 +66,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 labelColor: Colors.black,
                 isScrollable: false,
                 tabs: <Widget>[
-                  Tab(text: "About"),
+                  Tab(text: "Edit Timebank"),
                   // Tab(text: "Upgrade"),
                   Tab(text: "Billings"),
                   Tab(text: "Settings"),
@@ -107,7 +107,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
                 labelColor: Colors.black,
                 isScrollable: false,
                 tabs: <Widget>[
-                  Tab(text: "About"),
+                  Tab(text: "Edit Timebank"),
                   Tab(text: "Settings"),
                 ],
 //                onTap: (index) {
@@ -287,7 +287,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
       child: Container(
         margin: EdgeInsets.only(top: 20),
         child: Text(
-          'Edit Timebank',
+          'About',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -482,7 +482,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
           ),
           viewRequests(context: context),
           // viewAcceptedOffers(context: context),
-          manageTimebankCodes(context: context),
+          // manageTimebankCodes(context: context),
 //          billingView(context: context),
         ],
       ),

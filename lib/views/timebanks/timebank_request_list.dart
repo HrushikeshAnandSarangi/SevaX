@@ -112,6 +112,7 @@ class TimeBankRequestList extends StatelessWidget {
                                 timebankId: model.id,
                                 userEmail:
                                     SevaCore.of(context).loggedInUser.email,
+                                isFromGroup: false,
                               )),
                     );
 //              Navigator.of(context).push(s

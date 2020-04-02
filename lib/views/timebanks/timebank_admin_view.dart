@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -8,15 +9,11 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/timebanks/edit_timebank.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import 'dart:ui';
+import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'edit_super_admins_view.dart';
-import 'edit_timebank_view.dart';
 
 class TimebankAdminPage extends StatefulWidget {
   final String timebankId;
@@ -215,8 +212,8 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     );
   }
 
-  Future loadItems() async{
-    if(adminsNotLoaded){
+  Future loadItems() async {
+    if (adminsNotLoaded) {
       loadNextAdmins().then((onValue) {
         adminsNotLoaded = false;
         if (_coordinators.length == 0 && FlavorConfig.appFlavor == Flavor.APP) {
@@ -234,7 +231,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     }
   }
 
-  void resetVariables(){
+  void resetVariables() {
     _pageIndex = 1;
     _indexSoFar = 0;
     currSelectedState = false;
@@ -255,9 +252,8 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
 
   void resetAndLoad() {
     resetVariables();
-    loadItems().then((onValue){
-      setState(() {
-      });
+    loadItems().then((onValue) {
+      setState(() {});
     });
   }
 
@@ -289,12 +285,12 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       itemBuilder: (BuildContext ctxt, int index) => Padding(
         padding: const EdgeInsets.all(0.0),
         child: index < _avtars.length
-        ? _avtars[index]
-        : Container(
-            width: double.infinity,
-            height: 80,
-            child: circularBar,
-          ),
+            ? _avtars[index]
+            : Container(
+                width: double.infinity,
+                height: 80,
+                child: circularBar,
+              ),
       ),
     );
   }
@@ -333,9 +329,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                   icon: Icons.close,
                   color: Colors.red,
                   caption: 'Remove',
-                  onTap: () {
+                  onTap: () async {
                     List<String> admins =
-                    timebankModel.admins.map((s) => s).toList();
+                        timebankModel.admins.map((s) => s).toList();
                     admins.remove(user.sevaUserID);
                     updateTimebank(timebankModel, admins: admins);
                   },
@@ -348,9 +344,9 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                   caption: 'Coordinator',
                   onTap: () {
                     List<String> admins =
-                    timebankModel.admins.map((s) => s).toList();
+                        timebankModel.admins.map((s) => s).toList();
                     List<String> coordinators =
-                    timebankModel.coordinators.map((s) => s).toList();
+                        timebankModel.coordinators.map((s) => s).toList();
                     coordinators.add(user.sevaUserID);
                     admins.remove(user.sevaUserID);
                     updateTimebank(
@@ -376,7 +372,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       timebankModel.coordinators = List<String>();
     }
     if (timebankModel.coordinators.length != 0) {
-      bool isCoordinator  = timebankModel.coordinators.contains(
+      bool isCoordinator = timebankModel.coordinators.contains(
         SevaCore.of(context).loggedInUser.sevaUserID,
       );
 
@@ -389,21 +385,21 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
             .forEach((key, user) {
           _adminEmails.add(user.email);
           if (isCoordinator) {
-            var widget =  Slidable(
-                delegate: SlidableDrawerDelegate(),
-                actions: <Widget>[
-                  IconSlideAction(
-                    icon: Icons.close,
-                    color: Colors.red,
-                    caption: 'Remove',
-                    onTap: () {
-                      List<String> coordinators =
-                      user.coordinators.map((s) => s).toList();
-                      coordinators.remove(user.sevaUserID);
-                      updateTimebank(user, coordinators: coordinators);
-                    },
-                  ),
-                ],
+            var widget = Slidable(
+              delegate: SlidableDrawerDelegate(),
+              actions: <Widget>[
+                IconSlideAction(
+                  icon: Icons.close,
+                  color: Colors.red,
+                  caption: 'Remove',
+                  onTap: () {
+                    List<String> coordinators =
+                        user.coordinators.map((s) => s).toList();
+                    coordinators.remove(user.sevaUserID);
+                    updateTimebank(user, coordinators: coordinators);
+                  },
+                ),
+              ],
 //                secondaryActions: <Widget>[
 //                IconSlideAction(
 //                  icon: Icons.arrow_downward,
@@ -440,17 +436,16 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
       FirestoreManager.getUsersForAdminsCoordinatorsMembersTimebankId(
               widget.timebankId, _pageIndex, widget.userEmail)
           .then((onValue) {
-
         var userModelList = onValue.userModelList;
         if (userModelList == null || userModelList.length == 0) {
 //          if (userModelList == null) {
-            nullCount++;
+          nullCount++;
 //          }
           _isLoading = false;
           _pageIndex = _pageIndex + 1;
-          if(nullCount<3){
+          if (nullCount < 3) {
             loadNextMembers();
-          }else{
+          } else {
             setState(() {
               _lastReached = true;
             });
@@ -458,7 +453,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
         } else {
           nullCount = 0;
           var addItems = userModelList.map((memberObject) {
-            if(_adminEmails.contains(memberObject.email.trim())){
+            if (_adminEmails.contains(memberObject.email.trim())) {
               return Offstage();
             }
             var member = memberObject.sevaUserID;
@@ -490,7 +485,8 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
             setState(() {
               var iterationCount = 0;
               for (int i = 0; i < addItems.length; i++) {
-                if (emailIndexMap[userModelList[i].email] == null && !_adminEmails.contains(userModelList[i].email.trim())) {
+                if (emailIndexMap[userModelList[i].email] == null &&
+                    !_adminEmails.contains(userModelList[i].email.trim())) {
                   // Filtering duplicates
                   _members.add(addItems[i]);
                   indexToModelMap[lastIndex] = userModelList[i];
@@ -749,8 +745,15 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
                                 ),
                                 onPressed: () async {
                                   //Remove a member
-                                  removeFromTimebank(model, userModel);
-
+                                  Map<String, bool> onActivityResult =
+                                      await showAdvisory(
+                                          dialogTitle:
+                                              "Are you sure you want to remove ${userModel.fullname ?? "member"} from timebank members?");
+                                  if (onActivityResult['PROCEED']) {
+                                    removeFromTimebank(model, userModel);
+                                  } else {
+                                    return;
+                                  }
                                   Navigator.pop(viewContext);
                                 },
                               ),
@@ -882,5 +885,44 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     await FirestoreManager.updateTimebank(timebankModel: model).then((onValue) {
       resetAndLoad();
     });
+  }
+
+  Future<Map> showAdvisory({String dialogTitle}) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(
+              dialogTitle,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop({'PROCEED': false});
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  'Proceed',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                },
+              ),
+            ],
+          );
+        });
   }
 }

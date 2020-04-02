@@ -186,7 +186,7 @@ class GroupOfferCommons {
 
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
-        return 'Group Offers';
+        return 'Timebank Offers';
       default:
         return "Others";
     }

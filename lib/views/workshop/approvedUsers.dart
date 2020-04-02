@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/workshop/MembersInvolved.dart';
-import 'dart:ui';
 
 import '../../flavor_config.dart';
 
@@ -168,7 +168,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
   Future sendMail() async {
 
     final response1 = await http.get(
-        'https://us-central1-sevaxproject4sevax.cloudfunctions.net/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
+        '${FlavorConfig.values.cloudFunctionBaseURL}/requests_membersSevax?requestId=${widget.requestId}&receiver=${SevaCore.of(context).loggedInUser.email}');
 
     if (response1.statusCode == 200) {
       print(response1);
@@ -181,7 +181,7 @@ class RequestStatusViewState extends State<RequestStatusView> {
 
   Future<List<MemberForRequest>> fetchPost() async {
     final response = await http.post(
-        'https://us-central1-sevaexchange.cloudfunctions.net/getApprovedMembers',
+        '${FlavorConfig.values.cloudFunctionBaseURL}/getApprovedMembers',
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"requestId": widget.requestId}));
 

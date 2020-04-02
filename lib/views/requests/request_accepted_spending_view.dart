@@ -830,7 +830,9 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.saveRequestFinalAction(
       model: claimedRequestStatus,
     );
-    await approveTransaction(requestModel, userId, notificationId, sevaCore);
+
+      await approveTransaction(requestModel, userId, notificationId, sevaCore);
+  
   }
 
   Future approveTransaction(RequestModel model, String userId,
@@ -839,7 +841,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         model.transactions.map((t) => t).toList();
 
     model.transactions = transactions.map((t) {
-      if (t.to == userId ) {
+      if (t.to == userId) {
         TransactionModel editedTransaction = t;
         editedTransaction.isApproved = true;
         return editedTransaction;
