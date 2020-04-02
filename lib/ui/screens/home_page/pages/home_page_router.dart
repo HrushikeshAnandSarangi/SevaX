@@ -63,7 +63,7 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
       title: AppConfig.appName,
       debugShowCheckedModeBanner: false,
       theme: FlavorConfig.values.theme,
-      home: BlocProvider(
+      home: BlocProvider<UserDataBloc>(
         bloc: _userBloc,
         child: Scaffold(
           resizeToAvoidBottomPadding: false,

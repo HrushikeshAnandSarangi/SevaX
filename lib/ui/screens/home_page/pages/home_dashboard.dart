@@ -25,24 +25,23 @@ import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
-class HomeDashBoard extends StatelessWidget {
-  HomeDashBoard();
+// class HomeDashBoard extends StatelessWidget {
+//   HomeDashBoard();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: HomeDashBoard(),
+//     );
+//   }
+// }
+
+class HomeDashBoard extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: MyHomePage(),
-    );
-  }
+  _HomeDashBoardState createState() => _HomeDashBoardState();
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage();
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+class _HomeDashBoardState extends State<HomeDashBoard>
+    with TickerProviderStateMixin {
   TabController controller;
   TabController manageController;
   TabController _timebankController;
@@ -165,10 +164,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => Builder(builder: (context) {
-                      return SearchPage(
-                        bloc: _homeDashBoardBloc,
-                        user: SevaCore.of(context).loggedInUser,
-                        timebank: primaryTimebank,
+                      return BlocProvider(
+                        bloc: _user,
+                        child: SearchPage(
+                          bloc: _homeDashBoardBloc,
+                          user: SevaCore.of(context).loggedInUser,
+                          timebank: primaryTimebank,
+                          community: selectedCommunity,
+                        ),
                       );
                     }),
                   ),
