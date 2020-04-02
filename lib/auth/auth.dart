@@ -90,10 +90,11 @@ class Auth {
   }) async {
     FirebaseUser user;
     try {
-      user = (await _firebaseAuth.signInWithEmailAndPassword(
+      AuthResult res = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      )) as FirebaseUser;
+      );
+      user = res.user;
     } on Exception catch (error) {
       throw error;
     } catch (error) {
