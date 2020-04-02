@@ -103,7 +103,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
-                  onPressed: navigateToCreateProjectGroup,
+                  onPressed: navigateToCreateGroupi,
                 ),
               ],
             ),
