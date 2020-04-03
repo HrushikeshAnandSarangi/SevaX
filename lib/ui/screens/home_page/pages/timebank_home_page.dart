@@ -40,17 +40,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     super.dispose();
   }
 
-  void navigateToProjectRequest() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProjectRequests(
-          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-        ),
-      ),
-    );
-  }
-
   void navigateToCreateGroup() {
     createEditCommunityBloc
         .updateUserDetails(SevaCore.of(context).loggedInUser);
@@ -96,10 +85,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                RaisedButton(
-                  child: Text("Project Request"),
-                  onPressed: navigateToProjectRequest,
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
