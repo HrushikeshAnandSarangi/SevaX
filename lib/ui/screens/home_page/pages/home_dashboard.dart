@@ -63,7 +63,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       Tab(
           text:
               "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
-      Tab(text: "Feeds"),
+      Center(child: Tab(text: "Feeds")),
       Tab(text: "Projects"),
       Tab(text: "Requests"),
       Tab(text: "Offers"),
@@ -206,7 +206,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               if (primaryTimebank != null &&
                   primaryTimebank.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
-                  tabs.length == 8) {
+                  tabs.length == 9) {
                 isAdmin = true;
                 _timebankController = TabController(length: 11, vsync: this);
 
