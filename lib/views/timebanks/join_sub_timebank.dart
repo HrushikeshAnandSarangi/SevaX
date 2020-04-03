@@ -13,6 +13,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -119,17 +120,25 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget getTimebanks({BuildContext context}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
-    return StreamBuilder<CommunityCreateEditController>(
-        stream: createEditCommunityBloc.createEditCommunity,
+    return FutureBuilder<List<TimebankModel>>(
+        future: getSubTimebanksForUserStream(
+            communityId: widget.loggedInUserModel.currentCommunity),
         builder: (context, snapshot) {
-          print('timee${snapshot.data}');
+          print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          timebankList = snapshot.data.timebanks;
+//          if (snapshot.data == null) {
+//            return Center(
+//              child: Text('No groups available'),
+//            );
+//          }
+          timebankList = snapshot.data;
+
           timebankList.forEach((t) {
             dropdownList.add(t.id);
+            print('timee  banks  ${t}');
           });
 
           // Navigator.pop(context);

@@ -337,7 +337,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    initialValue: timebankModel.missionStatement,
+                    initialValue: timebankModel.missionStatement ?? "",
                     onChanged: (value) {
                       timebankModel.missionStatement = value;
                       communityModel.about = value;
@@ -1041,9 +1041,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.state != null
-             ? controller.community.billing_address.state
-             : '',
+          initialValue: controller.community.billing_address.state != null
+              ? controller.community.billing_address.state
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1069,9 +1069,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.state != null
-             ? controller.community.billing_address.state
-             : '',
+          initialValue: controller.community.billing_address.state != null
+              ? controller.community.billing_address.state
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1097,9 +1097,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.pincode != null
-             ? controller.community.billing_address.pincode.toString()
-             : '',
+          initialValue: controller.community.billing_address.pincode != null
+              ? controller.community.billing_address.pincode.toString()
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1236,9 +1236,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.companyname != null
-             ? controller.community.billing_address.companyname
-             : '',
+          initialValue: controller.community.billing_address.companyname != null
+              ? controller.community.billing_address.companyname
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },

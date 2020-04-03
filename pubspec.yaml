@@ -162,14 +162,15 @@ flutter:
     - lib/assets/images/yang_in_crowd.png
     - lib/assets/images/yang_speaking.jpg
     - lib/assets/images/yang_standing.jpg
-    - lib/assets/images/apple-logo.jpg
-
+    - lib/assets/images/apple-logo.png
+    - lib/assets/images/signin_apple.png
     # - lib/assets/images/andrew_yang_three.jpg
 
     - lib/assets/images/recycle-bin.png
     - lib/assets/images/image_01.png
     - lib/assets/images/image_02.png
     - lib/assets/images/search.png
+    - lib/assets/images/apple-id-outline-yes_2x.png
 
     # card images
     - images/

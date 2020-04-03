@@ -54,7 +54,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           chatCount =
               snapshot.data.chatCount(SevaCore.of(context).loggedInUser.email);
         }
-        
+
         return CurvedNavigationBar(
           // key: UniqueKey(),
           key: Key((notificationCount + chatCount).toString()),
@@ -65,7 +65,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           height: 55,
           items: <CustomNavigationItem>[
             CustomNavigationItem(
-              primaryIcon: Icons.search,
+              primaryIcon: Icons.explore,
               title: 'Explore',
               isSelected: selected == 0,
             ),

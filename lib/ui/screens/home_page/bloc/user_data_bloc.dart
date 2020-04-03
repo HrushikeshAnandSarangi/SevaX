@@ -29,7 +29,6 @@ class UserDataBloc extends BlocBase {
   }
 
   void getData({String email, String communityId}) {
-    print(TransactionType.message_sent);
     CombineLatestStream.combine2(
             Firestore.instance.collection("users").document(email).snapshots(),
             Firestore.instance
@@ -56,17 +55,4 @@ class HomeRouterModel {
   final DocumentSnapshot community;
 
   HomeRouterModel({this.user, this.community});
-}
-
-enum TransactionType {
-  user_joins_timebank,
-  request_made,
-  request_accepted,
-  offer_made,
-  post_feed,
-  message_sent,
-  recieves_notification,
-  request_marked_complete,
-  admin_reviews_completed,
-  user_credited_with_coins
 }

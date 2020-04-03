@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/widgets/no_group_placeholder.dart';
+import 'package:sevaexchange/ui/screens/home_page/widgets/timebank_card.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/home_page/widgets/no_group_placeholder.dart';
-import 'package:sevaexchange/views/home_page/widgets/timebank_card.dart';
+import 'package:sevaexchange/views/project_request/project_requests.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 
@@ -38,6 +40,17 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     super.dispose();
   }
 
+  void navigateToProjectRequest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectRequests(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+        ),
+      ),
+    );
+  }
+
   void navigateToCreateGroup() {
     createEditCommunityBloc
         .updateUserDetails(SevaCore.of(context).loggedInUser);
@@ -45,6 +58,19 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       context,
       MaterialPageRoute(
         builder: (context) => TimebankCreate(
+          timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
+        ),
+      ),
+    );
+  }
+
+  void navigateToCreateProjectGroup() {
+    createEditCommunityBloc
+        .updateUserDetails(SevaCore.of(context).loggedInUser);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimeBankProjectsView(
           timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
         ),
       ),
@@ -70,6 +96,10 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
+                ),
+                RaisedButton(
+                  child: Text("Project Request"),
+                  onPressed: navigateToProjectRequest,
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),

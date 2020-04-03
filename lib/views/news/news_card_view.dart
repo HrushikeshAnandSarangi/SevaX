@@ -17,11 +17,10 @@ class NewsCardView extends StatelessWidget {
   final String timebankId;
 
   NewsCardView({Key key, @required this.newsModel, @required this.timebankId})
-      : super(key: key) {
-    // assert(newsModel.title != null, 'News title cannot be null');
-    // assert(newsModel.description != null, 'News description cannot be null');
-    // assert(newsModel.fullName != null, 'Full name cannot be null');
-  }
+      : super(key: key);
+  // assert(newsModel.title != null, 'News title cannot be null');
+  // assert(newsModel.description != null, 'News description cannot be null');
+  // assert(newsModel.fullName != null, 'Full name cannot be null');
 
   @override
   Widget build(BuildContext context) {
@@ -430,7 +429,7 @@ class NewsCardView extends StatelessWidget {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          title: Text('Delete Feed'),
+          title: Text('Delete feed'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -454,7 +453,7 @@ class NewsCardView extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      showProgressDialog("Deleting Feed", parentContext);
+                      showProgressDialog("Deleting feed", parentContext);
                       _deleteNews(parentContext);
                     },
                   ),
