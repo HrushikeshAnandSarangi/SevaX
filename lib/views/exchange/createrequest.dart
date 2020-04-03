@@ -256,56 +256,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 40),
                 Text(
-                  'No. of hours *',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.grey,
-                  ),
-                ),
-                TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'No. of hours required',
-                      hintStyle: textStyle,
-                      // labelText: 'No. of volunteers',
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter the number of hours required';
-                      } else {
-                        requestModel.numberOfHours = int.parse(value);
-                        return null;
-                      }
-                    }),
-                SizedBox(height: 20),
-                Text(
-                  'No. of hours *',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Europa',
-                    color: Colors.grey,
-                  ),
-                ),
-                TextFormField(
-                    decoration: InputDecoration(
-                      hintText: 'No. of hours required',
-                      hintStyle: textStyle,
-                      // labelText: 'No. of volunteers',
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter the number of hours required';
-                      } else {
-                        requestModel.numberOfHours = int.parse(value);
-                        return null;
-                      }
-                    }),
-                SizedBox(height: 20),
-                Text(
                   'No. of volunteers*',
                   style: TextStyle(
                     fontSize: 16,
@@ -537,9 +487,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         });
   }
 
-    //adding some members for humanity first
-    if (_formKey.currentState.validate()) {
-      if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+  void showDialogForTitle({String dialogTitle}) {
+    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
         var timebankDetails = await FirestoreManager.getTimeBankForId(
             timebankId: requestModel.timebankId);
         requestModel.fullName = timebankDetails.name;
@@ -547,49 +496,26 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       }
 
       showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (createDialogContext) {
-            dialogContext = createDialogContext;
-            return AlertDialog(
-              title: Text('Creating Request..'),
-              content: LinearProgressIndicator(),
-            );
-          });
 
-      print("Select Members");
-      if (widget.isOfferRequest == true && widget.userModel != null) {
-        if (requestModel.approvedUsers == null) requestModel.approvedUsers = [];
-        requestModel.approvedUsers.add(widget.userModel.email);
-      }
-
-      await _writeToDB();
-
-      if (widget.isOfferRequest == true && widget.userModel != null) {
-        print(
-            "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        // OfferModel offer = widget.offer;
-        // Set<String> offerRequestList = () {
-        //   if (offer.requestList == null) return [];
-        //   return offer.requestList;
-        // }()
-        //     .toSet();
-        // offerRequestList.add(requestModel.id);
-        // offer.requestList = offerRequestList.toList();
-        // FirestoreManager.updateOfferWithRequest(offer: offer);
-        // sendOfferRequest(
-        //     offerModel: widget.offer,
-        //     requestSevaID: requestModel.sevaUserId);
-
-        // Navigator.pop(dialogContext);
-        // Navigator.pop(context);
-        Navigator.pop(dialogContext);
-        Navigator.pop(context, {'response': 'ACCEPTED'});
-      } else {
-        Navigator.pop(dialogContext);
-        Navigator.pop(context);
-      }
-    }
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogTitle),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Map<String, UserModel> selectedUsers;
@@ -728,44 +654,5 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     AppConfig.remoteConfig = await RemoteConfig.instance;
     AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
     AppConfig.remoteConfig.activateFetched();
-  }
-    void showDialogForTitle({String dialogTitle}) {
-      showDialog(
-          context: context,
-          builder: (BuildContext viewContext) {
-            return AlertDialog(
-              title: Text(dialogTitle),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(viewContext).pop();
-                  },
-                ),
-              ],
-            );
-          });
-    }
-
-  void get _fetchCurrentlocation {
-    Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
-    });
   }
 }
