@@ -58,7 +58,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
-        TabController(initialIndex: 0, length: 9, vsync: this);
+        TabController(initialIndex: 0, length: 8, vsync: this);
     tabs = [
       Tab(
           text:
@@ -67,7 +67,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       Tab(text: "Projects"),
       Tab(text: "Requests"),
       Tab(text: "Offers"),
-      Tab(text: "Projects"),
       Tab(text: "About"),
       Tab(text: "Accepted Offers"),
       Tab(text: "Members")
@@ -206,7 +205,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               if (primaryTimebank != null &&
                   primaryTimebank.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
-                  tabs.length == 9) {
+                  tabs.length == 8) {
                 isAdmin = true;
                 _timebankController = TabController(length: 11, vsync: this);
 
@@ -258,10 +257,10 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
                       ),
-                      ProjectRequests(
-                        timebankId: primaryTimebank.id,
-                        timebankModel: primaryTimebank,
-                      ),
+//                      ProjectRequests(
+//                        timebankId: primaryTimebank.id,
+//                        timebankModel: primaryTimebank,
+//                      ),
                       TimeBankAboutView.of(
                         timebankModel: primaryTimebank,
                         email: SevaCore.of(context).loggedInUser.email,

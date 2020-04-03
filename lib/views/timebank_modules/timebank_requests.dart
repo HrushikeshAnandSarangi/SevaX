@@ -1046,13 +1046,15 @@ class RequestListItemsState extends State<RequestListItems> {
     switch (model.getType()) {
       case RequestModelList.TITLE:
         var isMyContent = (model as GroupTitle).groupTitle.contains("My");
-        var title = widget.isProjectRequest ? "Project Requests" : GroupRequestCommons.getGroupTitle(
-            groupKey: (model as GroupTitle).groupTitle);
+        if(widget.isProjectRequest){
+          return Container();
+        }
         return Container(
           height: !isMyContent ? 18 : 0,
           margin: !isMyContent ? EdgeInsets.all(12) : EdgeInsets.all(0),
           child: Text(
-            title,
+            GroupRequestCommons.getGroupTitle(
+                groupKey: (model as GroupTitle).groupTitle),
           ),
         );
 
