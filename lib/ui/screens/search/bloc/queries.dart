@@ -52,8 +52,10 @@ class Searches {
     @required UserModel loggedInUser,
     @required CommunityModel currentCommunityOfUser
   }) async* {
-   List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-
+    print("usermodel is " + loggedInUser.email +" currentCommunityOfUser is "+currentCommunityOfUser.id);
+    print("usermodel is " + loggedInUser.membershipTimebanks.toString() +" currentCommunityOfUser is "+currentCommunityOfUser.timebanks.toString());
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+  print("myTimebanks.length.tostring is"+myTimebanks.length.toString());
     String url = baseURL + '/newsfeed/_doc/_search';
     dynamic body = json.encode(
       {
@@ -360,8 +362,8 @@ class Searches {
                 }
               },
               {
-                "match":{
-                  "communities": loggedInUser.currentCommunity
+                "term":{
+                  "communities.keyword": loggedInUser.currentCommunity
                 }
               },
               {
@@ -399,6 +401,7 @@ class Searches {
 
   static List<String> getTimebanksAndGroupsOfUser(timebanksOfCommunity, timebanksOfUser){
       List<String> timebankarr = new List();
+//      ("Length isssssssssssss---"+timebanksOfCommunity.length.toString()+"    "+timebanksOfUser.length.toString());
       timebanksOfCommunity.forEach( (tb) {
         if(timebanksOfUser.contains(tb)){
           timebankarr.add(tb);
