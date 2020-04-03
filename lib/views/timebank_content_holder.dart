@@ -11,6 +11,7 @@ import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/members_of_timebank.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart';
@@ -19,9 +20,9 @@ import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
+import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
-import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -146,6 +147,7 @@ Widget createAdminTabBar(
       ),
       body: Column(
         children: <Widget>[
+          ShowLimitBadge(),
           TabBar(
             labelColor: Theme.of(context).primaryColor,
             indicatorColor: Theme.of(context).primaryColor,
@@ -210,8 +212,9 @@ Widget createAdminTabBar(
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
+                  isFromGroup: true,
                 ),
-                ManageTimebankSeva.of(
+                ManageGroupView.of(
                   timebankModel: timebankModel,
                 ),
                 TimebankNotificationsView(
@@ -393,6 +396,7 @@ Widget createJoinedUserTabBar(
                   ),
                   timebankId: timebankModel.id,
                   userEmail: SevaCore.of(context).loggedInUser.email,
+                  isFromGroup: true,
                 ),
               ],
             ),
@@ -439,6 +443,7 @@ Widget createNormalUserTabBar(
               isUserAdmin: false,
               timebankId: timebankModel.id,
               userEmail: SevaCore.of(context).loggedInUser.email,
+              isFromGroup: true,
             ),
           ],
         )),

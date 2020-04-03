@@ -46,10 +46,6 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   Widget get inviteCodeWidget {
     return Column(
       children: <Widget>[
-        Divider(
-          color: Colors.grey,
-          height: 15,
-        ),
         Padding(
           padding: EdgeInsets.all(5),
           child: GestureDetector(

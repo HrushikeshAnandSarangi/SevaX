@@ -290,7 +290,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                   hintStyle: hintTextStyle,
                 ),
                 keyboardType: TextInputType.multiline,
-                maxLines: 4,
+                maxLines: 2,
                 maxLength: 500,
                 onChanged: (value) {
                   widget.requestModel.description = value;
@@ -305,6 +305,38 @@ class RequestEditFormState extends State<RequestEditForm> {
               Padding(
                 padding: EdgeInsets.all(10.0),
               ),
+
+              // SizedBox(height: 40),
+              Text(
+                'No. of hours *',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Europa',
+                  color: Colors.grey,
+                ),
+              ),
+              TextFormField(
+                  initialValue: "${widget.requestModel.numberOfHours ?? 0}",
+                  decoration: InputDecoration(
+                    hintText: 'No. of hours required',
+                    hintStyle: textStyle,
+                    // labelText: 'No. of volunteers',
+                  ),
+                  onChanged: (value) {
+                    widget.requestModel.numberOfHours = int.parse(value);
+                  },
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the number of hours required';
+                    } else {
+                      requestModel.numberOfHours = int.parse(value);
+                      return null;
+                    }
+                  }),
+              SizedBox(height: 20),
+
               Text(
                 'No. of volunteers',
                 style: TextStyle(

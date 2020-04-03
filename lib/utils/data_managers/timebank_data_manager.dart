@@ -78,7 +78,6 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
     {@required String communityId}) async {
   List<dynamic> timeBankIdList = [];
   List<TimebankModel> timeBankModelList = [];
-
   await Firestore.instance
       .collection('communities')
       .document(communityId)
@@ -87,12 +86,9 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
     Map<String, dynamic> dataMap = documentSnaphot.data;
     print("hey ${dataMap}");
     timeBankIdList = dataMap["timebanks"];
-    print("timebankssssss ${dataMap['timebanks']}");
   });
 
   var comm = await getCommunityDetailsByCommunityId(communityId: communityId);
-
-  print("+===========================${comm.primary_timebank}");
 
   print(timeBankIdList);
   for (int i = 0; i < timeBankIdList.length; i += 1) {
@@ -101,7 +97,6 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
         timebankId: timeBankIdList[i],
       );
       timeBankModelList.add(timeBankModel);
-      print("heyyyy ${timeBankModel.admins}");
     }
     /*if(timeBankModel.members.contains(sevaUserId)){
       timeBankModel.joinStatus=CompareToTimeBank.JOIN;
@@ -222,6 +217,8 @@ Future<void> updateTimebank({@required TimebankModel timebankModel}) async {
   if (timebankModel == null) {
     return;
   }
+
+  print("________" + timebankModel.id);
   return await Firestore.instance
       .collection('timebanknew')
       .document(timebankModel.id)

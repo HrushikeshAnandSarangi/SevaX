@@ -16,6 +16,7 @@ class RequestModel extends DataModel {
   int postTimestamp;
   int requestEnd;
   int requestStart;
+  int numberOfHours;
   bool accepted;
   String rejectedReason;
   List<TransactionModel> transactions;
@@ -146,6 +147,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('numberOfApprovals')) {
       this.numberOfApprovals = map['numberOfApprovals'];
     }
+
+    if (map.containsKey('numberOfHours')) {
+      this.numberOfHours = map['numberOfHours'];
+    }
+
     if (map.containsKey('location')) {
       GeoPoint geoPoint = map['location']['geopoint'];
 
@@ -170,6 +176,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
+
+    if (map.containsKey('no')) {
+      this.id = map['id'];
+    }
+
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -210,6 +221,10 @@ class RequestModel extends DataModel {
     }
     if (map.containsKey('accepted')) {
       this.accepted = map['accepted'];
+    }
+
+    if (map.containsKey('numberOfHours')) {
+      this.numberOfHours = map['numberOfHours'];
     }
 
     if (map.containsKey('isNotified')) {
@@ -308,6 +323,10 @@ class RequestModel extends DataModel {
     }
     if (this.accepted != null) {
       object['accepted'] = this.accepted;
+    }
+
+    if (this.numberOfHours != null) {
+      object['numberOfHours'] = this.numberOfHours;
     }
 
     if (this.isNotified != null) {

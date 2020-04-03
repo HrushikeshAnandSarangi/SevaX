@@ -140,7 +140,7 @@ class CreateEditCommunityViewFormState
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    if (FlavorConfig.appFlavor == Flavor.APP) {
+    if (FlavorConfig.appFlavor == Flavor.APP && !widget.isCreateTimebank) {
       fetchCurrentlocation();
     }
 
@@ -201,6 +201,7 @@ class CreateEditCommunityViewFormState
     timebankModel =
         await FirestoreManager.getTimeBankForId(timebankId: widget.timebankId);
 
+    location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
 //    setState(() {
@@ -262,10 +263,12 @@ class CreateEditCommunityViewFormState
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: Text(
-                      'Timebank is where you can collaborate with your organization',
-                      textAlign: TextAlign.center,
-                    ),
+                    child: widget.isCreateTimebank
+                        ? Text(
+                            'Timebank is where you can collaborate with your organization',
+                            textAlign: TextAlign.center,
+                          )
+                        : Container(),
                   ),
                   Center(
                     child: Padding(
@@ -428,7 +431,7 @@ class CreateEditCommunityViewFormState
                     ],
                   ),
                   Text(
-                    'With protected timebank, user to user transactions are disabled.',
+                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -436,7 +439,7 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Your timebank location.'),
                   Text(
-                    'Timebank location will help your members to locate',
+                    'List the place or address where your community meets (such as a cafe, library, or church.).',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -531,6 +534,10 @@ class CreateEditCommunityViewFormState
 //                              _showVerificationAndLogoutDialogue();
 //                            }
 
+                            var timebankAdvisory =
+                                // "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                                "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+
                             print(_formKey.currentState.validate());
 
 //                            communityFound =
@@ -539,8 +546,20 @@ class CreateEditCommunityViewFormState
 //                              print("Found:$communityFound");
 //                              return;
 //                            }
+
                             if (_formKey.currentState.validate()) {
                               if (isBillingDetailsProvided) {
+                                Map<String, bool> onActivityResult =
+                                    await showTimebankAdvisory(
+                                        dialogTitle: timebankAdvisory);
+                                if (onActivityResult['PROCEED']) {
+                                  print("YES PROCEED WITH TIMEBANK CREATION");
+                                } else {
+                                  print(
+                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
+                                  Navigator.of(context).pop();
+                                }
+
                                 setState(() {
                                   this._billingDetailsError = '';
                                 });
@@ -618,7 +637,7 @@ class CreateEditCommunityViewFormState
                                       ),
                                     ),
                                   );
-                                  //Navigator.of(context).pushAndRemoveUntil(
+                                  // Navigator.of(context).pushAndRemoveUntil(
                                   //    MaterialPageRoute(
                                   //      builder: (context1) => MainApplication(
                                   //        skipToHomePage: true,
@@ -634,6 +653,13 @@ class CreateEditCommunityViewFormState
                               }
                             } else {}
                           } else {
+                            if (location == null) {
+                              showDialogForSuccess(
+                                  dialogTitle:
+                                      "Please add your timebank location");
+                              return;
+                            }
+
                             showProgressDialog('Updating timebank');
                             if (globals.timebankAvatarURL != null) {
                               communityModel.logo_url =
@@ -645,7 +671,9 @@ class CreateEditCommunityViewFormState
 //                            print("comm ${communityModel}");
 //
 //                            print("time add${timebankModel.address}");
+
                             timebankModel.location = location;
+
                             if (selectedUsers != null) {
                               selectedUsers.forEach((key, user) {
                                 print("Selected member with key $key");
@@ -656,13 +684,9 @@ class CreateEditCommunityViewFormState
                               });
                               selectedUsers.forEach((key, user) {
                                 print("Selected member with key $key");
-
                                 members.add(user.sevaUserID);
                               });
                             }
-
-                            print("time ${timebankModel.photoUrl}");
-                            print("time ${communityModel.logo_url}");
                             // creation of community;
 
                             // updating timebank with latest values
@@ -686,7 +710,13 @@ class CreateEditCommunityViewFormState
                               Navigator.pop(dialogContext);
                             }
                             _formKey.currentState.reset();
-                            Navigator.of(context).pop();
+                            if (widget.isFromFind) {
+                              Navigator.of(context).pop();
+                            } else {
+                              showDialogForSuccess(
+                                  dialogTitle:
+                                      "Timebank updated successfully, Please restart your app to see the updated chnages.");
+                            }
                           }
                         },
                         shape: StadiumBorder(),
@@ -1041,9 +1071,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('state', value);
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.state != null
-             ? controller.community.billing_address.state
-             : '',
+          initialValue: controller.community.billing_address.state != null
+              ? controller.community.billing_address.state
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1069,9 +1099,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.state != null
-             ? controller.community.billing_address.state
-             : '',
+          initialValue: controller.community.billing_address.state != null
+              ? controller.community.billing_address.state
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1097,9 +1127,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('pincode', int.parse(value));
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.pincode != null
-             ? controller.community.billing_address.pincode.toString()
-             : '',
+          initialValue: controller.community.billing_address.pincode != null
+              ? controller.community.billing_address.pincode.toString()
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1212,9 +1242,6 @@ class CreateEditCommunityViewFormState
           initialValue: controller.community.billing_address.companyname != null
               ? controller.community.billing_address.companyname
               : '',
-          validator: (value) {
-            return value.isEmpty ? 'Field cannot be left blank*' : null;
-          },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
@@ -1236,9 +1263,9 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-         initialValue: controller.community.billing_address.companyname != null
-             ? controller.community.billing_address.companyname
-             : '',
+          initialValue: controller.community.billing_address.companyname != null
+              ? controller.community.billing_address.companyname
+              : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
@@ -1393,5 +1420,67 @@ class CreateEditCommunityViewFormState
       print("No users where selected");
       //no users where selected
     }
+  }
+
+  Future<Map> showTimebankAdvisory({String dialogTitle}) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(
+              dialogTitle,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop({'PROCEED': false});
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  'Proceed',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void showDialogForSuccess({String dialogTitle}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogTitle),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 }

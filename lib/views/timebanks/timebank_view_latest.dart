@@ -272,11 +272,12 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 15, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(widget.timebankModel.missionStatement,
+                      
                       style: TextStyle(
                         fontFamily: 'Europa',
                         fontSize: 16,

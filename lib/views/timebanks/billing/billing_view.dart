@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_cards_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/payment_bloc.dart';
@@ -30,11 +31,9 @@ class BillingViewState extends State<BillingView> {
     print(widget.planId);
     StripePayment.setOptions(
       StripeOptions(
-        publishableKey: 'pk_live_UF4dJaTWW2zXECJ5xdzuAe7P00ga985PfN',
-        // publishableKey: 'pk_test_Ht3PQZ4PkldeKISCo6RYsl0v004ONW8832',
+        publishableKey: FlavorConfig.values.stripePublishableKey,
+        androidPayMode: FlavorConfig.values.androidPayMode,
         merchantId: 'acct_1BuMJNIPTZX4UEIO',
-        androidPayMode: 'production',
-        // androidPayMode: 'test',
       ),
     );
     super.initState();
@@ -309,7 +308,7 @@ class BillingViewState extends State<BillingView> {
 
 Future<UserCardsModel> getUserCard(String communityId) async {
   var result = await http.post(
-      "https://us-central1-sevaxproject4sevax.cloudfunctions.net/getCardsOfCustomer",
+      "${FlavorConfig.values.cloudFunctionBaseURL}/getCardsOfCustomer",
       body: {"communityId": communityId});
   print(result.body);
   if (result.statusCode == 200) {
@@ -321,7 +320,7 @@ Future<UserCardsModel> getUserCard(String communityId) async {
 
 Future<void> setDefaultCard({String communityId, String token}) async {
   var result = await http.post(
-    "https://us-central1-sevaxproject4sevax.cloudfunctions.net/setDefaultCardForCustomer",
+    "${FlavorConfig.values.cloudFunctionBaseURL}/setDefaultCardForCustomer",
     body: {"communityId": communityId, "token": token},
   );
   print(result.body);

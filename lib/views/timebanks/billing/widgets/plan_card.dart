@@ -1,17 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/billing_plan_details.dart';
 import 'package:sevaexchange/models/user_model.dart';
 
+import '../../../../main_app.dart';
 import '../billing_view.dart';
 
 class BillingPlanCard extends StatelessWidget {
   final bool isSelected;
   final bool isPlanActive;
   final UserModel user;
-  final BillingPlanDetailsModel billingDetails;
+  final BillingPlanDetailsModel plan;
   const BillingPlanCard({
     Key key,
-    this.billingDetails,
+    this.plan,
     this.user,
     this.isSelected = false,
     this.isPlanActive = false,
@@ -40,92 +42,59 @@ class BillingPlanCard extends StatelessWidget {
                     style: TextStyle(color: textColor),
                     children: [
                       TextSpan(
-                        text: "${billingDetails.planName}\n",
+                        text: "${plan.planName}\n",
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                        text: "${billingDetails.planDescription}",
+                        text: "${plan.planDescription}",
                         style: TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
                 ),
                 Spacer(),
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "${billingDetails.currency}",
-                        style: TextStyle(
-                          fontSize: 36,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "${billingDetails.price}",
-                        style: TextStyle(
-                          fontSize: 48,
-                        ),
-                      ),
-                      TextSpan(text: "/${billingDetails.duration}"),
-                    ],
-                  ),
-                ),
+                planPriceBuilder(textColor),
                 Spacer(),
                 Row(
                   children: <Widget>[
                     Text(
-                      "${billingDetails.note1}",
+                      "${plan.note1}",
                       style: TextStyle(fontSize: 16, color: textColor),
                     ),
                     SizedBox(width: 4),
-                    // InkWell(
-                    //   onTap: () {
-                    //     _showDialog(context);
-                    //   },
-                    //   child: CircleAvatar(
-                    //     radius: 8,
-                    //     backgroundColor: Colors.blue,
-                    //     foregroundColor: Colors.white,
-                    //     child: Text(
-                    //       "i",
-                    //       style: TextStyle(fontSize: 12),
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
                 Text(
-                  "${billingDetails.note2}",
+                  "${plan.note2}",
                   style: TextStyle(fontSize: 10, color: textColor),
                 ),
                 SizedBox(height: 4),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "Click here for more info",
-                      style: TextStyle(fontSize: 10, color: textColor),
-                    ),
-                    SizedBox(width: 8),
-                    InkWell(
-                      onTap: () {
-                        _showDialog(context);
-                      },
-                      child: CircleAvatar(
-                        radius: 8,
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        child: Text(
-                          "i",
-                          style: TextStyle(fontSize: 12),
+                Offstage(
+                  offstage: plan.id == "community_plan",
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        "Click here for more info",
+                        style: TextStyle(fontSize: 10, color: textColor),
+                      ),
+                      SizedBox(width: 8),
+                      InkWell(
+                        onTap: () {
+                          _showDialog(context);
+                        },
+                        child: CircleAvatar(
+                          radius: 8,
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                          child: Text(
+                            "i",
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 Spacer(),
                 Expanded(
@@ -134,12 +103,12 @@ class BillingPlanCard extends StatelessWidget {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return Text(
-                        billingDetails.freeTransaction[index],
+                        plan.freeTransaction[index],
                         style: TextStyle(color: textColor),
                       );
                     },
                     separatorBuilder: (context, index) => Divider(),
-                    itemCount: billingDetails.freeTransaction.length,
+                    itemCount: plan.freeTransaction.length,
                   ),
                 ),
                 Spacer(),
@@ -164,15 +133,21 @@ class BillingPlanCard extends StatelessWidget {
                     if (isPlanActive) {
                       _changePlanAlert(context);
                     } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BillingView(
-                            user.currentCommunity,
-                            billingDetails.id,
-                            user: user,
+                      if (plan.id == "community_plan") {
+                        _planSuccessMessage(
+                          context: context,
+                        );
+                      } else {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => BillingView(
+                              user.currentCommunity,
+                              plan.id,
+                              user: user,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     }
                   },
                 )
@@ -184,8 +159,44 @@ class BillingPlanCard extends StatelessWidget {
     );
   }
 
+  RichText planPriceBuilder(Color textColor) {
+    List<String> price = [];
+
+    if (plan.price == '0') {
+      price.add('');
+      price.add('FREE');
+      price.add('');
+    } else {
+      price.add(plan.currency);
+      price.add(plan.price);
+      price.add("/${plan.duration}");
+    }
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+        ),
+        children: [
+          TextSpan(
+            text: "${price[0]}",
+            style: TextStyle(
+              fontSize: 36,
+            ),
+          ),
+          TextSpan(
+            text: "${price[1]}",
+            style: TextStyle(
+              fontSize: 48,
+            ),
+          ),
+          TextSpan(text: "${price[2]}"),
+        ],
+      ),
+    );
+  }
+
   void _showDialog(context) {
-    // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -197,10 +208,10 @@ class BillingPlanCard extends StatelessWidget {
             child: ListView.separated(
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return Text(billingDetails.billableTransaction[index]);
+                return Text(plan.billableTransaction[index]);
               },
               separatorBuilder: (context, index) => Divider(),
-              itemCount: billingDetails.billableTransaction.length,
+              itemCount: plan.billableTransaction.length,
             ),
           ),
           actions: <Widget>[
@@ -233,6 +244,48 @@ class BillingPlanCard extends StatelessWidget {
               },
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _planSuccessMessage({
+    BuildContext context,
+  }) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        Firestore.instance
+            .collection("communities")
+            .document(user.currentCommunity)
+            .updateData(
+          {
+            "payment": {
+              "payment_success": true,
+              "planId": plan.id,
+              "message": "You are on Community Plan"
+            }
+          },
+        ).then((_) {
+          Navigator.of(context).pop();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context1) => MainApplication(
+                  skipToHomePage: true,
+                ),
+              ),
+              (Route<dynamic> route) => false);
+        }).catchError((e) => print(e));
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text("Taking you to your new Timebank..."),
+              // Text('It may take couple of minutes to synchronize your payment'),
+            ],
+          ),
         );
       },
     );

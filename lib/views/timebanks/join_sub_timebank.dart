@@ -4,6 +4,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
@@ -21,8 +22,15 @@ import '../timebank_content_holder.dart';
 class JoinSubTimeBankView extends StatefulWidget {
   final UserModel loggedInUserModel;
   final bool isFromDash;
+  final String communityId;
+  final String communityPrimaryTimebankId;
 
-  JoinSubTimeBankView({this.loggedInUserModel, @required this.isFromDash});
+  JoinSubTimeBankView({
+    this.loggedInUserModel,
+    @required this.isFromDash,
+    @required this.communityId,
+    @required this.communityPrimaryTimebankId,
+  });
 
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
 }
@@ -119,15 +127,28 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget getTimebanks({BuildContext context}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
-    return StreamBuilder<CommunityCreateEditController>(
-        stream: createEditCommunityBloc.createEditCommunity,
+    return FutureBuilder<List<TimebankModel>>(
+        future: getTimebanksForCommunity(
+          communityId: widget.communityId,
+          primaryTimebankId: widget.communityPrimaryTimebankId,
+        ),
         builder: (context, snapshot) {
           print('timee${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
-          timebankList = snapshot.data.timebanks;
+
+          if (snapshot.data.length == 0) {
+            return Container(
+              margin: EdgeInsets.all(20),
+              child: Center(
+                child: Text("No Groups found"),
+              ),
+            );
+          }
+
+          timebankList = snapshot.data;
           timebankList.forEach((t) {
             dropdownList.add(t.id);
           });
@@ -209,7 +230,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               AspectRatio(
                 aspectRatio: 3.3 / 2.3,
                 child: CachedNetworkImage(
-                  imageUrl: timebank.photoUrl,
+                  imageUrl: timebank.photoUrl ?? defaultUserImageURL,
                   fit: BoxFit.fitWidth,
                   errorWidget: (context, url, error) =>
                       Center(child: Text('No Image Avaialable')),
@@ -239,9 +260,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 //                                maxLines: 1,
                         ),
                         Text(
-                          timebank.address +
-                                  ' .' +
-                                  timebank.members.length.toString() ??
+                          timebank.address ??
+                              "" + ' .' + timebank.members.length.toString() ??
                               " ",
                           style: TextStyle(
                               fontFamily: "Europa",
@@ -295,7 +315,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               notification.timebankId =
                                   FlavorConfig.values.timebankId;
                               //  print('creator id ${notification.timebankId}');
-
+                              
                               UserModel timebankCreator =
                                   await FirestoreManager.getUserForId(
                                       sevaUserId: timebank.creatorId);
@@ -375,4 +395,23 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     }
     return CompareToTimeBank.JOIN;
   }
+}
+
+Future<List<TimebankModel>> getTimebanksForCommunity(
+    {String communityId, String primaryTimebankId}) async {
+  List<TimebankModel> timebankList = [];
+
+  return Firestore.instance
+      .collection('timebanknew')
+      .where('community_id', isEqualTo: communityId)
+      .getDocuments()
+      .then((QuerySnapshot timebankModel) {
+    timebankModel.documents.forEach((timebank) {
+      var model = TimebankModel.fromMap(timebank.data);
+      if (model.id != primaryTimebankId) timebankList.add(model);
+    });
+    return timebankList;
+  }).catchError((onError) {
+    return onError;
+  });
 }

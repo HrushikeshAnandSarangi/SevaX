@@ -254,9 +254,9 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
 
                         if (snapshot.data.length == 0) {
                           return Container(
-                            margin: EdgeInsets.only(left: 20),
+                            margin: EdgeInsets.only(left: 0, top: 10),
                             child: Text(
-                              'No approved members',
+                              'No approved members yet.',
                             ),
                           );
                         }

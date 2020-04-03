@@ -115,6 +115,7 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     switch (FlavorConfig.appFlavor) {
+      case Flavor.SEVA_DEV:
       case Flavor.APP:
         return sevaAppSplash;
         break;
@@ -385,9 +386,9 @@ class _SplashViewState extends State<SplashView> {
 
   void initiateLogin() {
     loadingMessage = 'Checking, if we met before';
-    _getLoggedInUserId()
-        .then(handleLoggedInUserIdResponse)
-        .catchError((error) {});
+    _getLoggedInUserId().then(handleLoggedInUserIdResponse).catchError((error) {
+      print("Inside -> Error $error");
+    });
   }
 
   Future<String> _getLoggedInUserId() async {
@@ -452,7 +453,7 @@ class _SplashViewState extends State<SplashView> {
 
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     print("---> ${loggedInUser.currentCommunity}");
-    if ((loggedInUser.currentCommunity == "" ||
+    if ((loggedInUser.currentCommunity == " " ||
             loggedInUser.currentCommunity == null) &&
         loggedInUser.communities.length != 0) {
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);
@@ -469,6 +470,7 @@ class _SplashViewState extends State<SplashView> {
       _navigateToLoginPage();
       return;
     }
+
     // print('logger${loggedInUser}');
     UserData.shared.user = loggedInUser;
 
@@ -590,28 +592,28 @@ class _SplashViewState extends State<SplashView> {
     //   await _navogateToIntro(loggedInUser);
     // }
 
-    // if (widget.skipToHomePage) {
-    //   print('Navigating to home page');
-    //   _navigateToCoreView(loggedInUser);
+    if (widget.skipToHomePage) {
+      print('Navigating to home page');
+      _navigateToCoreView(loggedInUser);
 
-    await FirebaseAuth.instance
-        .currentUser()
-        .then((FirebaseUser firebaseUser) async {
-      if (firebaseUser != null) {
-        if (!firebaseUser.isEmailVerified) {
-          await Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => VerifyEmail(
-                  firebaseUser: firebaseUser,
-                  email: loggedInUser.email,
-                  emailSent: loggedInUser.emailSent,
+      await FirebaseAuth.instance
+          .currentUser()
+          .then((FirebaseUser firebaseUser) async {
+        if (firebaseUser != null) {
+          if (!firebaseUser.isEmailVerified) {
+            await Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => VerifyEmail(
+                    firebaseUser: firebaseUser,
+                    email: loggedInUser.email,
+                    emailSent: loggedInUser.emailSent,
+                  ),
                 ),
-              ),
-              (Route<dynamic> route) => false);
+                (Route<dynamic> route) => false);
+          }
         }
-      }
-    });
-    // }
+      });
+    }
     print("reached here------->><><>");
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);

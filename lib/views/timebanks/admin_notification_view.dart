@@ -248,7 +248,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                                   ? '${model.credits} Yang Bucks'
                                   : FlavorConfig.appFlavor == Flavor.TULSI
                                       ? '${model.credits} Tulsi Tokens'
-                                      : '${model.credits} Seva Coins';
+                                      : '${model.credits} Seva Credits';
                             }(),
                             style: TextStyle(
                               color: Colors.black,
@@ -314,7 +314,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                               ? '${model.credits} Yang Bucks '
                               : FlavorConfig.appFlavor == Flavor.TULSI
                                   ? '${model.credits} Tulsi TOkens '
-                                  : '${model.credits} Seva Coins ';
+                                  : '${model.credits} Seva Credits ';
                         }(),
                         style: TextStyle(
                           color: Colors.black,
