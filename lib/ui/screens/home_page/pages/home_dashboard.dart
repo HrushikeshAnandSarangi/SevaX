@@ -212,7 +212,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
                   tabs.length == 9) {
                 isAdmin = true;
-                _timebankController = TabController(length: 11, vsync: this);
+                _timebankController = TabController(length: 12, vsync: this);
 
                 tabs.add(Tab(text: 'Manage'));
                 tabs.add(
