@@ -176,8 +176,8 @@ class UserModel extends DataModel {
       List<String> campaignList = List.castFrom(map['membership_campaigns']);
       this.membershipCampaigns = campaignList;
     }
-    if (map.containsKey('membership_timebanks')) {
-      List<String> timebanksList = List.castFrom(map['membership_timebanks']);
+    if (map.containsKey('membershipTimebanks')) {
+      List<String> timebanksList = List.castFrom(map['membershipTimebanks']);
       this.membershipTimebanks = timebanksList;
     }
     if (map.containsKey('sevauserid')) {

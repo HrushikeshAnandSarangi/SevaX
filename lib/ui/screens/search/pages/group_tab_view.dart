@@ -55,6 +55,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                     return ListView.builder(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         final group = snapshot.data[index];
@@ -62,10 +63,10 @@ class _GroupTabViewState extends State<GroupTabView> {
                           padding: EdgeInsets.symmetric(vertical: 10),
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: 10,
+                          itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return GroupCard(
-                              image: group.photoUrl,
+                              image: group.photoUrl ?? "",
                               title: group.name,
                               subtitle: group.missionStatement,
                               onPressed: () {},

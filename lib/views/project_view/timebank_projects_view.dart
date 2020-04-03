@@ -89,14 +89,14 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   List<ProjectModel> projectModelList =
                       requestListSnapshot.data;
                   print('projects data ${requestListSnapshot.data}');
-                  print('projects list ${projectModelList[0].toString()}');
+                  //print('projects list ${projectModelList[0].toString()}');
 
-//              if (projectModelList.length == 0) {
-//                return Padding(
-//                  padding: const EdgeInsets.all(16.0),
-//                  child: Center(child: Text('No Projects')),
-//                );
-//              }
+                  if (projectModelList.length == 0) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Center(child: Text('No Projects')),
+                    );
+                  }
                   return requestCards(projectModelList);
                 //  return formatListFrom(consolidatedList: projectModelList);
               }
@@ -114,7 +114,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Projects"),
+          title: new Text("Projects Alert"),
           content: new Text("Only admin can create projects"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
@@ -185,7 +185,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               MaterialPageRoute(
                 builder: (context) => ProjectRequests(
                   timebankId: widget.timebankId,
-
+                  projectModel: projectModel,
                 ),
               ),
             );

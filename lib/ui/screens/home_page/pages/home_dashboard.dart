@@ -12,9 +12,9 @@ import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/messages/timebank_chats.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
+import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
@@ -88,6 +88,10 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       data.forEach((model) {
         if (model.id == SevaCore.of(context).loggedInUser.currentCommunity) {
           selectedCommunity = model;
+          SevaCore.of(context).loggedInUser.currentTimebank =
+              model.primary_timebank;
+          SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+              model.timebanks.length;
         }
       });
   }
@@ -207,7 +211,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
                   tabs.length == 8) {
                 isAdmin = true;
-                _timebankController = TabController(length: 11, vsync: this);
+                _timebankController = TabController(length: 12, vsync: this);
 
                 tabs.add(Tab(text: 'Manage'));
                 tabs.add(
