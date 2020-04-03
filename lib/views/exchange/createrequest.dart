@@ -26,13 +26,15 @@ class CreateRequest extends StatefulWidget {
   final OfferModel offer;
   final String timebankId;
   final UserModel userModel;
+  String projectId;
 
   CreateRequest(
       {Key key,
       this.isOfferRequest,
       this.offer,
       this.timebankId,
-      this.userModel})
+      this.userModel,
+      this.projectId})
       : super(key: key);
 
   @override
@@ -48,7 +50,7 @@ class _CreateRequestState extends State<CreateRequest> {
           title: Text(
             FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? "Create Yang Gang Request"
-                : "Create Request",
+                : _title,
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -67,10 +69,18 @@ class _CreateRequestState extends State<CreateRequest> {
                     offer: widget.offer,
                     timebankId: widget.timebankId,
                     userModel: widget.userModel,
-                    loggedInUser: snapshot.data.loggedinuser);
+                    loggedInUser: snapshot.data.loggedinuser,
+                    projectId: widget.projectId,
+                );
               }
               return Text('');
             }));
+  }
+  String get _title {
+    if(widget.projectId == null || widget.projectId.isEmpty ||  widget.projectId == ""){
+      return "Create Request";
+    }
+    return "Create Project Request";
   }
 }
 
@@ -80,12 +90,14 @@ class RequestCreateForm extends StatefulWidget {
   final String timebankId;
   final UserModel userModel;
   final UserModel loggedInUser;
+  String projectId;
   RequestCreateForm(
       {this.isOfferRequest,
       this.offer,
       this.timebankId,
       this.userModel,
-      this.loggedInUser});
+      this.loggedInUser,
+      this.projectId});
 
   @override
   RequestCreateFormState createState() {
@@ -116,11 +128,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+    this.requestModel.projectId = widget.projectId;
 
     // print("Email goes like this " + SevaCore.of(context).loggedInUser.email);
     fetchRemoteConfig();
 
     print(location);
+  }
+
+  Future<void> fetchRemoteConfig() async {
+    AppConfig.remoteConfig = await RemoteConfig.instance;
+    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
+    AppConfig.remoteConfig.activateFetched();
   }
 
   @override
@@ -156,36 +175,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(bottom: 20),
-                  width: double.infinity,
-                  child: CupertinoSegmentedControl<int>(
-                    selectedColor: Theme.of(context).primaryColor,
-                    children: logoWidgets,
-                    borderColor: Colors.grey,
-
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    groupValue: sharedValue,
-                    onValueChanged: (int val) {
-                      print(val);
-                      if (val != sharedValue) {
-                        setState(() {});
-                        setState(() {
-                          print("$sharedValue -- $val");
-                          if (sharedValue == 0) {
-                            requestModel.requestMode =
-                                RequestMode.TIMEBANK_REQUEST;
-                          } else {
-                            requestModel.requestMode =
-                                RequestMode.PERSONAL_REQUEST;
-                          }
-                          sharedValue = val;
-                        });
-                      }
-                    },
-                    //groupValue: sharedValue,
-                  ),
-                ),
+                requestSwitch,
 
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -221,110 +211,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   //endTime: CalendarWidgetState.endDate
                 ),
                 SizedBox(height: 12),
-
-                // FlatButton(
-                //   //Request Date and Time
-                //   color: Color.fromRGBO(112, 196, 147, 1.0),
-                //   onPressed: () {
-                //     DateTime selectedDate;
-                //     if (requestModel.requestStart == null) {
-                //       selectedDate = DateTime.now();
-                //     } else {
-                //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
-                //         requestModel.requestStart,
-                //       );
-                //     }
-
-                //     DatePicker.showDateTimePicker(
-                //       context,
-                //       showTitleActions: true,
-                //       onChanged: (date) {
-                //         requestModel.requestStart = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageStart = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                 requestModel.requestStart,
-                //               ).toString();
-                //         });
-                //       },
-                //       onConfirm: (date) {
-                //         requestModel.requestStart = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageStart = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                 requestModel.requestStart,
-                //               ).toString();
-                //         });
-                //       },
-                //       currentTime: DateTime(
-                //         selectedDate.year,
-                //         selectedDate.month,
-                //         selectedDate.day,
-                //         selectedDate.hour,
-                //         selectedDate.minute,
-                //         00,
-                //       ),
-                //     );
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.calendar_today, size: 24.0),
-                //       Text(_dateMessageStart),
-                //     ],
-                //   ),
-                // ),
-                // Text(' '),
-                // FlatButton(
-                //   color: Color.fromRGBO(112, 196, 0, 1.0),
-                //   onPressed: () {
-                //     DateTime selectedDate;
-
-                //     if (requestModel.requestEnd == null) {
-                //       selectedDate = DateTime.now();
-                //     } else {
-                //       selectedDate = DateTime.fromMillisecondsSinceEpoch(
-                //         requestModel.requestEnd,
-                //       );
-                //     }
-
-                //     DatePicker.showDateTimePicker(
-                //       context,
-                //       showTitleActions: true,
-                //       onChanged: (date) {
-                //         requestModel.requestEnd = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageEnd = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                       requestModel.requestEnd)
-                //                   .toString();
-                //         });
-                //       },
-                //       onConfirm: (date) {
-                //         requestModel.requestEnd = date.millisecondsSinceEpoch;
-                //         setState(() {
-                //           _dateMessageEnd = ' ' +
-                //               DateTime.fromMillisecondsSinceEpoch(
-                //                       requestModel.requestEnd)
-                //                   .toString();
-                //         });
-                //       },
-                //       currentTime: DateTime(
-                //         selectedDate.year,
-                //         selectedDate.month,
-                //         selectedDate.day,
-                //         selectedDate.hour,
-                //         selectedDate.minute,
-                //         00,
-                //       ),
-                //     );
-                //   },
-                //   child: Row(
-                //     children: [
-                //       Icon(Icons.calendar_today, size: 24.0),
-                //       Text(_dateMessageEnd),
-                //     ],
-                //   ),
-                // ),
                 SizedBox(height: 20),
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
@@ -431,6 +317,43 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       ),
     );
   }
+
+  Widget get requestSwitch{
+    if(widget.projectId == null || widget.projectId.isEmpty ||  widget.projectId == ""){
+      return Container(
+        margin: EdgeInsets.only(bottom: 20),
+        width: double.infinity,
+        child: CupertinoSegmentedControl<int>(
+          selectedColor: Theme.of(context).primaryColor,
+          children: logoWidgets,
+          borderColor: Colors.grey,
+
+          padding: EdgeInsets.only(left: 5.0, right: 5.0),
+          groupValue: sharedValue,
+          onValueChanged: (int val) {
+            print(val);
+            if (val != sharedValue) {
+              setState(() {});
+              setState(() {
+                print("$sharedValue -- $val");
+                if (sharedValue == 0) {
+                  requestModel.requestMode =
+                      RequestMode.TIMEBANK_REQUEST;
+                } else {
+                  requestModel.requestMode =
+                      RequestMode.PERSONAL_REQUEST;
+                }
+                sharedValue = val;
+              });
+            }
+          },
+          //groupValue: sharedValue,
+        ),
+      );
+    }
+    return Container();
+  }
+
 
   int sharedValue = 0;
 
@@ -620,6 +543,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     if (requestModel.requestEnd == null) {
       requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
     }
+    print("Project id : ${widget.projectId}");
+    if(widget.projectId != null && widget.projectId.isNotEmpty){
+      requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      print("Inside yes");
+      return true;
+    }
 
     print(getTimeInFormat(requestModel.requestStart) +
         " <- Start   -> End " +
@@ -679,9 +608,4 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     });
   }
 
-  Future<void> fetchRemoteConfig() async {
-    AppConfig.remoteConfig = await RemoteConfig.instance;
-    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
-    AppConfig.remoteConfig.activateFetched();
-  }
 }

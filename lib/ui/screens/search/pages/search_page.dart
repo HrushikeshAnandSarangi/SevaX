@@ -20,10 +20,17 @@ import 'offers_tab_view.dart';
 class SearchPage extends StatefulWidget {
   final HomeDashBoardBloc bloc;
   final TimebankModel timebank;
+  final CommunityModel community;
+
   final UserModel user;
 
-  const SearchPage({Key key, this.bloc, this.timebank, this.user})
-      : super(key: key);
+  const SearchPage({
+    Key key,
+    this.bloc,
+    this.timebank,
+    this.community,
+    this.user,
+  }) : super(key: key);
   @override
   _ExplorePageState createState() => _ExplorePageState();
 }
@@ -37,7 +44,11 @@ class _ExplorePageState extends State<SearchPage>
 
   @override
   void initState() {
-    _bloc = SearchBloc(user: widget.user, timebank: widget.timebank);
+    _bloc = SearchBloc(
+      user: widget.user,
+      timebank: widget.timebank,
+      community: widget.community,
+    );
     _bloc.searchAfterDelay();
     _tabController = TabController(
       length: ExplorePageLabels.tabContent.length,

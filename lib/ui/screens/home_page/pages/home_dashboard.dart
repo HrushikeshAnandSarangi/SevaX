@@ -12,6 +12,7 @@ import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/messages/timebank_chats.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
@@ -25,24 +26,23 @@ import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
-class HomeDashBoard extends StatelessWidget {
-  HomeDashBoard();
+// class HomeDashBoard extends StatelessWidget {
+//   HomeDashBoard();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: HomeDashBoard(),
+//     );
+//   }
+// }
+
+class HomeDashBoard extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: MyHomePage(),
-    );
-  }
+  _HomeDashBoardState createState() => _HomeDashBoardState();
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage();
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+class _HomeDashBoardState extends State<HomeDashBoard>
+    with TickerProviderStateMixin {
   TabController controller;
   TabController manageController;
   TabController _timebankController;
@@ -58,15 +58,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
-        TabController(initialIndex: 0, length: 8, vsync: this);
+        TabController(initialIndex: 0, length: 9, vsync: this);
     tabs = [
       Tab(
           text:
               "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
-      Tab(text: "Feeds"),
+      Center(child: Tab(text: "Feeds")),
       Tab(text: "Projects"),
       Tab(text: "Requests"),
       Tab(text: "Offers"),
+      Tab(text: "Projects"),
       Tab(text: "About"),
       Tab(text: "Accepted Offers"),
       Tab(text: "Members")
@@ -165,10 +166,14 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => Builder(builder: (context) {
-                      return SearchPage(
-                        bloc: _homeDashBoardBloc,
-                        user: SevaCore.of(context).loggedInUser,
-                        timebank: primaryTimebank,
+                      return BlocProvider(
+                        bloc: _user,
+                        child: SearchPage(
+                          bloc: _homeDashBoardBloc,
+                          user: SevaCore.of(context).loggedInUser,
+                          timebank: primaryTimebank,
+                          community: selectedCommunity,
+                        ),
                       );
                     }),
                   ),
@@ -201,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               if (primaryTimebank != null &&
                   primaryTimebank.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
-                  tabs.length == 8) {
+                  tabs.length == 9) {
                 isAdmin = true;
                 _timebankController = TabController(length: 11, vsync: this);
 
@@ -250,6 +255,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         isFromSettings: false,
                       ),
                       OffersModule.of(
+                        timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
+                      ),
+                      ProjectRequests(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
                       ),
