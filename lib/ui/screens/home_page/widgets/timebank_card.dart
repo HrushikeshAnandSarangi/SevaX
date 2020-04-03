@@ -4,8 +4,9 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/views/timebank_content_holder.dart';
 
-import '../../timebank_content_holder.dart';
+
 
 class TimeBankCard extends StatelessWidget {
   final TimebankModel timebank;

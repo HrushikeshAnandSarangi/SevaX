@@ -28,6 +28,7 @@ class RequestModel extends DataModel {
   String root_timebank_id;
   Color color;
   bool isNotified = false;
+  String projectId = "";
 
   RequestMode requestMode;
 
@@ -54,11 +55,18 @@ class RequestModel extends DataModel {
     this.numberOfApprovals = 1,
     this.location,
     this.root_timebank_id,
+    this.projectId,
   });
 
   RequestModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('id')) {
       this.id = map['id'];
+    }
+
+    if(map.containsKey('projectId')){
+      this.projectId = map['projectId'];
+    }else{
+      this.projectId = "";
     }
 
     if (map.containsKey('requestMode')) {
@@ -176,11 +184,11 @@ class RequestModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
-
-    if (map.containsKey('no')) {
-      this.id = map['id'];
+    if(map.containsKey('projectId')){
+      this.projectId = map['projectId'];
+    }else{
+      this.projectId = "";
     }
-
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -282,6 +290,11 @@ class RequestModel extends DataModel {
       object['requestMode'] = "PERSONAL_REQUEST";
     }
 
+    if (this.projectId != null && this.projectId.isNotEmpty) {
+      object['projectId'] = this.projectId;
+    }else{
+      object['projectId'] = "";
+    }
     if (this.title != null && this.title.isNotEmpty) {
       object['title'] = this.title;
     }

@@ -100,10 +100,16 @@ class EmailAuthenticationService extends BaseService {
 
     FirebaseUser user;
     try {
-      user = (await _firebaseAuth.signInWithEmailAndPassword(
+//      user = (await _firebaseAuth.signInWithEmailAndPassword(
+//        email: email,
+//        password: password,
+//      )) as FirebaseUser;
+
+      AuthResult authResult = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      )) as FirebaseUser;
+      );
+      user = authResult.user;
     } on PlatformException catch (error) {
       log.e('loginWithEmailAndPassword: Exception { ${error.toString()} }');
       throw error;

@@ -432,45 +432,7 @@ class _ProfilePageState extends State<ProfilePage>
                         //     ),
                         //   ),
                         // ),
-//                        SizedBox(height: 10),
-//                        RichText(
-//                          textAlign: TextAlign.center,
-//                          text: TextSpan(
-//                            children: [
-//                              // TextSpan(
-//                              //   text: 'or \n\n',
-//                              //   style: TextStyle(
-//                              //     color: Colors.black,
-//                              //   ),
-//                              // ),
-//                              TextSpan(
-//                                text: 'Discover more Timebanks',
-//                                style: TextStyle(
-//                                  color: Colors.grey,
-//                                  fontWeight: FontWeight.bold,
-//                                  decoration: TextDecoration.underline,
-//                                ),
-//                                recognizer: TapGestureRecognizer()
-//                                  ..onTap = () {
-//                                    //Navigate to discover teams
-//                                    Navigator.of(context).push(
-//                                      MaterialPageRoute(
-//                                        builder: (context) {
-//                                          return FindCommunitiesView(
-//                                            keepOnBackPress: true,
-//                                            loggedInUser: SevaCore.of(context)
-//                                                .loggedInUser,
-//                                            showBackBtn: true,
-//                                            isFromHome: false,
-//                                          );
-//                                        },
-//                                      ),
-//                                    );
-//                                  },
-//                              ),
-//                            ],
-//                          ),
-//                        ),
+
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {

@@ -21,7 +21,7 @@ class TimebankModel extends DataModel {
   String communityId;
   String rootTimebankId;
   List<String> children;
-  double balance;
+  num balance;
   GeoFirePoint location;
 
   // CompareToTimeBank joinStatus;
@@ -53,7 +53,7 @@ class TimebankModel extends DataModel {
         map.containsKey("root_timebank_id") ? map["root_timebank_id"] : '';
     this.children =
         map.containsKey("children") ? List.castFrom(map['children']) : [];
-    this.balance = map.containsKey("balance") ? map["balance"] : 0;
+    this.balance = map.containsKey("balance") ? map["balance"] : 0.0;
     this.location = getLocation(map);
 
     // joinStatus = CompareToTimeBank.JOIN;
@@ -63,9 +63,16 @@ class TimebankModel extends DataModel {
     if (map.containsKey("location") &&
         map["location"] != null &&
         map['location']['geopoint'] != null) {
-      GeoPoint geoPoint = map['location']['geopoint'];
-      geoFirePoint = Geoflutterfire()
-          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      if (map['location']['geopoint'] is GeoPoint) {
+        GeoPoint geoPoint = map['location']['geopoint'];
+        geoFirePoint = Geoflutterfire()
+            .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      } else {
+        geoFirePoint = GeoFirePoint(
+          map["location"]["geopoint"]["_latitude"],
+          map["location"]["geopoint"]["_longitude"],
+        );
+      }
     } else {
       geoFirePoint = GeoFirePoint(40.754387, -73.984291);
     }
@@ -124,7 +131,7 @@ class TimebankModel extends DataModel {
     if (key == 'balance') {
       this.balance = value;
     }
-    if (key == 'community_id'){
+    if (key == 'community_id') {
       this.communityId = value;
     }
   }
@@ -132,9 +139,19 @@ class TimebankModel extends DataModel {
   factory TimebankModel.fromMap(Map<String, dynamic> json) {
     TimebankModel timebankModel = new TimebankModel(json);
     if (json.containsKey('location')) {
-      GeoPoint geoPoint = json['location']['geopoint'];
-      timebankModel.location = Geoflutterfire()
-          .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      if (json['location']['geopoint'] is GeoPoint) {
+        GeoPoint geoPoint = json['location']['geopoint'];
+        timebankModel.location = Geoflutterfire()
+            .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      } else {
+        timebankModel.location = GeoFirePoint(
+          json["location"]["geopoint"]["_latitude"],
+          json["location"]["geopoint"]["_longitude"],
+        );
+        // GeoPoint geoPoint = json['location']['geopoint'];
+        // timebankModel.location = Geoflutterfire()
+        //     .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      }
     }
     return timebankModel;
   }
@@ -177,8 +194,6 @@ class TimebankModel extends DataModel {
   String toString() {
     return 'TimebankModel{id: $id, name: $name, missionStatement: $missionStatement, emailId: $emailId, phoneNumber: $phoneNumber, address: $address, creatorId: $creatorId, photoUrl: $photoUrl, createdAt: $createdAt, admins: $admins, coordinators: $coordinators, members: $members, protected: $protected, parentTimebankId: $parentTimebankId, communityId: $communityId, rootTimebankId: $rootTimebankId, children: $children, balance: $balance, location: $location}';
   }
-
-
 }
 
 class Member extends DataModel {

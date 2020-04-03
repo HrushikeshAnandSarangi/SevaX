@@ -340,7 +340,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    initialValue: timebankModel.missionStatement,
+                    initialValue: timebankModel.missionStatement ?? "",
                     onChanged: (value) {
                       timebankModel.missionStatement = value;
                       communityModel.about = value;

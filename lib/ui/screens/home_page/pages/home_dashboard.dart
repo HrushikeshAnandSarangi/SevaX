@@ -1,15 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/models/chat_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
+import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
+import 'package:sevaexchange/views/messages/timebank_chats.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
+import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
@@ -21,28 +26,23 @@ import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 
-import 'messages/timebank_chats.dart';
-// import 'package:sevaexchange/views/timebanks/timebank_notification_view.dart';
-// import 'package:sevaexchange/views/timebanks/admin_notification_view.dart';
+// class HomeDashBoard extends StatelessWidget {
+//   HomeDashBoard();
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: HomeDashBoard(),
+//     );
+//   }
+// }
 
-class HomeDashBoard extends StatelessWidget {
-  HomeDashBoard();
+class HomeDashBoard extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: MyHomePage(),
-    );
-  }
+  _HomeDashBoardState createState() => _HomeDashBoardState();
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage();
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+class _HomeDashBoardState extends State<HomeDashBoard>
+    with TickerProviderStateMixin {
   TabController controller;
   TabController manageController;
   TabController _timebankController;
@@ -58,14 +58,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
-        TabController(initialIndex: 0, length: 7, vsync: this);
+        TabController(initialIndex: 0, length: 9, vsync: this);
     tabs = [
       Tab(
           text:
               "${selectedCommunity != null ? selectedCommunity.name : ''} Timebank"),
-      Tab(text: "Feeds"),
+      Center(child: Tab(text: "Feeds")),
+      Tab(text: "Projects"),
       Tab(text: "Requests"),
       Tab(text: "Offers"),
+      Tab(text: "Projects"),
       Tab(text: "About"),
       Tab(text: "Accepted Offers"),
       Tab(text: "Members")
@@ -97,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // final _user = BlocProvider.of<UserDataBloc>(context);
+    final _user = BlocProvider.of<UserDataBloc>(context);
     // print("user bloc ${_user.user.email}");
 
     return BlocProvider(
@@ -105,52 +107,84 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          centerTitle: true,
+          centerTitle: false,
           title: StreamBuilder<List<CommunityModel>>(
             stream: _homeDashBoardBloc.communities,
             builder: (context, snapshot) {
               setCurrentCommunity(snapshot.data);
               return snapshot.data != null
-                  ? DropdownButtonHideUnderline(
-                      child: DropdownButton<CommunityModel>(
-                      value: selectedCommunity,
-                      onChanged: (v) {
-                        if (v.id != selectedCommunity.id) {
-                          SevaCore.of(context).loggedInUser.currentCommunity =
-                              v.id;
-                          _homeDashBoardBloc
-                              .setDefaultCommunity(
-                            context: context,
-                            community: v,
-                            //oldCommunityId: selectedCommunity.id,
-                          )
-                              .then((_) {
-                            SevaCore.of(context).loggedInUser.currentCommunity =
-                                v.id;
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SwitchTimebank(),
+                  ? Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: Theme.of(context).primaryColor,
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<CommunityModel>(
+                          style: TextStyle(color: Colors.white),
+                          focusColor: Colors.white,
+                          iconEnabledColor: Colors.white,
+                          value: selectedCommunity,
+                          onChanged: (v) {
+                            if (v.id != selectedCommunity.id) {
+                              SevaCore.of(context)
+                                  .loggedInUser
+                                  .currentCommunity = v.id;
+                              _homeDashBoardBloc
+                                  .setDefaultCommunity(
+                                context: context,
+                                community: v,
+                                //oldCommunityId: selectedCommunity.id,
+                              )
+                                  .then((_) {
+                                SevaCore.of(context)
+                                    .loggedInUser
+                                    .currentCommunity = v.id;
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SwitchTimebank(),
+                                  ),
+                                );
+                              });
+                            }
+                          },
+                          items: List.generate(
+                            snapshot.data.length,
+                            (index) => DropdownMenuItem(
+                              value: snapshot.data[index],
+                              child: Text(
+                                snapshot.data[index].name,
+                                style: TextStyle(fontSize: 18),
                               ),
-                            );
-                          });
-                        }
-                      },
-                      items: List.generate(
-                        snapshot.data.length,
-                        (index) => DropdownMenuItem(
-                          value: snapshot.data[index],
-                          child: Text(
-                            snapshot.data[index].name,
-                            style: TextStyle(fontSize: 18),
+                            ),
                           ),
                         ),
                       ),
-                    ))
+                    )
                   : Text('Loading');
             },
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Builder(builder: (context) {
+                      return BlocProvider(
+                        bloc: _user,
+                        child: SearchPage(
+                          bloc: _homeDashBoardBloc,
+                          user: SevaCore.of(context).loggedInUser,
+                          timebank: primaryTimebank,
+                          community: selectedCommunity,
+                        ),
+                      );
+                    }),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: StreamBuilder<SelectedCommuntityGroup>(
           stream: _homeDashBoardBloc
@@ -176,9 +210,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               if (primaryTimebank != null &&
                   primaryTimebank.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
-                  tabs.length == 7) {
+                  tabs.length == 9) {
                 isAdmin = true;
-                _timebankController = TabController(length: 10, vsync: this);
+                _timebankController = TabController(length: 12, vsync: this);
 
                 tabs.add(Tab(text: 'Manage'));
                 tabs.add(
@@ -197,26 +231,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             return Column(
               children: <Widget>[
                 ShowLimitBadge(),
-//                 Consumer<TransactionConfig>(
-//                   builder: (context, transConfig, child) {
-//                     print(
-//                         "$context ${transConfig.currentTransactionCount} $child");
-//                     return Offstage(
-// //                      offstage: transactionConfig.currentTransactionCount <
-// //                          AppConfig.maxTransactionLimit,
-//                       child: Container(
-//                         width: MediaQuery.of(context).size.width,
-//                         alignment: Alignment.center,
-//                         color: Colors.red,
-//                         height: 30,
-//                         child: Text(
-//                           'Transaction Limit Reached',
-//                           style: TextStyle(color: Colors.white),
-//                         ),
-//                       ),
-//                     );
-//                   },
-//                 ),
                 TabBar(
                   controller: _timebankController,
                   indicatorColor: Colors.black,
@@ -234,6 +248,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       DiscussionList(
                         timebankId: primaryTimebank.id,
                       ),
+                      TimeBankProjectsView(
+                        timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
+                      ),
                       // TimebankFeeds(),
                       RequestsModule.of(
                         timebankId: primaryTimebank.id,
@@ -241,6 +259,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         isFromSettings: false,
                       ),
                       OffersModule.of(
+                        timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
+                      ),
+                      ProjectRequests(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
                       ),

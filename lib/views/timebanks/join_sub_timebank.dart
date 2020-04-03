@@ -14,6 +14,7 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -128,12 +129,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
     return FutureBuilder<List<TimebankModel>>(
-        future: getTimebanksForCommunity(
-          communityId: widget.communityId,
-          primaryTimebankId: widget.communityPrimaryTimebankId,
-        ),
+        future: getSubTimebanksForUserStream(
+            communityId: widget.loggedInUserModel.currentCommunity,
+            primaryTimebankId: widget.communityPrimaryTimebankId,
+            ),
         builder: (context, snapshot) {
-          print('timee${snapshot.data}');
+          print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -151,6 +152,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           timebankList = snapshot.data;
           timebankList.forEach((t) {
             dropdownList.add(t.id);
+            print('timee  banks  ${t}');
           });
 
           // Navigator.pop(context);
@@ -315,7 +317,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                               notification.timebankId =
                                   FlavorConfig.values.timebankId;
                               //  print('creator id ${notification.timebankId}');
-                              
+
                               UserModel timebankCreator =
                                   await FirestoreManager.getUserForId(
                                       sevaUserId: timebank.creatorId);
