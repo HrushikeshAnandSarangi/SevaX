@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
+
+import '../../flavor_config.dart';
 
 class ProjectRequests extends StatefulWidget {
   final String timebankId;
-  ProjectRequests({@required this.timebankId});
+  final ProjectModel projectModel;
+  ProjectRequests({@required this.timebankId, this.projectModel});
   State<StatefulWidget> createState() {
     return RequestsState();
   }
@@ -42,6 +46,8 @@ class RequestsState extends State<ProjectRequests> {
   }
 
   Widget get requestStatusBar {
+    int total = widget.projectModel.pendingRequests.length +
+        widget.projectModel.completedRequests.length;
     return Container(
       height: 75,
       width: MediaQuery.of(context).size.width,
@@ -52,9 +58,16 @@ class RequestsState extends State<ProjectRequests> {
         children: <Widget>[
           Row(
             children: <Widget>[
-              setTitle(num: '10', title: 'Requests'),
-              setTitle(num: '3', title: 'Pending'),
-              setTitle(num: '7', title: 'Completed'),
+              setTitle(num: total.toString() ?? "", title: 'Requests'),
+              setTitle(
+                  num: widget.projectModel.pendingRequests.length.toString() ??
+                      "",
+                  title: 'Pending'),
+              setTitle(
+                  num:
+                      widget.projectModel.completedRequests.length.toString() ??
+                          "",
+                  title: 'Completed'),
             ],
           ),
         ],
@@ -250,10 +263,9 @@ class RequestsState extends State<ProjectRequests> {
               ),
               GestureDetector(
                 child: Container(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 10,
-                    child: Image.asset("lib/assets/images/add.png"),
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    color: FlavorConfig.values.theme.primaryColor,
                   ),
                 ),
                 onTap: () {},
