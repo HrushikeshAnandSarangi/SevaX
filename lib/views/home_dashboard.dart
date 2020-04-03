@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/home_page/timebank_home_page.dart';
+import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
@@ -58,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
-        TabController(initialIndex: 0, length: 7, vsync: this);
+        TabController(initialIndex: 0, length: 8, vsync: this);
     tabs = [
       Tab(
           text:
@@ -66,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       Tab(text: "Feeds"),
       Tab(text: "Requests"),
       Tab(text: "Offers"),
+      Tab(text: "Projects"),
       Tab(text: "About"),
       Tab(text: "Accepted Offers"),
       Tab(text: "Members")
@@ -237,6 +239,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         isFromSettings: false,
                       ),
                       OffersModule.of(
+                        timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
+                      ),
+                      ProjectRequests(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
                       ),

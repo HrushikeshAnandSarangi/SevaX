@@ -38,7 +38,7 @@ class _EditRequestState extends State<EditRequest> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          "Edit Request",
+          title,
           style: TextStyle(fontSize: 18),
         ),
         centerTitle: false,
@@ -50,6 +50,12 @@ class _EditRequestState extends State<EditRequest> {
         timebankId: widget.timebankId,
       ),
     );
+  }
+  String get title {
+    if(widget.requestModel.projectId == null || widget.requestModel.projectId == "" || widget.requestModel.projectId.isEmpty){
+      return "Edit Request";
+    }
+    return "Edit Project Request";
   }
 }
 

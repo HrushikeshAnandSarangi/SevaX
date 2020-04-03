@@ -298,6 +298,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                                 offer: model,
                                 timebankId: timebankId,
                                 userModel: userModel,
+                                projectId: "",
                               ),
                             ),
                           );
