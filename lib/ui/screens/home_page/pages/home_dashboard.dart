@@ -89,6 +89,10 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       data.forEach((model) {
         if (model.id == SevaCore.of(context).loggedInUser.currentCommunity) {
           selectedCommunity = model;
+          SevaCore.of(context).loggedInUser.currentTimebank =
+              model.primary_timebank;
+          SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+              model.timebanks.length;
         }
       });
   }
@@ -208,7 +212,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
                   tabs.length == 9) {
                 isAdmin = true;
-                _timebankController = TabController(length: 11, vsync: this);
+                _timebankController = TabController(length: 12, vsync: this);
 
                 tabs.add(Tab(text: 'Manage'));
                 tabs.add(
