@@ -130,9 +130,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     List<TimebankModel> timebankList = [];
     return FutureBuilder<List<TimebankModel>>(
         future: getSubTimebanksForUserStream(
-            communityId: widget.loggedInUserModel.currentCommunity,
-            primaryTimebankId: widget.communityPrimaryTimebankId,
-            ),
+          communityId: widget.loggedInUserModel.currentCommunity,
+        ),
         builder: (context, snapshot) {
           print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
