@@ -52,7 +52,7 @@ class Searches {
     @required UserModel loggedInUser,
     @required CommunityModel currentCommunityOfUser
   }) async* {
-   List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+   List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
 
     String url = baseURL + '/newsfeed/_doc/_search';
     dynamic body = json.encode(
@@ -125,7 +125,7 @@ class Searches {
     @required loggedInUser,
     @required CommunityModel currentCommunityOfUser
   }) async* {
-    List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/offers/offer/_search';
     dynamic body = json.encode(
       {
@@ -187,7 +187,7 @@ class Searches {
 //    @required loggedInUser,
 //    @required CommunityModel currentCommunityOfUser
 //  }) async* {
-//  List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+//  List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
 //    String url = baseURL + '/sevaxprojects/_doc/_search';
 //    dynamic body = json.encode(
 //      {
@@ -239,7 +239,7 @@ class Searches {
     @required loggedInUser,
     @required CommunityModel currentCommunityOfUser
   }) async* {
-    List<TimebankModel> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/requests/request/_search';
     dynamic body = json.encode(
       {
@@ -397,8 +397,8 @@ class Searches {
 
 
 
-  static List<TimebankModel> getTimebanksAndGroupsOfUser(timebanksOfCommunity, timebanksOfUser){
-      List<TimebankModel> timebankarr = new List();
+  static List<String> getTimebanksAndGroupsOfUser(timebanksOfCommunity, timebanksOfUser){
+      List<String> timebankarr = new List();
       timebanksOfCommunity.forEach( (tb) {
         if(timebanksOfUser.contains(tb)){
           timebankarr.add(tb);
