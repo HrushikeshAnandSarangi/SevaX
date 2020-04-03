@@ -305,6 +305,31 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     }),
                 SizedBox(height: 20),
                 Text(
+                  'No. of hours *',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.grey,
+                  ),
+                ),
+                TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'No. of hours required',
+                      hintStyle: textStyle,
+                      // labelText: 'No. of volunteers',
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter the number of hours required';
+                      } else {
+                        requestModel.numberOfHours = int.parse(value);
+                        return null;
+                      }
+                    }),
+                SizedBox(height: 20),
+                Text(
                   'No. of volunteers*',
                   style: TextStyle(
                     fontSize: 16,
@@ -685,24 +710,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
     AppConfig.remoteConfig.activateFetched();
   }
-
-  void get _fetchCurrentlocation {
-    Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
-    });
-  }
-
     void showDialogForTitle({String dialogTitle}) {
       showDialog(
           context: context,
@@ -725,4 +732,21 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             );
           });
     }
+
+  void get _fetchCurrentlocation {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
+  }
 }
