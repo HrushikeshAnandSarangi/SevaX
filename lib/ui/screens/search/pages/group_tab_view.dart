@@ -52,31 +52,26 @@ class _GroupTabViewState extends State<GroupTabView> {
                         ],
                       );
                     }
-                    return ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      shrinkWrap: true,
+
+                    print("snapshot ==> ${snapshot.data.length}");
+
+                    return ListView.separated(
+                      padding: EdgeInsets.symmetric(vertical: 10),
                       physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                       itemCount: snapshot.data.length,
                       itemBuilder: (context, index) {
                         final group = snapshot.data[index];
-                        return ListView.separated(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            return GroupCard(
-                              image: group.photoUrl ?? "",
-                              title: group.name,
-                              subtitle: group.missionStatement,
-                              onPressed: () {},
-                            );
-                          },
-                          separatorBuilder: (context, index) {
-                            return Divider(
-                              thickness: 2,
-                            );
-                          },
+                        return GroupCard(
+                          image: group.photoUrl ?? "",
+                          title: group.name,
+                          subtitle: group.missionStatement,
+                          onPressed: () {},
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          thickness: 2,
                         );
                       },
                     );
