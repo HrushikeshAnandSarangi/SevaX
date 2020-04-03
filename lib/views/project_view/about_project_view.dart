@@ -7,6 +7,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/profile/review_earnings.dart';
+import 'package:timeago/timeago.dart' as timeAgo;
 
 import 'create_edit_project.dart';
 
@@ -157,6 +158,19 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                       ),
                       SizedBox(width: 10),
                       Text(user.fullname ?? ""),
+                      SizedBox(width: 30),
+                      Text(
+                        timeAgo
+                            .format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  projectModel.createdAt),
+                            )
+                            .replaceAll('hours ago', 'h'),
+                        style: TextStyle(
+                          fontFamily: 'Europa',
+                          color: Colors.black38,
+                        ),
+                      )
                     ],
                   ),
                 ],
