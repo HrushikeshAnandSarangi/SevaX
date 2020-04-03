@@ -275,6 +275,31 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 40),
                 Text(
+                  'No. of hours *',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Europa',
+                    color: Colors.grey,
+                  ),
+                ),
+                TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'No. of hours required',
+                      hintStyle: textStyle,
+                      // labelText: 'No. of volunteers',
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter the number of hours required';
+                      } else {
+                        requestModel.numberOfHours = int.parse(value);
+                        return null;
+                      }
+                    }),
+                SizedBox(height: 20),
+                Text(
                   'No. of volunteers*',
                   style: TextStyle(
                     fontSize: 16,
@@ -300,8 +325,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   },
                 ),
                 SizedBox(height: 40),
-                if (FlavorConfig.appFlavor != Flavor.APP)
-                  addVolunteersForAdmin(),
                 Center(
                   child: FlatButton.icon(
                     icon: Icon(Icons.add_location),
