@@ -67,19 +67,22 @@ class _CreateRequestState extends State<CreateRequest> {
               }
               if (snapshot.data != null) {
                 return RequestCreateForm(
-                    isOfferRequest: widget.isOfferRequest,
-                    offer: widget.offer,
-                    timebankId: widget.timebankId,
-                    userModel: widget.userModel,
-                    loggedInUser: snapshot.data.loggedinuser,
-                    projectId: widget.projectId,
+                  isOfferRequest: widget.isOfferRequest,
+                  offer: widget.offer,
+                  timebankId: widget.timebankId,
+                  userModel: widget.userModel,
+                  loggedInUser: snapshot.data.loggedinuser,
+                  projectId: widget.projectId,
                 );
               }
               return Text('');
             }));
   }
+
   String get _title {
-    if(widget.projectId == null || widget.projectId.isEmpty ||  widget.projectId == ""){
+    if (widget.projectId == null ||
+        widget.projectId.isEmpty ||
+        widget.projectId == "") {
       return "Create Request";
     }
     return "Create Project Request";
@@ -148,6 +151,23 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     print(location);
   }
 
+  void get _fetchCurrentlocation {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
+  }
+
   Future<void> fetchRemoteConfig() async {
     AppConfig.remoteConfig = await RemoteConfig.instance;
     AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
@@ -188,7 +208,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 requestSwitch,
-
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang gang request title"
@@ -331,8 +350,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
-  Widget get requestSwitch{
-    if(widget.projectId == null || widget.projectId.isEmpty ||  widget.projectId == ""){
+  Widget get requestSwitch {
+    if (widget.projectId == null ||
+        widget.projectId.isEmpty ||
+        widget.projectId == "") {
       return Container(
         margin: EdgeInsets.only(bottom: 20),
         width: double.infinity,
@@ -350,11 +371,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
               setState(() {
                 print("$sharedValue -- $val");
                 if (sharedValue == 0) {
-                  requestModel.requestMode =
-                      RequestMode.TIMEBANK_REQUEST;
+                  requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
-                  requestModel.requestMode =
-                      RequestMode.PERSONAL_REQUEST;
+                  requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                 }
                 sharedValue = val;
               });
@@ -366,7 +385,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
     return Container();
   }
-
 
   int sharedValue = 0;
 
@@ -384,7 +402,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
-
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
@@ -419,7 +436,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             SevaCore.of(context).loggedInUser.sevaUserID,
           );
 
-          print("Seva Coins $sevaCoinsValue -------------------------------------------");
+          print(
+              "Seva Coins $sevaCoinsValue -------------------------------------------");
 
           if (!hasSufficientBalance()) {
             showInsufficientBalance();
@@ -487,16 +505,15 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         });
   }
 
-  void showDialogForTitle({String dialogTitle}) {
+  Future<void> showDialogForTitle({String dialogTitle}) async {
     if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-        var timebankDetails = await FirestoreManager.getTimeBankForId(
-            timebankId: requestModel.timebankId);
-        requestModel.fullName = timebankDetails.name;
-        requestModel.photoUrl = timebankDetails.photoUrl;
-      }
+      var timebankDetails = await FirestoreManager.getTimeBankForId(
+          timebankId: requestModel.timebankId);
+      requestModel.fullName = timebankDetails.name;
+      requestModel.photoUrl = timebankDetails.photoUrl;
+    }
 
-      showDialog(
-
+    showDialog(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
@@ -595,7 +612,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
     }
     print("Project id : ${widget.projectId}");
-    if(widget.projectId != null && widget.projectId.isNotEmpty){
+    if (widget.projectId != null && widget.projectId.isNotEmpty) {
       requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
       print("Inside yes");
       return true;
@@ -648,11 +665,5 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     setState(() {
       this.selectedAddress = address;
     });
-  }
-
-  Future<void> fetchRemoteConfig() async {
-    AppConfig.remoteConfig = await RemoteConfig.instance;
-    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
-    AppConfig.remoteConfig.activateFetched();
   }
 }

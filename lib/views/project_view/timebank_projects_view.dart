@@ -209,7 +209,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             label: Container(
                               width: MediaQuery.of(context).size.width - 170,
                               child: Text(
-                                projectModel.address,
+                                projectModel.address ?? "",
                                 style: TextStyle(
                                   fontFamily: 'Europa',
                                   color: Colors.black,

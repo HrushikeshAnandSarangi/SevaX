@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
@@ -97,7 +98,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 
     print("Final arrray $members");
 
-    timebankModel.id = Utils.getUuid();
+    String id = Utils.getUuid();
+    timebankModel.id = id;
     timebankModel.communityId =
         SevaCore.of(context).loggedInUser.currentCommunity;
     timebankModel.creatorId = SevaCore.of(context).loggedInUser.sevaUserID;
@@ -116,6 +118,15 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         location == null ? GeoFirePoint(40.754387, -73.984291) : location;
 
     createTimebank(timebankModel: timebankModel);
+
+    Firestore.instance
+        .collection("communities")
+        .document(SevaCore.of(context).loggedInUser.currentCommunity)
+        .updateData(
+      {
+        "timebanks": FieldValue.arrayUnion([id]),
+      },
+    );
 
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
