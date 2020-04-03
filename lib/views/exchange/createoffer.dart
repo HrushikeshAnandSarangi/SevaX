@@ -71,7 +71,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String selectedAddress;
   String timebankId;
 
-  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
+  GeoFirePoint location;
 
   OfferType offerType;
   GroupOfferDataModel groupOfferDataModel;
@@ -85,6 +85,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     _selectedTimebankId = widget.timebankId;
     offerType = OfferType.INDIVIDUAL_OFFER;
     groupOfferDataModel = GroupOfferDataModel();
+    individualOfferDataModel = IndividualOfferDataModel();
 
     this.timebankId = _selectedTimebankId;
     if (FlavorConfig.appFlavor == Flavor.APP) {
@@ -93,9 +94,8 @@ class MyCustomFormState extends State<MyCustomForm> {
   }
 
   void _writeToDB({OfferModel model}) async {
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-
+    print("offer mdoel ----> ${model.toMap()}");
+    // return;
     await createOffer(offerModel: model);
   }
 
@@ -267,7 +267,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                           if (_formKey.currentState.validate()) {
                             if (location == null) {
                               showDialogForDate(
-                                  dialogTitle: "Please add location to your offer");
+                                  dialogTitle:
+                                      "Please add location to your offer");
                               return;
                             }
                             OfferModel model;
@@ -280,6 +281,7 @@ class MyCustomFormState extends State<MyCustomForm> {
                                 if (!isClassStartDateSelected()) {
                                   return;
                                 }
+                                print("--------------- $groupOfferDataModel");
                                 model = gatherGroupOffer();
                                 break;
                             }
@@ -536,7 +538,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       timestamp: DateTime.now().millisecondsSinceEpoch,
       location:
           location == null ? GeoFirePoint(40.754387, -73.984291) : location,
-      groupOfferDataModel: null,
+      groupOfferDataModel: GroupOfferDataModel(),
       individualOfferDataModel: individualOfferDataModel,
       offerType: OfferType.INDIVIDUAL_OFFER,
     );
@@ -549,6 +551,8 @@ class MyCustomFormState extends State<MyCustomForm> {
     groupOfferDataModel.startDate = OfferDurationWidgetState.starttimestamp;
     groupOfferDataModel.endDate = OfferDurationWidgetState.endtimestamp;
 
+    print("-----------------$groupOfferDataModel");
+
     return OfferModel(
       id: id,
       email: SevaCore.of(context).loggedInUser.email,
@@ -559,7 +563,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       location:
           location == null ? GeoFirePoint(40.754387, -73.984291) : location,
       groupOfferDataModel: groupOfferDataModel,
-      individualOfferDataModel: null,
+      individualOfferDataModel: IndividualOfferDataModel(),
       offerType: OfferType.GROUP_OFFER,
     );
   }

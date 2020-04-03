@@ -5,10 +5,7 @@ import 'package:sevaexchange/flavor_config.dart';
 
 import 'models.dart';
 
-enum OfferType {
-  INDIVIDUAL_OFFER,
-  GROUP_OFFER,
-}
+enum OfferType { INDIVIDUAL_OFFER, GROUP_OFFER }
 
 class GroupOfferDataModel {
   String classTitle;
@@ -19,6 +16,34 @@ class GroupOfferDataModel {
   String classDescription;
   List<String> signedUpMembers;
 
+  GroupOfferDataModel();
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+
+    if (this.classTitle != null) map['classTitle'] = this.classTitle;
+
+    if (this.startDate != null) map['startDate'] = this.startDate;
+
+    if (this.endDate != null) map['endDate'] = this.endDate;
+
+    if (this.numberOfPreperationHours != null)
+      map['numberOfPreperationHours'] = this.numberOfPreperationHours;
+
+    if (this.numberOfClassHours != null)
+      map['numberOfClassHours'] = this.numberOfClassHours;
+
+    if (this.classDescription != null)
+      map['classDescription'] = this.classDescription;
+
+    if (this.signedUpMembers != null)
+      map['signedUpMembers'] = this.signedUpMembers;
+
+    return map;
+  }
+
+  @override
   GroupOfferDataModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('classTitle')) {
       this.classTitle = map['classTitle'];
@@ -51,14 +76,23 @@ class GroupOfferDataModel {
       this.signedUpMembers = [];
     }
   }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "classTitle:$classTitle + classDescription:$classDescription + startDate:$startDate + endDate:$endDate + numberOfClassHours:$numberOfClassHours + numberOfPreperationHours:$numberOfPreperationHours";
+  }
 }
 
-class IndividualOfferDataModel {
+class IndividualOfferDataModel extends DataModel {
   String title;
   String description;
   String schedule;
   List<String> offerAcceptors;
 
+  IndividualOfferDataModel();
+
+  @override
   IndividualOfferDataModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('title')) {
       this.title = map['title'];
@@ -76,6 +110,29 @@ class IndividualOfferDataModel {
     } else {
       this.offerAcceptors = [];
     }
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+    if (title != null) {
+      map['title'] = title;
+    }
+
+    if (description != null) {
+      map['description'] = description;
+    }
+
+    if (schedule != null) {
+      map['schedule'] = schedule;
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "Title : $title,  Description : $description, Schedule  : $schedule";
   }
 }
 
@@ -107,6 +164,7 @@ class OfferModel extends DataModel {
     this.timestamp,
     this.timebankId,
     this.location,
+    this.offerType,
     this.groupOfferDataModel,
     this.individualOfferDataModel,
   }) {
@@ -162,13 +220,23 @@ class OfferModel extends DataModel {
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
+
+    if (map.containsKey("individualOfferDataModel"))
+      this.individualOfferDataModel =
+          IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
+    else
+      this.individualOfferDataModel = null;
+
+    if (map.containsKey("groupOfferDataModel"))
+      this.groupOfferDataModel =
+          GroupOfferDataModel.fromMap(map['groupOfferDataModel']);
+    else
+      this.groupOfferDataModel = null;
   }
 
   OfferModel.fromMap(Map<String, dynamic> map) {
     if (map.containsKey('offerType')) {
-      this.offerType = map['offerType'];
-
-      if (map['offerType'] == OfferType.GROUP_OFFER.toString()) {
+      if (map['offerType'] == describeOfferType(OfferType.GROUP_OFFER)) {
         this.offerType = OfferType.GROUP_OFFER;
       } else {
         this.offerType = OfferType.INDIVIDUAL_OFFER;
@@ -212,8 +280,14 @@ class OfferModel extends DataModel {
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {};
 
+    // print("+++++++++++++++++++++++ ${this.groupOfferDataModel}");
+    map['groupOfferDataModel'] = this.groupOfferDataModel.toMap() ?? null;
+
+    map['individualOfferDataModel'] =
+        this.individualOfferDataModel.toMap() ?? null;
+
     if (this.offerType != null) {
-      map['offerType'] = this.offerType.toString();
+      map['offerType'] = describeOfferType(this.offerType);
     }
 
     if (this.id != null && this.id.isNotEmpty) {
@@ -224,12 +298,6 @@ class OfferModel extends DataModel {
       map['root_timebank_id'] = this.root_timebank_id;
     }
 
-    // if (this.title != null && this.title.isNotEmpty) {
-    //   map['title'] = this.title;
-    // }
-    // if (this.description != null && this.description.isNotEmpty) {
-    //   map['description'] = this.description;
-    // }
     if (this.email != null && this.email.isNotEmpty) {
       map['email'] = this.email;
     }
@@ -244,9 +312,7 @@ class OfferModel extends DataModel {
     } else {
       map['assossiatedRequest'] = null;
     }
-    // if (this.schedule != null && this.schedule.isNotEmpty) {
-    //   map['schedule'] = this.schedule;
-    // }
+
     if (this.timestamp != null) {
       map['timestamp'] = this.timestamp;
     }
@@ -259,6 +325,12 @@ class OfferModel extends DataModel {
     }
 
     return map;
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "$groupOfferDataModel $individualOfferDataModel $id";
   }
 
   @override
@@ -307,5 +379,14 @@ class OfferModel extends DataModel {
     }
 
     return map;
+  }
+
+  String describeOfferType(OfferType offerType) {
+    switch (offerType) {
+      case OfferType.GROUP_OFFER:
+        return "GROUP_OFFER";
+      case OfferType.INDIVIDUAL_OFFER:
+        return "INDIVIDUAL_OFFER";
+    }
   }
 }
