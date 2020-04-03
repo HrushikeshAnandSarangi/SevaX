@@ -9,8 +9,12 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:usage/uuid/uuid.dart';
 import 'package:intl/intl.dart';
+import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
 import '../core.dart';
+import '../onboarding/findcommunitiesview.dart';
+import '../project_view/about_project_view.dart';
+import '../timebanks/join_sub_timebank.dart';
 
 class ProjectRequests extends StatefulWidget {
   String timebankId;
@@ -24,9 +28,14 @@ class ProjectRequests extends StatefulWidget {
 
 // Create a Form Widget
 
-class RequestsState extends State<ProjectRequests> {
+class RequestsState extends State<ProjectRequests> with SingleTickerProviderStateMixin {
   UserModel user = null;
-  List<TimebankModel> timebankList = [];
+  TabController tabController;
+  @override
+  void initState() {
+    super.initState();
+    tabController = new TabController(length: 2, vsync: this);
+  }
 
   @override
   void didChangeDependencies() {
@@ -42,31 +51,64 @@ class RequestsState extends State<ProjectRequests> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0.5,
-        title: Column(
-          children: <Widget>[
-            Text(
-              'Requests',
+
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            elevation: 0.5,
+            title: Text(
+              '${widget.projectModel.name}',
               style: TextStyle(
                 fontSize: 20,
               ),
             ),
-          ],
-        ),
-      ),
-      body: Column(
-        children: <Widget>[
-          requestStatusBar,
-          addRequest,
-          Container(
-            height: 10,
           ),
-          allRequests,
-        ],
-      ),
+          backgroundColor: Colors.white,
+          body: Column(
+            children: <Widget>[
+              Container(
+                constraints: BoxConstraints(maxHeight: 150.0),
+                child: Material(
+                  color: Theme.of(context).primaryColor,
+                  child: TabBar(
+                    indicatorColor: Theme.of(context).accentColor,
+                    labelColor: Colors.white,
+                    isScrollable: false,
+                    tabs: <Widget>[
+                      Tab(text: "Requests"),
+                      Tab(text: "About"),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    requestBody,
+                    AboutProjectView(
+                      project_id: widget.projectModel.id,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+    );
+  }
+
+  Widget get requestBody {
+    return Column(
+      children: <Widget>[
+        requestStatusBar,
+        addRequest,
+        Container(
+          height: 10,
+        ),
+        allRequests,
+      ],
     );
   }
 
@@ -83,6 +125,7 @@ class RequestsState extends State<ProjectRequests> {
                   timebankId: widget.timebankId,
                   timebankModel: widget.timebankModel,
                   isProjectRequest: true,
+                  projectId: widget.projectModel.id,
               ),
             ],
           ),
@@ -92,7 +135,6 @@ class RequestsState extends State<ProjectRequests> {
   }
 
   Widget get requestStatusBar {
-
     return Container(
       height: 75,
       width: MediaQuery.of(context).size.width,
@@ -390,11 +432,11 @@ class RequestsState extends State<ProjectRequests> {
   }
 
   void createProjectRequest () async{
+    var sevaUserId = SevaCore.of(context)
+        .loggedInUser
+        .sevaUserID;
     if (widget.timebankModel.protected) {
-      if (widget.timebankModel.admins.contains(
-          SevaCore.of(context)
-              .loggedInUser
-              .sevaUserID)) {
+      if (widget.timebankModel.admins.contains(sevaUserId)) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -404,9 +446,9 @@ class RequestsState extends State<ProjectRequests> {
             ),
           ),
         );
-        return;
+      } else {
+        _showProtectedTimebankMessage();
       }
-      _showProtectedTimebankMessage();
     } else {
       Navigator.push(
         context,
@@ -479,7 +521,10 @@ class RequestsState extends State<ProjectRequests> {
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 10,
-                    child: Image.asset("lib/assets/images/add.png"),
+                    child: Icon(
+                      Icons.add_circle_outline,
+                      color: FlavorConfig.values.theme.primaryColor,
+                    ),
                   ),
                 ),
                 onTap: () => createProjectRequest(),

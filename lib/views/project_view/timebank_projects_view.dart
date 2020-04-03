@@ -186,6 +186,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 builder: (context) => ProjectRequests(
                   timebankId: widget.timebankId,
                   projectModel: projectModel,
+                  timebankModel:widget.timebankModel,
                 ),
               ),
             );

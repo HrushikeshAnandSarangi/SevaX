@@ -869,6 +869,7 @@ class NearRequestListItems extends StatelessWidget {
 
 class RequestListItems extends StatefulWidget {
   final String timebankId;
+  String projectId;
   final BuildContext parentContext;
   final TimebankModel timebankModel;
   bool isProjectRequest = false;
@@ -880,7 +881,8 @@ class RequestListItems extends StatefulWidget {
       this.parentContext,
       this.timebankModel,
       this.isAdmin,
-      this.isProjectRequest});
+      this.isProjectRequest,
+      this.projectId});
 
   @override
   State<StatefulWidget> createState() {
@@ -937,9 +939,11 @@ class RequestListItemsState extends State<RequestListItems> {
                             requestModelList,
                             SevaCore.of(context).loggedInUser.sevaUserID);
                     return formatListFrom(
-                        consolidatedList: consolidatedList,
-                        loggedintimezone: loggedintimezone,
-                        userEmail: SevaCore.of(context).loggedInUser.email);
+                      consolidatedList: consolidatedList,
+                      loggedintimezone: loggedintimezone,
+                      userEmail: SevaCore.of(context).loggedInUser.email,
+                      projectId: widget.projectId,
+                    );
                   } else if (snapshot.hasError) {
                     return Text(snapshot.error.toString());
                   }
@@ -985,7 +989,10 @@ class RequestListItemsState extends State<RequestListItems> {
                         GroupRequestCommons.groupAndConsolidateRequests(
                             requestModelList,
                             SevaCore.of(context).loggedInUser.sevaUserID);
-                    return formatListFrom(consolidatedList: consolidatedList);
+                    return formatListFrom(
+                        consolidatedList: consolidatedList,
+                        projectId: widget.projectId,
+                    );
                 }
               },
             );
@@ -1018,7 +1025,8 @@ class RequestListItemsState extends State<RequestListItems> {
   Widget formatListFrom(
       {List<RequestModelList> consolidatedList,
       String loggedintimezone,
-      String userEmail}) {
+      String userEmail,
+      String projectId}) {
     return Expanded(
       child: Container(
           child: ListView.builder(
@@ -1235,6 +1243,9 @@ class RequestListItemsState extends State<RequestListItems> {
     BuildContext context,
     String address
   }){
+    if(model.projectId != widget.projectId){
+      return Container();
+    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -1298,21 +1309,16 @@ class RequestListItemsState extends State<RequestListItems> {
                   margin: EdgeInsets.only(right: 10,left: 10),
                   child: Row(
                     children: <Widget>[
-                      InkWell(
-                        onTap: (){
-
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(5),
-                          height: 40,
-                          width: 40,
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              '${model.photoUrl}',
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        height: 40,
+                        width: 40,
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            '${model.photoUrl}',
 //                              'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
-                            ),
-                            minRadius: 40.0,
                           ),
+                          minRadius: 40.0,
                         ),
                       ),
                       Container(
