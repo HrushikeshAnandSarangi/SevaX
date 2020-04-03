@@ -89,6 +89,10 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       data.forEach((model) {
         if (model.id == SevaCore.of(context).loggedInUser.currentCommunity) {
           selectedCommunity = model;
+          SevaCore.of(context).loggedInUser.currentTimebank =
+              model.primary_timebank;
+          SevaCore.of(context).loggedInUser.associatedWithTimebanks =
+              model.timebanks.length;
         }
       });
   }

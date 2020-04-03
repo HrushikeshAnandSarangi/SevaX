@@ -8,7 +8,6 @@ import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/project_request/project_requests.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';

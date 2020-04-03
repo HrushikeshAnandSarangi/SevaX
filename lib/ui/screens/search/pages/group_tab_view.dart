@@ -66,7 +66,7 @@ class _GroupTabViewState extends State<GroupTabView> {
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return GroupCard(
-                              image: group.photoUrl,
+                              image: group.photoUrl ?? "",
                               title: group.name,
                               subtitle: group.missionStatement,
                               onPressed: () {},
