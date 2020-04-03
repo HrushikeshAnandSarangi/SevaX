@@ -9,12 +9,14 @@ import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:usage/uuid/uuid.dart';
 import 'package:intl/intl.dart';
+import '../../new_baseline/models/project_model.dart';
 import '../core.dart';
 
 class ProjectRequests extends StatefulWidget {
   String timebankId;
   final TimebankModel timebankModel;
-  ProjectRequests({@required this.timebankId,@required this.timebankModel});
+  final ProjectModel projectModel;
+  ProjectRequests({@required this.timebankId,@required this.projectModel,@required this.timebankModel});
   State<StatefulWidget> createState() {
     return RequestsState();
   }
@@ -388,9 +390,6 @@ class RequestsState extends State<ProjectRequests> {
   }
 
   void createProjectRequest () async{
-    var uuid = new Uuid();
-    var projectId = uuid.generateV4();
-    print("Project_id:${projectId}");
     if (widget.timebankModel.protected) {
       if (widget.timebankModel.admins.contains(
           SevaCore.of(context)
@@ -401,7 +400,7 @@ class RequestsState extends State<ProjectRequests> {
           MaterialPageRoute(
             builder: (context) => CreateRequest(
               timebankId: widget.timebankModel.id,
-              projectId: "$projectId",
+              projectId: widget.projectModel.id,
             ),
           ),
         );
@@ -414,7 +413,7 @@ class RequestsState extends State<ProjectRequests> {
         MaterialPageRoute(
           builder: (context) => CreateRequest(
             timebankId: widget.timebankModel.id,
-            projectId: "$projectId",
+            projectId: widget.projectModel.id,
           ),
         ),
       );
