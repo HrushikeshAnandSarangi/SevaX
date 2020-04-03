@@ -19,8 +19,9 @@ class UserProfileBloc {
   StreamSink<bool> get changeCommunity => _communityLoaded.sink;
 
   void getAllCommunities(context, UserModel userModel) async {
+
     FirestoreManager.getUserForIdStream(
-      sevaUserId: userModel.sevaUserID,
+      sevaUserId: userModel.sevaUserID == null ? "" : userModel.sevaUserID,
     ).listen((userModel) {
       if (userModel.communities != null) {
         List<Widget> community = [];

@@ -5,11 +5,11 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
-import 'package:sevaexchange/views/project_request/project_requests.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
 import '../core.dart';
+import '../requests/project_request.dart';
 
 class TimeBankProjectsView extends StatefulWidget {
   final String timebankId;
@@ -186,6 +186,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 builder: (context) => ProjectRequests(
                   timebankId: widget.timebankId,
                   projectModel: projectModel,
+                  timebankModel:widget.timebankModel,
                 ),
               ),
             );
