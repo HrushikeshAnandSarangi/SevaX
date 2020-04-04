@@ -47,6 +47,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     if (!widget.isCreateProject) {
       getData();
     }
+    setState(() {});
   }
 
   void getData() async {

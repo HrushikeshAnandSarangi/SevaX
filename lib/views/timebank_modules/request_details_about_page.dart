@@ -19,12 +19,14 @@ class RequestDetailsAboutPage extends StatefulWidget {
   final TimebankModel timebankModel;
   final bool applied;
   final bool isAdmin;
+  final String project_id;
   RequestDetailsAboutPage({
     Key key,
     this.applied = false,
     this.requestItem,
     this.timebankModel,
     this.isAdmin,
+    this.project_id,
   }) : super(key: key);
 
   @override
@@ -54,7 +56,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   void initState() {
     super.initState();
     print("fullname ${widget.requestItem.fullName}");
-
   }
 
   @override

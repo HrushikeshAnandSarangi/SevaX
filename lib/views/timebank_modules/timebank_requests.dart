@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
@@ -14,7 +13,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
-import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -294,7 +292,7 @@ class RequestsState extends State<RequestsModule> {
                   timebankId: timebankId,
                   timebankModel: widget.timebankModel,
                   isProjectRequest: false,
-          )
+                )
         ],
       ),
     );
@@ -975,6 +973,8 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
+                    requestModelList
+                        .removeWhere((request) => request.projectId != null);
 
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
@@ -990,8 +990,8 @@ class RequestListItemsState extends State<RequestListItems> {
                             requestModelList,
                             SevaCore.of(context).loggedInUser.sevaUserID);
                     return formatListFrom(
-                        consolidatedList: consolidatedList,
-                        projectId: widget.projectId,
+                      consolidatedList: consolidatedList,
+                      projectId: widget.projectId,
                     );
                 }
               },
@@ -999,8 +999,6 @@ class RequestListItemsState extends State<RequestListItems> {
           });
     }
   }
-
-
 
   List<RequestModel> filterBlockedRequestsContent({
     List<RequestModel> requestModelList,
@@ -1054,7 +1052,7 @@ class RequestListItemsState extends State<RequestListItems> {
     switch (model.getType()) {
       case RequestModelList.TITLE:
         var isMyContent = (model as GroupTitle).groupTitle.contains("My");
-        if(widget.isProjectRequest){
+        if (widget.isProjectRequest) {
           return Container();
         }
         return Container(
@@ -1078,9 +1076,9 @@ class RequestListItemsState extends State<RequestListItems> {
     }
   }
 
-  Widget getFromNormalRequest({RequestModel model, String loggedintimezone, String userEmail}){
-
-    if(model.projectId != null && model.projectId.isNotEmpty){
+  Widget getFromNormalRequest(
+      {RequestModel model, String loggedintimezone, String userEmail}) {
+    if (model.projectId != null && model.projectId.isNotEmpty) {
       return Container();
     }
     return Container(
@@ -1090,7 +1088,7 @@ class RequestListItemsState extends State<RequestListItems> {
         color: Colors.white,
         elevation: 2,
         child: InkWell(
-          onTap: ()  => editRequest(),
+          onTap: () => editRequest(),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Row(
@@ -1128,7 +1126,7 @@ class RequestListItemsState extends State<RequestListItems> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style:
-                          Theme.of(widget.parentContext).textTheme.subtitle,
+                              Theme.of(widget.parentContext).textTheme.subtitle,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -1155,28 +1153,28 @@ class RequestListItemsState extends State<RequestListItems> {
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
                           model.acceptors.contains(userEmail) ||
-                              model.approvedUsers.contains(userEmail)
+                                  model.approvedUsers.contains(userEmail)
                               ?
 //                          || model.invitedUsers.contains(userEmail) ?
-                          Container(
-                            margin: EdgeInsets.only(top: 10, bottom: 10),
-                            width: 100,
-                            height: 32,
-                            child: FlatButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: EdgeInsets.all(0),
-                              color: Colors.green,
-                              child: Text(
-                                'Applied',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              onPressed: () {},
-                            ),
-                          )
+                              Container(
+                                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                                  width: 100,
+                                  height: 32,
+                                  child: FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: EdgeInsets.all(0),
+                                    color: Colors.green,
+                                    child: Text(
+                                      'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                )
                               : Container(),
                         ],
                       ),
@@ -1190,10 +1188,10 @@ class RequestListItemsState extends State<RequestListItems> {
       ),
     );
   }
-  Widget getRequestListViewHolder({
-    RequestModel model, String loggedintimezone, String userEmail
-  }) {
-    if(!widget.isProjectRequest){
+
+  Widget getRequestListViewHolder(
+      {RequestModel model, String loggedintimezone, String userEmail}) {
+    if (!widget.isProjectRequest) {
       return getFromNormalRequest(
         model: model,
         loggedintimezone: loggedintimezone,
@@ -1201,20 +1199,18 @@ class RequestListItemsState extends State<RequestListItems> {
       );
     }
     return Container();
-
   }
 
   void editRequest({RequestModel model}) {
     timeBankBloc.setSelectedRequest(model);
     timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
     widget.isAdmin =
-    model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
-        ? true
-        : false;
+        model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID
+            ? true
+            : false;
     timeBankBloc.setIsAdmin(widget.isAdmin);
 
-    if (model.sevaUserId ==
-        SevaCore.of(context).loggedInUser.sevaUserID ||
+    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
         widget.timebankModel.admins
             .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
       Navigator.push(
@@ -1233,6 +1229,7 @@ class RequestListItemsState extends State<RequestListItems> {
             requestItem: model,
             timebankModel: widget.timebankModel,
             isAdmin: false,
+            project_id: '',
           ),
         ),
       );

@@ -94,6 +94,7 @@ class RequestsTabView extends StatelessWidget {
             requestItem: requestModel,
             timebankModel: timebankModel,
             isAdmin: false,
+            project_id: '',
           ),
         ),
       );

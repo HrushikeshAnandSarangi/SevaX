@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/exchange/edit_request.dart';
-import 'package:intl/intl.dart';
+import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
+
 import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
 import '../core.dart';
@@ -16,7 +18,10 @@ class ProjectRequests extends StatefulWidget {
   String timebankId;
   final TimebankModel timebankModel;
   final ProjectModel projectModel;
-  ProjectRequests({@required this.timebankId,@required this.projectModel,@required this.timebankModel});
+  ProjectRequests(
+      {@required this.timebankId,
+      @required this.projectModel,
+      @required this.timebankModel});
   State<StatefulWidget> createState() {
     return RequestsState();
   }
@@ -24,7 +29,8 @@ class ProjectRequests extends StatefulWidget {
 
 // Create a Form Widget
 
-class RequestsState extends State<ProjectRequests> with SingleTickerProviderStateMixin {
+class RequestsState extends State<ProjectRequests>
+    with SingleTickerProviderStateMixin {
   UserModel user = null;
   TabController tabController;
   ProjectModel projectModel;
@@ -40,14 +46,13 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     super.didChangeDependencies();
     Future.delayed(Duration.zero, () {
       FirestoreManager.getUserForIdStream(
-          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID
-      ).listen((onData){
-          user = onData;
-          setState(() {});
+              sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .listen((onData) {
+        user = onData;
+        setState(() {});
       });
-      FirestoreManager.getProjectStream(
-        projectId: projectModel.id
-      ).listen((onData){
+      FirestoreManager.getProjectStream(projectId: projectModel.id)
+          .listen((onData) {
         projectModel = onData;
         setState(() {});
       });
@@ -56,52 +61,51 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-
     return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            elevation: 0.5,
-            title: Text(
-              '${projectModel.name}',
-              style: TextStyle(
-                fontSize: 20,
-              ),
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0.5,
+          title: Text(
+            '${projectModel.name}',
+            style: TextStyle(
+              fontSize: 20,
             ),
           ),
-          backgroundColor: Colors.white,
-          body: Column(
-            children: <Widget>[
-              Container(
-                constraints: BoxConstraints(maxHeight: 150.0),
-                child: Material(
-                  color: Theme.of(context).primaryColor,
-                  child: TabBar(
-                    indicatorColor: Theme.of(context).accentColor,
-                    labelColor: Colors.white,
-                    isScrollable: false,
-                    tabs: <Widget>[
-                      Tab(text: "Requests"),
-                      Tab(text: "About"),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    requestBody,
-                    AboutProjectView(
-                      project_id: projectModel.id,
-                      timebankId: widget.timebankId,
-                    ),
+        ),
+        backgroundColor: Colors.white,
+        body: Column(
+          children: <Widget>[
+            Container(
+              constraints: BoxConstraints(maxHeight: 150.0),
+              child: Material(
+                color: Theme.of(context).primaryColor,
+                child: TabBar(
+                  indicatorColor: Theme.of(context).accentColor,
+                  labelColor: Colors.white,
+                  isScrollable: false,
+                  tabs: <Widget>[
+                    Tab(text: "Requests"),
+                    Tab(text: "About"),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  requestBody,
+                  AboutProjectView(
+                    project_id: projectModel.id,
+                    timebankId: widget.timebankId,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
+      ),
     );
   }
 
@@ -118,7 +122,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     );
   }
 
-  Widget get allRequests{
+  Widget get allRequests {
     return Expanded(
       child: SizedBox(
         height: 200,
@@ -130,88 +134,81 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     );
   }
 
-  Widget get requestResult{
-    return projectModel.pendingRequests.length == 0 ?
-      Column(
-        children: <Widget>[
-          Text(''),
-          Text('No project request found'),
-        ],
-      ):
-      ListView.builder(
-        itemCount: projectModel.pendingRequests.length,
-        itemBuilder: (_context, index) {
-          return StreamBuilder<RequestModel>(
-            stream: FirestoreManager.getRequestStreamById(
-                requestId: projectModel.pendingRequests[index]),
-            builder: (context, snapshot) {
-
-              if (snapshot.hasError) {
-                return new Text('Error: ${snapshot.error}');
-              }
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return loadingWidget;
-                default:
-                  RequestModel model =
-                      snapshot.data;
-                  return FutureBuilder<String>(
-                      future: _getLocation(model.location),
-                      builder: (context, snapshot){
-                        var address = snapshot.data;
-                        switch (snapshot.connectionState) {
-                          case ConnectionState.waiting:
-                            return getProjectRequestWidget(
-                              model: model,
-                              loggedintimezone: user.timezone,
-                              context: context,
-                              address: "Fetching location",
-                            );
-                          default:
-                            return getProjectRequestWidget(
-                              model: model,
-                              loggedintimezone: user.timezone,
-                              context: context,
-                              address: address,
-                            );
-                        }
-                      }
-                  );
-              }
-            },
-          );
-        }
-      );
-
+  Widget get requestResult {
+    return projectModel.pendingRequests.length == 0
+        ? Column(
+            children: <Widget>[
+              Text(''),
+              Text('No project request found'),
+            ],
+          )
+        : ListView.builder(
+            itemCount: projectModel.pendingRequests.length,
+            itemBuilder: (_context, index) {
+              return StreamBuilder<RequestModel>(
+                stream: FirestoreManager.getRequestStreamById(
+                    requestId: projectModel.pendingRequests[index]),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return new Text('Error: ${snapshot.error}');
+                  }
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return loadingWidget;
+                    default:
+                      RequestModel model = snapshot.data;
+                      return FutureBuilder<String>(
+                          future: _getLocation(model.location),
+                          builder: (context, snapshot) {
+                            var address = snapshot.data;
+                            switch (snapshot.connectionState) {
+                              case ConnectionState.waiting:
+                                return getProjectRequestWidget(
+                                  model: model,
+                                  loggedintimezone: user.timezone,
+                                  context: context,
+                                  address: "Fetching location",
+                                );
+                              default:
+                                return getProjectRequestWidget(
+                                  model: model,
+                                  loggedintimezone: user.timezone,
+                                  context: context,
+                                  address: address,
+                                );
+                            }
+                          });
+                  }
+                },
+              );
+            });
   }
 
   Future<Widget> getProjectRequestWidgetWithLocation({
     RequestModel model,
     String loggedintimezone,
     BuildContext context,
-  }) async{
+  }) async {
     var address = await _getLocation(model.location);
     return getProjectRequestWidget(
         model: model,
         loggedintimezone: loggedintimezone,
         context: context,
-        address: address
-    );
+        address: address);
   }
 
-  Widget get loadingWidget{
+  Widget get loadingWidget {
     return Container(
-      height: 150,
-      decoration: containerDecorationR,
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-      child: Card(
-        color: Colors.white,
-        elevation: 2,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      )
-    );
+        height: 150,
+        decoration: containerDecorationR,
+        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+        child: Card(
+          color: Colors.white,
+          elevation: 2,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ));
   }
 
   Widget getProjectRequestWidget({
@@ -219,7 +216,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     String loggedintimezone,
     BuildContext context,
     String address,
-  }){
+  }) {
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -232,8 +229,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
               context,
               MaterialPageRoute(
                 builder: (context) => EditRequest(
-                  timebankId:
-                  SevaCore.of(context).loggedInUser.currentTimebank,
+                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
                   requestModel: model,
                 ),
               ),
@@ -280,7 +276,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(right: 10,left: 10),
+                  margin: EdgeInsets.only(right: 10, left: 10),
                   child: Row(
                     children: <Widget>[
                       Container(
@@ -360,9 +356,9 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
         children: <Widget>[
           Row(
             children: <Widget>[
-              setTitle(num: '$totalRequests', title: 'Requests'),
-              setTitle(num: '$pendingRequest', title: 'Pending'),
-              setTitle(num: '$completedRequest', title: 'Completed'),
+              setTitle(num: '$totalRequests ?? "', title: 'Requests'),
+              setTitle(num: '$pendingRequest ?? "', title: 'Pending'),
+              setTitle(num: '$completedRequest ?? "', title: 'Completed'),
             ],
           ),
         ],
@@ -371,38 +367,35 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
   }
 
   Widget getList({
-    List<RequestModel>finalRequestModelList,
-  }){
+    List<RequestModel> finalRequestModelList,
+  }) {
     return Expanded(
       child: SizedBox(
         height: 200.0,
         child: ListView.builder(
             itemCount: finalRequestModelList.length + 1,
-            itemBuilder: ( _context, index) {
-              return index < finalRequestModelList.length ?
-              FutureBuilder<Widget>(
-                  future: getListTile(
-                    model: finalRequestModelList[index],
-                    loggedintimezone: user.timezone,
-                    context: context,
-                  ),
-                  builder: (BuildContext context, AsyncSnapshot<Widget> snapshot){
-                    if(snapshot.hasData)
-                      return snapshot.data;
-
-                    return getListWidgetItem(
+            itemBuilder: (_context, index) {
+              return index < finalRequestModelList.length
+                  ? FutureBuilder<Widget>(
+                      future: getListTile(
                         model: finalRequestModelList[index],
                         loggedintimezone: user.timezone,
                         context: context,
-                        address: "Fetching address"
-                    );
-                  }
-              )
+                      ),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Widget> snapshot) {
+                        if (snapshot.hasData) return snapshot.data;
+
+                        return getListWidgetItem(
+                            model: finalRequestModelList[index],
+                            loggedintimezone: user.timezone,
+                            context: context,
+                            address: "Fetching address");
+                      })
                   : SizedBox(
-                height: 50,
-              );
-            }
-        ),
+                      height: 50,
+                    );
+            }),
       ),
     );
   }
@@ -423,18 +416,19 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     List<RequestModel> filteredList = [];
 
     requestModelList.forEach((request) => SevaCore.of(context)
-        .loggedInUser
-        .blockedMembers
-        .contains(request.sevaUserId) ||
-        SevaCore.of(context)
-            .loggedInUser
-            .blockedBy
-            .contains(request.sevaUserId)
+                .loggedInUser
+                .blockedMembers
+                .contains(request.sevaUserId) ||
+            SevaCore.of(context)
+                .loggedInUser
+                .blockedBy
+                .contains(request.sevaUserId)
         ? "Filtering blocked content"
         : filteredList.add(request));
 
     return filteredList;
   }
+
   BoxDecoration get containerDecorationR {
     return BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(2.0)),
@@ -453,22 +447,26 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     RequestModel model,
     String loggedintimezone,
     BuildContext context,
-    }) async{
+  }) async {
     var address = await _getLocation(model.location);
     return getListWidgetItem(
-      model: model,
-      loggedintimezone: loggedintimezone,
-      context: context,
-      address: address
-    );
+        model: model,
+        loggedintimezone: loggedintimezone,
+        context: context,
+        address: address);
   }
 
-  Widget getListWidgetItem({
-    RequestModel model,
-    String loggedintimezone,
-    BuildContext context,
-    String address
-    }){
+  Widget getListWidgetItem(
+      {RequestModel model,
+      String loggedintimezone,
+      BuildContext context,
+      String address}) {
+    bool isAdmin = false;
+    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+        widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      isAdmin = true;
+    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -480,10 +478,12 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditRequest(
-                  timebankId:
-                  SevaCore.of(context).loggedInUser.currentTimebank,
-                  requestModel: model,
+                builder: (context) => RequestDetailsAboutPage(
+                  project_id: projectModel.id,
+                  requestItem: model,
+                  applied: isAdmin ? false : true,
+                  timebankModel: widget.timebankModel,
+                  isAdmin: isAdmin,
                 ),
               ),
             );
@@ -529,13 +529,11 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(right: 10,left: 10),
+                  margin: EdgeInsets.only(right: 10, left: 10),
                   child: Row(
                     children: <Widget>[
                       InkWell(
-                        onTap: (){
-
-                        },
+                        onTap: () {},
                         child: Container(
                           margin: EdgeInsets.all(5),
                           height: 40,
@@ -608,10 +606,8 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     return address;
   }
 
-  void createProjectRequest () async{
-    var sevaUserId = SevaCore.of(context)
-        .loggedInUser
-        .sevaUserID;
+  void createProjectRequest() async {
+    var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     if (widget.timebankModel.protected) {
       if (widget.timebankModel.admins.contains(sevaUserId)) {
         Navigator.push(
@@ -664,7 +660,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     );
   }
 
-  Widget getSpacerItem(Widget item){
+  Widget getSpacerItem(Widget item) {
     return Row(
       children: <Widget>[
         item,
@@ -672,6 +668,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
       ],
     );
   }
+
   Widget get addRequest {
     return Container(
       margin: EdgeInsets.only(top: 15),
@@ -738,5 +735,3 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     );
   }
 }
-
-
