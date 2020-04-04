@@ -23,7 +23,6 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
@@ -214,7 +213,23 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                requestSwitch,
+                FutureBuilder<TimebankModel>(
+                  future: getTimebankAdminStatus,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError)
+                      return Text(snapshot.error.toString());
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container();
+                    }
+                    timebankModel = snapshot.data;
+                    if (snapshot.data.admins.contains(
+                        SevaCore.of(context).loggedInUser.sevaUserID)) {
+                      return requestSwitch;
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
                 Text(
                   FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                       ? "Yang gang request title"
@@ -391,13 +406,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           selectedColor: Theme.of(context).primaryColor,
           children: logoWidgets,
           borderColor: Colors.grey,
-
           padding: EdgeInsets.only(left: 5.0, right: 5.0),
           groupValue: sharedValue,
           onValueChanged: (int val) {
             print(val);
             if (val != sharedValue) {
-              setState(() {});
               setState(() {
                 print("$sharedValue -- $val");
                 if (sharedValue == 0) {
@@ -688,10 +701,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Future _updateProjectModel() async {
-    if(widget.projectModel!=null){
+    if (widget.projectModel != null) {
       ProjectModel projectModel = widget.projectModel;
       var userSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-      if(!projectModel.members.contains(userSevaUserId)){
+      if (!projectModel.members.contains(userSevaUserId)) {
         projectModel.members.add(userSevaUserId);
       }
       projectModel.pendingRequests.add(requestModel.id);
