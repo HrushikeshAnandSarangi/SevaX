@@ -8,14 +8,16 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class Searches {
-  static const baseURL = 'http://35.227.18.55//elasticsearch';
+  static const baseURL = 'http://35.227.68.255//elasticsearch';
 
   static Future<http.Response> makePostRequest({
     @required String url,
     Map<String, String> headers,
     dynamic body,
   }) async {
-    return await http.post(url, body: body, headers: headers);
+    var result = await http.post(url, body: body, headers: headers);
+    print("http response ==> ${result.body}");
+    return result;
   }
 
   static Future<List<Map<String, dynamic>>> _makeElasticSearchPostRequest(
@@ -45,21 +47,18 @@ class Searches {
   }
 
 
-// Feeds done
 
-  static Stream<List<NewsModel>> searchFeeds({
-    @required  String queryString,
-    @required UserModel loggedInUser,
-    @required CommunityModel currentCommunityOfUser
-  }) async* {
-    print("usermodel is " + loggedInUser.email +" currentCommunityOfUser is "+currentCommunityOfUser.id);
-    print("usermodel is " + loggedInUser.membershipTimebanks.toString() +" currentCommunityOfUser is "+currentCommunityOfUser.timebanks.toString());
-    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-  print("myTimebanks.length.tostring is"+myTimebanks.length.toString());
+  static Stream<List<NewsModel>> searchFeeds(
+      {@required String queryString,
+      @required UserModel loggedInUser,
+      @required CommunityModel currentCommunityOfUser}) async* {
+
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(
+        currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/newsfeed/_doc/_search';
     dynamic body = json.encode(
       {
-        "size":3000,
+        "size": 1000,
         "query": {
           "bool": {
             "must": [
@@ -69,9 +68,7 @@ class Searches {
                   "query": {
                     "bool": {
                       "must": {
-                        "terms": {
-                          "entity.entityId.keyword": myTimebanks
-                        }
+                        "terms": {"entity.entityId.keyword": myTimebanks}
                       }
                     }
                   }
@@ -100,38 +97,40 @@ class Searches {
         }
       },
     );
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
     List<NewsModel> feedsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if(loggedInUser.blockedBy != null){
-        if(!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])){
+      if (loggedInUser.blockedBy.length==0) {
+        NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
+        news.id = map['_id'];
+        feedsList.add(news);
+      } else {
+        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
           NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
           news.id = map['_id'];
           feedsList.add(news);
         }
-      } else {
-        NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
-        news.id = map['_id'];
-        feedsList.add(news);
       }
     });
-    feedsList.sort((a, b) => a.title.compareTo(b.title));
+//    feedsList.sort((a, b) => a.title.compareTo(b.title));
     yield feedsList;
   }
 
-// Offers done
 
-  static Stream<List<OfferModel>> searchOffers({
-    @required queryString,
-    @required loggedInUser,
-    @required CommunityModel currentCommunityOfUser
-  }) async* {
-    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+
+  static Stream<List<OfferModel>> searchOffers(
+      {@required queryString,
+      @required UserModel loggedInUser,
+      @required CommunityModel currentCommunityOfUser}) async* {
+    print("Query hit one");
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(
+        currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/offers/offer/_search';
     dynamic body = json.encode(
       {
-        "size":3000,
+        "size": 3000,
         "query": {
           "bool": {
             "must": [
@@ -141,9 +140,7 @@ class Searches {
                 }
               },
               {
-                "terms": {
-                  "timebankId.keyword": myTimebanks
-                }
+                "terms": {"timebankId.keyword": myTimebanks}
               },
               {
                 "multi_match": {
@@ -157,12 +154,20 @@ class Searches {
         }
       },
     );
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
 
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-       if(loggedInUser.blockedBy != null){
+      if (loggedInUser.blockedBy.length==0) {
+        OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
+        if (model.associatedRequest == null ||
+            model.associatedRequest.isEmpty) {
+          offersList.add(model);
+        }
+      } else {
         if (!loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
           if (model.associatedRequest == null ||
@@ -170,13 +175,7 @@ class Searches {
             offersList.add(model);
           }
         }
-      }else{
-         OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
-         if (model.associatedRequest == null ||
-             model.associatedRequest.isEmpty) {
-           offersList.add(model);
-         }
-       }
+      }
     });
     offersList.sort((a, b) => a.title.compareTo(b.title));
     yield offersList;
@@ -186,7 +185,7 @@ class Searches {
 
 //  static Stream<List<RequestModel>> searchProjects({
 //    @required String queryString,
-//    @required loggedInUser,
+//    @required UserModel loggedInUser,
 //    @required CommunityModel currentCommunityOfUser
 //  }) async* {
 //  List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
@@ -219,14 +218,14 @@ class Searches {
 //    List<RequestModel> projectsList = [];
 //    hitList.forEach((map) {
 //      Map<String, dynamic> sourceMap = map['_source'];
-//      if(loggedInUser.blockedBy != null){
+//      if(loggedInUser.blockedBy.length==0){
+//        ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
+//        projectsList.add(model);
+//      }else{
 //        if(!loggedInUser.blockedBy.contains(sourceMap["creator_id"])){
 //          ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
 //          projectsList.add(model);
 //        }
-//      }else{
-//        ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
-//        projectsList.add(model);
 //      }
 //
 //    });
@@ -234,18 +233,18 @@ class Searches {
 //    yield projectsList;
 //  }
 
-  // Requests done
+  static Stream<List<RequestModel>> searchRequests(
+      {@required String queryString,
+      @required UserModel loggedInUser,
+      @required CommunityModel currentCommunityOfUser}) async* {
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(
+        currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    print("inside search feeds function " );
 
-  static Stream<List<RequestModel>> searchRequests({
-    @required String queryString,
-    @required loggedInUser,
-    @required CommunityModel currentCommunityOfUser
-  }) async* {
-    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/requests/request/_search';
     dynamic body = json.encode(
       {
-        "size":3000,
+        "size": 3000,
         "query": {
           "bool": {
             "must": [
@@ -255,9 +254,7 @@ class Searches {
                 }
               },
               {
-                "terms": {
-                  "timebankId.keyword": myTimebanks
-                }
+                "terms": {"timebankId.keyword": myTimebanks}
               },
               {
                 "multi_match": {
@@ -272,41 +269,41 @@ class Searches {
       },
     );
     List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+        await _makeElasticSearchPostRequest(url, body);
     List<RequestModel> requestsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if(loggedInUser.blockedBy != null){
-        if(!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])){
+      if (loggedInUser.blockedBy.length == 0) {
+        RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
+        if (model.accepted == false) requestsList.add(model);
+      } else {
+        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
           RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
           if (model.accepted == false) requestsList.add(model);
         }
-      }else{
-        RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
-        if (model.accepted == false) requestsList.add(model);
+
       }
       requestsList.sort((a, b) => a.title.compareTo(b.title));
     });
     yield requestsList;
   }
 
-  // group Timebanks
+  // Groups DONE
 
-  static Stream<List<TimebankModel>> searchGroups({
-    @required queryString,
-    @required loggedInUser,
-    @required CommunityModel currentCommunityOfUser
-  }) async* {
+  static Stream<List<TimebankModel>> searchGroups(
+      {@required queryString,
+      @required UserModel loggedInUser,
+      @required CommunityModel currentCommunityOfUser}) async* {
     String url = baseURL + "/sevaxtimebanks/sevaxtimebank/_search";
-    dynamic body = json.encode(
-    {
-      "size":3000,
+    dynamic body = json.encode({
+      "size": 3000,
       "query": {
         "bool": {
           "must": [
             {
               "term": {
-                "parent_timebank_id.keyword": currentCommunityOfUser.primary_timebank
+                "parent_timebank_id.keyword":
+                    currentCommunityOfUser.primary_timebank
               }
             },
             {
@@ -324,46 +321,40 @@ class Searches {
       }
     });
     List<Map<String, dynamic>> hitList =
-    await _makeElasticSearchPostRequest(url, body);
+        await _makeElasticSearchPostRequest(url, body);
     List<TimebankModel> timeBanksList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if(loggedInUser.blockedBy != null){
-        if(!loggedInUser.blockedBy.contains(sourceMap["creator_id"])){
+      if (loggedInUser.blockedBy.length==0) {
+        var timeBank = TimebankModel.fromMap(sourceMap);
+        timeBanksList.add(timeBank);
+      } else {
+        if (!loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
           var timeBank = TimebankModel.fromMap(sourceMap);
           timeBanksList.add(timeBank);
         }
-      }else{
-        var timeBank = TimebankModel.fromMap(sourceMap);
-        timeBanksList.add(timeBank);
       }
 //      timeBanksList.sort((a, b) => a.name.compareTo(b.name));
     });
     yield timeBanksList;
   }
 
-  // Users of a timebank done
+  // Members DONE
 
-  static Stream<List<UserModel>> searchMembersOfTimebank({
-    @required queryString,
-    @required loggedInUser,
-    @required CommunityModel currentCommunityOfUser
-  }) async* {
+  static Stream<List<UserModel>> searchMembersOfTimebank(
+      {@required queryString,
+      @required UserModel loggedInUser,
+      @required CommunityModel currentCommunityOfUser}) async* {
     String url = baseURL + '/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
-    {
-      "size":3000,
+      {
+        "size": 3000,
         "query": {
           "bool": {
             "must": [
               {
                 "match": {
                   "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
-              {
-                "term":{
-                  "communities.keyword": loggedInUser.currentCommunity
                 }
               },
               {
@@ -378,37 +369,39 @@ class Searches {
         }
       },
     );
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
     List<UserModel> usersList = [];
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if(loggedInUser.blockedBy != null){
-        if(!loggedInUser.blockedBy.contains(sourceMap['sevauserid'])){
+      if (loggedInUser.blockedBy.length==0) {
+        if(sourceMap['communities'].contains(loggedInUser.currentCommunity) && loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           UserModel user = UserModel.fromMap(sourceMap);
           usersList.add(user);
         }
-      }else{
-        UserModel user = UserModel.fromMap(sourceMap);
-        usersList.add(user);
+      } else {
+        if (sourceMap['communities'].contains(loggedInUser.currentCommunity) && !loggedInUser.blockedBy.contains(sourceMap['sevauserid']) && loggedInUser.sevaUserID != sourceMap['sevauserid'] ) {
+          UserModel user = UserModel.fromMap(sourceMap);
+          usersList.add(user);
       }
+    }
     });
     usersList.sort((a, b) => a.fullname.compareTo(b.fullname));
     yield usersList;
   }
 
 
+  static List<String> getTimebanksAndGroupsOfUser(
+      timebanksOfCommunity, timebanksOfUser) {
 
-  static List<String> getTimebanksAndGroupsOfUser(timebanksOfCommunity, timebanksOfUser){
-      List<String> timebankarr = new List();
-//      ("Length isssssssssssss---"+timebanksOfCommunity.length.toString()+"    "+timebanksOfUser.length.toString());
-      timebanksOfCommunity.forEach( (tb) {
-        if(timebanksOfUser.contains(tb)){
-          timebankarr.add(tb);
-        }
-      });
-      return timebankarr;
+    List<String> timebankarr = new List();
+    timebanksOfCommunity.forEach((tb) {
+      if (timebanksOfUser.contains(tb)) {
+        timebankarr.add(tb);
+      }
+    });
+    print("gettimebanksandgroupsofuser " + timebankarr.length.toString());
+    return timebankarr;
   }
-
-
 }
