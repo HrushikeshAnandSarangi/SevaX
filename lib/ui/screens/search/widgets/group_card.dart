@@ -6,6 +6,7 @@ class GroupCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final Function onPressed;
+  final JoinStatus status;
 
   const GroupCard({
     Key key,
@@ -13,6 +14,7 @@ class GroupCard extends StatelessWidget {
     this.title,
     this.subtitle,
     this.onPressed,
+    this.status = JoinStatus.JOIN,
   }) : super(key: key);
 
   @override
@@ -59,7 +61,7 @@ class GroupCard extends StatelessWidget {
                     shape: StadiumBorder(),
                     color: Colors.grey[300],
                     textColor: Theme.of(context).primaryColor,
-                    child: Text("Join"),
+                    child: Text(status.toString().split('.')[1]),
                     onPressed: onPressed,
                   ),
                 ),
@@ -70,4 +72,11 @@ class GroupCard extends StatelessWidget {
       ),
     );
   }
+}
+
+enum JoinStatus {
+  JOIN,
+  JOINED,
+  REQUESTED,
+  REJECTED,
 }

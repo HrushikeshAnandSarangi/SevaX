@@ -27,7 +27,6 @@ class _OffersTabViewState extends State<OffersTabView> {
               queryString: search.data,
               loggedInUser: _bloc.user,
               currentCommunityOfUser: _bloc.community,
-              
             ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -50,6 +49,7 @@ class _OffersTabViewState extends State<OffersTabView> {
                   return OffersCard(
                     title: offer.title,
                     description: offer.description,
+                    onTap: () => onTap(offer),
                   );
                 },
               );
@@ -60,11 +60,11 @@ class _OffersTabViewState extends State<OffersTabView> {
     );
   }
 
-  void onTap() {
+  void onTap(OfferModel offerModel) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OfferCardView(offerModel: OfferModel()),
+        builder: (context) => OfferCardView(offerModel: offerModel),
       ),
     );
   }
@@ -74,8 +74,10 @@ class OffersCard extends StatelessWidget {
   final String title;
   final String description;
   final String photoUrl;
+  final Function onTap;
 
-  const OffersCard({Key key, this.title, this.description, this.photoUrl})
+  const OffersCard(
+      {Key key, this.title, this.description, this.photoUrl, this.onTap})
       : assert(title != null),
         assert(description != null),
         super(key: key);
@@ -84,36 +86,39 @@ class OffersCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          ClipOval(
-            child: SizedBox(
-              height: 40,
-              width: 40,
-              child: FadeInImage.assetNetwork(
-                placeholder: 'lib/assets/images/profile.png',
-                image: photoUrl ?? "",
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            ClipOval(
+              child: SizedBox(
+                height: 40,
+                width: 40,
+                child: FadeInImage.assetNetwork(
+                  placeholder: 'lib/assets/images/profile.png',
+                  image: photoUrl ?? "",
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.subhead,
-                ),
-                Text(
-                  description,
-                  style: Theme.of(context).textTheme.subtitle,
-                ),
-              ],
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.subhead,
+                  ),
+                  Text(
+                    description,
+                    style: Theme.of(context).textTheme.subtitle,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
