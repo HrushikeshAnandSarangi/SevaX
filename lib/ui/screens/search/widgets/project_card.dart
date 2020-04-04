@@ -35,7 +35,7 @@ class ProjectsCard extends StatelessWidget {
         assert(description != null),
         assert(tasks != null),
         assert(pendingTask != null),
-        assert(photoUrl != null),
+//        assert(photoUrl != null),
         super(key: key);
 
   @override
@@ -83,7 +83,8 @@ class ProjectsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          getInitials(title),
+//                          getInitials(title),
+                          title,
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
