@@ -6,7 +6,6 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
-import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 import '../../flavor_config.dart';
@@ -217,6 +216,12 @@ class RequestsState extends State<ProjectRequests>
     BuildContext context,
     String address,
   }) {
+    bool isAdmin = false;
+    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+        widget.timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      isAdmin = true;
+    }
     return Container(
       decoration: containerDecorationR,
       margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
@@ -228,9 +233,12 @@ class RequestsState extends State<ProjectRequests>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditRequest(
-                  timebankId: SevaCore.of(context).loggedInUser.currentTimebank,
-                  requestModel: model,
+                builder: (context) => RequestDetailsAboutPage(
+                  project_id: projectModel.id,
+                  requestItem: model,
+                  //   applied: isAdmin ? false : true,
+                  timebankModel: widget.timebankModel,
+                  isAdmin: isAdmin,
                 ),
               ),
             );
@@ -356,9 +364,9 @@ class RequestsState extends State<ProjectRequests>
         children: <Widget>[
           Row(
             children: <Widget>[
-              setTitle(num: '$totalRequests ?? "', title: 'Requests'),
-              setTitle(num: '$pendingRequest ?? "', title: 'Pending'),
-              setTitle(num: '$completedRequest ?? "', title: 'Completed'),
+              setTitle(num: '${totalRequests ?? ""}', title: 'Requests'),
+              setTitle(num: '${pendingRequest ?? ""}', title: 'Pending'),
+              setTitle(num: '${completedRequest ?? ""}', title: 'Completed'),
             ],
           ),
         ],
@@ -481,7 +489,7 @@ class RequestsState extends State<ProjectRequests>
                 builder: (context) => RequestDetailsAboutPage(
                   project_id: projectModel.id,
                   requestItem: model,
-                  applied: isAdmin ? false : true,
+                  //   applied: isAdmin ? false : true,
                   timebankModel: widget.timebankModel,
                   isAdmin: isAdmin,
                 ),

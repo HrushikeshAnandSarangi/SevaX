@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -37,6 +39,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   TimebankModel timebankModel = TimebankModel({});
   BuildContext dialogContext;
   String dateTimeEroor = '';
+  String locationError = '';
   var startDate;
   var endDate;
 
@@ -304,6 +307,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 },
               ),
             ),
+            Text(
+              locationError,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0),
               child: Container(
@@ -355,8 +366,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         if (projectModel.startTime == null ||
                             projectModel.endTime == null) {
                           setState(() {
-                            this.communityImageError = 'Duration is Mandatory';
+                            this.dateTimeEroor = 'Duration is Mandatory';
                           });
+                        }
+                        if (projectModel.address == null ||
+                            this.selectedAddress == null) {
+                          this.locationError = 'Location is Mandatory';
                         }
 
                         showProgressDialog('Creating project');
@@ -383,8 +398,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         if (projectModel.startTime == null ||
                             projectModel.endTime == null) {
                           setState(() {
-                            this.communityImageError = 'Duration is Mandatory';
+                            this.dateTimeEroor = 'Duration is Mandatory';
                           });
+                        }
+
+                        if (projectModel.address == null ||
+                            this.selectedAddress == null) {
+                          this.locationError = 'Location is Mandatory';
                         }
                         showProgressDialog('Updating project');
                         await FirestoreManager.updateProject(
@@ -444,7 +464,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     });
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
-    projectModel.address = address;
+    projectModel.address = this.selectedAddress;
   }
 
   Widget headingText(String name) {
