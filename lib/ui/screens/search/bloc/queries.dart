@@ -8,7 +8,7 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 
 class Searches {
-  static const baseURL = 'http://35.227.18.55//elasticsearch';
+  static const baseURL = 'http://35.227.68.255//elasticsearch';
 
   static Future<http.Response> makePostRequest({
     @required String url,

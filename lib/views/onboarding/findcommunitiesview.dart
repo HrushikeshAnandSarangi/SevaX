@@ -74,33 +74,30 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     bool showBachBtn = widget.showBackBtn;
     showAppbar = widget.isFromHome;
     print("isdash trueee ---${widget.isFromHome}");
-    return MaterialApp(
-        title: AppConfig.appName,
-        theme: FlavorConfig.values.theme,
-        home: Scaffold(
-          resizeToAvoidBottomInset: false,
-          appBar: !showAppbar
-              ? AppBar(
-                  // automaticallyImplyLeading: widget.keepOnBackPress,
-                  automaticallyImplyLeading: false,
-                  elevation: 0.5,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: !showAppbar
+          ? AppBar(
+              // automaticallyImplyLeading: widget.keepOnBackPress,
+              automaticallyImplyLeading: false,
+              elevation: 0.5,
 
-                  leading: showBachBtn
-                      ? BackButton(
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      : Offstage(),
-                  title: Text(
-                    'Find your Timebank',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  centerTitle: true,
-                )
-              : null,
-          body: searchTeams(),
-        )); // );
+              leading: showBachBtn
+                  ? BackButton(
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  : Offstage(),
+              title: Text(
+                'Find your Timebank',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+              centerTitle: true,
+            )
+          : null,
+      body: searchTeams(),
+    ); // );
   }
 
   Widget searchTeams() {

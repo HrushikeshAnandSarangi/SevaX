@@ -1,10 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart';
+
+import '../../../../flavor_config.dart';
 
 class GroupTabView extends StatefulWidget {
   @override
@@ -84,4 +91,56 @@ class _GroupTabViewState extends State<GroupTabView> {
       ),
     );
   }
+
+  Future<void> joinTimebank(
+      joinRequestModel, UserModel user, TimebankModel timebank) async {
+    //    print('print time data ${timebank.creatorId}');
+    joinRequestModel.reason = "i want to join";
+    joinRequestModel.userId = user.sevaUserID;
+    joinRequestModel.timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    joinRequestModel.entityId = timebank.id;
+    joinRequestModel.entityType = EntityType.Timebank;
+    joinRequestModel.accepted = false;
+
+    await updateJoinRequest(model: joinRequestModel);
+
+    JoinRequestNotificationModel joinReqModel = JoinRequestNotificationModel(
+        timebankId: timebank.id,
+        timebankTitle: timebank.name,
+        reasonToJoin: joinRequestModel.reason);
+
+    NotificationsModel notification = NotificationsModel(
+      id: Utils.getUuid(),
+      targetUserId: timebank.creatorId,
+      senderUserId: user.sevaUserID,
+      type: NotificationType.JoinRequest,
+      data: joinReqModel.toMap(),
+      directToMember: false,
+    );
+
+    notification.timebankId = FlavorConfig.values.timebankId;
+    //  print('creator id ${notification.timebankId}');
+
+    UserModel timebankCreator =
+        await FirestoreManager.getUserForId(sevaUserId: timebank.creatorId);
+    //print('time creator email ${timebankCreator.email}');
+
+    await Firestore.instance
+        .collection('users')
+        .document(timebankCreator.email)
+        .collection("notifications")
+        .document(notification.id)
+        .setData(notification.toMap());
+
+    setState(() {
+      // getData();
+    });
+    return;
+  }
+}
+
+enum EntityType {
+  Timebank,
+  Campaign,
 }
