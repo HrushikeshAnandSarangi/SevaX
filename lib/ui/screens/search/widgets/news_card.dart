@@ -125,19 +125,18 @@ class NewsCard extends StatelessWidget {
           onTap: onShare,
           child: Icon(Icons.share),
         ),
-        SizedBox(width: 5),
-        InkWell(
-          onTap: onFavorite,
-          child: Icon(
-            isFavorite ? Icons.favorite : Icons.favorite_border,
-          ),
-        ),
         SizedBox(width: 10),
+        // InkWell(
+        //   onTap: onFavorite,
+        //   child: Icon(
+        //     isFavorite ? Icons.favorite : Icons.favorite_border,
+        //   ),
+        // ),
+        // SizedBox(width: 10),
       ],
     );
   }
 }
-
 
 // import 'dart:collection';
 
@@ -173,7 +172,7 @@ class NewsCard extends StatelessWidget {
 //   @override
 //   void initState() {
 //     news = widget.news;
-    
+
 //     super.initState();
 //   }
 
