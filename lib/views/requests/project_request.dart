@@ -123,54 +123,66 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
       child: SizedBox(
         height: 200,
         child: Container(
-          margin: EdgeInsets.only(left: 0, right: 0, top: 10),
-          child: ListView.builder(
-              itemCount: projectModel.pendingRequests.length,
-              itemBuilder: (_context, index) {
-                return StreamBuilder<RequestModel>(
-                  stream: FirestoreManager.getRequestStreamById(
-                      requestId: projectModel.pendingRequests[index]),
-                  builder: (context, snapshot) {
-
-                    if (snapshot.hasError) {
-                      return new Text('Error: ${snapshot.error}');
-                    }
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
-                      default:
-                        RequestModel model =
-                            snapshot.data;
-                      return FutureBuilder<String>(
-                        future: _getLocation(model.location),
-                        builder: (context, snapshot){
-                          var address = snapshot.data;
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.waiting:
-                              return getProjectRequestWidget(
-                                model: model,
-                                loggedintimezone: user.timezone,
-                                context: context,
-                                address: "Fetching location",
-                              );
-                            default:
-                              return getProjectRequestWidget(
-                                model: model,
-                                loggedintimezone: user.timezone,
-                                context: context,
-                                address: address,
-                              );
-                          }
-                        }
-                      );
-                    }
-                  },
-                );
-              }
-            ),
+          margin: EdgeInsets.only(top: 10),
+          child: requestResult,
         ),
       ),
     );
+  }
+
+  Widget get requestResult{
+    return projectModel.pendingRequests.length == 0 ?
+      Column(
+        children: <Widget>[
+          Text(''),
+          Text('No project request found'),
+        ],
+      ):
+      ListView.builder(
+        itemCount: projectModel.pendingRequests.length,
+        itemBuilder: (_context, index) {
+          return StreamBuilder<RequestModel>(
+            stream: FirestoreManager.getRequestStreamById(
+                requestId: projectModel.pendingRequests[index]),
+            builder: (context, snapshot) {
+
+              if (snapshot.hasError) {
+                return new Text('Error: ${snapshot.error}');
+              }
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return loadingWidget;
+                default:
+                  RequestModel model =
+                      snapshot.data;
+                  return FutureBuilder<String>(
+                      future: _getLocation(model.location),
+                      builder: (context, snapshot){
+                        var address = snapshot.data;
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return getProjectRequestWidget(
+                              model: model,
+                              loggedintimezone: user.timezone,
+                              context: context,
+                              address: "Fetching location",
+                            );
+                          default:
+                            return getProjectRequestWidget(
+                              model: model,
+                              loggedintimezone: user.timezone,
+                              context: context,
+                              address: address,
+                            );
+                        }
+                      }
+                  );
+              }
+            },
+          );
+        }
+      );
+
   }
 
   Future<Widget> getProjectRequestWidgetWithLocation({
@@ -187,11 +199,26 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     );
   }
 
+  Widget get loadingWidget{
+    return Container(
+      height: 150,
+      decoration: containerDecorationR,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+      child: Card(
+        color: Colors.white,
+        elevation: 2,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      )
+    );
+  }
+
   Widget getProjectRequestWidget({
     RequestModel model,
     String loggedintimezone,
     BuildContext context,
-    String address
+    String address,
   }){
     return Container(
       decoration: containerDecorationR,

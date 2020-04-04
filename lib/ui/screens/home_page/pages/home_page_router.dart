@@ -20,23 +20,8 @@ class HomePageRouter extends StatefulWidget {
 }
 
 class _BottomNavBarRouterState extends State<HomePageRouter> {
-  // List<Widget> pages;
   int selected = 2;
   UserDataBloc _userBloc = UserDataBloc();
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   pages = [
-  //     JoinSubTimeBankView(
-  //       isFromDash: true,
-  //       loggedInUserModel: SevaCore.of(context).loggedInUser,
-  //     ),
-  //     NotificationsPage(),
-  //     HomeDashBoard(),
-  //     ChatListView(),
-  //     ProfilePage(),
-  //   ];
-  // }
 
   @override
   void initState() {
