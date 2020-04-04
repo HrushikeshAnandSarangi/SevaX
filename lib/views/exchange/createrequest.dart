@@ -13,6 +13,7 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -22,12 +23,14 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 class CreateRequest extends StatefulWidget {
   final bool isOfferRequest;
   final OfferModel offer;
   final String timebankId;
   final UserModel userModel;
+  final ProjectModel projectModel;
   String projectId;
 
   CreateRequest(
@@ -36,7 +39,8 @@ class CreateRequest extends StatefulWidget {
       this.offer,
       this.timebankId,
       this.userModel,
-      this.projectId})
+      this.projectId,
+      this.projectModel})
       : super(key: key);
 
   @override
@@ -73,6 +77,7 @@ class _CreateRequestState extends State<CreateRequest> {
                   userModel: widget.userModel,
                   loggedInUser: snapshot.data.loggedinuser,
                   projectId: widget.projectId,
+                  projectModel: widget.projectModel,
                 );
               }
               return Text('');
@@ -95,6 +100,7 @@ class RequestCreateForm extends StatefulWidget {
   final String timebankId;
   final UserModel userModel;
   final UserModel loggedInUser;
+  final ProjectModel projectModel;
   String projectId;
   RequestCreateForm(
       {this.isOfferRequest,
@@ -102,7 +108,8 @@ class RequestCreateForm extends StatefulWidget {
       this.timebankId,
       this.userModel,
       this.loggedInUser,
-      this.projectId});
+      this.projectId,
+      this.projectModel});
 
   @override
   RequestCreateFormState createState() {
@@ -475,6 +482,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       }
       linearProgressForCreatingRequest();
       await _writeToDB();
+      await _updateProjectModel();
 
       if (widget.isOfferRequest == true && widget.userModel != null) {
         Navigator.pop(dialogContext);
@@ -677,6 +685,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     if (requestModel.id == null) return;
     await FirestoreManager.createRequest(requestModel: requestModel);
+  }
+
+  Future _updateProjectModel() async {
+    if(widget.projectModel!=null){
+      ProjectModel projectModel = widget.projectModel;
+      var userSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+      if(!projectModel.members.contains(userSevaUserId)){
+        projectModel.members.add(userSevaUserId);
+      }
+      projectModel.pendingRequests.add(requestModel.id);
+      await FirestoreManager.updateProject(projectModel: projectModel);
+    }
   }
 
   Future _getLocation() async {

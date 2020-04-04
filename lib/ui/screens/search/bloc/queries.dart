@@ -46,19 +46,19 @@ class Searches {
     return hitList;
   }
 
-// Feeds done
+
 
   static Stream<List<NewsModel>> searchFeeds(
       {@required String queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
+
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
         currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-
     String url = baseURL + '/newsfeed/_doc/_search';
     dynamic body = json.encode(
       {
-        "size": 3000,
+        "size": 1000,
         "query": {
           "bool": {
             "must": [
@@ -102,27 +102,27 @@ class Searches {
     List<NewsModel> feedsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy != null) {
+      if (loggedInUser.blockedBy.length==0) {
+        NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
+        news.id = map['_id'];
+        feedsList.add(news);
+      } else {
         if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
           NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
           news.id = map['_id'];
           feedsList.add(news);
         }
-      } else {
-        NewsModel news = NewsModel.fromMapElasticSearch(sourceMap);
-        news.id = map['_id'];
-        feedsList.add(news);
       }
     });
-    feedsList.sort((a, b) => a.title.compareTo(b.title));
+//    feedsList.sort((a, b) => a.title.compareTo(b.title));
     yield feedsList;
   }
 
-// Offers done
+
 
   static Stream<List<OfferModel>> searchOffers(
       {@required queryString,
-      @required loggedInUser,
+      @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     print("Query hit one");
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -161,19 +161,19 @@ class Searches {
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy != null) {
+      if (loggedInUser.blockedBy.length==0) {
+        OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
+        if (model.associatedRequest == null ||
+            model.associatedRequest.isEmpty) {
+          offersList.add(model);
+        }
+      } else {
         if (!loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
           if (model.associatedRequest == null ||
               model.associatedRequest.isEmpty) {
             offersList.add(model);
           }
-        }
-      } else {
-        OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
-        if (model.associatedRequest == null ||
-            model.associatedRequest.isEmpty) {
-          offersList.add(model);
         }
       }
     });
@@ -185,7 +185,7 @@ class Searches {
 
 //  static Stream<List<RequestModel>> searchProjects({
 //    @required String queryString,
-//    @required loggedInUser,
+//    @required UserModel loggedInUser,
 //    @required CommunityModel currentCommunityOfUser
 //  }) async* {
 //  List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
@@ -218,14 +218,14 @@ class Searches {
 //    List<RequestModel> projectsList = [];
 //    hitList.forEach((map) {
 //      Map<String, dynamic> sourceMap = map['_source'];
-//      if(loggedInUser.blockedBy != null){
+//      if(loggedInUser.blockedBy.length==0){
+//        ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
+//        projectsList.add(model);
+//      }else{
 //        if(!loggedInUser.blockedBy.contains(sourceMap["creator_id"])){
 //          ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
 //          projectsList.add(model);
 //        }
-//      }else{
-//        ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
-//        projectsList.add(model);
 //      }
 //
 //    });
@@ -233,14 +233,14 @@ class Searches {
 //    yield projectsList;
 //  }
 
-  // Requests done
-
   static Stream<List<RequestModel>> searchRequests(
       {@required String queryString,
-      @required loggedInUser,
+      @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
         currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    print("inside search feeds function " );
+
     String url = baseURL + '/requests/request/_search';
     dynamic body = json.encode(
       {
@@ -273,25 +273,26 @@ class Searches {
     List<RequestModel> requestsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy != null) {
+      if (loggedInUser.blockedBy.length == 0) {
+        RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
+        if (model.accepted == false) requestsList.add(model);
+      } else {
         if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
           RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
           if (model.accepted == false) requestsList.add(model);
         }
-      } else {
-        RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
-        if (model.accepted == false) requestsList.add(model);
+
       }
       requestsList.sort((a, b) => a.title.compareTo(b.title));
     });
     yield requestsList;
   }
 
-  // group Timebanks
+  // Groups DONE
 
   static Stream<List<TimebankModel>> searchGroups(
       {@required queryString,
-      @required loggedInUser,
+      @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     String url = baseURL + "/sevaxtimebanks/sevaxtimebank/_search";
     dynamic body = json.encode({
@@ -324,25 +325,25 @@ class Searches {
     List<TimebankModel> timeBanksList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy != null) {
+      if (loggedInUser.blockedBy.length==0) {
+        var timeBank = TimebankModel.fromMap(sourceMap);
+        timeBanksList.add(timeBank);
+      } else {
         if (!loggedInUser.blockedBy.contains(sourceMap["creator_id"])) {
           var timeBank = TimebankModel.fromMap(sourceMap);
           timeBanksList.add(timeBank);
         }
-      } else {
-        var timeBank = TimebankModel.fromMap(sourceMap);
-        timeBanksList.add(timeBank);
       }
 //      timeBanksList.sort((a, b) => a.name.compareTo(b.name));
     });
     yield timeBanksList;
   }
 
-  // Users of a timebank done
+  // Members DONE
 
   static Stream<List<UserModel>> searchMembersOfTimebank(
       {@required queryString,
-      @required loggedInUser,
+      @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
     String url = baseURL + '/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
@@ -355,9 +356,6 @@ class Searches {
                 "match": {
                   "root_timebank_id": "${FlavorConfig.values.timebankId}"
                 }
-              },
-              {
-                "match": {"communities": loggedInUser.currentCommunity}
               },
               {
                 "multi_match": {
@@ -377,28 +375,33 @@ class Searches {
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy != null) {
-        if (!loggedInUser.blockedBy.contains(sourceMap['sevauserid'])) {
+      if (loggedInUser.blockedBy.length==0) {
+        if(sourceMap['communities'].contains(loggedInUser.currentCommunity) && loggedInUser.sevaUserID != sourceMap['sevauserid']) {
           UserModel user = UserModel.fromMap(sourceMap);
           usersList.add(user);
         }
       } else {
-        UserModel user = UserModel.fromMap(sourceMap);
-        usersList.add(user);
+        if (sourceMap['communities'].contains(loggedInUser.currentCommunity) && !loggedInUser.blockedBy.contains(sourceMap['sevauserid']) && loggedInUser.sevaUserID != sourceMap['sevauserid'] ) {
+          UserModel user = UserModel.fromMap(sourceMap);
+          usersList.add(user);
       }
+    }
     });
     usersList.sort((a, b) => a.fullname.compareTo(b.fullname));
     yield usersList;
   }
 
+
   static List<String> getTimebanksAndGroupsOfUser(
       timebanksOfCommunity, timebanksOfUser) {
+
     List<String> timebankarr = new List();
     timebanksOfCommunity.forEach((tb) {
       if (timebanksOfUser.contains(tb)) {
         timebankarr.add(tb);
       }
     });
+    print("gettimebanksandgroupsofuser " + timebankarr.length.toString());
     return timebankarr;
   }
 }

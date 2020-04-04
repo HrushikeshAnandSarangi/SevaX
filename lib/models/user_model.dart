@@ -111,13 +111,10 @@ class UserModel extends DataModel {
     }
 
     if (map.containsKey('blockedMembers')) {
-      //print("Blocked Data present");
       List<String> blockedMembers = List.castFrom(map['blockedMembers']);
       this.blockedMembers = blockedMembers;
-      // SevaCore.of(context).loggedInUser.blockedMembers = blockedMembers;
     } else {
       this.blockedMembers = List();
-      // print("Blocked Data not present");
     }
 
     if (map.containsKey('currentCommunity')) {
@@ -135,10 +132,8 @@ class UserModel extends DataModel {
     if (map.containsKey('blockedBy')) {
       List<String> blockedBy = List.castFrom(map['blockedBy']);
       this.blockedBy = blockedBy;
-      //print("data updated");
     } else {
       this.blockedBy = List();
-      //print("data not found");
     }
 
     if (map.containsKey('bio')) {
@@ -176,8 +171,8 @@ class UserModel extends DataModel {
       List<String> campaignList = List.castFrom(map['membership_campaigns']);
       this.membershipCampaigns = campaignList;
     }
-    if (map.containsKey('membership_timebanks')) {
-      List<String> timebanksList = List.castFrom(map['membership_timebanks']);
+    if (map.containsKey('membershipTimebanks')) {
+      List<String> timebanksList = List.castFrom(map['membershipTimebanks']);
       this.membershipTimebanks = timebanksList;
     }
     if (map.containsKey('sevauserid')) {

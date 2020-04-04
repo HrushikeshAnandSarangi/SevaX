@@ -13,8 +13,9 @@ import 'create_edit_project.dart';
 
 class AboutProjectView extends StatefulWidget {
   final String project_id;
+  final String timebankId;
 
-  AboutProjectView({this.project_id});
+  AboutProjectView({this.project_id,this.timebankId});
 
   @override
   _AboutProjectViewState createState() => _AboutProjectViewState();
@@ -85,12 +86,11 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                             child: FlatButton(
                               onPressed: () {
                                 print('pressed');
-
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => CreateEditProject(
-                                        timebankId: '',
+                                        timebankId: widget.timebankId,
                                         isCreateProject: false,
                                         projectId: projectModel.id,
                                       ),
