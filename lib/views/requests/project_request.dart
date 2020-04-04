@@ -137,7 +137,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
                     }
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
-                        return Center(child: CircularProgressIndicator());
+                        return loadingWidget;
                       default:
                         RequestModel model =
                             snapshot.data;
@@ -187,11 +187,26 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
     );
   }
 
+  Widget get loadingWidget{
+    return Container(
+      height: 150,
+      decoration: containerDecorationR,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+      child: Card(
+        color: Colors.white,
+        elevation: 2,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      )
+    );
+  }
+
   Widget getProjectRequestWidget({
     RequestModel model,
     String loggedintimezone,
     BuildContext context,
-    String address
+    String address,
   }){
     return Container(
       decoration: containerDecorationR,
