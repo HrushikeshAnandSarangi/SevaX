@@ -1213,7 +1213,7 @@ class RequestListItemsState extends State<RequestListItems> {
         if(snapshot.hasData)
           return snapshot.data;
 
-        return getListWidgetItem(
+        return getProjectRequestWidget(
             model: model,
             loggedintimezone: loggedintimezone,
             context: context,
@@ -1229,7 +1229,7 @@ class RequestListItemsState extends State<RequestListItems> {
     BuildContext context,
   }) async{
     var address = await _getLocation(model.location);
-    return getListWidgetItem(
+    return getProjectRequestWidget(
         model: model,
         loggedintimezone: loggedintimezone,
         context: context,
@@ -1237,7 +1237,7 @@ class RequestListItemsState extends State<RequestListItems> {
     );
   }
 
-  Widget getListWidgetItem({
+  Widget getProjectRequestWidget({
     RequestModel model,
     String loggedintimezone,
     BuildContext context,

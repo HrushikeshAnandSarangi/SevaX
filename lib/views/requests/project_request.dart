@@ -6,15 +6,11 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/exchange/edit_request.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
-import 'package:usage/uuid/uuid.dart';
 import 'package:intl/intl.dart';
 import '../../flavor_config.dart';
 import '../../new_baseline/models/project_model.dart';
 import '../core.dart';
-import '../onboarding/findcommunitiesview.dart';
 import '../project_view/about_project_view.dart';
-import '../timebanks/join_sub_timebank.dart';
 
 class ProjectRequests extends StatefulWidget {
   String timebankId;
@@ -31,22 +27,31 @@ class ProjectRequests extends StatefulWidget {
 class RequestsState extends State<ProjectRequests> with SingleTickerProviderStateMixin {
   UserModel user = null;
   TabController tabController;
+  ProjectModel projectModel;
   @override
   void initState() {
     super.initState();
     tabController = new TabController(length: 2, vsync: this);
+    projectModel = widget.projectModel;
   }
 
   @override
   void didChangeDependencies() {
+    super.didChangeDependencies();
     Future.delayed(Duration.zero, () {
       FirestoreManager.getUserForIdStream(
-          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID).listen((onData){
-            user = onData;
-            setState(() {});
+          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID
+      ).listen((onData){
+          user = onData;
+          setState(() {});
+      });
+      FirestoreManager.getProjectStream(
+        projectId: projectModel.id
+      ).listen((onData){
+        projectModel = onData;
+        setState(() {});
       });
     });
-
   }
 
   @override
@@ -59,7 +64,7 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
             centerTitle: true,
             elevation: 0.5,
             title: Text(
-              '${widget.projectModel.name}',
+              '${projectModel.name}',
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -88,7 +93,8 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
                   children: [
                     requestBody,
                     AboutProjectView(
-                      project_id: widget.projectModel.id,
+                      project_id: projectModel.id,
+                      timebankId: widget.timebankId,
                     ),
                   ],
                 ),
@@ -118,16 +124,195 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
         height: 200,
         child: Container(
           margin: EdgeInsets.only(left: 0, right: 0, top: 10),
-          child: Column(
-            children: <Widget>[
-              RequestListItems(
-                  parentContext: context,
-                  timebankId: widget.timebankId,
-                  timebankModel: widget.timebankModel,
-                  isProjectRequest: true,
-                  projectId: widget.projectModel.id,
+          child: ListView.builder(
+              itemCount: projectModel.pendingRequests.length,
+              itemBuilder: (_context, index) {
+                return StreamBuilder<RequestModel>(
+                  stream: FirestoreManager.getRequestStreamById(
+                      requestId: projectModel.pendingRequests[index]),
+                  builder: (context, snapshot) {
+
+                    if (snapshot.hasError) {
+                      return new Text('Error: ${snapshot.error}');
+                    }
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Center(child: CircularProgressIndicator());
+                      default:
+                        RequestModel model =
+                            snapshot.data;
+                      return FutureBuilder<String>(
+                        future: _getLocation(model.location),
+                        builder: (context, snapshot){
+                          var address = snapshot.data;
+                          switch (snapshot.connectionState) {
+                            case ConnectionState.waiting:
+                              return getProjectRequestWidget(
+                                model: model,
+                                loggedintimezone: user.timezone,
+                                context: context,
+                                address: "Fetching location",
+                              );
+                            default:
+                              return getProjectRequestWidget(
+                                model: model,
+                                loggedintimezone: user.timezone,
+                                context: context,
+                                address: address,
+                              );
+                          }
+                        }
+                      );
+                    }
+                  },
+                );
+              }
+            ),
+        ),
+      ),
+    );
+  }
+
+  Future<Widget> getProjectRequestWidgetWithLocation({
+    RequestModel model,
+    String loggedintimezone,
+    BuildContext context,
+  }) async{
+    var address = await _getLocation(model.location);
+    return getProjectRequestWidget(
+        model: model,
+        loggedintimezone: loggedintimezone,
+        context: context,
+        address: address
+    );
+  }
+
+  Widget getProjectRequestWidget({
+    RequestModel model,
+    String loggedintimezone,
+    BuildContext context,
+    String address
+  }){
+    return Container(
+      decoration: containerDecorationR,
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+      child: Card(
+        color: Colors.white,
+        elevation: 2,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditRequest(
+                  timebankId:
+                  SevaCore.of(context).loggedInUser.currentTimebank,
+                  requestModel: model,
+                ),
               ),
-            ],
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          FlatButton.icon(
+                            icon: Icon(
+                              Icons.add_location,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            label: Container(
+                              width: MediaQuery.of(context).size.width - 170,
+                              child: Text(
+                                "$address",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+//                      Text(
+//                        '${model.postTimestamp}',
+//                        style: TextStyle(
+//                          color: Colors.black38,
+//                        ),
+//                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 10,left: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        height: 40,
+                        width: 40,
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            '${model.photoUrl}',
+//                              'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+                          ),
+                          minRadius: 40.0,
+                        ),
+                      ),
+                      Container(
+                        child: Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              getSpacerItem(
+                                Text(
+                                  '${model.title}',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                              getSpacerItem(
+                                Text(
+                                  '${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}',
+                                  style: TextStyle(
+                                    color: Colors.black38,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                              getSpacerItem(
+                                Flexible(
+                                  flex: 10,
+                                  child: Text(
+                                    '${model.description}',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 17,
+                                    ),
+//                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -135,6 +320,9 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
   }
 
   Widget get requestStatusBar {
+    var pendingRequest = projectModel.pendingRequests.length;
+    var completedRequest = projectModel.completedRequests.length;
+    var totalRequests = pendingRequest + completedRequest;
     return Container(
       height: 75,
       width: MediaQuery.of(context).size.width,
@@ -145,51 +333,13 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
         children: <Widget>[
           Row(
             children: <Widget>[
-              setTitle(num: '10', title: 'Requests'),
-              setTitle(num: '3', title: 'Pending'),
-              setTitle(num: '7', title: 'Completed'),
+              setTitle(num: '$totalRequests', title: 'Requests'),
+              setTitle(num: '$pendingRequest', title: 'Pending'),
+              setTitle(num: '$completedRequest', title: 'Completed'),
             ],
           ),
         ],
       ),
-    );
-  }
-
-  Widget get requestCards{
-    var finalRequestModelList = List<RequestModel>();
-    return StreamBuilder<List<RequestModel>>(
-      stream: FirestoreManager.getAllRequestListStream(),
-      builder: (BuildContext context,
-          AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
-        if (requestListSnapshot.hasError) {
-          return new Text('Error: ${requestListSnapshot.error}');
-        }
-        switch (requestListSnapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
-          default:
-            List<RequestModel> requestModelList =
-                requestListSnapshot.data;
-            for(var i = 0; i<requestModelList.length;i++){
-              var model = requestModelList[i];
-              if(model.timebankId == widget.timebankId){
-                if(model.projectId != null && model.projectId != ""){
-                  finalRequestModelList.add(model);
-                }
-              }
-            }
-            if (finalRequestModelList.length == 0) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(child: Text('No Project Requests')),
-              );
-            }
-
-            return getList(
-              finalRequestModelList: finalRequestModelList,
-            );
-        }
-      },
     );
   }
 
@@ -442,7 +592,8 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
           MaterialPageRoute(
             builder: (context) => CreateRequest(
               timebankId: widget.timebankModel.id,
-              projectId: widget.projectModel.id,
+              projectId: projectModel.id,
+              projectModel: projectModel,
             ),
           ),
         );
@@ -455,7 +606,8 @@ class RequestsState extends State<ProjectRequests> with SingleTickerProviderStat
         MaterialPageRoute(
           builder: (context) => CreateRequest(
             timebankId: widget.timebankModel.id,
-            projectId: widget.projectModel.id,
+            projectId: projectModel.id,
+            projectModel: projectModel,
           ),
         ),
       );
