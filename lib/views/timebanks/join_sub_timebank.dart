@@ -12,6 +12,8 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
@@ -85,6 +87,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   Widget build(BuildContext context) {
+    final _bloc = BlocProvider.of<UserDataBloc>(context);
+    print("in explore ==> ${_bloc.user.email}");
     return Scaffold(
 //      appBar: AppBar(
 //        title: Text("Group",
@@ -117,7 +121,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 //      ),
       body: isDataLoaded
           ? SingleChildScrollView(
-              child: getTimebanks(context: context),
+              child: getTimebanks(context: context,bloc: _bloc),
             )
           : Center(child: CircularProgressIndicator()),
     );
@@ -125,7 +129,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   List<String> dropdownList = [];
 
-  Widget getTimebanks({BuildContext context}) {
+  Widget getTimebanks({BuildContext context,UserDataBloc bloc}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
     return FutureBuilder<List<TimebankModel>>(
@@ -176,22 +180,22 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                     if (_joinRequestModels != null) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status,bloc);
                     } else if (timebank.admins
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status,bloc);
                     } else if (timebank.coordinators
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status,bloc);
                     } else if (timebank.members
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status,bloc);
                     } else {
                       status = CompareToTimeBank.JOIN;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status,bloc);
                     }
                   },
                   padding: const EdgeInsets.all(8),
@@ -211,15 +215,18 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         });
   }
 
-  Widget makeItem(TimebankModel timebank, CompareToTimeBank status) {
+  Widget makeItem(TimebankModel timebank, CompareToTimeBank status,bloc) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TimebankTabsViewHolder.of(
-              timebankId: timebank.id,
-              timebankModel: timebank,
+            builder: (context) => BlocProvider<UserDataBloc>(
+              bloc: bloc,
+                          child: TimebankTabsViewHolder.of(
+                timebankId: timebank.id,
+                timebankModel: timebank,
+              ),
             ),
           ),
         );
