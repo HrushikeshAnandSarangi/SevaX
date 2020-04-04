@@ -155,6 +155,9 @@ Stream<List<RequestModel>> getTimebankRequestListStream(
             }
           },
         );
+
+        print("request list size ____________ ${requestList.length}");
+
         requestSink.add(requestList);
       },
     ),
@@ -396,10 +399,9 @@ Future<void> approveRequestCompletion({
           .elementAt(0)
           .toMap(),
     );
-  
+
     if (model.requestMode == RequestMode.PERSONAL_REQUEST)
       await utils.createTransactionNotification(model: debitnotification);
-  
   }
 
   print("========================================================== Step6");
