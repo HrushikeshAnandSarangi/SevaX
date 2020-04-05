@@ -740,6 +740,19 @@ Future<void> updateProject({@required ProjectModel projectModel}) async {
       .updateData(projectModel.toMap());
 }
 
+Future<void> updateProjectCompletedRequest(
+    {@required String projectId, @required String requestId}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectId)
+      .updateData({
+    'completedRequests': FieldValue.arrayUnion(
+      [requestId],
+    ),
+    'pendingRequests': FieldValue.arrayRemove([requestId])
+  });
+}
+
 Stream<List<RequestModel>> getCompletedRequestStream({
   @required String userEmail,
   @required String userId,

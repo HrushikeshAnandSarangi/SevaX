@@ -148,10 +148,8 @@ class RequestsState extends State<ProjectRequests>
             return Center(child: CircularProgressIndicator());
           default:
             List<RequestModel> requestModelList = requestListSnapshot.data;
-
-//            requestModelList.removeWhere((model) {
-//              if(model.)
-//            });
+            requestModelList = filterCompletedRequests(
+                requestModelList: requestModelList, mContext: context);
             requestModelList = filterBlockedRequestsContent(
                 context: context, requestModelList: requestModelList);
 
@@ -493,6 +491,22 @@ class RequestsState extends State<ProjectRequests>
         : filteredList.add(request));
 
     return filteredList;
+  }
+
+  List<RequestModel> filterCompletedRequests(
+      {List<RequestModel> requestModelList, BuildContext mContext}) {
+    // List<RequestModel> filteredList = [];
+    String sevauserid = SevaCore.of(mContext).loggedInUser.sevaUserID;
+
+    requestModelList.forEach((request) {
+      if (sevauserid != request.sevaUserId ||
+          !widget.timebankModel.admins.contains(sevauserid)) {
+        requestModelList.removeWhere(
+            (request) => projectModel.completedRequests.contains(request.id));
+      }
+    });
+
+    return requestModelList;
   }
 
   BoxDecoration get containerDecorationR {

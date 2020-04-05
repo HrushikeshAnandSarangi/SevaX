@@ -831,8 +831,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       model: claimedRequestStatus,
     );
 
-      await approveTransaction(requestModel, userId, notificationId, sevaCore);
-  
+    await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
   Future approveTransaction(RequestModel model, String userId,
@@ -860,6 +859,10 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
+    if (model.projectId.isNotEmpty) {
+      await FirestoreManager.updateProjectCompletedRequest(
+          projectId: model.projectId, requestId: model.id);
+    }
     setState(() {
       isProgressBarActive = false;
     });
