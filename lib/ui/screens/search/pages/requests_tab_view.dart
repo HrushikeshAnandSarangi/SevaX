@@ -83,7 +83,9 @@ class RequestsTabView extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RequestTabHolder(isAdmin: true,),
+          builder: (context) => RequestTabHolder(
+            isAdmin: true,
+          ),
         ),
       );
     } else {
@@ -94,7 +96,7 @@ class RequestsTabView extends StatelessWidget {
             requestItem: requestModel,
             timebankModel: timebankModel,
             isAdmin: false,
-            project_id: '',
+            //  project_id: '',
           ),
         ),
       );

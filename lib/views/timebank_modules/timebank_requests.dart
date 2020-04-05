@@ -979,8 +979,7 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-                    requestModelList
-                        .removeWhere((request) => request.projectId != null);
+                    //   requestModelList.removeWhere((request) => request.projectId != null);
 
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
@@ -1235,7 +1234,6 @@ class RequestListItemsState extends State<RequestListItems> {
             requestItem: model,
             timebankModel: widget.timebankModel,
             isAdmin: false,
-            project_id: '',
           ),
         ),
       );

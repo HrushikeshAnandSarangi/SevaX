@@ -135,53 +135,111 @@ class RequestsState extends State<ProjectRequests>
   }
 
   Widget get requestResult {
-    return projectModel.pendingRequests.length == 0
-        ? Column(
-            children: <Widget>[
-              Text(''),
-              Text('No project request found'),
-            ],
-          )
-        : ListView.builder(
-            itemCount: projectModel.pendingRequests.length,
-            itemBuilder: (_context, index) {
-              return StreamBuilder<RequestModel>(
-                stream: FirestoreManager.getRequestStreamById(
-                    requestId: projectModel.pendingRequests[index]),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return new Text('Error: ${snapshot.error}');
-                  }
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return loadingWidget;
-                    default:
-                      RequestModel model = snapshot.data;
-                      return FutureBuilder<String>(
-                          future: _getLocation(model.location),
-                          builder: (context, snapshot) {
-                            var address = snapshot.data;
-                            switch (snapshot.connectionState) {
-                              case ConnectionState.waiting:
-                                return getProjectRequestWidget(
-                                  model: model,
-                                  loggedintimezone: user.timezone,
-                                  context: context,
-                                  address: "Fetching location",
-                                );
-                              default:
-                                return getProjectRequestWidget(
-                                  model: model,
-                                  loggedintimezone: user.timezone,
-                                  context: context,
-                                  address: address,
-                                );
-                            }
-                          });
-                  }
-                },
+    return StreamBuilder<List<RequestModel>>(
+      stream: FirestoreManager.getProjectRequestsStream(
+          project_id: projectModel.id),
+      builder: (BuildContext context,
+          AsyncSnapshot<List<RequestModel>> requestListSnapshot) {
+        if (requestListSnapshot.hasError) {
+          return new Text('Error: ${requestListSnapshot.error}');
+        }
+        switch (requestListSnapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+          default:
+            List<RequestModel> requestModelList = requestListSnapshot.data;
+
+//            requestModelList.removeWhere((model) {
+//              if(model.)
+//            });
+            requestModelList = filterBlockedRequestsContent(
+                context: context, requestModelList: requestModelList);
+
+            if (requestModelList.length == 0) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(child: Text('No Project Requests')),
               );
-            });
+            }
+
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: requestModelList.length + 1,
+              itemBuilder: (context, index) {
+                if (index >= requestModelList.length) {
+                  return Container(
+                    width: double.infinity,
+                    height: 65,
+                  );
+                }
+                return FutureBuilder<String>(
+                    future: _getLocation(
+                        requestModelList.elementAt(index).location),
+                    builder: (context, snapshot) {
+                      var address = snapshot.data;
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return getProjectRequestWidget(
+                            model: requestModelList.elementAt(index),
+                            loggedintimezone: user.timezone,
+                            context: context,
+                            address: "Fetching location",
+                          );
+                        default:
+                          return getProjectRequestWidget(
+                            model: requestModelList.elementAt(index),
+                            loggedintimezone: user.timezone,
+                            context: context,
+                            address: address,
+                          );
+                      }
+                    });
+              },
+            );
+        }
+      },
+    );
+
+//        : ListView.builder(
+//            itemCount: projectModel.pendingRequests.length,
+//            itemBuilder: (_context, index) {
+//              return StreamBuilder<RequestModel>(
+//                stream: FirestoreManager.getRequestStreamById(
+//                    requestId: projectModel.pendingRequests[index]),
+//                builder: (context, snapshot) {
+//                  if (snapshot.hasError) {
+//                    return new Text('Error: ${snapshot.error}');
+//                  }
+//                  switch (snapshot.connectionState) {
+//                    case ConnectionState.waiting:
+//                      return loadingWidget;
+//                    default:
+//                      RequestModel model = snapshot.data;
+//                      return FutureBuilder<String>(
+//                          future: _getLocation(model.location),
+//                          builder: (context, snapshot) {
+//                            var address = snapshot.data;
+//                            switch (snapshot.connectionState) {
+//                              case ConnectionState.waiting:
+//                                return getProjectRequestWidget(
+//                                  model: model,
+//                                  loggedintimezone: user.timezone,
+//                                  context: context,
+//                                  address: "Fetching location",
+//                                );
+//                              default:
+//                                return getProjectRequestWidget(
+//                                  model: model,
+//                                  loggedintimezone: user.timezone,
+//                                  context: context,
+//                                  address: address,
+//                                );
+//                            }
+//                          });
+//                  }
+//                },
+//              );
+//            });
   }
 
   Future<Widget> getProjectRequestWidgetWithLocation({
@@ -235,7 +293,6 @@ class RequestsState extends State<ProjectRequests>
               context,
               MaterialPageRoute(
                 builder: (context) => RequestDetailsAboutPage(
-                  project_id: projectModel.id,
                   requestItem: model,
                   //   applied: isAdmin ? false : true,
                   timebankModel: widget.timebankModel,
@@ -501,7 +558,6 @@ class RequestsState extends State<ProjectRequests>
                 context,
                 MaterialPageRoute(
                   builder: (context) => RequestDetailsAboutPage(
-                    project_id: projectModel.id,
                     requestItem: model,
                     //   applied: isAdmin ? false : true,
                     timebankModel: widget.timebankModel,
