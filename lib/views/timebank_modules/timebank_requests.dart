@@ -702,7 +702,7 @@ class NearRequestListItems extends StatelessWidget {
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
                   requestModelList
-                      .removeWhere((request) => request.projectId != null);
+                      .removeWhere((request) => request.projectId.isNotEmpty);
 
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
@@ -927,7 +927,7 @@ class RequestListItemsState extends State<RequestListItems> {
                         snapshot.data.requests;
 
                     requestModelList
-                        .removeWhere((request) => request.projectId != null);
+                        .removeWhere((request) => request.projectId.isNotEmpty);
 
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
@@ -979,7 +979,8 @@ class RequestListItemsState extends State<RequestListItems> {
                   default:
                     List<RequestModel> requestModelList =
                         requestListSnapshot.data;
-                    //   requestModelList.removeWhere((request) => request.projectId != null);
+                    requestModelList
+                        .removeWhere((request) => request.projectId.isNotEmpty);
 
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
@@ -1093,7 +1094,7 @@ class RequestListItemsState extends State<RequestListItems> {
         color: Colors.white,
         elevation: 2,
         child: InkWell(
-          onTap: () => editRequest(),
+          onTap: () => editRequest(model: model),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             child: Row(

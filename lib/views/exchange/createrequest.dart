@@ -701,12 +701,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Future _updateProjectModel() async {
-    if (widget.projectId != null) {
+    if (widget.projectId.isNotEmpty) {
       ProjectModel projectModel = widget.projectModel;
-      var userSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-      if (!projectModel.members.contains(userSevaUserId)) {
-        projectModel.members.add(userSevaUserId);
-      }
+//      var userSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+//      if (!projectModel.members.contains(userSevaUserId)) {
+//        projectModel.members.add(userSevaUserId);
+//      }
       projectModel.pendingRequests.add(requestModel.id);
       await FirestoreManager.updateProject(projectModel: projectModel);
     }
