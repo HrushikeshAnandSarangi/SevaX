@@ -42,6 +42,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   String locationError = '';
   var startDate;
   var endDate;
+  bool isDataLoaded = false;
 
   @override
   void initState() {
@@ -59,6 +60,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       projectModel = onValue;
       print("projectttttt ${projectModel}");
       selectedAddress = projectModel.address;
+      isDataLoaded = true;
       setState(() {});
     });
   }
@@ -85,10 +87,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: createProjectForm,
-      ),
+      body: widget.isCreateProject
+          ? Form(
+              key: _formKey,
+              child: createProjectForm,
+            )
+          : isDataLoaded
+              ? Form(
+                  key: _formKey,
+                  child: createProjectForm,
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                ),
     );
   }
 
