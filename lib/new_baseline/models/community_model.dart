@@ -121,6 +121,7 @@ class CommunityModel extends DataModel {
   String created_by;
   String created_at;
   String primary_timebank;
+  double taxPercentage;
   List<String> timebanks;
   List<String> admins;
   List<String> coordinators;
@@ -133,6 +134,7 @@ class CommunityModel extends DataModel {
     this.transactionCount = map.containsKey('transactionCount')
         ? map['transactionCount'] ?? 0
         : null;
+    this.taxPercentage = map["taxPercentage"] ?? 0.0;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
     this.transactionCount = map['transactionCount'] ?? 0;
     this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});
@@ -175,7 +177,9 @@ class CommunityModel extends DataModel {
     if (key == 'about') {
       this.about = value;
     }
-
+    if (key == 'taxPercentage') {
+      this.taxPercentage = value;
+    }
     if (key == 'primary_email') {
       this.primary_email = value;
     }
@@ -211,6 +215,10 @@ class CommunityModel extends DataModel {
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> object = {};
+
+    if (this.taxPercentage != null) {
+      object['taxPercentage'] = this.taxPercentage;
+    }
 
     if (this.id != null && this.id.isNotEmpty) {
       object['id'] = this.id;
@@ -280,7 +288,8 @@ class CommunityModel extends DataModel {
         'admins: $admins, '
         'coordinators: $coordinators,'
         ' members: $members, '
-        'transactionCount: $transactionCount}';
+        'transactionCount: $transactionCount}'
+        'taxPercentage: $taxPercentage}';
   }
 }
 

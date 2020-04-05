@@ -88,7 +88,7 @@ class CreateEditCommunityViewFormState
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-
+  double taxPercentage = 0;
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
@@ -445,9 +445,31 @@ class CreateEditCommunityViewFormState
                       color: Colors.grey,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  SizedBox(height: 20),
+                  headingText('Select Tax percentage'),
+                  Slider(
+                    label: "${taxPercentage.toInt()}%",
+                    value: taxPercentage,
+                    min: 0,
+                    max: 15,
+                    divisions: 15,
+                    onChanged: (value) {
+                      snapshot.data.community
+                          .updateValueByKey('taxPercentage', value / 100);
+                      setState(() {
+                        taxPercentage = value;
+                      });
+                      print(snapshot.data.community);
+                    },
                   ),
+                  Text(
+                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   Center(
                     child: FlatButton.icon(
                       icon: Icon(Icons.add_location),

@@ -14,12 +14,12 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
-import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
+import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
 
 import 'edit_profile.dart';
 import 'timezone.dart';
@@ -226,52 +226,16 @@ class _ProfilePageState extends State<ProfilePage>
                           ),
                         ),
                         SizedBox(height: 20),
-                        Container(
-                          height: 60,
-                          padding: EdgeInsets.all(5),
-                          child: RaisedButton(
-                            shape: StadiumBorder(),
-                            color: Colors.white,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 2.0),
-                                      child: sevaCoinIcon,
-                                    ),
-                                    SizedBox(height: 1),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: sevaCoinIcon,
-                                    ),
-                                    SizedBox(height: 1),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 6.0),
-                                      child: sevaCoinIcon,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 8),
-                                getMembersSevaCoinBalance()
-                              ],
+                        SevaCoinWidget(
+                          amount: sevaCoinsValue ?? 0,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ReviewEarningsPage();
+                              },
                             ),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return ReviewEarningsPage();
-                                  },
-                                ),
-                              );
-                            },
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -432,7 +396,44 @@ class _ProfilePageState extends State<ProfilePage>
                         //     ),
                         //   ),
                         // ),
-
+                        SizedBox(height: 10),
+                        RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              // TextSpan(
+                              //   text: 'or \n\n',
+                              //   style: TextStyle(
+                              //     color: Colors.black,
+                              //   ),
+                              // ),
+                              TextSpan(
+                                text: 'Discover more Timebanks',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    //Navigate to discover teams
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return FindCommunitiesView(
+                                            keepOnBackPress: true,
+                                            loggedInUser: SevaCore.of(context)
+                                                .loggedInUser,
+                                            showBackBtn: true,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {
@@ -454,44 +455,6 @@ class _ProfilePageState extends State<ProfilePage>
                                     padding: const EdgeInsets.only(left: 15),
                                     child: Text(
                                       'My Timezone',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Icon(Icons.navigate_next),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return AboutApp();
-                                },
-                              ),
-                            );
-                          },
-                          child: Card(
-                            elevation: 2,
-                            child: Container(
-                              height: 60,
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      'Help',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.black,
@@ -827,50 +790,6 @@ class _ProfilePageState extends State<ProfilePage>
   //     ),
   //   );
   // }
-
-  Widget getMembersSevaCoinBalance() {
-    return FutureBuilder<double>(
-      future: getMemberBalance(
-        SevaCore.of(context).loggedInUser.email,
-        SevaCore.of(context).loggedInUser.sevaUserID,
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('',
-              style: TextStyle(
-                color: user.currentBalance > 0 ? Colors.blue : Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ));
-        }
-        if (snapshot.hasError) {
-          return Text('couldn\'t load balance',
-              style: TextStyle(
-                color: user.currentBalance > 0 ? Colors.blue : Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ));
-        }
-
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text('fetching balance...',
-              style: TextStyle(
-                color: user.currentBalance > 0 ? Colors.blue : Colors.red,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ));
-        }
-        return Text(
-          "${snapshot.data} Seva Credits",
-          style: TextStyle(
-            color: user.currentBalance > 0 ? Colors.blue : Colors.red,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        );
-      },
-    );
-  }
 
   void _showVerificationAndLogoutDialogue() {
     // flutter defined function
@@ -1239,18 +1158,6 @@ class _ProfilePageState extends State<ProfilePage>
   //   }));
   // }
 
-  Widget get sevaCoinIcon {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(2),
-        ),
-        color: Color.fromARGB(255, 255, 197, 75),
-      ),
-      width: 20,
-      height: 5,
-    );
-  }
 }
 
 class CommunityCard extends StatelessWidget {

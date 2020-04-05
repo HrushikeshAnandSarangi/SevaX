@@ -385,7 +385,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         ),
                       ),
                       TextSpan(
-                        text: 'has been credited to ${user.fullname}',
+                        text:
+                            'has been debited from your account', //credited to ${user.fullname}',
                         style: TextStyle(
                           color: Colors.grey,
                         ),
@@ -802,7 +803,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             content: Form(
               //key: _formKey,
               child: Column(
-                mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _getCloseButton(viewContext),
                   Container(

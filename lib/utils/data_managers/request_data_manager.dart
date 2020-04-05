@@ -9,6 +9,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -366,6 +367,7 @@ Future<void> approveRequestCompletion({
   @required RequestModel model,
   @required String userId,
   @required String communityId,
+  // @required num taxPercentage,
 }) async {
   var approvalCount = 0;
   if (model.transactions != null) {
@@ -378,6 +380,13 @@ Future<void> approveRequestCompletion({
   model.accepted = approvalCount >= model.numberOfApprovals;
 
   print("========================================================== Step1");
+
+  DocumentSnapshot data = await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get();
+  double taxPercentage = data.data['taxPercentage'];
+  print('---->tax percentage $taxPercentage');
 
   await Firestore.instance
       .collection('requests')
@@ -400,14 +409,54 @@ Future<void> approveRequestCompletion({
 
   print("========================================================== Step2");
 
-  num transactionvalue = model.durationOfRequest / 60;
-  String credituser = model.approvedUsers.toString();
+  double transactionvalue = (model.durationOfRequest / 60);
+
+  double tax = transactionvalue * taxPercentage;
+
+  double userAmount = transactionvalue - tax;
+
+  print('===>after tax  $userAmount');
+
+  Map<String, dynamic> transactionData = model.transactions
+      .where((transactionModel) {
+        if (transactionModel.from == model.sevaUserId &&
+            transactionModel.to == userId) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .elementAt(0)
+      .toMap();
+
   if (FlavorConfig.appFlavor == Flavor.APP) {
     await Firestore.instance
         .collection('users')
         .document(model.email)
         .updateData(
-            {'currentBalance': FieldValue.increment(-(transactionvalue))});
+            {'currentBalance': FieldValue.increment(-(userAmount.toDouble()))});
+
+    print("========================================================== Step3");
+
+    //Create transaction record for timebank
+    TimeBankBalanceTransactionModel balanceTransactionModel =
+        TimeBankBalanceTransactionModel(
+      communityId: communityId,
+      userId: userId,
+      requestId: model.id,
+      amount: tax,
+      timestamp:FieldValue.serverTimestamp()
+    );
+
+
+
+    Firestore.instance
+        .collection("communities")
+        .document(communityId)
+        .collection("balance")
+        .add(
+          balanceTransactionModel.toJson(),
+        );
 
     NotificationsModel debitnotification = NotificationsModel(
       timebankId: model.timebankId,
@@ -416,17 +465,7 @@ Future<void> approveRequestCompletion({
       senderUserId: userId,
       communityId: communityId,
       type: NotificationType.TransactionDebit,
-      data: model.transactions
-          .where((transactionModel) {
-            if (transactionModel.from == model.sevaUserId &&
-                transactionModel.to == userId) {
-              return true;
-            } else {
-              return false;
-            }
-          })
-          .elementAt(0)
-          .toMap(),
+      data: transactionData,
     );
 
     if (model.requestMode == RequestMode.PERSONAL_REQUEST)
@@ -438,7 +477,11 @@ Future<void> approveRequestCompletion({
   await Firestore.instance
       .collection('users')
       .document(user.email)
-      .updateData({'currentBalance': FieldValue.increment(transactionvalue)});
+      .updateData({'currentBalance': FieldValue.increment(userAmount)});
+
+  //User gets a notification with amount after tax deducation
+  transactionData["credits"] = userAmount;
+
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
@@ -446,17 +489,7 @@ Future<void> approveRequestCompletion({
     senderUserId: model.sevaUserId,
     communityId: communityId,
     type: NotificationType.TransactionCredit,
-    data: model.transactions
-        .where((transactionModel) {
-          if (transactionModel.from == model.sevaUserId &&
-              transactionModel.to == userId) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .elementAt(0)
-        .toMap(),
+    data: transactionData,
   );
 
   print("========================================================== Step7");
