@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 
 class Searches {
   static const baseURL = 'http://35.227.68.255//elasticsearch';
@@ -46,15 +48,22 @@ class Searches {
     return hitList;
   }
 
-
+  // Feeds DONE
 
   static Stream<List<NewsModel>> searchFeeds(
       {@required String queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-
-    List<String> myTimebanks = getTimebanksAndGroupsOfUser(
-        currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    List<String> timebanksIdArr = new List();
+    QuerySnapshot timebankSnap = await Firestore.instance.collection("timebanknew").where('members',arrayContains: loggedInUser.sevaUserID).getDocuments();
+    timebankSnap.documents.forEach((DocumentSnapshot doc){
+      if(doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4"){
+        timebanksIdArr.add(doc.documentID);
+        print("asdasdasdsdasdas"+doc.documentID);
+      }
+    });
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+//    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/newsfeed/_doc/_search';
     dynamic body = json.encode(
       {
@@ -118,15 +127,22 @@ class Searches {
     yield feedsList;
   }
 
-
+  // Offers DONE
 
   static Stream<List<OfferModel>> searchOffers(
       {@required queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    print("Query hit one");
-    List<String> myTimebanks = getTimebanksAndGroupsOfUser(
-        currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    List<String> timebanksIdArr = new List();
+    QuerySnapshot timebankSnap = await Firestore.instance.collection("timebanknew").where('members',arrayContains: loggedInUser.sevaUserID).getDocuments();
+    timebankSnap.documents.forEach((DocumentSnapshot doc){
+      if(doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4"){
+        timebanksIdArr.add(doc.documentID);
+        print("asdasdasdsdasdas"+doc.documentID);
+      }
+    });
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+//    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = baseURL + '/offers/offer/_search';
     dynamic body = json.encode(
       {
@@ -181,64 +197,88 @@ class Searches {
     yield offersList;
   }
 
-// TODO projects api integration.
+  // Projects DONE
 
-//  static Stream<List<RequestModel>> searchProjects({
-//    @required String queryString,
-//    @required UserModel loggedInUser,
-//    @required CommunityModel currentCommunityOfUser
-//  }) async* {
-//  List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-//    String url = baseURL + '/sevaxprojects/_doc/_search';
-//    dynamic body = json.encode(
-//      {
-//        "size":3000,
-//        "query": {
-//          "bool": {
-//            "must": [
-//              {
-//                "terms": {
-//                  "timebank_id.keyword": myTimebanks
-//                }
-//              },
-//              {
-//                "multi_match": {
-//                  "query": queryString,
-//                  "fields": ["address", "email_id", "name"],
-//                  "type": "phrase_prefix"
-//                }
-//              }
-//            ]
-//          }
-//        }
-//      },
-//    );
-//    List<Map<String, dynamic>> hitList =
-//    await _makeElasticSearchPostRequest(url, body);
-//    List<RequestModel> projectsList = [];
-//    hitList.forEach((map) {
-//      Map<String, dynamic> sourceMap = map['_source'];
-//      if(loggedInUser.blockedBy.length==0){
-//        ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
-//        projectsList.add(model);
-//      }else{
-//        if(!loggedInUser.blockedBy.contains(sourceMap["creator_id"])){
-//          ProjectModel model = ProjectModel.fromMapElasticSearch(sourceMap);
-//          projectsList.add(model);
-//        }
-//      }
-//
-//    });
-//    projectsList.sort((a, b) => a.name.compareTo(b.name));
-//    yield projectsList;
-//  }
+  static Stream<List<ProjectModel>> searchProjects({
+    @required String queryString,
+    @required UserModel loggedInUser,
+    @required CommunityModel currentCommunityOfUser
+  }) async* {
+    List<String> timebanksIdArr = new List();
+    QuerySnapshot timebankSnap = await Firestore.instance.collection("timebanknew").where('members',arrayContains: loggedInUser.sevaUserID).getDocuments();
+    timebankSnap.documents.forEach((DocumentSnapshot doc){
+      if(doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4"){
+        timebanksIdArr.add(doc.documentID);
+        print("asdasdasdsdasdas"+doc.documentID);
+      }
+    });
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+//    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    String url = baseURL + '/sevaxprojects/_doc/_search';
+    dynamic body = json.encode(
+      {
+        "size":3000,
+        "query": {
+          "bool": {
+            "must": [
+              {
+                "terms": {
+                  "timebank_id.keyword": myTimebanks
+                }
+              },
+              {
+                "multi_match": {
+                  "query": queryString,
+                  "fields": [
+                    "address",
+                    "description",
+                    "email_id",
+                    "name"
+                  ],
+                  "type": "phrase_prefix"
+                }
+              }
+            ]
+          }
+        }
+      },
+    );
+    List<Map<String, dynamic>> hitList =
+    await _makeElasticSearchPostRequest(url, body);
+    List<ProjectModel> projectsList = [];
+    hitList.forEach((map) {
+      Map<String, dynamic> sourceMap = map['_source'];
+      if(loggedInUser.blockedBy.length==0){
+        ProjectModel model = ProjectModel.fromMap(sourceMap);
+        projectsList.add(model);
+      }else{
+        if(!loggedInUser.blockedBy.contains(sourceMap["creator_id"])){
+          ProjectModel model = ProjectModel.fromMap(sourceMap);
+          projectsList.add(model);
+        }
+      }
+
+    });
+    projectsList.sort((a, b) => a.name.compareTo(b.name));
+    yield projectsList;
+  }
+
+  // Requests DONE
 
   static Stream<List<RequestModel>> searchRequests(
       {@required String queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    List<String> myTimebanks = getTimebanksAndGroupsOfUser(
-        currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
+    List<String> timebanksIdArr = new List();
+    QuerySnapshot timebankSnap = await Firestore.instance.collection("timebanknew").where('members',arrayContains: loggedInUser.sevaUserID).getDocuments();
+    timebankSnap.documents.forEach((DocumentSnapshot doc){
+      if(doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4"){
+        timebanksIdArr.add(doc.documentID);
+        print("asdasdasdsdasdas"+doc.documentID);
+      }
+    });
+    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, timebanksIdArr);
+//    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     print("inside search feeds function " );
 
     String url = baseURL + '/requests/request/_search';
@@ -401,7 +441,6 @@ class Searches {
         timebankarr.add(tb);
       }
     });
-    print("gettimebanksandgroupsofuser " + timebankarr.length.toString());
     return timebankarr;
   }
 }

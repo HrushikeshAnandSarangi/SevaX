@@ -17,7 +17,7 @@ class CustomNetworkImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: imageUrl,
+      imageUrl: imageUrl ?? "https://getuikit.com/v2/docs/images/placeholder_600x400.svg",
       fit: fit ?? BoxFit.fitWidth,
       placeholder: (context, url) => Center(
         child: placeholder ?? CircularProgressIndicator(),
