@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
-
+import 'package:sevaexchange/views/requests/project_request.dart';
 
 class ProjectsTabView extends StatefulWidget {
   @override
@@ -46,25 +47,44 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
-
+                    ProjectModel project = snapshot.data[index];
+                    int totalTask = project.completedRequests != null &&
+                            project.pendingRequests != null
+                        ? project.pendingRequests.length +
+                            project.completedRequests.length
+                        : 0;
                     return ProjectsCard(
-                      timestamp: snapshot.data[index].createdAt,
-                      startTime: snapshot.data[index].startTime,
-                      endTime: snapshot.data[index].endTime,
-                      title: "asdasdsasds",
-                      description:snapshot.data[index].description,
-                      photoUrl: snapshot.data[index].photoUrl,
-//                      location: snapshot.data[index].lcoation,
-                      tasks: 10,
-                      pendingTask: 7,
-//                  onTap: ,
+                      timestamp: project.createdAt,
+                      startTime: project.startTime,
+                      endTime: project.endTime,
+                      title: project.name,
+                      description: project.description,
+                      photoUrl: project.photoUrl ?? "",
+                      location: project.address,
+                      tasks: totalTask,
+                      pendingTask: project.pendingRequests?.length,
+                      onTap: () =>
+                          onTap(timebank: _bloc.timebank, project: project),
                     );
                   },
                 ),
               );
-            }
+            },
           );
         },
+      ),
+    );
+  }
+
+  void onTap({TimebankModel timebank, ProjectModel project}) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProjectRequests(
+          timebankId: timebank.id,
+          projectModel: project,
+          timebankModel: timebank,
+        ),
       ),
     );
   }
