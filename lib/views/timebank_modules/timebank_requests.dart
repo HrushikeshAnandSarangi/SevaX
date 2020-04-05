@@ -109,7 +109,7 @@ class RequestsState extends State<RequestsModule> {
                                         MaterialPageRoute(
                                           builder: (context) => CreateRequest(
                                             timebankId: timebankId,
-                                            projectId: "",
+                                            projectId: '',
                                           ),
                                         ),
                                       );
@@ -122,7 +122,7 @@ class RequestsState extends State<RequestsModule> {
                                       MaterialPageRoute(
                                         builder: (context) => CreateRequest(
                                           timebankId: timebankId,
-                                          projectId: "",
+                                          projectId: '',
                                         ),
                                       ),
                                     );
@@ -701,6 +701,8 @@ class NearRequestListItems extends StatelessWidget {
                 default:
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
+                  requestModelList
+                      .removeWhere((request) => request.projectId != null);
 
                   requestModelList = filterBlockedRequestsContent(
                       context: context, requestModelList: requestModelList);
@@ -923,6 +925,10 @@ class RequestListItemsState extends State<RequestListItems> {
                   if (snapshot.hasData) {
                     List<RequestModel> requestModelList =
                         snapshot.data.requests;
+
+                    requestModelList
+                        .removeWhere((request) => request.projectId != null);
+
                     requestModelList = filterBlockedRequestsContent(
                         context: context, requestModelList: requestModelList);
 

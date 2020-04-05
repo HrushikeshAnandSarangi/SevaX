@@ -701,7 +701,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   Future _updateProjectModel() async {
-    if (widget.projectModel != null) {
+    if (widget.projectId != null) {
       ProjectModel projectModel = widget.projectModel;
       var userSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
       if (!projectModel.members.contains(userSevaUserId)) {

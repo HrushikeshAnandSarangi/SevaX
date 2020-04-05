@@ -6,6 +6,7 @@ import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 
 import '../../flavor_config.dart';
@@ -483,18 +484,32 @@ class RequestsState extends State<ProjectRequests>
         elevation: 2,
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RequestDetailsAboutPage(
-                  project_id: projectModel.id,
-                  requestItem: model,
-                  //   applied: isAdmin ? false : true,
-                  timebankModel: widget.timebankModel,
-                  isAdmin: isAdmin,
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(
+                    isAdmin: true,
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                    project_id: projectModel.id,
+                    requestItem: model,
+                    //   applied: isAdmin ? false : true,
+                    timebankModel: widget.timebankModel,
+                    isAdmin: isAdmin,
+                  ),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

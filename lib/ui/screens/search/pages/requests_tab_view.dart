@@ -83,7 +83,7 @@ class RequestsTabView extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RequestTabHolder(isAdmin: true),
+          builder: (context) => RequestTabHolder(isAdmin: true,),
         ),
       );
     } else {

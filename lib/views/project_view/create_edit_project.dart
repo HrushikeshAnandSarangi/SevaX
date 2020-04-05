@@ -261,6 +261,15 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               onChanged: (value) {
                 projectModel.phoneNumber = value;
               },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Mobile Number cannot be empty.';
+                } else {
+                  projectModel.phoneNumber = value;
+                }
+                return null;
+              },
+              maxLength: 15,
               initialValue: projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
@@ -333,6 +342,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: RaisedButton(
                   onPressed: () async {
                     // show a dialog
+                    projectModel.startTime =
+                        OfferDurationWidgetState.starttimestamp;
+                    projectModel.endTime =
+                        OfferDurationWidgetState.endtimestamp;
                     if (widget.isCreateProject) {
 //                            if (!firebaseUser.isEmailVerified) {
 //                              _showVerificationAndLogoutDialogue();
@@ -347,10 +360,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                              return;
 //                            }
                       if (_formKey.currentState.validate()) {
-                        projectModel.startTime =
-                            OfferDurationWidgetState.starttimestamp;
-                        projectModel.endTime =
-                            OfferDurationWidgetState.endtimestamp;
+                        if (projectModel.startTime == 0 ||
+                            projectModel.endTime == 0) {
+                          showDialogForTitle(
+                              dialogTitle:
+                                  "Please mention the start and end date of the project");
+                          return;
+                        }
+                        if (!hasRegisteredLocation()) {
+                          showDialogForTitle(
+                              dialogTitle:
+                                  "Please add location to your project");
+                          return;
+                        }
                         projectModel.communityId =
                             SevaCore.of(context).loggedInUser.currentCommunity;
                         projectModel.completedRequests = [];
@@ -370,20 +392,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         if (globals.timebankAvatarURL == null) {
                           setState(() {
                             this.communityImageError =
-                                'Timebank logo is mandatory';
+                                'Project logo is mandatory';
                           });
                         }
-
-                        if (projectModel.startTime == null ||
-                            projectModel.endTime == null) {
-                          setState(() {
-                            this.dateTimeEroor = 'Duration is Mandatory';
-                          });
-                        }
-                        if (projectModel.address == null ||
-                            this.selectedAddress == null) {
-                          this.locationError = 'Location is Mandatory';
-                        }
+                        this.communityImageError = '';
 
                         showProgressDialog('Creating project');
                         await FirestoreManager.createProject(
@@ -449,6 +461,34 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         ),
       ),
     );
+  }
+
+  bool hasRegisteredLocation() {
+    print("Location ---========================= ${projectModel.address}");
+    return location != null;
+  }
+
+  Future<void> showDialogForTitle({String dialogTitle}) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogTitle),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   void showProgressDialog(String message) {
