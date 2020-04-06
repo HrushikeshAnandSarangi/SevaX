@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -43,6 +44,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   var startDate;
   var endDate;
   bool isDataLoaded = false;
+  ScrollController _controller = ScrollController();
 
   @override
   void initState() {
@@ -50,6 +52,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     super.initState();
     if (!widget.isCreateProject) {
       getData();
+    } else {
+      setState(() {
+        this.projectModel.mode = 'Personal';
+      });
     }
     setState(() {});
   }
@@ -103,13 +109,56 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
+  Widget get projectSwitch {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      width: double.infinity,
+      child: CupertinoSegmentedControl<int>(
+        selectedColor: Theme.of(context).primaryColor,
+        children: logoWidgets,
+        borderColor: Colors.grey,
+        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+        groupValue: sharedValue,
+        onValueChanged: (int val) {
+          print(val);
+          if (val != sharedValue) {
+            setState(() {
+              print("$sharedValue -- $val");
+              if (sharedValue == 0) {
+                projectModel.mode = 'Timebank';
+              } else {
+                projectModel.mode = 'Personal';
+              }
+              sharedValue = val;
+            });
+          }
+        },
+        //groupValue: sharedValue,
+      ),
+    );
+  }
+
+  int sharedValue = 0;
+
+  final Map<int, Widget> logoWidgets = const <int, Widget>{
+    0: Text(
+      'Personal Project',
+      style: TextStyle(fontSize: 15.0),
+    ),
+    1: Text(
+      'Timebank Project',
+      style: TextStyle(fontSize: 15.0),
+    ),
+  };
   Widget get createProjectForm {
     return SingleChildScrollView(
+      controller: _controller,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            widget.isCreateProject ? projectSwitch : Container(),
             Center(
               child: Padding(
                 padding: EdgeInsets.all(5.0),
@@ -383,7 +432,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.pendingRequests = [];
                         projectModel.timebankId = widget.timebankId;
                         projectModel.photoUrl = globals.timebankAvatarURL;
-                        projectModel.mode = 'TimeBank';
+                        //  projectModel.mode = 'TimeBank';
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -397,11 +446,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           setState(() {
                             this.communityImageError =
                                 'Project logo is mandatory';
+                            //   moveToTop();
                           });
                         }
-                        this.communityImageError = '';
-
                         showProgressDialog('Creating project');
+//                          setState(() {
+//                            this.communityImageError = '';
+//                          });
                         await FirestoreManager.createProject(
                             projectModel: projectModel);
                         if (dialogContext != null) {
@@ -469,6 +520,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
           ],
         ),
       ),
+    );
+  }
+
+  moveToTop() {
+    print("move to top");
+    // _controller.jumpTo(0.0);
+    _controller.animateTo(
+      -100,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
     );
   }
 

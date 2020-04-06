@@ -278,7 +278,7 @@ class CreateEditCommunityViewFormState
                           widget.isCreateTimebank
                               ? TimebankAvatar()
                               : TimebankAvatar(
-                                  photoUrl: communityModel.logo_url,
+                                  photoUrl: communityModel.logo_url ?? "",
                                 ),
                           Text(''),
                           Text(
