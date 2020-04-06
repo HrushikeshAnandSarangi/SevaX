@@ -8,7 +8,6 @@ import 'package:sevaexchange/new_baseline/models/join_request_model.dart'
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
-import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -25,90 +24,80 @@ class _GroupTabViewState extends State<GroupTabView> {
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<SearchBloc>(context);
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-        child: Column(
-          children: <Widget>[
-            Text(
-              ExplorePageLabels.groupInfo,
-              style: TextStyle(fontSize: 16),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+      child: StreamBuilder<String>(
+        stream: _bloc.searchText,
+        builder: (context, search) {
+          if (search.data == null || search.data == "") {
+            return Center(child: Text("Search Something"));
+          }
+          return StreamBuilder<GroupData>(
+            stream: CombineLatestStream.combine2(
+              Searches.searchGroups(
+                queryString: search.data,
+                loggedInUser: _bloc.user,
+                currentCommunityOfUser: _bloc.community,
+              ),
+              Firestore.instance
+                  .collection("join_requests")
+                  .where("user_id", isEqualTo: _bloc.user.sevaUserID)
+                  .snapshots(),
+              (x, y) => GroupData(x, y),
             ),
-            StreamBuilder<String>(
-              stream: _bloc.searchText,
-              builder: (context, search) {
-                if (search.data == null || search.data == "") {
-                  return Center(child: Text("Search Something"));
-                }
-                return StreamBuilder<GroupData>(
-                  stream: CombineLatestStream.combine2(
-                    Searches.searchGroups(
-                      queryString: search.data,
-                      loggedInUser: _bloc.user,
-                      currentCommunityOfUser: _bloc.community,
-                    ),
-                    Firestore.instance
-                        .collection("join_requests")
-                        .where("user_id", isEqualTo: _bloc.user.sevaUserID)
-                        .snapshots(),
-                    (x, y) => GroupData(x, y),
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (snapshot.data.timebanks == null ||
-                        snapshot.data.timebanks.isEmpty) {
-                      print("===>> ${snapshot.data.timebanks}");
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Text("No data found !"),
-                        ],
-                      );
-                    }
-
-                    print("snapshot ==> ${snapshot.data.timebanks.length}");
-
-                    return ListView.separated(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: snapshot.data.timebanks.length,
-                      itemBuilder: (context, index) {
-                        final group = snapshot.data.timebanks[index];
-                        JoinStatus joinStatus = status(
-                          group,
-                          _bloc.user.sevaUserID,
-                          snapshot.data.requests,
-                        );
-                        return GroupCard(
-                          image: group.photoUrl ?? "",
-                          title: group.name,
-                          subtitle: group.missionStatement,
-                          status: joinStatus,
-                          onPressed: joinStatus == JoinStatus.JOIN
-                              ? () {
-                                  joinTimebank(_bloc.user, group);
-                                }
-                              : null,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return Divider(
-                          thickness: 2,
-                        );
-                      },
-                    );
-                  },
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
                 );
-              },
-            ),
-          ],
-        ),
+              }
+              if (snapshot.data.timebanks == null ||
+                  snapshot.data.timebanks.isEmpty) {
+                print("===>> ${snapshot.data.timebanks}");
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Text("No data found !"),
+                  ],
+                );
+              }
+
+              print("snapshot ==> ${snapshot.data.timebanks.length}");
+
+              return ListView.separated(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: snapshot.data.timebanks.length,
+                itemBuilder: (context, index) {
+                  final group = snapshot.data.timebanks[index];
+                  JoinStatus joinStatus = status(
+                    group,
+                    _bloc.user.sevaUserID,
+                    snapshot.data.requests,
+                  );
+                  return GroupCard(
+                    image: group.photoUrl ?? "",
+                    title: group.name,
+                    subtitle: group.missionStatement,
+                    status: joinStatus,
+                    onPressed: joinStatus == JoinStatus.JOIN
+                        ? () {
+                            joinTimebank(_bloc.user, group);
+                          }
+                        : null,
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    thickness: 2,
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }
