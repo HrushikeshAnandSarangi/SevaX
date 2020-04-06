@@ -396,7 +396,7 @@ Future<void> approveRequestCompletion({
       .document(model.id)
       .setData(model.toMap(), merge: true);
 
-  UserModel user = await utils.getUserForId(sevaUserId: userId);
+  // UserModel user = await utils.getUserForId(sevaUserId: userId);
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -431,22 +431,20 @@ Future<void> approveRequestCompletion({
       .toMap();
 
   // if (FlavorConfig.appFlavor == Flavor.SEVA_DEV) {//removed flavor check
-    await Firestore.instance
-        .collection('users')
-        .document(model.email)
-        .updateData(
-            {'currentBalance': FieldValue.increment(-(userAmount.toDouble()))});
 
-    print("========================================================== Step3");
+  print("========================================================== Step3");
 
-    //Create transaction record for timebank
+  //Create transaction record for timebank
+
+  if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
     TimeBankBalanceTransactionModel balanceTransactionModel =
         TimeBankBalanceTransactionModel(
-            communityId: communityId,
-            userId: userId,
-            requestId: model.id,
-            amount: tax,
-            timestamp: FieldValue.serverTimestamp());
+      communityId: communityId,
+      userId: userId,
+      requestId: model.id,
+      amount: tax,
+      timestamp: FieldValue.serverTimestamp(),
+    );
 
     Firestore.instance
         .collection("communities")
@@ -455,6 +453,11 @@ Future<void> approveRequestCompletion({
         .add(
           balanceTransactionModel.toJson(),
         );
+  } else {
+    // await Firestore.instance
+    //     .collection('users')
+    //     .document(user.email)
+    //     .updateData({'currentBalance': FieldValue.increment(userAmount)});
 
     NotificationsModel debitnotification = NotificationsModel(
       timebankId: model.timebankId,
@@ -469,14 +472,19 @@ Future<void> approveRequestCompletion({
 
     await utils.createTransactionNotification(model: debitnotification);
     print("==>debit notification sent<==");
+  }
+
+  // await Firestore.instance.collection('users').document(model.email).updateData(
+  //   {
+  //     'currentBalance': FieldValue.increment(
+  //       -(userAmount.toDouble()),
+  //     ),
+  //   },
+  // );
+
   // }
 
   print("========================================================== Step6");
-
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .updateData({'currentBalance': FieldValue.increment(userAmount)});
 
   //User gets a notification with amount after tax deducation
   transactionData["credits"] = userAmount;
