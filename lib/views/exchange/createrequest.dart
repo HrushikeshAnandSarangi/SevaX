@@ -663,12 +663,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     if (requestModel.requestEnd == null) {
       requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
     }
-    print("Project id : ${widget.projectId}");
-    if (widget.projectId != null && widget.projectId.isNotEmpty) {
-      requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
-      print("Inside yes");
-      return true;
-    }
+//    print("Project id : ${widget.projectId}");
+//    if (widget.projectId != null && widget.projectId.isNotEmpty) {
+//      requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+//      print("Inside yes");
+//      return true;
+//    }
 
     print(getTimeInFormat(requestModel.requestStart) +
         " <- Start   -> End " +
