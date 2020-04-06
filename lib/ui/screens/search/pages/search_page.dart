@@ -127,7 +127,7 @@ class _ExplorePageState extends State<SearchPage>
                     Navigator.of(context).pop();
                   },
                 ),
-                SizedBox(width: 20),
+                // SizedBox(width: 5),
               ],
             ),
             SizedBox(height: 10),
