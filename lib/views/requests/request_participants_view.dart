@@ -44,7 +44,11 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
     FirestoreRequestManager.getRequestStreamById(requestId: requestModel.id)
         .listen((_requestModel) {
       requestModel = _requestModel;
-      setState(() {});
+      try {
+        setState(() {});
+      } on Exception {
+        print("Exception caught in request_participants_view");
+      }
     });
   }
 

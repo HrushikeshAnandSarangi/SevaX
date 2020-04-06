@@ -284,7 +284,6 @@ Future<void> sendOfferRequest({
     isRead: false,
     senderUserId: requestSevaID,
     communityId: communityId,
-    directToMember: directToMember,
   );
   await utils.offerAcceptNotification(
     model: model,
@@ -316,10 +315,9 @@ Future<void> acceptRequest({
       isRead: false,
       senderUserId: senderUserId,
       communityId: communityId,
-      directToMember: directToMember,
     );
 
-    print("Creating notification model $model");
+    print("Creating notificationss model $requestModel");
 
     if (isWithdrawal)
       await utils.withdrawAcceptRequestNotification(
@@ -385,7 +383,7 @@ Future<void> approveRequestCompletion({
       .collection('communities')
       .document(communityId)
       .get();
-  double taxPercentage = data.data['taxPercentage'];
+  double taxPercentage = data.data['taxPercentage'] ?? 0;
   print('---->tax percentage $taxPercentage');
 
   await Firestore.instance
@@ -394,8 +392,6 @@ Future<void> approveRequestCompletion({
       .setData(model.toMap(), merge: true);
 
   UserModel user = await utils.getUserForId(sevaUserId: userId);
-
-  //check if protected
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -441,14 +437,11 @@ Future<void> approveRequestCompletion({
     //Create transaction record for timebank
     TimeBankBalanceTransactionModel balanceTransactionModel =
         TimeBankBalanceTransactionModel(
-      communityId: communityId,
-      userId: userId,
-      requestId: model.id,
-      amount: tax,
-      timestamp:FieldValue.serverTimestamp()
-    );
-
-
+            communityId: communityId,
+            userId: userId,
+            requestId: model.id,
+            amount: tax,
+            timestamp: FieldValue.serverTimestamp());
 
     Firestore.instance
         .collection("communities")
@@ -468,8 +461,7 @@ Future<void> approveRequestCompletion({
       data: transactionData,
     );
 
-    if (model.requestMode == RequestMode.PERSONAL_REQUEST)
-      await utils.createTransactionNotification(model: debitnotification);
+    await utils.createTransactionNotification(model: debitnotification);
   }
 
   print("========================================================== Step6");
@@ -535,7 +527,6 @@ Future<void> approveAcceptRequest({
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: tempRequestModel.toMap(),
-    directToMember: directToMember,
   );
 
   await utils.removeAcceptRequestNotification(
@@ -550,7 +541,6 @@ Future<void> approveAcceptRequestForTimebank({
   @required String approvedUserId,
   @required String notificationId,
   @required String communityId,
-  @required bool directToMember,
 }) async {
   var approvalCount = 0;
   if (requestModel.transactions != null) {
@@ -566,7 +556,6 @@ Future<void> approveAcceptRequestForTimebank({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
-  //timebankUpdateFullName
   var timebankModel = await fetchTimebankData(requestModel.timebankId);
   var tempTimebankModel = requestModel;
   tempTimebankModel.photoUrl = timebankModel.photoUrl;
@@ -580,14 +569,13 @@ Future<void> approveAcceptRequestForTimebank({
     senderUserId: tempTimebankModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: tempTimebankModel.toMap(),
-    directToMember: directToMember,
   );
 
-  await utils.removeAcceptRequestNotification(
-    model: model,
+  await utils.readTimeBankNotification(
+    timebankId: requestModel.timebankId,
     notificationId: notificationId,
   );
-  await utils.createRequestApprovalNotification(model: model);
+  await utils.createApprovalNotificationForMemberFromTimebank(model: model);
 }
 
 Future<void> rejectAcceptRequest({

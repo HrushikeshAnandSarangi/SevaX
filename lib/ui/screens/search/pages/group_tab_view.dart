@@ -169,7 +169,6 @@ class _GroupTabViewState extends State<GroupTabView> {
       senderUserId: user.sevaUserID,
       type: NotificationType.JoinRequest,
       data: joinReqModel.toMap(),
-      directToMember: false,
     );
 
     notification.timebankId = FlavorConfig.values.timebankId;

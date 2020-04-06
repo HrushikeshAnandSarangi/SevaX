@@ -73,28 +73,28 @@ class _ProfilePageState extends State<ProfilePage>
       });
     });
 
-    Future.delayed(Duration.zero, () {
-      user = SevaCore.of(context).loggedInUser;
-      setState(() {
-        isUserLoaded = true;
-      });
-      FirestoreManager.getCompletedRequestStream(
-              userEmail: SevaCore.of(context).loggedInUser.email,
-              userId: SevaCore.of(context).loggedInUser.sevaUserID)
-          .listen(
-        (requestList) {
-          if (!mounted) return;
-          requestList.forEach((requestObj) {
-            requestObj.transactions?.forEach((transaction) {
-              if (transaction.isApproved &&
-                  transaction.to ==
-                      SevaCore.of(context).loggedInUser.sevaUserID)
-                sevaCoinsValue += transaction.credits;
-            });
-          });
-        },
-      );
-    });
+    // Future.delayed(Duration.zero, () {
+    //   user = SevaCore.of(context).loggedInUser;
+    //   setState(() {
+    //     isUserLoaded = true;
+    //   });
+    //   FirestoreManager.getCompletedRequestStream(
+    //           userEmail: SevaCore.of(context).loggedInUser.email,
+    //           userId: SevaCore.of(context).loggedInUser.sevaUserID)
+    //       .listen(
+    //     (requestList) {
+    //       if (!mounted) return;
+    //       requestList.forEach((requestObj) {
+    //         requestObj.transactions?.forEach((transaction) {
+    //           if (transaction.isApproved &&
+    //               transaction.to ==
+    //                   SevaCore.of(context).loggedInUser.sevaUserID)
+    //             sevaCoinsValue += transaction.credits;
+    //         });
+    //       });
+    //     },
+    //   );
+    // });
 
     _profileBloc.communityLoaded.listen((value) {
       isCommunityLoaded = value;
@@ -226,15 +226,29 @@ class _ProfilePageState extends State<ProfilePage>
                           ),
                         ),
                         SizedBox(height: 20),
-                        SevaCoinWidget(
-                          amount: sevaCoinsValue ?? 0,
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return ReviewEarningsPage();
-                              },
-                            ),
+                        FutureBuilder(
+                          future: FirestoreManager.getMemberBalance(
+                            SevaCore.of(context).loggedInUser.email,
+                            SevaCore.of(context).loggedInUser.sevaUserID,
                           ),
+                          initialData: 0,
+                          builder:
+                              (BuildContext context, AsyncSnapshot snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Text("Fetching seva credits...");
+                            }
+                            return SevaCoinWidget(
+                              amount: snapshot.data ?? 0,
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return ReviewEarningsPage();
+                                  },
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

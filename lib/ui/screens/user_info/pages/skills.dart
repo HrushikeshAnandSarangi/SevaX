@@ -5,7 +5,6 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/ui/screens/user_info/utils/custom_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/widgets/custom_chip.dart';
@@ -196,7 +195,7 @@ class _SkillViewNewState extends State<SkillsPage> {
                     _selectedSkills.forEach((id, _) => selectedID.add(id));
                     user.skills = selectedID;
                     fireStoreManager.updateUser(user: user).then((_) {
-                      customRouter(context: context, user: user);
+                      // customRouter(context: context, user: user);
                     });
                   },
                   child: Text(
@@ -212,7 +211,7 @@ class _SkillViewNewState extends State<SkillsPage> {
                           Navigator.pop(context);
                         } else {
                           AppConfig.prefs.setBool(AppConfig.skip_skill, true);
-                          customRouter(context: context, user: user);
+                          // customRouter(context: context, user: user);
                         }
                       },
                       child: Text(

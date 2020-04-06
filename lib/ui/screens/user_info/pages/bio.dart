@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/interests.dart';
-import 'package:sevaexchange/ui/screens/user_info/utils/custom_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 
@@ -118,7 +117,7 @@ class _BioViewState extends State<BioPage> {
                     if (_formKey.currentState.validate()) {
                       user.bio = bio;
                       fireStoreManager.updateUser(user: user).then((_) {
-                        customRouter(context: context, user: user);
+                        // customRouter(context: context, user: user);
                       }).catchError((e) => print(e));
                     }
                   },
@@ -131,7 +130,7 @@ class _BioViewState extends State<BioPage> {
               FlatButton(
                 onPressed: () {
                   AppConfig.prefs.setBool(AppConfig.skip_bio, true);
-                  customRouter(context: context, user: user);
+                  // customRouter(context: context, user: user);
                 },
                 child: Text(
                   AppConfig.prefs.getBool(AppConfig.skip_bio) == null

@@ -28,7 +28,11 @@ Future<TimebankModel> fetchTimebankData(String timebankId) async {
 Future<void> createAcceptRequestNotification({
   NotificationsModel notificationsModel,
 }) async {
+  print("Notification model---------------------${notificationsModel}");
+
   var requestModel = RequestModel.fromMap(notificationsModel.data);
+
+  print("Request mode---------------------${requestModel}");
 
   switch (requestModel.requestMode) {
     case RequestMode.PERSONAL_REQUEST:
@@ -44,8 +48,7 @@ Future<void> createAcceptRequestNotification({
 
     case RequestMode.TIMEBANK_REQUEST:
       await Firestore.instance
-          .collection(
-              notificationsModel.directToMember ? 'users' : 'timebanknew')
+          .collection('timebanknew')
           .document(notificationsModel.timebankId)
           .collection('notifications')
           .document(notificationsModel.id)
@@ -181,9 +184,6 @@ Future<void> createRequestApprovalNotification({
       break;
 
     case RequestMode.TIMEBANK_REQUEST:
-      // var timebankModel = await fetchTimebankData(model.timebankId);
-      // requestModel.fullName = timebankModel.name;
-      // requestModel.photoUrl = timebankModel.photoUrl;
       model.data = requestModel.toMap();
       Firestore.instance
           .collection('timebanknew')
@@ -193,6 +193,18 @@ Future<void> createRequestApprovalNotification({
           .setData(model.toMap());
       break;
   }
+}
+
+Future<void> createApprovalNotificationForMemberFromTimebank({
+  NotificationsModel model,
+}) async {
+  UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .collection('notifications')
+      .document(model.id)
+      .setData(model.toMap());
 }
 
 Future<void> createTaskCompletedNotification({NotificationsModel model}) async {
@@ -341,7 +353,7 @@ Future<void> readUserNotification(
 }
 
 Future<void> readTimeBankNotification(
-    String notificationId, String timebankId) async {
+    {String notificationId, String timebankId}) async {
   await Firestore.instance
       .collection('timebanknew')
       .document(timebankId)

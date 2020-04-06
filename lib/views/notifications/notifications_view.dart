@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -1272,6 +1273,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   Widget getNotificationAcceptedWidget(
       RequestModel model, String userId, String notificationId) {
+print("_____________________${userId}");
     return FutureBuilder<UserModel>(
       future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
@@ -1298,36 +1300,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                     userModel: user,
                     notificationId: notificationId,
                     requestModel: model);
-
-                // BuildContext dialogContext;
-
-                // showDialog(
-                //     barrierDismissible: false,
-                //     context: context,
-                //     builder: (createDialogContext) {
-                //       dialogContext = createDialogContext;
-                //       return AlertDialog(
-                //         title: Text('Please wait'),
-                //         content: LinearProgressIndicator(),
-                //       );
-                //     });
-
-                // Firestore.instance
-                //     .collection("requests")
-                //     .document(model.id)
-                //     .get()
-                //     .then((onValue) {
-                //   var requestModel = RequestModel.fromMap(onValue.data);
-                //   prefix0.Navigator.pop(dialogContext);
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => ViewRequestStatus(
-                //         requestModel: requestModel,
-                //       ),
-                //     ),
-                //   );
-                // });
               },
               child: Container(
                   margin: notificationPadding,
@@ -1338,7 +1310,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       child: Text(model.title),
                     ),
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL),
+                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
                     subtitle: Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 10),

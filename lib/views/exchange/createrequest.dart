@@ -480,7 +480,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           );
 
           print(
-              "Seva Coins $sevaCoinsValue -------------------------------------------");
+              "Seva Credits $sevaCoinsValue -------------------------------------------");
 
           if (!hasSufficientBalance()) {
             showInsufficientBalance();
@@ -672,7 +672,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     var requestCoins = requestModel.numberOfHours;
     print("Hours:${diffDate.inHours} --> " +
         requestModel.numberOfApprovals.toString());
-    print("Number of seva coins:${requestCoins}");
+    print("Number of Seva Credits:${requestCoins}");
     print("Seva coin available:${sevaCoinsValue}");
 
     var lowerLimit =
@@ -697,6 +697,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
 
     if (requestModel.id == null) return;
+
+    // print(
+    //     "Requeest Model -------------------------- ${requestModel.toString()}");
     await FirestoreManager.createRequest(requestModel: requestModel);
   }
 

@@ -4,7 +4,6 @@ import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/main_app.dart';
 import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/ui/screens/user_info/utils/custom_router.dart';
 import 'package:sevaexchange/views/timebanks/EULAgreement.dart';
 
 class EulaPage extends StatefulWidget {
@@ -108,7 +107,7 @@ class EulaAgreementState extends State<EulaPage> {
                                       .updateData({'acceptedEULA': true}).then(
                                           (onValue) {
                                     print("routing");
-                                    customRouter(context: context, user: user);
+                                    // customRouter(context: context, user: user);
                                   }).catchError((onError) {
                                     print("Error Updating introduction");
                                   });

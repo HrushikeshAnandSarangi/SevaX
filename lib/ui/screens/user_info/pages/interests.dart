@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/user_info/pages/skills.dart';
-import 'package:sevaexchange/ui/screens/user_info/utils/custom_router.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/widgets/custom_chip.dart';
@@ -197,7 +196,7 @@ class _InterestPageState extends State<InterestPage> {
                         .forEach((id, value) => selectedID.add(id));
                     user.interests = selectedID;
                     fireStoreManager.updateUser(user: user).then((_) {
-                      customRouter(context: context, user: user);
+                      // customRouter(context: context, user: user);
                     }).catchError((e) => print(e));
                   },
                   child: Text(
@@ -215,7 +214,7 @@ class _InterestPageState extends State<InterestPage> {
                         } else {
                           AppConfig.prefs
                               .setBool(AppConfig.skip_interest, true);
-                          customRouter(context: context, user: user);
+                          // customRouter(context: context, user: user);
                         }
                       },
                       child: Text(
