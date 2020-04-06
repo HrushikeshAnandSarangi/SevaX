@@ -88,10 +88,10 @@ class GroupRequestCommons {
       case "Others":
         return FlavorConfig.appFlavor == Flavor.APP
             ? "Timebank Requests"
-            : "Yang Gang Requests";
+            : "Timebank Requests";
 
       default:
-        return "Others";
+        return "Timebank Requests";
     }
   }
 }

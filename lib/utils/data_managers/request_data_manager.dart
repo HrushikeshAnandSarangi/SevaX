@@ -396,7 +396,7 @@ Future<void> approveRequestCompletion({
       .document(model.id)
       .setData(model.toMap(), merge: true);
 
-  // UserModel user = await utils.getUserForId(sevaUserId: userId);
+  UserModel user = await utils.getUserForId(sevaUserId: userId);
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -481,7 +481,6 @@ Future<void> approveRequestCompletion({
   //     ),
   //   },
   // );
-
   // }
 
   print("========================================================== Step6");
