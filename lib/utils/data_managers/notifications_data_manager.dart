@@ -248,7 +248,7 @@ Future<void> createTransactionNotification({
   var requestModel = RequestModel.fromMap(model.data);
 
   switch (requestModel.requestMode) {
-    case RequestMode.PERSONAL_REQUEST:
+    case RequestMode.TIMEBANK_REQUEST:
       await Firestore.instance
           .collection('timebanknew')
           .document(model.timebankId)
@@ -256,7 +256,7 @@ Future<void> createTransactionNotification({
           .document(model.id)
           .setData(model.toMap());
       break;
-    case RequestMode.TIMEBANK_REQUEST:
+    case RequestMode.PERSONAL_REQUEST:
       UserModel user = await getUserForId(sevaUserId: model.targetUserId);
       await Firestore.instance
           .collection('users')
@@ -374,13 +374,8 @@ Stream<List<NotificationsModel>> getNotifications({
           NotificationsModel model = NotificationsModel.fromMap(
             documentSnapshot.data,
           );
-          if (FlavorConfig.appFlavor != Flavor.APP) {
-            if (model.type != NotificationType.TransactionDebit)
-              notifications.add(model);
-          } else
-            notifications.add(model);
+          notifications.add(model);
         });
-
         notifications.sort((a, b) => b.timestamp > a.timestamp ? 1 : -1);
         notificationSink.add(notifications);
       },
