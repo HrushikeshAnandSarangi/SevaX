@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-import 'package:sevaexchange/ui/utils/initial_generator.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'network_image.dart';
@@ -74,7 +73,7 @@ class ProjectsCard extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 38,
-                    backgroundColor: Colors.pink,
+                    backgroundColor: Theme.of(context).primaryColor,
                     child: CustomNetworkImage(photoUrl, fit: BoxFit.cover),
                   ),
                   SizedBox(width: 12),
