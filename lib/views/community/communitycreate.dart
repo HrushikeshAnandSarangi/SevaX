@@ -193,6 +193,7 @@ class CreateEditCommunityViewFormState
           .then((onValue) {
         communityModel = onValue;
         communitynName = communityModel.name;
+        taxPercentage = onValue.taxPercentage * 100;
 
         searchTextController.text = communityModel.name;
       });
@@ -458,6 +459,7 @@ class CreateEditCommunityViewFormState
                           .updateValueByKey('taxPercentage', value / 100);
                       setState(() {
                         taxPercentage = value;
+                        communityModel.taxPercentage = value / 100;
                       });
                       print(snapshot.data.community);
                     },
@@ -718,7 +720,7 @@ class CreateEditCommunityViewFormState
                                 .then((onValue) {
                               print("timebank updated");
                             });
-
+                            // communityModel.taxPercentage = taxPercentage / 100;
 //                            //updating community with latest values
                             await FirestoreManager.updateCommunityDetails(
                                     communityModel: communityModel)
