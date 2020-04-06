@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:sevaexchange/auth/auth.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,7 +23,9 @@ Future<void> main() async {
       sound: true,
     ),
   );
-
+  ConnectionStatusSingleton connectionStatus =
+      ConnectionStatusSingleton.getInstance();
+  connectionStatus.initialize();
   AppConfig.prefs = await SharedPreferences.getInstance();
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));

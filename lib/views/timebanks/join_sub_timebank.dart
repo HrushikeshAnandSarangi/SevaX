@@ -285,8 +285,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     padding: const EdgeInsets.only(right: 7),
                     child: RaisedButton(
                       elevation: 0,
-                      color: Colors.grey[300],
-                      textColor: Theme.of(context).primaryColor,
+                      color: Theme.of(context).accentColor,
+                      textColor: Colors.white,
                       child: Text(getTimeBankStatusTitle(status) ?? "",
                           style: TextStyle(fontSize: 14)),
                       onPressed: status == CompareToTimeBank.JOIN

@@ -278,6 +278,7 @@ Future updateCommunityDetails({@required CommunityModel communityModel}) async {
     'about': communityModel.about,
     'logo_url': communityModel.logo_url,
     'billing_address': communityModel.billing_address.toMap(),
+    'taxPercentage': communityModel.taxPercentage,
   });
 }
 

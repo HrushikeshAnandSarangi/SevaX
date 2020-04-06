@@ -378,15 +378,18 @@ Future<void> approveRequestCompletion({
   model.accepted = approvalCount >= model.numberOfApprovals;
 
   print("========================================================== Step1");
+  double taxPercentage;
+  if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    DocumentSnapshot data = await Firestore.instance
+        .collection('communities')
+        .document(communityId)
+        .get();
 
-  if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {}
-  DocumentSnapshot data = await Firestore.instance
-      .collection('communities')
-      .document(communityId)
-      .get();
-
-  double taxPercentage = data.data['taxPercentage'] ?? 0;
-  print('---->tax percentage $taxPercentage');
+    taxPercentage = data.data['taxPercentage'] ?? 0;
+    print('---->tax percentage $taxPercentage');
+  } else {
+    taxPercentage = 0;
+  }
 
   await Firestore.instance
       .collection('requests')
@@ -427,7 +430,7 @@ Future<void> approveRequestCompletion({
       .elementAt(0)
       .toMap();
 
-  if (FlavorConfig.appFlavor == Flavor.APP) {
+  // if (FlavorConfig.appFlavor == Flavor.SEVA_DEV) {//removed flavor check
     await Firestore.instance
         .collection('users')
         .document(model.email)
@@ -462,9 +465,11 @@ Future<void> approveRequestCompletion({
       type: NotificationType.TransactionDebit,
       data: transactionData,
     );
+    print("${debitnotification.id}");
 
     await utils.createTransactionNotification(model: debitnotification);
-  }
+    print("==>debit notification sent<==");
+  // }
 
   print("========================================================== Step6");
 
@@ -490,6 +495,7 @@ Future<void> approveRequestCompletion({
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
+  print("==>Transaction complete<==");
 }
 
 Future<void> approveAcceptRequest({
