@@ -9,9 +9,9 @@ import 'package:sevaexchange/views/admin_viewe_requests.dart';
 import 'package:sevaexchange/views/campaigns/campaigncreate.dart';
 import 'package:sevaexchange/views/campaigns/campaignsview.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/splash_view.dart';
+import 'package:sevaexchange/views/timebanks/invite_members.dart';
 import 'package:sevaexchange/views/timebanks/join_request_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_admin_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_join_request.dart';
@@ -655,9 +655,10 @@ class _EditSuperTimebankViewState extends State<EditSuperTimebankView> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => InviteMembers(
-                                    widget.timebankId,
-                                    widget.superAdminTimebankModel.communityId),
+                                builder: (context) => InviteAddMembers(
+                                  widget.timebankId,
+                                  widget.superAdminTimebankModel.communityId,
+                                ),
                               ),
                             );
                           },

@@ -6,7 +6,6 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/invitation/InviteMembers.dart';
 import 'package:sevaexchange/views/manage/timebank_billing_admin_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
@@ -288,33 +287,6 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
         margin: EdgeInsets.only(top: 20),
         child: Text(
           'About',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.blue,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget manageTimebankCodes({BuildContext context}) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => InviteMembers(
-              widget.timebankModel.id,
-              widget.timebankModel.communityId,
-            ),
-          ),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.only(top: 20),
-        child: Text(
-          'Invite members via code',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,

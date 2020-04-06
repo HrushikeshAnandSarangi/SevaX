@@ -1,141 +1,141 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/views/exchange/createoffer.dart';
-import 'package:sevaexchange/views/exchange/createrequest.dart';
-import 'package:sevaexchange/views/invitation/InviteMembers.dart';
-import 'package:sevaexchange/views/news/newscreate.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart' as prefix0;
+// import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+// import 'package:sevaexchange/views/core.dart';
+// import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+// import 'package:sevaexchange/views/exchange/createoffer.dart';
+// import 'package:sevaexchange/views/exchange/createrequest.dart';
+// import 'package:sevaexchange/views/invitation/InviteMembers.dart';
+// import 'package:sevaexchange/views/news/newscreate.dart';
 
-import '../../flavor_config.dart';
+// import '../../flavor_config.dart';
 
-class SelectTimeBankForNewRequest extends StatefulWidget {
-  @override
-  String isFrom;
-  SelectTimeBankForNewRequest(this.isFrom);
-  SelectTimeBankForNewRequestState createState() =>
-      SelectTimeBankForNewRequestState();
-}
+// class SelectTimeBankForNewRequest extends StatefulWidget {
+//   @override
+//   String isFrom;
+//   SelectTimeBankForNewRequest(this.isFrom);
+//   SelectTimeBankForNewRequestState createState() =>
+//       SelectTimeBankForNewRequestState();
+// }
 
-class SelectTimeBankForNewRequestState
-    extends State<SelectTimeBankForNewRequest> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          FlavorConfig.values.timebankName == "Yang 2020"
-              ? "My Yang Gang Chapters"
-              : "My ${FlavorConfig.values.timebankTitle}",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: getTimebanks(context, widget.isFrom),
-    );
-  }
-}
+// class SelectTimeBankForNewRequestState
+//     extends State<SelectTimeBankForNewRequest> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(
+//           FlavorConfig.values.timebankName == "Yang 2020"
+//               ? "My Yang Gang Chapters"
+//               : "My ${FlavorConfig.values.timebankTitle}",
+//           style: TextStyle(color: Colors.white),
+//         ),
+//       ),
+//       body: getTimebanks(context, widget.isFrom),
+//     );
+//   }
+// }
 
-List<String> dropdownList = [];
+// List<String> dropdownList = [];
 
-Widget getTimebanks(BuildContext context, String isFrom) {
-  List<TimebankModel> timebankList = [];
-  return StreamBuilder<List<TimebankModel>>(
-      stream: isFrom == "Request" || isFrom == "Invite"
-          ? FirestoreManager.getTimebanksForAdmins(
-              userId: SevaCore.of(context).loggedInUser.sevaUserID,
-            )
-          : FirestoreManager.getTimebanksForUserStream(
-              userId: SevaCore.of(context).loggedInUser.sevaUserID,
-              communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-            ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
+// Widget getTimebanks(BuildContext context, String isFrom) {
+//   List<TimebankModel> timebankList = [];
+//   return StreamBuilder<List<TimebankModel>>(
+//       stream: isFrom == "Request" || isFrom == "Invite"
+//           ? FirestoreManager.getTimebanksForAdmins(
+//               userId: SevaCore.of(context).loggedInUser.sevaUserID,
+//             )
+//           : FirestoreManager.getTimebanksForUserStream(
+//               userId: SevaCore.of(context).loggedInUser.sevaUserID,
+//               communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+//             ),
+//       builder: (context, snapshot) {
+//         if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return Center(child: CircularProgressIndicator());
+//         }
 
-        timebankList = snapshot.data;
-        timebankList.forEach((t) {
-          dropdownList.add(t.id);
-        });
+//         timebankList = snapshot.data;
+//         timebankList.forEach((t) {
+//           dropdownList.add(t.id);
+//         });
 
-        if (timebankList.length == 0) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Text(
-                "Only admins can create ${isFrom}s, You haven't created any as of now.",
-                textAlign: TextAlign.center,
-              ),
-            ),
-          );
-        }
+//         if (timebankList.length == 0) {
+//           return Center(
+//             child: Padding(
+//               padding: EdgeInsets.all(20),
+//               child: Text(
+//                 "Only admins can create ${isFrom}s, You haven't created any as of now.",
+//                 textAlign: TextAlign.center,
+//               ),
+//             ),
+//           );
+//         }
 
-        // Navigator.pop(context);
-        print("Length ${dropdownList.length}");
+//         // Navigator.pop(context);
+//         print("Length ${dropdownList.length}");
 
-        return ListView.builder(
-            itemCount: timebankList.length,
-            itemBuilder: (context, index) {
-              TimebankModel timebank = timebankList.elementAt(index);
-              return GestureDetector(
-                onTap: () {
-                  prefix0.Navigator.pop(context);
-                  if (isFrom == "Offer") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateOffer(
-                          timebankId: timebank.id,
-                        ),
-                      ),
-                    );
-                  } else if (isFrom == "Request") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CreateRequest(
-                          timebankId: timebank.id,
-                          projectId: "",
-                        ),
-                      ),
-                    );
-                  } else if (isFrom == "Feed") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NewsCreate(
-                          timebankId: timebank.id,
-                        ),
-                      ),
-                    );
-                  } else if (isFrom == "Invite") {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            InviteMembers(timebank.id, timebank.communityId),
-                      ),
-                    );
-                  } else {
-                    return;
-                  }
-                },
-                child: Card(
-                  margin: EdgeInsets.all(5),
-                  child: Container(
-                    margin: EdgeInsets.all(15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(timebank.name),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            });
-      });
-}
+//         return ListView.builder(
+//             itemCount: timebankList.length,
+//             itemBuilder: (context, index) {
+//               TimebankModel timebank = timebankList.elementAt(index);
+//               return GestureDetector(
+//                 onTap: () {
+//                   prefix0.Navigator.pop(context);
+//                   if (isFrom == "Offer") {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => CreateOffer(
+//                           timebankId: timebank.id,
+//                         ),
+//                       ),
+//                     );
+//                   } else if (isFrom == "Request") {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => CreateRequest(
+//                           timebankId: timebank.id,
+//                           projectId: "",
+//                         ),
+//                       ),
+//                     );
+//                   } else if (isFrom == "Feed") {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) => NewsCreate(
+//                           timebankId: timebank.id,
+//                         ),
+//                       ),
+//                     );
+//                   } else if (isFrom == "Invite") {
+//                     Navigator.push(
+//                       context,
+//                       MaterialPageRoute(
+//                         builder: (context) =>
+//                             InviteMembers(timebank.id, timebank.communityId),
+//                       ),
+//                     );
+//                   } else {
+//                     return;
+//                   }
+//                 },
+//                 child: Card(
+//                   margin: EdgeInsets.all(5),
+//                   child: Container(
+//                     margin: EdgeInsets.all(15),
+//                     child: Column(
+//                       mainAxisAlignment: MainAxisAlignment.start,
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: <Widget>[
+//                         Text(timebank.name),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               );
+//             });
+//       });
+// }
