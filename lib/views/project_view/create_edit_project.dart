@@ -198,7 +198,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 hintText:
                     'Ex: A bit more about your project which will help to associate with',
               ),
-              initialValue: projectModel.description ?? "",
+              initialValue:
+                  widget.isCreateProject ? "" : projectModel.description ?? "",
               keyboardType: TextInputType.multiline,
               maxLines: null,
               //  initialValue: timebankModel.missionStatement,
@@ -270,7 +271,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 return null;
               },
               maxLength: 15,
-              initialValue: projectModel.phoneNumber ?? "",
+              initialValue:
+                  widget.isCreateProject ? "" : projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
@@ -301,7 +303,9 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 icon: Icon(Icons.add_location),
                 label: Container(
                   child: Text(
-                    selectedAddress == '' ? 'Add Location' : selectedAddress,
+                    selectedAddress == ''
+                        ? 'Add Location'
+                        : selectedAddress ?? "",
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -418,16 +422,21 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             OfferDurationWidgetState.starttimestamp;
                         projectModel.endTime =
                             OfferDurationWidgetState.endtimestamp;
-                        if (projectModel.startTime == null ||
-                            projectModel.endTime == null) {
-                          setState(() {
-                            this.dateTimeEroor = 'Duration is Mandatory';
-                          });
+                        if (projectModel.startTime == 0 ||
+                            projectModel.endTime == 0) {
+                          showDialogForTitle(
+                              dialogTitle:
+                                  "Please mention the start and end date of the project");
+                          return;
                         }
 
                         if (projectModel.address == null ||
                             this.selectedAddress == null) {
                           this.locationError = 'Location is Mandatory';
+                          showDialogForTitle(
+                              dialogTitle:
+                                  "Please add location to your project");
+                          return;
                         }
                         showProgressDialog('Updating project');
                         await FirestoreManager.updateProject(
