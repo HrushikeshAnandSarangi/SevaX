@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -52,22 +53,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 //                      ),
                     ),
                     onTap: () {
-                      if (widget.timebankModel.admins.contains(
-                          SevaCore.of(context).loggedInUser.sevaUserID)) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateEditProject(
-                              timebankId: widget.timebankId,
-                              isCreateProject: true,
-                              projectId: '',
-                            ),
-                          ),
-                        );
-                        return;
-                      } else {
-                        _showAdminAccessMessage();
-                      }
+                      navigateToCreateProject();
                     },
                   ),
                 ),
@@ -94,7 +80,25 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   if (projectModelList.length == 0) {
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Center(child: Text('No Projects')),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14),
+                              text: 'No projects available.Try ',
+                            ),
+                            TextSpan(
+                                text: 'creating one',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = navigateToCreateProject),
+                          ],
+                        ),
+                      ),
                     );
                   }
                   return requestCards(projectModelList);
@@ -373,5 +377,24 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
         ),
       ),
     );
+  }
+
+  void navigateToCreateProject() {
+    if (widget.timebankModel.admins
+        .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CreateEditProject(
+            timebankId: widget.timebankId,
+            isCreateProject: true,
+            projectId: '',
+          ),
+        ),
+      );
+      return;
+    } else {
+      _showAdminAccessMessage();
+    }
   }
 }
