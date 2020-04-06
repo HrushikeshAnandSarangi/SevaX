@@ -379,10 +379,12 @@ Future<void> approveRequestCompletion({
 
   print("========================================================== Step1");
 
+  if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {}
   DocumentSnapshot data = await Firestore.instance
       .collection('communities')
       .document(communityId)
       .get();
+
   double taxPercentage = data.data['taxPercentage'] ?? 0;
   print('---->tax percentage $taxPercentage');
 
@@ -575,7 +577,7 @@ Future<void> approveAcceptRequestForTimebank({
     timebankId: requestModel.timebankId,
     notificationId: notificationId,
   );
-  await utils.createApprovalNotificationForMemberFromTimebank(model: model);
+  await utils.createApprovalNotificationForMember(model: model);
 }
 
 Future<void> rejectAcceptRequest({
@@ -589,10 +591,9 @@ Future<void> rejectAcceptRequest({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
-  var timebankModel = await fetchTimebankData(requestModel.timebankId);
   var tempRequestModel = requestModel;
-
-  if (timebankModel.protected) {
+  if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    var timebankModel = await fetchTimebankData(requestModel.timebankId);
     tempRequestModel.photoUrl = timebankModel.photoUrl;
     tempRequestModel.fullName = timebankModel.name;
   }

@@ -170,32 +170,16 @@ Future<void> removeAcceptRequestNotification({
 Future<void> createRequestApprovalNotification({
   NotificationsModel model,
 }) async {
-  var requestModel = RequestModel.fromMap(model.data);
-
-  switch (requestModel.requestMode) {
-    case RequestMode.PERSONAL_REQUEST:
-      UserModel user = await getUserForId(sevaUserId: model.targetUserId);
-      Firestore.instance
-          .collection('users')
-          .document(user.email)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
-      break;
-
-    case RequestMode.TIMEBANK_REQUEST:
-      model.data = requestModel.toMap();
-      Firestore.instance
-          .collection('timebanknew')
-          .document(model.timebankId)
-          .collection('notifications')
-          .document(model.id)
-          .setData(model.toMap());
-      break;
-  }
+  UserModel user = await getUserForId(sevaUserId: model.targetUserId);
+  Firestore.instance
+      .collection('users')
+      .document(user.email)
+      .collection('notifications')
+      .document(model.id)
+      .setData(model.toMap());
 }
 
-Future<void> createApprovalNotificationForMemberFromTimebank({
+Future<void> createApprovalNotificationForMember({
   NotificationsModel model,
 }) async {
   UserModel user = await getUserForId(sevaUserId: model.targetUserId);
