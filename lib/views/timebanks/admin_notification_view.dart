@@ -1446,6 +1446,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
+
+    
   }
 
   Future<void> approveMemberForVolunteerRequest({

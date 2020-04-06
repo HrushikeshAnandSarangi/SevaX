@@ -825,6 +825,7 @@ class DiscussionListState extends State<DiscussionList> {
               //       ),
               //     );
               //   }
+              //these 
               // },
               child: GestureDetector(
                 onTap: () {

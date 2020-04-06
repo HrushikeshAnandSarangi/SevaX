@@ -425,8 +425,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           //groupValue: sharedValue,
         ),
       );
+    } else {
+      if (widget.projectModel.mode == 'Timebank') {
+        requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+      } else {
+        requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      }
+      return Container();
     }
-    return Container();
   }
 
   int sharedValue = 0;
@@ -445,6 +451,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
+    print('request mode ${requestModel.requestMode.toString()}');
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
