@@ -496,13 +496,13 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         height: 200,
         child: Container(
           margin: EdgeInsets.only(top: 10),
-          child: requestResult(),
+          child: requestResult(buildContext: context),
         ),
       ),
     );
   }
 
-  Widget requestResult() {
+  Widget requestResult({BuildContext buildContext}) {
     return StreamBuilder<List<RequestModel>>(
       stream: FirestoreManager.getProjectRequestsStream(
           project_id: widget.projectModel.id),
@@ -567,14 +567,14 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
                             loggedintimezone: widget.userModel.timezone,
-                            context: context,
+                            mContext: context,
                             address: "Fetching location",
                           );
                         default:
                           return getProjectRequestWidget(
                             model: requestModelList.elementAt(index),
                             loggedintimezone: widget.userModel.timezone,
-                            context: context,
+                            mContext: context,
                             address: address,
                           );
                       }
@@ -586,18 +586,18 @@ class ProjectRequestListState extends State<ProjectRequestList> {
     );
   }
 
-  Future<Widget> getProjectRequestWidgetWithLocation({
-    RequestModel model,
-    String loggedintimezone,
-    BuildContext context,
-  }) async {
-    var address = await _getLocation(model.location);
-    return getProjectRequestWidget(
-        model: model,
-        loggedintimezone: loggedintimezone,
-        context: context,
-        address: address);
-  }
+//  Future<Widget> getProjectRequestWidgetWithLocation({
+//    RequestModel model,
+//    String loggedintimezone,
+//    BuildContext context,
+//  }) async {
+//    var address = await _getLocation(model.location);
+//    return getProjectRequestWidget(
+//        model: model,
+//        loggedintimezone: loggedintimezone,
+//        context: context,
+//        address: address);
+//  }
 
   Widget get loadingWidget {
     return Container(
@@ -616,13 +616,13 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   Widget getProjectRequestWidget({
     RequestModel model,
     String loggedintimezone,
-    BuildContext context,
+    BuildContext mContext,
     String address,
   }) {
     bool isAdmin = false;
-    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+    if (model.sevaUserId == SevaCore.of(mContext).loggedInUser.sevaUserID ||
         widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+            .contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
       isAdmin = true;
     }
     return Container(
@@ -634,15 +634,13 @@ class ProjectRequestListState extends State<ProjectRequestList> {
         child: InkWell(
           onTap: () {
             if (model.sevaUserId ==
-                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                    SevaCore.of(mContext).loggedInUser.sevaUserID ||
                 widget.timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
-                widget.projectModel.creatorId ==
-                    SevaCore.of(context).loggedInUser.sevaUserID) {
+                    .contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RequestTabHolder(
+                  builder: (mContext) => RequestTabHolder(
                     isAdmin: true,
                   ),
                 ),
@@ -651,7 +649,7 @@ class ProjectRequestListState extends State<ProjectRequestList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => RequestDetailsAboutPage(
+                  builder: (mContext) => RequestDetailsAboutPage(
                     requestItem: model,
                     //   applied: isAdmin ? false : true,
                     timebankModel: widget.timebankModel,
