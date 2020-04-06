@@ -61,9 +61,7 @@ class InviteMembersState extends State<InviteMembers> {
           FutureBuilder(
             future: timebankModel,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                
-              }
+              if (snapshot.connectionState == ConnectionState.waiting) {}
 
               return;
             },

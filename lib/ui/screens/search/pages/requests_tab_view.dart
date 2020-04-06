@@ -5,6 +5,7 @@ import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/timebank/widgets/timebank_request_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
@@ -75,11 +76,21 @@ class RequestsTabView extends StatelessWidget {
       {BuildContext context,
       RequestModel requestModel,
       TimebankModel timebankModel}) {
+    bool isAdmin = false;
+    if (requestModel.sevaUserId ==
+            SevaCore.of(context).loggedInUser.sevaUserID ||
+        timebankModel.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      isAdmin = true;
+    }
     print("navigating");
     if (requestModel.sevaUserId ==
             SevaCore.of(context).loggedInUser.sevaUserID ||
         timebankModel.admins
             .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+      timeBankBloc.setSelectedRequest(requestModel);
+      timeBankBloc.setSelectedTimeBankDetails(timebankModel);
+      timeBankBloc.setIsAdmin(isAdmin);
       Navigator.push(
         context,
         MaterialPageRoute(

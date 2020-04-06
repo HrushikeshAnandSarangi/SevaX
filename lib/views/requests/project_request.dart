@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -637,6 +638,9 @@ class ProjectRequestListState extends State<ProjectRequestList> {
                     SevaCore.of(mContext).loggedInUser.sevaUserID ||
                 widget.timebankModel.admins
                     .contains(SevaCore.of(mContext).loggedInUser.sevaUserID)) {
+              timeBankBloc.setSelectedRequest(model);
+              timeBankBloc.setSelectedTimeBankDetails(widget.timebankModel);
+              timeBankBloc.setIsAdmin(isAdmin);
               Navigator.push(
                 context,
                 MaterialPageRoute(
