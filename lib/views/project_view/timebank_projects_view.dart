@@ -78,25 +78,27 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   //print('projects list ${projectModelList[0].toString()}');
 
                   if (projectModelList.length == 0) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: <TextSpan>[
-                            TextSpan(
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 14),
-                              text: 'No projects available.Try ',
-                            ),
-                            TextSpan(
-                                text: 'creating one',
-                                style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = navigateToCreateProject),
-                          ],
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              TextSpan(
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 14),
+                                text: 'No projects available.Try ',
+                              ),
+                              TextSpan(
+                                  text: 'creating one',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = navigateToCreateProject),
+                            ],
+                          ),
                         ),
                       ),
                     );
