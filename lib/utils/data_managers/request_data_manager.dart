@@ -431,44 +431,41 @@ Future<void> approveRequestCompletion({
       .toMap();
 
   // if (FlavorConfig.appFlavor == Flavor.SEVA_DEV) {//removed flavor check
-    await Firestore.instance
-        .collection('users')
-        .document(model.email)
-        .updateData(
-            {'currentBalance': FieldValue.increment(-(userAmount.toDouble()))});
+  await Firestore.instance.collection('users').document(model.email).updateData(
+      {'currentBalance': FieldValue.increment(-(userAmount.toDouble()))});
 
-    print("========================================================== Step3");
+  print("========================================================== Step3");
 
-    //Create transaction record for timebank
-    TimeBankBalanceTransactionModel balanceTransactionModel =
-        TimeBankBalanceTransactionModel(
-            communityId: communityId,
-            userId: userId,
-            requestId: model.id,
-            amount: tax,
-            timestamp: FieldValue.serverTimestamp());
+  //Create transaction record for timebank
+  TimeBankBalanceTransactionModel balanceTransactionModel =
+      TimeBankBalanceTransactionModel(
+          communityId: communityId,
+          userId: userId,
+          requestId: model.id,
+          amount: tax,
+          timestamp: FieldValue.serverTimestamp());
 
-    Firestore.instance
-        .collection("communities")
-        .document(communityId)
-        .collection("balance")
-        .add(
-          balanceTransactionModel.toJson(),
-        );
+  Firestore.instance
+      .collection("communities")
+      .document(communityId)
+      .collection("balance")
+      .add(
+        balanceTransactionModel.toJson(),
+      );
 
-    NotificationsModel debitnotification = NotificationsModel(
-      timebankId: model.timebankId,
-      id: utils.Utils.getUuid(),
-      targetUserId: model.sevaUserId,
-      senderUserId: userId,
-      communityId: communityId,
-      type: NotificationType.TransactionDebit,
-      data: transactionData,
-    );
-    print("${debitnotification.id}");
+  NotificationsModel debitnotification = NotificationsModel(
+    timebankId: model.timebankId,
+    id: utils.Utils.getUuid(),
+    targetUserId: model.sevaUserId,
+    senderUserId: userId,
+    communityId: communityId,
+    type: NotificationType.TransactionDebit,
+    data: transactionData,
+  );
+  print("${debitnotification.id}");
 
-    await utils.createTransactionNotification(model: debitnotification);
-    print("==>debit notification sent<==");
+  await utils.createTransactionNotification(model: debitnotification);
+  print("==>debit notification sent<==");
   // }
 
   print("========================================================== Step6");
@@ -830,9 +827,8 @@ Future<double> getMemberBalance(userEmail, userId) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.transactions?.forEach((transaction) {
-        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
-            transaction.isApproved &&
-            transaction.to == userId) sevaCoins += transaction.credits;
+        if (transaction.isApproved && transaction.to == userId)
+          sevaCoins += transaction.credits;
       });
     });
 
@@ -855,7 +851,7 @@ Future<double> getMyDebits(userEmail, userId) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.transactions?.forEach((transaction) {
-        if (transaction.isApproved && transaction.from == userId)
+        if (model.requestMode == RequestMode.PERSONAL_REQUEST && transaction.isApproved && transaction.from == userId)
           myDebits += transaction.credits;
       });
     });
