@@ -287,17 +287,33 @@ class RequestsState extends State<ProjectRequests>
         elevation: 2,
         child: InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RequestDetailsAboutPage(
-                  requestItem: model,
-                  //   applied: isAdmin ? false : true,
-                  timebankModel: widget.timebankModel,
-                  isAdmin: isAdmin,
+            if (model.sevaUserId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID ||
+                widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID) ||
+                projectModel.creatorId ==
+                    SevaCore.of(context).loggedInUser.sevaUserID) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RequestTabHolder(
+                    isAdmin: true,
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RequestDetailsAboutPage(
+                    requestItem: model,
+                    //   applied: isAdmin ? false : true,
+                    timebankModel: widget.timebankModel,
+                    isAdmin: isAdmin,
+                  ),
+                ),
+              );
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -429,40 +445,7 @@ class RequestsState extends State<ProjectRequests>
       ),
     );
   }
-
-  Widget getList({
-    List<RequestModel> finalRequestModelList,
-  }) {
-    return Expanded(
-      child: SizedBox(
-        height: 200.0,
-        child: ListView.builder(
-            itemCount: finalRequestModelList.length + 1,
-            itemBuilder: (_context, index) {
-              return index < finalRequestModelList.length
-                  ? FutureBuilder<Widget>(
-                      future: getListTile(
-                        model: finalRequestModelList[index],
-                        loggedintimezone: user.timezone,
-                        context: context,
-                      ),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<Widget> snapshot) {
-                        if (snapshot.hasData) return snapshot.data;
-
-                        return getListWidgetItem(
-                            model: finalRequestModelList[index],
-                            loggedintimezone: user.timezone,
-                            context: context,
-                            address: "Fetching address");
-                      })
-                  : SizedBox(
-                      height: 50,
-                    );
-            }),
-      ),
-    );
-  }
+//
 
   String getTimeFormattedString(int timeInMilliseconds, String timezoneAbb) {
     DateFormat dateFormat = DateFormat('d MMM hh:mm a ');
@@ -523,173 +506,173 @@ class RequestsState extends State<ProjectRequests>
     );
   }
 
-  Future<Widget> getListTile({
-    RequestModel model,
-    String loggedintimezone,
-    BuildContext context,
-  }) async {
-    var address = await _getLocation(model.location);
-    return getListWidgetItem(
-        model: model,
-        loggedintimezone: loggedintimezone,
-        context: context,
-        address: address);
-  }
+//  Future<Widget> getListTile({
+//    RequestModel model,
+//    String loggedintimezone,
+//    BuildContext context,
+//  }) async {
+//    var address = await _getLocation(model.location);
+//    return getListWidgetItem(
+//        model: model,
+//        loggedintimezone: loggedintimezone,
+//        context: context,
+//        address: address);
+//  }
 
-  Widget getListWidgetItem(
-      {RequestModel model,
-      String loggedintimezone,
-      BuildContext context,
-      String address}) {
-    bool isAdmin = false;
-    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
-        widget.timebankModel.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-      isAdmin = true;
-    }
-    return Container(
-      decoration: containerDecorationR,
-      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-      child: Card(
-        color: Colors.white,
-        elevation: 2,
-        child: InkWell(
-          onTap: () {
-            if (model.sevaUserId ==
-                    SevaCore.of(context).loggedInUser.sevaUserID ||
-                widget.timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RequestTabHolder(
-                    isAdmin: true,
-                  ),
-                ),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RequestDetailsAboutPage(
-                    requestItem: model,
-                    //   applied: isAdmin ? false : true,
-                    timebankModel: widget.timebankModel,
-                    isAdmin: isAdmin,
-                  ),
-                ),
-              );
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          FlatButton.icon(
-                            icon: Icon(
-                              Icons.add_location,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            label: Container(
-                              width: MediaQuery.of(context).size.width - 170,
-                              child: Text(
-                                "$address",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 17,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-//                      Text(
-//                        '${model.postTimestamp}',
-//                        style: TextStyle(
-//                          color: Colors.black38,
+//  Widget getListWidgetItem(
+//      {RequestModel model,
+//      String loggedintimezone,
+//      BuildContext context,
+//      String address}) {
+//    bool isAdmin = false;
+//    if (model.sevaUserId == SevaCore.of(context).loggedInUser.sevaUserID ||
+//        widget.timebankModel.admins
+//            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+//      isAdmin = true;
+//    }
+//    return Container(
+//      decoration: containerDecorationR,
+//      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+//      child: Card(
+//        color: Colors.white,
+//        elevation: 2,
+//        child: InkWell(
+//          onTap: () {
+//            if (model.sevaUserId ==
+//                    SevaCore.of(context).loggedInUser.sevaUserID ||
+//                widget.timebankModel.admins
+//                    .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                  builder: (context) => RequestTabHolder(
+//                    isAdmin: true,
+//                  ),
+//                ),
+//              );
+//            } else {
+//              Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                  builder: (context) => RequestDetailsAboutPage(
+//                    requestItem: model,
+//                    //   applied: isAdmin ? false : true,
+//                    timebankModel: widget.timebankModel,
+//                    isAdmin: isAdmin,
+//                  ),
+//                ),
+//              );
+//            }
+//          },
+//          child: Padding(
+//            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+//            child: Column(
+//              children: <Widget>[
+//                Container(
+//                  margin: EdgeInsets.only(right: 10),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.start,
+//                    children: <Widget>[
+//                      Row(
+//                        children: <Widget>[
+//                          FlatButton.icon(
+//                            icon: Icon(
+//                              Icons.add_location,
+//                              color: Theme.of(context).primaryColor,
+//                            ),
+//                            label: Container(
+//                              width: MediaQuery.of(context).size.width - 170,
+//                              child: Text(
+//                                "$address",
+//                                style: TextStyle(
+//                                  color: Colors.black,
+//                                  fontSize: 17,
+//                                ),
+//                                overflow: TextOverflow.ellipsis,
+//                              ),
+//                            ),
+//                          ),
+//                        ],
+//                      ),
+//                      Spacer(),
+////                      Text(
+////                        '${model.postTimestamp}',
+////                        style: TextStyle(
+////                          color: Colors.black38,
+////                        ),
+////                      )
+//                    ],
+//                  ),
+//                ),
+//                Container(
+//                  margin: EdgeInsets.only(right: 10, left: 10),
+//                  child: Row(
+//                    children: <Widget>[
+//                      InkWell(
+//                        onTap: () {},
+//                        child: Container(
+//                          margin: EdgeInsets.all(5),
+//                          height: 40,
+//                          width: 40,
+//                          child: CircleAvatar(
+//                            backgroundImage: NetworkImage(
+//                              '${model.photoUrl}',
+////                              'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
+//                            ),
+//                            minRadius: 40.0,
+//                          ),
 //                        ),
-//                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(right: 10, left: 10),
-                  child: Row(
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {},
-                        child: Container(
-                          margin: EdgeInsets.all(5),
-                          height: 40,
-                          width: 40,
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                              '${model.photoUrl}',
-//                              'https://icon-library.net/images/user-icon-image/user-icon-image-21.jpg',
-                            ),
-                            minRadius: 40.0,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              getSpacerItem(
-                                Text(
-                                  '${model.title}',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              getSpacerItem(
-                                Text(
-                                  '${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}',
-                                  style: TextStyle(
-                                    color: Colors.black38,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                              getSpacerItem(
-                                Flexible(
-                                  flex: 10,
-                                  child: Text(
-                                    '${model.description}',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-//                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+//                      ),
+//                      Container(
+//                        child: Expanded(
+//                          child: Column(
+//                            mainAxisAlignment: MainAxisAlignment.start,
+//                            children: <Widget>[
+//                              getSpacerItem(
+//                                Text(
+//                                  '${model.title}',
+//                                  style: TextStyle(
+//                                    color: Colors.black,
+//                                    fontSize: 20,
+//                                  ),
+//                                ),
+//                              ),
+//                              getSpacerItem(
+//                                Text(
+//                                  '${getTimeFormattedString(model.requestStart, loggedintimezone) + '-' + getTimeFormattedString(model.requestEnd, loggedintimezone)}',
+//                                  style: TextStyle(
+//                                    color: Colors.black38,
+//                                    fontSize: 13,
+//                                  ),
+//                                ),
+//                              ),
+//                              getSpacerItem(
+//                                Flexible(
+//                                  flex: 10,
+//                                  child: Text(
+//                                    '${model.description}',
+//                                    style: TextStyle(
+//                                      color: Colors.black,
+//                                      fontSize: 17,
+//                                    ),
+////                                    overflow: TextOverflow.ellipsis,
+//                                  ),
+//                                ),
+//                              ),
+//                            ],
+//                          ),
+//                        ),
+//                      ),
+//                    ],
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
+//        ),
+//      ),
+//    );
+//  }
 
   Future<String> _getLocation(GeoFirePoint location) async {
     String address = await LocationUtility().getFormattedAddress(
@@ -738,8 +721,8 @@ class RequestsState extends State<ProjectRequests>
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Protected Timebank"),
-          content: new Text("You cannot post requests in a protected timebank"),
+          title: new Text("Project Request Alert"),
+          content: new Text("Only admins can create project request"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

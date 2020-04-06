@@ -186,7 +186,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 builder: (context) => ProjectRequests(
                   timebankId: widget.timebankId,
                   projectModel: projectModel,
-                  timebankModel:widget.timebankModel,
+                  timebankModel: widget.timebankModel,
                 ),
               ),
             );
@@ -245,8 +245,8 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.all(5),
-                        height: 60,
-                        width: 60,
+                        height: 70,
+                        width: 70,
                         child: CircleAvatar(
                           backgroundImage: NetworkImage(
                             projectModel.photoUrl ??
