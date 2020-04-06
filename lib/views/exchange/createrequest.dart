@@ -426,7 +426,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         ),
       );
     } else {
-      if (widget.projectModel.mode == 'Timebank') {
+      if (widget.projectModel != null &&
+          widget.projectModel.mode == 'Timebank') {
         requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
       } else {
         requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
