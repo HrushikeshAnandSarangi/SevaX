@@ -701,22 +701,9 @@ class RequestsState extends State<ProjectRequests>
 
   void createProjectRequest() async {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
-    if (widget.timebankModel.protected) {
-      if (widget.timebankModel.admins.contains(sevaUserId)) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CreateRequest(
-              timebankId: widget.timebankModel.id,
-              projectId: projectModel.id,
-              projectModel: projectModel,
-            ),
-          ),
-        );
-      } else {
-        _showProtectedTimebankMessage();
-      }
-    } else {
+
+    if (widget.timebankModel.admins.contains(sevaUserId) ||
+        projectModel.creatorId == sevaUserId) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -727,7 +714,21 @@ class RequestsState extends State<ProjectRequests>
           ),
         ),
       );
+    } else {
+      _showProtectedTimebankMessage();
     }
+//    } else {
+//      Navigator.push(
+//        context,
+//        MaterialPageRoute(
+//          builder: (context) => CreateRequest(
+//            timebankId: widget.timebankModel.id,
+//            projectId: projectModel.id,
+//            projectModel: projectModel,
+//          ),
+//        ),
+//      );
+//    }
   }
 
   void _showProtectedTimebankMessage() {
