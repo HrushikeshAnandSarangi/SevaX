@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/utils/data_managers/resources/community_list_provider.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -36,6 +38,7 @@ class RequestsState extends State<ProjectRequests>
   UserModel user = null;
   TabController tabController;
   ProjectModel projectModel;
+
   @override
   void initState() {
     super.initState();
@@ -350,6 +353,37 @@ class ProjectRequestList extends StatefulWidget {
 }
 
 class ProjectRequestListState extends State<ProjectRequestList> {
+  ProjectModel projectModel;
+  final _firestore = Firestore.instance;
+  int completedCount = 0;
+  int pendingCount = 0;
+  int totalCount = 0;
+  List<RequestModel> requestList = [];
+  final requestApiProvider = RequestApiProvider();
+  @override
+  void initState() {
+    super.initState();
+
+    projectModel = widget.projectModel;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    requestApiProvider
+        .getProjectCompletedList(projectId: widget.projectModel.id)
+        .then((onValue) {
+      completedCount = onValue.length;
+    });
+
+    requestApiProvider
+        .getProjectPendingList(projectId: widget.projectModel.id)
+        .then((onValue) {
+      pendingCount = onValue.length;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -771,9 +805,9 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   }
 
   Widget get requestStatusBar {
-    var pendingRequest = widget.projectModel.pendingRequests.length;
-    var completedRequest = widget.projectModel.completedRequests.length;
-    var totalRequests = pendingRequest + completedRequest;
+    var pendingRequest = pendingCount;
+    var completedRequest = completedCount;
+    var totalRequests = pendingCount + completedCount;
     return Container(
       height: 75,
       width: MediaQuery.of(context).size.width,
