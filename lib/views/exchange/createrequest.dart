@@ -246,13 +246,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
                         : "Ex: Small carpentry work...",
+                    hintStyle: textStyle,
                   ),
                   keyboardType: TextInputType.text,
                   initialValue: widget.offer != null && widget.isOfferRequest
                       ? widget.offer.title
                       : "",
                   textCapitalization: TextCapitalization.sentences,
-                  style: textStyle,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter the subject of your request';
