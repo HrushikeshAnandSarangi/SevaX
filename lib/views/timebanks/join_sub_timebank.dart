@@ -148,7 +148,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             return Container(
               margin: EdgeInsets.all(20),
               child: Center(
-                child: Text("No Groups found"),
+                child: Text("No groups found"),
               ),
             );
           }
