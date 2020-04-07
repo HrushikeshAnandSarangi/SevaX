@@ -59,11 +59,11 @@ class RequestApiProvider {
         .where('projectId', isEqualTo: projectId);
 
     QuerySnapshot querySnapshot = await query.getDocuments();
-    print("comm list provider");
+    print("complted list provider");
     querySnapshot.documents.forEach((documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.id = documentSnapshot.documentID;
-      print("model is : " + model.id);
+      print("completed model is : " + model.id);
       requestList.add(model);
     });
     return requestList;
@@ -77,11 +77,11 @@ class RequestApiProvider {
         .where('projectId', isEqualTo: projectId);
 
     QuerySnapshot querySnapshot = await query.getDocuments();
-    print("comm list provider");
+    print("pending list provider");
     querySnapshot.documents.forEach((documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.id = documentSnapshot.documentID;
-      print("model is : " + model.id);
+      print("pending model is : " + model.id);
       requestList.add(model);
     });
     return requestList;

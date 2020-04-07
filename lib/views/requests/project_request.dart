@@ -363,25 +363,29 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   @override
   void initState() {
     super.initState();
-
     projectModel = widget.projectModel;
+    getData();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    requestApiProvider
+  void getData() async {
+    await requestApiProvider
         .getProjectCompletedList(projectId: widget.projectModel.id)
         .then((onValue) {
       completedCount = onValue.length;
     });
 
-    requestApiProvider
+    await requestApiProvider
         .getProjectPendingList(projectId: widget.projectModel.id)
         .then((onValue) {
       pendingCount = onValue.length;
     });
+
+    setState(() {});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
