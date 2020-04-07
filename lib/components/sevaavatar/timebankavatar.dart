@@ -82,7 +82,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     var widthOfAvtar = FlavorConfig.appFlavor == Flavor.APP ? 150.0 : 150.0;
     return Container(
       child: GestureDetector(
-        onTap: () => imagePicker.showDialog(context),
+        // onTap: () => imagePicker.showDialog(context),
         child: Container(
           width: widthOfAvtar,
           height: widthOfAvtar,
