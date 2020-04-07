@@ -190,7 +190,7 @@ class _RequestParticipantsViewState extends State<RequestParticipantsView> {
               ),
               Expanded(
                 child: Text(
-                  userModel.bio ?? "",
+                  userModel.bio ?? "User not updated bio",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 12,
