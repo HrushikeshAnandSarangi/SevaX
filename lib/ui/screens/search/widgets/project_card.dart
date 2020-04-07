@@ -98,11 +98,11 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             SizedBox(width: 2),
                             Icon(
-                              Icons.arrow_forward,
+                              Icons.remove,
                               size: 14,
                               color: Colors.grey,
                             ),
-                            SizedBox(width: 4),
+                            SizedBox(width: 2),
                             Text(
                               getTimeFormattedString(endTime),
                               style:
@@ -137,7 +137,8 @@ class ProjectsCard extends StatelessWidget {
                               TextSpan(text: "$pendingTask Pending"),
                             ],
                           ),
-                        )
+                        ),
+                        SizedBox(height: 5),
                       ],
                     ),
                   )

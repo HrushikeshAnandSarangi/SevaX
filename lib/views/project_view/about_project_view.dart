@@ -15,7 +15,7 @@ class AboutProjectView extends StatefulWidget {
   final String project_id;
   final String timebankId;
 
-  AboutProjectView({this.project_id,this.timebankId});
+  AboutProjectView({this.project_id, this.timebankId});
 
   @override
   _AboutProjectViewState createState() => _AboutProjectViewState();
@@ -64,49 +64,46 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 40),
-                            child: Column(
-                              children: <Widget>[
-                                TimebankAvatar(
-                                    photoUrl: projectModel.photoUrl ??
-                                        defaultCameraImageURL),
-                                Text(''),
-                              ],
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          height: 100,
+                          width: 100,
+                          child: TimebankAvatar(
+                              photoUrl: projectModel.photoUrl ??
+                                  'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png'),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 30),
+                          child: FlatButton(
+                            onPressed: () {
+                              print('pressed');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateEditProject(
+                                      timebankId: widget.timebankId,
+                                      isCreateProject: false,
+                                      projectId: projectModel.id,
+                                    ),
+                                  ));
+                            },
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: 'Europa',
+                                  fontWeight: FontWeight.bold,
+                                  color: FlavorConfig.values.theme.primaryColor,
+                                  decoration: TextDecoration.underline),
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(left: 30),
-                            child: FlatButton(
-                              onPressed: () {
-                                print('pressed');
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateEditProject(
-                                        timebankId: widget.timebankId,
-                                        isCreateProject: false,
-                                        projectId: projectModel.id,
-                                      ),
-                                    ));
-                              },
-                              child: Text(
-                                'Edit',
-                                style: TextStyle(
-                                    color:
-                                        FlavorConfig.values.theme.primaryColor,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
                   ),
                   headingText('Title'),

@@ -45,12 +45,18 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
   void getData() async {
     // print('Admin id  ${widget.timebankModel.admins[0]}');
 
-    user = await FirestoreManager.getUserForId(
-        sevaUserId: widget.timebankModel.admins[0]);
+    await FirestoreManager.getUserForId(
+            sevaUserId: widget.timebankModel.admins[0])
+        .then((onValue) {
+      user = onValue;
+      setState(() {
+        isAdminLoaded = true;
+      });
+    });
 
-    if (user != null) {
-      isAdminLoaded = true;
-    }
+//    if (user != null) {
+//      isAdminLoaded = true;
+//    }
 
     if (widget.timebankModel.members.contains(widget.userId)) {
       isUserJoined = true;
@@ -285,7 +291,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(widget.timebankModel.missionStatement,
-                      
                       style: TextStyle(
                         fontFamily: 'Europa',
                         fontSize: 16,
