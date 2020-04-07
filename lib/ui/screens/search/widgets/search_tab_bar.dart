@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 
-class ExploreTabBar extends StatelessWidget {
-  const ExploreTabBar({
+class SearchTabBar extends StatelessWidget {
+  const SearchTabBar({
     Key key,
     @required TabController tabController,
   })  : _tabController = tabController,

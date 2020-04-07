@@ -6,8 +6,8 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart'
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/pages/projects_tab_view.dart';
 import 'package:sevaexchange/ui/screens/search/pages/requests_tab_view.dart';
-import 'package:sevaexchange/ui/screens/search/widgets/explore_tab_bar.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_field.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/search_tab_bar.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -134,17 +134,17 @@ class _ExplorePageState extends State<SearchPage>
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
-              child: ExploreTabBar(tabController: _tabController),
+              child: SearchTabBar(tabController: _tabController),
             ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  GroupTabView(),
-                  ProjectsTabView(),
                   FeedsTabView(),
                   RequestsTabView(),
                   OffersTabView(),
+                  ProjectsTabView(),
+                  GroupTabView(),
                   MembersTabView(),
                 ],
               ),
