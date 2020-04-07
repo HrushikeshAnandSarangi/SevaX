@@ -768,7 +768,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           return AlertDialog(
             title: Text(dialogText),
             actions: <Widget>[
-              FlatButton(
+              FlatButton( 
                 child: Text(
                   'OK',
                   style: TextStyle(

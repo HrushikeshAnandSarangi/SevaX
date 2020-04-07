@@ -3,8 +3,6 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import 'network_image.dart';
-
 class ProjectsCard extends StatelessWidget {
   final String location;
   final int timestamp;
@@ -74,8 +72,9 @@ class ProjectsCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 38,
                     backgroundColor: Theme.of(context).primaryColor,
-                    child: CustomNetworkImage(photoUrl ?? defaultUserImageURL,
-                        fit: BoxFit.cover),
+                    backgroundImage: NetworkImage(
+                      photoUrl ?? defaultProjectImageURL
+                    ),
                   ),
                   SizedBox(width: 12),
                   Expanded(
