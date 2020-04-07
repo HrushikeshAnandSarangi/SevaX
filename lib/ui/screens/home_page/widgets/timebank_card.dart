@@ -40,7 +40,7 @@ class TimeBankCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
                   image: CachedNetworkImageProvider(
-                      timebank.photoUrl ?? defaultUserImageURL),
+                      timebank.photoUrl ?? defaultGroupImageURL),
                   fit: BoxFit.cover)),
           child: Container(
             padding: EdgeInsets.all(10),

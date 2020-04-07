@@ -1105,6 +1105,7 @@ class RequestListItemsState extends State<RequestListItems> {
                     height: 45,
                     width: 45,
                     child: FadeInImage.assetNetwork(
+                      fit: BoxFit.cover,
                       placeholder: defaultUserImageURL,
                       //  placeholder: 'lib/assets/images/profile.png',
                       image: model.photoUrl == null

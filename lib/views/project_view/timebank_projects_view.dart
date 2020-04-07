@@ -8,7 +8,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
 
-import '../core.dart';
 import '../requests/project_request.dart';
 
 class TimeBankProjectsView extends StatefulWidget {
@@ -158,21 +157,15 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   }
 
   void navigateToCreateProject() {
-    if (widget.timebankModel.admins
-        .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CreateEditProject(
-            timebankId: widget.timebankId,
-            isCreateProject: true,
-            projectId: '',
-          ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateEditProject(
+          timebankId: widget.timebankId,
+          isCreateProject: true,
+          projectId: '',
         ),
-      );
-      return;
-    } else {
-      _showAdminAccessMessage();
-    }
+      ),
+    );
   }
 }

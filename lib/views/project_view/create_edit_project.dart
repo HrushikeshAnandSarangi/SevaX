@@ -8,13 +8,14 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/models/timebank_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 
 import '../../flavor_config.dart';
 
@@ -57,6 +58,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         this.projectModel.mode = 'Personal';
       });
     }
+
+    getTimebankAdminStatus = getTimebankDetailsbyFuture(
+      timebankId: widget.timebankId,
+    );
+
     setState(() {});
   }
 
@@ -109,32 +115,50 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
+  Future<TimebankModel> getTimebankAdminStatus;
+  TimebankModel timebankModelFuture;
+
   Widget get projectSwitch {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      width: double.infinity,
-      child: CupertinoSegmentedControl<int>(
-        selectedColor: Theme.of(context).primaryColor,
-        children: logoWidgets,
-        borderColor: Colors.grey,
-        padding: EdgeInsets.only(left: 5.0, right: 5.0),
-        groupValue: sharedValue,
-        onValueChanged: (int val) {
-          print(val);
-          if (val != sharedValue) {
-            setState(() {
-              print("$sharedValue -- $val");
-              if (sharedValue == 0) {
-                projectModel.mode = 'Timebank';
-              } else {
-                projectModel.mode = 'Personal';
-              }
-              sharedValue = val;
-            });
-          }
-        },
-        //groupValue: sharedValue,
-      ),
+    return FutureBuilder(
+      future: getTimebankAdminStatus,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
+        timebankModel = snapshot.data;
+        if (snapshot.data.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 20),
+            width: double.infinity,
+            child: CupertinoSegmentedControl<int>(
+              selectedColor: Theme.of(context).primaryColor,
+              children: logoWidgets,
+              borderColor: Colors.grey,
+              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+              groupValue: sharedValue,
+              onValueChanged: (int val) {
+                print(val);
+                if (val != sharedValue) {
+                  setState(() {
+                    print("$sharedValue -- $val");
+                    if (sharedValue == 0) {
+                      projectModel.mode = 'Timebank';
+                    } else {
+                      projectModel.mode = 'Personal';
+                    }
+                    sharedValue = val;
+                  });
+                }
+              },
+              //groupValue: sharedValue,
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
@@ -503,7 +527,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   },
                   shape: StadiumBorder(),
                   child: Text(
-                    widget.isCreateProject ? 'Next' : 'Save',
+                    widget.isCreateProject ? 'Create project' : 'Save',
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
                   ),
                   textColor: FlavorConfig.values.buttonTextColor,

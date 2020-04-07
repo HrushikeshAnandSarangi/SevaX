@@ -415,6 +415,27 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     var notificationId =
                         await RequestNotificationManager.getNotificationId(
                             user, requestModel);
+
+                    if (requestModel.requestMode ==
+                        RequestMode.PERSONAL_REQUEST) {
+                      showLinearProgress();
+                      var canApproveTransaction =
+                          await FirestoreManager.hasSufficientCredits(
+                        credits: transactionModel.credits,
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                      );
+                      Navigator.pop(linearProgressForBalanceCheck);
+
+                      if (!canApproveTransaction) {
+                        showDiologForMessage(
+                          "Your seva credits are not sufficient to approve the credit request.",
+                          context,
+                        );
+                        return;
+                      }
+                    }
+
                     showMemberClaimConfirmation(
                         context: context,
                         notificationId: notificationId,
@@ -429,6 +450,21 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             ),
           ),
         ));
+  }
+
+  BuildContext linearProgressForBalanceCheck;
+
+  void showLinearProgress() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          linearProgressForBalanceCheck = createDialogContext;
+          return AlertDialog(
+            title: Text('Hang on..'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   Future<Widget> getNotificationRequestCompletedWidget(

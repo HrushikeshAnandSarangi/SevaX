@@ -55,7 +55,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   String title = '';
   String schedule = '';
   String description = '';
-  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
+  GeoFirePoint location;
   String selectedAddress;
   String timebankId;
 
@@ -206,6 +206,13 @@ class MyCustomFormState extends State<MyCustomForm> {
                         onPressed: () {
                           //if (location != null) {
                           if (_formKey.currentState.validate()) {
+                            if (!hasRegisteredLocation()) {
+                              showDialogForTitle(
+                                  dialogTitle:
+                                      "Please add location to your offer");
+                              return;
+                            }
+
                             Scaffold.of(context).showSnackBar(
                               SnackBar(content: Text('Creating Offer')),
                             );
@@ -246,6 +253,33 @@ class MyCustomFormState extends State<MyCustomForm> {
     setState(() {
       this.selectedAddress = address;
     });
+  }
+
+  bool hasRegisteredLocation() {
+    return location != null;
+  }
+
+  void showDialogForTitle({String dialogTitle}) async {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogTitle),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   void get _fetchCurrentlocation {
