@@ -394,6 +394,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
+                    FocusScope.of(context).requestFocus(new FocusNode());
                     // show a dialog
                     projectModel.startTime =
                         OfferDurationWidgetState.starttimestamp;
