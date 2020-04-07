@@ -1173,8 +1173,7 @@ class OfferCardViewState extends State<OfferCardView> {
 
   Future _makePostRequest(OfferModel offerModel) async {
     // set up POST request arguments
-    String url =
-        '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
+    String url = '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
     Map<String, String> headers = {"Content-type": "application/json"};
     Map<String, String> body = {
       'id': offerModel.id,

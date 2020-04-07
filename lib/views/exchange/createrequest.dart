@@ -461,6 +461,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     if (_formKey.currentState.validate()) {
       // validate request start and end date
+
+
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
         showDialogForTitle(
             dialogTitle:
@@ -519,7 +521,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   bool hasRegisteredLocation() {
-    print("Location ---========================= ${requestModel.location}");
     return location != null;
   }
 
@@ -560,14 +561,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         });
   }
 
-  Future<void> showDialogForTitle({String dialogTitle}) async {
-    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-      var timebankDetails = await FirestoreManager.getTimeBankForId(
-          timebankId: requestModel.timebankId);
-      requestModel.fullName = timebankDetails.name;
-      requestModel.photoUrl = timebankDetails.photoUrl;
-    }
-
+  void showDialogForTitle({String dialogTitle}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
