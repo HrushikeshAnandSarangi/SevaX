@@ -699,8 +699,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                   userEmail: SevaCore.of(context).loggedInUser.email,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                 );
-
                 Navigator.pop(linearProgressForBalanceCheck);
+              
 
                 if (!canApproveTransaction) {
                   showDiologForMessage(

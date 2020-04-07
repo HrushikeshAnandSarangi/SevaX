@@ -544,7 +544,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future<void> _signOut(BuildContext context) async {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     var auth = AuthProvider.of(context).auth;
     await auth.signOut();
     Navigator.pushReplacement(

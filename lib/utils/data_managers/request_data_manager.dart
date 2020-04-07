@@ -894,8 +894,13 @@ Future<bool> hasSufficientCredits({
   } on Exception {
     print("Exception raised while getting user minimum balance");
   }
-  var lowerLimitBalance = (sevaCoinsBalance + lowerLimit ?? 10);
-  return lowerLimitBalance + credits >= -lowerLimit;
+
+  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 10);
+
+  print(
+      " Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
+
+  return maxAvailableBalance - credits >= (-lowerLimit);
 }
 
 Future<double> getMemberBalance(userEmail, userId) {
