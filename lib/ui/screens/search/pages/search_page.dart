@@ -110,25 +110,21 @@ class _ExplorePageState extends State<SearchPage>
                   : Text('Loading');
             },
           ),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+          ],
         ),
         body: Column(
           children: <Widget>[
             SizedBox(height: 20),
-            Row(
-              children: <Widget>[
-                SizedBox(width: 20),
-                Expanded(
-                  child: SearchField(bloc: _bloc, controller: _controller),
-                ),
-                FlatButton(
-                  child: Text("Cancel"),
-                  textColor: Colors.black,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                // SizedBox(width: 5),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: SearchField(bloc: _bloc, controller: _controller),
             ),
             SizedBox(height: 10),
             Divider(

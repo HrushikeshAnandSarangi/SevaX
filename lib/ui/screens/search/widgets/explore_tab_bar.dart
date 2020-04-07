@@ -28,6 +28,7 @@ class ExploreTabBar extends StatelessWidget {
         letterSpacing: 0.7,
       ),
       indicatorColor: Theme.of(context).primaryColor,
+      labelPadding: EdgeInsets.symmetric(horizontal: 10),
       tabs: List.generate(
         ExplorePageLabels.tabContent.length,
         (index) => Tab(
