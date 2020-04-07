@@ -6,8 +6,8 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart'
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/pages/projects_tab_view.dart';
 import 'package:sevaexchange/ui/screens/search/pages/requests_tab_view.dart';
-import 'package:sevaexchange/ui/screens/search/widgets/explore_tab_bar.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/search_field.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/search_tab_bar.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -110,25 +110,21 @@ class _ExplorePageState extends State<SearchPage>
                   : Text('Loading');
             },
           ),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+          ],
         ),
         body: Column(
           children: <Widget>[
             SizedBox(height: 20),
-            Row(
-              children: <Widget>[
-                SizedBox(width: 20),
-                Expanded(
-                  child: SearchField(bloc: _bloc, controller: _controller),
-                ),
-                FlatButton(
-                  child: Text("Cancel"),
-                  textColor: Colors.black,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                // SizedBox(width: 5),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: SearchField(bloc: _bloc, controller: _controller),
             ),
             SizedBox(height: 10),
             Divider(
@@ -138,17 +134,17 @@ class _ExplorePageState extends State<SearchPage>
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
-              child: ExploreTabBar(tabController: _tabController),
+              child: SearchTabBar(tabController: _tabController),
             ),
             Expanded(
               child: TabBarView(
                 controller: _tabController,
                 children: <Widget>[
-                  GroupTabView(),
-                  ProjectsTabView(),
                   FeedsTabView(),
                   RequestsTabView(),
                   OffersTabView(),
+                  ProjectsTabView(),
+                  GroupTabView(),
                   MembersTabView(),
                 ],
               ),
