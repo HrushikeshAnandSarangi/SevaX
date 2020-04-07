@@ -246,10 +246,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
                         : "Ex: Small carpentry work...",
+                    hintStyle: textStyle,
                   ),
                   keyboardType: TextInputType.text,
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.title
+                      : "",
                   textCapitalization: TextCapitalization.sentences,
-                  style: textStyle,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter the subject of your request';
@@ -281,10 +284,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
-                  initialValue:
-                      widget.isOfferRequest != null && widget.isOfferRequest
-                          ? ""
-                          : "",
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.description
+                      : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 2,
                   validator: (value) {
@@ -426,11 +428,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         ),
       );
     } else {
-      if (widget.projectModel != null &&
-          widget.projectModel.mode == 'Timebank') {
-        requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
-      } else {
-        requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+      if (widget.projectModel != null) {
+        if (widget.projectModel.mode == 'Timebank') {
+          requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+        } else {
+          requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+        }
       }
       return Container();
     }

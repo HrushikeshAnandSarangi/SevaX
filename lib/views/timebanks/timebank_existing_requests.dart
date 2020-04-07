@@ -68,7 +68,7 @@ class _TimeBankExistingRequestsState extends State<TimeBankExistingRequests> {
               return Center(child: CircularProgressIndicator());
             }
             return StreamBuilder<List<RequestModel>>(
-              stream: FirestoreManager.getTimebankRequestListStream(
+              stream: FirestoreManager.getTimebankExistingRequestListStream(
                   timebankId: widget.timebankId),
               builder: (BuildContext context,
                   AsyncSnapshot<List<RequestModel>> requestListSnapshot) {

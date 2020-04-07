@@ -887,7 +887,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
     if (model.projectId.isNotEmpty &&
-        model.numberOfApprovals == model.approvedUsers.length) {
+            model.numberOfApprovals == model.approvedUsers.length ||
+        model.requestEnd < DateTime.now().millisecondsSinceEpoch) {
       await FirestoreManager.updateProjectCompletedRequest(
           projectId: model.projectId, requestId: model.id);
     }
