@@ -79,7 +79,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   @override
   Widget build(BuildContext context) {
     // _getAvatarURL();
-    var widthOfAvtar = FlavorConfig.appFlavor == Flavor.APP ? 150.0 : 40.0;
+    var widthOfAvtar = FlavorConfig.appFlavor == Flavor.APP ? 150.0 : 150.0;
     return Container(
       child: GestureDetector(
         onTap: () => imagePicker.showDialog(context),
@@ -111,7 +111,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
   Widget get defaultAvtarWidget {
     return FlavorConfig.appFlavor == Flavor.APP
         ? sevaXdeafaultImage
-        : humanityFirstdefaultImage;
+        : sevaXdeafaultImage;
   }
 
   Widget get humanityFirstdefaultImage {
