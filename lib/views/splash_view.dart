@@ -782,48 +782,6 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-//  Future _navigateToCalendarView(UserModel loggedInUser) async {
-//    await Navigator.of(context).push(
-//      MaterialPageRoute(
-//        builder: (context) => LocationView(
-//          onSelectedCalendar: (availability) {
-//            Navigator.pop(context);
-//            loggedInUser.availability = availability;
-//            updateUserAvailableData(loggedInUser);
-//           // updateUserWeekDay(loggedInUser);
-//            loadingMessage = 'Updating Calendar';
-//          },
-//          onSkipped: () {
-//            Navigator.pop(context);
-//            loggedInUser.availability = null;
-//            updateUserData(loggedInUser);
-//            loadingMessage = 'Skipping Calendar';
-//          },
-//        ),
-//      ),
-//    );
-//  }
-//   Future _navigateToPinView(UserModel loggedInUser) async {
-//     await Navigator.of(context).push(
-//       MaterialPageRoute(
-//         builder: (context) => PinView(
-//           onSelectedOtp: (otp) {
-// //            Navigator.pop(context);
-// //            loggedInUser.otp = otp;
-// //            updateUserData(loggedInUser);
-// //            loadingMessage = 'Checking Otp';
-//           },
-//           onSkipped: () {
-// //            Navigator.pop(context);
-// //            loggedInUser.otp = null;
-// //            updateUserData(loggedInUser);
-// //            loadingMessage = 'Skipping Otp';
-//           },
-//         ),
-//       ),
-//     );
-//   }
-
   Future _navigateToInterestsView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -854,7 +812,8 @@ class _SplashViewState extends State<SplashView> {
   Future _navigateToBioView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => BioView(onSave: (bio) {
+        builder: (context) => BioView(
+          onSave: (bio) {
           Navigator.pop(context);
           loggedInUser.bio = bio;
           updateUserData(loggedInUser);
@@ -884,7 +843,7 @@ class _SplashViewState extends State<SplashView> {
                   loadingMessage = 'Skipping interests';
                 },
                 onBacked: () {
-                  _navigateToInterestsView(loggedInUser);
+                  _navigateToSkillsView(loggedInUser);
                 },
               ),
             ),
