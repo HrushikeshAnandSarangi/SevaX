@@ -690,14 +690,33 @@ class NotificationsView extends State<NotificationViewHolder> {
             actions: <Widget>[],
             secondaryActions: <Widget>[],
             child: GestureDetector(
-              onTap: () {
+              onTap: () async {
+                //check member balance
+                showLinearProgress();
+                var canApproveTransaction =
+                    await FirestoreManager.hasSufficientCredits(
+                  credits: transactionModel.credits,
+                  userEmail: SevaCore.of(context).loggedInUser.email,
+                  userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                );
+
+                Navigator.pop(linearProgressForBalanceCheck);
+
+                if (!canApproveTransaction) {
+                  showDiologForMessage(
+                      "Your seva credits are not sufficient to approve the credit request.");
+                  return;
+                }
+
+                // member has sufficent balance
                 showMemberClaimConfirmation(
-                    context: context,
-                    notificationId: notificationId,
-                    requestModel: model,
-                    userId: userId,
-                    userModel: user,
-                    credits: transactionModel.credits);
+                  context: context,
+                  notificationId: notificationId,
+                  requestModel: model,
+                  userId: userId,
+                  userModel: user,
+                  credits: transactionModel.credits,
+                );
               },
               child: Container(
                 margin: notificationPadding,
@@ -740,6 +759,29 @@ class NotificationsView extends State<NotificationViewHolder> {
             ));
       },
     );
+  }
+
+  void showDiologForMessage(String dialogText) {
+    showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogText),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Widget getInvitedRequestsNotificationWidget(
@@ -1273,7 +1315,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   Widget getNotificationAcceptedWidget(
       RequestModel model, String userId, String notificationId) {
-print("_____________________${userId}");
+    print("_____________________${userId}");
     return FutureBuilder<UserModel>(
       future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
@@ -1310,7 +1352,8 @@ print("_____________________${userId}");
                       child: Text(model.title),
                     ),
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+                      backgroundImage:
+                          NetworkImage(user.photoURL ?? defaultUserImageURL),
                     ),
                     subtitle: Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -1321,6 +1364,21 @@ print("_____________________${userId}");
             ));
       },
     );
+  }
+
+  BuildContext linearProgressForBalanceCheck;
+
+  void showLinearProgress() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          linearProgressForBalanceCheck = createDialogContext;
+          return AlertDialog(
+            title: Text('Hang on..'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   void declineRequestedMember({

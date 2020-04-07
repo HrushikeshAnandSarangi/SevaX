@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -13,6 +14,7 @@ import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import '../app_config.dart';
 import 'notifications_data_manager.dart';
 
 Location location = new Location();
@@ -360,6 +362,25 @@ Future<void> rejectRequestCompletion({
   await utils.createTaskCompletedApprovedNotification(model: notification);
 }
 
+List<TransactionModel> updateListTransactionsCreditsAsPerTimebankTaxPolicy({
+  List<TransactionModel> originalModel,
+  double credits,
+  String userIdToBeCredited,
+  double userAmout,
+}) {
+  List<TransactionModel> modelTransactions =
+      originalModel.map((f) => f).toList();
+
+  return modelTransactions.map((t) {
+    if (t.to == userIdToBeCredited) {
+      TransactionModel editedTransaction = t;
+      editedTransaction.credits = userAmout;
+      return editedTransaction;
+    }
+    return t;
+  }).toList();
+}
+
 Future<void> approveRequestCompletion({
   @required RequestModel model,
   @required String userId,
@@ -376,9 +397,14 @@ Future<void> approveRequestCompletion({
   }
   model.accepted = approvalCount >= model.numberOfApprovals;
 
+  double transactionvalue = (model.durationOfRequest / 60);
+
+  TimeBankBalanceTransactionModel balanceTransactionModel;
+  
   print("========================================================== Step1");
-  double taxPercentage;
   if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    double taxPercentage;
+
     DocumentSnapshot data = await Firestore.instance
         .collection('communities')
         .document(communityId)
@@ -386,16 +412,18 @@ Future<void> approveRequestCompletion({
 
     taxPercentage = data.data['taxPercentage'] ?? 0;
     print('---->tax percentage $taxPercentage');
-  } else {
-    taxPercentage = 0;
+
+    double tax = transactionvalue * taxPercentage;
+    transactionvalue = transactionvalue - tax;
+
+    balanceTransactionModel = TimeBankBalanceTransactionModel(
+      communityId: communityId,
+      userId: userId,
+      requestId: model.id,
+      amount: tax,
+      timestamp: FieldValue.serverTimestamp(),
+    );
   }
-
-  await Firestore.instance
-      .collection('requests')
-      .document(model.id)
-      .setData(model.toMap(), merge: true);
-
-  // UserModel user = await utils.getUserForId(sevaUserId: userId);
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -409,14 +437,6 @@ Future<void> approveRequestCompletion({
 
   print("========================================================== Step2");
 
-  double transactionvalue = (model.durationOfRequest / 60);
-
-  double tax = transactionvalue * taxPercentage;
-
-  double userAmount = transactionvalue - tax;
-
-  print('===>after tax  $userAmount');
-
   Map<String, dynamic> transactionData = model.transactions
       .where((transactionModel) {
         if (transactionModel.from == model.sevaUserId &&
@@ -429,24 +449,11 @@ Future<void> approveRequestCompletion({
       .elementAt(0)
       .toMap();
 
-  // if (FlavorConfig.appFlavor == Flavor.SEVA_DEV) {//removed flavor check
-  // await Firestore.instance.collection('users').document(model.email).updateData(
-  //     {'currentBalance': FieldValue.increment(-(userAmount.toDouble()))});
-
   print("========================================================== Step3");
 
   //Create transaction record for timebank
 
   if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
-    TimeBankBalanceTransactionModel balanceTransactionModel =
-        TimeBankBalanceTransactionModel(
-      communityId: communityId,
-      userId: userId,
-      requestId: model.id,
-      amount: tax,
-      timestamp: FieldValue.serverTimestamp(),
-    );
-
     Firestore.instance
         .collection("communities")
         .document(communityId)
@@ -480,7 +487,23 @@ Future<void> approveRequestCompletion({
   //     .updateData({'currentBalance': FieldValue.increment(userAmount)});
 
   //User gets a notification with amount after tax deducation
-  transactionData["credits"] = userAmount;
+  transactionData["credits"] = transactionvalue;
+
+  var updatedRequestModel = model;
+  updatedRequestModel.transactions =
+      updateListTransactionsCreditsAsPerTimebankTaxPolicy(
+    credits: transactionvalue,
+    originalModel: model.transactions,
+    userAmout: transactionvalue,
+    userIdToBeCredited: userId,
+  );
+
+  await Firestore.instance.collection('requests').document(model.id).setData(
+        model.requestMode == RequestMode.PERSONAL_REQUEST
+            ? model.toMap()
+            : updatedRequestModel.toMap(),
+        merge: true,
+      );
 
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
@@ -818,6 +841,27 @@ Stream<List<RequestModel>> getCompletedRequestStream({
       },
     ),
   );
+}
+
+Future<bool> hasSufficientCredits({
+  String userEmail,
+  String userId,
+  double credits,
+}) async {
+  var sevaCoinsBalance = await getMemberBalance(
+    userEmail,
+    userId,
+  );
+
+  var lowerLimit = 10;
+  try {
+    lowerLimit =
+        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance");
+  }
+  var lowerLimitBalance = (sevaCoinsBalance + lowerLimit ?? 10);
+  return lowerLimitBalance + credits >= -lowerLimit;
 }
 
 Future<double> getMemberBalance(userEmail, userId) {

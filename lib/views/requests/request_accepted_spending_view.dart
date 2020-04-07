@@ -452,7 +452,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         actions: <Widget>[],
         secondaryActions: <Widget>[],
         child: GestureDetector(
-          onTap: () {
+          onTap: () async {
+            if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+              //here credits are approved
+
+            }
             showMemberClaimConfirmation(
                 context: context,
                 notificationId: notificationId,
@@ -500,6 +504,29 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             ),
           ),
         ));
+  }
+
+  void showDiologForMessage(String dialogText, BuildContext dialogContext) {
+    showDialog(
+        context: dialogContext,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogText),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Future<Widget> showMemberClaimConfirmation(
