@@ -239,7 +239,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               AspectRatio(
                 aspectRatio: 3.3 / 2.3,
                 child: CachedNetworkImage(
-                  imageUrl: timebank.photoUrl ?? defaultUserImageURL,
+                  imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
                   fit: BoxFit.fitWidth,
                   errorWidget: (context, url, error) =>
                       Center(child: Text('No Image Avaialable')),
