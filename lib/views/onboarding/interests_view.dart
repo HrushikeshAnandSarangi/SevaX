@@ -19,7 +19,7 @@ class InterestViewNew extends StatefulWidget {
     @required this.onSkipped,
     this.onBacked,
     this.userModel,
-    this.automaticallyImplyLeading = true,
+    this.automaticallyImplyLeading
   });
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
@@ -54,6 +54,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
+        leading : widget.automaticallyImplyLeading ? null : BackButton(onPressed: widget.onBacked,),
         title: Text(
           'Interests',
           style: TextStyle(

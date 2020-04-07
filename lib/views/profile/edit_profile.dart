@@ -185,6 +185,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
+          automaticallyImplyLeading: true,
           userModel: loggedInUser,
           onSelectedInterests: (interests) {
             Navigator.pop(context);
@@ -205,6 +206,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
+          automaticallyImplyLeading: true,
           userModel: loggedInUser,
           onSelectedSkills: (skills) {
             Navigator.pop(context);
