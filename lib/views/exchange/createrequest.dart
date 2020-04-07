@@ -248,6 +248,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         : "Ex: Small carpentry work...",
                   ),
                   keyboardType: TextInputType.text,
+                  initialValue: widget.offer != null ? widget.offer.title : "",
                   textCapitalization: TextCapitalization.sentences,
                   style: textStyle,
                   validator: (value) {
@@ -281,10 +282,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
-                  initialValue:
-                      widget.isOfferRequest != null && widget.isOfferRequest
-                          ? ""
-                          : "",
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.description
+                      : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 2,
                   validator: (value) {
