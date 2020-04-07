@@ -923,11 +923,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
     await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
 
-    if (model.projectId.isNotEmpty &&
-        model.approvedUsers.length <= model.numberOfApprovals) {
-      await FirestoreManager.updateProjectCompletedRequest(
-          projectId: model.projectId, requestId: model.id);
-    }
+//    if (model.projectId.isNotEmpty &&
+//        model.approvedUsers.length <= model.numberOfApprovals) {
+//      await FirestoreManager.updateProjectCompletedRequest(
+//          projectId: model.projectId, requestId: model.id);
+//    }
 
     setState(() {
       isProgressBarActive = false;

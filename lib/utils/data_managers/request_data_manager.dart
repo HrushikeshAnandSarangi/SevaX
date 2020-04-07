@@ -839,24 +839,7 @@ Future<void> updateProjectCompletedRequest(
   });
 }
 
-/// Get all timebanknew associated with a User as a Stream_
-Future<int> getCompletedProjectRequestCount(
-    {@required String communityId}) async {
-  int totalCount = 0;
-  print("com id ----- ${communityId}");
-
-  List<TimebankModel> timeBankModelList =
-      await getMembersCount(communityId: communityId);
-  print("list is ----- ${timeBankModelList.length}");
-
-  timeBankModelList.forEach((timebankModel) {
-    totalCount += timebankModel.members.length;
-  });
-  print("count is ----- $totalCount");
-
-  return totalCount;
-}
-
+/// Get all timebanknew associated with a User as a Stream
 Stream<List<RequestModel>> getCompletedRequestStream({
   @required String userEmail,
   @required String userId,
