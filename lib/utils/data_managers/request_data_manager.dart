@@ -203,7 +203,7 @@ Stream<List<RequestModel>> getPersonalRequestListStream(
       .collection('requests')
       .where('sevauserid', isEqualTo: sevauserid)
       .where('accepted', isEqualTo: false)
-      .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
+      .where('requestMode', isEqualTo: 'PERSONAL_REQUEST');
 
   var data = query.snapshots();
 
