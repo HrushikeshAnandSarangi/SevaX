@@ -434,7 +434,8 @@ Future<void> approveRequestCompletion({
   double transactionvalue = (model.durationOfRequest / 60);
 
   TimeBankBalanceTransactionModel balanceTransactionModel;
-  
+  var updatedRequestModel = model;
+
   print("========================================================== Step1");
   if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
     double taxPercentage;
@@ -456,6 +457,14 @@ Future<void> approveRequestCompletion({
       requestId: model.id,
       amount: tax,
       timestamp: FieldValue.serverTimestamp(),
+    );
+
+    updatedRequestModel.transactions =
+        updateListTransactionsCreditsAsPerTimebankTaxPolicy(
+      credits: transactionvalue,
+      originalModel: model.transactions,
+      userAmout: transactionvalue,
+      userIdToBeCredited: userId,
     );
   }
 
@@ -522,15 +531,6 @@ Future<void> approveRequestCompletion({
 
   //User gets a notification with amount after tax deducation
   transactionData["credits"] = transactionvalue;
-
-  var updatedRequestModel = model;
-  updatedRequestModel.transactions =
-      updateListTransactionsCreditsAsPerTimebankTaxPolicy(
-    credits: transactionvalue,
-    originalModel: model.transactions,
-    userAmout: transactionvalue,
-    userIdToBeCredited: userId,
-  );
 
   await Firestore.instance.collection('requests').document(model.id).setData(
         model.requestMode == RequestMode.PERSONAL_REQUEST
