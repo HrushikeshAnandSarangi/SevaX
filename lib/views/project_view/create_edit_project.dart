@@ -336,7 +336,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             Padding(
               padding: EdgeInsets.all(8),
             ),
-            headingText('Your timebank location.'),
+            headingText('Your project location.'),
             Text(
               'Project location will help your members to locate',
               style: TextStyle(

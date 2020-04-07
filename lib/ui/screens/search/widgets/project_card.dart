@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -34,7 +35,6 @@ class ProjectsCard extends StatelessWidget {
         assert(description != null),
         assert(tasks != null),
         assert(pendingTask != null),
-//        assert(photoUrl != null),
         super(key: key);
 
   @override
@@ -57,7 +57,7 @@ class ProjectsCard extends StatelessWidget {
                     Icons.location_on,
                     color: Theme.of(context).primaryColor,
                   ),
-                  Text(location ?? "Unknown"),
+                  Text(getLocation(location)),
                   Spacer(),
                   Text(
                     timeago.format(
@@ -74,7 +74,8 @@ class ProjectsCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 38,
                     backgroundColor: Theme.of(context).primaryColor,
-                    child: CustomNetworkImage(photoUrl, fit: BoxFit.cover),
+                    child: CustomNetworkImage(photoUrl ?? defaultUserImageURL,
+                        fit: BoxFit.cover),
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -147,5 +148,21 @@ class ProjectsCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getLocation(String location) {
+    if (location != null) {
+      List<String> l = location.split(',');
+      l = l.reversed.toList();
+      if (l.length >= 2) {
+        return "${l[1]},${l[0]}";
+      } else if (l.length >= 1) {
+        return "${l[0]}";
+      } else {
+        return "Unknown";
+      }
+    } else {
+      return "Unknown";
+    }
   }
 }

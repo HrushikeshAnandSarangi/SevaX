@@ -15,7 +15,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
-import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
@@ -701,12 +700,6 @@ class _SplashViewState extends State<SplashView> {
           //this.isLatestVersion = !this.isLatestVersion;
         },
       ),
-    ));
-  }
-
-  Future _navigateToAboutPage() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AboutApp(),
     ));
   }
 

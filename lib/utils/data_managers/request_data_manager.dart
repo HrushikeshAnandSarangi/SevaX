@@ -10,7 +10,6 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -396,7 +395,7 @@ Future<void> approveRequestCompletion({
       .document(model.id)
       .setData(model.toMap(), merge: true);
 
-  UserModel user = await utils.getUserForId(sevaUserId: userId);
+  // UserModel user = await utils.getUserForId(sevaUserId: userId);
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -431,22 +430,22 @@ Future<void> approveRequestCompletion({
       .toMap();
 
   // if (FlavorConfig.appFlavor == Flavor.SEVA_DEV) {//removed flavor check
-    await Firestore.instance
-        .collection('users')
-        .document(model.email)
-        .updateData(
-            {'currentBalance': FieldValue.increment(-(userAmount.toDouble()))});
+  // await Firestore.instance.collection('users').document(model.email).updateData(
+  //     {'currentBalance': FieldValue.increment(-(userAmount.toDouble()))});
 
-    print("========================================================== Step3");
+  print("========================================================== Step3");
 
-    //Create transaction record for timebank
+  //Create transaction record for timebank
+
+  if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
     TimeBankBalanceTransactionModel balanceTransactionModel =
         TimeBankBalanceTransactionModel(
-            communityId: communityId,
-            userId: userId,
-            requestId: model.id,
-            amount: tax,
-            timestamp: FieldValue.serverTimestamp());
+      communityId: communityId,
+      userId: userId,
+      requestId: model.id,
+      amount: tax,
+      timestamp: FieldValue.serverTimestamp(),
+    );
 
     Firestore.instance
         .collection("communities")
@@ -455,7 +454,7 @@ Future<void> approveRequestCompletion({
         .add(
           balanceTransactionModel.toJson(),
         );
-
+  } else {
     NotificationsModel debitnotification = NotificationsModel(
       timebankId: model.timebankId,
       id: utils.Utils.getUuid(),
@@ -469,14 +468,16 @@ Future<void> approveRequestCompletion({
 
     await utils.createTransactionNotification(model: debitnotification);
     print("==>debit notification sent<==");
+  }
+
   // }
 
   print("========================================================== Step6");
 
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .updateData({'currentBalance': FieldValue.increment(userAmount)});
+  // await Firestore.instance
+  //     .collection('users')
+  //     .document(user.email)
+  //     .updateData({'currentBalance': FieldValue.increment(userAmount)});
 
   //User gets a notification with amount after tax deducation
   transactionData["credits"] = userAmount;
@@ -830,9 +831,8 @@ Future<double> getMemberBalance(userEmail, userId) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.transactions?.forEach((transaction) {
-        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
-            transaction.isApproved &&
-            transaction.to == userId) sevaCoins += transaction.credits;
+        if (transaction.isApproved && transaction.to == userId)
+          sevaCoins += transaction.credits;
       });
     });
 
@@ -855,8 +855,9 @@ Future<double> getMyDebits(userEmail, userId) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.transactions?.forEach((transaction) {
-        if (transaction.isApproved && transaction.from == userId)
-          myDebits += transaction.credits;
+        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
+            transaction.isApproved &&
+            transaction.from == userId) myDebits += transaction.credits;
       });
     });
     return myDebits;

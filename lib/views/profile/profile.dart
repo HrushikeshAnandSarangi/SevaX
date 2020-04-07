@@ -15,6 +15,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
@@ -447,6 +448,7 @@ class _ProfilePageState extends State<ProfilePage>
                         //     ],
                         //   ),
                         // ),
+                        getHelpSection,
                         SizedBox(height: 10),
                         InkWell(
                           onTap: () {
@@ -502,6 +504,51 @@ class _ProfilePageState extends State<ProfilePage>
                 ],
               ),
             ),
+    );
+  }
+
+  Widget get getHelpSection {
+    return Column(
+      children: <Widget>[
+        SizedBox(height: 10),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return AboutApp();
+                },
+              ),
+            );
+          },
+          child: Card(
+            elevation: 2,
+            child: Container(
+              height: 60,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Text(
+                      'Help',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  Icon(Icons.navigate_next),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

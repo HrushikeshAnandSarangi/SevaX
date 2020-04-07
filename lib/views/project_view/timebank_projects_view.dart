@@ -53,82 +53,84 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               ],
             ),
           ),
-          StreamBuilder<List<ProjectModel>>(
-            stream: FirestoreManager.getAllProjectListStream(
-                timebankid: widget.timebankId),
-            builder: (BuildContext context,
-                AsyncSnapshot<List<ProjectModel>> requestListSnapshot) {
-              if (requestListSnapshot.hasError) {
-                return new Text('Error: ${requestListSnapshot.error}');
-              }
-              switch (requestListSnapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return Center(child: CircularProgressIndicator());
-                default:
-                  List<ProjectModel> projectModelList =
-                      requestListSnapshot.data;
+          Expanded(
+            child: StreamBuilder<List<ProjectModel>>(
+              stream: FirestoreManager.getAllProjectListStream(
+                  timebankid: widget.timebankId),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<ProjectModel>> requestListSnapshot) {
+                if (requestListSnapshot.hasError) {
+                  return new Text('Error: ${requestListSnapshot.error}');
+                }
+                switch (requestListSnapshot.connectionState) {
+                  case ConnectionState.waiting:
+                    return Center(child: CircularProgressIndicator());
+                  default:
+                    List<ProjectModel> projectModelList =
+                        requestListSnapshot.data;
 
-                  if (projectModelList.length == 0) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            children: <TextSpan>[
-                              TextSpan(
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 14),
-                                text: 'No projects available.Try ',
-                              ),
-                              TextSpan(
-                                  text: 'creating one',
+                    if (projectModelList.length == 0) {
+                      return Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: <TextSpan>[
+                                TextSpan(
                                   style: TextStyle(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = navigateToCreateProject),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: projectModelList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      ProjectModel project = projectModelList[index];
-                      int totalTask = project.completedRequests != null &&
-                              project.pendingRequests != null
-                          ? project.pendingRequests.length +
-                              project.completedRequests.length
-                          : 0;
-                      return ProjectsCard(
-                        timestamp: project.createdAt,
-                        startTime: project.startTime,
-                        endTime: project.endTime,
-                        title: project.name,
-                        description: project.description,
-                        photoUrl: project.photoUrl ?? "",
-                        location: project.address,
-                        tasks: totalTask,
-                        pendingTask: project.pendingRequests?.length,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProjectRequests(
-                              timebankId: widget.timebankId,
-                              projectModel: project,
-                              timebankModel: widget.timebankModel,
+                                      color: Colors.grey, fontSize: 14),
+                                  text: 'No projects available.Try ',
+                                ),
+                                TextSpan(
+                                    text: 'creating one',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = navigateToCreateProject),
+                              ],
                             ),
                           ),
                         ),
                       );
-                    },
-                  );
-              }
-            },
+                    }
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: projectModelList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        ProjectModel project = projectModelList[index];
+                        int totalTask = project.completedRequests != null &&
+                                project.pendingRequests != null
+                            ? project.pendingRequests.length +
+                                project.completedRequests.length
+                            : 0;
+                        return ProjectsCard(
+                          timestamp: project.createdAt,
+                          startTime: project.startTime,
+                          endTime: project.endTime,
+                          title: project.name,
+                          description: project.description,
+                          photoUrl: project.photoUrl,
+                          location: project.address,
+                          tasks: totalTask,
+                          pendingTask: project.pendingRequests?.length,
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProjectRequests(
+                                timebankId: widget.timebankId,
+                                projectModel: project,
+                                timebankModel: widget.timebankModel,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                }
+              },
+            ),
           ),
         ],
       ),

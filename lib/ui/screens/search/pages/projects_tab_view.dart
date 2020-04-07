@@ -44,6 +44,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
 
               return Center(
                 child: ListView.builder(
+                  
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   itemCount: snapshot.data.length,
                   itemBuilder: (context, index) {
@@ -59,7 +60,7 @@ class _ProjectsTabViewState extends State<ProjectsTabView> {
                       endTime: project.endTime,
                       title: project.name,
                       description: project.description,
-                      photoUrl: project.photoUrl ?? "",
+                      photoUrl: project.photoUrl,
                       location: project.address,
                       tasks: totalTask,
                       pendingTask: project.pendingRequests?.length,
