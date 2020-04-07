@@ -248,7 +248,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         : "Ex: Small carpentry work...",
                   ),
                   keyboardType: TextInputType.text,
-                  initialValue: widget.offer != null ? widget.offer.title : "",
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.title
+                      : "",
                   textCapitalization: TextCapitalization.sentences,
                   style: textStyle,
                   validator: (value) {
