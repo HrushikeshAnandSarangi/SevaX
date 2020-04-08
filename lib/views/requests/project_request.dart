@@ -431,21 +431,28 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   void createProjectRequest() async {
     var sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
 
-    if (widget.timebankModel.admins.contains(sevaUserId) ||
+    if (widget.projectModel.mode == "Timebank" &&
+        widget.timebankModel.admins.contains(sevaUserId)) {
+      proceedCreatingRequest();
+    } else if (widget.projectModel.mode == "Personal" &&
         widget.projectModel.creatorId == sevaUserId) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CreateRequest(
-            timebankId: widget.timebankModel.id,
-            projectId: widget.projectModel.id,
-            projectModel: widget.projectModel,
-          ),
-        ),
-      );
+      proceedCreatingRequest();
     } else {
       _showProtectedTimebankMessage();
     }
+  }
+
+  void proceedCreatingRequest() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateRequest(
+          timebankId: widget.timebankModel.id,
+          projectId: widget.projectModel.id,
+          projectModel: widget.projectModel,
+        ),
+      ),
+    );
   }
 
   void _showProtectedTimebankMessage() {
@@ -455,8 +462,8 @@ class ProjectRequestListState extends State<ProjectRequestList> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Project Request Alert"),
-          content: new Text("Only admins can create project request"),
+          title: new Text("Access denied."),
+          content: new Text("You are not authorized to create a request."),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             new FlatButton(

@@ -6,6 +6,7 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -66,19 +67,31 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.all(5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          height: 100,
-                          width: 100,
-                          child: TimebankAvatar(
-                              photoUrl: projectModel.photoUrl ??
-                                  'https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png'),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 30),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            height: 100,
+                            width: 100,
+                            child: TimebankAvatar(
+                                photoUrl: projectModel.photoUrl ??
+                                    defaultProjectImageURL),
+                          ),
+
+                          // SizedBox(
+                          //   width: 30,
+                          // )
+                        ],
+                      ),
+                    ),
+                  ),
+                  projectModel.creatorId ==
+                          SevaCore.of(context).loggedInUser.sevaUserID
+                      ? Container(
+                          width: double.infinity,
                           child: FlatButton(
                             onPressed: () {
                               print('pressed');
@@ -95,7 +108,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                             child: Text(
                               'Edit',
                               style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontFamily: 'Europa',
                                   fontWeight: FontWeight.bold,
                                   color: FlavorConfig.values.theme.primaryColor,
@@ -103,9 +116,7 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                             ),
                           ),
                         )
-                      ],
-                    ),
-                  ),
+                      : Container(),
                   headingText('Title'),
                   Text(projectModel.name ?? ""),
                   headingText('Mission Statement'),
