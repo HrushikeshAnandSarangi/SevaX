@@ -187,11 +187,6 @@ class TimebankRequests extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    // child: Text(userModel.email),
-                    child: Text(""),
-                  ),
                   if (userModel.bio != null)
                     Padding(
                       padding: EdgeInsets.all(0.0),
