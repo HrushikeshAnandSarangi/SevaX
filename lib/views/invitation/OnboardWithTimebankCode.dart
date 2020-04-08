@@ -412,9 +412,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                               .loggedinuser.sevaUserID,
                           type: prefix0.NotificationType.JoinRequest,
                           data: joinReqModel.toMap(),
-                          communityId: SevaCore.of(context)
-                              .loggedInUser
-                              .currentCommunity,
+                          communityId: widget.communityModel.id,
                         );
 
                         notification.timebankId =
