@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -76,9 +75,8 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                           Container(
                             height: 100,
                             width: 100,
-                            child: TimebankAvatar(
-                                photoUrl: projectModel.photoUrl ??
-                                    defaultProjectImageURL),
+                            child: Image.network(projectModel.photoUrl ??
+                                defaultProjectImageURL),
                           ),
 
                           // SizedBox(
