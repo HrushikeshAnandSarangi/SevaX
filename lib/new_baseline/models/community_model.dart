@@ -134,7 +134,8 @@ class CommunityModel extends DataModel {
     this.transactionCount = map.containsKey('transactionCount')
         ? map['transactionCount'] ?? 0
         : null;
-    this.taxPercentage = map["taxPercentage"] ?? 0.0;
+    this.taxPercentage =
+        map["taxPercentage"] != null ? map["taxPercentage"].toDouble() : 0.0;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
     this.transactionCount = map['transactionCount'] ?? 0;
     this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});

@@ -5,7 +5,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -152,7 +151,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: 'Type your timebank name. Ex: Alaska (min 5 char)',
+              hintText: 'Type your timebank name. Ex: Alaska (min 1 char)',
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
@@ -171,11 +170,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       return Container();
     }
 
-    if (searchTextController.text.trim().length < 3) {
-      print('Search requires minimum 3 characters');
+    if (searchTextController.text.trim().length < 1) {
+      print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
-          getEmptyWidget('Users', 'Search requires minimum 3 characters'),
+          getEmptyWidget('Users', 'Search requires minimum 1 character'),
         ],
       );
     }
@@ -214,7 +213,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                   AsyncSnapshot<UserModel> snapshot) {
                                 if (snapshot.hasError) {
                                   return Text(
-                                    "Not found",
+                                    "Timebank",
                                   );
                                 } else if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -292,6 +291,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             }
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
+            // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){
             return Expanded(

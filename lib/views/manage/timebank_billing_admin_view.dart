@@ -487,7 +487,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             Column(
               children: <Widget>[
                 Text(
-                  'Billing Details',
+                  'Profile Information',
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
