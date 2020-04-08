@@ -273,7 +273,8 @@ class _ViewAcceptedOffers extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
+                    // child: Text(userModel.email),
+                    child: Text(""),
                   ),
                   if (userModel.bio != null)
                     Padding(

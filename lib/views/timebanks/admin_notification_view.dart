@@ -778,7 +778,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
+                    // child: Text(userModel.email),
+                    child: Text(""),
                   ),
                   if (userModel.bio != null)
                     Padding(
@@ -1058,7 +1059,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
+                    // child: Text(userModel.email),
+                    child: Text(""),
                   ),
                   if (userModel.bio != null)
                     Padding(
@@ -1513,7 +1515,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
+                    // child: Text(userModel.email),
+                    child: Text(""),
                   ),
                   if (userModel.bio != null)
                     Padding(
