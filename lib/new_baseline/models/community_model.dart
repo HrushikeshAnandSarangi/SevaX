@@ -288,7 +288,7 @@ class CommunityModel extends DataModel {
         'admins: $admins, '
         'coordinators: $coordinators,'
         ' members: $members, '
-        'transactionCount: $transactionCount}'
+//        'transactionCount: $transactionCount}'
         'taxPercentage: $taxPercentage}';
   }
 }
