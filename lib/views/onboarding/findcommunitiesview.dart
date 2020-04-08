@@ -174,7 +174,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
-          getEmptyWidget('Users', 'Search requires minimum 1 character'),
+          getEmptyWidget('Users', ''),
         ],
       );
     }
