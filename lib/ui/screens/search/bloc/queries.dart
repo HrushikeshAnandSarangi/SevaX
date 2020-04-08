@@ -10,6 +10,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 
 class Searches {
+
   static Future<http.Response> makePostRequest({
     @required String url,
     Map<String, String> headers,
@@ -66,8 +67,7 @@ class Searches {
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
         currentCommunityOfUser.timebanks, timebanksIdArr);
 //    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-    String url =
-        FlavorConfig.values.elasticSearchBaseURL + '/elasticsearch/newsfeed/_doc/_search';
+    String url = FlavorConfig.values.elasticSearchBaseURL + '//elasticsearch/newsfeed/_doc/_search';
     dynamic body = json.encode(
       {
         "size": 1000,
@@ -150,8 +150,7 @@ class Searches {
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
         currentCommunityOfUser.timebanks, timebanksIdArr);
 //    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-    String url =
-        FlavorConfig.values.elasticSearchBaseURL + '/elasticsearch/offers/offer/_search';
+    String url = FlavorConfig.values.elasticSearchBaseURL + '//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
         "size": 3000,
@@ -225,8 +224,7 @@ class Searches {
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
         currentCommunityOfUser.timebanks, timebanksIdArr);
 //    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-    String url = FlavorConfig.values.elasticSearchBaseURL +
-        '/elasticsearch/sevaxprojects/_doc/_search';
+    String url = FlavorConfig.values.elasticSearchBaseURL + '//elasticsearch/sevaxprojects/_doc/_search';
     dynamic body = json.encode(
       {
         "size": 3000,
@@ -289,8 +287,7 @@ class Searches {
 //    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     print("inside search feeds function ");
 
-    String url =
-        FlavorConfig.values.elasticSearchBaseURL + 'elasticsearch/requests/request/_search';
+    String url = FlavorConfig.values.elasticSearchBaseURL + '//elasticsearch/requests/request/_search';
     dynamic body = json.encode(
       {
         "size": 3000,
@@ -342,8 +339,7 @@ class Searches {
       {@required queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    String url = FlavorConfig.values.elasticSearchBaseURL +
-        "/elasticsearch/sevaxtimebanks/sevaxtimebank/_search";
+    String url = FlavorConfig.values.elasticSearchBaseURL + "//elasticsearch/sevaxtimebanks/sevaxtimebank/_search";
     dynamic body = json.encode({
       "size": 3000,
       "query": {
@@ -394,8 +390,7 @@ class Searches {
       {@required queryString,
       @required UserModel loggedInUser,
       @required CommunityModel currentCommunityOfUser}) async* {
-    String url = FlavorConfig.values.elasticSearchBaseURL +
-        '/elasticsearch/sevaxusers/sevaxuser/_search';
+    String url = FlavorConfig.values.elasticSearchBaseURL + '//elasticsearch/sevaxusers/sevaxuser/_search';
     dynamic body = json.encode(
       {
         "size": 3000,
