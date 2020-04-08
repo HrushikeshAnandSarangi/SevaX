@@ -363,7 +363,9 @@ class ProjectRequestListState extends State<ProjectRequestList> {
   @override
   void initState() {
     super.initState();
+
     projectModel = widget.projectModel;
+
     getData();
   }
 
