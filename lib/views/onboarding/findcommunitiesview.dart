@@ -5,10 +5,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/community/communitycreate.dart';
 import 'package:sevaexchange/views/core.dart';
@@ -40,6 +40,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   static const String JOIN = "Join";
   static const String JOINED = "Joined";
   bool showAppbar = false;
+  String nearTimebankText = 'Timebanks near you';
   @override
   void initState() {
     super.initState();
@@ -48,7 +49,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
     Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
+        .debounceTime(Duration(milliseconds: 500))
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {
@@ -168,14 +169,14 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     if (widget == null ||
         searchTextController == null ||
         searchTextController.text == null) {
-      return Container();
+      return nearByTimebanks();
     }
 
     if (searchTextController.text.trim().length < 3) {
       print('Search requires minimum 3 characters');
       return Column(
         children: <Widget>[
-          getEmptyWidget('Users', 'Search requires minimum 3 characters'),
+          getEmptyWidget('Users', nearTimebankText),
         ],
       );
     }
@@ -201,84 +202,129 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                           status = _compareUserStatus(communityList[index],
                               widget.loggedInUser.sevaUserID);
 
-                          return ListTile(
-                            onTap: goToNext(snapshot.data),
-                            title: Text(communityList[index].name,
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w700)),
-                            subtitle: FutureBuilder(
-                              future: getUserForId(
-                                  sevaUserId: communityList[index].created_by),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<UserModel> snapshot) {
-                                if (snapshot.hasError) {
-                                  return Text(
-                                    "Not found",
-                                  );
-                                } else if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Text("...");
-                                } else if (snapshot.hasData) {
-                                  return Text(
-                                    "Created by " + snapshot.data.fullname,
-                                  );
-                                } else {
-                                  return Text(
-                                    "Community",
-                                  );
-                                }
-                              },
-                            ),
-                            trailing:
-                                Row(mainAxisSize: MainAxisSize.min, children: <
-                                    Widget>[
-                              RaisedButton(
-                                onPressed: status == CompareUserStatus.JOIN
-                                    ? () {
-                                        var communityModel =
-                                            communityList[index];
-                                        createEditCommunityBloc
-                                            .selectCommunity(communityModel);
-                                        createEditCommunityBloc
-                                            .updateUserDetails(
-                                                SevaCore.of(context)
-                                                    .loggedInUser);
-                                        // snapshot.data.communities[index].
+                          return timeBankWidget(
+                              communityModel: communityList[index],
+                              context: context,
+                              status: status);
+                        }));
+              } else {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
+                  child: Center(
+                    child: Text("No timebanks found",
+                        style: TextStyle(fontFamily: "Europa", fontSize: 14)),
+                  ),
+                );
+              }
+            }
+          } else if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          /*else if(snapshot.data==null){
+            return Expanded(
+              child: Center(
+                child: Text('No Timebank found'),
+              ),
+            );
+          }*/
+          return Text("");
+        });
+  }
 
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (contexts) =>
-                                                OnBoardWithTimebank(
-                                              communityModel: communityModel,
-                                              sevauserId: widget
-                                                  .loggedInUser.sevaUserID,
-                                              user: SevaCore.of(context)
-                                                  .loggedInUser,
-                                            ),
-                                          ),
-                                        );
-                                        print('clicked ${communityModel.id}');
-                                      }
-                                    : null,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: Text(
-                                          getUserTimeBankStatusTitle(status) ??
-                                              ""),
-                                    ),
-                                  ],
-                                ),
-                                color: Theme.of(context).accentColor,
-                                textColor: FlavorConfig.values.buttonTextColor,
-                                shape: StadiumBorder(),
-                              )
-                            ]),
-                          );
+  Widget timeBankWidget(
+      {CommunityModel communityModel,
+      BuildContext context,
+      CompareUserStatus status}) {
+    return ListTile(
+      // onTap: goToNext(snapshot.data),
+      title: Text(communityModel.name,
+          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+      subtitle: FutureBuilder(
+        future: getUserForId(sevaUserId: communityModel.created_by),
+        builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
+          if (snapshot.hasError) {
+            return Text(
+              "Not found",
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("...");
+          } else if (snapshot.hasData) {
+            return Text(
+              "Created by " + snapshot.data.fullname,
+            );
+          } else {
+            return Text(
+              "Community",
+            );
+          }
+        },
+      ),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        RaisedButton(
+          onPressed: status == CompareUserStatus.JOIN
+              ? () {
+                  var communityModell = communityModel;
+                  createEditCommunityBloc.selectCommunity(communityModell);
+                  createEditCommunityBloc
+                      .updateUserDetails(SevaCore.of(context).loggedInUser);
+                  // snapshot.data.communities[index].
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (contexts) => OnBoardWithTimebank(
+                        communityModel: communityModel,
+                        sevauserId: widget.loggedInUser.sevaUserID,
+                        user: SevaCore.of(context).loggedInUser,
+                      ),
+                    ),
+                  );
+                  print('clicked ${communityModel.id}');
+                }
+              : null,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: Text(getUserTimeBankStatusTitle(status) ?? ""),
+              ),
+            ],
+          ),
+          color: Theme.of(context).accentColor,
+          textColor: FlavorConfig.values.buttonTextColor,
+          shape: StadiumBorder(),
+        )
+      ]),
+    );
+  }
+
+  Widget nearByTimebanks() {
+    return StreamBuilder<List<CommunityModel>>(
+        stream: FirestoreManager.getNearCommunitiesListStream(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              print(' near by comminities ${snapshot.data}');
+
+              if (snapshot.data.length != 0) {
+                List<CommunityModel> communityList = snapshot.data;
+                return Padding(
+                    padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+                    child: ListView.builder(
+                        itemCount: communityList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          CompareUserStatus status;
+
+                          status = _compareUserStatus(communityList[index],
+                              widget.loggedInUser.sevaUserID);
+
+                          return timeBankWidget(
+                              communityModel: communityList[index],
+                              context: context,
+                              status: status);
                         }));
               } else {
                 return Padding(

@@ -149,7 +149,7 @@ class CreateEditCommunityViewFormState
 
     // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
     Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
+        .debounceTime(Duration(milliseconds: 500))
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {

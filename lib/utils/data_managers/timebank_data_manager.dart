@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
@@ -183,6 +185,45 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
         );
 
         timebankSink.add(modelList);
+      },
+    ),
+  );
+}
+
+Stream<List<CommunityModel>> getNearCommunitiesListStream(
+    {String timebankId}) async* {
+  // LocationData pos = await location.getLocation();
+  // double lat = pos.latitude;
+  // double lng = pos.longitude;
+  // Location location = new Location();
+  Geoflutterfire geo = Geoflutterfire();
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
+  userLocation = await geolocator.getCurrentPosition();
+  double lat = userLocation.latitude;
+  double lng = userLocation.longitude;
+
+  GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+  var query =
+      Firestore.instance.collection('communities').where('id', isNull: false);
+  var data = geo
+      .collection(collectionRef: query)
+      .within(center: center, radius: 20, field: 'location', strictMode: true);
+  print('near data ${data}');
+  yield* data.transform(
+    StreamTransformer<List<DocumentSnapshot>,
+        List<CommunityModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<CommunityModel> communityList = [];
+        snapshot.forEach(
+          (documentSnapshot) {
+            CommunityModel model = CommunityModel(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+
+            communityList.add(model);
+          },
+        );
+        requestSink.add(communityList);
       },
     ),
   );
