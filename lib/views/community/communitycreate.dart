@@ -556,22 +556,8 @@ class CreateEditCommunityViewFormState
                         onPressed: () async {
                           // show a dialog
                           if (widget.isCreateTimebank) {
-//                            if (!firebaseUser.isEmailVerified) {
-//                              _showVerificationAndLogoutDialogue();
-//                            }
-
-                            var timebankAdvisory =
-                                // "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
-                                "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
-
+                            var timebankAdvisory = "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
                             print(_formKey.currentState.validate());
-
-//                            communityFound =
-//                                await isCommunityFound(enteredName);
-//                            if (communityFound) {
-//                              print("Found:$communityFound");
-//                              return;
-//                            }
 
                             if (_formKey.currentState.validate()) {
                               if (isBillingDetailsProvided) {
