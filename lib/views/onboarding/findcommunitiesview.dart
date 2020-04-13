@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:sevaexchange/auth/auth_provider.dart';
+import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -90,6 +92,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                       Icons.power_settings_new,
                     ),
                     onPressed: () {
+                      logOut();
 //                      Navigator.of(context).push(MaterialPageRoute(
 //                          builder: (context) => ()));
                     },
@@ -112,6 +115,68 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
           : null,
       body: searchTeams(),
     ); // );
+  }
+
+  void logOut() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Logout"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text("Are you sure you want to logout?"),
+              SizedBox(height: 10),
+              Row(
+                children: <Widget>[
+                  Spacer(),
+                  FlatButton(
+                    padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                    color: Theme.of(context).accentColor,
+                    textColor: FlavorConfig.values.buttonTextColor,
+                    child: new Text(
+                      "Logout",
+                      style: TextStyle(fontFamily: 'Europa'),
+                    ),
+                    onPressed: () {
+                      // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+                      //   statusBarBrightness: Brightness.light,
+                      //   statusBarColor: Colors.white,
+                      // ));
+                      Navigator.of(context).pop();
+                      _signOut(context);
+                    },
+                  ),
+                  new FlatButton(
+                    child: new Text(
+                      "Cancel",
+                      style: TextStyle(color: Colors.red, fontFamily: 'Europa'),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _signOut(BuildContext context) async {
+    // Navigator.pop(context);
+    var auth = AuthProvider.of(context).auth;
+    await auth.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => AuthRouter(),
+      ),
+    );
   }
 
   Widget searchTeams() {
@@ -166,27 +231,33 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: 'Type your timebank name. Ex: Alaska (min 5 char)',
+              hintText: 'Type your timebank name. Ex: Alaska (min 1 char)',
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
         // buildList(),
-        Expanded(child: buildList()),
+        Expanded(child: nearby()),
         // This container holds the align
         widget.isFromHome ? Container() : createCommunity(),
       ]),
     );
   }
 
+  Widget nearby() {
+    return nearByTimebanks();
+  }
+
   Widget buildList() {
     if (widget == null ||
         searchTextController == null ||
         searchTextController.text == null) {
+      print('near by called');
+
       return nearByTimebanks();
     }
 
-    if (searchTextController.text.trim().length < 3) {
-      print('Search requires minimum 3 characters');
+    if (searchTextController.text.trim().length < 1) {
+      print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
           getEmptyWidget('Users', nearTimebankText),
@@ -257,7 +328,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         builder: (BuildContext context, AsyncSnapshot<UserModel> snapshot) {
           if (snapshot.hasError) {
             return Text(
-              "Not found",
+              "Timebank",
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("...");
@@ -314,7 +385,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 
   Widget nearByTimebanks() {
     return StreamBuilder<List<CommunityModel>>(
-        stream: FirestoreManager.getNearCommunitiesListStream(),
+        stream: FirestoreManager.getNearCommunitiesListStream(timebankId: ''),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -351,6 +422,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             }
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
+            // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){
             return Expanded(

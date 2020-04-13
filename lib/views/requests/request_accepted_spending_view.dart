@@ -604,10 +604,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
-                  ),
                   if (userModel.bio != null)
                     Padding(
                       padding: EdgeInsets.all(0.0),

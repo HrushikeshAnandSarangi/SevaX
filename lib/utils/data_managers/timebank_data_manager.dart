@@ -204,12 +204,11 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
   double lng = userLocation.longitude;
 
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
-  var query =
-      Firestore.instance.collection('communities').where('id', isNull: false);
+  var query = Firestore.instance.collection('communities');
   var data = geo
       .collection(collectionRef: query)
-      .within(center: center, radius: 20, field: 'location', strictMode: true);
-  print('near data ${data}');
+      .within(center: center, radius: 10, field: 'location', strictMode: true);
+  //print('near data ${data}');
   yield* data.transform(
     StreamTransformer<List<DocumentSnapshot>,
         List<CommunityModel>>.fromHandlers(
@@ -217,6 +216,8 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
         List<CommunityModel> communityList = [];
         snapshot.forEach(
           (documentSnapshot) {
+            print('near data ${documentSnapshot.data}');
+
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
 

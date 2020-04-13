@@ -81,10 +81,6 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                                       defaultProjectImageURL),
                             ),
                           ),
-
-                          // SizedBox(
-                          //   width: 30,
-                          // )
                         ],
                       ),
                     ),

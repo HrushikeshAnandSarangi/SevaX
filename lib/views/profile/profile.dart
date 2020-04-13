@@ -55,13 +55,14 @@ class _ProfilePageState extends State<ProfilePage>
   int selected = 0;
   double sevaCoinsValue = 0.0;
 
-  UserProfileBloc _profileBloc = UserProfileBloc();
+  UserProfileBloc _profileBloc;
 
   List<CommunityModel> communities = [];
   Stream<List<RequestModel>> requestStream;
 
   @override
   void initState() {
+    _profileBloc = UserProfileBloc(context);
     super.initState();
     _profileBloc.getAllCommunities(context, widget.userModel);
     checkEmailVerified();

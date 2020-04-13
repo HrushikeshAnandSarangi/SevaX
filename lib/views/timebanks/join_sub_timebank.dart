@@ -16,7 +16,6 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -133,9 +132,9 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
     return FutureBuilder<List<TimebankModel>>(
-        future: getSubTimebanksForUserStream(
+        future: getTimebanksForCommunity(
           communityId: widget.loggedInUserModel.currentCommunity,
-          // primaryTimebankId: widget.communityPrimaryTimebankId,
+          primaryTimebankId: widget.communityPrimaryTimebankId,
         ),
         builder: (context, snapshot) {
           print('timee ${snapshot.data}');

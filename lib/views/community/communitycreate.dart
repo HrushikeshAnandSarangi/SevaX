@@ -88,7 +88,7 @@ class CreateEditCommunityViewFormState
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-  double taxPercentage = 0;
+  double taxPercentage = 0.0;
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
@@ -266,7 +266,7 @@ class CreateEditCommunityViewFormState
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: widget.isCreateTimebank
                         ? Text(
-                            'Timebank is where you can collaborate with your organization',
+                            'A TimeBank is a community of volunteers that give and receive time to each other and to the larger community',
                             textAlign: TextAlign.center,
                           )
                         : Container(),
@@ -438,15 +438,8 @@ class CreateEditCommunityViewFormState
                       color: Colors.grey,
                     ),
                   ),
-                  headingText('Your timebank location.'),
-                  Text(
-                    'List the place or address where your community meets (such as a cafe, library, or church.).',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
                   SizedBox(height: 20),
+
                   headingText('Select Tax percentage'),
                   Slider(
                     label: "${taxPercentage.toInt()}%",
@@ -466,6 +459,15 @@ class CreateEditCommunityViewFormState
                   ),
                   Text(
                     'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  headingText('Your timebank location.'),
+                  Text(
+                    'List the place or address where your community meets (such as a cafe, library, or church.).',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
@@ -533,13 +535,13 @@ class CreateEditCommunityViewFormState
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text(
-                                  'Looking for existing timebank',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                tappableFindYourTeam,
+                                // Text(
+                                //   'Looking for existing timebank',
+                                //   style: TextStyle(
+                                //     color: Colors.grey,
+                                //   ),
+                                // ),
+                                // tappableFindYourTeam,
                               ],
                             ),
                           ),
@@ -611,6 +613,7 @@ class CreateEditCommunityViewFormState
                                   snapshot.data.UpdateCommunityDetails(
                                     SevaCore.of(context).loggedInUser,
                                     globals.timebankAvatarURL,
+                                    location,
                                   );
                                   // creation of default timebank;
                                   snapshot.data.UpdateTimebankDetails(
@@ -625,6 +628,7 @@ class CreateEditCommunityViewFormState
 
                                   snapshot.data.community.primary_timebank =
                                       snapshot.data.timebank.id;
+                                  snapshot.data.community.location = location;
 
                                   createEditCommunityBloc.createCommunity(
                                     snapshot.data,
@@ -726,7 +730,7 @@ class CreateEditCommunityViewFormState
                                 .then((onValue) {
                               print("timebank updated");
                             });
-                            // communityModel.taxPercentage = taxPercentage / 100;
+                            communityModel.taxPercentage = taxPercentage / 100;
 //                            //updating community with latest values
                             await FirestoreManager.updateCommunityDetails(
                                     communityModel: communityModel)
@@ -887,7 +891,7 @@ class CreateEditCommunityViewFormState
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Configure billing details',
+              'Configure profile information',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -985,6 +989,7 @@ class CreateEditCommunityViewFormState
     timebankModel.address = address;
     communityModel.location = location;
     data.timebank.updateValueByKey('address', address);
+    data.community.updateValueByKey('location', location);
     createEditCommunityBloc.onChange(data);
   }
 
@@ -1036,7 +1041,7 @@ class CreateEditCommunityViewFormState
             Column(
               children: <Widget>[
                 Text(
-                  'Billing Details',
+                  'Profile Information',
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,

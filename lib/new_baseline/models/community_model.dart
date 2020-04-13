@@ -138,7 +138,8 @@ class CommunityModel extends DataModel {
     this.transactionCount = map.containsKey('transactionCount')
         ? map['transactionCount'] ?? 0
         : null;
-    this.taxPercentage = map["taxPercentage"] ?? 0.0;
+    this.taxPercentage =
+        map["taxPercentage"] != null ? map["taxPercentage"].toDouble() : 0.0;
     this.payment = Map<String, dynamic>.from(map['payment'] ?? {});
     this.transactionCount = map['transactionCount'] ?? 0;
     this.billingQuota = Map<String, dynamic>.from(map['billing_quota'] ?? {});
@@ -207,6 +208,10 @@ class CommunityModel extends DataModel {
     }
     if (key == 'primary_email') {
       this.primary_email = value;
+    }
+
+    if (key == 'locar=tion') {
+      this.location = value;
     }
 
     if (key == 'billing_address') {
@@ -286,11 +291,18 @@ class CommunityModel extends DataModel {
     if (this.coordinators != null) {
       object['coordinators'] = this.coordinators;
     }
+
+    if (this.coordinators != null) {
+      object['coordinators'] = this.coordinators;
+    }
     if (this.members != null) {
       object['members'] = this.members;
     }
     if (this.primary_timebank != null) {
       object['primary_timebank'] = this.primary_timebank;
+    }
+    if (this.location != null) {
+      object['location'] = this.location.data;
     }
     return object;
   }
@@ -311,9 +323,10 @@ class CommunityModel extends DataModel {
         'primary_timebank: $primary_timebank, '
         'timebanks: $timebanks, '
         'admins: $admins, '
+        'location: $location, '
         'coordinators: $coordinators,'
         ' members: $members, '
-        'transactionCount: $transactionCount}'
+//        'transactionCount: $transactionCount}'
         'taxPercentage: $taxPercentage}';
   }
 }

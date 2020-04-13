@@ -869,10 +869,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
-                  ),
                   if (userModel.bio != null)
                     Padding(
                       padding: EdgeInsets.all(0.0),
@@ -1460,10 +1456,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
                   ),
                   if (userModel.bio != null)
                     Padding(
