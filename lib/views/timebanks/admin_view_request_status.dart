@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:shimmer/shimmer.dart';
 
 import '../../flavor_config.dart';
@@ -307,7 +308,7 @@ class TimebankRequestsState extends State<TimebankRequests> {
     RequestModel model,
     UserModel user,
     String notificationId,
-  }) {
+  }) async {
     List<String> approvedUsers = model.approvedUsers;
     Set<String> usersSet = approvedUsers.toSet();
 
@@ -316,12 +317,17 @@ class TimebankRequestsState extends State<TimebankRequests> {
 
     if (model.numberOfApprovals <= model.approvedUsers.length)
       model.accepted = true;
+
     approveAcceptRequest(
       requestModel: model,
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
+    if (model.projectId.isNotEmpty) {
+      await FirestoreManager.updateProjectCompletedRequest(
+          projectId: model.projectId, requestId: model.id);
+    }
   }
 
   Widget _getCloseButton(BuildContext context) {

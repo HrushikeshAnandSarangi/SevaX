@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sevaexchange/flavor_config.dart';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -97,17 +99,13 @@ class UserModelListMoreStatus {
 
 Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
     String timebankId, int index, String email) async {
-  var storage = 'sevaexchange';
   var saveXLink = '';
   if (FlavorConfig.values.timebankName == "Yang 2020") {
     saveXLink = '';
-    storage = 'sevaexchange';
   } else {
     saveXLink = 'Sevax';
-    storage = 'sevaxproject4sevax';
   }
-  var urlLink =
-      'https://us-central1-$storage.cloudfunctions.net/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
+  var urlLink = FlavorConfig.values.cloudFunctionBaseURL + '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
 
   print("==============$urlLink==============");
   var res = await http
@@ -129,17 +127,13 @@ Future<UserModelListMoreStatus> getUsersForAdminsCoordinatorsMembersTimebankId(
 Future<UserModelListMoreStatus>
     getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
         String timebankId, int index, String email) async {
-  var storage = 'sevaexchange';
   var saveXLink = '';
   if (FlavorConfig.values.timebankName == "Yang 2020") {
     saveXLink = '';
-    storage = 'sevaexchange';
   } else {
     saveXLink = 'Sevax';
-    storage = 'sevaxproject4sevax';
   }
-  var urlLink =
-      'https://us-central1-$storage.cloudfunctions.net/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
+  var urlLink = FlavorConfig.values.cloudFunctionBaseURL + '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email&showBlockedMembers=true';
   print("==============$urlLink==============");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});
@@ -159,18 +153,14 @@ Future<UserModelListMoreStatus>
 
 Future<UserModelListMoreStatus> getUsersForTimebankId(
     String timebankId, int index, String email) async {
-  var storage = 'sevaexchange';
   var saveXLink = '';
   if (FlavorConfig.values.timebankName == "Yang 2020") {
     saveXLink = '';
-    storage = 'sevaexchange';
   } else {
     saveXLink = 'Sevax';
-    storage = 'sevaxproject4sevax';
   }
   print("peekaboo:${FlavorConfig.values.timebankName}");
-  var urlLink =
-      'https://us-central1-$storage.cloudfunctions.net/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
+  var urlLink = FlavorConfig.values.cloudFunctionBaseURL + '/timebankMembers$saveXLink?timebankId=$timebankId&page=$index&userId=$email';
   print("\n\n\n\n\n\n\n\nMembersListURL:$urlLink");
   var res = await http
       .get(Uri.encodeFull(urlLink), headers: {"Accept": "application/json"});

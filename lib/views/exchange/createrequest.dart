@@ -13,6 +13,7 @@ import 'package:sevaexchange/components/duration_picker/offer_duration_widget.da
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/request_data_manager.dart';
@@ -28,13 +29,17 @@ class CreateRequest extends StatefulWidget {
   final OfferModel offer;
   final String timebankId;
   final UserModel userModel;
+  final ProjectModel projectModel;
+  String projectId;
 
   CreateRequest(
       {Key key,
       this.isOfferRequest,
       this.offer,
       this.timebankId,
-      this.userModel})
+      this.userModel,
+      this.projectId,
+      this.projectModel})
       : super(key: key);
 
   @override
@@ -50,7 +55,7 @@ class _CreateRequestState extends State<CreateRequest> {
           title: Text(
             FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                 ? "Create Yang Gang Request"
-                : "Create Request",
+                : _title,
             style: TextStyle(fontSize: 18),
           ),
           centerTitle: false,
@@ -65,14 +70,26 @@ class _CreateRequestState extends State<CreateRequest> {
               }
               if (snapshot.data != null) {
                 return RequestCreateForm(
-                    isOfferRequest: widget.isOfferRequest,
-                    offer: widget.offer,
-                    timebankId: widget.timebankId,
-                    userModel: widget.userModel,
-                    loggedInUser: snapshot.data.loggedinuser);
+                  isOfferRequest: widget.isOfferRequest,
+                  offer: widget.offer,
+                  timebankId: widget.timebankId,
+                  userModel: widget.userModel,
+                  loggedInUser: snapshot.data.loggedinuser,
+                  projectId: widget.projectId,
+                  projectModel: widget.projectModel,
+                );
               }
               return Text('');
             }));
+  }
+
+  String get _title {
+    if (widget.projectId == null ||
+        widget.projectId.isEmpty ||
+        widget.projectId == "") {
+      return "Create Request";
+    }
+    return "Create Project Request";
   }
 }
 
@@ -82,12 +99,16 @@ class RequestCreateForm extends StatefulWidget {
   final String timebankId;
   final UserModel userModel;
   final UserModel loggedInUser;
+  final ProjectModel projectModel;
+  String projectId;
   RequestCreateForm(
       {this.isOfferRequest,
       this.offer,
       this.timebankId,
       this.userModel,
-      this.loggedInUser});
+      this.loggedInUser,
+      this.projectId,
+      this.projectModel});
 
   @override
   RequestCreateFormState createState() {
@@ -121,6 +142,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
     this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+    this.requestModel.projectId = widget.projectId;
 
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: _selectedTimebankId,
@@ -133,6 +155,29 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
 
     print(location);
+  }
+
+  void get _fetchCurrentlocation {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
+  }
+
+  Future<void> fetchRemoteConfig() async {
+    AppConfig.remoteConfig = await RemoteConfig.instance;
+    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
+    AppConfig.remoteConfig.activateFetched();
   }
 
   @override
@@ -179,35 +224,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     timebankModel = snapshot.data;
                     if (snapshot.data.admins.contains(
                         SevaCore.of(context).loggedInUser.sevaUserID)) {
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        width: double.infinity,
-                        child: CupertinoSegmentedControl<int>(
-                          selectedColor: Theme.of(context).primaryColor,
-                          children: logoWidgets,
-                          borderColor: Colors.grey,
-
-                          padding: EdgeInsets.only(left: 0.0, right: 0),
-                          groupValue: sharedValue,
-                          onValueChanged: (int val) {
-                            if (val != sharedValue) {
-                              setState(() {});
-                              setState(() {
-                                print("$sharedValue -- $val");
-                                if (sharedValue == 0) {
-                                  requestModel.requestMode =
-                                      RequestMode.TIMEBANK_REQUEST;
-                                } else {
-                                  requestModel.requestMode =
-                                      RequestMode.PERSONAL_REQUEST;
-                                }
-                                sharedValue = val;
-                              });
-                            }
-                          },
-                          //groupValue: sharedValue,
-                        ),
-                      );
+                      return requestSwitch;
                     } else {
                       return Container();
                     }
@@ -229,10 +246,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
                         : "Ex: Small carpentry work...",
+                    hintStyle: textStyle,
                   ),
                   keyboardType: TextInputType.text,
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.title
+                      : "",
                   textCapitalization: TextCapitalization.sentences,
-                  style: textStyle,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter the subject of your request';
@@ -264,10 +284,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
-                  initialValue:
-                      widget.isOfferRequest != null && widget.isOfferRequest
-                          ? ""
-                          : "",
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.description
+                      : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 2,
                   validator: (value) {
@@ -378,6 +397,48 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
+  Widget get requestSwitch {
+    if (widget.projectId == null ||
+        widget.projectId.isEmpty ||
+        widget.projectId == "") {
+      return Container(
+        margin: EdgeInsets.only(bottom: 20),
+        width: double.infinity,
+        child: CupertinoSegmentedControl<int>(
+          selectedColor: Theme.of(context).primaryColor,
+          children: logoWidgets,
+          borderColor: Colors.grey,
+          padding: EdgeInsets.only(left: 5.0, right: 5.0),
+          groupValue: sharedValue,
+          onValueChanged: (int val) {
+            print(val);
+            if (val != sharedValue) {
+              setState(() {
+                print("$sharedValue -- $val");
+                if (sharedValue == 0) {
+                  requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+                } else {
+                  requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+                }
+                sharedValue = val;
+              });
+            }
+          },
+          //groupValue: sharedValue,
+        ),
+      );
+    } else {
+      if (widget.projectModel != null) {
+        if (widget.projectModel.mode == 'Timebank') {
+          requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+        } else {
+          requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+        }
+      }
+      return Container();
+    }
+  }
+
   int sharedValue = 0;
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
@@ -394,11 +455,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
+    print('request mode ${requestModel.requestMode.toString()}');
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
     if (_formKey.currentState.validate()) {
       // validate request start and end date
+
+
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
         showDialogForTitle(
             dialogTitle:
@@ -429,7 +493,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           );
 
           print(
-              "Seva Coins $sevaCoinsValue -------------------------------------------");
+              "Seva Credits $sevaCoinsValue -------------------------------------------");
 
           if (!hasSufficientBalance()) {
             showInsufficientBalance();
@@ -444,6 +508,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       }
       linearProgressForCreatingRequest();
       await _writeToDB();
+      await _updateProjectModel();
 
       if (widget.isOfferRequest == true && widget.userModel != null) {
         Navigator.pop(dialogContext);
@@ -456,7 +521,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   bool hasRegisteredLocation() {
-    print("Location ---========================= ${requestModel.location}");
     return location != null;
   }
 
@@ -497,7 +561,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         });
   }
 
-  void showDialogForTitle({String dialogTitle}) {
+  void showDialogForTitle({String dialogTitle}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -596,6 +660,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     if (requestModel.requestEnd == null) {
       requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
     }
+//    print("Project id : ${widget.projectId}");
+//    if (widget.projectId != null && widget.projectId.isNotEmpty) {
+//      requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+//      print("Inside yes");
+//      return true;
+//    }
 
     print(getTimeInFormat(requestModel.requestStart) +
         " <- Start   -> End " +
@@ -607,7 +677,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     var requestCoins = requestModel.numberOfHours;
     print("Hours:${diffDate.inHours} --> " +
         requestModel.numberOfApprovals.toString());
-    print("Number of seva coins:${requestCoins}");
+    print("Number of Seva Credits:${requestCoins}");
     print("Seva coin available:${sevaCoinsValue}");
 
     var lowerLimit =
@@ -632,7 +702,22 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
 
     if (requestModel.id == null) return;
+
+    // print(
+    //     "Requeest Model -------------------------- ${requestModel.toString()}");
     await FirestoreManager.createRequest(requestModel: requestModel);
+  }
+
+  Future _updateProjectModel() async {
+    if (widget.projectId.isNotEmpty) {
+      ProjectModel projectModel = widget.projectModel;
+//      var userSevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
+//      if (!projectModel.members.contains(userSevaUserId)) {
+//        projectModel.members.add(userSevaUserId);
+//      }
+      projectModel.pendingRequests.add(requestModel.id);
+      await FirestoreManager.updateProject(projectModel: projectModel);
+    }
   }
 
   Future _getLocation() async {
@@ -643,29 +728,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     setState(() {
       this.selectedAddress = address;
-    });
-  }
-
-  Future<void> fetchRemoteConfig() async {
-    AppConfig.remoteConfig = await RemoteConfig.instance;
-    AppConfig.remoteConfig.fetch(expiration: const Duration(hours: 0));
-    AppConfig.remoteConfig.activateFetched();
-  }
-
-  void get _fetchCurrentlocation {
-    Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
     });
   }
 }

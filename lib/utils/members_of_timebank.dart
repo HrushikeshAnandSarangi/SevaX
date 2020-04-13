@@ -122,7 +122,8 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
 
   @override
   Widget build(BuildContext context) {
-    print("${SevaCore.of(context).loggedInUser.currentTimebank}  -------------------");
+    print(
+        "${SevaCore.of(context).loggedInUser.currentTimebank}  -------------------");
 
     if (_avtars.length == 0 && !_isLoading) {
       loadNextBatchItems();
@@ -430,12 +431,12 @@ class _SelectMembersInGroupState extends State<SelectMembersFromTimebank> {
               color: getTextColorForSelectedItem(user.email),
             ),
           ),
-          subtitle: Text(
-            user.email,
-            style: TextStyle(
-              color: getTextColorForSelectedItem(user.email),
-            ),
-          ),
+          // subtitle: Text(
+          //   user.email,
+          //   style: TextStyle(
+          //     color: getTextColorForSelectedItem(user.email),
+          //   ),
+          // ),
         ),
       ),
     );

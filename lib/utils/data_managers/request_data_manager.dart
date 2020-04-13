@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -9,9 +10,11 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
+import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
+import '../app_config.dart';
 import 'notifications_data_manager.dart';
 
 Location location = new Location();
@@ -107,6 +110,154 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
   );
 }
 
+Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
+  var query = Firestore.instance
+      .collection('projects')
+      .where('timebank_id', isEqualTo: timebankid);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<ProjectModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<ProjectModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            requestList.add(model);
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getTimebankRequestListStream(
+    {String timebankId}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('timebankId', isEqualTo: timebankId)
+      .where('accepted', isEqualTo: false);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+
+        print("request list size ____________ ${requestList.length}");
+
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getTimebankExistingRequestListStream(
+    {String timebankId}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('timebankId', isEqualTo: timebankId)
+      .where('accepted', isEqualTo: false)
+      .where('requestMode', isEqualTo: 'TIMEBANK_REQUEST');
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+
+        print("request list size ____________ ${requestList.length}");
+
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getPersonalRequestListStream(
+    {String sevauserid}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('sevauserid', isEqualTo: sevauserid)
+      .where('accepted', isEqualTo: false)
+      .where('requestMode', isEqualTo: 'PERSONAL_REQUEST');
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
+Stream<List<RequestModel>> getProjectRequestsStream(
+    {String project_id}) async* {
+  var query = Firestore.instance
+      .collection('requests')
+      .where('projectId', isEqualTo: project_id)
+      .where('accepted', isEqualTo: false);
+
+  var data = query.snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<RequestModel> requestList = [];
+        snapshot.documents.forEach(
+          (documentSnapshot) {
+            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+            if (model.approvedUsers != null) {
+              if (model.approvedUsers.length <= model.numberOfApprovals)
+                requestList.add(model);
+            }
+          },
+        );
+        requestSink.add(requestList);
+      },
+    ),
+  );
+}
+
 Stream<List<RequestModel>> getNearRequestListStream(
     {String timebankId}) async* {
   // LocationData pos = await location.getLocation();
@@ -168,7 +319,6 @@ Future<void> sendOfferRequest({
     isRead: false,
     senderUserId: requestSevaID,
     communityId: communityId,
-    directToMember: directToMember,
   );
   await utils.offerAcceptNotification(
     model: model,
@@ -200,10 +350,9 @@ Future<void> acceptRequest({
       isRead: false,
       senderUserId: senderUserId,
       communityId: communityId,
-      directToMember: directToMember,
     );
 
-    print("Creating notification model $model");
+    print("Creating notificationss model $requestModel");
 
     if (isWithdrawal)
       await utils.withdrawAcceptRequestNotification(
@@ -247,10 +396,30 @@ Future<void> rejectRequestCompletion({
   await utils.createTaskCompletedApprovedNotification(model: notification);
 }
 
+List<TransactionModel> updateListTransactionsCreditsAsPerTimebankTaxPolicy({
+  List<TransactionModel> originalModel,
+  double credits,
+  String userIdToBeCredited,
+  double userAmout,
+}) {
+  List<TransactionModel> modelTransactions =
+      originalModel.map((f) => f).toList();
+
+  return modelTransactions.map((t) {
+    if (t.to == userIdToBeCredited) {
+      TransactionModel editedTransaction = t;
+      editedTransaction.credits = userAmout;
+      return editedTransaction;
+    }
+    return t;
+  }).toList();
+}
+
 Future<void> approveRequestCompletion({
   @required RequestModel model,
   @required String userId,
   @required String communityId,
+  // @required num taxPercentage,
 }) async {
   var approvalCount = 0;
   if (model.transactions != null) {
@@ -262,16 +431,42 @@ Future<void> approveRequestCompletion({
   }
   model.accepted = approvalCount >= model.numberOfApprovals;
 
+  double transactionvalue = (model.durationOfRequest / 60);
+
+  TimeBankBalanceTransactionModel balanceTransactionModel;
+  var updatedRequestModel = model;
+
   print("========================================================== Step1");
+  if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    double taxPercentage;
 
-  await Firestore.instance
-      .collection('requests')
-      .document(model.id)
-      .setData(model.toMap(), merge: true);
+    DocumentSnapshot data = await Firestore.instance
+        .collection('communities')
+        .document(communityId)
+        .get();
 
-  UserModel user = await utils.getUserForId(sevaUserId: userId);
+    taxPercentage = data.data['taxPercentage'] ?? 0;
+    print('---->tax percentage $taxPercentage');
 
-  //check if protected
+    double tax = transactionvalue * taxPercentage;
+    transactionvalue = transactionvalue - tax;
+
+    balanceTransactionModel = TimeBankBalanceTransactionModel(
+      communityId: communityId,
+      userId: userId,
+      requestId: model.id,
+      amount: tax,
+      timestamp: FieldValue.serverTimestamp(),
+    );
+
+    updatedRequestModel.transactions =
+        updateListTransactionsCreditsAsPerTimebankTaxPolicy(
+      credits: transactionvalue,
+      originalModel: model.transactions,
+      userAmout: transactionvalue,
+      userIdToBeCredited: userId,
+    );
+  }
 
   NotificationsModel notification = NotificationsModel(
     timebankId: model.timebankId,
@@ -285,15 +480,31 @@ Future<void> approveRequestCompletion({
 
   print("========================================================== Step2");
 
-  num transactionvalue = model.durationOfRequest / 60;
-  String credituser = model.approvedUsers.toString();
-  if (FlavorConfig.appFlavor == Flavor.APP) {
-    await Firestore.instance
-        .collection('users')
-        .document(model.email)
-        .updateData(
-            {'currentBalance': FieldValue.increment(-(transactionvalue))});
+  Map<String, dynamic> transactionData = model.transactions
+      .where((transactionModel) {
+        if (transactionModel.from == model.sevaUserId &&
+            transactionModel.to == userId) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .elementAt(0)
+      .toMap();
 
+  print("========================================================== Step3");
+
+  //Create transaction record for timebank
+
+  if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    Firestore.instance
+        .collection("communities")
+        .document(communityId)
+        .collection("balance")
+        .add(
+          balanceTransactionModel.toJson(),
+        );
+  } else {
     NotificationsModel debitnotification = NotificationsModel(
       timebankId: model.timebankId,
       id: utils.Utils.getUuid(),
@@ -301,30 +512,33 @@ Future<void> approveRequestCompletion({
       senderUserId: userId,
       communityId: communityId,
       type: NotificationType.TransactionDebit,
-      data: model.transactions
-          .where((transactionModel) {
-            if (transactionModel.from == model.sevaUserId &&
-                transactionModel.to == userId) {
-              return true;
-            } else {
-              return false;
-            }
-          })
-          .elementAt(0)
-          .toMap(),
+      data: transactionData,
     );
-  
-    if (model.requestMode == RequestMode.PERSONAL_REQUEST)
-      await utils.createTransactionNotification(model: debitnotification);
-  
+    print("${debitnotification.id}");
+
+    await utils.createTransactionNotification(model: debitnotification);
+    print("==>debit notification sent<==");
   }
+
+  // }
 
   print("========================================================== Step6");
 
-  await Firestore.instance
-      .collection('users')
-      .document(user.email)
-      .updateData({'currentBalance': FieldValue.increment(transactionvalue)});
+  // await Firestore.instance
+  //     .collection('users')
+  //     .document(user.email)
+  //     .updateData({'currentBalance': FieldValue.increment(userAmount)});
+
+  //User gets a notification with amount after tax deducation
+  transactionData["credits"] = transactionvalue;
+
+  await Firestore.instance.collection('requests').document(model.id).setData(
+        model.requestMode == RequestMode.PERSONAL_REQUEST
+            ? model.toMap()
+            : updatedRequestModel.toMap(),
+        merge: true,
+      );
+
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
@@ -332,23 +546,14 @@ Future<void> approveRequestCompletion({
     senderUserId: model.sevaUserId,
     communityId: communityId,
     type: NotificationType.TransactionCredit,
-    data: model.transactions
-        .where((transactionModel) {
-          if (transactionModel.from == model.sevaUserId &&
-              transactionModel.to == userId) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        .elementAt(0)
-        .toMap(),
+    data: transactionData,
   );
 
   print("========================================================== Step7");
 
   await utils.createTaskCompletedApprovedNotification(model: notification);
   await utils.createTransactionNotification(model: creditnotification);
+  print("==>Transaction complete<==");
 }
 
 Future<void> approveAcceptRequest({
@@ -388,7 +593,6 @@ Future<void> approveAcceptRequest({
     senderUserId: requestModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: tempRequestModel.toMap(),
-    directToMember: directToMember,
   );
 
   await utils.removeAcceptRequestNotification(
@@ -403,7 +607,6 @@ Future<void> approveAcceptRequestForTimebank({
   @required String approvedUserId,
   @required String notificationId,
   @required String communityId,
-  @required bool directToMember,
 }) async {
   var approvalCount = 0;
   if (requestModel.transactions != null) {
@@ -419,7 +622,6 @@ Future<void> approveAcceptRequestForTimebank({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
-  //timebankUpdateFullName
   var timebankModel = await fetchTimebankData(requestModel.timebankId);
   var tempTimebankModel = requestModel;
   tempTimebankModel.photoUrl = timebankModel.photoUrl;
@@ -433,14 +635,13 @@ Future<void> approveAcceptRequestForTimebank({
     senderUserId: tempTimebankModel.sevaUserId,
     type: NotificationType.RequestApprove,
     data: tempTimebankModel.toMap(),
-    directToMember: directToMember,
   );
 
-  await utils.removeAcceptRequestNotification(
-    model: model,
+  await utils.readTimeBankNotification(
+    timebankId: requestModel.timebankId,
     notificationId: notificationId,
   );
-  await utils.createRequestApprovalNotification(model: model);
+  await utils.createApprovalNotificationForMember(model: model);
 }
 
 Future<void> rejectAcceptRequest({
@@ -454,10 +655,9 @@ Future<void> rejectAcceptRequest({
       .document(requestModel.id)
       .updateData(requestModel.toMap());
 
-  var timebankModel = await fetchTimebankData(requestModel.timebankId);
   var tempRequestModel = requestModel;
-
-  if (timebankModel.protected) {
+  if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
+    var timebankModel = await fetchTimebankData(requestModel.timebankId);
     tempRequestModel.photoUrl = timebankModel.photoUrl;
     tempRequestModel.fullName = timebankModel.name;
   }
@@ -569,6 +769,15 @@ Future<RequestModel> getRequestFutureById({
   return RequestModel.fromMap(documentsnapshot.data);
 }
 
+Future<ProjectModel> getProjectFutureById({
+  @required String projectId,
+}) async {
+  var documentsnapshot =
+      await Firestore.instance.collection('projects').document(projectId).get();
+
+  return ProjectModel.fromMap(documentsnapshot.data);
+}
+
 Stream<RequestModel> getRequestStreamById({
   @required String requestId,
 }) async* {
@@ -586,6 +795,51 @@ Stream<RequestModel> getRequestStreamById({
   );
 }
 
+Stream<ProjectModel> getProjectStream({
+  @required String projectId,
+}) async* {
+  var data =
+      Firestore.instance.collection('projects').document(projectId).snapshots();
+
+  yield* data.transform(
+    StreamTransformer<DocumentSnapshot, ProjectModel>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        ProjectModel model = ProjectModel.fromMap(snapshot.data);
+        model.id = snapshot.documentID;
+        requestSink.add(model);
+      },
+    ),
+  );
+}
+
+Future<void> createProject({@required ProjectModel projectModel}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectModel.id)
+      .setData(projectModel.toMap());
+}
+
+Future<void> updateProject({@required ProjectModel projectModel}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectModel.id)
+      .updateData(projectModel.toMap());
+}
+
+Future<void> updateProjectCompletedRequest(
+    {@required String projectId, @required String requestId}) async {
+  return await Firestore.instance
+      .collection('projects')
+      .document(projectId)
+      .updateData({
+    'completedRequests': FieldValue.arrayUnion(
+      [requestId],
+    ),
+    'pendingRequests': FieldValue.arrayRemove([requestId])
+  });
+}
+
+/// Get all timebanknew associated with a User as a Stream
 Stream<List<RequestModel>> getCompletedRequestStream({
   @required String userEmail,
   @required String userId,
@@ -624,6 +878,32 @@ Stream<List<RequestModel>> getCompletedRequestStream({
   );
 }
 
+Future<bool> hasSufficientCredits({
+  String userEmail,
+  String userId,
+  double credits,
+}) async {
+  var sevaCoinsBalance = await getMemberBalance(
+    userEmail,
+    userId,
+  );
+
+  var lowerLimit = 10;
+  try {
+    lowerLimit =
+        json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance");
+  }
+
+  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 10);
+
+  print(
+      " Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
+
+  return maxAvailableBalance - credits >= (-lowerLimit);
+}
+
 Future<double> getMemberBalance(userEmail, userId) {
   double sevaCoins = 0;
   return Firestore.instance
@@ -635,9 +915,8 @@ Future<double> getMemberBalance(userEmail, userId) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.transactions?.forEach((transaction) {
-        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
-            transaction.isApproved &&
-            transaction.to == userId) sevaCoins += transaction.credits;
+        if (transaction.isApproved && transaction.to == userId)
+          sevaCoins += transaction.credits;
       });
     });
 
@@ -660,8 +939,9 @@ Future<double> getMyDebits(userEmail, userId) {
     querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
       RequestModel model = RequestModel.fromMap(documentSnapshot.data);
       model.transactions?.forEach((transaction) {
-        if (transaction.isApproved && transaction.from == userId)
-          myDebits += transaction.credits;
+        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
+            transaction.isApproved &&
+            transaction.from == userId) myDebits += transaction.credits;
       });
     });
     return myDebits;

@@ -18,6 +18,7 @@ import 'package:sevaexchange/views/messages/select_timebank_for_news_share.dart'
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
@@ -135,7 +136,7 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 9,
+    length: 10,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -157,6 +158,9 @@ Widget createAdminTabBar(
             tabs: [
               Tab(
                 text: "Feeds",
+              ),
+              Tab(
+                text: "Projects",
               ),
               Tab(
                 text: "Requests",
@@ -189,6 +193,10 @@ Widget createAdminTabBar(
               children: [
                 DiscussionList(
                   timebankId: timebankId,
+                ),
+                TimeBankProjectsView(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,
@@ -301,7 +309,7 @@ Widget createJoinedUserTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 6,
+    length: 7,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -351,6 +359,9 @@ Widget createJoinedUserTabBar(
                 text: "Feeds",
               ),
               Tab(
+                text: "Projects",
+              ),
+              Tab(
                 text: "Requests",
               ),
               Tab(
@@ -372,6 +383,10 @@ Widget createJoinedUserTabBar(
               children: [
                 DiscussionList(
                   timebankId: timebankId,
+                ),
+                TimeBankProjectsView(
+                  timebankId: timebankId,
+                  timebankModel: timebankModel,
                 ),
                 RequestsModule.of(
                   timebankId: timebankId,
@@ -810,6 +825,7 @@ class DiscussionListState extends State<DiscussionList> {
               //       ),
               //     );
               //   }
+              //these 
               // },
               child: GestureDetector(
                 onTap: () {

@@ -12,6 +12,8 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -84,6 +86,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   }
 
   Widget build(BuildContext context) {
+    final _bloc = BlocProvider.of<UserDataBloc>(context);
+    print("in explore ==> ${_bloc.user.email}");
     return Scaffold(
 //      appBar: AppBar(
 //        title: Text("Group",
@@ -116,7 +120,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 //      ),
       body: isDataLoaded
           ? SingleChildScrollView(
-              child: getTimebanks(context: context),
+              child: getTimebanks(context: context, bloc: _bloc),
             )
           : Center(child: CircularProgressIndicator()),
     );
@@ -124,16 +128,16 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   List<String> dropdownList = [];
 
-  Widget getTimebanks({BuildContext context}) {
+  Widget getTimebanks({BuildContext context, UserDataBloc bloc}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
     return FutureBuilder<List<TimebankModel>>(
         future: getTimebanksForCommunity(
-          communityId: widget.communityId,
+          communityId: widget.loggedInUserModel.currentCommunity,
           primaryTimebankId: widget.communityPrimaryTimebankId,
         ),
         builder: (context, snapshot) {
-          print('timee${snapshot.data}');
+          print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -143,7 +147,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             return Container(
               margin: EdgeInsets.all(20),
               child: Center(
-                child: Text("No Groups found"),
+                child: Text("No groups found"),
               ),
             );
           }
@@ -151,6 +155,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           timebankList = snapshot.data;
           timebankList.forEach((t) {
             dropdownList.add(t.id);
+            print('timee  banks  ${t}');
           });
 
           // Navigator.pop(context);
@@ -174,22 +179,22 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                     if (_joinRequestModels != null) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status, bloc);
                     } else if (timebank.admins
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status, bloc);
                     } else if (timebank.coordinators
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status, bloc);
                     } else if (timebank.members
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status, bloc);
                     } else {
                       status = CompareToTimeBank.JOIN;
-                      return makeItem(timebank, status);
+                      return makeItem(timebank, status, bloc);
                     }
                   },
                   padding: const EdgeInsets.all(8),
@@ -209,15 +214,18 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         });
   }
 
-  Widget makeItem(TimebankModel timebank, CompareToTimeBank status) {
+  Widget makeItem(TimebankModel timebank, CompareToTimeBank status, bloc) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TimebankTabsViewHolder.of(
-              timebankId: timebank.id,
-              timebankModel: timebank,
+            builder: (context) => BlocProvider<UserDataBloc>(
+              bloc: bloc,
+              child: TimebankTabsViewHolder.of(
+                timebankId: timebank.id,
+                timebankModel: timebank,
+              ),
             ),
           ),
         );
@@ -230,7 +238,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               AspectRatio(
                 aspectRatio: 3.3 / 2.3,
                 child: CachedNetworkImage(
-                  imageUrl: timebank.photoUrl ?? defaultUserImageURL,
+                  imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
                   fit: BoxFit.fitWidth,
                   errorWidget: (context, url, error) =>
                       Center(child: Text('No Image Avaialable')),
@@ -276,8 +284,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     padding: const EdgeInsets.only(right: 7),
                     child: RaisedButton(
                       elevation: 0,
-                      color: Colors.grey[300],
-                      textColor: Theme.of(context).primaryColor,
+                      color: Theme.of(context).accentColor,
+                      textColor: Colors.white,
                       child: Text(getTimeBankStatusTitle(status) ?? "",
                           style: TextStyle(fontSize: 14)),
                       onPressed: status == CompareToTimeBank.JOIN
@@ -309,13 +317,12 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                                     widget.loggedInUserModel.sevaUserID,
                                 type: prefix0.NotificationType.JoinRequest,
                                 data: joinReqModel.toMap(),
-                                directToMember: false,
                               );
 
                               notification.timebankId =
                                   FlavorConfig.values.timebankId;
                               //  print('creator id ${notification.timebankId}');
-                              
+
                               UserModel timebankCreator =
                                   await FirestoreManager.getUserForId(
                                       sevaUserId: timebank.creatorId);

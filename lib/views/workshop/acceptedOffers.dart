@@ -3,9 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
-import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 
 class AcceptedOffers extends StatefulWidget {
   final String sevaUserId;
@@ -22,6 +23,24 @@ class AcceptedOffers extends StatefulWidget {
 }
 
 class AcceptedOffersViewState extends State<AcceptedOffers> {
+  TimebankModel timebankModel = TimebankModel({});
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("time id --- ${widget.timebankId}");
+
+    FirestoreManager.getTimebankModelStream(timebankId: widget.timebankId)
+        .listen((onValue) {
+      timebankModel = onValue;
+      print("toimeppppp --- ${timebankModel}");
+    });
+    setState(() {});
+
+    // timeBankBloc.getRequestsStreamFromTimebankId(widget.timebankId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +55,7 @@ class AcceptedOffersViewState extends State<AcceptedOffers> {
       body: _ViewAcceptedOffers(
         sevaUserId: widget.sevaUserId,
         timebankId: widget.timebankId,
+        timebankModel: timebankModel,
       ),
     );
   }
@@ -44,8 +64,12 @@ class AcceptedOffersViewState extends State<AcceptedOffers> {
 class _ViewAcceptedOffers extends StatelessWidget {
   final String sevaUserId;
   final String timebankId;
+  final TimebankModel timebankModel;
 
-  _ViewAcceptedOffers({@required this.sevaUserId, @required this.timebankId});
+  _ViewAcceptedOffers(
+      {@required this.sevaUserId,
+      @required this.timebankId,
+      this.timebankModel});
 
   @override
   Widget build(BuildContext context) {
@@ -245,10 +269,6 @@ class _ViewAcceptedOffers extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
-                  ),
                   if (userModel.bio != null)
                     Padding(
                       padding: EdgeInsets.all(0.0),
@@ -299,6 +319,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                                 offer: model,
                                 timebankId: timebankId,
                                 userModel: userModel,
+                                projectId: "",
                               ),
                             ),
                           );
@@ -310,9 +331,51 @@ class _ViewAcceptedOffers extends StatelessWidget {
                           // }
                         },
                       ),
+
 //                      Padding(
 //                        padding: EdgeInsets.all(8.0),
 //                      ),
+                      RaisedButton(
+                        child: Container(
+                          width: double.infinity,
+                          child: Text(
+                            'Add to Existing Request',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        onPressed: () async {
+                          // Once approved
+                          print("UserModel ${userModel.sevaUserID}");
+                          print("admint ${timebankModel.admins}");
+                          Navigator.pop(viewContext);
+                          if (timebankModel.admins.contains(
+                              SevaCore.of(context).loggedInUser.sevaUserID)) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdminOfferRequestsTab(
+                                  timebankid: timebankId,
+                                  parentContext: context,
+                                  userModel: userModel,
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdminPersonalRequests(
+                                  timebankId: timebankId,
+                                  isTimebankRequest: true,
+                                  parentContext: context,
+                                  userModel: userModel,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
                       RaisedButton(
                         color: Theme.of(context).accentColor,
                         child: Container(

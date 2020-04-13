@@ -8,10 +8,14 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
+import 'package:sevaexchange/views/switch_timebank.dart';
 
 class UserProfileBloc {
+  final BuildContext context;
   final _communities = BehaviorSubject<List<Widget>>();
   final _communityLoaded = BehaviorSubject<bool>.seeded(false);
+
+  UserProfileBloc(this.context);
 
   Stream<List<Widget>> get communities => _communities.stream;
   Stream<bool> get communityLoaded => _communityLoaded.stream;
@@ -20,7 +24,7 @@ class UserProfileBloc {
 
   void getAllCommunities(context, UserModel userModel) async {
     FirestoreManager.getUserForIdStream(
-      sevaUserId: userModel.sevaUserID,
+      sevaUserId: userModel.sevaUserID == null ? "" : userModel.sevaUserID,
     ).listen((userModel) {
       if (userModel.communities != null) {
         List<Widget> community = [];
@@ -34,8 +38,15 @@ class UserProfileBloc {
             CommunityCard(
               selected: userModel.currentCommunity == value.documentID,
               community: CommunityModel(value.data),
-              onTap: () => setDefaultCommunity(
-                  userModel.email, value.documentID, context),
+              onTap: () {
+                setDefaultCommunity(userModel.email, value.documentID, context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SwitchTimebank(),
+                  ),
+                );
+              },
             ),
           );
           _communities.add(community);
@@ -45,7 +56,7 @@ class UserProfileBloc {
       }
       Future.delayed(
         Duration(milliseconds: 300),
-            () => _communityLoaded.add(true),
+        () => _communityLoaded.add(true),
       );
     });
   }

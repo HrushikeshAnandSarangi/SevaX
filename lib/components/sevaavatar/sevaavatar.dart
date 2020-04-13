@@ -1,24 +1,15 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sevaexchange/views/core.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:cached_network_image/cached_network_image.dart';
-
-import '../../globals.dart' as globals;
-// import '../../auth/auth_provider.dart';
-// import '../../auth/auth_router.dart';
-// import '../../components/loader/seva_loader.dart';
-// import '../../views/mytasks.dart';
-// import '../../views/profileedit.dart';
-
-// import '../services/seva_firestore_service.dart';
-
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import './image_picker_handler.dart';
+import '../../globals.dart' as globals;
 
 class SevaAvatar extends StatefulWidget {
   _SevaAvatarState createState() => _SevaAvatarState();
@@ -129,7 +120,7 @@ class _SevaAvatarState extends State<SevaAvatar>
                     //   placeholder: CircularProgressIndicator(),
                     // ),
                     backgroundImage: NetworkImage(
-                        SevaCore.of(context).loggedInUser.photoURL),
+                        SevaCore.of(context).loggedInUser.photoURL ?? defaultUserImageURL),
                     backgroundColor: const Color(0xFF778899),
                   ),
                 ),

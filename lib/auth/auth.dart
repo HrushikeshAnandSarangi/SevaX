@@ -97,6 +97,7 @@ class Auth {
     } on Exception catch (error) {
       throw error;
     } catch (error) {
+      print(error);
       log('Auth: signInWithEmailAndPassword: $error');
     }
     return _processGoogleUser(result.user);

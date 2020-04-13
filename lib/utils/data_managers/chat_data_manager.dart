@@ -62,11 +62,15 @@ Future<void> updateReadStatus(ChatModel chat, String email) async {
 //tested and working
 /// Update a [chat]
 
-Future<void> updateMessagingReadStatus(
-    {@required ChatModel chat,
-    @required String email,
-    @required String userEmail,
-    bool isAdmin = false}) async {
+
+
+Future<void> updateMessagingReadStatus({
+  @required ChatModel chat,
+  @required String email,
+  @required String userEmail,
+  bool isAdmin = false,
+  bool once = false,
+}) async {
   await Firestore.instance
       .collection("chatsnew")
       .document(
@@ -83,7 +87,7 @@ Future<void> updateMessagingReadStatus(
 
     prefix0.Map<String, int> unreadStatus = HashMap();
     unreadStatus[email] = 0;
-    unreadStatus[userEmail] = lastUnreadCount + 1;
+    unreadStatus[userEmail] = once?lastUnreadCount:lastUnreadCount + 1;
 
     //
     return Firestore.instance

@@ -185,6 +185,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
+          automaticallyImplyLeading: true,
           userModel: loggedInUser,
           onSelectedInterests: (interests) {
             Navigator.pop(context);
@@ -205,6 +206,7 @@ class _EditProfilePageState extends State<EditProfilePage>
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
+          automaticallyImplyLeading: true,
           userModel: loggedInUser,
           onSelectedSkills: (skills) {
             Navigator.pop(context);
@@ -544,7 +546,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future<void> _signOut(BuildContext context) async {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     var auth = AuthProvider.of(context).auth;
     await auth.signOut();
     Navigator.pushReplacement(

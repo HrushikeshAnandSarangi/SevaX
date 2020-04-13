@@ -58,6 +58,8 @@ class RequestTabHolder extends StatelessWidget {
                               child: RequestDetailsAboutPage(
                                 requestItem: requestModel,
                                 timebankModel: timebank,
+                                isAdmin: true,
+                                applied: false,
                               ),
                             ),
                             Container(

@@ -54,7 +54,6 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   void initState() {
     super.initState();
     print("fullname ${widget.requestItem.fullName}");
-
   }
 
   @override
