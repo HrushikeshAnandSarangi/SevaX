@@ -13,6 +13,8 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -26,6 +28,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
+import '../../ui/screens/offers/pages/create_offer.dart' as prefix0;
 import '../core.dart';
 
 class OffersModule extends StatefulWidget {
@@ -86,6 +89,26 @@ class OffersState extends State<OffersModule> {
                             radius: 10,
                             child: Image.asset("lib/assets/images/add.png"),
                           ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => prefix0.CreateOffer(
+                              timebankId: timebankId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 10,
+                          child: Image.asset("lib/assets/images/add.png"),
                         ),
                       ),
                     ),
@@ -250,6 +273,7 @@ class OfferListItems extends StatelessWidget {
               var consolidatedList =
                   GroupOfferCommons.groupAndConsolidateOffers(
                       offersList, SevaCore.of(context).loggedInUser.sevaUserID);
+              print("conso ===> $consolidatedList");
               return formatListOffer(consolidatedList: consolidatedList);
           }
         },
@@ -801,6 +825,47 @@ class OfferCardViewState extends State<OfferCardView> {
                                                                 Colors.white),
                                                       ),
                                                       onPressed: () {
+                                                        switch (widget
+                                                            .offerModel
+                                                            .offerType) {
+                                                          case OfferType
+                                                              .INDIVIDUAL_OFFER:
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        IndividualOffer(
+                                                                  offerModel: widget
+                                                                      .offerModel,
+                                                                  timebankId: widget
+                                                                      .offerModel
+                                                                      .timebankId,
+                                                                ),
+                                                              ),
+                                                            );
+                                                            break;
+                                                          case OfferType
+                                                              .GROUP_OFFER:
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        OneToManyOffer(
+                                                                  offerModel: widget
+                                                                      .offerModel,
+                                                                  timebankId: widget
+                                                                      .offerModel
+                                                                      .timebankId,
+                                                                ),
+                                                              ),
+                                                            );
+                                                            break;
+                                                        }
+
                                                         // Navigator.push(
                                                         //   context,
                                                         //   MaterialPageRoute(
@@ -929,7 +994,7 @@ class OfferCardViewState extends State<OfferCardView> {
   BuildContext dialogContext;
   Widget getBottombar() {
     isAccepted =
-        getOfferParticipants(offerDataModel: widget.offerModel).contains(
+        getOfferParticipants(offerDataModel: widget?.offerModel).contains(
       SevaCore.of(context).loggedInUser.sevaUserID,
     );
     return Padding(

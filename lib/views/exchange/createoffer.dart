@@ -159,7 +159,6 @@ class MyCustomFormState extends State<MyCustomForm> {
         TextFormField(
           decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
           keyboardType: TextInputType.text,
-          // style: finalStyle,
           style: subTitleStyle,
           validator: (value) {
             if (value.isEmpty) {
