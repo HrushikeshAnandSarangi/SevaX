@@ -44,7 +44,7 @@ class GroupOfferDataModel {
   }
 
   @override
-  GroupOfferDataModel.fromMap(Map<String, dynamic> map) {
+  GroupOfferDataModel.fromMap(Map<dynamic, dynamic> map) {
     if (map.containsKey('classTitle')) {
       this.classTitle = map['classTitle'];
     }
@@ -93,7 +93,8 @@ class IndividualOfferDataModel extends DataModel {
   IndividualOfferDataModel();
 
   @override
-  IndividualOfferDataModel.fromMap(Map<String, dynamic> map) {
+  IndividualOfferDataModel.fromMap(Map<dynamic, dynamic> map) {
+
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -150,6 +151,7 @@ class OfferModel extends DataModel {
   OfferType offerType;
   String photoUrlImage;
   Color color;
+  String selectedAdrress;
 
   GroupOfferDataModel groupOfferDataModel;
   IndividualOfferDataModel individualOfferDataModel;
@@ -167,8 +169,14 @@ class OfferModel extends DataModel {
     this.offerType,
     this.groupOfferDataModel,
     this.individualOfferDataModel,
+    this.selectedAdrress,
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
+  }
+
+  @override
+  String toString() {
+    return "id = $id, email = $email, fullName : $fullName , selectedAddress : $selectedAdrress indiOffer : $individualOfferDataModel, groupOffer : $groupOfferDataModel";
   }
 
   OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -184,6 +192,10 @@ class OfferModel extends DataModel {
 
     if (map.containsKey('id')) {
       this.id = map['id'];
+    }
+
+    if (map.containsKey("selectedAdrress")) {
+      this.selectedAdrress = map['selectedAdrress'];
     }
 
     if (map.containsKey('offerType')) {
@@ -247,6 +259,10 @@ class OfferModel extends DataModel {
       this.id = map['id'];
     }
 
+    if (map.containsKey("selectedAdrress")) {
+      this.selectedAdrress = map['selectedAdrress'];
+    }
+
     if (map.containsKey('email')) {
       this.email = map['email'];
     }
@@ -274,6 +290,18 @@ class OfferModel extends DataModel {
       this.location = Geoflutterfire()
           .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
     }
+
+    if (map.containsKey("individualOfferDataModel"))
+      this.individualOfferDataModel =
+          IndividualOfferDataModel.fromMap(map['individualOfferDataModel']);
+    else
+      this.individualOfferDataModel = null;
+
+    if (map.containsKey("groupOfferDataModel"))
+      this.groupOfferDataModel =
+          GroupOfferDataModel.fromMap(map['groupOfferDataModel']);
+    else
+      this.groupOfferDataModel = null;
   }
 
   @override
@@ -292,6 +320,10 @@ class OfferModel extends DataModel {
 
     if (this.id != null && this.id.isNotEmpty) {
       map['id'] = this.id;
+    }
+
+    if (this.selectedAdrress != null && this.selectedAdrress.isNotEmpty) {
+      map['selectedAdrress'] = this.selectedAdrress;
     }
 
     if (this.root_timebank_id != null && this.root_timebank_id.isNotEmpty) {
@@ -325,12 +357,6 @@ class OfferModel extends DataModel {
     }
 
     return map;
-  }
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return "$groupOfferDataModel $individualOfferDataModel $id";
   }
 
   @override

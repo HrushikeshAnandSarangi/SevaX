@@ -551,14 +551,13 @@ class MyCustomFormState extends State<MyCustomForm> {
     groupOfferDataModel.startDate = OfferDurationWidgetState.starttimestamp;
     groupOfferDataModel.endDate = OfferDurationWidgetState.endtimestamp;
 
-    print("-----------------$groupOfferDataModel");
-
     return OfferModel(
       id: id,
       email: SevaCore.of(context).loggedInUser.email,
       fullName: SevaCore.of(context).loggedInUser.fullname,
       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       timebankId: widget.timebankId,
+      selectedAdrress: selectedAddress,
       timestamp: timestamp,
       location:
           location == null ? GeoFirePoint(40.754387, -73.984291) : location,
