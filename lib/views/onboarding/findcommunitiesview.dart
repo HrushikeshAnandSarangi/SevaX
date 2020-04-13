@@ -82,7 +82,20 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               // automaticallyImplyLeading: widget.keepOnBackPress,
               automaticallyImplyLeading: false,
               elevation: 0.5,
-
+              actions: <Widget>[
+                Offstage(
+                  offstage: true,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.power_settings_new,
+                    ),
+                    onPressed: () {
+//                      Navigator.of(context).push(MaterialPageRoute(
+//                          builder: (context) => ()));
+                    },
+                  ),
+                )
+              ],
               leading: showBachBtn
                   ? BackButton(
                       onPressed: () => Navigator.pop(context),

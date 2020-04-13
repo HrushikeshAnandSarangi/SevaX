@@ -52,20 +52,6 @@ class CreateEditCommunityView extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              actions: <Widget>[
-                Offstage(
-                  offstage: true,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.power_settings_new,
-                    ),
-                    onPressed: () {
-//                      Navigator.of(context).push(MaterialPageRoute(
-//                          builder: (context) => ()));
-                    },
-                  ),
-                )
-              ],
             )
           : null,
       body: CreateEditCommunityViewForm(
