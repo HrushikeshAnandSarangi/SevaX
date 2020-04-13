@@ -48,82 +48,82 @@
 //     super.didChangeDependencies();
 //   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Theme.of(context).primaryColor,
-        title: Text(
-          'Select Request',
-          style: TextStyle(fontSize: 16.0, color: Colors.white),
-        ),
-      ),
-      body: Container(
-        padding: EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('Your Requests'),
-                SizedBox(height: 8.0),
-                () {
-                  if (requestList.length != 0) {
-                    return DropdownButton<RequestModel>(
-                      hint: Text('Select a request'),
-                      items: requestList.map((model) {
-                        return DropdownMenuItem<RequestModel>(
-                          child: Text(model.title),
-                          value: model,
-                        );
-                      }).toList(),
-                      onChanged: (model) {
-                        setState(() {
-                          this.selectedRequestModel = model;
-                        });
-                      },
-                      value: selectedRequestModel,
-                    );
-                  } else {
-                    return Text(
-                      'You do not have any active requests',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                      ),
-                    );
-                  }
-                }(),
-                SizedBox(height: 16),
-                FlatButton(
-                  onPressed: () {
-                    isofferrequest = true;
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return CreateRequest(
-                            isOfferRequest: isofferrequest,
-                            offer: widget.offerModel,
-                            timebankId: FlavorConfig.values.timebankId,
-                            projectId: "",
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: Text('Create a request'),
-                  textColor: Colors.blueAccent,
-                ),
-                selectedRequestModel == null ? Offstage() : selectedRequest,
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       iconTheme: IconThemeData(color: Colors.white),
+  //       backgroundColor: Theme.of(context).primaryColor,
+  //       title: Text(
+  //         'Select Request',
+  //         style: TextStyle(fontSize: 16.0, color: Colors.white),
+  //       ),
+  //     ),
+  //     body: Container(
+  //       padding: EdgeInsets.all(16.0),
+  //       child: SingleChildScrollView(
+  //         child: Container(
+  //           width: double.infinity,
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: <Widget>[
+  //               Text('Your Requests'),
+  //               SizedBox(height: 8.0),
+  //               () {
+  //                 if (requestList.length != 0) {
+  //                   return DropdownButton<RequestModel>(
+  //                     hint: Text('Select a request'),
+  //                     items: requestList.map((model) {
+  //                       return DropdownMenuItem<RequestModel>(
+  //                         child: Text(model.title),
+  //                         value: model,
+  //                       );
+  //                     }).toList(),
+  //                     onChanged: (model) {
+  //                       setState(() {
+  //                         this.selectedRequestModel = model;
+  //                       });
+  //                     },
+  //                     value: selectedRequestModel,
+  //                   );
+  //                 } else {
+  //                   return Text(
+  //                     'You do not have any active requests',
+  //                     style: TextStyle(
+  //                       color: Colors.grey,
+  //                       fontSize: 12,
+  //                     ),
+  //                   );
+  //                 }
+  //               }(),
+  //               SizedBox(height: 16),
+  //               FlatButton(
+  //                 onPressed: () {
+  //                   isofferrequest = true;
+  //                   Navigator.of(context).push(
+  //                     MaterialPageRoute(
+  //                       builder: (context) {
+  //                         return CreateRequest(
+  //                           isOfferRequest: isofferrequest,
+  //                           offer: widget.offerModel,
+  //                           timebankId: FlavorConfig.values.timebankId,
+  //                           projectId: "",
+  //                         );
+  //                       },
+  //                     ),
+  //                   );
+  //                 },
+  //                 child: Text('Create a request'),
+  //                 textColor: Colors.blueAccent,
+  //               ),
+  //               selectedRequestModel == null ? Offstage() : selectedRequest,
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
 //   Widget get selectedRequest {
 //     return Container(

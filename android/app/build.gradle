@@ -76,7 +76,7 @@ android {
         App {
             dimension "flavor-type"
             applicationIdSuffix ".sevax"
-            resValue "string", "app_name", "Seva Exchange"
+            resValue "string", "app_name", "SevaX"
         }
         Tulsi {
             dimension "flavor-type"
