@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class BillingAddress {
@@ -127,6 +129,8 @@ class CommunityModel extends DataModel {
   List<String> coordinators;
   List<String> members;
   int transactionCount;
+  GeoFirePoint location;
+
   Map<String, dynamic> billingQuota;
   Map<String, dynamic> payment;
 
@@ -165,6 +169,27 @@ class CommunityModel extends DataModel {
         : [];
     this.members =
         map.containsKey('members') ? List.castFrom(map['members']) : [];
+    this.location = getLocation(map);
+  }
+  GeoFirePoint getLocation(map) {
+    GeoFirePoint geoFirePoint;
+    if (map.containsKey("location") &&
+        map["location"] != null &&
+        map['location']['geopoint'] != null) {
+      if (map['location']['geopoint'] is GeoPoint) {
+        GeoPoint geoPoint = map['location']['geopoint'];
+        geoFirePoint = Geoflutterfire()
+            .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      } else {
+        geoFirePoint = GeoFirePoint(
+          map["location"]["geopoint"]["_latitude"],
+          map["location"]["geopoint"]["_longitude"],
+        );
+      }
+    } else {
+      geoFirePoint = GeoFirePoint(40.754387, -73.984291);
+    }
+    return geoFirePoint;
   }
 
   updateValueByKey(String key, dynamic value) {

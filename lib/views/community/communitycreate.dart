@@ -52,6 +52,20 @@ class CreateEditCommunityView extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
+              actions: <Widget>[
+                Offstage(
+                  offstage: true,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.power_settings_new,
+                    ),
+                    onPressed: () {
+//                      Navigator.of(context).push(MaterialPageRoute(
+//                          builder: (context) => ()));
+                    },
+                  ),
+                )
+              ],
             )
           : null,
       body: CreateEditCommunityViewForm(
@@ -583,6 +597,12 @@ class CreateEditCommunityViewFormState
                                       "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
                                   Navigator.of(context).pop();
                                 }
+                                if (location == null) {
+                                  showDialogForSuccess(
+                                      dialogTitle:
+                                          "Please add your timebank location");
+                                  return;
+                                }
 
                                 setState(() {
                                   this._billingDetailsError = '';
@@ -977,6 +997,7 @@ class CreateEditCommunityViewFormState
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
     timebankModel.address = address;
+    communityModel.location = location;
     data.timebank.updateValueByKey('address', address);
     createEditCommunityBloc.onChange(data);
   }
