@@ -13,12 +13,14 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/edit_offer.dart';
@@ -70,8 +72,9 @@ class OffersState extends State<OffersModule> {
                   children: <Widget>[
                     Text(
                       'My Offers',
-                      style: (TextStyle(fontWeight: FontWeight.w500)),
+                      style: (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                     ),
+                    IconButton(icon: Icon(Icons.info_outline), iconSize: 18, onPressed: showOffersWebPage,),
                     TransactionLimitCheck(
                       child: GestureDetector(
                         onTap: () {
@@ -282,6 +285,29 @@ class OffersState extends State<OffersModule> {
       style: TextStyle(fontSize: 10.0),
     ),
   };
+
+  void showOffersWebPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Offers Link", urlToHit: dynamicLinks['offersInfoLink']),
+      context: context,
+    );
+  }
+
+
+  void navigateToWebView({
+    BuildContext context,
+    AboutMode aboutMode,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SevaWebView(aboutMode),
+      ),
+    );
+  }
+
 }
 
 class OfferCardView extends StatefulWidget {
@@ -1173,8 +1199,7 @@ class OfferCardViewState extends State<OfferCardView> {
 
   Future _makePostRequest(OfferModel offerModel) async {
     // set up POST request arguments
-    String url =
-        '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
+    String url = '${FlavorConfig.values.cloudFunctionBaseURL}/acceptOffer';
     Map<String, String> headers = {"Content-type": "application/json"};
     Map<String, String> body = {
       'id': offerModel.id,

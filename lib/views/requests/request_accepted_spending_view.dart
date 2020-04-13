@@ -415,6 +415,27 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                     var notificationId =
                         await RequestNotificationManager.getNotificationId(
                             user, requestModel);
+
+                    if (requestModel.requestMode ==
+                        RequestMode.PERSONAL_REQUEST) {
+                      showLinearProgress();
+                      var canApproveTransaction =
+                          await FirestoreManager.hasSufficientCredits(
+                        credits: transactionModel.credits,
+                        userEmail: SevaCore.of(context).loggedInUser.email,
+                        userId: SevaCore.of(context).loggedInUser.sevaUserID,
+                      );
+                      Navigator.pop(linearProgressForBalanceCheck);
+
+                      if (!canApproveTransaction) {
+                        showDiologForMessage(
+                          "Your seva credits are not sufficient to approve the credit request.",
+                          context,
+                        );
+                        return;
+                      }
+                    }
+
                     showMemberClaimConfirmation(
                         context: context,
                         notificationId: notificationId,
@@ -429,6 +450,21 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
             ),
           ),
         ));
+  }
+
+  BuildContext linearProgressForBalanceCheck;
+
+  void showLinearProgress() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          linearProgressForBalanceCheck = createDialogContext;
+          return AlertDialog(
+            title: Text('Hang on..'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   Future<Widget> getNotificationRequestCompletedWidget(
@@ -452,7 +488,11 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         actions: <Widget>[],
         secondaryActions: <Widget>[],
         child: GestureDetector(
-          onTap: () {
+          onTap: () async {
+            if (model.requestMode == RequestMode.PERSONAL_REQUEST) {
+              //here credits are approved
+
+            }
             showMemberClaimConfirmation(
                 context: context,
                 notificationId: notificationId,
@@ -502,6 +542,29 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
         ));
   }
 
+  void showDiologForMessage(String dialogText, BuildContext dialogContext) {
+    showDialog(
+        context: dialogContext,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(dialogText),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
   Future<Widget> showMemberClaimConfirmation(
       {BuildContext context,
       UserModel userModel,
@@ -540,10 +603,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
                   ),
                   if (userModel.bio != null)
                     Padding(
@@ -831,8 +890,7 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       model: claimedRequestStatus,
     );
 
-      await approveTransaction(requestModel, userId, notificationId, sevaCore);
-  
+    await approveTransaction(requestModel, userId, notificationId, sevaCore);
   }
 
   Future approveTransaction(RequestModel model, String userId,
@@ -860,6 +918,13 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
     await FirestoreManager.readUserNotification(
         notificationId, sevaCore.loggedInUser.email);
+
+//    if (model.projectId.isNotEmpty &&
+//        model.approvedUsers.length <= model.numberOfApprovals) {
+//      await FirestoreManager.updateProjectCompletedRequest(
+//          projectId: model.projectId, requestId: model.id);
+//    }
+
     setState(() {
       isProgressBarActive = false;
     });

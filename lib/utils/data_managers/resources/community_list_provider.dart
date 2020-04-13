@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' show Client, Response;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
@@ -48,6 +47,42 @@ class RequestApiProvider {
       if (model.approvedUsers.length <= model.numberOfApprovals) {
         requestList.add(model);
       }
+    });
+    return requestList;
+  }
+
+  Future<List<RequestModel>> getProjectCompletedList({String projectId}) async {
+    List<RequestModel> requestList = [];
+    var query = Firestore.instance
+        .collection('requests')
+        .where('accepted', isEqualTo: true)
+        .where('projectId', isEqualTo: projectId);
+
+    QuerySnapshot querySnapshot = await query.getDocuments();
+    print("complted list provider");
+    querySnapshot.documents.forEach((documentSnapshot) {
+      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+      model.id = documentSnapshot.documentID;
+      print("completed model is : " + model.id);
+      requestList.add(model);
+    });
+    return requestList;
+  }
+
+  Future<List<RequestModel>> getProjectPendingList({String projectId}) async {
+    List<RequestModel> requestList = [];
+    var query = Firestore.instance
+        .collection('requests')
+        .where('accepted', isEqualTo: false)
+        .where('projectId', isEqualTo: projectId);
+
+    QuerySnapshot querySnapshot = await query.getDocuments();
+    print("pending list provider");
+    querySnapshot.documents.forEach((documentSnapshot) {
+      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+      model.id = documentSnapshot.documentID;
+      print("pending model is : " + model.id);
+      requestList.add(model);
     });
     return requestList;
   }
@@ -170,8 +205,6 @@ class CommunityApiProvider {
         .document(community.id)
         .setData(community.toMap());
   }
-
-
 
   Future<void> updateUserWithTimeBankIdCommunityId(
       UserModel user, timebankId, communityId) async {

@@ -88,7 +88,7 @@ class CreateEditCommunityViewFormState
   // us to validate the form
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
-
+  double taxPercentage = 0.0;
   CommunityModel communityModel = CommunityModel({});
   CommunityModel editCommunityModel = CommunityModel({});
   final _formKey = GlobalKey<FormState>();
@@ -193,6 +193,7 @@ class CreateEditCommunityViewFormState
           .then((onValue) {
         communityModel = onValue;
         communitynName = communityModel.name;
+        taxPercentage = onValue.taxPercentage * 100;
 
         searchTextController.text = communityModel.name;
       });
@@ -265,7 +266,7 @@ class CreateEditCommunityViewFormState
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: widget.isCreateTimebank
                         ? Text(
-                            'Timebank is where you can collaborate with your organization',
+                            'A TimeBank is a community of volunteers that give and receive time to each other and to the larger community',
                             textAlign: TextAlign.center,
                           )
                         : Container(),
@@ -278,7 +279,7 @@ class CreateEditCommunityViewFormState
                           widget.isCreateTimebank
                               ? TimebankAvatar()
                               : TimebankAvatar(
-                                  photoUrl: communityModel.logo_url,
+                                  photoUrl: communityModel.logo_url ?? "",
                                 ),
                           Text(''),
                           Text(
@@ -437,6 +438,33 @@ class CreateEditCommunityViewFormState
                       color: Colors.grey,
                     ),
                   ),
+                  SizedBox(height: 20),
+
+                  headingText('Select Tax percentage'),
+                  Slider(
+                    label: "${taxPercentage.toInt()}%",
+                    value: taxPercentage,
+                    min: 0,
+                    max: 15,
+                    divisions: 15,
+                    onChanged: (value) {
+                      snapshot.data.community
+                          .updateValueByKey('taxPercentage', value / 100);
+                      setState(() {
+                        taxPercentage = value;
+                        communityModel.taxPercentage = value / 100;
+                      });
+                      print(snapshot.data.community);
+                    },
+                  ),
+                  Text(
+                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   headingText('Your timebank location.'),
                   Text(
                     'List the place or address where your community meets (such as a cafe, library, or church.).',
@@ -445,9 +473,7 @@ class CreateEditCommunityViewFormState
                       color: Colors.grey,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  ),
+                  SizedBox(height: 20),
                   Center(
                     child: FlatButton.icon(
                       icon: Icon(Icons.add_location),
@@ -509,13 +535,13 @@ class CreateEditCommunityViewFormState
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Text(
-                                  'Looking for existing timebank',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                tappableFindYourTeam,
+                                // Text(
+                                //   'Looking for existing timebank',
+                                //   style: TextStyle(
+                                //     color: Colors.grey,
+                                //   ),
+                                // ),
+                                // tappableFindYourTeam,
                               ],
                             ),
                           ),
@@ -530,35 +556,21 @@ class CreateEditCommunityViewFormState
                         onPressed: () async {
                           // show a dialog
                           if (widget.isCreateTimebank) {
-//                            if (!firebaseUser.isEmailVerified) {
-//                              _showVerificationAndLogoutDialogue();
-//                            }
-
-                            var timebankAdvisory =
-                                // "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
-                                "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
-
+                            var timebankAdvisory = "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
                             print(_formKey.currentState.validate());
-
-//                            communityFound =
-//                                await isCommunityFound(enteredName);
-//                            if (communityFound) {
-//                              print("Found:$communityFound");
-//                              return;
-//                            }
 
                             if (_formKey.currentState.validate()) {
                               if (isBillingDetailsProvided) {
-                                Map<String, bool> onActivityResult =
-                                    await showTimebankAdvisory(
-                                        dialogTitle: timebankAdvisory);
-                                if (onActivityResult['PROCEED']) {
-                                  print("YES PROCEED WITH TIMEBANK CREATION");
-                                } else {
-                                  print(
-                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
-                                  Navigator.of(context).pop();
-                                }
+//                                Map<String, bool> onActivityResult =
+//                                    await showTimebankAdvisory(
+//                                        dialogTitle: timebankAdvisory);
+//                                if (onActivityResult['PROCEED']) {
+//                                  print("YES PROCEED WITH TIMEBANK CREATION");
+//                                } else {
+//                                  print(
+//                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
+//                                  Navigator.of(context).pop();
+//                                }
 
                                 setState(() {
                                   this._billingDetailsError = '';
@@ -625,7 +637,6 @@ class CreateEditCommunityViewFormState
                                   // _billingInformationKey.currentState.reset();
                                   UserModel user =
                                       SevaCore.of(context).loggedInUser;
-                                  // Navigator.pop(dialogContext);
                                   _formKey.currentState.reset();
                                   // _billingInformationKey.currentState.reset();
                                   Navigator.of(context).push(
@@ -696,7 +707,7 @@ class CreateEditCommunityViewFormState
                                 .then((onValue) {
                               print("timebank updated");
                             });
-
+                             communityModel.taxPercentage = taxPercentage / 100;
 //                            //updating community with latest values
                             await FirestoreManager.updateCommunityDetails(
                                     communityModel: communityModel)
@@ -857,7 +868,7 @@ class CreateEditCommunityViewFormState
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Configure billing details',
+              'Configure profile information',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
@@ -1005,7 +1016,7 @@ class CreateEditCommunityViewFormState
             Column(
               children: <Widget>[
                 Text(
-                  'Billing Details',
+                  'Profile Information',
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,
@@ -1363,7 +1374,7 @@ class CreateEditCommunityViewFormState
     var communitiesFound =
         await searchCommunityByName(enteredName, communities);
 
-    if (communities == null || communities == null || communities.length == 0) {
+    if ( communities == null || communities.length == 0) {
       return false;
     } else {
       return true;

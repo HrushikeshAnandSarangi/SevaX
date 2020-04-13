@@ -16,7 +16,6 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/data_managers/timebank_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
@@ -121,7 +120,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 //      ),
       body: isDataLoaded
           ? SingleChildScrollView(
-              child: getTimebanks(context: context,bloc: _bloc),
+              child: getTimebanks(context: context, bloc: _bloc),
             )
           : Center(child: CircularProgressIndicator()),
     );
@@ -129,14 +128,14 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   List<String> dropdownList = [];
 
-  Widget getTimebanks({BuildContext context,UserDataBloc bloc}) {
+  Widget getTimebanks({BuildContext context, UserDataBloc bloc}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
     return FutureBuilder<List<TimebankModel>>(
-        future: getSubTimebanksForUserStream(
-            communityId: widget.loggedInUserModel.currentCommunity,
-            // primaryTimebankId: widget.communityPrimaryTimebankId,
-            ),
+        future: getTimebanksForCommunity(
+          communityId: widget.loggedInUserModel.currentCommunity,
+          primaryTimebankId: widget.communityPrimaryTimebankId,
+        ),
         builder: (context, snapshot) {
           print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -148,7 +147,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
             return Container(
               margin: EdgeInsets.all(20),
               child: Center(
-                child: Text("No Groups found"),
+                child: Text("No groups found"),
               ),
             );
           }
@@ -180,22 +179,22 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
                     if (_joinRequestModels != null) {
                       status = compareTimeBanks(_joinRequestModels, timebank);
-                      return makeItem(timebank, status,bloc);
+                      return makeItem(timebank, status, bloc);
                     } else if (timebank.admins
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status,bloc);
+                      return makeItem(timebank, status, bloc);
                     } else if (timebank.coordinators
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status,bloc);
+                      return makeItem(timebank, status, bloc);
                     } else if (timebank.members
                         .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status,bloc);
+                      return makeItem(timebank, status, bloc);
                     } else {
                       status = CompareToTimeBank.JOIN;
-                      return makeItem(timebank, status,bloc);
+                      return makeItem(timebank, status, bloc);
                     }
                   },
                   padding: const EdgeInsets.all(8),
@@ -215,7 +214,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         });
   }
 
-  Widget makeItem(TimebankModel timebank, CompareToTimeBank status,bloc) {
+  Widget makeItem(TimebankModel timebank, CompareToTimeBank status, bloc) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -223,7 +222,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
           MaterialPageRoute(
             builder: (context) => BlocProvider<UserDataBloc>(
               bloc: bloc,
-                          child: TimebankTabsViewHolder.of(
+              child: TimebankTabsViewHolder.of(
                 timebankId: timebank.id,
                 timebankModel: timebank,
               ),
@@ -239,7 +238,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               AspectRatio(
                 aspectRatio: 3.3 / 2.3,
                 child: CachedNetworkImage(
-                  imageUrl: timebank.photoUrl ?? defaultUserImageURL,
+                  imageUrl: timebank.photoUrl ?? defaultGroupImageURL,
                   fit: BoxFit.fitWidth,
                   errorWidget: (context, url, error) =>
                       Center(child: Text('No Image Avaialable')),
@@ -285,8 +284,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     padding: const EdgeInsets.only(right: 7),
                     child: RaisedButton(
                       elevation: 0,
-                      color: Colors.grey[300],
-                      textColor: Theme.of(context).primaryColor,
+                      color: Theme.of(context).accentColor,
+                      textColor: Colors.white,
                       child: Text(getTimeBankStatusTitle(status) ?? "",
                           style: TextStyle(fontSize: 14)),
                       onPressed: status == CompareToTimeBank.JOIN
@@ -318,7 +317,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                                     widget.loggedInUserModel.sevaUserID,
                                 type: prefix0.NotificationType.JoinRequest,
                                 data: joinReqModel.toMap(),
-                                directToMember: false,
                               );
 
                               notification.timebankId =

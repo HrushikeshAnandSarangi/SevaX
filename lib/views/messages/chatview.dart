@@ -74,6 +74,15 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () {
+      updateMessagingReadStatus(
+        chat: widget.chatModel,
+        userEmail: widget.useremail,
+        email: SevaCore.of(context).loggedInUser.email,
+        once: true,
+      );
+    });
+
     _fetchAppBarData = isValidEmail(widget.useremail)
         ? FirestoreManager.getUserForEmail(emailAddress: widget.useremail)
         : FirestoreManager.getTimeBankForId(timebankId: widget.useremail);
@@ -98,7 +107,8 @@ class _ChatViewState extends State<ChatView> {
       widget.chatModel.candidateLocation =
           GeoFirePoint(onValue.latitude, onValue.longitude);
 
-      print("-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
+      print(
+          "-------------------------------------------->>> ${widget.chatModel.candidateLocation.latitude}");
     });
   }
 

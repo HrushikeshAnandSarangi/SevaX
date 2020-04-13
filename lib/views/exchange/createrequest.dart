@@ -130,6 +130,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
   String selectedAddress;
+  int sharedValue = 0;
 
   String _selectedTimebankId;
 
@@ -246,10 +247,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
                         : "Ex: Small carpentry work...",
+                    hintStyle: textStyle,
                   ),
                   keyboardType: TextInputType.text,
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.title
+                      : "",
                   textCapitalization: TextCapitalization.sentences,
-                  style: textStyle,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter the subject of your request';
@@ -281,10 +285,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
                   ),
-                  initialValue:
-                      widget.isOfferRequest != null && widget.isOfferRequest
-                          ? ""
-                          : "",
+                  initialValue: widget.offer != null && widget.isOfferRequest
+                      ? widget.offer.description
+                      : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 2,
                   validator: (value) {
@@ -413,9 +416,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             if (val != sharedValue) {
               setState(() {
                 print("$sharedValue -- $val");
-                if (sharedValue == 0) {
+                if (val == 0) {
+                  print("TIMEBANK___REQUEST");
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
+                  print("PERSONAL___REQUEST");
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                 }
                 sharedValue = val;
@@ -425,19 +430,26 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           //groupValue: sharedValue,
         ),
       );
+    } else {
+      if (widget.projectModel != null) {
+        if (widget.projectModel.mode == 'Timebank') {
+          requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+        } else {
+          requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+        }
+      }
+      return Container();
     }
-    return Container();
   }
 
-  int sharedValue = 0;
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
-      'Personal Request',
+      'Timebank Request',
       style: TextStyle(fontSize: 15.0),
     ),
     1: Text(
-      'Timebank Request',
+      'Personal Request',
       style: TextStyle(fontSize: 15.0),
     ),
   };
@@ -445,11 +457,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
+    print('request mode ${requestModel.requestMode.toString()}');
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;
 
     if (_formKey.currentState.validate()) {
       // validate request start and end date
+
+
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
         showDialogForTitle(
             dialogTitle:
@@ -480,7 +495,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           );
 
           print(
-              "Seva Coins $sevaCoinsValue -------------------------------------------");
+              "Seva Credits $sevaCoinsValue -------------------------------------------");
 
           if (!hasSufficientBalance()) {
             showInsufficientBalance();
@@ -508,7 +523,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   bool hasRegisteredLocation() {
-    print("Location ---========================= ${requestModel.location}");
     return location != null;
   }
 
@@ -549,14 +563,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         });
   }
 
-  Future<void> showDialogForTitle({String dialogTitle}) async {
-    if (requestModel.requestMode == RequestMode.TIMEBANK_REQUEST) {
-      var timebankDetails = await FirestoreManager.getTimeBankForId(
-          timebankId: requestModel.timebankId);
-      requestModel.fullName = timebankDetails.name;
-      requestModel.photoUrl = timebankDetails.photoUrl;
-    }
-
+  void showDialogForTitle({String dialogTitle}) async {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
@@ -655,12 +662,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     if (requestModel.requestEnd == null) {
       requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
     }
-    print("Project id : ${widget.projectId}");
-    if (widget.projectId != null && widget.projectId.isNotEmpty) {
-      requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
-      print("Inside yes");
-      return true;
-    }
+//    print("Project id : ${widget.projectId}");
+//    if (widget.projectId != null && widget.projectId.isNotEmpty) {
+//      requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
+//      print("Inside yes");
+//      return true;
+//    }
 
     print(getTimeInFormat(requestModel.requestStart) +
         " <- Start   -> End " +
@@ -672,7 +679,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     var requestCoins = requestModel.numberOfHours;
     print("Hours:${diffDate.inHours} --> " +
         requestModel.numberOfApprovals.toString());
-    print("Number of seva coins:${requestCoins}");
+    print("Number of Seva Credits:${requestCoins}");
     print("Seva coin available:${sevaCoinsValue}");
 
     var lowerLimit =
@@ -697,6 +704,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     requestModel.root_timebank_id = FlavorConfig.values.timebankId;
 
     if (requestModel.id == null) return;
+
+    // print(
+    //     "Requeest Model -------------------------- ${requestModel.toString()}");
     await FirestoreManager.createRequest(requestModel: requestModel);
   }
 

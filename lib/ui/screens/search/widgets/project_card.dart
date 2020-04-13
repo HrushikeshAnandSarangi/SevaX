@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/ui/utils/date_formatter.dart';
-import 'package:sevaexchange/ui/utils/initial_generator.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
-import 'network_image.dart';
 
 class ProjectsCard extends StatelessWidget {
   final String location;
@@ -35,7 +33,6 @@ class ProjectsCard extends StatelessWidget {
         assert(description != null),
         assert(tasks != null),
         assert(pendingTask != null),
-//        assert(photoUrl != null),
         super(key: key);
 
   @override
@@ -58,7 +55,7 @@ class ProjectsCard extends StatelessWidget {
                     Icons.location_on,
                     color: Theme.of(context).primaryColor,
                   ),
-                  Text(location ?? "Unknown"),
+                  Text(getLocation(location)),
                   Spacer(),
                   Text(
                     timeago.format(
@@ -74,8 +71,10 @@ class ProjectsCard extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 38,
-                    backgroundColor: Colors.pink,
-                    child: CustomNetworkImage(photoUrl, fit: BoxFit.cover),
+                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundImage: NetworkImage(
+                      photoUrl ?? defaultProjectImageURL
+                    ),
                   ),
                   SizedBox(width: 12),
                   Expanded(
@@ -98,11 +97,11 @@ class ProjectsCard extends StatelessWidget {
                             ),
                             SizedBox(width: 2),
                             Icon(
-                              Icons.arrow_forward,
+                              Icons.remove,
                               size: 14,
                               color: Colors.grey,
                             ),
-                            SizedBox(width: 4),
+                            SizedBox(width: 2),
                             Text(
                               getTimeFormattedString(endTime),
                               style:
@@ -137,7 +136,8 @@ class ProjectsCard extends StatelessWidget {
                               TextSpan(text: "$pendingTask Pending"),
                             ],
                           ),
-                        )
+                        ),
+                        SizedBox(height: 5),
                       ],
                     ),
                   )
@@ -148,5 +148,21 @@ class ProjectsCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getLocation(String location) {
+    if (location != null) {
+      List<String> l = location.split(',');
+      l = l.reversed.toList();
+      if (l.length >= 2) {
+        return "${l[1]},${l[0]}";
+      } else if (l.length >= 1) {
+        return "${l[0]}";
+      } else {
+        return "Unknown";
+      }
+    } else {
+      return "Unknown";
+    }
   }
 }

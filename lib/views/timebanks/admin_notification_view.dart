@@ -215,12 +215,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
           return Dismissible(
               key: Key(Utils.getUuid()),
               background: dismissibleBackground,
-              onDismissed: (direction) {
-                FirestoreManager.readTimeBankNotification(
-                  notificationId,
-                  SevaCore.of(context).loggedInUser.email,
-                );
-              },
+              onDismissed: (direction) {},
               child: GestureDetector(
                 child: Container(
                   margin: notificationPadding,
@@ -561,8 +556,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
     // return;
     FirestoreManager.readTimeBankNotification(
-      notificationId,
-      model.timebankId,
+      notificationId: notificationId,
+      timebankId: model.timebankId,
     );
     //
   }
@@ -781,10 +776,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
-                  ),
                   if (userModel.bio != null)
                     Padding(
                       padding: EdgeInsets.all(0.0),
@@ -965,8 +956,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     );
 
     FirestoreManager.readTimeBankNotification(
-      notificationId,
-      widget.timebankId,
+      notificationId: notificationId,
+      timebankId: widget.timebankId,
     );
   }
 
@@ -1063,7 +1054,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
+                    // child: Text(userModel.email),
+                    child: Text(""),
                   ),
                   if (userModel.bio != null)
                     Padding(
@@ -1164,8 +1156,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             model.accepted = false;
                             model.operationTaken = true;
                             await updateJoinRequest(model: model);
-                            await readTimeBankNotification(
-                                notificationId, widget.timebankId);
+                            // await readTimeBankNotification(
+                            //     notificationId, widget.timebankId);
 
                             Navigator.pop(showProgressForOnboardingUserContext);
                           },
@@ -1451,6 +1443,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
+
+    
   }
 
   Future<void> approveMemberForVolunteerRequest({
@@ -1472,7 +1466,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       approvedUserId: user.sevaUserID,
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      directToMember: true,
     );
   }
 
@@ -1514,10 +1507,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    child: Text(userModel.email),
                   ),
                   if (userModel.bio != null)
                     Padding(

@@ -15,7 +15,6 @@ import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as fireStoreManager;
 import 'package:sevaexchange/utils/preference_manager.dart';
 import 'package:sevaexchange/views/IntroSlideForHumanityFirst.dart';
-import 'package:sevaexchange/views/community/about_app.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/login/login_page.dart';
 import 'package:sevaexchange/views/onboarding/bioview.dart';
@@ -704,12 +703,6 @@ class _SplashViewState extends State<SplashView> {
     ));
   }
 
-  Future _navigateToAboutPage() async {
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AboutApp(),
-    ));
-  }
-
   Future _navigateToEULA(UserModel loggedInUser) async {
     print("EULA -> ${loggedInUser.toString()}");
 
@@ -789,48 +782,6 @@ class _SplashViewState extends State<SplashView> {
     );
   }
 
-//  Future _navigateToCalendarView(UserModel loggedInUser) async {
-//    await Navigator.of(context).push(
-//      MaterialPageRoute(
-//        builder: (context) => LocationView(
-//          onSelectedCalendar: (availability) {
-//            Navigator.pop(context);
-//            loggedInUser.availability = availability;
-//            updateUserAvailableData(loggedInUser);
-//           // updateUserWeekDay(loggedInUser);
-//            loadingMessage = 'Updating Calendar';
-//          },
-//          onSkipped: () {
-//            Navigator.pop(context);
-//            loggedInUser.availability = null;
-//            updateUserData(loggedInUser);
-//            loadingMessage = 'Skipping Calendar';
-//          },
-//        ),
-//      ),
-//    );
-//  }
-//   Future _navigateToPinView(UserModel loggedInUser) async {
-//     await Navigator.of(context).push(
-//       MaterialPageRoute(
-//         builder: (context) => PinView(
-//           onSelectedOtp: (otp) {
-// //            Navigator.pop(context);
-// //            loggedInUser.otp = otp;
-// //            updateUserData(loggedInUser);
-// //            loadingMessage = 'Checking Otp';
-//           },
-//           onSkipped: () {
-// //            Navigator.pop(context);
-// //            loggedInUser.otp = null;
-// //            updateUserData(loggedInUser);
-// //            loadingMessage = 'Skipping Otp';
-//           },
-//         ),
-//       ),
-//     );
-//   }
-
   Future _navigateToInterestsView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
@@ -861,7 +812,8 @@ class _SplashViewState extends State<SplashView> {
   Future _navigateToBioView(UserModel loggedInUser) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => BioView(onSave: (bio) {
+        builder: (context) => BioView(
+          onSave: (bio) {
           Navigator.pop(context);
           loggedInUser.bio = bio;
           updateUserData(loggedInUser);
@@ -891,7 +843,7 @@ class _SplashViewState extends State<SplashView> {
                   loadingMessage = 'Skipping interests';
                 },
                 onBacked: () {
-                  _navigateToInterestsView(loggedInUser);
+                  _navigateToSkillsView(loggedInUser);
                 },
               ),
             ),

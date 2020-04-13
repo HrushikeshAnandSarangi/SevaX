@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -15,7 +15,7 @@ class AboutProjectView extends StatefulWidget {
   final String project_id;
   final String timebankId;
 
-  AboutProjectView({this.project_id,this.timebankId});
+  AboutProjectView({this.project_id, this.timebankId});
 
   @override
   _AboutProjectViewState createState() => _AboutProjectViewState();
@@ -64,51 +64,56 @@ class _AboutProjectViewState extends State<AboutProjectView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Container(
+                      alignment: Alignment.center,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 40),
-                            child: Column(
-                              children: <Widget>[
-                                TimebankAvatar(
-                                    photoUrl: projectModel.photoUrl ??
-                                        defaultCameraImageURL),
-                                Text(''),
-                              ],
+                          Container(
+                            height: 100,
+                            width: 100,
+                            child: CircleAvatar(
+                              backgroundImage: NetworkImage(
+                                  projectModel.photoUrl ??
+                                      defaultProjectImageURL),
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(left: 30),
-                            child: FlatButton(
-                              onPressed: () {
-                                print('pressed');
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateEditProject(
-                                        timebankId: widget.timebankId,
-                                        isCreateProject: false,
-                                        projectId: projectModel.id,
-                                      ),
-                                    ));
-                              },
-                              child: Text(
-                                'Edit',
-                                style: TextStyle(
-                                    color:
-                                        FlavorConfig.values.theme.primaryColor,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            ),
-                          )
                         ],
                       ),
                     ),
                   ),
+                  projectModel.creatorId ==
+                          SevaCore.of(context).loggedInUser.sevaUserID
+                      ? Container(
+                          width: double.infinity,
+                          child: FlatButton(
+                            onPressed: () {
+                              print('pressed');
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateEditProject(
+                                      timebankId: widget.timebankId,
+                                      isCreateProject: false,
+                                      projectId: projectModel.id,
+                                    ),
+                                  ));
+                            },
+                            child: Text(
+                              'Edit',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontFamily: 'Europa',
+                                  fontWeight: FontWeight.bold,
+                                  color: FlavorConfig.values.theme.primaryColor,
+                                  decoration: TextDecoration.underline),
+                            ),
+                          ),
+                        )
+                      : Container(),
                   headingText('Title'),
                   Text(projectModel.name ?? ""),
                   headingText('Mission Statement'),

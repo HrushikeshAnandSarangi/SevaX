@@ -5,7 +5,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -152,7 +151,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.white),
                   borderRadius: new BorderRadius.circular(25.7)),
-              hintText: 'Type your timebank name. Ex: Alaska (min 5 char)',
+              hintText: 'Type your timebank name. Ex: Alaska (min 1 char)',
               hintStyle: TextStyle(color: Colors.black45, fontSize: 14)),
         ),
         SizedBox(height: 20),
@@ -171,11 +170,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       return Container();
     }
 
-    if (searchTextController.text.trim().length < 3) {
-      print('Search requires minimum 3 characters');
+    if (searchTextController.text.trim().length < 1) {
+      print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
-          getEmptyWidget('Users', 'Search requires minimum 3 characters'),
+          getEmptyWidget('Users', ''),
         ],
       );
     }
@@ -214,7 +213,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                                   AsyncSnapshot<UserModel> snapshot) {
                                 if (snapshot.hasError) {
                                   return Text(
-                                    "Not found",
+                                    "Timebank",
                                   );
                                 } else if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -292,6 +291,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             }
           } else if (snapshot.hasError) {
             return Text(snapshot.error.toString());
+            // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){
             return Expanded(
@@ -317,7 +317,8 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     }
   }
 
-  CompareUserStatus _compareUserStatus(
+  CompareUserStatus
+  _compareUserStatus(
     CommunityModel communityModel,
     String seveaUserId,
   ) {
@@ -376,22 +377,28 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   'Create a Timebank',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
-                onPressed: () {
-                  createEditCommunityBloc
-                      .updateUserDetails(SevaCore.of(context).loggedInUser);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context1) => SevaCore(
-                        loggedInUser: SevaCore.of(context).loggedInUser,
-                        child: CreateEditCommunityView(
-                          isCreateTimebank: true,
-                          timebankId: FlavorConfig.values.timebankId,
-                          isFromFind: true,
+                onPressed: ()async {
+                  var timebankAdvisory = "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                  Map<String, bool> onActivityResult = await showTimebankAdvisory(dialogTitle: timebankAdvisory);
+                  if (onActivityResult['PROCEED']) {
+                    print("YES PROCEED WITH TIMEBANK CREATION");
+                    createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context1) => SevaCore(
+                          loggedInUser: SevaCore.of(context).loggedInUser,
+                          child: CreateEditCommunityView(
+                            isCreateTimebank: true,
+                            timebankId: FlavorConfig.values.timebankId,
+                            isFromFind: true,
+                          ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    print("NO CANCEL MY PLAN OF CREATING A TIMEBANK");
+                  }
                 },
               ),
               SizedBox(height: 20),
@@ -400,6 +407,45 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
       ),
     );
+  }
+
+  Future<Map> showTimebankAdvisory({String dialogTitle}) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+            title: Text(
+              dialogTitle,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop({'PROCEED': false});
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  'Proceed',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                },
+              ),
+            ],
+          );
+        });
   }
 
   goToNext(data) {

@@ -138,15 +138,11 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                   .forEach((subscritpion) {
                                 if (subscritpion.containsKey("items")) {
                                   if (subscritpion['items']['data'] != null) {
-                                    planData =
-                                        subscritpion['items']['data'] ?? [];
-                                    if (cardModel.currentPlan ==
-                                        "grande_plan") {
-                                      data =
-                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying Yearly. for \$${planData[0]['plan']['amount'] / 100 ?? ""} And For Additional Subscitption paying Monthly.";
+                                    planData = subscritpion['items']['data'] ?? [];
+                                    if (cardModel.currentPlan == "grande_plan") {
+                                      data = "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying yearly for \$1500 and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} per transaction billed monthly upon exceeding free monthly quota.";
                                     } else {
-                                      data =
-                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying ${planData[0]['plan']['interval'] == 'month' ? 'Monthly' : 'Yearly'}. for \$${planData[0]['plan']['amount'] / 100 ?? ""}.";
+                                      data = "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} yearly and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  per transaction billed annualy upon exceeding free monthly quota.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
@@ -252,8 +248,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         stream: Firestore.instance
             .collection("communities")
             .document(SevaCore.of(context).loggedInUser.currentCommunity)
-            .collection("transactions")
-            .document("${month}_$year")
             .snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -272,7 +266,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return spendingsTextWidget(
-                        "For the ${pastPlans[index]['nickname'] ?? " "} charged \$${pastPlans[index]['amount'] / 100 ?? ""} .");
+//                        "For the ${pastPlans[index]['nickname'] ?? " "} charged \$ ${pastPlans[index]['amount'] / 100 ?? ""} .");
+                  "dummy string");
                   });
             } else {
               return emptyText();
@@ -492,7 +487,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             Column(
               children: <Widget>[
                 Text(
-                  'Billing Details',
+                  'Profile Information',
                   style: TextStyle(
                       color: FlavorConfig.values.theme.primaryColor,
                       fontSize: 20,

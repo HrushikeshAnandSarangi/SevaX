@@ -10,6 +10,7 @@ import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
+import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
 
 // import 'package:sevaexchange/views/core.dart';
 
@@ -44,12 +45,18 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
   void getData() async {
     // print('Admin id  ${widget.timebankModel.admins[0]}');
 
-    user = await FirestoreManager.getUserForId(
-        sevaUserId: widget.timebankModel.admins[0]);
+    await FirestoreManager.getUserForId(
+            sevaUserId: widget.timebankModel.admins[0])
+        .then((onValue) {
+      user = onValue;
+      setState(() {
+        isAdminLoaded = true;
+      });
+    });
 
-    if (user != null) {
-      isAdminLoaded = true;
-    }
+//    if (user != null) {
+//      isAdminLoaded = true;
+//    }
 
     if (widget.timebankModel.members.contains(widget.userId)) {
       isUserJoined = true;
@@ -129,6 +136,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
+            Offstage(
+                offstage: !widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                child: TimeBankSevaCoin(
+                  communityId:
+                      SevaCore.of(context).loggedInUser.currentCommunity,
+                )),
             SizedBox(
               height: 15,
             ),
@@ -277,7 +291,6 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(widget.timebankModel.missionStatement,
-                      
                       style: TextStyle(
                         fontFamily: 'Europa',
                         fontSize: 16,

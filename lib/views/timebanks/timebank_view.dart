@@ -342,7 +342,6 @@ class _TimebankViewState extends State<TimebankView> {
                                                             .JoinRequest,
                                                         data: joinReqModel
                                                             .toMap(),
-                                                        directToMember: false,
                                                       );
                                                       notification.timebankId =
                                                           FlavorConfig.values

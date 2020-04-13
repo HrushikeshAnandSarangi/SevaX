@@ -63,9 +63,9 @@ class RequestModel extends DataModel {
       this.id = map['id'];
     }
 
-    if(map.containsKey('projectId')){
+    if (map.containsKey('projectId')) {
       this.projectId = map['projectId'];
-    }else{
+    } else {
       this.projectId = "";
     }
 
@@ -184,9 +184,9 @@ class RequestModel extends DataModel {
     if (map.containsKey('id')) {
       this.id = map['id'];
     }
-    if(map.containsKey('projectId')){
+    if (map.containsKey('projectId')) {
       this.projectId = map['projectId'];
-    }else{
+    } else {
       this.projectId = "";
     }
     if (map.containsKey('title')) {
@@ -292,7 +292,7 @@ class RequestModel extends DataModel {
 
     if (this.projectId != null && this.projectId.isNotEmpty) {
       object['projectId'] = this.projectId;
-    }else{
+    } else {
       object['projectId'] = "";
     }
     if (this.title != null && this.title.isNotEmpty) {

@@ -240,7 +240,10 @@ class _UserResultViewElasticState extends State<UserResultViewElastic> {
         .snapshots()
         .listen((reqModel) {
       requestModel = RequestModel.fromMap(reqModel.data);
-      setState(() {});
+
+      try {
+        setState(() {});
+      } on Exception {}
     });
   }
 

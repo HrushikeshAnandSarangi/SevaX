@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/utils/strings.dart';
 
-class ExploreTabBar extends StatelessWidget {
-  const ExploreTabBar({
+class SearchTabBar extends StatelessWidget {
+  const SearchTabBar({
     Key key,
     @required TabController tabController,
   })  : _tabController = tabController,
@@ -28,6 +28,7 @@ class ExploreTabBar extends StatelessWidget {
         letterSpacing: 0.7,
       ),
       indicatorColor: Theme.of(context).primaryColor,
+      labelPadding: EdgeInsets.symmetric(horizontal: 10),
       tabs: List.generate(
         ExplorePageLabels.tabContent.length,
         (index) => Tab(

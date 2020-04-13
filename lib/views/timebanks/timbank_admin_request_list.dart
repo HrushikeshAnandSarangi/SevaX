@@ -621,7 +621,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
 
                     Map<String, bool> onActivityResult = await showAdvisory(
                         dialogTitle:
-                            "Are you sure you want to remove ${user.fullname} from ${timebankModel.name}?");
+                            "Are you sure you want to remove ${user.fullname}?");
                     if (onActivityResult['PROCEED']) {
                       setState(() {
                         isProgressBarActive = true;

@@ -11,9 +11,7 @@ class NotificationsModel extends DataModel {
   bool isRead;
   String timebankId;
   String communityId;
-  bool directToMember;
   int timestamp;
-  bool personalRequest = true;
 
   NotificationsModel({
     this.id,
@@ -24,8 +22,6 @@ class NotificationsModel extends DataModel {
     this.senderUserId,
     @required this.timebankId,
     @required this.communityId,
-    this.directToMember = true,
-    @required this.personalRequest,
   });
 
   NotificationsModel.fromMap(Map<String, dynamic> map) {
@@ -108,7 +104,7 @@ class NotificationsModel extends DataModel {
   @override
   String toString() {
     // TODO: implement toString
-    return "${this.type} -- ${this.isRead} -- ";
+    return " type : ${this.type} -- ${this.data} -- ";
   }
 
   @override

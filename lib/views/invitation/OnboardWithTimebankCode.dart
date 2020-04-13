@@ -27,7 +27,10 @@ class OnBoardWithTimebank extends StatefulWidget {
   final UserModel user;
 
   OnBoardWithTimebank(
-      {this.communityModel, this.sevauserId, this.isFromExplore = false, this.user});
+      {this.communityModel,
+      this.sevauserId,
+      this.isFromExplore = false,
+      this.user});
 
   @override
   State<StatefulWidget> createState() => OnBoardWithTimebankState();
@@ -138,8 +141,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     this.timebankModel = communityCreateEditSnapshot.timebank;
     // globals.timebankAvatarURL = timebankModel.photoUrl;
     CompareToTimeBank requestStatus;
-    requestStatus = compareTimeBanks(_joinRequestModelList, timebankModel,
-        widget.user.sevaUserID);
+    requestStatus = compareTimeBanks(
+        _joinRequestModelList, timebankModel, widget.user.sevaUserID);
 
     return Container(
       height: MediaQuery.of(context).size.height - 90,
@@ -409,7 +412,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                               .loggedinuser.sevaUserID,
                           type: prefix0.NotificationType.JoinRequest,
                           data: joinReqModel.toMap(),
-                          directToMember: false,
+                          communityId: widget.communityModel.id,
                         );
 
                         notification.timebankId =
@@ -511,8 +514,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   });
 
                   setState(() {
-                    widget.user.currentCommunity =
-                        widget.communityModel.id;
+                    widget.user.currentCommunity = widget.communityModel.id;
                   });
 
                   Navigator.of(context).pushAndRemoveUntil(

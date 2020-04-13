@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +57,7 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
       // Crashlytics.instance.enableInDevMode = true;
-      // FlutterError.onError = Crashlytics.instance.recordFlutterError;
+      FlutterError.onError = Crashlytics.instance.recordFlutterError;
       runApp(MainApplication());
       // runZoned(() {
 
