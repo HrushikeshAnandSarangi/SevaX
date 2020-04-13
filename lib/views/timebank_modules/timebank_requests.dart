@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +11,12 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
@@ -68,7 +72,7 @@ class RequestsState extends State<RequestsModule> {
 //      body: Text("Hello"),
 //    );
     var body = Container(
-      margin: EdgeInsets.only(left: 0, right: 0, top: 10),
+      margin: EdgeInsets.only(left: 0, right: 0, top: 7),
       child: Column(
         children: <Widget>[
           Offstage(
@@ -83,14 +87,15 @@ class RequestsState extends State<RequestsModule> {
                     children: <Widget>[
                       Text(
                         'My Requests',
-                        style: (TextStyle(fontWeight: FontWeight.w500)),
+                        style: (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                       ),
+                      IconButton(icon: Icon(Icons.info_outline), iconSize: 18, onPressed: showGroupsWebPage,),
                       widget.isFromSettings
                           ? Container()
                           : TransactionLimitCheck(
                               child: GestureDetector(
                                 child: Container(
-                                  margin: EdgeInsets.only(left: 10),
+                                  margin: EdgeInsets.only(left: 8),
                                   child: CircleAvatar(
                                     backgroundColor: Colors.white,
                                     radius: 10,
@@ -360,6 +365,28 @@ class RequestsState extends State<RequestsModule> {
         builder: (context) => TimebankCreate(
           timebankId: FlavorConfig.values.timebankId,
         ),
+      ),
+    );
+  }
+
+  void showGroupsWebPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Groups Link", urlToHit: dynamicLinks['groupsInfoLink']),
+      context: context,
+    );
+  }
+
+
+  void navigateToWebView({
+    BuildContext context,
+    AboutMode aboutMode,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SevaWebView(aboutMode),
       ),
     );
   }

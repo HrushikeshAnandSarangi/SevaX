@@ -561,16 +561,16 @@ class CreateEditCommunityViewFormState
 
                             if (_formKey.currentState.validate()) {
                               if (isBillingDetailsProvided) {
-                                Map<String, bool> onActivityResult =
-                                    await showTimebankAdvisory(
-                                        dialogTitle: timebankAdvisory);
-                                if (onActivityResult['PROCEED']) {
-                                  print("YES PROCEED WITH TIMEBANK CREATION");
-                                } else {
-                                  print(
-                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
-                                  Navigator.of(context).pop();
-                                }
+//                                Map<String, bool> onActivityResult =
+//                                    await showTimebankAdvisory(
+//                                        dialogTitle: timebankAdvisory);
+//                                if (onActivityResult['PROCEED']) {
+//                                  print("YES PROCEED WITH TIMEBANK CREATION");
+//                                } else {
+//                                  print(
+//                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
+//                                  Navigator.of(context).pop();
+//                                }
 
                                 setState(() {
                                   this._billingDetailsError = '';
@@ -637,7 +637,6 @@ class CreateEditCommunityViewFormState
                                   // _billingInformationKey.currentState.reset();
                                   UserModel user =
                                       SevaCore.of(context).loggedInUser;
-                                  // Navigator.pop(dialogContext);
                                   _formKey.currentState.reset();
                                   // _billingInformationKey.currentState.reset();
                                   Navigator.of(context).push(
@@ -1375,7 +1374,7 @@ class CreateEditCommunityViewFormState
     var communitiesFound =
         await searchCommunityByName(enteredName, communities);
 
-    if (communities == null || communities == null || communities.length == 0) {
+    if ( communities == null || communities.length == 0) {
       return false;
     } else {
       return true;
