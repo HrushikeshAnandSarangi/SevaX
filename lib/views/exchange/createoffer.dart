@@ -535,6 +535,7 @@ class MyCustomFormState extends State<MyCustomForm> {
       fullName: SevaCore.of(context).loggedInUser.fullname,
       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
       timebankId: widget.timebankId,
+      selectedAdrress: selectedAddress,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       location:
           location == null ? GeoFirePoint(40.754387, -73.984291) : location,

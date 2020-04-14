@@ -149,7 +149,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                                       widget.requestItem.requestEnd),
                                   timezoneAbb: SevaCore.of(context)
                                       .loggedInUser
-                                      .timezone),
+                                      .timezone,),
                             ),
                         style: subTitleStyle,
                         maxLines: 1,

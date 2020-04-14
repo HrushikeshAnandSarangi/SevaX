@@ -14,7 +14,6 @@ import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/timebank_chats.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
-import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
@@ -68,7 +67,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       Tab(text: "Requests"),
       Tab(text: "Offers"),
       Tab(text: "About"),
-      Tab(text: "Accepted Offers"),
+      Tab(text: "Bookmarked Offers"),
       Tab(text: "Members")
     ];
     super.initState();

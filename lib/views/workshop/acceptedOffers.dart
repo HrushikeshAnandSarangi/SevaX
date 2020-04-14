@@ -78,7 +78,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<OfferModel>>(
-      stream: FirestoreManager.getOffersApprovedByAdmin(
+      stream: FirestoreManager.getBookmarkedOffersByMember(
         sevaUserId: sevaUserId,
       ),
       builder: (context, snapshot) {

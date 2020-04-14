@@ -2,30 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/ui/screens/offers/offers_ui.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 
 import 'core.dart';
-
 class SearchView extends StatefulWidget {
   final TabController controller;
-
   SearchView(this.controller);
-
   @override
   SearchViewState createState() => SearchViewState();
 }
-
 class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
   TabController controller;
   final TextEditingController searchTextController = TextEditingController();
   final searchOnChange = new BehaviorSubject<String>();
-
   @override
   void initState() {
     super.initState();
@@ -41,7 +36,6 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
       });
     });
   }
-
   void _search(String queryString) {
     if (queryString.length == 1) {
       setState(() {
@@ -51,7 +45,6 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
       searchOnChange.add(queryString);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -104,15 +97,10 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
                   hasFloatingPlaceholder: false,
                   alignLabelWithHint: true,
                   isDense: true,
-                  // suffix: GestureDetector(
-                  //   //onTap: () => search(),
-                  //   child: Icon(Icons.search),
-                  // ),
                   enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)),
                   hintText: 'Search',
                   hintStyle: TextStyle(color: Colors.white)),
-              // controller: searchTextController,
             ),
           ),
           bottom: TabBar(
@@ -152,22 +140,17 @@ class SearchViewState extends State<SearchView> with TickerProviderStateMixin {
     );
   }
 }
-
 class ResultView extends StatefulWidget {
   final SearchType type;
   final TextEditingController controller;
-
   ResultView(this.type, this.controller);
-
   @override
   _ResultViewState createState() => _ResultViewState();
 }
-
 class _ResultViewState extends State<ResultView> {
   bool checkValidSting(String str) {
     return str != null && str.trim().length != 0;
   }
-
   Widget getTitleForCard(String str, String fullName) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,13 +168,11 @@ class _ResultViewState extends State<ResultView> {
           str.trim(),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          // style: sectionHeadingStyle,
           textAlign: TextAlign.left,
         ),
       ],
     );
   }
-
   Widget fetchHeadingFromNewsModel(NewsModel newsModel) {
     if (checkValidSting(newsModel.title)) {
       return getTitleForCard(newsModel.title, newsModel.fullName);
@@ -204,14 +185,12 @@ class _ResultViewState extends State<ResultView> {
     }
     return getTitleForCard('No content', newsModel.fullName);
   }
-
   Widget build(BuildContext context) {
     if (widget == null ||
         widget.controller == null ||
         widget.controller.text == null) {
       return Container();
     }
-
     if (widget.controller.text.trim().isEmpty) {
       return Center(
           child: ClipOval(
@@ -290,7 +269,6 @@ class _ResultViewState extends State<ResultView> {
           },
         );
         break;
-
       case SearchType.NEWS:
         return StreamBuilder<List<NewsModel>>(
           stream:
@@ -332,7 +310,6 @@ class _ResultViewState extends State<ResultView> {
                             content: LinearProgressIndicator(),
                           );
                         });
-
                     Navigator.of(context, rootNavigator: true).pop();
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -343,19 +320,7 @@ class _ResultViewState extends State<ResultView> {
                         },
                       ),
                     );
-
                     return;
-                    // NewsModel newsModel;
-                    // FirestoreManager.getNewsForId(news.id)
-                    //     .catchError((onError) {
-                    //   print("Exception-------------------");
-                    // }).then((onValue) {
-                    //   newsModel = onValue;
-                    //   if (newsModel == null) {
-                    //     print("Model is not defined");
-                    //     return;
-                    //   }
-                    // });
                   },
                   child: ListTile(
                     title: fetchHeadingFromNewsModel(news),
@@ -376,7 +341,6 @@ class _ResultViewState extends State<ResultView> {
                     ),
                   ),
                 );
-
                 Card(
                   child: ListTile(
                     onTap: () async {
@@ -427,7 +391,6 @@ class _ResultViewState extends State<ResultView> {
           },
         );
         break;
-
       case SearchType.OFFER:
         return StreamBuilder<List<OfferModel>>(
           stream:
@@ -446,7 +409,6 @@ class _ResultViewState extends State<ResultView> {
               );
             }
             List<OfferModel> offerList = snapshot.data;
-
             if (offerList.length == 0) {
               return getEmptyWidget('Offers', 'No offer found');
             }
@@ -460,7 +422,6 @@ class _ResultViewState extends State<ResultView> {
                   );
                 }
                 OfferModel model = offerList.elementAt(index - 1);
-
                 return Card(
                   child: ListTile(
                     onTap: () {
@@ -487,7 +448,6 @@ class _ResultViewState extends State<ResultView> {
           },
         );
         break;
-
       case SearchType.REQUEST:
         return StreamBuilder<List<RequestModel>>(
           stream: SearchManager.searchForRequest(
@@ -506,7 +466,6 @@ class _ResultViewState extends State<ResultView> {
               );
             }
             List<RequestModel> requestList = snapshot.data;
-
             if (requestList.length == 0) {
               return getEmptyWidget('Requests', 'No request found');
             }
@@ -552,7 +511,6 @@ class _ResultViewState extends State<ResultView> {
               return CircularProgressIndicator();
             }
             List<UserModel> userList = snapshot.data;
-
             if (userList.length == 0) {
               return getEmptyWidget('Users', 'No user found');
             }
@@ -601,7 +559,6 @@ class _ResultViewState extends State<ResultView> {
         );
     }
   }
-
   Widget getEmptyWidget(String title, String notFoundValue) {
     return Center(
       child: Text(
@@ -610,27 +567,7 @@ class _ResultViewState extends State<ResultView> {
         style: sectionHeadingStyle,
       ),
     );
-//    return Column(
-//      crossAxisAlignment: CrossAxisAlignment.start,
-//      children: <Widget>[
-//        Container(
-//          padding: EdgeInsets.only(left: 8, top: 16),
-//          child: Text(title, style: sectionTextStyle),
-//        ),
-//        Container(
-//          padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/3),
-//          child: Center(
-//            child: Text(
-//              notFoundValue,
-//              overflow: TextOverflow.ellipsis,
-//              style: sectionHeadingStyle,
-//            ),
-//          ),
-//        ),
-//      ],
-//    );
   }
-
   TextStyle get sectionHeadingStyle {
     return TextStyle(
       fontWeight: FontWeight.w600,
@@ -638,7 +575,6 @@ class _ResultViewState extends State<ResultView> {
       color: Colors.black,
     );
   }
-
   TextStyle get sectionTextStyle {
     return TextStyle(
       fontWeight: FontWeight.w600,
@@ -647,11 +583,8 @@ class _ResultViewState extends State<ResultView> {
     );
   }
 }
-
 enum SearchType {
   USER,
-//  TIMEBANK,
-//  CAMPAIGN,
   NEWS,
   OFFER,
   REQUEST,
