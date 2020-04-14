@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
@@ -7,6 +8,7 @@ import 'package:sevaexchange/auth/auth_router.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/user_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart';
@@ -236,7 +238,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         ),
         SizedBox(height: 20),
         // buildList(),
-        Expanded(child: nearby()),
+        Expanded(
+          child: buildList(),
+        ),
         // This container holds the align
         widget.isFromHome ? Container() : createCommunity(),
       ]),
@@ -248,19 +252,18 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   Widget buildList() {
-    if (widget == null ||
-        searchTextController == null ||
-        searchTextController.text == null) {
-      print('near by called');
-
-      return nearByTimebanks();
-    }
+//    if (searchTextController.text.length == 0) {
+//      print('near by called');
+//
+//      return nearByTimebanks();
+//    }
 
     if (searchTextController.text.trim().length < 1) {
       print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
           getEmptyWidget('Users', nearTimebankText),
+          nearByTimebanks(),
         ],
       );
     }
@@ -384,8 +387,16 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
   }
 
   Widget nearByTimebanks() {
+    var radius = 10;
+    try {
+      radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+    } on Exception {
+      print("Exception raised while getting user minimum balance");
+    }
+
     return StreamBuilder<List<CommunityModel>>(
-        stream: FirestoreManager.getNearCommunitiesListStream(timebankId: ''),
+        stream: FirestoreManager.getNearCommunitiesListStream(
+            radius: radius.toString()),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -398,6 +409,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 return Padding(
                     padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
                     child: ListView.builder(
+                        shrinkWrap: true,
                         itemCount: communityList.length,
                         itemBuilder: (BuildContext context, int index) {
                           CompareUserStatus status;

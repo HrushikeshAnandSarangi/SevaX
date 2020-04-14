@@ -22,7 +22,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -944,36 +943,36 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Widget get tappableFindYourTeam {
-    return GestureDetector(
-      onTap: () {
-        if (widget.isFromFind) {
-          Navigator.pop(context);
-        } else {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return FindCommunitiesView(
-                  keepOnBackPress: true,
-                  loggedInUser: SevaCore.of(context).loggedInUser,
-                  showBackBtn: true,
-                  isFromHome: false,
-                );
-              },
-            ),
-          );
-        }
-      },
-      child: Text(
-        ' Find your Timebank',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.blue,
-          decoration: TextDecoration.underline,
-        ),
-      ),
-    );
-  }
+//  Widget get tappableFindYourTeam {
+//    return GestureDetector(
+//      onTap: () {
+//        if (widget.isFromFind) {
+//          Navigator.pop(context);
+//        } else {
+//          Navigator.of(context).push(
+//            MaterialPageRoute(
+//              builder: (context) {
+//                return FindCommunitiesView(
+//                  keepOnBackPress: true,
+//                  loggedInUser: SevaCore.of(context).loggedInUser,
+//                  showBackBtn: true,
+//                  isFromHome: false,
+//                );
+//              },
+//            ),
+//          );
+//        }
+//      },
+//      child: Text(
+//        ' Find your Timebank',
+//        style: TextStyle(
+//          fontWeight: FontWeight.bold,
+//          color: Colors.blue,
+//          decoration: TextDecoration.underline,
+//        ),
+//      ),
+//    );
+//  }
 
   Future _getLocation(data) async {
     print('Timebank value:$data');

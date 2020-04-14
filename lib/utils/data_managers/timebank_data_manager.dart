@@ -191,7 +191,7 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
 }
 
 Stream<List<CommunityModel>> getNearCommunitiesListStream(
-    {String timebankId}) async* {
+    {String radius}) async* {
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
