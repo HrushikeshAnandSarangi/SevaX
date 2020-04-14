@@ -50,13 +50,14 @@ class _OffersTabViewState extends State<OffersTabView> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   final offer = snapshot.data[index];
-                  return OffersCard(
-                    title: getOfferTitle(
-                      offerDataModel: offer,
-                    ),
-                    description: getOfferDescription(offerDataModel: offer),
-                    onTap: () => onTap(offer),
-                  );
+                  return Container();
+              //     return OffersCard(
+              //       title: getOfferTitle(
+              //         offerDataModel: offer,
+              //       ),
+              //       description: getOfferDescription(offerDataModel: offer),
+              //       onTap: () => onTap(offer),
+              //     );
                 },
               );
             },

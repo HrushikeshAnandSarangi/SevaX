@@ -70,6 +70,26 @@ class OffersState extends State<OffersModule> {
                         ),
                       ),
                     ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => prefix0.CreateOffer(
+                              timebankId: timebankId,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 10,
+                          child: Image.asset("lib/assets/images/add.png"),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

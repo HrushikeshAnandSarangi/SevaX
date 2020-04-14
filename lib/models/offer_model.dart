@@ -92,6 +92,8 @@ class IndividualOfferDataModel extends DataModel {
 
   IndividualOfferDataModel();
 
+  
+
   @override
   IndividualOfferDataModel.fromMap(Map<dynamic, dynamic> map) {
 
