@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/ui/screens/offers/offers_ui.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
@@ -162,7 +163,7 @@ class OfferListItems extends StatelessWidget {
           Navigator.push(
             parentContext,
             MaterialPageRoute(
-              builder: (context) => OfferCardView(offerModel: model),
+              builder: (context) => OfferDetailsRouter(offerModel: model),
             ),
           );
         },
