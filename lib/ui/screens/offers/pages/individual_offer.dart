@@ -4,6 +4,7 @@ import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/individual_offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_textfield.dart';
+import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 

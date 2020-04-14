@@ -3,11 +3,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/ui/utils/offer_utility.dart';
 import 'package:sevaexchange/ui/utils/validators.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
-
-import 'individual_offer_bloc.dart';
 
 class OneToManyOfferBloc extends BlocBase {
   int startTime;
