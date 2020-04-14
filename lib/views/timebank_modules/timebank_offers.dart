@@ -75,7 +75,7 @@ class OffersState extends State<OffersModule> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => prefix0.CreateOffer(
+                            builder: (context) => CreateOffer(
                               timebankId: timebankId,
                             ),
                           ),

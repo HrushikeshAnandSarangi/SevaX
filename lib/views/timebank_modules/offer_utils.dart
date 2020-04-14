@@ -16,8 +16,8 @@ String getOfferDescription({OfferModel offerDataModel}) {
 
 List<String> getOfferParticipants({OfferModel offerDataModel}) {
   return offerDataModel.offerType == OfferType.INDIVIDUAL_OFFER
-      ? offerDataModel.individualOfferDataModel.offerAcceptors
-      : offerDataModel.groupOfferDataModel.signedUpMembers;
+      ? offerDataModel.individualOfferDataModel.offerAcceptors ?? []
+      : offerDataModel.groupOfferDataModel.signedUpMembers ?? [];
 }
 
 String getOfferLocation({OfferModel offerDataModel}) {

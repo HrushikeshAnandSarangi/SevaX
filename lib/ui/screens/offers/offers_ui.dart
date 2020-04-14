@@ -12,6 +12,8 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -226,21 +228,46 @@ class OfferCardViewState extends State<OfferCardView> {
                                                                 Colors.white),
                                                       ),
                                                       onPressed: () {
-                                                        // Navigator.push(
-                                                        //   context,
-                                                        //   MaterialPageRoute(
-                                                        //     builder:
-                                                        //         (context) =>
-                                                        //             UpdateOffer(
-                                                        //       timebankId: SevaCore
-                                                        //               .of(context)
-                                                        //           .loggedInUser
-                                                        //           .currentTimebank,
-                                                        //       offerModel: widget
-                                                        //           .offerModel,
-                                                        //     );
-                                                        //   ),
-                                                        // );
+                                                        switch (widget
+                                                            .offerModel
+                                                            .offerType) {
+                                                          case OfferType
+                                                              .INDIVIDUAL_OFFER:
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        IndividualOffer(
+                                                                  offerModel: widget
+                                                                      .offerModel,
+                                                                  timebankId: widget
+                                                                      .offerModel
+                                                                      .timebankId,
+                                                                ),
+                                                              ),
+                                                            );
+                                                            break;
+                                                          case OfferType
+                                                              .GROUP_OFFER:
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        OneToManyOffer(
+                                                                  offerModel: widget
+                                                                      .offerModel,
+                                                                  timebankId: widget
+                                                                      .offerModel
+                                                                      .timebankId,
+                                                                ),
+                                                              ),
+                                                            );
+                                                            break;
+                                                        }
                                                       },
                                                     )
                                                   : Container(),
