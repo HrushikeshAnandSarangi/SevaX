@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -73,62 +72,62 @@ class OfferCardViewState extends State<OfferCardView> {
               .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {}
     });
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          widget.offerModel.sevaUserId ==
-                  SevaCore.of(context).loggedInUser.sevaUserID
-              ? IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext viewcontext) {
-                          return AlertDialog(
-                            title: Text(
-                              'Are you sure you want to delete this offer?',
-                            ),
-                            actions: <Widget>[
-                              FlatButton(
-                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                color: Theme.of(context).accentColor,
-                                textColor: FlavorConfig.values.buttonTextColor,
-                                child: Text(
-                                  'Yes',
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  deleteOffer(offerModel: widget.offerModel);
-                                  Navigator.pop(viewcontext);
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              FlatButton(
-                                child: Text(
-                                  'No',
-                                  style: TextStyle(
-                                    fontSize: dialogButtonSize,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(viewcontext);
-                                },
-                              ),
-                            ],
-                          );
-                        });
-                  },
-                )
-              : Offstage()
-        ],
-        title: Text(
-          "Offer Details",
-          style: TextStyle(fontSize: 18),
-        ),
-        elevation: 0.5,
-      ),
+      // appBar: AppBar(
+      //   actions: <Widget>[
+      //     widget.offerModel.sevaUserId ==
+      //             SevaCore.of(context).loggedInUser.sevaUserID
+      //         ? IconButton(
+      //             icon: Icon(Icons.delete),
+      //             onPressed: () {
+      //               showDialog(
+      //                   context: context,
+      //                   builder: (BuildContext viewcontext) {
+      //                     return AlertDialog(
+      //                       title: Text(
+      //                         'Are you sure you want to delete this offer?',
+      //                       ),
+      //                       actions: <Widget>[
+      //                         FlatButton(
+      //                           padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+      //                           color: Theme.of(context).accentColor,
+      //                           textColor: FlavorConfig.values.buttonTextColor,
+      //                           child: Text(
+      //                             'Yes',
+      //                             style: TextStyle(
+      //                               fontSize: dialogButtonSize,
+      //                             ),
+      //                           ),
+      //                           onPressed: () {
+      //                             deleteOffer(offerModel: widget.offerModel);
+      //                             Navigator.pop(viewcontext);
+      //                             Navigator.pop(context);
+      //                           },
+      //                         ),
+      //                         FlatButton(
+      //                           child: Text(
+      //                             'No',
+      //                             style: TextStyle(
+      //                               fontSize: dialogButtonSize,
+      //                               color: Colors.red,
+      //                             ),
+      //                           ),
+      //                           onPressed: () {
+      //                             Navigator.pop(viewcontext);
+      //                           },
+      //                         ),
+      //                       ],
+      //                     );
+      //                   });
+      //             },
+      //           )
+      //         : Offstage()
+      //   ],
+      //   title: Text(
+      //     "Offer Details",
+      //     style: TextStyle(fontSize: 18),
+      //   ),
+      //   elevation: 0.5,
+      // ),
       body: FutureBuilder<Object>(
           future: FirestoreManager.getUserForId(
               sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
@@ -283,30 +282,35 @@ class OfferCardViewState extends State<OfferCardView> {
                                               style: titleStyle,
                                               maxLines: 1,
                                             ),
-                                            subtitle: FutureBuilder<String>(
-                                              future: _getLocation(
-                                                widget.offerModel.location
-                                                    .latitude,
-                                                widget.offerModel.location
-                                                    .longitude,
-                                              ),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.hasError) {
-                                                  return Text(
-                                                      "Unnamed Location");
-                                                }
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return Text(
-                                                      "Resolving location...");
-                                                }
-                                                return Text(
-                                                  snapshot.data,
-                                                  style: subTitleStyle,
-                                                  maxLines: 1,
-                                                );
-                                              },
+                                            subtitle: Text(
+                                              widget.offerModel.selectedAdrress,
+                                              style: subTitleStyle,
+                                              maxLines: 1,
                                             ),
+                                            // subtitle: FutureBuilder<String>(
+                                            //   future: _getLocation(
+                                            //     widget.offerModel.location
+                                            //         .latitude,
+                                            //     widget.offerModel.location
+                                            //         .longitude,
+                                            //   ),
+                                            //   builder: (context, snapshot) {
+                                            //     if (snapshot.hasError) {
+                                            //       return Text(
+                                            //           "Unnamed Location");
+                                            //     }
+                                            //     if (snapshot.connectionState ==
+                                            //         ConnectionState.waiting) {
+                                            //       return Text(
+                                            //           "Resolving location...");
+                                            //     }
+                                            //     return Text(
+                                            //       snapshot.data,
+                                            //       style: subTitleStyle,
+                                            //       maxLines: 1,
+                                            //     );
+                                            //   },
+                                            // ),
                                           ),
                                           CustomListTile(
                                             leading: Icon(
