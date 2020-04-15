@@ -142,6 +142,9 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return circularBar;
         }
+        if (snapshot.data == null) {
+          return listViewWidget;
+        }
         timebankModel = snapshot.data;
         return listViewWidget;
       },
@@ -165,8 +168,13 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
         ),
       );
     }
+    if (_avtars.length == 0) {
+      return Center(
+        child: Text('No volunteers available'),
+      );
+    }
     return Center(
-      child: Text('No volunteers present'),
+      child: Text('No volunteers available'),
     );
   }
 
@@ -227,6 +235,11 @@ class _SelectMembersInGroupState extends State<SelectMembersInGroup> {
               print("User:${user.fullname}");
               if (user == null) {
                 return Offstage();
+              }
+              if (userModelList.length == 1 && user.email == widget.userEmail) {
+                return Center(
+                  child: Text('No volunteers available'),
+                );
               }
               if (user.email == widget.userEmail) {
                 return Offstage();
