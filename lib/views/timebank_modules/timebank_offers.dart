@@ -6,10 +6,13 @@ import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 
+import '../../ui/screens/offers/pages/create_offer.dart' as prefix0;
+
 class OffersModule extends StatefulWidget {
+  final String communityId;
   final String timebankId;
   TimebankModel timebankModel;
-  OffersModule.of({this.timebankId, this.timebankModel});
+  OffersModule.of({this.timebankId, this.timebankModel, this.communityId});
   @override
   OffersState createState() => OffersState();
 }
@@ -75,8 +78,9 @@ class OffersState extends State<OffersModule> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CreateOffer(
+                            builder: (context) => prefix0.CreateOffer(
                               timebankId: timebankId,
+                              // communityId: widget.communityId,
                             ),
                           ),
                         );
@@ -146,8 +150,6 @@ class OffersState extends State<OffersModule> {
     );
   }
 
-
-
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
       'All',
@@ -159,5 +161,3 @@ class OffersState extends State<OffersModule> {
     ),
   };
 }
-
-

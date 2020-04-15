@@ -108,7 +108,8 @@ class ParticipantCard extends StatelessWidget {
               left: MediaQuery.of(context).size.width * 0.2 - 60,
               child: CircleAvatar(
                 radius: 35,
-                child: CustomNetworkImage(imageUrl ?? defaultUserImageURL),
+                child: ClipOval(
+                    child: CustomNetworkImage(imageUrl ?? defaultUserImageURL)),
               ),
             )
           ],

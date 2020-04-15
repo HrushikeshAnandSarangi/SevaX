@@ -33,7 +33,7 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    OfferParticipants(),
+                    OfferParticipants(offerModel:offerModel),
                     Container(
                       color: Colors.grey,
                     )

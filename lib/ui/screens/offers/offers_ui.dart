@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -329,6 +330,10 @@ class OfferCardViewState extends State<OfferCardView> {
                                                 text: getOfferDescription(
                                                     offerDataModel:
                                                         widget.offerModel)),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: UserCircleAvatarList(),
                                           ),
                                         ],
                                       ),
