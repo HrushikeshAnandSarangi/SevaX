@@ -33,7 +33,10 @@ class OneToManyOfferBloc extends BlocBase {
   Stream<Status> get status => _status.stream;
 
   ///[Function] to create or update offer
-  void createOrUpdateOffer({UserModel user, String timebankId}) {
+  void createOrUpdateOffer({
+    UserModel user,
+    String timebankId,
+  }) {
     print(errorCheck());
     if (!errorCheck()) {
       var timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -45,6 +48,7 @@ class OneToManyOfferBloc extends BlocBase {
         fullName: user.fullname,
         sevaUserId: user.sevaUserID,
         timebankId: timebankId,
+        communityId: user.currentCommunity,
         selectedAdrress: _location.value.address,
         timestamp: timestamp,
         location: _location.value == null

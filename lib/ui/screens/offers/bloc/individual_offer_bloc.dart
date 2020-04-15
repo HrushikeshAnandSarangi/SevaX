@@ -46,6 +46,7 @@ class IndividualOfferBloc extends BlocBase with Validators {
         fullName: user.fullname,
         sevaUserId: user.sevaUserID,
         timebankId: timebankId,
+        communityId: user.currentCommunity,
         timestamp: DateTime.now().millisecondsSinceEpoch,
         location: _location.value == null
             ? GeoFirePoint(40.754387, -73.984291)

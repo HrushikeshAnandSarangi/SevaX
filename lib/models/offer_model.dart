@@ -92,11 +92,8 @@ class IndividualOfferDataModel extends DataModel {
 
   IndividualOfferDataModel();
 
-  
-
   @override
   IndividualOfferDataModel.fromMap(Map<dynamic, dynamic> map) {
-
     if (map.containsKey('title')) {
       this.title = map['title'];
     }
@@ -154,6 +151,7 @@ class OfferModel extends DataModel {
   String photoUrlImage;
   Color color;
   String selectedAdrress;
+  String communityId;
 
   GroupOfferDataModel groupOfferDataModel;
   IndividualOfferDataModel individualOfferDataModel;
@@ -172,6 +170,7 @@ class OfferModel extends DataModel {
     this.groupOfferDataModel,
     this.individualOfferDataModel,
     this.selectedAdrress,
+    this.communityId,
   }) {
     this.root_timebank_id = FlavorConfig.values.timebankId;
   }
@@ -227,6 +226,9 @@ class OfferModel extends DataModel {
 
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
+    }
+    if (map.containsKey('communityId')) {
+      this.communityId = map['communityId'];
     }
     if (map.containsKey('location')) {
       GeoPoint geoPoint = GeoPoint(map['location']['geopoint']['_latitude'],
@@ -285,6 +287,9 @@ class OfferModel extends DataModel {
 
     if (map.containsKey('timebankId')) {
       this.timebankId = map['timebankId'];
+    }
+    if (map.containsKey('communityId')) {
+      this.timebankId = map['communityId'];
     }
 
     if (map.containsKey('location')) {
@@ -353,6 +358,9 @@ class OfferModel extends DataModel {
 
     if (this.timebankId != null) {
       map['timebankId'] = this.timebankId;
+    }
+    if (this.communityId != null) {
+      map['communityId'] = this.communityId;
     }
     if (this.location != null) {
       map['location'] = this.location.data;
