@@ -209,7 +209,7 @@ class InviteAddMembersState extends State<InviteAddMembers> {
   String shareText(TimebankCodeModel timebankCode) {
     // var text =  "Please download the SevaX volunteer app and join my Timebank ${timebankModel.name} by using the code \"${timebankCode.timebankCode}\"";
     var text =
-        "${SevaCore.of(context).loggedInUser.fullname} has invited you to join the Timebank  \"${timebankModel.name}\". Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code \"${timebankCode.timebankCode}\" when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com";
+        "${SevaCore.of(context).loggedInUser.fullname} has invited you to join \"${timebankModel.name}\" Timebank. Timebanks are communities that allow you to volunteer and also receive time credits towards getting things done for you. Use the code \"${timebankCode.timebankCode}\" when prompted to join this Timebank. Please download the app from the links provided at https://sevaxapp.com";
 
     return text;
   }
