@@ -37,12 +37,16 @@ enum ParticipantStatus {
   CREATOR_REQUESTED_CREDITS,
   MEMBER_APPROVED_CREDIT_REQUEST,
   MEMBER_REJECTED_CREDIT_REQUEST,
+  MEMBER_TRANSACTION_SUCCESSFUL,
+  MEMBER_TRANSACTION_FAILED,
+  MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER,
+  MEMBER_DID_NOT_ATTEND,
 }
 
 String getParticipantStatus(ParticipantStatus status) {
   switch (status) {
     case ParticipantStatus.NO_ACTION_FROM_CREATOR:
-      return '';
+      return 'Pending';
       break;
     case ParticipantStatus.CREATOR_REQUESTED_CREDITS:
       return 'REQUESTED';
