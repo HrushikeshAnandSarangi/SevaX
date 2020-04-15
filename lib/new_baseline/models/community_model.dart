@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
 
 class BillingAddress {
@@ -127,6 +129,8 @@ class CommunityModel extends DataModel {
   List<String> coordinators;
   List<String> members;
   int transactionCount;
+  GeoFirePoint location;
+
   Map<String, dynamic> billingQuota;
   Map<String, dynamic> payment;
 
@@ -166,6 +170,27 @@ class CommunityModel extends DataModel {
         : [];
     this.members =
         map.containsKey('members') ? List.castFrom(map['members']) : [];
+    this.location = getLocation(map);
+  }
+  GeoFirePoint getLocation(map) {
+    GeoFirePoint geoFirePoint;
+    if (map.containsKey("location") &&
+        map["location"] != null &&
+        map['location']['geopoint'] != null) {
+      if (map['location']['geopoint'] is GeoPoint) {
+        GeoPoint geoPoint = map['location']['geopoint'];
+        geoFirePoint = Geoflutterfire()
+            .point(latitude: geoPoint.latitude, longitude: geoPoint.longitude);
+      } else {
+        geoFirePoint = GeoFirePoint(
+          map["location"]["geopoint"]["_latitude"],
+          map["location"]["geopoint"]["_longitude"],
+        );
+      }
+    } else {
+      geoFirePoint = GeoFirePoint(40.754387, -73.984291);
+    }
+    return geoFirePoint;
   }
 
   updateValueByKey(String key, dynamic value) {
@@ -183,6 +208,10 @@ class CommunityModel extends DataModel {
     }
     if (key == 'primary_email') {
       this.primary_email = value;
+    }
+
+    if (key == 'locar=tion') {
+      this.location = value;
     }
 
     if (key == 'billing_address') {
@@ -262,11 +291,18 @@ class CommunityModel extends DataModel {
     if (this.coordinators != null) {
       object['coordinators'] = this.coordinators;
     }
+
+    if (this.coordinators != null) {
+      object['coordinators'] = this.coordinators;
+    }
     if (this.members != null) {
       object['members'] = this.members;
     }
     if (this.primary_timebank != null) {
       object['primary_timebank'] = this.primary_timebank;
+    }
+    if (this.location != null) {
+      object['location'] = this.location.data;
     }
     return object;
   }
@@ -287,6 +323,7 @@ class CommunityModel extends DataModel {
         'primary_timebank: $primary_timebank, '
         'timebanks: $timebanks, '
         'admins: $admins, '
+        'location: $location, '
         'coordinators: $coordinators,'
         ' members: $members, '
 //        'transactionCount: $transactionCount}'

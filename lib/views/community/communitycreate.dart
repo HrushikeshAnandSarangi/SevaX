@@ -22,7 +22,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -149,7 +148,7 @@ class CreateEditCommunityViewFormState
 
     // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
     Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
+        .debounceTime(Duration(milliseconds: 500))
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {
@@ -585,6 +584,12 @@ class CreateEditCommunityViewFormState
                                       "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
                                   Navigator.of(context).pop();
                                 }
+                                if (location == null) {
+                                  showDialogForSuccess(
+                                      dialogTitle:
+                                          "Please add your timebank location");
+                                  return;
+                                }
 
                                 setState(() {
                                   this._billingDetailsError = '';
@@ -607,6 +612,7 @@ class CreateEditCommunityViewFormState
                                   snapshot.data.UpdateCommunityDetails(
                                     SevaCore.of(context).loggedInUser,
                                     globals.timebankAvatarURL,
+                                    location,
                                   );
                                   // creation of default timebank;
                                   snapshot.data.UpdateTimebankDetails(
@@ -621,6 +627,7 @@ class CreateEditCommunityViewFormState
 
                                   snapshot.data.community.primary_timebank =
                                       snapshot.data.timebank.id;
+                                  snapshot.data.community.location = location;
 
                                   createEditCommunityBloc.createCommunity(
                                     snapshot.data,
@@ -722,7 +729,7 @@ class CreateEditCommunityViewFormState
                                 .then((onValue) {
                               print("timebank updated");
                             });
-                             communityModel.taxPercentage = taxPercentage / 100;
+                            communityModel.taxPercentage = taxPercentage / 100;
 //                            //updating community with latest values
                             await FirestoreManager.updateCommunityDetails(
                                     communityModel: communityModel)
@@ -936,36 +943,36 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Widget get tappableFindYourTeam {
-    return GestureDetector(
-      onTap: () {
-        if (widget.isFromFind) {
-          Navigator.pop(context);
-        } else {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return FindCommunitiesView(
-                  keepOnBackPress: true,
-                  loggedInUser: SevaCore.of(context).loggedInUser,
-                  showBackBtn: true,
-                  isFromHome: false,
-                );
-              },
-            ),
-          );
-        }
-      },
-      child: Text(
-        ' Find your Timebank',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.blue,
-          decoration: TextDecoration.underline,
-        ),
-      ),
-    );
-  }
+//  Widget get tappableFindYourTeam {
+//    return GestureDetector(
+//      onTap: () {
+//        if (widget.isFromFind) {
+//          Navigator.pop(context);
+//        } else {
+//          Navigator.of(context).push(
+//            MaterialPageRoute(
+//              builder: (context) {
+//                return FindCommunitiesView(
+//                  keepOnBackPress: true,
+//                  loggedInUser: SevaCore.of(context).loggedInUser,
+//                  showBackBtn: true,
+//                  isFromHome: false,
+//                );
+//              },
+//            ),
+//          );
+//        }
+//      },
+//      child: Text(
+//        ' Find your Timebank',
+//        style: TextStyle(
+//          fontWeight: FontWeight.bold,
+//          color: Colors.blue,
+//          decoration: TextDecoration.underline,
+//        ),
+//      ),
+//    );
+//  }
 
   Future _getLocation(data) async {
     print('Timebank value:$data');
@@ -979,7 +986,9 @@ class CreateEditCommunityViewFormState
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
     timebankModel.address = address;
+    communityModel.location = location;
     data.timebank.updateValueByKey('address', address);
+    data.community.updateValueByKey('location', location);
     createEditCommunityBloc.onChange(data);
   }
 
