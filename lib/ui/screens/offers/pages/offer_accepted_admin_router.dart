@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 
+import 'offer_earnings.dart';
 import 'offer_participants.dart';
 
 class OfferAcceptedAdminRouter extends StatelessWidget {
@@ -33,10 +34,8 @@ class OfferAcceptedAdminRouter extends StatelessWidget {
               Expanded(
                 child: TabBarView(
                   children: <Widget>[
-                    OfferParticipants(offerModel:offerModel),
-                    Container(
-                      color: Colors.grey,
-                    )
+                    OfferParticipants(offerModel: offerModel),
+                    OfferEarnings(),
                   ],
                 ),
               )
