@@ -46,7 +46,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
-        TabController(initialIndex: 0, length: 8, vsync: this);
+        TabController(initialIndex: 0, length: 7, vsync: this);
     tabs = [
       Tab(
           text:

@@ -16,10 +16,6 @@ class OfferParticipants extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
-    print(_bloc.participants.listen((data) {
-      print(data[0].email);
-    }));
-
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -49,15 +45,16 @@ class OfferParticipants extends StatelessWidget {
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return ParticipantCard(
-                    name: snapshot.data[index].fullname,
-                    imageUrl: snapshot.data[index].photourl,
-                    bio: snapshot.data[index].bio,
-                    rating: double.parse(snapshot.data[index].rating),
+                    name: snapshot.data[index].participantDetails.fullname,
+                    imageUrl: snapshot.data[index].participantDetails.photourl,
+                    bio: snapshot.data[index].participantDetails.bio,
+                    
+                    // rating: double.parse(snapshot.data[index].participantDetails.),
                     onMessageTapped: () {
                       onMessageClick(
                         context,
                         SevaCore.of(context).loggedInUser.email,
-                        snapshot.data[index].email,
+                        snapshot.data[index].participantDetails.email,
                         offerModel.timebankId,
                         offerModel.communityId,
                       );

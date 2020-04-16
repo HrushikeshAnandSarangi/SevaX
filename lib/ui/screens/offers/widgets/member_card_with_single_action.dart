@@ -9,6 +9,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
   final Function onMessagePressed;
   final Function action;
   final String status;
+  final Color buttonColor;
   const MemberCardWithSingleAction({
     Key key,
     this.name,
@@ -16,7 +17,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
     this.photoUrl,
     this.onMessagePressed,
     this.action,
-    this.status,
+    this.status, this.buttonColor,
   }) : super(key: key);
 
   @override
@@ -57,7 +58,7 @@ class MemberCardWithSingleAction extends StatelessWidget {
           Container(
             height: 30,
             child: RaisedButton(
-              color: Colors.green,
+              color: buttonColor,
               child: Text(status),
               onPressed: action,
             ),
