@@ -25,6 +25,7 @@ class TimeBankProjectsView extends StatefulWidget {
 }
 
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,16 +63,16 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               stream: FirestoreManager.getAllProjectListStream(
                   timebankid: widget.timebankId),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<ProjectModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
+                  AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
+                if (projectListSnapshot.hasError) {
+                  return new Text('Error: ${projectListSnapshot.error}');
                 }
-                switch (requestListSnapshot.connectionState) {
+                switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
                     List<ProjectModel> projectModelList =
-                        requestListSnapshot.data;
+                        projectListSnapshot.data;
 
                     if (projectModelList.length == 0) {
                       return Center(
@@ -195,4 +196,6 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       ),
     );
   }
+
+
 }

@@ -147,32 +147,29 @@ class CreateEditCommunityViewFormState
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
 
-    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
     Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
+        .debounceTime(Duration(milliseconds: 600))
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {
           _searchText = "";
         });
       } else {
-        SearchManager.searchCommunityForDuplicate(queryString: s).then((v) {
-          if (v) {
+        SearchManager.searchCommunityForDuplicate(queryString: s).then((commFound) {
+          if (commFound) {
             setState(() {
               communityFound = true;
-              print(
-                  "name ----- ${communitynName}  ${searchTextController.text}");
+              print("name ----- ${communitynName} and ${searchTextController.text}");
 
               if (!widget.isCreateTimebank) {
-                if (searchTextController.text != null &&
-                    communitynName != searchTextController.text) {
-                  //  errTxt = null;
-                  errTxt = 'Timebank name already exist';
+//                if (searchTextController.text != null
+//                    && communitynName != searchTextController.text) {
+                  errTxt = 'Timebank name already exists';
 
                   print("name is equal");
-                }
+//                }
               } else {
-                errTxt = 'Timebank name already exist';
+                errTxt = 'Timebank name already exists';
               }
             });
           } else {
@@ -502,7 +499,7 @@ class CreateEditCommunityViewFormState
                             location = snapshot.data.timebank.location = point;
 
                             print(
-                                "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                                "Location is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                           }
                           _getLocation(snapshot.data);
                           print(
@@ -664,6 +661,14 @@ class CreateEditCommunityViewFormState
                               }
                             } else {}
                           } else {
+                            if(communityFound){
+                              print("duplicate name given up");
+                              showDialogForSuccess(
+                                  dialogTitle:
+                                  "Timebank name already exists");
+                              return;
+                            }
+
                             if (location == null) {
                               showDialogForSuccess(
                                   dialogTitle:
@@ -678,10 +683,6 @@ class CreateEditCommunityViewFormState
                               timebankModel.photoUrl =
                                   globals.timebankAvatarURL;
                             }
-
-//                            print("comm ${communityModel}");
-//
-//                            print("time add${timebankModel.address}");
 
                             timebankModel.location = location;
 
@@ -714,9 +715,6 @@ class CreateEditCommunityViewFormState
                                 .then((onValue) {
                               print("community updated");
                             });
-//
-//
-//
                             if (dialogContext != null) {
                               Navigator.pop(dialogContext);
                             }
@@ -726,9 +724,10 @@ class CreateEditCommunityViewFormState
                             } else {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Timebank updated successfully, Please restart your app to see the updated chnages.");
+                                      "Timebank updated successfully, Please restart your app to see the updated changes.");
                             }
                           }
+
                         },
                         shape: StadiumBorder(),
                         child: Text(

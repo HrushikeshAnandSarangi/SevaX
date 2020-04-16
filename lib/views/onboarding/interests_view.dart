@@ -189,26 +189,39 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   widget.onSelectedInterests(selectedID);
                 },
                 child: Text(
-                  widget.userModel.interests == null ? 'Next' : 'Update',
+                  widget.userModel.interests == null || widget.userModel.interests.length==0? 'Next' : 'Update',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-            widget.userModel.interests == null
-                ? FlatButton(
-                    onPressed: () {
-                      widget.onSkipped();
-                    },
-                    child: Text(
-                      AppConfig.prefs.getBool(AppConfig.skip_interest) == null
-                          ? 'Skip'
-                          : 'Cancel',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      ),
-                    ),
-                  )
-                : Container(),
+//            widget.userModel.interests == null
+//                ? FlatButton(
+//                    onPressed: () {
+//                      widget.onSkipped();
+//                    },
+//                    child: Text(
+//                      AppConfig.prefs.getBool(AppConfig.skip_interest) == null
+//                          ? 'Skip'
+//                          : 'Cancel',
+//                      style: TextStyle(
+//                        color: Theme.of(context).accentColor,
+//                      ),
+//                    ),
+//                  )
+//                : Container(),
+            FlatButton(
+              onPressed: () {
+                widget.onSkipped();
+              },
+              child: Text(
+                AppConfig.prefs.getBool(AppConfig.skip_interest) == null
+                    ? 'Skip'
+                    : 'Cancel',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
             SizedBox(height: 20),
           ],
         ),

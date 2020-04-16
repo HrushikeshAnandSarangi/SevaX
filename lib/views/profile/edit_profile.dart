@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -182,6 +183,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future _navigateToInterestsView(UserModel loggedInUser) async {
+    AppConfig.prefs.setBool(AppConfig.skip_interest, true);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
@@ -195,7 +197,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.interests = [];
-            updateUserData(loggedInUser);
+//            updateUserData(loggedInUser);
           },
         ),
       ),
@@ -203,6 +205,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
+    AppConfig.prefs.setBool(AppConfig.skip_skill, true);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
@@ -216,7 +219,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           onSkipped: () {
             Navigator.pop(context);
             loggedInUser.skills = [];
-            updateUserData(loggedInUser);
+//            updateUserData(loggedInUser);
           },
         ),
       ),

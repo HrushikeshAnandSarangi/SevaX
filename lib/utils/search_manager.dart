@@ -120,19 +120,30 @@ class SearchManager {
   static Future<bool> searchCommunityForDuplicate(
       {@required queryString}) async {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_count';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
+//    '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_count';
     dynamic body = json.encode({
       "query": {
-        "term": {"name.keyword": queryString}
+        "match": { "name": queryString }
       }
     });
-    int count =
-        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
-    if (count > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+//    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+    bool commFound = false;
+    for(var map in hitList) {
+      if(map['_source']['name'].toLowerCase() == queryString.toLowerCase()){
+        commFound = true;
+        break;
+      }
+    };
+    return commFound;
+//    int count =
+//        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
+//    if (count > 0) {
+//      return true;
+//    } else {
+//      return false;
+//    }
   }
 
   static Stream<List<TimebankModel>> searchTimeBank({
@@ -402,17 +413,10 @@ class SearchManager {
       "Accept": "application/json",
       "Content-Type": "application/json"
     });
-    //log(response.body);
-    // print("Reuqest Response --> ${response.body}");
-
-//    print("Reuqest Response --> ${response.body}");
 
     Map<String, dynamic> bodyMap = json.decode(response.body);
     Map<String, dynamic> hitMap = bodyMap['hits'];
     List<Map<String, dynamic>> hitList = List.castFrom(hitMap['hits']);
-    // print("Reuqest Response --> $hitList");
-//    log(response.body);
-//    log("loggg - "+hitList.toString());
     return hitList;
   }
 
@@ -436,10 +440,7 @@ class SearchManager {
       "Accept": "application/json",
       "Content-Type": "application/json"
     });
-    //log(response.body);
-    // print("Reuqest Response --> ${response.body}");
 
-//    print("Reuqest Response --> ${response.body}");
 
     Map<String, dynamic> bodyMap = json.decode(response.body);
     int count = bodyMap['count'];
