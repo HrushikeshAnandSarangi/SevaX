@@ -14,6 +14,7 @@ class OneToManyOfferBloc extends BlocBase {
   final _title = BehaviorSubject<String>();
   final _preparationHours = BehaviorSubject<String>();
   final _classHours = BehaviorSubject<String>();
+  final _classSize = BehaviorSubject<String>();
   final _classDescription = BehaviorSubject<String>();
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
@@ -21,12 +22,14 @@ class OneToManyOfferBloc extends BlocBase {
   Function(String value) get onTitleChanged => _title.sink.add;
   Function(String) get onPreparationHoursChanged => _preparationHours.sink.add;
   Function(String) get onClassHoursChanged => _classHours.sink.add;
+  Function(String) get onClassSizeChanged => _classSize.sink.add;
   Function(String) get onclassDescriptionChanged => _classDescription.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
 
   Stream<String> get title => _title.stream;
   Stream<String> get preparationHours => _preparationHours.stream;
   Stream<String> get classHours => _classHours.stream;
+  Stream<String> get classSize => _classSize.stream;
   Stream<String> get classDescription => _classDescription.stream;
   Stream<CustomLocation> get location => _location.stream;
 
@@ -60,6 +63,7 @@ class OneToManyOfferBloc extends BlocBase {
           ..endDate = endTime
           ..numberOfPreperationHours = int.parse(_preparationHours.value)
           ..numberOfClassHours = int.parse(_classHours.value)
+          ..sizeOfClass = int.parse(_classSize.value)
           ..classDescription = _classDescription.value,
         individualOfferDataModel: IndividualOfferDataModel(),
         offerType: OfferType.GROUP_OFFER,
@@ -84,6 +88,7 @@ class OneToManyOfferBloc extends BlocBase {
             int.parse(_preparationHours.value.replaceAll('__*__', ''))
         ..numberOfClassHours =
             int.parse(_classHours.value.replaceAll('__*__', ''))
+        ..sizeOfClass = int.parse(_classSize.value.replaceAll('__*__', ''))
         ..classDescription = _classDescription.value.replaceAll('__*__', '');
 
       updateOfferWithRequest(offer: offerModel).then((_) {
@@ -104,9 +109,12 @@ class OneToManyOfferBloc extends BlocBase {
     _classHours.add(
       offerModel.groupOfferDataModel.numberOfClassHours.toString() + '__*__',
     );
+    _classSize
+        .add(offerModel.groupOfferDataModel.sizeOfClass.toString() + '__*__');
     _classDescription.add(
       offerModel.groupOfferDataModel.classDescription + '__*__',
     );
+
     _location.add(
       CustomLocation(
         offerModel.location,
@@ -117,6 +125,9 @@ class OneToManyOfferBloc extends BlocBase {
 
   ///[ERROR CHECKS] TO Validate input
   bool errorCheck() {
+    RegExp numberCheck = RegExp(r"^0*[1-9]\d*$");
+    RegExp numberWithZeroCheck = RegExp(r"^\d+$");
+
     bool flag = false;
     if (_title.value == null || _title.value == '') {
       _title.addError(ValidationErrors.titleError);
@@ -127,23 +138,22 @@ class OneToManyOfferBloc extends BlocBase {
       flag = true;
     }
     if (_classHours.value == null ||
-        _classHours.value == '' ||
-        !_isNumeric(_classHours.value?.replaceAll('__*__', ''))) {
-      _classHours.addError(
-        !_isNumeric(_classHours.value?.replaceAll('__*__', ''))
-            ? ValidationErrors.hoursNotInt
-            : ValidationErrors.classHours,
-      );
+        !numberCheck.hasMatch(_classHours.value.replaceAll('__*__', ''))) {
+      _classHours.addError(ValidationErrors.classHours);
+      flag = true;
+    }
+
+    if (_classSize.value == null ||
+        !numberCheck.hasMatch(_classSize.value.replaceAll('__*__', ''))) {
+      _classSize.addError(ValidationErrors.sizeOfClassError);
       flag = true;
     }
 
     if (_preparationHours.value == null ||
-        _preparationHours.value == '' ||
-        !_isNumeric(_preparationHours.value?.replaceAll('__*__', ''))) {
+        !numberWithZeroCheck
+            .hasMatch(_preparationHours.value.replaceAll('__*__', ''))) {
       _preparationHours.addError(
-        !_isNumeric(_preparationHours.value?.replaceAll('__*__', ''))
-            ? ValidationErrors.hoursNotInt
-            : ValidationErrors.preprationTimeError,
+        ValidationErrors.preprationTimeError,
       );
       flag = true;
     }
@@ -161,14 +171,8 @@ class OneToManyOfferBloc extends BlocBase {
     _classDescription.close();
     _preparationHours.close();
     _classHours.close();
+    _classSize.close();
     _location.close();
     _status.close();
-  }
-
-  bool _isNumeric(String s) {
-    if (s == null) {
-      return false;
-    }
-    return int.tryParse(s) != null;
   }
 }

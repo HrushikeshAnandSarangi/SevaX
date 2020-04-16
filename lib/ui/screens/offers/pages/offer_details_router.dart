@@ -21,7 +21,8 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
 
   @override
   void initState() {
-    _bloc.init(widget.offerModel.id);
+    _bloc.offerModel = widget.offerModel;
+    _bloc.init();
     super.initState();
   }
 
@@ -76,7 +77,9 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                   child: TabBarView(
                     children: _isCreator
                         ? <Widget>[
-                            OfferCardView(offerModel: widget.offerModel),
+                            OfferCardView(
+                              offerModel: widget.offerModel,
+                            ),
                             OfferAcceptedAdminRouter(
                               offerModel: widget.offerModel,
                             ),

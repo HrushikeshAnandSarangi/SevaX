@@ -197,6 +197,24 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           ),
                           SizedBox(height: 20),
                           StreamBuilder<String>(
+                            stream: _bloc.classSize,
+                            builder: (context, snapshot) {
+                              return CustomTextField(
+                                initialValue: snapshot.data != null
+                                    ? snapshot.data.contains('__*__')
+                                        ? snapshot.data
+                                        : null
+                                    : null,
+                                heading: "Size of class *",
+                                onChanged: _bloc.onClassSizeChanged,
+                                hint: "Enter the number of participants",
+                                error: snapshot.error,
+                                textInputType: TextInputType.number,
+                              );
+                            },
+                          ),
+                          SizedBox(height: 20),
+                          StreamBuilder<String>(
                             stream: _bloc.classDescription,
                             builder: (context, snapshot) {
                               return CustomTextField(

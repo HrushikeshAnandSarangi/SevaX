@@ -14,6 +14,7 @@ class UserCircleAvatarList extends StatelessWidget {
         if (snapshot.data == null || snapshot.data.isEmpty) {
           return Container();
         }
+        print(snapshot.data);
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         }
@@ -32,7 +33,7 @@ class UserCircleAvatarList extends StatelessWidget {
                   return Padding(
                     padding: EdgeInsets.all(4),
                     child: ClipOval(
-                      child: CustomNetworkImage(snapshot.data[index].photourl),
+                      child: CustomNetworkImage(snapshot.data[index].participantDetails.photourl),
                     ),
                   );
                 },

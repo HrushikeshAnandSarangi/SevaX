@@ -53,6 +53,8 @@ class ValidationErrors {
   static const String preprationTimeError =
       'Please enter your preperation time';
   static const String locationError = 'Please select location';
+  static const String sizeOfClassIsNotInt = "Size of class can't be in decimal";
+  static const String sizeOfClassError = "Please enter valid size of class";
 
   // static const String titleError = 'Please enter the subject of your offer';
 }

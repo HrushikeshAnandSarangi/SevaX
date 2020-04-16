@@ -13,6 +13,7 @@ class GroupOfferDataModel {
   int endDate;
   int numberOfPreperationHours;
   int numberOfClassHours;
+  int sizeOfClass;
   String classDescription;
   List<String> signedUpMembers;
 
@@ -33,6 +34,8 @@ class GroupOfferDataModel {
 
     if (this.numberOfClassHours != null)
       map['numberOfClassHours'] = this.numberOfClassHours;
+
+    if (this.sizeOfClass != null) map['sizeOfClass'] = this.sizeOfClass;
 
     if (this.classDescription != null)
       map['classDescription'] = this.classDescription;
@@ -55,6 +58,10 @@ class GroupOfferDataModel {
 
     if (map.containsKey('endDate')) {
       this.endDate = map['endDate'];
+    }
+
+    if (map.containsKey('sizeOfClass')) {
+      this.sizeOfClass = map['sizeOfClass'];
     }
 
     if (map.containsKey('numberOfPreperationHours')) {
