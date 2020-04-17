@@ -198,26 +198,39 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  widget.userModel.skills == null ? 'Next' : 'Update',
+                  widget.userModel.skills == null || widget.userModel.skills.length==0? 'Next' : 'Update',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-            widget.userModel.skills == null
-                ? FlatButton(
-                    onPressed: () {
-                      widget.onSkipped();
-                    },
-                    child: Text(
-                      AppConfig.prefs.getBool(AppConfig.skip_skill) == null
-                          ? 'Skip'
-                          : 'Cancel',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      ),
-                    ),
-                  )
-                : Container(),
+//            widget.userModel.skills == null
+//                ? FlatButton(
+//                    onPressed: () {
+//                      widget.onSkipped();
+//                    },
+//                    child: Text(
+//                      AppConfig.prefs.getBool(AppConfig.skip_skill) == null
+//                          ? 'Skip'
+//                          : 'Cancel',
+//                      style: TextStyle(
+//                        color: Theme.of(context).accentColor,
+//                      ),
+//                    ),
+//                  )
+//                : Container(),
+            FlatButton(
+              onPressed: () {
+                widget.onSkipped();
+              },
+              child: Text(
+                AppConfig.prefs.getBool(AppConfig.skip_skill) == null
+                    ? 'Skip'
+                    : 'Cancel',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
             SizedBox(height: 20),
           ],
         ),

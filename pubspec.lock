@@ -191,7 +191,7 @@ packages:
       name: firebase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.2.1"
+    version: "7.3.0"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -423,7 +423,7 @@ packages:
       name: google_sign_in
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0"
+    version: "4.4.1"
   google_sign_in_platform_interface:
     dependency: transitive
     description:
@@ -479,7 +479,7 @@ packages:
       name: image_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.4"
+    version: "0.6.5"
   infinite_listview:
     dependency: transitive
     description:
@@ -799,7 +799,7 @@ packages:
       name: stripe_payment
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.7"
   synchronized:
     dependency: transitive
     description:

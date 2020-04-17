@@ -751,6 +751,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToSkillsView(UserModel loggedInUser) async {
+    AppConfig.prefs.setBool(AppConfig.skip_skill, null);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
@@ -766,7 +767,6 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             AppConfig.prefs.setBool(AppConfig.skip_skill, true);
             loggedInUser.skills = [];
-            updateUserData(loggedInUser);
             loadingMessage = 'Skipping skills';
           },
         ),
@@ -783,6 +783,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToInterestsView(UserModel loggedInUser) async {
+    AppConfig.prefs.setBool(AppConfig.skip_interest, null);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => InterestViewNew(
@@ -798,10 +799,10 @@ class _SplashViewState extends State<SplashView> {
             Navigator.pop(context);
             loggedInUser.interests = [];
             AppConfig.prefs.setBool(AppConfig.skip_interest, true);
-            updateUserData(loggedInUser);
             loadingMessage = 'Skipping interests';
           },
           onBacked: () {
+            AppConfig.prefs.setBool(AppConfig.skip_skill, null);
             _navigateToSkillsView(loggedInUser);
           },
         ),
@@ -810,6 +811,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future _navigateToBioView(UserModel loggedInUser) async {
+    AppConfig.prefs.setBool(AppConfig.skip_bio, null);
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => BioView(
@@ -818,36 +820,15 @@ class _SplashViewState extends State<SplashView> {
           loggedInUser.bio = bio;
           updateUserData(loggedInUser);
           loadingMessage = 'Updating bio';
-        }, onSkipped: () {
+        },
+          onSkipped: () {
           Navigator.pop(context);
           loggedInUser.bio = '';
           AppConfig.prefs.setBool(AppConfig.skip_bio, true);
-          updateUserData(loggedInUser);
           loadingMessage = 'Skipping bio';
         }, onBacked: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => InterestViewNew(
-                automaticallyImplyLeading: false,
-                userModel: loggedInUser,
-                onSelectedInterests: (interests) {
-                  Navigator.pop(context);
-                  loggedInUser.interests = interests;
-                  updateUserData(loggedInUser);
-                  loadingMessage = 'Updating interests';
-                },
-                onSkipped: () {
-                  Navigator.pop(context);
-                  loggedInUser.interests = [];
-                  updateUserData(loggedInUser);
-                  loadingMessage = 'Skipping interests';
-                },
-                onBacked: () {
-                  _navigateToSkillsView(loggedInUser);
-                },
-              ),
-            ),
-          );
+          AppConfig.prefs.setBool(AppConfig.skip_interest, null);
+          _navigateToInterestsView(loggedInUser);
         }),
       ),
     );

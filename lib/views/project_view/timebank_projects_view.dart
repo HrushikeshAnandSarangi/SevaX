@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
 
 import '../requests/project_request.dart';
@@ -21,6 +25,7 @@ class TimeBankProjectsView extends StatefulWidget {
 }
 
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +40,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   'Projects',
                   style: (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ),
+                IconButton(icon: Icon(Icons.info_outline), iconSize: 18, onPressed: showProjectsWebPage,),
                 TransactionLimitCheck(
                   child: GestureDetector(
                     child: Container(
@@ -57,16 +63,16 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               stream: FirestoreManager.getAllProjectListStream(
                   timebankid: widget.timebankId),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<ProjectModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
+                  AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
+                if (projectListSnapshot.hasError) {
+                  return new Text('Error: ${projectListSnapshot.error}');
                 }
-                switch (requestListSnapshot.connectionState) {
+                switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
                     List<ProjectModel> projectModelList =
-                        requestListSnapshot.data;
+                        projectListSnapshot.data;
 
                     if (projectModelList.length == 0) {
                       return Center(
@@ -168,4 +174,28 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       ),
     );
   }
+
+  void showProjectsWebPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Projects Link", urlToHit: dynamicLinks['projectsInfoLink']),
+      context: context,
+    );
+  }
+
+
+  void navigateToWebView({
+    BuildContext context,
+    AboutMode aboutMode,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SevaWebView(aboutMode),
+      ),
+    );
+  }
+
+
 }

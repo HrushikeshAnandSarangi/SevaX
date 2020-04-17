@@ -130,6 +130,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
   String selectedAddress;
+  int sharedValue = 0;
 
   String _selectedTimebankId;
 
@@ -415,9 +416,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
             if (val != sharedValue) {
               setState(() {
                 print("$sharedValue -- $val");
-                if (sharedValue == 0) {
+                if (val == 0) {
+                  print("TIMEBANK___REQUEST");
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
+                  print("PERSONAL___REQUEST");
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                 }
                 sharedValue = val;
@@ -439,15 +442,14 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
   }
 
-  int sharedValue = 0;
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
-      'Personal Request',
+      'Timebank Request',
       style: TextStyle(fontSize: 15.0),
     ),
     1: Text(
-      'Timebank Request',
+      'Personal Request',
       style: TextStyle(fontSize: 15.0),
     ),
   };

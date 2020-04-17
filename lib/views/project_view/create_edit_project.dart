@@ -45,6 +45,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   var startDate;
   var endDate;
   bool isDataLoaded = false;
+  int sharedValue = 0;
   ScrollController _controller = ScrollController();
 
   @override
@@ -118,6 +119,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   Future<TimebankModel> getTimebankAdminStatus;
   TimebankModel timebankModelFuture;
 
+
   Widget get projectSwitch {
     return FutureBuilder(
       future: getTimebankAdminStatus,
@@ -143,9 +145,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (val != sharedValue) {
                   setState(() {
                     print("$sharedValue -- $val");
-                    if (sharedValue == 0) {
+                    if (val == 0) {
+                      print("TTTTTTTTTtimebank proj");
                       projectModel.mode = 'Timebank';
                     } else {
+                      print("pppppppppersonal proj");
                       projectModel.mode = 'Personal';
                     }
                     sharedValue = val;
@@ -162,15 +166,14 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     );
   }
 
-  int sharedValue = 0;
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
-      'Personal Project',
+      'Timebank Project',
       style: TextStyle(fontSize: 15.0),
     ),
     1: Text(
-      'Timebank Project',
+      'Personal Project',
       style: TextStyle(fontSize: 15.0),
     ),
   };
