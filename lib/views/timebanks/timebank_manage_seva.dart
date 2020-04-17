@@ -51,47 +51,44 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
 
   @override
   Widget build(BuildContext context) {
-    print("seva id ${SevaCore.of(context).loggedInUser.sevaUserID}");
+    ///  print("seva id ${SevaCore.of(context).loggedInUser.sevaUserID}");
 
     if (isSuperAdmin) {
       return DefaultTabController(
         length: 3,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Column(
-            children: <Widget>[
-              TabBar(
-                indicatorColor: Colors.black,
-                labelColor: Colors.black,
-                isScrollable: false,
-                tabs: <Widget>[
-                  Tab(text: "Edit Timebank"),
-                  // Tab(text: "Upgrade"),
-                  Tab(text: "Billings"),
-                  Tab(text: "Settings"),
-                ],
+        child: Column(
+          children: <Widget>[
+            TabBar(
+              indicatorColor: Colors.black,
+              labelColor: Colors.black,
+              isScrollable: false,
+              tabs: <Widget>[
+                Tab(text: "Edit Timebank"),
+                // Tab(text: "Upgrade"),
+                Tab(text: "Billings"),
+                Tab(text: "Settings"),
+              ],
 //              onTap: (index) {
 //                if (_indextab != index) {
 //                  _indextab = index;
 //                  setState(() {});
 //                }
 //              },
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  CreateEditCommunityView(
+                    isCreateTimebank: false,
+                    isFromFind: false,
+                    timebankId: widget.timebankModel.id,
+                  ),
+                  TimeBankBillingAdminView(),
+                  Settings,
+                ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    CreateEditCommunityView(
-                      isCreateTimebank: false,
-                      isFromFind: false,
-                      timebankId: widget.timebankModel.id,
-                    ),
-                    TimeBankBillingAdminView(),
-                    Settings,
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     } else {

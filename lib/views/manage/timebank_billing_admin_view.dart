@@ -58,8 +58,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+
     final _bloc = BlocProvider.of<UserDataBloc>(context);
-    print("---->community model ${_bloc.community}");
+    //  print("---->community model ${_bloc.community}");
     this.parentContext = context;
     return Scaffold(
       body: SingleChildScrollView(
@@ -138,11 +140,15 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                   .forEach((subscritpion) {
                                 if (subscritpion.containsKey("items")) {
                                   if (subscritpion['items']['data'] != null) {
-                                    planData = subscritpion['items']['data'] ?? [];
-                                    if (cardModel.currentPlan == "grande_plan") {
-                                      data = "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying yearly for \$1500 and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} per transaction billed monthly upon exceeding free monthly quota.";
+                                    planData =
+                                        subscritpion['items']['data'] ?? [];
+                                    if (cardModel.currentPlan ==
+                                        "grande_plan") {
+                                      data =
+                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying yearly for \$1500 and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} per transaction billed monthly upon exceeding free monthly quota.";
                                     } else {
-                                      data = "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} yearly and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  per transaction billed annualy upon exceeding free monthly quota.";
+                                      data =
+                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} yearly and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  per transaction billed annualy upon exceeding free monthly quota.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
@@ -267,7 +273,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   itemBuilder: (context, index) {
                     return spendingsTextWidget(
 //                        "For the ${pastPlans[index]['nickname'] ?? " "} charged \$ ${pastPlans[index]['amount'] / 100 ?? ""} .");
-                  "dummy string");
+                        "dummy string");
                   });
             } else {
               return emptyText();
@@ -362,7 +368,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        headingText("Edit Billing Address"),
+        headingText("Edit Profile Information"),
         Padding(
           padding: EdgeInsets.only(left: 10, top: 10, right: 10),
           child: IconButton(
