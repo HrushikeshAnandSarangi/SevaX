@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
-import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -22,7 +22,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -121,10 +120,11 @@ class CreateEditCommunityViewFormState
   String errTxt;
   int totalMembersCount = 0;
 
+  final _textUpdates = StreamController<String>();
+
   void initState() {
     super.initState();
     var _searchText = "";
-    checkEmailVerified();
 
     Future.delayed(Duration.zero, () {
       createEditCommunityBloc.getChildTimeBanks(context);
@@ -132,7 +132,6 @@ class CreateEditCommunityViewFormState
     if (widget.isCreateTimebank == false) {
       getModelData();
     }
-    final _textUpdates = StreamController<String>();
 
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
@@ -140,7 +139,7 @@ class CreateEditCommunityViewFormState
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    if (FlavorConfig.appFlavor == Flavor.APP && !widget.isCreateTimebank) {
+    if (!widget.isCreateTimebank) {
       fetchCurrentlocation();
     }
 
@@ -155,11 +154,13 @@ class CreateEditCommunityViewFormState
           _searchText = "";
         });
       } else {
-        SearchManager.searchCommunityForDuplicate(queryString: s).then((commFound) {
+        SearchManager.searchCommunityForDuplicate(queryString: s)
+            .then((commFound) {
           if (commFound) {
             setState(() {
               communityFound = true;
-              print("name ----- ${communitynName} and ${searchTextController.text}");
+              print(
+                  "name ----- ${communitynName} and ${searchTextController.text}");
               errTxt = 'Timebank name already exists';
             });
           } else {
@@ -543,11 +544,15 @@ class CreateEditCommunityViewFormState
                         onPressed: () async {
                           // show a dialog
                           if (widget.isCreateTimebank) {
-                            var timebankAdvisory = "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                            if (!hasRegisteredLocation()) {
+                              showDialogForSuccess(
+                                  dialogTitle:
+                                      "Please add your timebank location");
+                              return;
+                            }
 
                             if (_formKey.currentState.validate()) {
                               if (isBillingDetailsProvided) {
-
                                 setState(() {
                                   this._billingDetailsError = '';
                                 });
@@ -637,7 +642,7 @@ class CreateEditCommunityViewFormState
                               } else {
                                 setState(() {
                                   this._billingDetailsError =
-                                      'Please configure your billing details';
+                                      'Please configure your personal information details';
                                 });
                               }
                             } else {}
@@ -681,7 +686,7 @@ class CreateEditCommunityViewFormState
                                 .then((onValue) {
                               print("timebank updated");
                             });
-                             communityModel.taxPercentage = taxPercentage / 100;
+                            communityModel.taxPercentage = taxPercentage / 100;
 //                            //updating community with latest values
                             await FirestoreManager.updateCommunityDetails(
                                     communityModel: communityModel)
@@ -700,7 +705,6 @@ class CreateEditCommunityViewFormState
                                       "Timebank updated successfully, Please restart your app to see the updated changes.");
                             }
                           }
-
                         },
                         shape: StadiumBorder(),
                         child: Text(
@@ -1322,7 +1326,7 @@ class CreateEditCommunityViewFormState
     var communitiesFound =
         await searchCommunityByName(enteredName, communities);
 
-    if ( communities == null || communities.length == 0) {
+    if (communities == null || communities.length == 0) {
       return false;
     } else {
       return true;

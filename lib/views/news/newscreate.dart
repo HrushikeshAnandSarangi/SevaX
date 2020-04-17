@@ -89,19 +89,16 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   String photoCredits;
   NewsModel newsObject = NewsModel();
   TextStyle textStyle;
-  NewsCreateFormState() {
-    _getLocation();
-  }
+  NewsCreateFormState() {}
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
-  GeoFirePoint location = GeoFirePoint(40.754387, -73.984291);
-  String selectedAddress = "Ave of the Americas 41 St, New York";
+  GeoFirePoint location;
+  String selectedAddress;
 
   Future<void> writeToDB() async {
     // print("Credit goes to ${}");
 
-    if (location == null) {}
 
     newsObject.placeAddress = this.selectedAddress;
 
@@ -112,8 +109,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
     newsObject.postTimestamp = timestamp;
-    newsObject.location =
-        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits == null ? "" : photoCredits;
 
@@ -160,27 +156,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     super.initState();
 
     dataList.add(EntityModel(entityType: EntityType.general));
-
-    if (FlavorConfig.appFlavor == Flavor.APP) {
-      fetchCurrentlocation();
-    }
-//    ApiManager.getTimeBanksForUser(userEmail: globals.email)
-//        .then((List<TimebankModel> timeBankModelList) {
-//      setState(() {
-//        timeBankModelList.forEach((model) {
-//          dataList.add(model);
-//        });
-//      });
-//    });
-//
-//    ApiManager.getCampaignsForUser(userEmail: globals.email)
-//        .then((List<CampaignModel> campaignModelList) {
-//      setState(() {
-//        campaignModelList.forEach((model) {
-//          dataList.add(model);
-//        });
-//      });
-//    });
+    fetchCurrentlocation();
   }
 
   @override
