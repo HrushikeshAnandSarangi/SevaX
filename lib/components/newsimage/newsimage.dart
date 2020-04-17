@@ -21,7 +21,7 @@ class NewsImage extends StatefulWidget {
   NewsImage(
       {String photoCredits,
       GeoFirePoint geoFirePointLocation,
-      Function(GeoFirePoint) geoFirePointLocationCallback,
+      this.geoFirePointLocationCallback,
       this.onCreditsEntered});
 
   NewsImageState createState() => NewsImageState(geoFirePointLocationCallback);
@@ -198,7 +198,7 @@ class NewsImageState extends State<NewsImage>
                             ).then((point) {
                               if (point != null) {
                                 widget.geoFirePointLocation = point;
-                                print("Setting data ");
+                                print("Setting data ${widget.geoFirePointLocation.latitude} ${geoFirePointLocationCallback}");
                                 geoFirePointLocationCallback(point);
                               }
                               // _getLocation();
