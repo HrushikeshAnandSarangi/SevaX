@@ -170,7 +170,6 @@ class SearchManager {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     bool groupFound = false;
-    print("histlist length ->>>>>"+hitList.length.toString()+" communityId ->>>>"+communityId);
     for (var map in hitList) {
       if (map['_source']['name'].toLowerCase() == queryString.toLowerCase()) {
         groupFound = true;

@@ -88,19 +88,15 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     Observable(_textUpdates.stream)
         .debounceTime(Duration(milliseconds: 600))
         .forEach((s) {
-          print("foreachhhhhhhhhhh");
       if (s.isEmpty) {
-        print("s.isempty");
         setState(() {
           _searchText = "";
         });
       } else {
-        print("inside else searching for duplicate groups");
         SearchManager.searchGroupForDuplicate(queryString: s, communityId: SevaCore.of(context).loggedInUser.currentCommunity).then((groupFound) {
           if (groupFound) {
             setState(() {
               errTxt = 'Group name already exists';
-              print("name is equal");
             });
           } else {
             setState(() {
@@ -375,7 +371,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           padding: EdgeInsets.all(15.0),
         ),
         TextFormField(
+          controller: searchTextController,
           decoration: InputDecoration(
+            errorText: errTxt,
             hintText: FlavorConfig.values.timebankName == "Yang 2020"
                 ? "Yang Gang Chapter"
                 : "Timebank Name",
@@ -402,6 +400,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               return 'Please enter some text';
             }
             timebankModel.name = value;
+            return "";
           },
         ),
         Text(' '),
@@ -429,6 +428,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               return 'Please enter some text';
             }
             timebankModel.missionStatement = value;
+            return "";
           },
         ),
         Text(''),

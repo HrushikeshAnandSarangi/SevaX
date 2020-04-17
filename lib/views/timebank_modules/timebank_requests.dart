@@ -89,7 +89,7 @@ class RequestsState extends State<RequestsModule> {
                         'My Requests',
                         style: (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                       ),
-                      IconButton(icon: Icon(Icons.info_outline), iconSize: 18, onPressed: showGroupsWebPage,),
+                      IconButton(icon: Icon(Icons.info_outline), iconSize: 18, onPressed: showRequestsWebPage,),
                       widget.isFromSettings
                           ? Container()
                           : TransactionLimitCheck(
@@ -369,11 +369,11 @@ class RequestsState extends State<RequestsModule> {
     );
   }
 
-  void showGroupsWebPage() {
+  void showRequestsWebPage() {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Groups Link", urlToHit: dynamicLinks['groupsInfoLink']),
+          title: "Groups Link", urlToHit: dynamicLinks['requestsInfoLink']),
       context: context,
     );
   }
