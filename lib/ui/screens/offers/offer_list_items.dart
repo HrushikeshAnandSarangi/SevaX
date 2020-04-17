@@ -11,7 +11,6 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 
-
 class OfferListItems extends StatelessWidget {
   final String timebankId;
   final BuildContext parentContext;
@@ -137,7 +136,7 @@ class OfferListItems extends StatelessWidget {
         var isMyContent =
             (offerModelList as OfferTitle).groupTitle.contains("My");
         return Container(
-          height: isMyContent ? 0 : 18,
+          height: isMyContent ? 0 : 25,
           margin: isMyContent
               ? EdgeInsets.all(0)
               : EdgeInsets.fromLTRB(5, 12, 12, 18),
@@ -572,4 +571,3 @@ class NearOfferListItems extends StatelessWidget {
     );
   }
 }
-
