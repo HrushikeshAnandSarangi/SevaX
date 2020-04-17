@@ -584,6 +584,12 @@ class CreateEditCommunityViewFormState
                                       "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
                                   Navigator.of(context).pop();
                                 }
+                                if (!hasRegisteredLocation()) {
+                                  showDialogForSuccess(
+                                      dialogTitle:
+                                          "Please add location to your project");
+                                  return;
+                                }
                                 if (location == null) {
                                   showDialogForSuccess(
                                       dialogTitle:
@@ -686,6 +692,12 @@ class CreateEditCommunityViewFormState
                               }
                             } else {}
                           } else {
+                            if (!hasRegisteredLocation()) {
+                              showDialogForSuccess(
+                                  dialogTitle:
+                                      "Please add location to your project");
+                              return;
+                            }
                             if (location == null) {
                               showDialogForSuccess(
                                   dialogTitle:
@@ -798,6 +810,11 @@ class CreateEditCommunityViewFormState
         this.firebaseUser = firebaseUser;
       });
     });
+  }
+
+  bool hasRegisteredLocation() {
+    //  print("Location ---========================= ${timebankModel.address}");
+    return location != null;
   }
 
   void _showVerificationAndLogoutDialogue() {
