@@ -40,9 +40,9 @@ class CreateEditCommunityView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var title = 'Create a Timebank';
-    return Scaffold(
-      appBar: isCreateTimebank
-          ? AppBar(
+    return isCreateTimebank
+        ? Scaffold(
+            appBar: AppBar(
               elevation: 0.5,
               automaticallyImplyLeading: true,
               title: Text(
@@ -51,14 +51,18 @@ class CreateEditCommunityView extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-            )
-          : null,
-      body: CreateEditCommunityViewForm(
-        timebankId: timebankId,
-        isFromFind: isFromFind,
-        isCreateTimebank: isCreateTimebank,
-      ),
-    );
+            ),
+            body: CreateEditCommunityViewForm(
+              timebankId: timebankId,
+              isFromFind: isFromFind,
+              isCreateTimebank: isCreateTimebank,
+            ),
+          )
+        : CreateEditCommunityViewForm(
+            timebankId: timebankId,
+            isFromFind: isFromFind,
+            isCreateTimebank: isCreateTimebank,
+          );
   }
 }
 
@@ -222,11 +226,9 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: createSevaX,
-      ),
+    return Form(
+      key: _formKey,
+      child: createSevaX,
     );
   }
 
