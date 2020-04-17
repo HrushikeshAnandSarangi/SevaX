@@ -141,7 +141,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   }
 
   Widget getTimebanks(UserDataBloc user) {
-    print("length ==> ${widget.selectedCommuntityGroup.timebanks.length}");
+//    print("length ==> ${widget.selectedCommuntityGroup.timebanks.length}");
     if (widget.selectedCommuntityGroup.timebanks.length <= 1) {
       return NoGroupPlaceHolder(navigateToCreateGroup: navigateToCreateGroup);
     }

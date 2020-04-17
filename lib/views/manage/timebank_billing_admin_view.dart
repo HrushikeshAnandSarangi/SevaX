@@ -61,7 +61,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     FocusScope.of(context).requestFocus(new FocusNode());
 
     final _bloc = BlocProvider.of<UserDataBloc>(context);
-    print("---->community model ${_bloc.community}");
+    //  print("---->community model ${_bloc.community}");
     this.parentContext = context;
     return Scaffold(
       body: SingleChildScrollView(

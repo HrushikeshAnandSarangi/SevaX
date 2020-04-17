@@ -216,7 +216,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
         List<CommunityModel> communityList = [];
         snapshot.forEach(
           (documentSnapshot) {
-            print('near data ${documentSnapshot.data}');
+            //   print('near data ${documentSnapshot.data}');
 
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;

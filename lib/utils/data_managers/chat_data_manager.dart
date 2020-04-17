@@ -62,8 +62,6 @@ Future<void> updateReadStatus(ChatModel chat, String email) async {
 //tested and working
 /// Update a [chat]
 
-
-
 Future<void> updateMessagingReadStatus({
   @required ChatModel chat,
   @required String email,
@@ -87,7 +85,7 @@ Future<void> updateMessagingReadStatus({
 
     prefix0.Map<String, int> unreadStatus = HashMap();
     unreadStatus[email] = 0;
-    unreadStatus[userEmail] = once?lastUnreadCount:lastUnreadCount + 1;
+    unreadStatus[userEmail] = once ? lastUnreadCount : lastUnreadCount + 1;
 
     //
     return Firestore.instance
@@ -154,7 +152,7 @@ Stream<List<ChatModel>> getChatsforUser({
   @required List<String> blockedMembers,
   @required String communityId,
 }) async* {
-  prefix0.print("Community id is here ---> $communityId");
+//  prefix0.print("Community id is here ---> $communityId");
 
   var data = Firestore.instance
       .collection('chatsnew')
@@ -239,7 +237,7 @@ Stream<List<ChatModel>> getChatsForTimebank({
   @required String timebankId,
   @required String communityId,
 }) async* {
-  prefix0.print("Community id is here ---> $communityId");
+  // prefix0.print("Community id is here ---> $communityId");
 
   var data = Firestore.instance
       .collection('chatsnew')

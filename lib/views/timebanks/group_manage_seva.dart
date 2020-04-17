@@ -47,66 +47,60 @@ class _ManageGroupView extends State<ManageGroupView> {
 
   @override
   Widget build(BuildContext context) {
-    print("seva id ${SevaCore.of(context).loggedInUser.sevaUserID}");
+    //   print("seva id ${SevaCore.of(context).loggedInUser.sevaUserID}");
 
     if (isSuperAdmin) {
       return DefaultTabController(
         length: 2,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Column(
-            children: <Widget>[
-              TabBar(
-                indicatorColor: Colors.black,
-                labelColor: Colors.black,
-                isScrollable: false,
-                tabs: <Widget>[
-                  Tab(text: "Edit Group"),
-                  Tab(text: "Settings"),
+        child: Column(
+          children: <Widget>[
+            TabBar(
+              indicatorColor: Colors.black,
+              labelColor: Colors.black,
+              isScrollable: false,
+              tabs: <Widget>[
+                Tab(text: "Edit Group"),
+                Tab(text: "Settings"),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  EditGroupView(
+                    timebankModel: widget.timebankModel,
+                  ),
+                  Settings,
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    EditGroupView(
-                      timebankModel: widget.timebankModel,
-                    ),
-                    Settings,
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     } else {
       return DefaultTabController(
         length: 2,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Column(
-            children: <Widget>[
-              TabBar(
-                indicatorColor: Colors.black,
-                labelColor: Colors.black,
-                isScrollable: false,
-                tabs: <Widget>[
-                  Tab(text: "Edit Group"),
-                  Tab(text: "Settings"),
+        child: Column(
+          children: <Widget>[
+            TabBar(
+              indicatorColor: Colors.black,
+              labelColor: Colors.black,
+              isScrollable: false,
+              tabs: <Widget>[
+                Tab(text: "Edit Group"),
+                Tab(text: "Settings"),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  EditGroupView(
+                    timebankModel: widget.timebankModel,
+                  ),
+                  Settings,
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    EditGroupView(
-                      timebankModel: widget.timebankModel,
-                    ),
-                    Settings,
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     }

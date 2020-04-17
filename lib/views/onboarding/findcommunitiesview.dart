@@ -259,7 +259,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
 //    }
 
     if (searchTextController.text.trim().length < 1) {
-      print('Search requires minimum 1 character');
+      //  print('Search requires minimum 1 character');
       return Column(
         children: <Widget>[
           getEmptyWidget('Users', nearTimebankText),
@@ -402,7 +402,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
             } else {
-              print(' near by comminities ${snapshot.data}');
+              //  print(' near by comminities ${snapshot.data}');
 
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
@@ -468,11 +468,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       print('u r joined user');
       return CompareUserStatus.JOINED;
     } else if (communityModel.admins.contains(widget.loggedInUser.sevaUserID)) {
-      print('u rrr joined user');
+      // print('u rrr joined user');
 
       return CompareUserStatus.JOINED;
     } else {
-      print('u r not joined user');
+      //  print('u r not joined user');
 
       return CompareUserStatus.JOIN;
     }
