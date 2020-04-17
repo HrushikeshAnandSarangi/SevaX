@@ -263,7 +263,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
       return Column(
         children: <Widget>[
           getEmptyWidget('Users', nearTimebankText),
-          nearByTimebanks(),
+          Expanded(child: nearByTimebanks()),
         ],
       );
     }
@@ -403,25 +403,25 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               return Center(child: CircularProgressIndicator());
             } else {
               //  print(' near by comminities ${snapshot.data}');
-
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
-                return Padding(
+                return ListView.builder(
                     padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: communityList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          CompareUserStatus status;
+                    shrinkWrap: true,
+                    itemCount: communityList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      CompareUserStatus status;
+                      status = _compareUserStatus(
+                        communityList[index],
+                        widget.loggedInUser.sevaUserID,
+                      );
 
-                          status = _compareUserStatus(communityList[index],
-                              widget.loggedInUser.sevaUserID);
-
-                          return timeBankWidget(
-                              communityModel: communityList[index],
-                              context: context,
-                              status: status);
-                        }));
+                      return timeBankWidget(
+                        communityModel: communityList[index],
+                        context: context,
+                        status: status,
+                      );
+                    });
               } else {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 100, horizontal: 60),
@@ -460,8 +460,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     }
   }
 
-  CompareUserStatus
-  _compareUserStatus(
+  CompareUserStatus _compareUserStatus(
     CommunityModel communityModel,
     String seveaUserId,
   ) {
@@ -520,12 +519,15 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                   'Create a Timebank',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
-                onPressed: ()async {
-                  var timebankAdvisory = "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
-                  Map<String, bool> onActivityResult = await showTimebankAdvisory(dialogTitle: timebankAdvisory);
+                onPressed: () async {
+                  var timebankAdvisory =
+                      "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                  Map<String, bool> onActivityResult =
+                      await showTimebankAdvisory(dialogTitle: timebankAdvisory);
                   if (onActivityResult['PROCEED']) {
                     print("YES PROCEED WITH TIMEBANK CREATION");
-                    createEditCommunityBloc.updateUserDetails(SevaCore.of(context).loggedInUser);
+                    createEditCommunityBloc
+                        .updateUserDetails(SevaCore.of(context).loggedInUser);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
