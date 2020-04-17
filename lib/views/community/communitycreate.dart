@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:collection';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/auth/auth_provider.dart';
 import 'package:sevaexchange/auth/auth_router.dart';
@@ -120,6 +120,7 @@ class CreateEditCommunityViewFormState
   List<FocusNode> focusNodes;
   String errTxt;
   int totalMembersCount = 0;
+  final _textUpdates = StreamController<String>();
 
   void initState() {
     super.initState();
@@ -132,7 +133,7 @@ class CreateEditCommunityViewFormState
     if (widget.isCreateTimebank == false) {
       getModelData();
     }
-    final _textUpdates = StreamController<String>();
+
 
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
@@ -160,17 +161,7 @@ class CreateEditCommunityViewFormState
             setState(() {
               communityFound = true;
               print("name ----- ${communitynName} and ${searchTextController.text}");
-
-              if (!widget.isCreateTimebank) {
-//                if (searchTextController.text != null
-//                    && communitynName != searchTextController.text) {
-                  errTxt = 'Timebank name already exists';
-
-                  print("name is equal");
-//                }
-              } else {
-                errTxt = 'Timebank name already exists';
-              }
+              errTxt = 'Timebank name already exists';
             });
           } else {
             setState(() {
@@ -1492,5 +1483,10 @@ class CreateEditCommunityViewFormState
             ],
           );
         });
+  }
+
+  void dispose() {
+    super.dispose();
+    _textUpdates.close();
   }
 }

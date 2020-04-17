@@ -6,6 +6,7 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
+import 'package:sevaexchange/views/core.dart';
 
 class SearchManager {
   static final String _baseUrl = 'http://api.sevaexchange.com:9200';
@@ -118,24 +119,26 @@ class SearchManager {
   }
 
   static Future<bool> searchCommunityForDuplicate(
-      {@required queryString}) async {
+      {@required String queryString}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_search';
 //    '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxcommunities/_doc/_count';
     dynamic body = json.encode({
       "query": {
-        "match": { "name": queryString }
+        "match": {"name": queryString}
       }
     });
-    List<Map<String, dynamic>> hitList = await _makeElasticSearchPostRequest(url, body);
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
 //    await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
     bool commFound = false;
-    for(var map in hitList) {
-      if(map['_source']['name'].toLowerCase() == queryString.toLowerCase()){
+    for (var map in hitList) {
+      if (map['_source']['name'].toLowerCase() == queryString.toLowerCase()) {
         commFound = true;
         break;
       }
-    };
+    }
+    ;
     return commFound;
 //    int count =
 //        await _makeElasticSearchPostRequestCommunityDuplicate(url, body);
@@ -144,6 +147,37 @@ class SearchManager {
 //    } else {
 //      return false;
 //    }
+  }
+
+  static Future<bool> searchGroupForDuplicate({@required queryString, @required communityId}) async {
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxtimebanks/sevaxtimebank/_search';
+    dynamic body = json.encode({
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {"community_id.keyword": communityId}
+            }
+            ,
+            {
+              "match": {"name": queryString}
+            }
+          ]
+        }
+      }
+    });
+    List<Map<String, dynamic>> hitList =
+        await _makeElasticSearchPostRequest(url, body);
+    bool groupFound = false;
+    print("histlist length ->>>>>"+hitList.length.toString()+" communityId ->>>>"+communityId);
+    for (var map in hitList) {
+      if (map['_source']['name'].toLowerCase() == queryString.toLowerCase()) {
+        groupFound = true;
+        break;
+      }
+    }
+    return groupFound;
   }
 
   static Stream<List<TimebankModel>> searchTimeBank({
@@ -235,7 +269,8 @@ class SearchManager {
   static Stream<List<NewsModel>> searchForNews({
     @required queryString,
   }) async* {
-    String url = '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/newsfeed/news/_search';
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/newsfeed/news/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -311,7 +346,8 @@ class SearchManager {
   static Stream<List<OfferModel>> searchForOffer({
     @required queryString,
   }) async* {
-    String url = '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/offer/_search';
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/offer/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -350,7 +386,8 @@ class SearchManager {
   static Stream<List<RequestModel>> searchForRequest({
     @required String queryString,
   }) async* {
-    String url = '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/requests/request/_search';
+    String url =
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/requests/request/_search';
     dynamic body = json.encode(
       {
         "query": {
@@ -440,7 +477,6 @@ class SearchManager {
       "Accept": "application/json",
       "Content-Type": "application/json"
     });
-
 
     Map<String, dynamic> bodyMap = json.decode(response.body);
     int count = bodyMap['count'];
