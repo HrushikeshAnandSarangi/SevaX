@@ -99,7 +99,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   Future<void> writeToDB() async {
     // print("Credit goes to ${}");
 
-
     newsObject.placeAddress = this.selectedAddress;
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -272,8 +271,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         photoCredits: "",
                         geoFirePointLocation: location,
                         geoFirePointLocationCallback:
-                            (geoLocationPointSelected) {
+                            (geoLocationPointSelected) async {
                           location = geoLocationPointSelected;
+                          await _getLocation();
+                          print("Location is updated to ");
                         },
                         onCreditsEntered: (photoCreditsFromNews) {
                           print("Hello its me:" + photoCreditsFromNews);
