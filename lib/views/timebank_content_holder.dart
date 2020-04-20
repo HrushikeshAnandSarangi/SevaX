@@ -494,6 +494,9 @@ class DiscussionListState extends State<DiscussionList> {
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
+  String pinnedNewsId = '';
+  bool isPinned = false;
+  NewsModel pinnedNewsModel;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -619,8 +622,10 @@ class DiscussionListState extends State<DiscussionList> {
                       break;
                     default:
                       List<NewsModel> newsList = snapshot.data;
-
+                      print('latest feeds ${newsList}');
                       newsList = filterBlockedContent(newsList, context);
+                      newsList = filterPinnedNews(newsList, context);
+
                       print("Size of incloming docs ${newsList.length}");
                       if (newsList.length == 0) {
                         return Padding(
@@ -629,39 +634,45 @@ class DiscussionListState extends State<DiscussionList> {
                         );
                       }
                       return Expanded(
-                        child: ListView.builder(
-                          itemCount: newsList.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index >= newsList.length) {
-                              return Container(
-                                width: double.infinity,
-                                height: 20,
-                              );
-                            }
+                        child: ListView(
+                          children: <Widget>[
+                            isPinned
+                                ? getNewsCard(
+                                    pinnedNewsModel,
+                                    false,
+                                  )
+                                : Offstage(),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: newsList.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index >= newsList.length) {
+                                  return Container(
+                                    width: double.infinity,
+                                    height: 20,
+                                  );
+                                }
 
-                            if (newsList.elementAt(index).reports.length > 2) {
-                              return Offstage();
-                            } else {
-                              if (index == 0) {
-                                return Column(
-                                  children: <Widget>[
-                                    // getCreateFeedCard(
-                                    //   news: newsList.elementAt(index),
-                                    // ),
-                                    getNewsCard(
+                                if (newsList.elementAt(index).reports.length >
+                                    2) {
+                                  return Offstage();
+                                } else {
+                                  if (index == 0) {
+                                    return getNewsCard(
                                       newsList.elementAt(index),
                                       false,
-                                    )
-                                  ],
-                                );
-                              } else {
-                                return getNewsCard(
-                                  newsList.elementAt(index),
-                                  false,
-                                );
-                              }
-                            }
-                          },
+                                    );
+                                  } else {
+                                    return getNewsCard(
+                                      newsList.elementAt(index),
+                                      false,
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       );
                   }
@@ -681,6 +692,7 @@ class DiscussionListState extends State<DiscussionList> {
                         default:
                           List<NewsModel> newsList = snapshot.data;
                           newsList = filterBlockedContent(newsList, context);
+                          newsList = filterPinnedNews(newsList, context);
 
                           if (newsList.length == 0) {
                             return Padding(
@@ -689,12 +701,23 @@ class DiscussionListState extends State<DiscussionList> {
                             );
                           }
                           return Expanded(
-                            child: ListView.builder(
-                              itemCount: newsList.length,
-                              itemBuilder: (context, index) {
-                                return getNewsCard(
-                                    newsList.elementAt(index), false);
-                              },
+                            child: ListView(
+                              children: <Widget>[
+                                isPinned
+                                    ? getNewsCard(
+                                        pinnedNewsModel,
+                                        false,
+                                      )
+                                    : Offstage(),
+                                ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: newsList.length,
+                                  itemBuilder: (context, index) {
+                                    return getNewsCard(
+                                        newsList.elementAt(index), false);
+                                  },
+                                ),
+                              ],
                             ),
                           );
                       }
@@ -722,6 +745,7 @@ class DiscussionListState extends State<DiscussionList> {
                                   "News list from near me ${newsList.length}");
                               newsList =
                                   filterBlockedContent(newsList, context);
+                              newsList = filterPinnedNews(newsList, context);
 
                               if (newsList.length == 0) {
                                 return Padding(
@@ -731,12 +755,23 @@ class DiscussionListState extends State<DiscussionList> {
                                 );
                               }
                               return Expanded(
-                                child: ListView.builder(
-                                  itemCount: newsList.length,
-                                  itemBuilder: (context, index) {
-                                    return getNewsCard(
-                                        newsList.elementAt(index), false);
-                                  },
+                                child: ListView(
+                                  children: <Widget>[
+                                    isPinned
+                                        ? getNewsCard(
+                                            pinnedNewsModel,
+                                            false,
+                                          )
+                                        : Offstage(),
+                                    ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: newsList.length,
+                                      itemBuilder: (context, index) {
+                                        return getNewsCard(
+                                            newsList.elementAt(index), false);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               );
                           }
@@ -758,6 +793,8 @@ class DiscussionListState extends State<DiscussionList> {
                                   List<NewsModel> newsList = snapshot.data;
                                   newsList =
                                       filterBlockedContent(newsList, context);
+                                  newsList =
+                                      filterPinnedNews(newsList, context);
 
                                   if (newsList.length == 0) {
                                     return Padding(
@@ -767,12 +804,25 @@ class DiscussionListState extends State<DiscussionList> {
                                     );
                                   }
                                   return Expanded(
-                                    child: ListView.builder(
-                                      itemCount: newsList.length,
-                                      itemBuilder: (context, index) {
-                                        return getNewsCard(
-                                            newsList.elementAt(index), false);
-                                      },
+                                    child: ListView(
+                                      children: <Widget>[
+                                        isPinned
+                                            ? getNewsCard(
+                                                pinnedNewsModel,
+                                                false,
+                                              )
+                                            : Offstage(),
+                                        ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemCount: newsList.length,
+                                          itemBuilder: (context, index) {
+                                            return getNewsCard(
+                                                newsList.elementAt(index),
+                                                false);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   );
                               }
@@ -879,6 +929,24 @@ class DiscussionListState extends State<DiscussionList> {
       style: TextStyle(fontSize: 10.0),
     ),
   };
+  List<NewsModel> filterPinnedNews(
+      List<NewsModel> newsList, BuildContext context) {
+    List<NewsModel> filteredNewsList = [];
+    filteredNewsList = newsList;
+    filteredNewsList.forEach((newsModel) {
+      if (newsModel.isPinned == true) {
+        pinnedNewsModel = newsModel;
+        isPinned = true;
+      }
+    });
+
+    print('pinned news ${pinnedNewsModel}');
+
+    filteredNewsList.removeWhere((news) => news.isPinned == true);
+    print('filtered news ${filteredNewsList}');
+
+    return filteredNewsList;
+  }
 
   List<NewsModel> filterBlockedContent(
       List<NewsModel> newsList, BuildContext context) {
@@ -933,6 +1001,7 @@ class DiscussionListState extends State<DiscussionList> {
                       padding: const EdgeInsets.only(
                           left: 12.0, top: 15, bottom: 15),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Expanded(
                             child: Column(
@@ -975,7 +1044,31 @@ class DiscussionListState extends State<DiscussionList> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 8.0),
+                          //  SizedBox(width: 8.0),
+                          widget.timebankModel.admins.contains(
+                                  SevaCore.of(context).loggedInUser.sevaUserID)
+                              ? getOptionButtons(
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    child: Icon(
+                                      Icons.colorize,
+                                      color: news.isPinned
+                                          ? Colors.green
+                                          : Colors.black,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  () {
+                                    news.isPinned
+                                        ? unPinFeed(newsModel: news)
+                                        : pinNews(
+                                            newsModel: news,
+                                          );
+                                    setState(() {});
+                                  },
+                                )
+                              : Offstage(),
                         ],
                       ),
                     ),
@@ -1349,23 +1442,6 @@ class DiscussionListState extends State<DiscussionList> {
                                         newsObject: news);
                                   },
                                 ),
-                                widget.timebankModel.admins.contains(
-                                        SevaCore.of(context)
-                                            .loggedInUser
-                                            .sevaUserID)
-                                    ? getOptionButtons(
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 6, vertical: 2),
-                                          child: Icon(
-                                            Icons.colorize,
-                                            color: Colors.black,
-                                            size: 20,
-                                          ),
-                                        ),
-                                        () {},
-                                      )
-                                    : Offstage(),
                               ],
                             )
                           : Center(),
@@ -1480,6 +1556,24 @@ class DiscussionListState extends State<DiscussionList> {
               backgroundColor: chipColor,
             ),
           );
+  }
+
+  void pinNews({NewsModel newsModel}) async {
+    if (pinnedNewsModel != null && isPinned == true) {
+      unPinFeed(newsModel: pinnedNewsModel);
+    }
+    newsModel.isPinned = true;
+    await FirestoreManager.updateNews(newsObject: newsModel);
+  }
+
+  void unPinFeed({NewsModel newsModel}) async {
+    newsModel.isPinned = false;
+    await FirestoreManager.updateNews(newsObject: newsModel);
+
+    setState(() {
+      pinnedNewsModel = null;
+      isPinned = false;
+    });
   }
 
   void loadTimebankForId(

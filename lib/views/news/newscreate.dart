@@ -102,6 +102,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.placeAddress = this.selectedAddress;
 
     int timestamp = DateTime.now().millisecondsSinceEpoch;
+    newsObject.isPinned = false;
     newsObject.id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
     newsObject.email = SevaCore.of(context).loggedInUser.email;
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;

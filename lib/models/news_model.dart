@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/data_model.dart';
 
@@ -20,6 +19,7 @@ class NewsModel extends DataModel {
   List<String> reports;
   String root_timebank_id;
   String placeAddress;
+  bool isPinned;
 
   List<String> urlsFromPost = List();
   List<String> hashTags = List();
@@ -43,6 +43,7 @@ class NewsModel extends DataModel {
     this.likes,
     this.reports,
     this.root_timebank_id,
+    this.isPinned,
   });
 
   Map<String, dynamic> toMap() {
@@ -103,6 +104,10 @@ class NewsModel extends DataModel {
     if (this.location != null) {
       map['location'] = this.location.data;
     }
+
+    if (this.isPinned != null) {
+      map['pinned'] = this.isPinned;
+    }
     if (this.entity != null) {
       map['entity'] = this.entity.toMap();
     }
@@ -148,6 +153,12 @@ class NewsModel extends DataModel {
 
     if (map.containsKey('placeAddress')) {
       this.placeAddress = map['placeAddress'];
+    }
+
+    if (map.containsKey('pinned')) {
+      this.isPinned = map['pinned'];
+    } else {
+      this.isPinned = false;
     }
 
     if (map.containsKey('subheading')) {
@@ -233,6 +244,11 @@ class NewsModel extends DataModel {
     if (map.containsKey('description')) {
       this.description = map['description'];
     }
+    if (map.containsKey('pinned')) {
+      this.isPinned = map['pinned'];
+    } else {
+      this.isPinned = false;
+    }
     if (map.containsKey('email')) {
       this.email = map['email'];
     }
@@ -278,7 +294,7 @@ class NewsModel extends DataModel {
 
   @override
   String toString() {
-    return "title -> $title subheading-> $subheading description-> $description urlsFromPost-> $urlsFromPost userPhotoURL-> $userPhotoURL hashTags-> $hashTags imagesScraped->$imageScraped";
+    return 'NewsModel{id: $id, title: $title, subheading: $subheading, description: $description, email: $email, fullName: $fullName, sevaUserId: $sevaUserId, newsImageUrl: $newsImageUrl, photoCredits: $photoCredits, postTimestamp: $postTimestamp, location: $location, entity: $entity, likes: $likes, reports: $reports, root_timebank_id: $root_timebank_id, placeAddress: $placeAddress, isPinned: $isPinned, urlsFromPost: $urlsFromPost, hashTags: $hashTags, userPhotoURL: $userPhotoURL, imageScraped: $imageScraped}';
   }
 }
 
