@@ -4,8 +4,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/offer_model.dart';
-import 'package:sevaexchange/ui/screens/offers/offers_ui.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/offer_details_router.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
@@ -150,66 +151,92 @@ class OfferListItems extends StatelessWidget {
           ),
         );
       case OfferModelList.OFFER:
-        return getOfferViewHolder((offerModelList as OfferItem).offerModel);
+        return Offstage(
+          offstage: isOfferVisible((offerModelList as OfferItem).offerModel,
+              SevaCore.of(parentContext).loggedInUser.sevaUserID),
+          child: getOfferViewHolder((offerModelList as OfferItem).offerModel),
+        );
     }
   }
 
-  Widget getOfferViewHolder(OfferModel model) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            parentContext,
-            MaterialPageRoute(
-              builder: (context) => OfferDetailsRouter(offerModel: model),
-            ),
-          );
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 15),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      getOfferTitle(offerDataModel: model),
-                      // style: Theme.of(parentContext).textTheme.subhead,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      getOfferDescription(offerDataModel: model),
-                      style: Theme.of(parentContext).textTheme.subtitle,
-                    ),
-                    getOfferMetaData(
-                      offerModel: model,
-                    ),
-                    model.email != SevaCore.of(parentContext).loggedInUser.email
-                        ? model.offerType == OfferType.INDIVIDUAL_OFFER
-                            ? getBottomActionsForIndividualOffer(
-                                offerModel: model,
-                              )
-                            : getBottomActionsForGroupOffer(offerModel: model)
-                        : Offstage(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+  _navigateToOfferDetails(OfferModel model) {
+    Navigator.push(
+      parentContext,
+      MaterialPageRoute(
+        builder: (context) => OfferDetailsRouter(offerModel: model),
       ),
     );
+  }
+
+  Widget getOfferViewHolder(OfferModel model) {
+    return OfferCard(
+      isCreator: model.email == SevaCore.of(parentContext).loggedInUser.email,
+      title: getOfferTitle(offerDataModel: model),
+      subtitle: getOfferDescription(offerDataModel: model),
+      offerType: model.offerType,
+      startDate: model?.groupOfferDataModel?.startDate,
+      selectedAddress: model.selectedAdrress,
+      actionButtonLabel: getButtonLabel(
+          model, SevaCore.of(parentContext).loggedInUser.sevaUserID),
+      onCardPressed: () => _navigateToOfferDetails(model),
+      onActionPressed: () => offerActions(model),
+    );
+
+    // return Card(
+    //   elevation: 2,
+    //   child: InkWell(
+    //     onTap: () {
+    //       Navigator.push(
+    //         parentContext,
+    //         MaterialPageRoute(
+    //           builder: (context) => OfferDetailsRouter(offerModel: model),
+    //         ),
+    //       );
+    //     },
+    //     child: Padding(
+    //       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 15),
+    //       child: Row(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: <Widget>[
+    //           SizedBox(width: 16),
+    //           Expanded(
+    //             child: Column(
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               children: <Widget>[
+    //                 Text(
+    //                   getOfferTitle(offerDataModel: model),
+    //                   // style: Theme.of(parentContext).textTheme.subhead,
+    //                   style: TextStyle(
+    //                     color: Colors.black,
+    //                     fontSize: 17,
+    //                     fontWeight: FontWeight.bold,
+    //                   ),
+    //                 ),
+    //                 SizedBox(
+    //                   height: 4,
+    //                 ),
+    //                 Text(
+    //                   getOfferDescription(offerDataModel: model),
+    //                   style: Theme.of(parentContext).textTheme.subtitle,
+    //                 ),
+    //                 getOfferMetaData(
+    //                   offerModel: model,
+    //                 ),
+    //                 model.email != SevaCore.of(parentContext).loggedInUser.email
+    //                     ? model.offerType == OfferType.INDIVIDUAL_OFFER
+    //                         ? getBottomActionsForIndividualOffer(
+    //                             offerModel: model,
+    //                           )
+    //                         : getBottomActionsForGroupOffer(offerModel: model)
+    //                     : Offstage(),
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   Widget getBottomActionsForIndividualOffer({OfferModel offerModel}) {
@@ -293,7 +320,9 @@ class OfferListItems extends StatelessWidget {
                   icon: Icons.access_time)
               : Offstage(),
           getStatsIcon(
-              label: getOfferLocation(offerDataModel: offerModel),
+              label: getOfferLocation(
+                selectedAddress: offerModel.selectedAdrress,
+              ),
               icon: Icons.location_on),
         ],
       ),
@@ -345,7 +374,7 @@ class OfferListItems extends StatelessWidget {
   }
 
   Widget getWidgetForAcceptOrRemoveBookmark({OfferModel offerModel}) {
-    var isBookmarked = getOfferParticipants(offerDataModel: offerModel)
+    bool isBookmarked = getOfferParticipants(offerDataModel: offerModel)
         .contains(SevaCore.of(parentContext).loggedInUser.sevaUserID);
 
     return FlatButton(
@@ -365,17 +394,60 @@ class OfferListItems extends StatelessWidget {
         Firestore.instance
             .collection("offers")
             .document(offerModel.id)
-            .updateData({
-          'individualOfferDataModel.offerAcceptors': isBookmarked
-              ? FieldValue.arrayRemove([myUserID])
-              : FieldValue.arrayUnion([myUserID])
-        });
+            .updateData(
+          {
+            'individualOfferDataModel.offerAcceptors': isBookmarked
+                ? FieldValue.arrayRemove([myUserID])
+                : FieldValue.arrayUnion([myUserID])
+          },
+        );
       },
     );
   }
 
+  offerActions(OfferModel model) {
+    var _userId = SevaCore.of(parentContext).loggedInUser.sevaUserID;
+    bool _isParticipant = getOfferParticipants(offerDataModel: model)
+        .contains(SevaCore.of(parentContext).loggedInUser.sevaUserID);
+
+    if (model.offerType == OfferType.GROUP_OFFER && !_isParticipant) {
+      //Check balance here
+      if (true) {
+        confirmationDialog(
+          context: parentContext,
+          title:
+              "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
+          onConfirmed: () {
+            var myUserID = SevaCore.of(parentContext).loggedInUser.sevaUserID;
+            Firestore.instance
+                .collection("offers")
+                .document(model.id)
+                .updateData({
+              'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
+                [myUserID],
+              )
+            });
+          },
+        );
+      } else {
+        errorDialog(
+          context: parentContext,
+          error: "You don't have enough credit to signup for this class",
+        );
+      }
+    } else {
+      Firestore.instance.collection("offers").document(model.id).updateData(
+        {
+          'individualOfferDataModel.offerAcceptors': _isParticipant
+              ? FieldValue.arrayRemove([_userId])
+              : FieldValue.arrayUnion([_userId])
+        },
+      );
+    }
+  }
+
   Widget getWidgetForSignUpOrWithdrawClassOffer({OfferModel offerModel}) {
-    var isSubscribed = getOfferParticipants(offerDataModel: offerModel)
+    bool isSubscribed = getOfferParticipants(offerDataModel: offerModel)
         .contains(SevaCore.of(parentContext).loggedInUser.sevaUserID);
 
     return FlatButton(
@@ -385,22 +457,42 @@ class OfferListItems extends StatelessWidget {
       padding: EdgeInsets.only(left: 10, right: 10),
       color: Theme.of(parentContext).primaryColor,
       child: Text(
-        !isSubscribed ? '  Signup  ' : '  Withdraw  ',
+        !isSubscribed ? '  Signup  ' : '  SignedUp  ',
         style: TextStyle(
           color: Colors.white,
         ),
       ),
-      onPressed: () {
-        var myUserID = SevaCore.of(parentContext).loggedInUser.sevaUserID;
-        Firestore.instance
-            .collection("offers")
-            .document(offerModel.id)
-            .updateData({
-          'groupOfferDataModel.signedUpMembers': isSubscribed
-              ? FieldValue.arrayRemove([myUserID])
-              : FieldValue.arrayUnion([myUserID])
-        });
-      },
+      onPressed: !isSubscribed
+          ? () {
+              //Check balance here
+              if (true) {
+                confirmationDialog(
+                  context: parentContext,
+                  title:
+                      "You are signing up for this ${offerModel.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${offerModel.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
+                  onConfirmed: () {
+                    var myUserID =
+                        SevaCore.of(parentContext).loggedInUser.sevaUserID;
+                    Firestore.instance
+                        .collection("offers")
+                        .document(offerModel.id)
+                        .updateData({
+                      'groupOfferDataModel.signedUpMembers':
+                          FieldValue.arrayUnion(
+                        [myUserID],
+                      )
+                    });
+                  },
+                );
+              } else {
+                errorDialog(
+                  context: parentContext,
+                  error:
+                      "You don't have enough credit to signup for this class",
+                );
+              }
+            }
+          : () {},
     );
   }
 }
@@ -516,7 +608,7 @@ class NearOfferListItems extends StatelessWidget {
             Navigator.push(
               parentContext,
               MaterialPageRoute(
-                builder: (context) => OfferCardView(offerModel: model),
+                builder: (context) => OfferDetailsRouter(offerModel: model),
               ),
             );
           },
