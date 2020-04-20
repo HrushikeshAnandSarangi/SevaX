@@ -34,6 +34,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
   @override
   void initState() {
+    print("inside interestsview init state");
+
     Firestore.instance
         .collection('interests')
         .getDocuments()

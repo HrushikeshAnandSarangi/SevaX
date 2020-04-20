@@ -196,7 +196,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           },
           onSkipped: () {
             Navigator.pop(context);
-            loggedInUser.interests = [];
+//            loggedInUser.interests = [];
 //            updateUserData(loggedInUser);
           },
         ),
@@ -218,7 +218,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           },
           onSkipped: () {
             Navigator.pop(context);
-            loggedInUser.skills = [];
+//            loggedInUser.skills = [];
 //            updateUserData(loggedInUser);
           },
         ),
@@ -227,6 +227,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future updateUserData(UserModel user) async {
+  print("inside updateUserData------------");
     await FirestoreManager.updateUser(user: user);
   }
 

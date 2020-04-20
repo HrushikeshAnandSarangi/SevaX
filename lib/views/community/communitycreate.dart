@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -427,32 +429,32 @@ class CreateEditCommunityViewFormState
                     ),
                   ),
                   SizedBox(height: 20),
-
-                  headingText('Select Tax percentage'),
-                  Slider(
-                    label: "${taxPercentage.toInt()}%",
-                    value: taxPercentage,
-                    min: 0,
-                    max: 15,
-                    divisions: 15,
-                    onChanged: (value) {
-                      snapshot.data.community
-                          .updateValueByKey('taxPercentage', value / 100);
-                      setState(() {
-                        taxPercentage = value;
-                        communityModel.taxPercentage = value / 100;
-                      });
-                      print(snapshot.data.community);
-                    },
-                  ),
-                  Text(
-                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 20),
+//
+//                  headingText('Select Tax percentage'),
+//                  Slider(
+//                    label: "${taxPercentage.toInt()}%",
+//                    value: taxPercentage,
+//                    min: 0,
+//                    max: 15,
+//                    divisions: 15,
+//                    onChanged: (value) {
+//                      snapshot.data.community
+//                          .updateValueByKey('taxPercentage', value / 100);
+//                      setState(() {
+//                        taxPercentage = value;
+//                        communityModel.taxPercentage = value / 100;
+//                      });
+//                      print(snapshot.data.community);
+//                    },
+//                  ),
+//                  Text(
+//                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
+//                    style: TextStyle(
+//                      fontSize: 12,
+//                      color: Colors.grey,
+//                    ),
+//                  ),
+//                  SizedBox(height: 20),
                   headingText('Your timebank location.'),
                   Text(
                     'List the place or address where your community meets (such as a cafe, library, or church.).',
@@ -690,6 +692,10 @@ class CreateEditCommunityViewFormState
                                 members.add(user.sevaUserID);
                               });
                             }
+                            var taxDefaultVal = (json.decode(AppConfig.remoteConfig.getString('defaultTaxPercentValue'))).toDouble();
+                            snapshot.data.community
+                                .updateValueByKey('taxPercentage', taxDefaultVal / 100);
+                            communityModel.taxPercentage = taxDefaultVal / 100;
                             // creation of community;
 
                             // updating timebank with latest values
