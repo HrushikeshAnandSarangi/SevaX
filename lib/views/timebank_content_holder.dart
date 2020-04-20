@@ -192,6 +192,7 @@ Widget createAdminTabBar(
             child: TabBarView(
               children: [
                 DiscussionList(
+                  timebankModel: timebankModel,
                   timebankId: timebankId,
                 ),
                 TimeBankProjectsView(
@@ -382,6 +383,7 @@ Widget createJoinedUserTabBar(
             child: TabBarView(
               children: [
                 DiscussionList(
+                  timebankModel: timebankModel,
                   timebankId: timebankId,
                 ),
                 TimeBankProjectsView(
@@ -479,7 +481,8 @@ AboutUserRole determineUserRoleInAbout(
 class DiscussionList extends StatefulWidget {
   final String loggedInUser;
   final String timebankId;
-  DiscussionList({this.timebankId, this.loggedInUser});
+  final TimebankModel timebankModel;
+  DiscussionList({this.timebankId, this.loggedInUser, this.timebankModel});
   @override
   DiscussionListState createState() {
     return DiscussionListState();
@@ -825,7 +828,7 @@ class DiscussionListState extends State<DiscussionList> {
               //       ),
               //     );
               //   }
-              //these 
+              //these
               // },
               child: GestureDetector(
                 onTap: () {
@@ -1345,7 +1348,24 @@ class DiscussionListState extends State<DiscussionList> {
                                     FirestoreManager.updateNews(
                                         newsObject: news);
                                   },
-                                )
+                                ),
+                                widget.timebankModel.admins.contains(
+                                        SevaCore.of(context)
+                                            .loggedInUser
+                                            .sevaUserID)
+                                    ? getOptionButtons(
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 6, vertical: 2),
+                                          child: Icon(
+                                            Icons.colorize,
+                                            color: Colors.black,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        () {},
+                                      )
+                                    : Offstage(),
                               ],
                             )
                           : Center(),

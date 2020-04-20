@@ -233,6 +233,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       DiscussionList(
                         timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
                       ),
                       // TimebankFeeds(),
                       RequestsModule.of(
