@@ -55,6 +55,7 @@ class ValidationErrors {
   static const String locationError = 'Please select location';
   static const String sizeOfClassIsNotInt = "Size of class can't be in decimal";
   static const String sizeOfClassError = "Please enter valid size of class";
+  static const String offerProfitError = "We cannot publish this Class. There are insufficient credits from the class. Please revise the Prep time or the number of students and submit the offer again";
 
   // static const String titleError = 'Please enter the subject of your offer';
 }

@@ -18,6 +18,7 @@ class OneToManyOfferBloc extends BlocBase {
   final _classDescription = BehaviorSubject<String>();
   final _location = BehaviorSubject<CustomLocation>();
   final _status = BehaviorSubject<Status>.seeded(Status.IDLE);
+  final _classSizeError = BehaviorSubject<String>();
 
   Function(String value) get onTitleChanged => _title.sink.add;
   Function(String) get onPreparationHoursChanged => _preparationHours.sink.add;
@@ -25,6 +26,7 @@ class OneToManyOfferBloc extends BlocBase {
   Function(String) get onClassSizeChanged => _classSize.sink.add;
   Function(String) get onclassDescriptionChanged => _classDescription.sink.add;
   Function(CustomLocation) get onLocatioChanged => _location.sink.add;
+  Function(String) get onClassSizeError => _classSizeError.sink.add;
 
   Stream<String> get title => _title.stream;
   Stream<String> get preparationHours => _preparationHours.stream;
@@ -32,6 +34,7 @@ class OneToManyOfferBloc extends BlocBase {
   Stream<String> get classSize => _classSize.stream;
   Stream<String> get classDescription => _classDescription.stream;
   Stream<CustomLocation> get location => _location.stream;
+  Stream<String> get classSizeError => _classSizeError.stream;
 
   Stream<Status> get status => _status.stream;
 
@@ -42,36 +45,45 @@ class OneToManyOfferBloc extends BlocBase {
   }) {
     print(errorCheck());
     if (!errorCheck()) {
-      var timestamp = DateTime.now().millisecondsSinceEpoch;
-      var id = '${user.email}*$timestamp';
+      int prepHours = int.parse(_preparationHours.value);
+      int classHours = int.parse(_classHours.value);
+      int classSize = int.parse(_classSize.value);
 
-      OfferModel offerModel = OfferModel(
-        id: id,
-        email: user.email,
-        fullName: user.fullname,
-        sevaUserId: user.sevaUserID,
-        timebankId: timebankId,
-        communityId: user.currentCommunity,
-        selectedAdrress: _location.value.address,
-        timestamp: timestamp,
-        location: _location.value == null
-            ? GeoFirePoint(40.754387, -73.984291)
-            : _location.value.location,
-        groupOfferDataModel: GroupOfferDataModel()
-          ..classTitle = _title.value
-          ..startDate = startTime
-          ..endDate = endTime
-          ..numberOfPreperationHours = int.parse(_preparationHours.value)
-          ..numberOfClassHours = int.parse(_classHours.value)
-          ..sizeOfClass = int.parse(_classSize.value)
-          ..classDescription = _classDescription.value,
-        individualOfferDataModel: IndividualOfferDataModel(),
-        offerType: OfferType.GROUP_OFFER,
-      );
+      if (prepHours + classHours < classSize * classHours) {
+        print("creating /....");
+        var timestamp = DateTime.now().millisecondsSinceEpoch;
+        var id = '${user.email}*$timestamp';
 
-      createOffer(offerModel: offerModel).then((_) {
-        _status.add(Status.COMPLETE);
-      }).catchError((e) => _status.add(Status.ERROR));
+        OfferModel offerModel = OfferModel(
+          id: id,
+          email: user.email,
+          fullName: user.fullname,
+          sevaUserId: user.sevaUserID,
+          timebankId: timebankId,
+          communityId: user.currentCommunity,
+          selectedAdrress: _location.value.address,
+          timestamp: timestamp,
+          location: _location.value == null
+              ? GeoFirePoint(40.754387, -73.984291)
+              : _location.value.location,
+          groupOfferDataModel: GroupOfferDataModel()
+            ..classTitle = _title.value
+            ..startDate = startTime
+            ..endDate = endTime
+            ..numberOfPreperationHours = prepHours
+            ..numberOfClassHours = classHours
+            ..sizeOfClass = classSize
+            ..classDescription = _classDescription.value,
+          individualOfferDataModel: IndividualOfferDataModel(),
+          offerType: OfferType.GROUP_OFFER,
+        );
+
+        createOffer(offerModel: offerModel).then((_) {
+          _status.add(Status.COMPLETE);
+        }).catchError((e) => _status.add(Status.ERROR));
+      } else {
+        _classSizeError.add(ValidationErrors.offerProfitError);
+      }
     }
   }
 
@@ -162,6 +174,20 @@ class OneToManyOfferBloc extends BlocBase {
       _location.addError(ValidationErrors.genericError);
       flag = true;
     }
+    //Check if the offer is valid
+    // try {
+    //   if (int.parse(_preparationHours.value) + int.parse(_classHours.value) >
+    //       int.parse(_classSize.value) * int.parse(_classHours.value)) {
+    //     _classSize.drain();
+    //     _classSize
+    //         .addError("The class size is small for the given offer details");
+    //     flag = true;
+    //   }
+    // } catch (e) {
+    //   print(e);
+    //   flag = true;
+    // }
+
     return flag;
   }
 
@@ -174,5 +200,6 @@ class OneToManyOfferBloc extends BlocBase {
     _classSize.close();
     _location.close();
     _status.close();
+    _classSizeError.close();
   }
 }
