@@ -948,6 +948,29 @@ class DiscussionListState extends State<DiscussionList> {
     return filteredNewsList;
   }
 
+  void _showAdminAccessMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Access denied."),
+          content: new Text("You are not authorized to pin a feed."),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   List<NewsModel> filterBlockedContent(
       List<NewsModel> newsList, BuildContext context) {
     List<NewsModel> filteredNewsList = [];
@@ -1045,30 +1068,31 @@ class DiscussionListState extends State<DiscussionList> {
                             ),
                           ),
                           //  SizedBox(width: 8.0),
-                          widget.timebankModel.admins.contains(
-                                  SevaCore.of(context).loggedInUser.sevaUserID)
-                              ? getOptionButtons(
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 2),
-                                    child: Icon(
-                                      Icons.colorize,
-                                      color: news.isPinned
-                                          ? Colors.green
-                                          : Colors.black,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  () {
-                                    news.isPinned
-                                        ? unPinFeed(newsModel: news)
-                                        : pinNews(
-                                            newsModel: news,
-                                          );
-                                    setState(() {});
-                                  },
-                                )
-                              : Offstage(),
+                          getOptionButtons(
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              child: Icon(
+                                Icons.colorize,
+                                color:
+                                    news.isPinned ? Colors.green : Colors.black,
+                                size: 20,
+                              ),
+                            ),
+                            () {
+                              widget.timebankModel.admins.contains(
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID)
+                                  ? news.isPinned
+                                      ? unPinFeed(newsModel: news)
+                                      : pinNews(
+                                          newsModel: news,
+                                        )
+                                  : _showAdminAccessMessage();
+                              setState(() {});
+                            },
+                          ),
                         ],
                       ),
                     ),
