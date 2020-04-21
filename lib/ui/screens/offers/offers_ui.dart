@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/individual_offer.dart';
 import 'package:sevaexchange/ui/screens/offers/pages/one_to_many_offer.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/users_circle_avatar_list.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -462,7 +463,7 @@ class OfferCardViewState extends State<OfferCardView> {
                                   .contains(SevaCore.of(context)
                                       .loggedInUser
                                       .sevaUserID)
-                              ? 'Withdraw'
+                              ? 'Accepted'
                               : 'Accept',
                           style: TextStyle(
                             color: isAccepted ? Colors.red : Colors.white,
@@ -474,51 +475,78 @@ class OfferCardViewState extends State<OfferCardView> {
                       ],
                     ),
                     onPressed: () async {
-                      if (widget.timebankModel != null &&
-                          widget.timebankModel.protected &&
-                          !(widget.timebankModel.admins.contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID))) {
-                        _showProtectedTimebankMessage();
-                        return;
-                      }
-                      showDialog(
-                          barrierDismissible: false,
+                      if (true) {
+                        confirmationDialog(
                           context: context,
-                          builder: (createDialogContext) {
-                            dialogContext = createDialogContext;
-                            return AlertDialog(
-                              title: Text('Please wait..'),
-                              content: LinearProgressIndicator(),
-                            );
-                          });
-                      var isAccepted = getOfferParticipants(
-                              offerDataModel: widget.offerModel)
-                          .contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID);
-                      Firestore.instance
-                          .collection("offers")
-                          .document(widget.offerModel.id)
-                          .updateData({
-                        'offerAcceptors': isAccepted
-                            ? FieldValue.arrayRemove(
-                                [SevaCore.of(context).loggedInUser.sevaUserID])
-                            : FieldValue.arrayUnion(
-                                [SevaCore.of(context).loggedInUser.sevaUserID])
-                      });
-                      widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
-                      var tempOutput = new List<String>.from(
-                        getOfferParticipants(offerDataModel: widget.offerModel),
-                      );
-                      tempOutput
-                          .add(SevaCore.of(context).loggedInUser.sevaUserID);
-                      widget.offerModel.offerType == OfferType.GROUP_OFFER
-                          ? widget
-                              .offerModel.groupOfferDataModel.signedUpMembers
-                          : widget.offerModel.individualOfferDataModel
-                              .offerAcceptors = tempOutput;
-                      await _makePostRequest(widget.offerModel);
-                      Navigator.of(dialogContext).pop();
-                      Navigator.of(context).pop();
+                          title:
+                              "You are signing up for this ${widget.offerModel.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${widget.offerModel.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
+                          onConfirmed: () {
+                            var myUserID =
+                                SevaCore.of(context).loggedInUser.sevaUserID;
+                            Firestore.instance
+                                .collection("offers")
+                                .document(widget.offerModel.id)
+                                .updateData({
+                              'groupOfferDataModel.signedUpMembers':
+                                  FieldValue.arrayUnion(
+                                [myUserID],
+                              )
+                            });
+                          },
+                        );
+                        Navigator.of(context).pop();
+                      } else {
+                        errorDialog(
+                          context: context,
+                          error:
+                              "You don't have enough credit to signup for this class",
+                        );
+                      }
+                      // if (widget.timebankModel != null &&
+                      //     widget.timebankModel.protected &&
+                      //     !(widget.timebankModel.admins.contains(
+                      //         SevaCore.of(context).loggedInUser.sevaUserID))) {
+                      //   _showProtectedTimebankMessage();
+                      //   return;
+                      // }
+                      // showDialog(
+                      //     barrierDismissible: false,
+                      //     context: context,
+                      //     builder: (createDialogContext) {
+                      //       dialogContext = createDialogContext;
+                      //       return AlertDialog(
+                      //         title: Text('Please wait..'),
+                      //         content: LinearProgressIndicator(),
+                      //       );
+                      //     });
+                      // var isAccepted = getOfferParticipants(
+                      //         offerDataModel: widget.offerModel)
+                      //     .contains(
+                      //         SevaCore.of(context).loggedInUser.sevaUserID);
+                      // Firestore.instance
+                      //     .collection("offers")
+                      //     .document(widget.offerModel.id)
+                      //     .updateData({
+                      //   'offerAcceptors': isAccepted
+                      //       ? FieldValue.arrayRemove(
+                      //           [SevaCore.of(context).loggedInUser.sevaUserID])
+                      //       : FieldValue.arrayUnion(
+                      //           [SevaCore.of(context).loggedInUser.sevaUserID])
+                      // });
+                      // widget.sevaUserIdOffer = widget.offerModel.sevaUserId;
+                      // var tempOutput = new List<String>.from(
+                      //   getOfferParticipants(offerDataModel: widget.offerModel),
+                      // );
+                      // tempOutput
+                      //     .add(SevaCore.of(context).loggedInUser.sevaUserID);
+                      // widget.offerModel.offerType == OfferType.GROUP_OFFER
+                      //     ? widget
+                      //         .offerModel.groupOfferDataModel.signedUpMembers
+                      //     : widget.offerModel.individualOfferDataModel
+                      //         .offerAcceptors = tempOutput;
+                      // await _makePostRequest(widget.offerModel);
+                      // Navigator.of(dialogContext).pop();
+                      // Navigator.of(context).pop();
                     },
                   ),
                 ),
