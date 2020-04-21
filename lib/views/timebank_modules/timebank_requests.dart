@@ -715,7 +715,7 @@ class NearRequestListItems extends StatelessWidget {
           return StreamBuilder<List<RequestModel>>(
             stream: timebankId != 'All'
                 ? FirestoreManager.getNearRequestListStream(
-                    timebankId: timebankId)
+                    timebankId: timebankId, loggedInUser: SevaCore.of(context).loggedInUser)
                 : FirestoreManager.getNearRequestListStream(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<RequestModel>> requestListSnapshot) {

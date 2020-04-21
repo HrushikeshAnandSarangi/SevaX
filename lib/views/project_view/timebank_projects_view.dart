@@ -64,7 +64,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   timebankid: widget.timebankId),
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
+
                 if (projectListSnapshot.hasError) {
+
                   return new Text('Error: ${projectListSnapshot.error}');
                 }
                 switch (projectListSnapshot.connectionState) {

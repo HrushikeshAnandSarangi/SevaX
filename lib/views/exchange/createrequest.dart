@@ -117,16 +117,14 @@ class RequestCreateForm extends StatefulWidget {
 }
 
 class RequestCreateFormState extends State<RequestCreateForm> {
-//  final GlobalKey<_CreateRequestState> _offerState = GlobalKey();
-//  final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
 
   final _formKey = GlobalKey<FormState>();
+  final hoursTextFocus = FocusNode();
+  final volunteersTextFocus = FocusNode();
 
   RequestModel requestModel = RequestModel();
   GeoFirePoint location;
 
-//  String _dateMessageStart = ' START date and time ';
-//  String _dateMessageEnd = '  END date and time ';
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
   String selectedAddress;
@@ -167,7 +165,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         location.latitude,
         location.longitude,
       )
-          .then((address) {
+      .then((address) {
         setState(() {
           this.selectedAddress = address;
         });
@@ -243,6 +241,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                  onFieldSubmitted: (v){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                   decoration: InputDecoration(
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
@@ -259,13 +260,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       return 'Please enter the subject of your request';
                     }
                     requestModel.title = value;
+                    return "";
                   },
                 ),
                 SizedBox(height: 30),
                 OfferDurationWidget(
                   title: ' Request duration',
-                  //startTime: CalendarWidgetState.startDate,
-                  //endTime: CalendarWidgetState.endDate
                 ),
                 SizedBox(height: 12),
                 SizedBox(height: 20),
@@ -281,6 +281,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                  focusNode: FocusNode(),
+                  onFieldSubmitted: (v){
+                    FocusScope.of(context).requestFocus(hoursTextFocus);
+                  },
                   decoration: InputDecoration(
                     hintText: 'Your Request \nand any #hashtags',
                     hintStyle: textStyle,
@@ -295,7 +299,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       return 'Please enter some text';
                     }
                     requestModel.description = value;
-                    // return null;
+                     return "";
                   },
                 ),
                 SizedBox(height: 40),
@@ -309,6 +313,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                    focusNode: hoursTextFocus,
+                    onFieldSubmitted: (v){
+                      FocusScope.of(context).requestFocus(volunteersTextFocus);
+                    },
                     decoration: InputDecoration(
                       hintText: 'No. of hours required',
                       hintStyle: textStyle,
@@ -334,6 +342,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                  focusNode: volunteersTextFocus,
+                  onFieldSubmitted: (v){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                   decoration: InputDecoration(
                     hintText: 'No. of approvals',
                     hintStyle: textStyle,

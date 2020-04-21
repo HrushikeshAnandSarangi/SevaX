@@ -117,6 +117,7 @@ class CreateEditCommunityViewFormState
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
   GlobalKey<FormState> _stateSelectorKey = GlobalKey();
+//  final aboutFocus = FocusNode();
 
   String selectedCountryValue = "Select your country";
 
@@ -293,6 +294,10 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+//                    focusNode: FocusNode(),
+//                    onFieldSubmitted: (v){
+//                      FocusScope.of(context).requestFocus(aboutFocus);
+//                    },
                     controller: searchTextController,
                     onChanged: (value) {
                       enteredName = value;
@@ -328,6 +333,10 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('About'),
                   TextFormField(
+//                    focusNode: aboutFocus,
+//                    onFieldSubmitted: (v){
+//                      FocusScope.of(context).requestFocus(FocusNode());
+//                    },
                     decoration: InputDecoration(
                       hintText: 'Ex: A bit more about your timebank',
                     ),
@@ -403,6 +412,16 @@ class CreateEditCommunityViewFormState
                   Row(
                     children: <Widget>[
                       headingText('Protected Timebank'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2,15,0,0),
+                        child: Tooltip(
+                            message: 'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations',
+                            child: IconButton(
+                                icon: Icon(
+                              Icons.info_outline,
+                              size: 20,
+                            ))),
+                      ),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -423,14 +442,14 @@ class CreateEditCommunityViewFormState
                       ),
                     ],
                   ),
-                  Text(
-                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 20),
+//                  Text(
+//                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
+//                    style: TextStyle(
+//                      fontSize: 12,
+//                      color: Colors.grey,
+//                    ),
+//                  ),
+                  SizedBox(height: 10),
 //
 //                  headingText('Select Tax percentage'),
 //                  Slider(
@@ -681,9 +700,12 @@ class CreateEditCommunityViewFormState
                                 members.add(user.sevaUserID);
                               });
                             }
-                            var taxDefaultVal = (json.decode(AppConfig.remoteConfig.getString('defaultTaxPercentValue'))).toDouble();
-                            snapshot.data.community
-                                .updateValueByKey('taxPercentage', taxDefaultVal / 100);
+                            var taxDefaultVal = (json.decode(AppConfig
+                                    .remoteConfig
+                                    .getString('defaultTaxPercentValue')))
+                                .toDouble();
+                            snapshot.data.community.updateValueByKey(
+                                'taxPercentage', taxDefaultVal / 100);
                             communityModel.taxPercentage = taxDefaultVal / 100;
                             // creation of community;
 

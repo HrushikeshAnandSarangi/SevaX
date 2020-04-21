@@ -234,7 +234,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} people Approved',
+                    '${widget.requestItem.approvedUsers.length} / ${widget.requestItem.acceptors.length} People approved',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
