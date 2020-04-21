@@ -286,7 +286,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     FocusScope.of(context).requestFocus(hoursTextFocus);
                   },
                   decoration: InputDecoration(
-                    hintText: 'Your Request \nand any #hashtags',
+                    hintText: 'Your Request and any #hashtags',
                     hintStyle: textStyle,
                   ),
                   initialValue: widget.offer != null && widget.isOfferRequest
@@ -454,7 +454,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
   }
 
-
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
       'Timebank Request',
@@ -475,7 +474,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     if (_formKey.currentState.validate()) {
       // validate request start and end date
-
 
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
         showDialogForTitle(

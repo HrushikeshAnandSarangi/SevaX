@@ -948,6 +948,29 @@ class DiscussionListState extends State<DiscussionList> {
     return filteredNewsList;
   }
 
+  void _showAdminAccessMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Access denied."),
+          content: new Text("You are not authorized to pin a feed."),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   List<NewsModel> filterBlockedContent(
       List<NewsModel> newsList, BuildContext context) {
     List<NewsModel> filteredNewsList = [];
