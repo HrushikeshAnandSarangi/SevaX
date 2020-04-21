@@ -227,29 +227,15 @@ class _ProfilePageState extends State<ProfilePage>
                           ),
                         ),
                         SizedBox(height: 20),
-                        FutureBuilder(
-                          future: FirestoreManager.getMemberBalance(
-                            SevaCore.of(context).loggedInUser.email,
-                            SevaCore.of(context).loggedInUser.sevaUserID,
+                        SevaCoinWidget(
+                          amount: this.user.currentBalance ?? 0.0,
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return ReviewEarningsPage();
+                              },
+                            ),
                           ),
-                          initialData: 0,
-                          builder:
-                              (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Text("Fetching seva credits...");
-                            }
-                            return SevaCoinWidget(
-                              amount: snapshot.data ?? 0,
-                              onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) {
-                                    return ReviewEarningsPage();
-                                  },
-                                ),
-                              ),
-                            );
-                          },
                         ),
                       ],
                     ),

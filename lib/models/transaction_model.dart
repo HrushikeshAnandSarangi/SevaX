@@ -6,6 +6,10 @@ class TransactionModel extends DataModel {
   int timestamp;
   num credits;
   bool isApproved;
+  String type;
+  String typeid;
+  String timebankid;
+  List<String> transactionbetween;
 
   TransactionModel({
     this.from,
@@ -13,6 +17,10 @@ class TransactionModel extends DataModel {
     this.credits,
     this.to,
     this.isApproved = false,
+    this.type,
+    this.typeid,
+    this.timebankid,
+    this.transactionbetween
   });
 
   TransactionModel.fromMap(Map<String, dynamic> map) {
@@ -28,9 +36,23 @@ class TransactionModel extends DataModel {
     if (map.containsKey('to')) {
       this.to = map['to'];
     }
+    if (map.containsKey('type')) {
+      this.type = map['type'];
+    }
     if (map.containsKey('isApproved')) {
       this.isApproved = map['isApproved'];
     }
+    if (map.containsKey('typeid')) {
+      this.typeid = map['typeid'];
+    }
+    if (map.containsKey('timebankid')) {
+      this.timebankid = map['timebankid'];
+    }
+    if (map.containsKey('transactionbetween')) {
+      List<String> transactionbetween = List.castFrom(map['transactionbetween']);
+      this.transactionbetween = transactionbetween;
+    }
+
   }
 
   @override
@@ -50,6 +72,19 @@ class TransactionModel extends DataModel {
     }
     if (this.isApproved != null) {
       map['isApproved'] = this.isApproved;
+    }
+    if (this.type != null) {
+      map['type'] = this.type;
+    }
+    if (this.typeid != null) {
+      map['typeid'] = this.typeid;
+    }
+    if (this.timebankid != null) {
+      map['timebankid'] = this.timebankid;
+    }
+    if (this.transactionbetween != null &&
+        this.transactionbetween.isNotEmpty) {
+      map['transactionbetween'] = this.transactionbetween;
     }
     return map;
   }

@@ -9,12 +9,13 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'models/news_model.dart';
+import 'package:flurry_analytics/flurry_analytics.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = Flavor.APP;
+  FlurryAnalytics.initialize(androidKey: "NZN3QTYM42M6ZQXV3GJ8", iosKey: "H9RX59248T458TDZGX3Y", enableLog: true);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(

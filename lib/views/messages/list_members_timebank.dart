@@ -57,7 +57,7 @@ Stream<List<TimebankModel>> getTimebankDetails({
   String timebankId,
 }) async* {
   var data = Firestore.instance
-      .collection('timebanksnew')
+      .collection('timebanknew')
       .where('timebankId', isEqualTo: timebankId)
       .snapshots();
 

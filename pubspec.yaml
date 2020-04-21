@@ -87,7 +87,7 @@ dependencies:
   device_info: ^0.4.1+4
   flutter_secure_storage: ^3.3.1+1
   connectivity: ^0.4.8+2
-
+  flurry_analytics: ^0.1.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

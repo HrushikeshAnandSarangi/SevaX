@@ -3,6 +3,117 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
 
+class TaskModel extends DataModel {
+  String id;
+  String sevaUserId;
+  String title;
+  int requestStart;
+  int requestEnd;
+  Color color;
+  String description;
+  String fullName;
+  int postTimestamp;
+  String email;
+  String requestid;
+  String timebankId;
+
+  TaskModel({
+    this.id,
+    this.sevaUserId,
+    this.title,
+    this.requestStart,
+    this.requestEnd,
+    this.color,
+    this.description,
+    this.fullName,
+    this.postTimestamp,
+    this.email,
+    this.requestid,
+    this.timebankId
+  });
+
+
+  TaskModel.fromMap(Map<String, dynamic> map) {
+    if (map.containsKey('id')) {
+      this.id = map['id'];
+    }
+    if (map.containsKey('sevaUserId')) {
+      this.sevaUserId = map['sevaUserId'];
+    }
+    if (map.containsKey('title')) {
+      this.title = map['title'];
+    }
+    if (map.containsKey('requestStart')) {
+      this.requestStart = map['requestStart'];
+    }
+    if (map.containsKey('requestEnd')) {
+      this.requestEnd = map['requestEnd'];
+    }
+    if (map.containsKey('color')) {
+      this.color = map['color'];
+    }
+    if (map.containsKey('description')) {
+      this.description = map['description'];
+    }
+    if (map.containsKey('fullName')) {
+      this.fullName = map['fullName'];
+    }
+    if (map.containsKey('postTimestamp')) {
+      this.postTimestamp = map['postTimestamp'];
+    }
+    if (map.containsKey('email')) {
+      this.email = map['email'];
+    }
+    if (map.containsKey('requestid')) {
+      this.requestid = map['requestid'];
+    }
+    if (map.containsKey('timebankId')) {
+      this.timebankId = map['timebankId'];
+    }
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> object = {};
+    if (this.id != null && this.id.isNotEmpty) {
+      object['id'] = this.id;
+    }
+    if (this.sevaUserId != null && this.sevaUserId.isNotEmpty) {
+      object['sevaUserId'] = this.sevaUserId;
+    }
+    if (this.title != null && this.title.isNotEmpty) {
+      object['title'] = this.title;
+    }
+    if (this.requestStart != null) {
+      object['requestStart'] = this.requestStart;
+    }
+    if (this.requestEnd != null) {
+      object['requestEnd'] = this.requestEnd;
+    }
+    if (this.color != null ) {
+      object['color'] = this.color;
+    }
+    if (this.description != null && this.description.isNotEmpty) {
+      object['description'] = this.description;
+    }
+    if (this.fullName != null && this.fullName.isNotEmpty) {
+      object['fullName'] = this.fullName;
+    }
+    if (this.postTimestamp != null) {
+      object['postTimestamp'] = this.postTimestamp;
+    }
+    if (this.email != null && this.email.isNotEmpty) {
+      object['email'] = this.email;
+    }
+    if (this.requestid != null && this.requestid.isNotEmpty) {
+      object['requestid'] = this.requestid;
+    }
+    if (this.timebankId != null && this.timebankId.isNotEmpty) {
+      object['timebankId'] = this.timebankId;
+    }
+  }
+
+}
 class RequestModel extends DataModel {
   String id;
   String title;
@@ -382,5 +493,9 @@ class RequestModel extends DataModel {
 
 enum RequestMode {
   PERSONAL_REQUEST,
-  TIMEBANK_REQUEST,
+  TIMEBANK_REQUEST
+}
+
+enum ContantsSeva {
+  USER_DONATE_TOTIMEBANK
 }
