@@ -430,7 +430,6 @@ class CreateEditCommunityViewFormState
                               snapshot.data.timebank
                                   .updateValueByKey('protected', value);
                               createEditCommunityBloc.onChange(snapshot.data);
-                              return "";
                             },
                           ),
                         ],

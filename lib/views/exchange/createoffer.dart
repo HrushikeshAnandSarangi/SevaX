@@ -135,7 +135,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                       return 'Please enter the subject of your Offer';
                     }
                     title = value;
-                    return "";
                   },
                 ),
                 SizedBox(height: 40),
@@ -149,7 +148,6 @@ class MyCustomFormState extends State<MyCustomForm> {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
                   maxLength: 500,
-
                   style: subTitleStyle,
                   decoration: InputDecoration(
                     hintText: 'Your offer and any #hashtags',

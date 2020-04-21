@@ -121,48 +121,33 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
 
   Widget get projectSwitch {
-    return FutureBuilder(
-      future: getTimebankAdminStatus,
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container();
-        }
-        timebankModel = snapshot.data;
-        if (snapshot.data.admins
-            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-          return Container(
-            margin: EdgeInsets.only(bottom: 20),
-            width: double.infinity,
-            child: CupertinoSegmentedControl<int>(
-              selectedColor: Theme.of(context).primaryColor,
-              children: logoWidgets,
-              borderColor: Colors.grey,
-              padding: EdgeInsets.only(left: 5.0, right: 5.0),
-              groupValue: sharedValue,
-              onValueChanged: (int val) {
-                print(val);
-                if (val != sharedValue) {
-                  setState(() {
-                    print("$sharedValue -- $val");
-                    if (val == 0) {
-                      print("TTTTTTTTTtimebank proj");
-                      projectModel.mode = 'Timebank';
-                    } else {
-                      print("pppppppppersonal proj");
-                      projectModel.mode = 'Personal';
-                    }
-                    sharedValue = val;
-                  });
-                }
-              },
-              //groupValue: sharedValue,
-            ),
-          );
-        } else {
-          return Container();
-        }
-      },
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      width: double.infinity,
+      child: CupertinoSegmentedControl<int>(
+        selectedColor: Theme.of(context).primaryColor,
+        children: logoWidgets,
+        borderColor: Colors.grey,
+        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+        groupValue: sharedValue,
+        onValueChanged: (int val) {
+          print(val);
+          if (val != sharedValue) {
+            setState(() {
+              print("$sharedValue -- $val");
+              if (val == 0) {
+                projectModel.mode = 'Timebank';
+                print("TTTTTTTTTtimebank proj " + projectModel.mode);
+              } else {
+                projectModel.mode = 'Personal';
+                print("pppppppppersonal proj "  + projectModel.mode);
+              }
+              sharedValue = val;
+            });
+          }
+        },
+        //groupValue: sharedValue,
+      ),
     );
   }
 
@@ -185,7 +170,24 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            widget.isCreateProject ? projectSwitch : Container(),
+            widget.isCreateProject ? FutureBuilder(
+          future: getTimebankAdminStatus,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasError) return Text(snapshot.error.toString());
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container();
+            }
+            timebankModel = snapshot.data;
+            if (snapshot.data.admins
+                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+              projectModel.mode = "Timebank";
+              return projectSwitch;
+            } else {
+              projectModel.mode = "Personal";
+              return Container();
+            }
+          },
+        ) : Container(),
             Center(
               child: Padding(
                 padding: EdgeInsets.all(5.0),
@@ -460,7 +462,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.pendingRequests = [];
                         projectModel.timebankId = widget.timebankId;
                         projectModel.photoUrl = globals.timebankAvatarURL;
-                        //  projectModel.mode = 'TimeBank';
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;

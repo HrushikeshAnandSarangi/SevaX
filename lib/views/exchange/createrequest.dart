@@ -223,6 +223,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     timebankModel = snapshot.data;
                     if (snapshot.data.admins.contains(
                         SevaCore.of(context).loggedInUser.sevaUserID)) {
+                      this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                       return requestSwitch;
                     } else {
                       return Container();
@@ -260,7 +261,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       return 'Please enter the subject of your request';
                     }
                     requestModel.title = value;
-                    return "";
                   },
                 ),
                 SizedBox(height: 30),
@@ -299,7 +299,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       return 'Please enter some text';
                     }
                     requestModel.description = value;
-                     return "";
                   },
                 ),
                 SizedBox(height: 40),
