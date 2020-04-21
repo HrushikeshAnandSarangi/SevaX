@@ -1068,31 +1068,30 @@ class DiscussionListState extends State<DiscussionList> {
                             ),
                           ),
                           //  SizedBox(width: 8.0),
-                          getOptionButtons(
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 6, vertical: 2),
-                              child: Icon(
-                                Icons.colorize,
-                                color:
-                                    news.isPinned ? Colors.green : Colors.black,
-                                size: 20,
-                              ),
-                            ),
-                            () {
-                              widget.timebankModel.admins.contains(
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID)
-                                  ? news.isPinned
-                                      ? unPinFeed(newsModel: news)
-                                      : pinNews(
-                                          newsModel: news,
-                                        )
-                                  : _showAdminAccessMessage();
-                              setState(() {});
-                            },
-                          ),
+                          widget.timebankModel.admins.contains(
+                                  SevaCore.of(context).loggedInUser.sevaUserID)
+                              ? getOptionButtons(
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    child: Icon(
+                                      Icons.colorize,
+                                      color: news.isPinned
+                                          ? Colors.green
+                                          : Colors.black,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  () {
+                                    news.isPinned
+                                        ? unPinFeed(newsModel: news)
+                                        : pinNews(
+                                            newsModel: news,
+                                          );
+                                    setState(() {});
+                                  },
+                                )
+                              : Offstage(),
                         ],
                       ),
                     ),
