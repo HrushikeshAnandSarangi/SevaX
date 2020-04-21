@@ -156,6 +156,7 @@ class BillingViewState extends State<BillingView> {
                     // if (snapshot.data.data.isEmpty) {
                     //   return Text("No Card");
                     // }
+
                     return Column(
                       children: <Widget>[
                         Padding(
@@ -174,19 +175,30 @@ class BillingViewState extends State<BillingView> {
                           physics: ClampingScrollPhysics(),
                           itemCount: snapshot.data.data.length,
                           itemBuilder: (BuildContext context, int index) {
+                            //  print(" user cards data ${snapshot.data.data[index]}");
+
+                            bool isDefault = false;
+                            if (snapshot.data.data[index].isDefault != null &&
+                                snapshot.data.data[index].isDefault == true) {
+                              isDefault = true;
+                            }
+
                             return GestureDetector(
                               onTap: () {
                                 // connectToStripe(cards[index]['paymentMethodId']);
                                 connectToStripe(snapshot.data.data[index].id);
                               },
-                              onLongPress: () => _showDialog(
-                                token: snapshot.data.data[index].id,
-                                communityId: widget.user.currentCommunity,
-                              ),
+                              onLongPress: () => isDefault
+                                  ? _showAlreadyDefaultMessage()
+                                  : _showDialog(
+                                      token: snapshot.data.data[index].id,
+                                      communityId: widget.user.currentCommunity,
+                                    ),
                               child: Stack(
                                 // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   CustomCreditCard(
+                                    isDefaultCard: isDefault,
                                     bankName: "Bank Name",
                                     cardNumber:
                                         snapshot.data.data[index].card.last4,
@@ -199,7 +211,7 @@ class BillingViewState extends State<BillingView> {
                                         .data.data[index].billingDetails.name,
                                   ),
                                   Offstage(
-                                    offstage: true,
+                                    offstage: isDefault ? false : true,
                                     child: Align(
                                       alignment: Alignment.topCenter,
                                       child: Container(
@@ -212,7 +224,7 @@ class BillingViewState extends State<BillingView> {
                                               bottomRight: Radius.circular(4),
                                             )),
                                         child: Text(
-                                          'Default',
+                                          'Default Card',
                                           style: TextStyle(color: Colors.white),
                                         ),
                                       ),
@@ -239,6 +251,43 @@ class BillingViewState extends State<BillingView> {
     );
   }
 
+//  BuildContext dialogContext;
+//  void showProgressDialog(String message) {
+//    showDialog(
+//        barrierDismissible: false,
+//        context: context,
+//        builder: (createDialogContext) {
+//          dialogContext = createDialogContext;
+//          return AlertDialog(
+//            title: Text(message),
+//            content: LinearProgressIndicator(),
+//          );
+//        });
+//  }
+
+  void _showAlreadyDefaultMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Default Card"),
+          content: new Text("This card is already added as default card"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showDialog({String token, String communityId}) {
     showDialog(
       context: context,
@@ -256,8 +305,13 @@ class BillingViewState extends State<BillingView> {
                   RaisedButton(
                     child: Text('Confirm'),
                     onPressed: () {
+                      //showProgressDialog('Adding default card');
                       setDefaultCard(token: token, communityId: communityId);
+//                      if (dialogContext != null) {
+//                        Navigator.pop(dialogContext);
+//                      }
                       Navigator.of(context).pop();
+                      setState(() {});
                     },
                   ),
                   SizedBox(width: 10),
@@ -310,7 +364,7 @@ Future<UserCardsModel> getUserCard(String communityId) async {
   var result = await http.post(
       "${FlavorConfig.values.cloudFunctionBaseURL}/getCardsOfCustomer",
       body: {"communityId": communityId});
-  print(result.body);
+  // print(result.body);
   if (result.statusCode == 200) {
     return userCardsModelFromJson(result.body);
   } else {

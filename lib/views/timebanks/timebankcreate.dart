@@ -93,7 +93,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           _searchText = "";
         });
       } else {
-        SearchManager.searchGroupForDuplicate(queryString: s, communityId: SevaCore.of(context).loggedInUser.currentCommunity).then((groupFound) {
+        SearchManager.searchGroupForDuplicate(
+                queryString: s,
+                communityId: SevaCore.of(context).loggedInUser.currentCommunity)
+            .then((groupFound) {
           if (groupFound) {
             setState(() {
               errTxt = 'Group name already exists';
@@ -449,11 +452,13 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ),
             ),
           ),
-          keyboardType: TextInputType.multiline,
+          keyboardType: TextInputType.emailAddress,
           maxLines: 1,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter email';
+            } else if (!validateEmail(value.trim())) {
+              return 'Please enter a valid email';
             }
             timebankModel.emailId = value;
           },
@@ -684,6 +689,19 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     } else {
       print("No users where selected");
       //no users where selected
+    }
+  }
+
+  bool validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return false;
+    } else if (!regExp.hasMatch(value)) {
+      return false;
+    } else {
+      return true;
     }
   }
 

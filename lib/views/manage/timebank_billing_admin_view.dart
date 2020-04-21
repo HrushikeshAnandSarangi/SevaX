@@ -58,8 +58,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
 
   @override
   Widget build(BuildContext context) {
+    // FocusScope.of(context).requestFocus(new FocusNode());
+
     final _bloc = BlocProvider.of<UserDataBloc>(context);
-    print("---->community model ${_bloc.community}");
+    //  print("---->community model ${_bloc.community}");
     this.parentContext = context;
     return Scaffold(
       body: SingleChildScrollView(
@@ -138,11 +140,15 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                                   .forEach((subscritpion) {
                                 if (subscritpion.containsKey("items")) {
                                   if (subscritpion['items']['data'] != null) {
-                                    planData = subscritpion['items']['data'] ?? [];
-                                    if (cardModel.currentPlan == "grande_plan") {
-                                      data = "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying yearly for \$1500 and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} per transaction billed monthly upon exceeding free monthly quota.";
+                                    planData =
+                                        subscritpion['items']['data'] ?? [];
+                                    if (cardModel.currentPlan ==
+                                        "grande_plan") {
+                                      data =
+                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying yearly for \$1500 and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10} per transaction billed monthly upon exceeding free monthly quota.";
                                     } else {
-                                      data = "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} yearly and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  per transaction billed annualy upon exceeding free monthly quota.";
+                                      data =
+                                          "Your community is on the ${cardModel.currentPlan != null ? planName(cardModel.currentPlan) : ""}, paying \$${cardModel.currentPlan == "venti_plan" ? "2500" : ""} yearly and additional charges of \$${planData[0]['plan']['amount'] != null ? planData[0]['plan']['amount'] / 100 : double.parse(planData[0]['plan']['amount_decimal']) / 10}  per transaction billed annualy upon exceeding free monthly quota.";
                                     }
                                     return spendingsTextWidgettwo(data ?? "");
                                   } else {
@@ -267,7 +273,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
                   itemBuilder: (context, index) {
                     return spendingsTextWidget(
 //                        "For the ${pastPlans[index]['nickname'] ?? " "} charged \$ ${pastPlans[index]['amount'] / 100 ?? ""} .");
-                  "dummy string");
+                        "dummy string");
                   });
             } else {
               return emptyText();
@@ -362,7 +368,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        headingText("Edit Billing Address"),
+        headingText("Edit Profile Information"),
         Padding(
           padding: EdgeInsets.only(left: 10, top: 10, right: 10),
           child: IconButton(
@@ -547,7 +553,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[2]);
+            FocusScope.of(parentContext).requestFocus(focusNodes[1]);
           },
           onChanged: (value) {
             print(value);
@@ -557,7 +563,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[1],
+          focusNode: focusNodes[0],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "City",
@@ -571,7 +577,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[1]);
+            FocusScope.of(parentContext).requestFocus(focusNodes[2]);
           },
           onChanged: (value) {
             communityModel.billing_address.state = value;
@@ -580,7 +586,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[0],
+          focusNode: focusNodes[1],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "State",
@@ -594,7 +600,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[3]);
+            FocusScope.of(parentContext).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             print(value);
@@ -604,7 +610,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[2],
+          focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -646,7 +652,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[4]);
+            FocusScope.of(parentContext).requestFocus(focusNodes[5]);
           },
           onChanged: (value) {
             communityModel.billing_address.street_address1 = value;
@@ -654,7 +660,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[3],
+          focusNode: focusNodes[4],
           textInputAction: TextInputAction.next,
           initialValue: street_address1 != null ? street_address1 : '',
           decoration: getInputDecoration(
@@ -669,12 +675,12 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
             onFieldSubmitted: (input) {
-              FocusScope.of(parentContext).requestFocus(focusNodes[5]);
+              FocusScope.of(parentContext).requestFocus(focusNodes[6]);
             },
             onChanged: (value) {
               communityModel.billing_address.street_address2 = value;
             },
-            focusNode: focusNodes[4],
+            focusNode: focusNodes[5],
             textInputAction: TextInputAction.next,
             initialValue: street_address2 != null ? street_address2 : '',
             decoration: getInputDecoration(
@@ -688,7 +694,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[6]);
+            FocusScope.of(parentContext).requestFocus(focusNodes[3]);
           },
           onChanged: (value) {
             communityModel.billing_address.country = value;
@@ -697,7 +703,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[5],
+          focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Country Name",

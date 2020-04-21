@@ -84,7 +84,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   List<DataModel> dataList = [];
   DataModel selectedEntity;
   GeoFirePoint location;
-  String selectedAddress = "Ave of the Americas 41 St, New York";
+  String selectedAddress;
 
   Future<void> writeToDB() async {
     newsObject.placeAddress = selectedAddress;
@@ -92,8 +92,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     newsObject.fullName = SevaCore.of(context).loggedInUser.fullname;
     newsObject.sevaUserId = SevaCore.of(context).loggedInUser.sevaUserID;
     newsObject.newsImageUrl = globals.newsImageURL ?? '';
-    newsObject.location =
-        location == null ? GeoFirePoint(40.754387, -73.984291) : location;
+    newsObject.location = location;
     newsObject.root_timebank_id = FlavorConfig.values.timebankId;
     newsObject.photoCredits = photoCredits != null ? photoCredits : '';
     //EntityModel entityModel = _getSelectedEntityModel;
@@ -352,8 +351,9 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                         photoCredits: newsObject.photoCredits,
                         geoFirePointLocation: location,
                         geoFirePointLocationCallback:
-                            (geoLocationPointSelected) {
+                            (geoLocationPointSelected) async {
                           location = geoLocationPointSelected;
+                          await _getLocation();
                         },
                         onCreditsEntered: (photoCreditsFromNews) {
                           // print("" + photoCredits);

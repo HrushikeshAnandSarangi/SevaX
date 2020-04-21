@@ -10,6 +10,7 @@ class CustomCreditCard extends StatefulWidget {
   final String cardHolderName;
   final String bankName;
   final String brand;
+  final bool isDefaultCard;
 
   final Color frontTextColor;
   final Color backTextColor;
@@ -38,6 +39,7 @@ class CustomCreditCard extends StatefulWidget {
     this.showShadow = false,
     this.width,
     this.height,
+    this.isDefaultCard,
   })  : assert(frontBackground != null),
         // assert(backBackground != null),
         super(key: key);
