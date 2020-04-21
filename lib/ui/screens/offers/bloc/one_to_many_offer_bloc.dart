@@ -39,18 +39,18 @@ class OneToManyOfferBloc extends BlocBase {
   Stream<Status> get status => _status.stream;
 
   ///[Function] to create or update offer
-  void createOrUpdateOffer({
+  void createOneToManyOffer({
     UserModel user,
     String timebankId,
   }) {
-    print(errorCheck());
+    //print(errorCheck());
     if (!errorCheck()) {
       int prepHours = int.parse(_preparationHours.value);
       int classHours = int.parse(_classHours.value);
       int classSize = int.parse(_classSize.value);
 
       if (prepHours + classHours < classSize * classHours) {
-        print("creating /....");
+        _status.add(Status.LOADING);
         var timestamp = DateTime.now().millisecondsSinceEpoch;
         var id = '${user.email}*$timestamp';
 
@@ -82,7 +82,7 @@ class OneToManyOfferBloc extends BlocBase {
           _status.add(Status.COMPLETE);
         }).catchError((e) => _status.add(Status.ERROR));
       } else {
-        _classSizeError.add(ValidationErrors.offerProfitError);
+        _classSizeError.add(ValidationErrors.offerCreditError);
       }
     }
   }
@@ -90,22 +90,30 @@ class OneToManyOfferBloc extends BlocBase {
   void updateOneToManyOffer(OfferModel offerModel) {
     OfferModel offer = offerModel;
     if (!errorCheck()) {
-      offer.location = _location.value.location;
-      offer.selectedAdrress = _location.value.address;
-      offer.groupOfferDataModel = GroupOfferDataModel()
-        ..classTitle = _title.value.replaceAll('__*__', '')
-        ..startDate = startTime
-        ..endDate = endTime
-        ..numberOfPreperationHours =
-            int.parse(_preparationHours.value.replaceAll('__*__', ''))
-        ..numberOfClassHours =
-            int.parse(_classHours.value.replaceAll('__*__', ''))
-        ..sizeOfClass = int.parse(_classSize.value.replaceAll('__*__', ''))
-        ..classDescription = _classDescription.value.replaceAll('__*__', '');
+      int prepHours =
+          int.parse(_preparationHours.value.replaceAll('__*__', ''));
+      int classHours = int.parse(_classHours.value.replaceAll('__*__', ''));
+      int classSize = int.parse(_classSize.value.replaceAll('__*__', ''));
+      if (prepHours + classHours < classSize * classHours) {
+        _status.add(Status.LOADING);
+        offer.location = _location.value.location;
+        offer.selectedAdrress = _location.value.address;
+        offer.groupOfferDataModel = GroupOfferDataModel()
+          ..classTitle = _title.value.replaceAll('__*__', '')
+          ..startDate = startTime
+          ..endDate = endTime
+          ..numberOfPreperationHours = prepHours
+          ..numberOfClassHours = classHours
+          ..sizeOfClass = classSize
+          ..classDescription = _classDescription.value.replaceAll('__*__', '');
+        print("updating offer ${offer.timebankId}");
 
-      updateOfferWithRequest(offer: offerModel).then((_) {
-        _status.add(Status.COMPLETE);
-      }).catchError((e) => _status.add(Status.ERROR));
+        updateOfferWithRequest(offer: offer).then((_) {
+          _status.add(Status.COMPLETE);
+        }).catchError((e) => _status.add(Status.ERROR));
+      } else {
+        _classSizeError.add(ValidationErrors.offerCreditError);
+      }
     }
   }
 
@@ -169,30 +177,29 @@ class OneToManyOfferBloc extends BlocBase {
       );
       flag = true;
     }
-
     if (_location.value == null) {
       _location.addError(ValidationErrors.genericError);
       flag = true;
     }
-    //Check if the offer is valid
-    // try {
-    //   if (int.parse(_preparationHours.value) + int.parse(_classHours.value) >
-    //       int.parse(_classSize.value) * int.parse(_classHours.value)) {
-    //     _classSize.drain();
-    //     _classSize
-    //         .addError("The class size is small for the given offer details");
-    //     flag = true;
-    //   }
-    // } catch (e) {
-    //   print(e);
-    //   flag = true;
-    // }
-
     return flag;
+  }
+
+  bool checkCreditError() {
+    if (!errorCheck()) {
+      int prepHours = int.parse(_preparationHours.value);
+      int classHours = int.parse(_classHours.value);
+      int classSize = int.parse(_classSize.value);
+
+      if (prepHours + classHours > classSize * classHours) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
   void dispose() {
+    print("bloc disposed");
     _title.close();
     _classDescription.close();
     _preparationHours.close();
