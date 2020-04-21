@@ -16,6 +16,8 @@ class GroupOfferDataModel {
   int sizeOfClass;
   String classDescription;
   List<String> signedUpMembers;
+  double creditsApproved;
+  int creditStatus;
 
   GroupOfferDataModel();
 
@@ -39,8 +41,9 @@ class GroupOfferDataModel {
 
     if (this.classDescription != null)
       map['classDescription'] = this.classDescription;
-
     map['signedUpMembers'] = this.signedUpMembers ?? [];
+    map['creditsApproved'] = this.creditsApproved ?? 0;
+    map['creditStatus'] = this.creditStatus ?? 0;
 
     return map;
   }
@@ -73,6 +76,12 @@ class GroupOfferDataModel {
 
     if (map.containsKey('classDescription')) {
       this.classDescription = map['classDescription'];
+    }
+    if (map.containsKey('creditsApproved')) {
+      this.creditsApproved = map['creditsApproved'].toDouble();
+    }
+    if (map.containsKey('creditStatus')) {
+      this.creditStatus = map['creditStatus'];
     }
 
     if (map.containsKey('signedUpMembers')) {
