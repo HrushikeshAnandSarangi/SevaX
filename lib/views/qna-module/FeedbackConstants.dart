@@ -72,4 +72,44 @@ class FeedbackConstants {
       ]
     }
   ];
+
+  static const FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER = const [
+    {
+      FEEDBACK_TITLE: "What is your overall rating of the class?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Excellent", SCORE: 5},
+        {ANSWER_TEXT: "Good", SCORE: 4},
+        {ANSWER_TEXT: "Average", SCORE: 3},
+        {ANSWER_TEXT: "Poor", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE: "What did you think of the content of the class?",
+      ANSWERS: [
+        {ANSWER_TEXT: "Just right", SCORE: 4},
+        {ANSWER_TEXT: "Too light", SCORE: 3},
+        {ANSWER_TEXT: "Too detailed", SCORE: 2},
+      ]
+    },
+    {
+      FEEDBACK_TITLE:
+          "What did you think of the length of the class?",
+      "answers": [
+        {ANSWER_TEXT: "Just right", SCORE: 4},
+        {ANSWER_TEXT: "Too light", SCORE: 3},
+        {ANSWER_TEXT: "Too detailed", SCORE: 2},
+      ]
+    },
+    // {
+    //   FEEDBACK_TITLE:
+    //       "Please provide any additional feedback",
+    //   "answers": [
+    //     {ANSWER_TEXT: "Highly skilled", SCORE: 3},
+    //     {ANSWER_TEXT: "Average", SCORE: 3},
+    //     {ANSWER_TEXT: "Not skilled at all", SCORE: 1},
+    //   ]
+    // }
+  ];
 }
+
+

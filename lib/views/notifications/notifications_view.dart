@@ -627,8 +627,8 @@ class NotificationsView extends State<NotificationViewHolder> {
       SevaCore sevaCore}) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return ReviewFeedback.forVolunteer(
-          forVolunteer: true,
+        return ReviewFeedback(
+          feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
         );
       },
     ));

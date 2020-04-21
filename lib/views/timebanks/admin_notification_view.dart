@@ -573,8 +573,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   }) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return ReviewFeedback.forVolunteer(
-          forVolunteer: true,
+        return ReviewFeedback(
+          feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
         );
       },
     ));

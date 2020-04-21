@@ -816,8 +816,8 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
       num credits}) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return ReviewFeedback.forVolunteer(
-          forVolunteer: true,
+        return ReviewFeedback(
+          feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
         );
       },
     ));
