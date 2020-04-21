@@ -200,12 +200,7 @@ class CreateEditCommunityViewFormState
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
-//    setState(() {
-//      searchTextController =
-//          new TextEditingController(text: communityModel.name);
-//
-//      //  searchTextController.text = communityModel.name;
-//    });
+
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -311,7 +306,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    //initialValue: snapshot.data.community.name ?? '',
+//                    initialValue: snapshot.data.community.name ?? '',
 
                     onSaved: (value) {
                       enteredName = value;
@@ -449,33 +444,32 @@ class CreateEditCommunityViewFormState
 //                      color: Colors.grey,
 //                    ),
 //                  ),
-                  SizedBox(height: 10),
-//
-//                  headingText('Select Tax percentage'),
-//                  Slider(
-//                    label: "${taxPercentage.toInt()}%",
-//                    value: taxPercentage,
-//                    min: 0,
-//                    max: 15,
-//                    divisions: 15,
-//                    onChanged: (value) {
-//                      snapshot.data.community
-//                          .updateValueByKey('taxPercentage', value / 100);
-//                      setState(() {
-//                        taxPercentage = value;
-//                        communityModel.taxPercentage = value / 100;
-//                      });
-//                      print(snapshot.data.community);
-//                    },
-//                  ),
-//                  Text(
-//                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
-//                    style: TextStyle(
-//                      fontSize: 12,
-//                      color: Colors.grey,
-//                    ),
-//                  ),
-//                  SizedBox(height: 20),
+                  widget.isCreateTimebank ? Container() : SizedBox(height: 10),
+                  widget.isCreateTimebank ? Container() : headingText('Select Tax percentage'),
+                  widget.isCreateTimebank ? Container() : Slider(
+                    label: "${taxPercentage.toInt()}%",
+                    value: taxPercentage,
+                    min: 0,
+                    max: 15,
+                    divisions: 15,
+                    onChanged: (value) {
+                      snapshot.data.community
+                          .updateValueByKey('taxPercentage', value / 100);
+                      setState(() {
+                        taxPercentage = value;
+                        communityModel.taxPercentage = value / 100;
+                      });
+                      print(snapshot.data.community);
+                    },
+                  ),
+                  Text(
+                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   headingText('Your timebank location.'),
                   Text(
                     'List the place or address where your community meets (such as a cafe, library, or church.).',
@@ -700,13 +694,13 @@ class CreateEditCommunityViewFormState
                                 members.add(user.sevaUserID);
                               });
                             }
-                            var taxDefaultVal = (json.decode(AppConfig
-                                    .remoteConfig
-                                    .getString('defaultTaxPercentValue')))
-                                .toDouble();
-                            snapshot.data.community.updateValueByKey(
-                                'taxPercentage', taxDefaultVal / 100);
-                            communityModel.taxPercentage = taxDefaultVal / 100;
+                            if(widget.isCreateTimebank){
+                              var taxDefaultVal = (json.decode(AppConfig.remoteConfig.getString('defaultTaxPercentValue'))).toDouble();
+                              snapshot.data.community.updateValueByKey(
+                                  'taxPercentage', taxDefaultVal / 100);
+                              communityModel.taxPercentage = taxDefaultVal / 100;
+                            }
+
                             // creation of community;
 
                             // updating timebank with latest values
