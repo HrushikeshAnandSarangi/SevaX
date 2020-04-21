@@ -40,8 +40,7 @@ class GroupOfferDataModel {
     if (this.classDescription != null)
       map['classDescription'] = this.classDescription;
 
-    if (this.signedUpMembers != null)
-      map['signedUpMembers'] = this.signedUpMembers;
+    map['signedUpMembers'] = this.signedUpMembers ?? [];
 
     return map;
   }
@@ -133,6 +132,7 @@ class IndividualOfferDataModel extends DataModel {
     if (schedule != null) {
       map['schedule'] = schedule;
     }
+    map['offerAcceptors'] = [];
     return map;
   }
 
@@ -184,7 +184,7 @@ class OfferModel extends DataModel {
 
   @override
   String toString() {
-    return "id = $id, email = $email, fullName : $fullName , selectedAddress : $selectedAdrress indiOffer : $individualOfferDataModel, groupOffer : $groupOfferDataModel";
+    return "id = $id, timebankId = $timebankId,email = $email, fullName : $fullName , selectedAddress : $selectedAdrress indiOffer : $individualOfferDataModel, groupOffer : $groupOfferDataModel";
   }
 
   OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
@@ -296,7 +296,7 @@ class OfferModel extends DataModel {
       this.timebankId = map['timebankId'];
     }
     if (map.containsKey('communityId')) {
-      this.timebankId = map['communityId'];
+      this.communityId = map['communityId'];
     }
 
     if (map.containsKey('location')) {
