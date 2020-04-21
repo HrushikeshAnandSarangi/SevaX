@@ -37,7 +37,11 @@ class OfferParticipants extends StatelessWidget {
                 return CircularProgressIndicator();
               }
               if (snapshot.data == null || snapshot.data.isEmpty) {
-                return Text("No Participants yet");
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  alignment: Alignment.center,
+                  child: Text("No Participants yet"),
+                );
               }
               return ListView.builder(
                 shrinkWrap: true,
@@ -48,7 +52,7 @@ class OfferParticipants extends StatelessWidget {
                     name: snapshot.data[index].participantDetails.fullname,
                     imageUrl: snapshot.data[index].participantDetails.photourl,
                     bio: snapshot.data[index].participantDetails.bio,
-                    
+
                     // rating: double.parse(snapshot.data[index].participantDetails.),
                     onMessageTapped: () {
                       onMessageClick(
