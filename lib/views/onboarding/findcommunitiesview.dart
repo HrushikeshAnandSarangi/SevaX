@@ -555,6 +555,60 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     return showDialog(
         context: context,
         builder: (BuildContext viewContext) {
+          Future<Map> showTimebankAdvisory({String dialogTitle}) {
+            return showDialog(
+                context: context,
+                builder: (BuildContext viewContext) {
+                  return AlertDialog(
+//            title: Text(
+//              dialogTitle,
+//              style: TextStyle(
+//                fontSize: 16,
+//              ),
+//            ),
+                    content: Form(
+                      child: Container(
+                        height: 200,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Text(
+                            dialogTitle,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(viewContext).pop({'PROCEED': false});
+                        },
+                      ),
+                      FlatButton(
+                        child: Text(
+                          'Proceed',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        onPressed: () {
+                          return Navigator.of(viewContext)
+                              .pop({'PROCEED': true});
+                        },
+                      ),
+                    ],
+                  );
+                });
+          }
+
           return AlertDialog(
 //            title: Text(
 //              dialogTitle,
