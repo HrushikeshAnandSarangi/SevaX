@@ -4,8 +4,8 @@ import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/views/core.dart';
 
-import '../offers_ui.dart';
 import 'offer_accepted_admin_router.dart';
+import 'offer_details.dart';
 
 class OfferDetailsRouter extends StatefulWidget {
   final OfferModel offerModel;
@@ -77,7 +77,7 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                   child: TabBarView(
                     children: _isCreator
                         ? <Widget>[
-                            OfferCardView(
+                            OfferDetails(
                               offerModel: widget.offerModel,
                             ),
                             OfferAcceptedAdminRouter(
@@ -85,7 +85,9 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
                             ),
                           ]
                         : <Widget>[
-                            OfferCardView(offerModel: widget.offerModel),
+                            OfferDetails(
+                              offerModel: widget.offerModel,
+                            ),
                           ],
                   ),
                 )
