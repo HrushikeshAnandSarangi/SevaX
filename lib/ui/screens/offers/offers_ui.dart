@@ -23,6 +23,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
+@deprecated
 class OfferCardView extends StatefulWidget {
   final OfferModel offerModel;
   TimebankModel timebankModel;
@@ -205,73 +206,67 @@ class OfferCardViewState extends State<OfferCardView> {
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                             ),
-                                            trailing: Container(
-                                              height: 30,
-                                              width: 80,
-                                              child: widget.offerModel
-                                                          .sevaUserId ==
-                                                      SevaCore.of(context)
-                                                          .loggedInUser
-                                                          .sevaUserID
-                                                  ? FlatButton(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      color: Color.fromRGBO(
-                                                          44, 64, 140, 1),
-                                                      child: Text(
-                                                        'Edit',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                      onPressed: () {
-                                                        switch (widget
-                                                            .offerModel
-                                                            .offerType) {
-                                                          case OfferType
-                                                              .INDIVIDUAL_OFFER:
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        IndividualOffer(
-                                                                  offerModel: widget
-                                                                      .offerModel,
-                                                                  timebankId: widget
-                                                                      .offerModel
-                                                                      .timebankId,
-                                                                ),
-                                                              ),
-                                                            );
-                                                            break;
-                                                          case OfferType
-                                                              .GROUP_OFFER:
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        OneToManyOffer(
-                                                                  offerModel: widget
-                                                                      .offerModel,
-                                                                  timebankId: widget
-                                                                      .offerModel
-                                                                      .timebankId,
-                                                                ),
-                                                              ),
-                                                            );
-                                                            break;
-                                                        }
-                                                      },
-                                                    )
-                                                  : Container(),
+                                            trailing: Offstage(
+                                              offstage: widget
+                                                      .offerModel.sevaUserId !=
+                                                  SevaCore.of(context)
+                                                      .loggedInUser
+                                                      .sevaUserID,
+                                              child: Container(
+                                                height: 30,
+                                                width: 80,
+                                                child: FlatButton(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  color: Color.fromRGBO(
+                                                      44, 64, 140, 1),
+                                                  child: Text(
+                                                    'Edit',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
+                                                  onPressed: () {
+                                                    switch (widget
+                                                        .offerModel.offerType) {
+                                                      case OfferType
+                                                          .INDIVIDUAL_OFFER:
+                                                        Navigator.of(context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                IndividualOffer(
+                                                              offerModel: widget
+                                                                  .offerModel,
+                                                              timebankId: widget
+                                                                  .offerModel
+                                                                  .timebankId,
+                                                            ),
+                                                          ),
+                                                        );
+                                                        break;
+                                                      case OfferType
+                                                          .GROUP_OFFER:
+                                                        Navigator.of(context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                OneToManyOffer(
+                                                              offerModel: widget
+                                                                  .offerModel,
+                                                              timebankId: widget
+                                                                  .offerModel
+                                                                  .timebankId,
+                                                            ),
+                                                          ),
+                                                        );
+                                                        break;
+                                                    }
+                                                  },
+                                                ),
+                                              ),
                                             ),
                                           ),
                                           CustomListTile(
