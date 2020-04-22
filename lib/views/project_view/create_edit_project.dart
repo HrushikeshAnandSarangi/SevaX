@@ -56,7 +56,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       getData();
     } else {
       setState(() {
-        this.projectModel.mode = 'Personal';
+        this.projectModel.mode = 'Timebank';
       });
     }
 
@@ -119,7 +119,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   Future<TimebankModel> getTimebankAdminStatus;
   TimebankModel timebankModelFuture;
 
-
   Widget get projectSwitch {
     return FutureBuilder(
       future: getTimebankAdminStatus,
@@ -160,12 +159,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
           );
         } else {
+          this.projectModel.mode = 'Personal';
+
           return Container();
         }
       },
     );
   }
-
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
@@ -421,6 +421,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
+                    print('project mode ${projectModel.mode}');
                     FocusScope.of(context).requestFocus(new FocusNode());
                     // show a dialog
                     projectModel.startTime =

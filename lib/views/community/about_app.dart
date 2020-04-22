@@ -46,6 +46,22 @@ class AboutApp extends StatelessWidget {
           getHelpButton(context, contactUsOnTap(context), "Contact Us"),
         ],
       ),
+      bottomSheet: Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Version 1.1',
+              style: TextStyle(
+                  fontFamily: 'Europa',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -252,7 +268,8 @@ class AboutApp extends StatelessWidget {
                     await http.post(
                         "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
                         body: {
-                          "memberEmail": SevaCore.of(context).loggedInUser.email,
+                          "memberEmail":
+                              SevaCore.of(context).loggedInUser.email,
                           "feedbackBody": feedbackText
                         });
                     Navigator.pop(progressContext);

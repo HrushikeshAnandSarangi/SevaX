@@ -142,7 +142,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
-    this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+    this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
 
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
@@ -225,8 +225,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     timebankModel = snapshot.data;
                     if (snapshot.data.admins.contains(
                         SevaCore.of(context).loggedInUser.sevaUserID)) {
-                      return requestSwitch;
+                      return requestSwitch();
                     } else {
+                      this.requestModel.requestMode =
+                          RequestMode.PERSONAL_REQUEST;
                       return Container();
                     }
                   },
@@ -398,7 +400,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
-  Widget get requestSwitch {
+  Widget requestSwitch() {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
         widget.projectId == "") {
@@ -411,6 +413,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           borderColor: Colors.grey,
           padding: EdgeInsets.only(left: 5.0, right: 5.0),
           groupValue: sharedValue,
+
           onValueChanged: (int val) {
             print(val);
             if (val != sharedValue) {

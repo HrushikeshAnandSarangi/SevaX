@@ -481,13 +481,15 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ),
             ),
           ),
-          keyboardType: TextInputType.multiline,
+          keyboardType: TextInputType.number,
           maxLines: 1,
+          maxLength: 15,
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            timebankModel.phoneNumber = value;
+            timebankModel.phoneNumber = value.replaceAll('.', '');
+            print(timebankModel.phoneNumber.toString());
           },
         ),
         Text(''),
