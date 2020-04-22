@@ -150,6 +150,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   ),
                 );
               },
+//              loadingBuilder: (context) {
+//                return Center(
+//                  child: CircularProgressIndicator(),
+//                );
+//              },
               onSuggestionSelected: (suggestion) {
                 _textEditingController.clear();
                 if (!_selectedSkills.containsValue(suggestion)) {
@@ -198,7 +203,10 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  widget.userModel.skills == null || widget.userModel.skills.length==0? 'Next' : 'Update',
+                  widget.userModel.skills == null ||
+                          widget.userModel.skills.length == 0
+                      ? 'Next'
+                      : 'Update',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),

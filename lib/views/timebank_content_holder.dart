@@ -627,6 +627,19 @@ class DiscussionListState extends State<DiscussionList> {
                       newsList = filterPinnedNews(newsList, context);
 
                       print("Size of incloming docs ${newsList.length}");
+                      if (newsList.length == 1 &&
+                          newsList[0].isPinned == true) {
+                        return Expanded(
+                          child: ListView(
+                            children: <Widget>[
+                              getNewsCard(
+                                newsList.elementAt(0),
+                                false,
+                              )
+                            ],
+                          ),
+                        );
+                      }
                       if (newsList.length == 0) {
                         return Padding(
                           padding: const EdgeInsets.all(28.0),
@@ -693,7 +706,19 @@ class DiscussionListState extends State<DiscussionList> {
                           List<NewsModel> newsList = snapshot.data;
                           newsList = filterBlockedContent(newsList, context);
                           newsList = filterPinnedNews(newsList, context);
-
+                          if (newsList.length == 1 &&
+                              newsList[0].isPinned == true) {
+                            return Expanded(
+                              child: ListView(
+                                children: <Widget>[
+                                  getNewsCard(
+                                    newsList.elementAt(0),
+                                    false,
+                                  )
+                                ],
+                              ),
+                            );
+                          }
                           if (newsList.length == 0) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -746,7 +771,19 @@ class DiscussionListState extends State<DiscussionList> {
                               newsList =
                                   filterBlockedContent(newsList, context);
                               newsList = filterPinnedNews(newsList, context);
-
+                              if (newsList.length == 1 &&
+                                  newsList[0].isPinned == true) {
+                                return Expanded(
+                                  child: ListView(
+                                    children: <Widget>[
+                                      getNewsCard(
+                                        newsList.elementAt(0),
+                                        false,
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
                               if (newsList.length == 0) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -795,7 +832,19 @@ class DiscussionListState extends State<DiscussionList> {
                                       filterBlockedContent(newsList, context);
                                   newsList =
                                       filterPinnedNews(newsList, context);
-
+                                  if (newsList.length == 1 &&
+                                      newsList[0].isPinned == true) {
+                                    return Expanded(
+                                      child: ListView(
+                                        children: <Widget>[
+                                          getNewsCard(
+                                            newsList.elementAt(0),
+                                            false,
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }
                                   if (newsList.length == 0) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -940,10 +989,11 @@ class DiscussionListState extends State<DiscussionList> {
       }
     });
 
-    print('pinned news ${pinnedNewsModel}');
-
-    filteredNewsList.removeWhere((news) => news.isPinned == true);
-    print('filtered news ${filteredNewsList}');
+    // print('pinned news ${pinnedNewsModel}');
+    if (filteredNewsList.length > 1) {
+      filteredNewsList.removeWhere((news) => news.isPinned == true);
+    }
+    // print('filtered news ${filteredNewsList}');
 
     return filteredNewsList;
   }
