@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
@@ -10,7 +11,10 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -66,6 +70,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           itemCount: notifications.length,
           itemBuilder: (context, index) {
             NotificationsModel notification = notifications.elementAt(index);
+            print(notification.type);
             switch (notification.type) {
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
@@ -257,12 +262,155 @@ class NotificationsView extends State<NotificationViewHolder> {
                   notification.communityId,
                 );
                 break;
+
+              // One to many offer notifications
+              // DEBIT_FROM_OFFER,
+              // CREDIT_FROM_OFFER_ON_HOLD,//timebank notification
+              // CREDIT_FROM_OFFER_APPROVED,//timebank notification
+              // CREDIT_FROM_OFFER,//user notification
+              // DEBIT_FULFILMENT_FROM_TIMEBANK,//timebank notification
+              // NEW_MEMBER_SIGNUP_OFFER,//user notification
+              // OFFER_FULFILMENT_ACHIEVED,// user notification
+              // OFFER_SUBSCRIPTION_COMPLETED,//user ///successfully signed up
+              // FEEDBACK_FROM_SIGNUP_MEMBER,//feedback user
+              // CREDIT_FULFILLED,//
+              // CREDIT_NOT_YET_FULFILLED//
+
+              case NotificationType.TYPE_DEBIT_FROM_OFFER:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return NotificationCard(
+                  photoUrl: data.participantDetails.photourl,
+                  title: "Debited",
+                  subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
+                      .replaceFirst(
+                        '*n',
+                        data.classDetails.numberOfClassHours.toString(),
+                      )
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                );
+                break;
+              // case NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD:
+              //   OneToManyNotificationDataModel data =
+              //       OneToManyNotificationDataModel.fromJson(notification.data);
+
+              //   return Container(
+              //     child: Text(
+              //         "${notification.type} ${data?.classDetails?.classTitle}  ${data?.participantDetails?.fullname}"),
+              //     color: Colors.purple,
+              //     height: 30,
+              //   );
+              //   break;
+              //TODO implement
+              case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return Container(
+                  child: Text(
+                      "${notification.type} ${data?.classDetails?.classTitle}  ${data?.participantDetails?.fullname}"),
+                  color: Colors.purple,
+                  height: 30,
+                );
+                break;
+              case NotificationType.TYPE_CREDIT_FROM_OFFER:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return NotificationCard(
+                  photoUrl: data.participantDetails.photourl,
+                  title: "Credited",
+                  subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
+                      .replaceFirst(
+                        '*n',
+                        (data.classDetails.numberOfClassHours +
+                                data.classDetails.numberOfPreperationHours)
+                            .toString(),
+                      )
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                );
+                break;
+              // case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:
+              //   OneToManyNotificationDataModel data =
+              //       OneToManyNotificationDataModel.fromJson(notification.data);
+
+              //   return Container(
+              //     child: Text(
+              //         "${notification.type} ${data?.classDetails?.classTitle}  ${data?.participantDetails?.fullname}"),
+              //     color: Colors.purple,
+              //     height: 30,
+              //   );
+              //   break;
+              case NotificationType.TYPE_NEW_MEMBER_SIGNUP_OFFER:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return NotificationCard(
+                  photoUrl: data.participantDetails.photourl,
+                  title: "New member signed up",
+                  subTitle: UserNotificationMessage.NEW_MEMBER_SIGNUP_OFFER
+                      .replaceFirst(
+                        '*name',
+                        data.participantDetails.fullname,
+                      )
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                );
+                break;
+              case NotificationType.TYPE_OFFER_FULFILMENT_ACHIEVED:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return NotificationCard(
+                  photoUrl: data.participantDetails.photourl,
+                  title: "Class completed",
+                  subTitle: UserNotificationMessage.OFFER_FULFILMENT_ACHIEVED
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                );
+                break;
+              case NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return NotificationCard(
+                  photoUrl: data.participantDetails.photourl,
+                  title: "Signed up for class",
+                  subTitle: UserNotificationMessage.OFFER_SUBSCRIPTION_COMPLETED
+                      .replaceFirst(
+                        '*class',
+                        data.classDetails.classTitle,
+                      )
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                );
+                break;
+              case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return NotificationCard(
+                  photoUrl: data.participantDetails.photourl,
+                  title: "Feedback request",
+                  subTitle: UserNotificationMessage.FEEDBACK_FROM_SIGNUP_MEMBER
+                      .replaceFirst(
+                    '*class',
+                    data.classDetails.classTitle,
+                  ),
+                  onPressed: () {
+                    print("navigate to feedback");
+                  },
+                );
+                break;
+
+              default:
+                Crashlytics().log(
+                    "Unhandled notification type ${notification.type} ${notification.id}");
+                return Container(
+                  child: Text(
+                    "Unhandled notification type ${notification.type} ${notification.id}",
+                  ),
+                  color: Colors.red,
+                );
             }
-            return Container(
-              color: Colors.yellow,
-              width: 50,
-              height: 30,
-            );
           },
         );
       },
@@ -566,7 +714,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${user.fullname} sent request for your offer ', 
+                                      '${user.fullname} sent request for your offer ',
                                   style: TextStyle(
                                     color: Colors.grey,
                                   ),
@@ -701,7 +849,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                 );
                 Navigator.pop(linearProgressForBalanceCheck);
-              
 
                 if (!canApproveTransaction) {
                   showDiologForMessage(
@@ -769,7 +916,7 @@ class NotificationsView extends State<NotificationViewHolder> {
           return AlertDialog(
             title: Text(dialogText),
             actions: <Widget>[
-              FlatButton( 
+              FlatButton(
                 child: Text(
                   'OK',
                   style: TextStyle(
