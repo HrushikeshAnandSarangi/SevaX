@@ -29,18 +29,20 @@ class UserDataBloc extends BlocBase {
   }
 
   void getData({String email, String communityId}) {
-    CombineLatestStream.combine2(
-            Firestore.instance.collection("users").document(email).snapshots(),
-            Firestore.instance
-                .collection("communities")
-                .document(communityId)
-                .snapshots(),
-            (u, c) => HomeRouterModel(user: u, community: c))
-        .listen((HomeRouterModel model) {
-      _user.add(UserModel.fromMap(model.user.data));
-      _community.add(CommunityModel(model.community.data));
-      print(_community.value.billingQuota);
-    });
+    if (!_user.isClosed && !_community.isClosed)
+      CombineLatestStream.combine2(
+          Firestore.instance.collection("users").document(email).snapshots(),
+          Firestore.instance
+              .collection("communities")
+              .document(communityId)
+              .snapshots(),
+          (u, c) =>
+              HomeRouterModel(user: u, community: c)).listen(
+          (HomeRouterModel model) {
+        _user.add(UserModel.fromMap(model.user.data));
+        _community.add(CommunityModel(model.community.data));
+        print(_community.value.billingQuota);
+      });
   }
 
   @override

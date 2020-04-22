@@ -11,6 +11,7 @@ import 'package:sevaexchange/views/profile/profile.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 
 class UserProfileBloc {
+  bool _isDisposed = false;
   final BuildContext context;
   final _communities = BehaviorSubject<List<Widget>>();
   final _communityLoaded = BehaviorSubject<bool>.seeded(false);
@@ -23,8 +24,9 @@ class UserProfileBloc {
   StreamSink<bool> get changeCommunity => _communityLoaded.sink;
 
   void getAllCommunities(context, UserModel userModel) async {
+    // if (!_isDisposed)
     FirestoreManager.getUserForIdStream(
-      sevaUserId: userModel.sevaUserID == null ? "" : userModel.sevaUserID,
+      sevaUserId: userModel?.sevaUserID == null ? "" : userModel.sevaUserID,
     ).listen((userModel) {
       if (userModel.communities != null) {
         List<Widget> community = [];
@@ -49,14 +51,16 @@ class UserProfileBloc {
               },
             ),
           );
-          _communities.add(community);
+          if (!_communities.isClosed) _communities.add(community);
         });
       } else {
-        _communities.addError('No Communities');
+        if (!_communities.isClosed) _communities.addError('No Communities');
       }
       Future.delayed(
         Duration(milliseconds: 300),
-        () => _communityLoaded.add(true),
+        () {
+          if (!_communityLoaded.isClosed) _communityLoaded.add(true);
+        },
       );
     });
   }
@@ -78,5 +82,6 @@ class UserProfileBloc {
   void dispose() {
     _communities.close();
     _communityLoaded.close();
+    _isDisposed = true;
   }
 }
