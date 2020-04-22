@@ -531,15 +531,25 @@ class _ProfilePageState extends State<ProfilePage>
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: ListView(
-              children: <Widget>[
-                Text(
-                  dialogTitle,
-                  style: TextStyle(
-                    fontSize: 16,
+//            title: Text(
+//              dialogTitle,
+//              style: TextStyle(
+//                fontSize: 16,
+//              ),
+//            ),
+            content: Form(
+              child: Container(
+                height: 200,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text(
+                    dialogTitle,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
-              ],
+              ),
             ),
             actions: <Widget>[
               FlatButton(
