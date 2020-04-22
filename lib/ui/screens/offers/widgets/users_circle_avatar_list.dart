@@ -5,6 +5,9 @@ import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class UserCircleAvatarList extends StatelessWidget {
+  final int sizeOfClass;
+
+  const UserCircleAvatarList({Key key, this.sizeOfClass}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
@@ -21,7 +24,10 @@ class UserCircleAvatarList extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("${snapshot.data.length}/100 people signup",
+            Text(
+                sizeOfClass == null
+                    ? "${snapshot.data.length} people signed up"
+                    : "${snapshot.data.length}/$sizeOfClass people signed up",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
             Container(
               height: 50,
@@ -33,7 +39,8 @@ class UserCircleAvatarList extends StatelessWidget {
                   return Padding(
                     padding: EdgeInsets.all(4),
                     child: ClipOval(
-                      child: CustomNetworkImage(snapshot.data[index].participantDetails.photourl),
+                      child: CustomNetworkImage(
+                          snapshot.data[index].participantDetails.photourl),
                     ),
                   );
                 },
