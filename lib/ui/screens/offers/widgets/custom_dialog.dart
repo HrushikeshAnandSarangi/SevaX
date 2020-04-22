@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-void errorDialog({BuildContext context, String error}) {
-  showDialog(
+Future<void> errorDialog({BuildContext context, String error}) async {
+  await showDialog(
     context: context,
     builder: (BuildContext viewContext) {
       return AlertDialog(
@@ -18,18 +18,19 @@ void errorDialog({BuildContext context, String error}) {
               ),
             ),
             onPressed: () {
-              Navigator.of(context,rootNavigator: true).pop();
+              Navigator.of(context, rootNavigator: true).pop();
             },
           ),
         ],
       );
     },
   );
+  return true;
 }
 
-void confirmationDialog(
-    {BuildContext context, String title, Function onConfirmed}) {
-  showDialog(
+Future<bool> confirmationDialog(
+    {BuildContext context, String title, Function onConfirmed}) async {
+  await showDialog(
     context: context,
     builder: (BuildContext viewContext) {
       return AlertDialog(
@@ -68,4 +69,5 @@ void confirmationDialog(
       );
     },
   );
+  return true;
 }

@@ -79,43 +79,44 @@ String getButtonLabel(OfferModel offerModel, String userId) {
   }
 }
 
-void offerActions(BuildContext context,OfferModel model) {
-    var _userId = SevaCore.of(context).loggedInUser.sevaUserID;
-    bool _isParticipant = getOfferParticipants(offerDataModel: model)
-        .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+Future<bool> offerActions(BuildContext context, OfferModel model) async {
+  var _userId = SevaCore.of(context).loggedInUser.sevaUserID;
+  bool _isParticipant = getOfferParticipants(offerDataModel: model)
+      .contains(SevaCore.of(context).loggedInUser.sevaUserID);
 
-    if (model.offerType == OfferType.GROUP_OFFER && !_isParticipant) {
-      //Check balance here
-      if (true) {
-        confirmationDialog(
-          context: context,
-          title:
-              "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
-          onConfirmed: () {
-            var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
-            Firestore.instance
-                .collection("offers")
-                .document(model.id)
-                .updateData({
-              'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
-                [myUserID],
-              )
-            });
-          },
-        );
-      } else {
-        errorDialog(
-          context: context,
-          error: "You don't have enough credit to signup for this class",
-        );
-      }
-    } else {
-      Firestore.instance.collection("offers").document(model.id).updateData(
-        {
-          'individualOfferDataModel.offerAcceptors': _isParticipant
-              ? FieldValue.arrayRemove([_userId])
-              : FieldValue.arrayUnion([_userId])
+  if (model.offerType == OfferType.GROUP_OFFER && !_isParticipant) {
+    //Check balance here
+    if (true) {
+      await confirmationDialog(
+        context: context,
+        title:
+            "You are signing up for this ${model.groupOfferDataModel.classTitle.trim()}. Doing so will debit a total of ${model.groupOfferDataModel.numberOfClassHours} credits from you after you say OK.",
+        onConfirmed: () {
+          var myUserID = SevaCore.of(context).loggedInUser.sevaUserID;
+          Firestore.instance
+              .collection("offers")
+              .document(model.id)
+              .updateData({
+            'groupOfferDataModel.signedUpMembers': FieldValue.arrayUnion(
+              [myUserID],
+            )
+          });
         },
       );
+    } else {
+      await errorDialog(
+        context: context,
+        error: "You don't have enough credit to signup for this class",
+      );
     }
+  } else {
+    Firestore.instance.collection("offers").document(model.id).updateData(
+      {
+        'individualOfferDataModel.offerAcceptors': _isParticipant
+            ? FieldValue.arrayRemove([_userId])
+            : FieldValue.arrayUnion([_userId])
+      },
+    );
   }
+  return true;
+}
