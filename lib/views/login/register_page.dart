@@ -27,6 +27,9 @@ class _RegisterPageState extends State<RegisterPage>
     with ImagePickerListener, SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final emailFocus = FocusNode();
+  final pwdFocus = FocusNode();
+  final confirmPwdFocus = FocusNode();
 
   bool _shouldObscurePassword = true;
   bool _shouldObscureConfirmPassword = true;
@@ -202,6 +205,10 @@ class _RegisterPageState extends State<RegisterPage>
       child: Column(
         children: <Widget>[
           getFormField(
+            focusNode: FocusNode(),
+            onFieldSubmittedCB:(v){
+              FocusScope.of(context).requestFocus(emailFocus);
+            },
             shouldRestrictLength: true,
             hint: 'Full Name',
             validator: (value) => value.isEmpty ? 'Name cannot be empty' : null,
@@ -209,6 +216,10 @@ class _RegisterPageState extends State<RegisterPage>
             onSave: (value) => this.fullName = value,
           ),
           getFormField(
+            focusNode: emailFocus,
+            onFieldSubmittedCB:(v){
+              FocusScope.of(context).requestFocus(pwdFocus);
+            },
             shouldRestrictLength: false,
             hint: 'Email Address',
             validator: (value) {
@@ -221,6 +232,10 @@ class _RegisterPageState extends State<RegisterPage>
             onSave: (value) => this.email = value.trim(),
           ),
           getFormField(
+            focusNode: pwdFocus,
+            onFieldSubmittedCB:(v){
+              FocusScope.of(context).requestFocus(confirmPwdFocus);
+            },
             shouldRestrictLength: false,
             hint: 'Password',
             shouldObscure: shouldObscurePassword,
@@ -250,6 +265,10 @@ class _RegisterPageState extends State<RegisterPage>
                 )),
           ),
           getFormField(
+            focusNode: confirmPwdFocus,
+            onFieldSubmittedCB:(v){
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
             shouldRestrictLength: false,
             hint: 'Confirm Password',
             shouldObscure: shouldObscureConfirmPassword,
@@ -283,6 +302,8 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   Widget getFormField({
+    focusNode,
+    onFieldSubmittedCB,
     bool shouldRestrictLength,
     String hint,
     String Function(String value) validator,
@@ -295,6 +316,8 @@ class _RegisterPageState extends State<RegisterPage>
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: TextFormField(
+        focusNode: focusNode,
+        onFieldSubmitted: onFieldSubmittedCB,
         enabled: !isLoading,
         decoration: InputDecoration(
           labelText: hint,

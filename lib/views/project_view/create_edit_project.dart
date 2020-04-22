@@ -461,7 +461,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.pendingRequests = [];
                         projectModel.timebankId = widget.timebankId;
                         projectModel.photoUrl = globals.timebankAvatarURL;
-                        //  projectModel.mode = 'TimeBank';
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;

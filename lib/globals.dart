@@ -92,5 +92,6 @@ int currentCampaignCreatedTimeStamp;
 dynamic currentCampaign;
 bool isNearme = false;
 String content = 'All';
+String currentVersionNumber;
 
 int sharedValue = 0;

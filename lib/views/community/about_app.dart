@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
@@ -53,7 +54,9 @@ class AboutApp extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Version 1.1',
+              globals.currentVersionNumber != null
+                  ? 'Version ${globals.currentVersionNumber}' ?? 'Version'
+                  : 'Version',
               style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 14,

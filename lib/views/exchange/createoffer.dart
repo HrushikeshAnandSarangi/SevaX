@@ -52,6 +52,9 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<MyCustomFormState>!
   final _formKey = GlobalKey<FormState>();
 
+  final descriptionTextFocus = FocusNode();
+
+
   String title = '';
   String schedule = '';
   String description = '';
@@ -119,6 +122,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                   // style: TextStyle(color: Colors.grey, fontSize: 14),
                 ),
                 TextFormField(
+                  onFieldSubmitted: (v){
+                    FocusScope.of(context).requestFocus(descriptionTextFocus);
+                  },
                   decoration:
                       InputDecoration(hintText: 'Ex: Tutoring, painting..'),
                   keyboardType: TextInputType.text,
@@ -137,6 +143,10 @@ class MyCustomFormState extends State<MyCustomForm> {
                   style: titleStyle,
                 ),
                 TextFormField(
+                  focusNode: descriptionTextFocus,
+                  onFieldSubmitted: (v){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                   maxLength: 500,
                   style: subTitleStyle,
                   decoration: InputDecoration(
@@ -154,6 +164,9 @@ class MyCustomFormState extends State<MyCustomForm> {
                 SizedBox(height: 20),
                 Text('Availability', style: titleStyle),
                 TextFormField(
+                  onFieldSubmitted: (v){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                   decoration: InputDecoration(
                     hintText: 'Describe my availability',
                   ),

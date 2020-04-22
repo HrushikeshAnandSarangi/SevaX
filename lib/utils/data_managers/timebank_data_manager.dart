@@ -113,54 +113,21 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
 }
 
 /// Get all timebanknew associated with a User as a Stream_
-Future<List<TimebankModel>> getMembersCount(
+Future<int> getMembersCount(
     {@required String communityId}) async {
-  List<dynamic> timeBankIdList = [];
-  List<TimebankModel> timeBankModelList = [];
-
-  await Firestore.instance
-      .collection('communities')
-      .document(communityId)
-      .get()
-      .then((DocumentSnapshot documentSnaphot) {
-    Map<String, dynamic> dataMap = documentSnaphot.data;
-    timeBankIdList = dataMap["timebanks"];
-  });
-
-  var comm = await getCommunityDetailsByCommunityId(communityId: communityId);
-
-  print(timeBankIdList);
-  for (int i = 0; i < timeBankIdList.length; i += 1) {
-    TimebankModel timeBankModel = await getTimeBankForId(
-      timebankId: timeBankIdList[i],
-    );
-    timeBankModelList.add(timeBankModel);
-    /*if(timeBankModel.members.contains(sevaUserId)){
-      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
-    } else if(timeBankModel.admins.contains(sevaUserId)){
-      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
-    }else{
-      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
-    }*/
-
-  }
-  return timeBankModelList;
+  DocumentSnapshot documentSnaphot = await Firestore.instance.collection('communities').document(communityId).get();
+  var primaryTimebankId = documentSnaphot.data['primary_timebank'];
+  DocumentSnapshot timebankDoc = await Firestore.instance.collection('timebanknew').document(primaryTimebankId).get();
+  int totalCount = timebankDoc.data['members'].length + timebankDoc.data['admins'].length;
+  print("full counttttttttt " + totalCount.toString());
+  return totalCount;
 }
 
 /// Get all timebanknew associated with a User as a Stream_
 Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
   int totalCount = 0;
-  print("com id ----- ${communityId}");
-
-  List<TimebankModel> timeBankModelList =
-      await getMembersCount(communityId: communityId);
-  print("list is ----- ${timeBankModelList.length}");
-
-  timeBankModelList.forEach((timebankModel) {
-    totalCount += timebankModel.members.length;
-  });
-  print("count is ----- $totalCount");
-
+  totalCount = await getMembersCount(communityId: communityId);
+  print("totalCounttttttttttttt " + totalCount.toString());
   return totalCount;
 }
 

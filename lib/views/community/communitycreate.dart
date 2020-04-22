@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,7 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
@@ -115,6 +117,7 @@ class CreateEditCommunityViewFormState
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
   GlobalKey<FormState> _stateSelectorKey = GlobalKey();
+//  final aboutFocus = FocusNode();
 
   String selectedCountryValue = "Select your country";
 
@@ -197,12 +200,7 @@ class CreateEditCommunityViewFormState
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
-//    setState(() {
-//      searchTextController =
-//          new TextEditingController(text: communityModel.name);
-//
-//      //  searchTextController.text = communityModel.name;
-//    });
+
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -291,6 +289,10 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+//                    focusNode: FocusNode(),
+//                    onFieldSubmitted: (v){
+//                      FocusScope.of(context).requestFocus(aboutFocus);
+//                    },
                     controller: searchTextController,
                     onChanged: (value) {
                       enteredName = value;
@@ -304,7 +306,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    //initialValue: snapshot.data.community.name ?? '',
+//                    initialValue: snapshot.data.community.name ?? '',
 
                     onSaved: (value) {
                       enteredName = value;
@@ -326,6 +328,10 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('About'),
                   TextFormField(
+//                    focusNode: aboutFocus,
+//                    onFieldSubmitted: (v){
+//                      FocusScope.of(context).requestFocus(FocusNode());
+//                    },
                     decoration: InputDecoration(
                       hintText: 'Ex: A bit more about your timebank',
                     ),
@@ -401,6 +407,16 @@ class CreateEditCommunityViewFormState
                   Row(
                     children: <Widget>[
                       headingText('Protected Timebank'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2,15,0,0),
+                        child: Tooltip(
+                            message: 'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations',
+                            child: IconButton(
+                                icon: Icon(
+                              Icons.info_outline,
+                              size: 20,
+                            ))),
+                      ),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -414,24 +430,22 @@ class CreateEditCommunityViewFormState
                               snapshot.data.timebank
                                   .updateValueByKey('protected', value);
                               createEditCommunityBloc.onChange(snapshot.data);
-                              return "";
                             },
                           ),
                         ],
                       ),
                     ],
                   ),
-                  Text(
-                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-
-                  headingText('Select Tax percentage'),
-                  Slider(
+//                  Text(
+//                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
+//                    style: TextStyle(
+//                      fontSize: 12,
+//                      color: Colors.grey,
+//                    ),
+//                  ),
+                  widget.isCreateTimebank ? Container() : SizedBox(height: 10),
+                  widget.isCreateTimebank ? Container() : headingText('Select Tax percentage'),
+                  widget.isCreateTimebank ? Container() : Slider(
                     label: "${taxPercentage.toInt()}%",
                     value: taxPercentage,
                     min: 0,
@@ -679,6 +693,13 @@ class CreateEditCommunityViewFormState
                                 members.add(user.sevaUserID);
                               });
                             }
+                            if(widget.isCreateTimebank){
+                              var taxDefaultVal = (json.decode(AppConfig.remoteConfig.getString('defaultTaxPercentValue'))).toDouble();
+                              snapshot.data.community.updateValueByKey(
+                                  'taxPercentage', taxDefaultVal / 100);
+                              communityModel.taxPercentage = taxDefaultVal / 100;
+                            }
+
                             // creation of community;
 
                             // updating timebank with latest values

@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   Alignment childAlignment = Alignment.center;
   bool _isLoading = false;
+  final pwdFocus = FocusNode();
 
   String emailId;
   String password;
@@ -616,6 +617,9 @@ class _LoginPageState extends State<LoginPage> {
                     cursorColor: Colors.black54,
                     validator: _validateEmailId,
                     onSaved: _saveEmail,
+                    onFieldSubmitted: (v){
+                      FocusScope.of(context).requestFocus(pwdFocus);
+                    },
                     decoration: InputDecoration(
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Colors.black54),
@@ -628,6 +632,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   TextFormField(
+                    focusNode: pwdFocus,
                     obscureText: _shouldObscurePassword,
                     style: textStyle,
                     cursorColor: Colors.black54,
