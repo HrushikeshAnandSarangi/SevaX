@@ -25,6 +25,9 @@ class UserNotificationMessage {
       "Please provide feedback for the *class that you recently attended";
 }
 
-class TimebankNotificationMessage{
-  // static const String 
+class TimebankNotificationMessage {
+  static const String DEBIT_FULFILMENT_FROM_TIMEBANK =
+      "*n credits have been sent to *name from the credits recieved for *class ";
+  static const String CREDIT_FROM_OFFER_APPROVED =
+      "Recieved *n credits from the the offer *class";
 }
