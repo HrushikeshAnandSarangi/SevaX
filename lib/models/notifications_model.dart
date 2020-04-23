@@ -41,50 +41,56 @@ class NotificationsModel extends DataModel {
     }
 
     if (map.containsKey('type')) {
-      String typeString = map['type'];
-      if (typeString == 'RequestAccept') {
-        this.type = NotificationType.RequestAccept;
-      }
+      this.type = typeMapper[map['type']];
+      // this.type = stringToNotificationType(map['type']);
+      // this.type =
+      //     stringToNotificationType(map['type']) ?? NotificationType.UNKNOWN;
+      // print(this.type);
 
-      if (typeString == 'JoinRequest') {
-        this.type = NotificationType.JoinRequest;
-      }
+      // String typeString = map['type'];
+      // if (typeString == 'RequestAccept') {
+      //   this.type = NotificationType.RequestAccept;
+      // }
 
-      if (typeString == 'RequestApprove') {
-        this.type = NotificationType.RequestApprove;
-      }
-      if (typeString == 'RequestReject') {
-        this.type = NotificationType.RequestReject;
-      }
-      if (typeString == 'RequestCompleted') {
-        this.type = NotificationType.RequestCompleted;
-      }
-      if (typeString == 'RequestCompletedApproved') {
-        this.type = NotificationType.RequestCompletedApproved;
-      }
-      if (typeString == 'RequestCompletedRejected') {
-        this.type = NotificationType.RequestCompletedRejected;
-      }
-      if (typeString == 'TransactionCredit') {
-        this.type = NotificationType.TransactionCredit;
-      }
-      if (typeString == 'TransactionDebit') {
-        this.type = NotificationType.TransactionDebit;
-      }
-      if (typeString == 'OfferAccept') {
-        this.type = NotificationType.OfferAccept;
-      }
-      if (typeString == 'OfferReject') {
-        this.type = NotificationType.OfferReject;
-      }
+      // if (typeString == 'JoinRequest') {
+      //   this.type = NotificationType.JoinRequest;
+      // }
 
-      if (typeString == 'AcceptedOffer') {
-        this.type = NotificationType.AcceptedOffer;
-      }
+      // if (typeString == 'RequestApprove') {
+      //   this.type = NotificationType.RequestApprove;
+      // }
+      // if (typeString == 'RequestReject') {
+      //   this.type = NotificationType.RequestReject;
+      // }
+      // if (typeString == 'RequestCompleted') {
+      //   this.type = NotificationType.RequestCompleted;
+      // }
+      // if (typeString == 'RequestCompletedApproved') {
+      //   this.type = NotificationType.RequestCompletedApproved;
+      // }
+      // if (typeString == 'RequestCompletedRejected') {
+      //   this.type = NotificationType.RequestCompletedRejected;
+      // }
+      // if (typeString == 'TransactionCredit') {
+      //   this.type = NotificationType.TransactionCredit;
+      // }
+      // if (typeString == 'TransactionDebit') {
+      //   this.type = NotificationType.TransactionDebit;
+      // }
+      // if (typeString == 'OfferAccept') {
+      //   this.type = NotificationType.OfferAccept;
+      // }
+      // if (typeString == 'OfferReject') {
+      //   this.type = NotificationType.OfferReject;
+      // }
 
-      if (typeString == 'RequestInvite') {
-        this.type = NotificationType.RequestInvite;
-      }
+      // if (typeString == 'AcceptedOffer') {
+      //   this.type = NotificationType.AcceptedOffer;
+      // }
+
+      // if (typeString == 'RequestInvite') {
+      //   this.type = NotificationType.RequestInvite;
+      // }
     }
     if (map.containsKey('data')) {
       this.data = Map.castFrom(map['data']);
@@ -103,7 +109,6 @@ class NotificationsModel extends DataModel {
 
   @override
   String toString() {
-    // TODO: implement toString
     return " type : ${this.type} -- ${this.data} -- ";
   }
 
@@ -161,5 +166,53 @@ enum NotificationType {
   OfferAccept,
   OfferReject,
   JoinRequest,
-  AcceptedOffer
+  AcceptedOffer,
+  TYPE_DEBIT_FROM_OFFER,
+  TYPE_CREDIT_FROM_OFFER_ON_HOLD,
+  TYPE_CREDIT_FROM_OFFER_APPROVED,
+  TYPE_CREDIT_FROM_OFFER,
+  TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK,
+  TYPE_NEW_MEMBER_SIGNUP_OFFER,
+  TYPE_OFFER_FULFILMENT_ACHIEVED,
+  TYPE_OFFER_SUBSCRIPTION_COMPLETED,
+  TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
 }
+
+//Check the method
+NotificationType stringToNotificationType(String str) {
+  print(str);
+  return NotificationType.values.firstWhere(
+    (v) => v.toString() == 'NotificationType.' + str.trim(),
+  );
+}
+
+Map<String, NotificationType> typeMapper = {
+  "RequestAccept": NotificationType.RequestAccept,
+  "RequestApprove": NotificationType.RequestApprove,
+  "RequestInvite": NotificationType.RequestInvite,
+  "RequestReject": NotificationType.RequestReject,
+  "RequestCompleted": NotificationType.RequestCompleted,
+  "RequestCompletedApproved": NotificationType.RequestCompletedApproved,
+  "RequestCompletedRejected": NotificationType.RequestCompletedRejected,
+  "TransactionCredit": NotificationType.TransactionCredit,
+  "TransactionDebit": NotificationType.TransactionDebit,
+  "OfferAccept": NotificationType.OfferAccept,
+  "OfferReject": NotificationType.OfferReject,
+  "JoinRequest": NotificationType.JoinRequest,
+  "AcceptedOffer": NotificationType.AcceptedOffer,
+  "TYPE_DEBIT_FROM_OFFER": NotificationType.TYPE_DEBIT_FROM_OFFER,
+  "TYPE_CREDIT_FROM_OFFER_ON_HOLD":
+      NotificationType.TYPE_CREDIT_FROM_OFFER_ON_HOLD,
+  "TYPE_CREDIT_FROM_OFFER_APPROVED":
+      NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED,
+  "TYPE_CREDIT_FROM_OFFER": NotificationType.TYPE_CREDIT_FROM_OFFER,
+  "TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK":
+      NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK,
+  "TYPE_NEW_MEMBER_SIGNUP_OFFER": NotificationType.TYPE_NEW_MEMBER_SIGNUP_OFFER,
+  "TYPE_OFFER_FULFILMENT_ACHIEVED":
+      NotificationType.TYPE_OFFER_FULFILMENT_ACHIEVED,
+  "TYPE_OFFER_SUBSCRIPTION_COMPLETED":
+      NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED,
+  "TYPE_FEEDBACK_FROM_SIGNUP_MEMBER":
+      NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
+};

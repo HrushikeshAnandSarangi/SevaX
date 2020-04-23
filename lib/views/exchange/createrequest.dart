@@ -22,6 +22,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -253,7 +254,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                   keyboardType: TextInputType.text,
                   initialValue: widget.offer != null && widget.isOfferRequest
-                      ? widget.offer.title
+                      ? getOfferTitle(
+                          offerDataModel: widget.offer,
+                        )
                       : "",
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
@@ -290,7 +293,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintStyle: textStyle,
                   ),
                   initialValue: widget.offer != null && widget.isOfferRequest
-                      ? widget.offer.description
+                      ? getOfferDescription(
+                          offerDataModel: widget.offer,
+                        )
                       : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 2,

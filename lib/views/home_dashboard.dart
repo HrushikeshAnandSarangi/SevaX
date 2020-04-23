@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       Tab(text: "Requests"),
       Tab(text: "Offers"),
       Tab(text: "About"),
-      Tab(text: "Accepted Offers"),
+      Tab(text: "Bookmarked Offers"),
       Tab(text: "Members")
     ];
     super.initState();

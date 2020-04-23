@@ -265,7 +265,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ],
           ),
           Text(
-            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled..',
+            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey,
@@ -320,7 +320,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 //                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();
 //                            // return;
-//
                             try {
                               parentTimebank.children.add(timebankModel.id);
                             } catch (e) {

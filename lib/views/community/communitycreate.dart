@@ -1248,6 +1248,9 @@ class CreateEditCommunityViewFormState
           initialValue: controller.community.billing_address.companyname != null
               ? controller.community.billing_address.companyname
               : '',
+          // validator: (value) {
+          //   return value.isEmpty ? 'Field cannot be left blank*' : null;
+          // },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(

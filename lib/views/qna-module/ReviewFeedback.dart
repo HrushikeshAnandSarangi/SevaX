@@ -4,19 +4,25 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/qna-module/FeedbackConstants.dart';
 
-class ReviewFeedback extends StatefulWidget {
-  final bool forVolunteer;
-  bool _validate = false;
+enum FeedbackType {
+  FOR_REQUEST_VOLUNTEER,
+  FOR_REQUEST_CREATOR,
+  FOR_ONE_TO_MANY_OFFER,
+}
 
-  ReviewFeedback.forVolunteer({this.forVolunteer});
+class ReviewFeedback extends StatefulWidget {
+  // final bool forVolunteer;
+  final FeedbackType feedbackType;
+
+  ReviewFeedback({this.feedbackType});
   @override
   State<StatefulWidget> createState() =>
-      ReviewFeedbackState(forVolunteer: forVolunteer);
+      ReviewFeedbackState();
 }
 
 class ReviewFeedbackState extends State<ReviewFeedback> {
-  var forVolunteer;
-  ReviewFeedbackState({this.forVolunteer});
+  // var forVolunteer;
+  // ReviewFeedbackState({this.forVolunteer});
 
   var toolbarTitle = "Review";
   bool _validate = false;
@@ -51,19 +57,28 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                 Navigator.of(context).pop()
               },
             )),
-        body: questionIndex <
-                (forVolunteer
-                    ? FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER.length
-                    : FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN.length)
+        body: questionIndex < getQuestions(widget.feedbackType).length
             ? getFeebackQuestions()
             : getTextFeedback(context),
       ),
     );
   }
 
-  List<Map<String, Object>> getQuestions() => forVolunteer
-      ? FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER
-      : FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN;
+  List<Map<String, Object>> getQuestions(FeedbackType type) {
+    switch (type) {
+      case FeedbackType.FOR_REQUEST_CREATOR:
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_ADMIN;
+        break;
+      case FeedbackType.FOR_REQUEST_VOLUNTEER:
+        return FeedbackConstants.FEEDBACK_QUESTIONS_FOR_VOLUNTEER;
+        break;
+      case FeedbackType.FOR_ONE_TO_MANY_OFFER:
+        return FeedbackConstants.FEEDBACK_QUESTION_FOR_ONE_TO_MANY_OFFER;
+        break;
+      default:
+        throw "FEEDBACK TYPE NOT DEFINED";
+    }
+  }
 
   Widget getFeebackQuestions() {
     Logger.root.level = Level.ALL;
@@ -77,14 +92,16 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
           margin: EdgeInsets.only(left: 10, bottom: 10, top: 20),
           alignment: Alignment.centerLeft,
           child: Text(
-            getQuestions()[questionIndex][FeedbackConstants.FEEDBACK_TITLE],
+            getQuestions(widget.feedbackType)[questionIndex]
+                [FeedbackConstants.FEEDBACK_TITLE],
             style: TextStyle(
               fontSize: 19,
               letterSpacing: 2,
             ),
           ),
         ),
-        ...(getQuestions()[questionIndex][FeedbackConstants.ANSWERS] as List)
+        ...(getQuestions(widget.feedbackType)[questionIndex]
+                [FeedbackConstants.ANSWERS] as List)
             .map((answerModel) {
           return Container(
             margin: EdgeInsets.all(10),
@@ -128,58 +145,59 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
 
   Widget getTextFeedback(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextFormField(
-                  controller: myCommentsController,
-                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
-                  decoration: InputDecoration(
-                    errorText: _validate ? 'Field can\'t be left blank' : null,
-                    hintStyle: TextStyle(fontSize: 14),
-                    hintText:
-                        'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.red, //this has no effect
-                      ),
-                      borderRadius: BorderRadius.circular(5.0),
+      margin: EdgeInsets.all(10),
+      child: SingleChildScrollView(
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TextFormField(
+                controller: myCommentsController,
+                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                decoration: InputDecoration(
+                  errorText: _validate ? 'Field can\'t be left blank' : null,
+                  hintStyle: TextStyle(fontSize: 14),
+                  hintText:
+                      'Take a moment to reflect on your experience and share your appreciation by writing a short review.',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.red, //this has no effect
                     ),
+                    borderRadius: BorderRadius.circular(5.0),
                   ),
-                  enabled: true,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 5,
                 ),
-                Container(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    shape: StadiumBorder(),
-                    color: Color(0x0FF766FE0),
-                    child: Text(
-                      "Submit",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        if (FlavorConfig.appFlavor == Flavor.APP) {
-                          myCommentsController.text.isEmpty
-                              ? _validate = true
-                              : _validate = false;
-                        }
-                      });
-
-                      if (!_validate) {
-                        finishState(context);
-                      }
-                    },
+                enabled: true,
+                keyboardType: TextInputType.multiline,
+                maxLines: 5,
+              ),
+              Container(
+                width: double.infinity,
+                child: RaisedButton(
+                  shape: StadiumBorder(),
+                  color: Color(0x0FF766FE0),
+                  child: Text(
+                    "Submit",
+                    style: TextStyle(color: Colors.white),
                   ),
-                )
-              ],
-            ),
+                  onPressed: () {
+                    setState(() {
+                      if (FlavorConfig.appFlavor == Flavor.APP) {
+                        myCommentsController.text.isEmpty
+                            ? _validate = true
+                            : _validate = false;
+                      }
+                    });
+
+                    if (!_validate) {
+                      finishState(context);
+                    }
+                  },
+                ),
+              )
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

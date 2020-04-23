@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/ui/screens/offers/offers_ui.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+
 
 class OffersTabView extends StatefulWidget {
   @override
@@ -40,17 +42,22 @@ class _OffersTabViewState extends State<OffersTabView> {
                   child: Text("No data found !"),
                 );
               }
+
+              //Todo UPDATE_REQUIRED
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
                   final offer = snapshot.data[index];
-                  return OffersCard(
-                    title: offer.title,
-                    description: offer.description,
-                    onTap: () => onTap(offer),
-                  );
+                  return Container();
+              //     return OffersCard(
+              //       title: getOfferTitle(
+              //         offerDataModel: offer,
+              //       ),
+              //       description: getOfferDescription(offerDataModel: offer),
+              //       onTap: () => onTap(offer),
+              //     );
                 },
               );
             },

@@ -7,8 +7,10 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
-import 'package:sevaexchange/views/workshop/admin_offer_requests_tab.dart';
+
+import 'admin_offer_requests_tab.dart';
 
 class AcceptedOffers extends StatefulWidget {
   final String sevaUserId;
@@ -76,7 +78,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<OfferModel>>(
-      stream: FirestoreManager.getOffersApprovedByAdmin(
+      stream: FirestoreManager.getBookmarkedOffersByMember(
         sevaUserId: sevaUserId,
       ),
       builder: (context, snapshot) {
@@ -156,7 +158,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: Text(
-                                model.title,
+                                getOfferTitle(offerDataModel: model),
                                 style:
                                     Theme.of(parentContext).textTheme.subhead,
                               ),
@@ -164,7 +166,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
                             Container(
                               margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               child: Text(
-                                model.description,
+                                getOfferDescription(offerDataModel: model),
                                 overflow: TextOverflow.ellipsis,
                                 style:
                                     Theme.of(parentContext).textTheme.subtitle,

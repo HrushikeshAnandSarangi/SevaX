@@ -172,7 +172,7 @@ Widget createAdminTabBar(
                 text: "About",
               ),
               Tab(
-                text: "Accepted Offers",
+                text: "Bookmarked Offers",
               ),
               Tab(
                 text: "Members",
@@ -372,7 +372,7 @@ Widget createJoinedUserTabBar(
                 text: "About",
               ),
               Tab(
-                text: "Accepted Offers",
+                text: "Bookmarked Offers",
               ),
               Tab(
                 text: "Members",

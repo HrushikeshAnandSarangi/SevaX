@@ -587,8 +587,8 @@ class TaskCardViewState extends State<TaskCardView> {
 
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return ReviewFeedback.forVolunteer(
-          forVolunteer: false,
+        return ReviewFeedback(
+          feedbackType: FeedbackType.FOR_REQUEST_CREATOR,
         );
       },
     ));
