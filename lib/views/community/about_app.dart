@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 
@@ -45,6 +46,24 @@ class AboutApp extends StatelessWidget {
               "Training Video"),
           getHelpButton(context, contactUsOnTap(context), "Contact Us"),
         ],
+      ),
+      bottomSheet: Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              globals.currentVersionNumber != null
+                  ? 'Version ${globals.currentVersionNumber}' ?? 'Version'
+                  : 'Version',
+              style: TextStyle(
+                  fontFamily: 'Europa',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -252,7 +271,8 @@ class AboutApp extends StatelessWidget {
                     await http.post(
                         "${FlavorConfig.values.cloudFunctionBaseURL}/sendFeedbackToTimebank",
                         body: {
-                          "memberEmail": SevaCore.of(context).loggedInUser.email,
+                          "memberEmail":
+                              SevaCore.of(context).loggedInUser.email,
                           "feedbackBody": feedbackText
                         });
                     Navigator.pop(progressContext);

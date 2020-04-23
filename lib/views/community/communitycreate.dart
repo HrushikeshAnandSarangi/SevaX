@@ -200,7 +200,6 @@ class CreateEditCommunityViewFormState
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
-
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -408,9 +407,10 @@ class CreateEditCommunityViewFormState
                     children: <Widget>[
                       headingText('Protected Timebank'),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(2,15,0,0),
+                        padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
                         child: Tooltip(
-                            message: 'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations',
+                            message:
+                                'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations',
                             child: IconButton(
                                 icon: Icon(
                               Icons.info_outline,
@@ -444,29 +444,45 @@ class CreateEditCommunityViewFormState
 //                    ),
 //                  ),
                   widget.isCreateTimebank ? Container() : SizedBox(height: 10),
-                  widget.isCreateTimebank ? Container() : headingText('Select Tax percentage'),
-                  widget.isCreateTimebank ? Container() : Slider(
-                    label: "${taxPercentage.toInt()}%",
-                    value: taxPercentage,
-                    min: 0,
-                    max: 15,
-                    divisions: 15,
-                    onChanged: (value) {
-                      snapshot.data.community
-                          .updateValueByKey('taxPercentage', value / 100);
-                      setState(() {
-                        taxPercentage = value;
-                        communityModel.taxPercentage = value / 100;
-                      });
-                      print(snapshot.data.community);
-                    },
-                  ),
-                  Text(
-                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                  widget.isCreateTimebank
+                      ? Container()
+                      : headingText('Select Tax percentage'),
+                  widget.isCreateTimebank
+                      ? Container()
+                      : Slider(
+                          label: "${taxPercentage.toInt()}%",
+                          value: taxPercentage,
+                          min: 0,
+                          max: 15,
+                          divisions: 15,
+                          onChanged: (value) {
+                            snapshot.data.community
+                                .updateValueByKey('taxPercentage', value / 100);
+                            setState(() {
+                              taxPercentage = value;
+                              communityModel.taxPercentage = value / 100;
+                            });
+                            print(snapshot.data.community);
+                          },
+                        ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      IconButton(
+                        tooltip:
+                            'At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax.',
+                        icon: Icon(
+                          Icons.info_outline,
+                          size: 20,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
                   headingText('Your timebank location.'),
@@ -693,11 +709,15 @@ class CreateEditCommunityViewFormState
                                 members.add(user.sevaUserID);
                               });
                             }
-                            if(widget.isCreateTimebank){
-                              var taxDefaultVal = (json.decode(AppConfig.remoteConfig.getString('defaultTaxPercentValue'))).toDouble();
+                            if (widget.isCreateTimebank) {
+                              var taxDefaultVal = (json.decode(AppConfig
+                                      .remoteConfig
+                                      .getString('defaultTaxPercentValue')))
+                                  .toDouble();
                               snapshot.data.community.updateValueByKey(
                                   'taxPercentage', taxDefaultVal / 100);
-                              communityModel.taxPercentage = taxDefaultVal / 100;
+                              communityModel.taxPercentage =
+                                  taxDefaultVal / 100;
                             }
 
                             // creation of community;

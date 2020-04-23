@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:sevaexchange/utils/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -13,6 +12,7 @@ import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/onboarding/interests_view.dart';
 import 'package:sevaexchange/views/onboarding/skills_view.dart';
@@ -227,7 +227,7 @@ class _EditProfilePageState extends State<EditProfilePage>
   }
 
   Future updateUserData(UserModel user) async {
-  print("inside updateUserData------------");
+    print("inside updateUserData------------");
     await FirestoreManager.updateUser(user: user);
   }
 
@@ -423,8 +423,11 @@ class _EditProfilePageState extends State<EditProfilePage>
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter bio to update';
+                    } else if (value.length < 50) {
+                      return 'Please enter min 50 char';
+                    } else {
+                      widget.userModel.bio = value;
                     }
-                    widget.userModel.bio = value;
                   },
                 ),
               ),

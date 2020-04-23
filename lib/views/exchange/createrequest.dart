@@ -117,7 +117,6 @@ class RequestCreateForm extends StatefulWidget {
 }
 
 class RequestCreateFormState extends State<RequestCreateForm> {
-
   final _formKey = GlobalKey<FormState>();
   final hoursTextFocus = FocusNode();
   final volunteersTextFocus = FocusNode();
@@ -140,7 +139,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
-    this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+    this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
 
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
@@ -165,7 +164,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
         location.latitude,
         location.longitude,
       )
-      .then((address) {
+          .then((address) {
         setState(() {
           this.selectedAddress = address;
         });
@@ -223,9 +222,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     timebankModel = snapshot.data;
                     if (snapshot.data.admins.contains(
                         SevaCore.of(context).loggedInUser.sevaUserID)) {
-                      this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
-                      return requestSwitch;
+                      return requestSwitch();
                     } else {
+                      this.requestModel.requestMode =
+                          RequestMode.PERSONAL_REQUEST;
                       return Container();
                     }
                   },
@@ -242,7 +242,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
                   decoration: InputDecoration(
@@ -282,7 +282,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                   focusNode: FocusNode(),
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(hoursTextFocus);
                   },
                   decoration: InputDecoration(
@@ -313,7 +313,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                     focusNode: hoursTextFocus,
-                    onFieldSubmitted: (v){
+                    onFieldSubmitted: (v) {
                       FocusScope.of(context).requestFocus(volunteersTextFocus);
                     },
                     decoration: InputDecoration(
@@ -342,7 +342,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                   focusNode: volunteersTextFocus,
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
                   decoration: InputDecoration(
@@ -409,7 +409,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
-  Widget get requestSwitch {
+  Widget requestSwitch() {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
         widget.projectId == "") {
@@ -422,6 +422,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           borderColor: Colors.grey,
           padding: EdgeInsets.only(left: 5.0, right: 5.0),
           groupValue: sharedValue,
+
           onValueChanged: (int val) {
             print(val);
             if (val != sharedValue) {

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/home_page_router.dart';
 import 'package:sevaexchange/ui/screens/onboarding/email_verify_page.dart';
@@ -488,6 +489,8 @@ class _SplashViewState extends State<SplashView> {
 
     if (Platform.isAndroid) {
       await PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
+        // print("version details ${packageInfo.version}");
+        globals.currentVersionNumber = packageInfo.version.toString();
         if (int.parse(packageInfo.buildNumber) <
             versionInfo['android']['build']) {
           print("New version available");
@@ -814,14 +817,12 @@ class _SplashViewState extends State<SplashView> {
     AppConfig.prefs.setBool(AppConfig.skip_bio, null);
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => BioView(
-          onSave: (bio) {
+        builder: (context) => BioView(onSave: (bio) {
           Navigator.pop(context);
           loggedInUser.bio = bio;
           updateUserData(loggedInUser);
           loadingMessage = 'Updating bio';
-        },
-          onSkipped: () {
+        }, onSkipped: () {
           Navigator.pop(context);
           loggedInUser.bio = '';
           AppConfig.prefs.setBool(AppConfig.skip_bio, true);

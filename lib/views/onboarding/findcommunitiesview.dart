@@ -556,10 +556,24 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text(
-              dialogTitle,
-              style: TextStyle(
-                fontSize: 16,
+//            title: Text(
+//              dialogTitle,
+//              style: TextStyle(
+//                fontSize: 16,
+//              ),
+//            ),
+            content: Form(
+              child: Container(
+                height: 200,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text(
+                    dialogTitle,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               ),
             ),
             actions: <Widget>[

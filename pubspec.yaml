@@ -164,7 +164,9 @@ flutter:
     - lib/assets/images/yang_speaking.jpg
     - lib/assets/images/yang_standing.jpg
     - lib/assets/images/apple-logo.png
+    - lib/assets/images/info.png
     - lib/assets/images/signin_apple.png
+    - lib/assets/images/pin.png
     # - lib/assets/images/andrew_yang_three.jpg
 
     - lib/assets/images/recycle-bin.png

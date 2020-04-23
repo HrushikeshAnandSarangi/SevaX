@@ -56,7 +56,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       getData();
     } else {
       setState(() {
-        this.projectModel.mode = 'Personal';
+        this.projectModel.mode = 'Timebank';
       });
     }
 
@@ -119,38 +119,53 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   Future<TimebankModel> getTimebankAdminStatus;
   TimebankModel timebankModelFuture;
 
-
   Widget get projectSwitch {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20),
-      width: double.infinity,
-      child: CupertinoSegmentedControl<int>(
-        selectedColor: Theme.of(context).primaryColor,
-        children: logoWidgets,
-        borderColor: Colors.grey,
-        padding: EdgeInsets.only(left: 5.0, right: 5.0),
-        groupValue: sharedValue,
-        onValueChanged: (int val) {
-          print(val);
-          if (val != sharedValue) {
-            setState(() {
-              print("$sharedValue -- $val");
-              if (val == 0) {
-                projectModel.mode = 'Timebank';
-                print("TTTTTTTTTtimebank proj " + projectModel.mode);
-              } else {
-                projectModel.mode = 'Personal';
-                print("pppppppppersonal proj "  + projectModel.mode);
-              }
-              sharedValue = val;
-            });
-          }
-        },
-        //groupValue: sharedValue,
-      ),
+    return FutureBuilder(
+      future: getTimebankAdminStatus,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
+        timebankModel = snapshot.data;
+        if (snapshot.data.admins
+            .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 20),
+            width: double.infinity,
+            child: CupertinoSegmentedControl<int>(
+              selectedColor: Theme.of(context).primaryColor,
+              children: logoWidgets,
+              borderColor: Colors.grey,
+              padding: EdgeInsets.only(left: 5.0, right: 5.0),
+              groupValue: sharedValue,
+              onValueChanged: (int val) {
+                print(val);
+                if (val != sharedValue) {
+                  setState(() {
+                    print("$sharedValue -- $val");
+                    if (val == 0) {
+                      print("TTTTTTTTTtimebank proj");
+                      projectModel.mode = 'Timebank';
+                    } else {
+                      print("pppppppppersonal proj");
+                      projectModel.mode = 'Personal';
+                    }
+                    sharedValue = val;
+                  });
+                }
+              },
+              //groupValue: sharedValue,
+            ),
+          );
+        } else {
+          this.projectModel.mode = 'Personal';
+
+          return Container();
+        }
+      },
     );
   }
-
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
@@ -170,24 +185,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            widget.isCreateProject ? FutureBuilder(
-          future: getTimebankAdminStatus,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasError) return Text(snapshot.error.toString());
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container();
-            }
-            timebankModel = snapshot.data;
-            if (snapshot.data.admins
-                .contains(SevaCore.of(context).loggedInUser.sevaUserID)) {
-              projectModel.mode = "Timebank";
-              return projectSwitch;
-            } else {
-              projectModel.mode = "Personal";
-              return Container();
-            }
-          },
-        ) : Container(),
+            widget.isCreateProject ? projectSwitch : Container(),
             Center(
               child: Padding(
                 padding: EdgeInsets.all(5.0),
@@ -423,6 +421,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
+                    print('project mode ${projectModel.mode}');
                     FocusScope.of(context).requestFocus(new FocusNode());
                     // show a dialog
                     projectModel.startTime =

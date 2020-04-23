@@ -51,8 +51,11 @@ class _EditRequestState extends State<EditRequest> {
       ),
     );
   }
+
   String get title {
-    if(widget.requestModel.projectId == null || widget.requestModel.projectId == "" || widget.requestModel.projectId.isEmpty){
+    if (widget.requestModel.projectId == null ||
+        widget.requestModel.projectId == "" ||
+        widget.requestModel.projectId.isEmpty) {
       return "Edit Request";
     }
     return "Edit Project Request";
@@ -96,6 +99,7 @@ class RequestEditFormState extends State<RequestEditForm> {
     color: Colors.grey,
     fontFamily: 'Europa',
   );
+  BuildContext dialogContext;
 
   @override
   void initState() {
@@ -435,6 +439,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                           //adding some members for humanity first
 
                           if (_formKey.currentState.validate()) {
+                            linearProgressForCreatingRequest();
                             await this.updateRequest(
                                 requestModel: widget.requestModel);
 
@@ -456,6 +461,9 @@ class RequestEditFormState extends State<RequestEditForm> {
 //                            Navigator.pop(context);
 //                            Navigator.pop(context);
 //                          }
+                            if (dialogContext != null) {
+                              Navigator.pop(dialogContext);
+                            }
                             Navigator.pop(context);
                           }
                         } else {
@@ -549,6 +557,19 @@ class RequestEditFormState extends State<RequestEditForm> {
         ),
       ),
     );
+  }
+
+  void linearProgressForCreatingRequest() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (createDialogContext) {
+          dialogContext = createDialogContext;
+          return AlertDialog(
+            title: Text('Updating Request..'),
+            content: LinearProgressIndicator(),
+          );
+        });
   }
 
   Map<String, UserModel> selectedUsers;
