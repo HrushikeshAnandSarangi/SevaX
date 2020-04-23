@@ -38,9 +38,14 @@ class UserCircleAvatarList extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return Padding(
                     padding: EdgeInsets.all(4),
-                    child: ClipOval(
-                      child: CustomNetworkImage(
-                          snapshot.data[index].participantDetails.photourl),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: ClipOval(
+                        child: CustomNetworkImage(
+                          snapshot.data[index].participantDetails.photourl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   );
                 },
