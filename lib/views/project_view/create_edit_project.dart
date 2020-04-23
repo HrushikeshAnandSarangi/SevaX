@@ -501,6 +501,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             OfferDurationWidgetState.starttimestamp;
                         projectModel.endTime =
                             OfferDurationWidgetState.endtimestamp;
+
                         if (projectModel.startTime == 0 ||
                             projectModel.endTime == 0) {
                           showDialogForTitle(
@@ -518,6 +519,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           return;
                         }
                         showProgressDialog('Updating project');
+                        print("final value of modeeeee is "+this.projectModel.mode);
                         await FirestoreManager.updateProject(
                             projectModel: projectModel);
                         if (dialogContext != null) {

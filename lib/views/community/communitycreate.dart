@@ -215,6 +215,7 @@ class CreateEditCommunityViewFormState
     return Form(
       key: _formKey,
       child: createSevaX,
+      autovalidate:false
     );
   }
 
@@ -305,8 +306,6 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-//                    initialValue: snapshot.data.community.name ?? '',
-
                     onSaved: (value) {
                       enteredName = value;
                     },

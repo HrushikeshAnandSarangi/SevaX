@@ -102,12 +102,12 @@ Stream<List<NewsModel>> getNearNewsStream(
       //'entityName': FlavorConfig.timebankName,
     },
   );
-
+  print("timebankID is presentt");
   var data = geos
       .collection(collectionRef: query)
       .within(center: center, radius: 20, field: 'location', strictMode: true);
 
-  print("-------------$lat---------$lng--------${data.toString()}");
+  print("-------------${lat.toString()}---------${lng.toString()}--------${data.toString()}");
 
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
