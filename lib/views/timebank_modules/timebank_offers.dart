@@ -4,14 +4,13 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
-import 'package:sevaexchange/views/exchange/createoffer.dart';
 
 import '../../ui/screens/offers/pages/create_offer.dart' as prefix0;
 
 class OffersModule extends StatefulWidget {
   final String communityId;
   final String timebankId;
-  TimebankModel timebankModel;
+  final TimebankModel timebankModel;
   OffersModule.of({this.timebankId, this.timebankModel, this.communityId});
   @override
   OffersState createState() => OffersState();
@@ -23,8 +22,6 @@ class OffersState extends State<OffersModule> {
     globals.orCreateSelector = 1;
   }
 
-  OffersState() {}
-  List<TimebankModel> timebankList = [];
   bool isNearme = false;
   int sharedValue = 0;
   @override
@@ -57,8 +54,9 @@ class OffersState extends State<OffersModule> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CreateOffer(
+                              builder: (context) => prefix0.CreateOffer(
                                 timebankId: timebankId,
+                                // communityId: widget.communityId,
                               ),
                             ),
                           );
@@ -66,31 +64,10 @@ class OffersState extends State<OffersModule> {
                         child: Container(
                           margin: EdgeInsets.only(left: 10),
                           child: CircleAvatar(
-                            backgroundColor: Theme.of(context).primaryColor,
+                            backgroundColor: Colors.white,
                             radius: 10,
                             child: Image.asset("lib/assets/images/add.png"),
                           ),
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => prefix0.CreateOffer(
-                              timebankId: timebankId,
-                              // communityId: widget.communityId,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(left: 10),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 10,
-                          child: Image.asset("lib/assets/images/add.png"),
                         ),
                       ),
                     ),
