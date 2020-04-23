@@ -97,7 +97,6 @@ class _BioViewState extends State<BioView> {
                                   return 'Min 50 characters *';
                                 }
                                 this.bio = value;
-                                return "";
                               }),
                           // Text(
                           //   '*min 100 characters',
