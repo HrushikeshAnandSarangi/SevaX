@@ -12,8 +12,9 @@ import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
-
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import '../app_config.dart';
 import 'notifications_data_manager.dart';
 
@@ -425,6 +426,20 @@ Future<void> approveRequestCompletion({
   @required String communityId,
   // @required num taxPercentage,
 }) async {
+  List<TransactionModel> transactions = model.transactions.map((t) => t).toList();
+  TransactionModel editedTransaction;
+  model.transactions = transactions.map((t) {
+    if (t.to == userId) {
+      editedTransaction = t;
+      editedTransaction.isApproved = true;
+      return editedTransaction;
+    }
+    return t;
+  }).toList();
+
+  if (model.transactions.where((model) => model.isApproved).length ==
+      model.numberOfApprovals) {}
+
   var approvalCount = 0;
   if (model.transactions != null) {
     for (var i = 0; i < model.transactions.length; i++) {
@@ -502,8 +517,8 @@ Future<void> approveRequestCompletion({
 
   if (model.requestMode == RequestMode.TIMEBANK_REQUEST) {
     Firestore.instance
-        .collection("communities")
-        .document(communityId)
+        .collection("timebanknew")
+        .document(model.timebankId)
         .collection("balance")
         .add(
           balanceTransactionModel.toJson(),
@@ -542,7 +557,7 @@ Future<void> approveRequestCompletion({
             : updatedRequestModel.toMap(),
         merge: true,
       );
-
+  transactionBloc.updateNewTransaction(editedTransaction.from, editedTransaction.to,  editedTransaction.timestamp, editedTransaction.credits, editedTransaction.isApproved, model.requestMode, model.id,model.timebankId, false);
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
@@ -715,6 +730,14 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   @required String userEmail,
   @required String userId,
 }) async* {
+  /* TODO needs flow correction need to be corrected as below when tasks introduced- Eswar
+  *   var data = Firestore.instance
+      .collection('users')
+      .document(userEmail)
+      .collection('tasks')
+      .snapshots();
+      *
+      * */
   var data = Firestore.instance
       .collection('requests')
       .where('approvedUsers', arrayContains: userEmail)
@@ -724,6 +747,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<RequestModel>>.fromHandlers(
       handleData: (snapshot, requestSink) {
+        // TODO needs flow correction to Tasks model need to be corrected
         List<RequestModel> requestModelList = [];
         snapshot.documents.forEach((documentSnapshot) {
           RequestModel model = RequestModel.fromMap(documentSnapshot.data);
@@ -743,6 +767,7 @@ Stream<List<RequestModel>> getTaskStreamForUserWithEmail({
       },
     ),
   );
+  // END OF CODE correction mentioned above
 }
 
 // Future<void> rejectRequestCompletion({
@@ -910,49 +935,35 @@ Future<bool> hasSufficientCredits({
 
 Future<double> getMemberBalance(userEmail, userId) {
   double sevaCoins = 0;
-  return Firestore.instance
-      .collection('requests')
-      .where('approvedUsers', arrayContains: userEmail)
-      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
-      .getDocuments()
-      .then((QuerySnapshot querySnapshot) async {
-    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
-      model.transactions?.forEach((transaction) {
-        if (transaction.isApproved && transaction.to == userId)
-          sevaCoins += transaction.credits;
-      });
-    });
-
-    double myDebits = await getMyDebits(userEmail, userId);
-
-    return sevaCoins - myDebits;
-  }).catchError((onError) {
+  FirestoreManager.getUserForIdStream(
+    sevaUserId: userId,
+  ).listen((UserModel userModel) {
+    sevaCoins = userModel.currentBalance;
     return sevaCoins;
   });
 }
-
-Future<double> getMyDebits(userEmail, userId) {
-  double myDebits = 0;
-  return Firestore.instance
-      .collection('requests')
-      .where('email', isEqualTo: userEmail)
-      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
-      .getDocuments()
-      .then((QuerySnapshot querySnapshot) {
-    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
-      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
-      model.transactions?.forEach((transaction) {
-        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
-            transaction.isApproved &&
-            transaction.from == userId) myDebits += transaction.credits;
-      });
-    });
-    return myDebits;
-  }).catchError((onError) {
-    return myDebits;
-  });
-}
+///NOTE Removed as a part of version 1.1 update as balance should be a meta not through calculation
+//Future<double> getMyDebits(userEmail, userId) {
+//  double myDebits = 0;
+//  return Firestore.instance
+//      .collection('requests')
+//      .where('email', isEqualTo: userEmail)
+//      .where("root_timebank_id", isEqualTo: FlavorConfig.values.timebankId)
+//      .getDocuments()
+//      .then((QuerySnapshot querySnapshot) {
+//    querySnapshot.documents.forEach((DocumentSnapshot documentSnapshot) {
+//      RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+//      model.transactions?.forEach((transaction) {
+//        if (model.requestMode == RequestMode.PERSONAL_REQUEST &&
+//            transaction.isApproved &&
+//            transaction.from == userId) myDebits += transaction.credits;
+//      });
+//    });
+//    return myDebits;
+//  }).catchError((onError) {
+//    return myDebits;
+//  });
+//}
 
 Stream<List<RequestModel>> getNotAcceptedRequestStream({
   @required String userEmail,

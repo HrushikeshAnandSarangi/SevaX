@@ -10,7 +10,7 @@ import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
-
+import 'package:sevaexchange/models/transaction_model.dart';
 import '../resources/repository.dart';
 
 class CommunityFindBloc {
@@ -143,6 +143,190 @@ class UserBloc {
     var userc = this._userController.value;
     userc.updateLoggedInUserDetails(userdata);
     _userController.add(userc);
+  }
+}
+
+class TransactionBloc {
+  final _repository = Repository();
+  final _transactionController = PublishSubject<TransactionController>();
+
+  Observable<TransactionController> get trasactionController =>
+      _transactionController.stream;
+
+//  fetchCommunities(name) async {
+//    CommunityListModel communityListModel = CommunityListModel();
+//    communityListModel.loading = true;
+//    _communitiesFetcher.sink.add(communityListModel);
+//    communityListModel =
+//    await _repository.searchCommunityByName(name, communityListModel);
+//    communityListModel.loading = false;
+//    print(communityListModel.communities.length);
+//    _communitiesFetcher.sink.add(communityListModel);
+//  }
+  handleApprovedTransaction(isApproved, from, to, timebankid, type, credits) async {
+
+    if (isApproved) {
+      print(type);
+      print(RequestMode.TIMEBANK_REQUEST);
+      print('came here approved');
+      // update user to user transaction balances
+      // TODO burhan suggest to do this in cloud function; current is a background task.
+      if (type == RequestMode.PERSONAL_REQUEST) {
+        print("handle final approval transaction to user and tiembnak personal request");
+        // debit from user
+        Query query = Firestore.instance
+            .collection('users')
+            .where('sevaUserID', isEqualTo: from);
+        QuerySnapshot snapshot = await query.getDocuments();
+        DocumentSnapshot document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        if (document != null)
+        Firestore.instance
+            .collection('users')
+            .document(document.documentID)
+            .setData({ 'currentBalance': FieldValue.increment(-credits)},merge: true);
+        // credit to user
+        query = Firestore.instance
+            .collection('users')
+            .where('sevaUserID', isEqualTo: to);
+        snapshot = await query.getDocuments();
+        document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        print("handle final approval transaction to user and tiembnak user request");
+        if (document != null)
+          Firestore.instance
+              .collection('users')
+              .document(document.documentID)
+              .setData({ 'currentBalance': FieldValue.increment(credits)},merge: true);
+      } else if (type == RequestMode.TIMEBANK_REQUEST) {
+        print("handle final approval transaction to user and tiembnak request");
+        // debit from timebank
+        Query query = Firestore.instance
+            .collection('timebanknew')
+            .where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.getDocuments();
+        DocumentSnapshot document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        print(timebankid);
+        print(snapshot.documents);
+        if (document != null)
+          Firestore.instance
+              .collection('timebanknew')
+              .document(document.documentID)
+              .setData({ 'balance': FieldValue.increment(-credits)},merge: true);
+        // credit to user
+        print("handle final approval transaction to user and tiembnak request comere here ");
+        query = Firestore.instance
+            .collection('users')
+            .where('sevauserid', isEqualTo: to);
+        snapshot = await query.getDocuments();
+        document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        if (document != null)
+          Firestore.instance
+              .collection('users')
+              .document(document.documentID)
+              .setData({ 'currentBalance': FieldValue.increment(credits)},merge: true);
+      } else if (type == ContantsSeva.USER_DONATE_TOTIMEBANK) {
+        // debit from timebank
+        Query query = Firestore.instance
+            .collection('timebanknew')
+            .where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.getDocuments();
+        DocumentSnapshot document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        if (document != null)
+          Firestore.instance
+              .collection('timebanknew')
+              .document(document.documentID)
+              .setData({ 'balance': FieldValue.increment(credits)},merge: true);
+        // credit to user
+
+        query = Firestore.instance
+            .collection('users')
+            .where('sevaUserID', isEqualTo: from);
+        snapshot = await query.getDocuments();
+        document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        if (document != null)
+          Firestore.instance
+              .collection('users')
+              .document(document.documentID)
+              .setData({ 'currentBalance': FieldValue.increment(-credits)},merge: true);
+      }
+    }
+  }
+
+  createNewTransaction(from, to, timestamp, credits, isApproved, type, typeid, timebankid) async {
+    TransactionModel transactionModel = new TransactionModel(from: from,to: to, timestamp: timestamp, credits: credits, isApproved: isApproved, type: type, typeid: typeid, timebankid: timebankid, transactionbetween: [from, to]);
+    handleApprovedTransaction(isApproved, from, to, timebankid, type, credits);
+    await Firestore.instance
+          .collection('transactions').document().setData(transactionModel.toMap(), merge: true);
+  }
+
+  updateNewTransaction(from, to, timestamp, credits, isApproved, type, typeid, timebankid, id) async {
+    TransactionModel prevtransactionModel;
+    TransactionModel transactionModel = new TransactionModel(from: from,to: to, timestamp: timestamp, credits: credits, isApproved: isApproved, type: type.toString(), typeid: typeid, timebankid: timebankid, transactionbetween: [from, to]);
+    if (id) {
+      var document = await Firestore.instance
+          .collection('transactions')
+          .document(id).get();
+      prevtransactionModel = new TransactionModel.fromMap(document.data);
+      if (document.data != null) {
+        await Firestore.instance
+            .collection('transactions')
+            .document(document.documentID)
+            .setData(transactionModel.toMap(), merge: true);
+        if (!prevtransactionModel.isApproved && isApproved) {
+          print("handle final approval transaction to user and tiembnak");
+          await handleApprovedTransaction(isApproved, from, to, timebankid, type, credits);
+        }
+      }
+    } else {
+      Query query = Firestore.instance
+          .collection('transactions')
+          .where('typeid', isEqualTo: typeid)
+          .where('from', isEqualTo: from)
+          .where('to', isEqualTo: to);
+      QuerySnapshot snapshot = await query.getDocuments();
+      DocumentSnapshot document =
+      snapshot.documents?.length > 0 && snapshot.documents != null
+          ? snapshot.documents.first
+          : null;
+      if (document != null)
+        prevtransactionModel = new TransactionModel.fromMap(document.data);
+        if (!prevtransactionModel.isApproved && isApproved) {
+          print("handle final approval transaction to user and tiembnak sdf");
+          await handleApprovedTransaction(isApproved, from, to, timebankid, type, credits);
+        }
+        return await Firestore.instance
+            .collection('transactions')
+            .document(document.documentID)
+            .setData(transactionModel.toMap(), merge: true);
+    }
+  }
+
+  dispose() {
+    _transactionController.close();
+  }
+}
+class TransactionController{
+  TimebankModel selectedtimebank;
+  List<TransactionModel> userTransactions = [];
+  List<TransactionModel> timebankTransactions = [];
+  TransactionController() {}
+
+  setUserTransactionsList(user_transactions) {
+    this.userTransactions = user_transactions;
+  }
+  setTimebankTransactionsList(timebank_transactions) {
+    this.timebankTransactions = timebank_transactions;
   }
 }
 
@@ -369,3 +553,4 @@ final createEditCommunityBloc = CommunityCreateEditBloc();
 final communityBloc = CommunityFindBloc();
 final userBloc = UserBloc();
 final volunteerUsersBloc = VolunteerFindBloc();
+final transactionBloc = TransactionBloc();

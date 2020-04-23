@@ -91,6 +91,7 @@ class NotificationsView extends State<NotificationViewHolder> {
             switch (notification.type) {
               case NotificationType.RequestAccept:
                 RequestModel model = RequestModel.fromMap(notification.data);
+                // TODO needs flow correction to tasks model and transaction model
                 return FutureBuilder<RequestModel>(
                     future: FirestoreManager.getRequestFutureById(
                       requestId: model.id,
@@ -789,21 +790,6 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   void approveTransaction(RequestModel model, String userId,
       String notificationId, SevaCore sevaCore) {
-    List<TransactionModel> transactions =
-        model.transactions.map((t) => t).toList();
-
-    model.transactions = transactions.map((t) {
-      if (t.to == userId && t.from == sevaCore.loggedInUser.sevaUserID) {
-        TransactionModel editedTransaction = t;
-        editedTransaction.isApproved = true;
-        return editedTransaction;
-      }
-      return t;
-    }).toList();
-
-    if (model.transactions.where((model) => model.isApproved).length ==
-        model.numberOfApprovals) {}
-
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,

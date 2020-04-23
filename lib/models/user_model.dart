@@ -21,7 +21,7 @@ class UserModel extends DataModel {
   String photoURL;
   String sevaUserID;
   List<String> invitedRequests;
-  num currentBalance;
+  double currentBalance;
   String timezone;
   String otp;
   String requestStatus;
@@ -195,9 +195,9 @@ class UserModel extends DataModel {
       this.favoriteByTimeBank = favoriteByTimeBankList;
     }
     if (map.containsKey('currentBalance')) {
-      this.currentBalance = map['currentBalance'];
+      this.currentBalance = map['currentBalance'].toDouble();
     } else {
-      this.currentBalance = 0;
+      this.currentBalance = 0.0;
     }
     if (map.containsKey('requestStatus')) {
       this.requestStatus = map['requestStatus'];

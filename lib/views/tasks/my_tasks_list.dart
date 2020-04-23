@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
@@ -71,6 +72,8 @@ class MyTasksList extends StatelessWidget {
           }
           UserModel userModel = snapshot.data;
           String usertimezone = userModel.timezone;
+          print("Sample ereadaf adsk aklfjadsf");
+          print(SevaCore.of(context).loggedInUser.sevaUserID);
           return StreamBuilder<List<RequestModel>>(
             stream: FirestoreManager.getTaskStreamForUserWithEmail(
                 userEmail: SevaCore.of(context).loggedInUser.email,
@@ -96,6 +99,7 @@ class MyTasksList extends StatelessWidget {
                 itemCount: requestModelList.length,
                 // physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (listContext, index) {
+                  // TODO needs flow correction to tasks model
                   RequestModel model = requestModelList[index];
 
                   return getTaskWidget(model, usertimezone);
@@ -371,7 +375,7 @@ class MyTasksList extends StatelessWidget {
 class TaskCardView extends StatefulWidget {
   final RequestModel requestModel;
   final String userTimezone;
-
+  // TODO needs flow correction to tasks model
   TaskCardView({@required this.requestModel, this.userTimezone});
 
   @override
@@ -626,9 +630,10 @@ class TaskCardViewState extends State<TaskCardView> {
 
   void startTransaction() {
     if (_formKey.currentState.validate()) {
+      // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
       int totalMinutes =
           int.parse(selectedMinuteValue) + (int.parse(selectedHourValue) * 60);
-
+      // TODO needs flow correction need to be removed when tasks introduced- Eswar
       this.requestModel.durationOfRequest = totalMinutes;
 
       TransactionModel transactionModel = TransactionModel(
@@ -646,7 +651,8 @@ class TaskCardViewState extends State<TaskCardView> {
       }
 
       FirestoreManager.requestComplete(model: requestModel);
-
+      // END OF CODE correction mentioned above
+      transactionBloc.createNewTransaction(requestModel.sevaUserId, SevaCore.of(context).loggedInUser.sevaUserID, DateTime.now().millisecondsSinceEpoch, totalMinutes / 60, false, this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST ? RequestMode.TIMEBANK_REQUEST.toString() : RequestMode.PERSONAL_REQUEST.toString(), this.requestModel.id, this.requestModel.timebankId);
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(
           id: utils.Utils.getUuid(),
