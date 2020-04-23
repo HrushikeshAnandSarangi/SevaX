@@ -282,29 +282,12 @@ class NotificationsView extends State<NotificationViewHolder> {
 
               // One to many offer notifications(user)
               // DEBIT_FROM_OFFER,
-              // CREDIT_FROM_OFFER,//user notification 
+              // CREDIT_FROM_OFFER,//user notification
               // NEW_MEMBER_SIGNUP_OFFER,//user notification
               // OFFER_FULFILMENT_ACHIEVED,// user notification
               // OFFER_SUBSCRIPTION_COMPLETED,//user ///successfully signed up
               // FEEDBACK_FROM_SIGNUP_MEMBER,//feedback user
 
-              case NotificationType.TYPE_DEBIT_FROM_OFFER:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
-
-                return NotificationCard(
-                  photoUrl: data.participantDetails.photourl,
-                  title: "Debited",
-                  subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
-                      .replaceFirst(
-                        '*n',
-                        data.classDetails.numberOfClassHours.toString(),
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle),
-                      onDismissed: onDismissed,
-                );
-                break;
-              
               //TODO implement
               // case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
               //   OneToManyNotificationDataModel data =
@@ -317,12 +300,15 @@ class NotificationsView extends State<NotificationViewHolder> {
               //     height: 30,
               //   );
               //   break;
+
+              //Creator notifications
               case NotificationType.TYPE_CREDIT_FROM_OFFER:
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
 
                 return NotificationCard(
-                  photoUrl: data.participantDetails.photourl,
+                  photoUrl:
+                      '', //get timebank photourl// data.participantDetails.photourl,
                   title: "Credited",
                   subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
                       .replaceFirst(
@@ -332,7 +318,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                             .toString(),
                       )
                       .replaceFirst('*class', data.classDetails.classTitle),
-                      onDismissed: onDismissed,
+                  onDismissed: onDismissed,
                 );
                 break;
               case NotificationType.TYPE_NEW_MEMBER_SIGNUP_OFFER:
@@ -348,6 +334,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                         data.participantDetails.fullname,
                       )
                       .replaceFirst('*class', data.classDetails.classTitle),
+                  onDismissed: onDismissed,
                 );
                 break;
               case NotificationType.TYPE_OFFER_FULFILMENT_ACHIEVED:
@@ -355,13 +342,40 @@ class NotificationsView extends State<NotificationViewHolder> {
                     OneToManyNotificationDataModel.fromJson(notification.data);
 
                 return NotificationCard(
-                  photoUrl: data.participantDetails.photourl,
-                  title: "Class completed",
+                  photoUrl:
+                      '', //get timebank photourl// data.participantDetails.photourl,
+                  title: "Credits for ${data.classDetails.classTitle}",
                   subTitle: UserNotificationMessage.OFFER_FULFILMENT_ACHIEVED
+                      .replaceFirst(
+                        '*n',
+                        (data.classDetails.numberOfClassHours +
+                                data.classDetails.numberOfPreperationHours)
+                            .toString(),
+                      )
                       .replaceFirst('*class', data.classDetails.classTitle),
-                      onDismissed: onDismissed,
+                  onDismissed: onDismissed,
                 );
                 break;
+
+              //Member notifications
+
+              case NotificationType.TYPE_DEBIT_FROM_OFFER:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+
+                return NotificationCard(
+                  photoUrl: data.participantDetails.photourl,
+                  title: "Debited",
+                  subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
+                      .replaceFirst(
+                        '*n',
+                        data.classDetails.numberOfClassHours.toString(),
+                      )
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                  onDismissed: onDismissed,
+                );
+                break;
+
               case NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED:
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
@@ -374,7 +388,8 @@ class NotificationsView extends State<NotificationViewHolder> {
                         '*class',
                         data.classDetails.classTitle,
                       )
-                      .replaceFirst('*class', data.classDetails.classTitle),onDismissed: onDismissed,
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                  onDismissed: onDismissed,
                 );
                 break;
               case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
@@ -399,15 +414,15 @@ class NotificationsView extends State<NotificationViewHolder> {
                 break;
 
               default:
-              log("Unhandled user notification type ${notification.type} ${notification.id}");
+                log("Unhandled user notification type ${notification.type} ${notification.id}");
                 Crashlytics().log(
                     "Unhandled notification type ${notification.type} ${notification.id}");
                 return Container(
-                  // child: Text(
-                  //   "Unhandled notification type ${notification.type} ${notification.id}",
-                  // ),
-                  // color: Colors.red,
-                );
+                    // child: Text(
+                    //   "Unhandled notification type ${notification.type} ${notification.id}",
+                    // ),
+                    // color: Colors.red,
+                    );
             }
           },
         );
