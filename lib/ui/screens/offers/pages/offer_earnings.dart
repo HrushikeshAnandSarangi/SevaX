@@ -5,7 +5,6 @@ import 'package:sevaexchange/models/offer_participants_model.dart';
 import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/member_card_with_single_action.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/seva_coin_star.dart';
-import 'package:sevaexchange/ui/utils/offer_dialogs.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 
 class OfferEarnings extends StatelessWidget {
@@ -42,11 +41,23 @@ class OfferEarnings extends StatelessWidget {
                   children: <Widget>[
                     SevaCoinStarWidget(
                       title: 'Your earnings',
-                      amount: '2591',
+                      amount: offerModel.groupOfferDataModel.creditStatus == 1
+                          ? (offerModel.groupOfferDataModel.numberOfClassHours +
+                                  offerModel.groupOfferDataModel
+                                      .numberOfPreperationHours)
+                              .toString()
+                          : '0',
                     ),
                     SevaCoinStarWidget(
-                      title: 'Your earnings',
-                      amount: '591',
+                      title: 'Timebank earnings',
+                      amount: offerModel.groupOfferDataModel.creditStatus == 1
+                          ? (offerModel.groupOfferDataModel.creditsApproved -
+                                  offerModel
+                                      .groupOfferDataModel.numberOfClassHours +
+                                  offerModel.groupOfferDataModel
+                                      .numberOfPreperationHours)
+                              .toString()
+                          : '0',
                     ),
                   ],
                 ),
@@ -77,20 +88,23 @@ class OfferEarnings extends StatelessWidget {
                         ),
                         onMessagePressed: () {},
                         action: () {
-                          print(_endTime.toString());
-                          if (_isOfferOver) {
-                            _bloc.handleRequestActions(context, index, status);
-                          } else {
-                            timeEndWarning(
-                              context,
-                              _durationLeft,
-                            );
-                          }
+                          // print(_endTime.toString());
+                          // if (_isOfferOver) {
+                          //   _bloc.handleRequestActions(context, index, status);
+                          // } else {
+                          //   timeEndWarning(
+                          //     context,
+                          //     _durationLeft,
+                          //   );
+                          // }
                         },
-                        status: getParticipantStatus(status),
+                        //removed the status of user because of the updated flow//need change in ui
+                        status: getParticipantStatus(ParticipantStatus
+                            .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                         photoUrl:
                             snapshot.data[index].participantDetails.photourl,
-                        buttonColor: getStatusColor(status),
+                        buttonColor: getStatusColor(ParticipantStatus
+                            .MEMBER_SIGNED_UP_FOR_ONE2_MANY_OFFER),
                       );
                     },
                     separatorBuilder: (context, index) {
