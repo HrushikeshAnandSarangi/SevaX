@@ -80,16 +80,45 @@ class RequestsState extends State<RequestsModule> {
             child: Row(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
+                  margin:
+                      EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 10),
                   // width: double.,
                   alignment: Alignment.centerLeft,
                   child: Row(
                     children: <Widget>[
-                      Text(
-                        'My Requests',
-                        style: (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      ButtonTheme(
+                        minWidth: 110.0,
+                        height: 50.0,
+                        buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
+                        child: Stack(
+                          children: [
+                            FlatButton(
+                              onPressed: () {},
+                              child: Text(
+                                'My Requests',
+                                style: (TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                              ),
+                            ),
+                            Positioned(
+                              // will be positioned in the top right of the container
+                              top: -10,
+                              right: -10,
+                              child: IconButton(
+                                icon: Image.asset(
+                                  'lib/assets/images/info.png',
+                                  color: FlavorConfig.values.theme.primaryColor,
+                                  height: 16,
+                                  width: 16,
+                                ),
+                                tooltip:
+                                    'Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.',
+                                onPressed: () {},
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      IconButton(icon: Icon(Icons.info_outline), iconSize: 18, onPressed: showRequestsWebPage,),
                       widget.isFromSettings
                           ? Container()
                           : TransactionLimitCheck(
@@ -135,12 +164,16 @@ class RequestsState extends State<RequestsModule> {
                                 },
                               ),
                             ),
+                      IconButton(
+                        icon: Icon(Icons.help_outline),
+                        color: FlavorConfig.values.theme.primaryColor,
+                        iconSize: 24,
+                        onPressed: showRequestsWebPage,
+                      ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10),
-                ),
+
                 // Offstage(
                 //   offstage: true,
                 //   child: StreamBuilder<Object>(
@@ -247,9 +280,7 @@ class RequestsState extends State<RequestsModule> {
                 //         );
                 //       }),
                 // ),
-                Expanded(
-                  child: Container(),
-                ),
+
                 Container(
                   width: 120,
                   child: CupertinoSegmentedControl<int>(
@@ -373,11 +404,10 @@ class RequestsState extends State<RequestsModule> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Groups Link", urlToHit: dynamicLinks['requestsInfoLink']),
+          title: "Requests Link", urlToHit: dynamicLinks['requestsInfoLink']),
       context: context,
     );
   }
-
 
   void navigateToWebView({
     BuildContext context,
@@ -715,7 +745,8 @@ class NearRequestListItems extends StatelessWidget {
           return StreamBuilder<List<RequestModel>>(
             stream: timebankId != 'All'
                 ? FirestoreManager.getNearRequestListStream(
-                    timebankId: timebankId, loggedInUser: SevaCore.of(context).loggedInUser)
+                    timebankId: timebankId,
+                    loggedInUser: SevaCore.of(context).loggedInUser)
                 : FirestoreManager.getNearRequestListStream(),
             builder: (BuildContext context,
                 AsyncSnapshot<List<RequestModel>> requestListSnapshot) {

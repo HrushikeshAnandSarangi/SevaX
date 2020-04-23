@@ -25,22 +25,52 @@ class TimeBankProjectsView extends StatefulWidget {
 }
 
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
+            margin: EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 10),
             alignment: Alignment.centerLeft,
             child: Row(
               children: <Widget>[
-                Text(
-                  'Projects',
-                  style: (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ButtonTheme(
+                  minWidth: 110.0,
+                  height: 50.0,
+                  buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
+                  child: Stack(
+                    children: [
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Projects',
+                          style: (TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                      ),
+                      Positioned(
+                        // will be positioned in the top right of the container
+                        top: -8,
+                        right: -10,
+                        child: IconButton(
+                          icon: Image.asset(
+                            'lib/assets/images/info.png',
+                            color: FlavorConfig.values.theme.primaryColor,
+                            height: 16,
+                            width: 16,
+                          ),
+                          tooltip:
+                              'Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.',
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                IconButton(icon: Icon(Icons.info_outline), iconSize: 18, onPressed: showProjectsWebPage,),
+                SizedBox(
+                  width: 10,
+                ),
                 TransactionLimitCheck(
                   child: GestureDetector(
                     child: Container(
@@ -55,6 +85,13 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                     },
                   ),
                 ),
+                Spacer(),
+                IconButton(
+                  icon: Icon(Icons.help_outline),
+                  color: FlavorConfig.values.theme.primaryColor,
+                  iconSize: 24,
+                  onPressed: showProjectsWebPage,
+                ),
               ],
             ),
           ),
@@ -64,9 +101,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   timebankid: widget.timebankId),
               builder: (BuildContext context,
                   AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
-
                 if (projectListSnapshot.hasError) {
-
                   return new Text('Error: ${projectListSnapshot.error}');
                 }
                 switch (projectListSnapshot.connectionState) {
@@ -186,7 +221,6 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     );
   }
 
-
   void navigateToWebView({
     BuildContext context,
     AboutMode aboutMode,
@@ -198,6 +232,4 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       ),
     );
   }
-
-
 }

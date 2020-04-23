@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
@@ -5,12 +7,16 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/no_group_placeholder.dart';
 import 'package:sevaexchange/ui/screens/home_page/widgets/timebank_card.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+
+import '../../../../flavor_config.dart';
 
 class TimebankHomePage extends StatefulWidget {
   final SelectedCommuntityGroup selectedCommuntityGroup;
@@ -78,16 +84,51 @@ class _TimebankHomePageState extends State<TimebankHomePage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(
-                  'Your Groups',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                ButtonTheme(
+                  minWidth: 110.0,
+                  height: 50.0,
+                  buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
+                  child: Stack(
+                    children: [
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Your Groups',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        // will be positioned in the top right of the container
+                        top: -10,
+                        right: -10,
+                        child: IconButton(
+                          icon: Image.asset(
+                            'lib/assets/images/info.png',
+                            color: FlavorConfig.values.theme.primaryColor,
+                            height: 16,
+                            width: 16,
+                          ),
+                          onPressed: () {},
+                          tooltip:
+                              'A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline),
                   onPressed: navigateToCreateGroup,
+                ),
+                Spacer(),
+                IconButton(
+                  icon: Icon(Icons.help_outline),
+                  color: FlavorConfig.values.theme.primaryColor,
+                  iconSize: 24,
+                  onPressed: showGroupsWebPage,
                 ),
               ],
             ),
@@ -166,6 +207,27 @@ class _TimebankHomePageState extends State<TimebankHomePage>
           padding: EdgeInsets.only(left: 12),
           scrollDirection: Axis.horizontal,
         ),
+      ),
+    );
+  }
+
+  void showGroupsWebPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Groups Link", urlToHit: dynamicLinks['groupsInfoLink']),
+      context: context,
+    );
+  }
+
+  void navigateToWebView({
+    BuildContext context,
+    AboutMode aboutMode,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SevaWebView(aboutMode),
       ),
     );
   }

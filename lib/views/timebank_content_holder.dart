@@ -1124,12 +1124,18 @@ class DiscussionListState extends State<DiscussionList> {
                                   Padding(
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 2),
-                                    child: Icon(
-                                      Icons.colorize,
-                                      color: news.isPinned
-                                          ? Colors.green
-                                          : Colors.black,
-                                      size: 20,
+                                    child: Container(
+//                                      color: news.isPinned
+//                                          ? Colors.green
+//                                          : Colors.black,
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset(
+                                        'lib/assets/images/pin.png',
+                                        color: news.isPinned
+                                            ? Colors.green
+                                            : Colors.black,
+                                      ),
                                     ),
                                   ),
                                   () {
