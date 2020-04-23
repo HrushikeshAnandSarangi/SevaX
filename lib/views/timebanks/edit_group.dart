@@ -163,7 +163,6 @@ class EditGroupFormState extends State<EditGroupForm> {
                 return 'Please enter some text';
               }
               widget.timebankModel.name = value;
-              return "";
             },
           ),
           headingText('About', true),

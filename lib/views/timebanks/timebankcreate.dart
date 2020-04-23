@@ -226,7 +226,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                 return 'Please enter some text';
               }
               timebankModel.name = value;
-              return "";
             },
           ),
           headingText('About', true),
@@ -402,7 +401,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               return 'Please enter some text';
             }
             timebankModel.name = value;
-            return "";
           },
         ),
         Text(' '),
@@ -430,7 +428,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               return 'Please enter some text';
             }
             timebankModel.missionStatement = value;
-            return "";
           },
         ),
         Text(''),
