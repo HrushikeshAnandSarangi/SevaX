@@ -325,6 +325,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter the number of hours required';
+                      } else if (int.parse(value) < 0) {
+                        return 'No. of hours cannot be lesser than 0';
+                      } else if (int.parse(value) == 0) {
+                        return 'No. of hours cannot be 0';
                       } else {
                         requestModel.numberOfHours = int.parse(value);
                         return null;
@@ -354,6 +358,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter the number of volunteers needed';
+                    } else if (int.parse(value) < 0) {
+                      return 'No. of volunteers cannot be lesser than 0';
+                    } else if (int.parse(value) == 0) {
+                      return 'No. of volunteers cannot be 0';
                     } else {
                       requestModel.numberOfApprovals = int.parse(value);
                       return null;

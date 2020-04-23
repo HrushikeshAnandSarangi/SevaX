@@ -29,6 +29,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   bool autovalidate = false;
   Map<String, dynamic> skills = {};
   Map<String, dynamic> _selectedSkills = {};
+  bool isDataLoaded = false;
   @override
   void initState() {
     print(widget.userModel.skills);
@@ -48,6 +49,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           // selectedChips.add(buildChip(id: id, value: skills[id]));
         });
       }
+      isDataLoaded = true;
       setState(() {});
     });
 
@@ -167,31 +169,35 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
             ),
             SizedBox(height: 20),
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Wrap(
-                  runSpacing: 5.0,
-                  spacing: 5.0,
-                  children: _selectedSkills.values
-                      .toList()
-                      .map(
-                        (value) => value == null
-                            ? Container()
-                            : CustomChip(
-                                title: value,
-                                onDelete: () {
-                                  String id = skills.keys
-                                      .firstWhere((k) => skills[k] == value);
-                                  _selectedSkills.remove(id);
-                                  setState(() {});
-                                },
-                              ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
+            isDataLoaded
+                ? ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Wrap(
+                        runSpacing: 5.0,
+                        spacing: 5.0,
+                        children: _selectedSkills.values
+                            .toList()
+                            .map(
+                              (value) => value == null
+                                  ? Container()
+                                  : CustomChip(
+                                      title: value,
+                                      onDelete: () {
+                                        String id = skills.keys.firstWhere(
+                                            (k) => skills[k] == value);
+                                        _selectedSkills.remove(id);
+                                        setState(() {});
+                                      },
+                                    ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
             Spacer(),
             SizedBox(
               width: 134,
