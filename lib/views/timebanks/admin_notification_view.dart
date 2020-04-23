@@ -211,6 +211,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           .replaceFirst('*name', data.classDetails.classHost)
                           .replaceFirst('*class', data.classDetails.classTitle),
                   photoUrl: '',
+                  onDismissed: () {},
                 );
                 break;
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
@@ -224,6 +225,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           '*n', data.classDetails.numberOfClassHours.toString())
                       .replaceFirst('*class', data.classDetails.classTitle),
                   photoUrl: '',
+                  onDismissed: () {},
                 );
                 break;
 
