@@ -17,59 +17,61 @@ class OfferParticipants extends StatelessWidget {
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<OfferBloc>(context);
     return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.symmetric(vertical: 8),
-            color: Colors.grey[300],
-            child: Center(
-              child: Text(
-                "Ensure to recieve credits after the class is completed",
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-            ),
-          ),
-          StreamBuilder<List<OfferParticipantsModel>>(
-            stream: _bloc.participants,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              }
-              if (snapshot.data == null || snapshot.data.isEmpty) {
-                return Container(
-                  height: MediaQuery.of(context).size.height * 0.75,
-                  alignment: Alignment.center,
-                  child: Text("No Participants yet"),
-                );
-              }
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return ParticipantCard(
-                    name: snapshot.data[index].participantDetails.fullname,
-                    imageUrl: snapshot.data[index].participantDetails.photourl,
-                    bio: snapshot.data[index].participantDetails.bio,
+      child: StreamBuilder<List<OfferParticipantsModel>>(
+        stream: _bloc.participants,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.data == null || snapshot.data.isEmpty) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.75,
+              alignment: Alignment.center,
+              child: Text("No Participants yet"),
+            );
+          }
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            physics: NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              return ParticipantCard(
+                name: snapshot.data[index].participantDetails.fullname,
+                imageUrl: snapshot.data[index].participantDetails.photourl,
+                bio: snapshot.data[index].participantDetails.bio,
 
-                    // rating: double.parse(snapshot.data[index].participantDetails.),
-                    onMessageTapped: () {
-                      onMessageClick(
-                        context,
-                        SevaCore.of(context).loggedInUser.email,
-                        snapshot.data[index].participantDetails.email,
-                        offerModel.timebankId,
-                        offerModel.communityId,
-                      );
-                    },
+                // rating: double.parse(snapshot.data[index].participantDetails.),
+                onMessageTapped: () {
+                  onMessageClick(
+                    context,
+                    SevaCore.of(context).loggedInUser.email,
+                    snapshot.data[index].participantDetails.email,
+                    offerModel.timebankId,
+                    offerModel.communityId,
                   );
                 },
               );
             },
-          )
-        ],
+          );
+        },
       ),
+      // child: Column(
+      //   children: <Widget>[
+      //     SizedBox(height: 10),
+      //     // Container(
+      //     //   width: MediaQuery.of(context).size.width,
+      //     //   padding: EdgeInsets.symmetric(vertical: 8),
+      //     //   color: Colors.grey[300],
+      //     //   child: Center(
+      //     //     child: Text(
+      //     //       "Ensure to recieve credits after the class is completed",
+      //     //       style: TextStyle(color: Colors.grey[700]),
+      //     //     ),
+      //     //   ),
+      //     // ),
+
+      //   ],
+      // ),
     );
   }
 
