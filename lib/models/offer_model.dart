@@ -19,6 +19,12 @@ class GroupOfferDataModel {
   double creditsApproved;
   int creditStatus;
 
+  int isReviewed;
+  int membersNotified;
+  int completedRefund;
+  bool hostNotified; //let it be bool
+  bool isCanceled;
+
   GroupOfferDataModel();
 
   @override
@@ -41,9 +47,15 @@ class GroupOfferDataModel {
 
     if (this.classDescription != null)
       map['classDescription'] = this.classDescription;
+      
     map['signedUpMembers'] = this.signedUpMembers ?? [];
     map['creditsApproved'] = this.creditsApproved ?? 0;
     map['creditStatus'] = this.creditStatus ?? 0;
+    map['isReviewed'] = this.isReviewed ?? 0;
+    map['membersNotified'] = this.membersNotified ?? 0;
+    map['completedRefund'] = this.completedRefund ?? 0;
+    map['hostNotified'] = this.hostNotified ?? false;
+    map['isCanceled'] = this.isCanceled ?? false;
 
     return map;
   }
@@ -83,6 +95,11 @@ class GroupOfferDataModel {
     if (map.containsKey('creditStatus')) {
       this.creditStatus = map['creditStatus'];
     }
+    this.isReviewed = map['isReviewed'] ?? 0;
+    this.membersNotified = map['membersNotified'] ?? 0;
+    this.completedRefund = map['completedRefund'] ?? 0;
+    this.hostNotified = map['hostNotified'] ?? false;
+    this.isCanceled = map['isCanceled'] ?? false;
 
     if (map.containsKey('signedUpMembers')) {
       List<String> signedUpMembers = List.castFrom(map['signedUpMembers']);

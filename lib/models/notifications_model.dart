@@ -41,7 +41,6 @@ class NotificationsModel extends DataModel {
     }
 
     if (map.containsKey('type')) {
-      print("type == > ${map['type']} ===> ${typeMapper[map['type']]}");
       this.type = typeMapper[map['type']];
       // this.type = stringToNotificationType(map['type']);
       // this.type =
