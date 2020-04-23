@@ -17,7 +17,8 @@ class MemberCardWithSingleAction extends StatelessWidget {
     this.photoUrl,
     this.onMessagePressed,
     this.action,
-    this.status, this.buttonColor,
+    this.status,
+    this.buttonColor,
   }) : super(key: key);
 
   @override
@@ -27,8 +28,14 @@ class MemberCardWithSingleAction extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          ClipOval(
-            child: CustomNetworkImage(photoUrl ?? defaultUserImageURL),
+          AspectRatio(
+            aspectRatio: 1,
+            child: ClipOval(
+              child: CustomNetworkImage(
+                photoUrl ?? defaultUserImageURL,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           SizedBox(width: 10),
           Expanded(
@@ -51,10 +58,10 @@ class MemberCardWithSingleAction extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.chat),
-            onPressed: onMessagePressed,
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.chat),
+          //   onPressed: onMessagePressed,
+          // ),
           Container(
             height: 30,
             child: RaisedButton(
