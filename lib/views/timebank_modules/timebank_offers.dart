@@ -25,6 +25,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createoffer.dart';
 import 'package:sevaexchange/views/exchange/edit_offer.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/widgets/custom_list_tile.dart';
 
@@ -51,7 +52,8 @@ class OffersState extends State<OffersModule> {
   List<TimebankModel> timebankList = [];
   bool isNearme = false;
   int sharedValue = 0;
-
+  String description =
+      'Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.';
   @override
   Widget build(BuildContext context) {
     _setORValue();
@@ -95,9 +97,12 @@ class OffersState extends State<OffersModule> {
                                 height: 16,
                                 width: 16,
                               ),
-                              tooltip:
-                                  'Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.',
-                              onPressed: () {},
+                              tooltip: description,
+                              onPressed: () {
+                                showInfoOfConcept(
+                                    dialogTitle: description,
+                                    mContext: context);
+                              },
                             ),
                           ),
                         ],

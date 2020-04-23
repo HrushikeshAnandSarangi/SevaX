@@ -31,6 +31,8 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   HomeDashBoardBloc _homeDashBoardBloc;
   TabController controller;
+  String description =
+      'A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.';
   @override
   void initState() {
     controller = TabController(length: 3, vsync: this);
@@ -111,9 +113,11 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                             height: 16,
                             width: 16,
                           ),
-                          onPressed: () {},
-                          tooltip:
-                              'A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.',
+                          onPressed: () {
+                            showInfoOfConcept(
+                                dialogTitle: description, mContext: context);
+                          },
+                          tooltip: description,
                         ),
                       ),
                     ],

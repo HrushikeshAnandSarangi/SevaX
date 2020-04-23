@@ -21,6 +21,7 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
@@ -50,6 +51,8 @@ class RequestsState extends State<RequestsModule> {
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
+  String description =
+      'Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.';
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
@@ -111,9 +114,12 @@ class RequestsState extends State<RequestsModule> {
                                   height: 16,
                                   width: 16,
                                 ),
-                                tooltip:
-                                    'Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.',
-                                onPressed: () {},
+                                tooltip: description,
+                                onPressed: () {
+                                  showInfoOfConcept(
+                                      dialogTitle: description,
+                                      mContext: context);
+                                },
                               ),
                             ),
                           ],

@@ -25,6 +25,8 @@ class TimeBankProjectsView extends StatefulWidget {
 }
 
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
+  String description =
+      'Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,9 +62,11 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             height: 16,
                             width: 16,
                           ),
-                          tooltip:
-                              'Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.',
-                          onPressed: () {},
+                          tooltip: description,
+                          onPressed: () {
+                            showInfoOfConcept(
+                                dialogTitle: description, mContext: context);
+                          },
                         ),
                       ),
                     ],
@@ -232,4 +236,46 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       ),
     );
   }
+}
+
+void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
+  showDialog(
+      context: mContext,
+      builder: (BuildContext viewContext) {
+        return AlertDialog(
+//            title: Text(
+//              dialogTitle,
+//              style: TextStyle(
+//                fontSize: 16,
+//              ),
+//            ),
+          content: Form(
+            child: Container(
+              height: 120,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Text(
+                  dialogTitle,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              onPressed: () {
+                return Navigator.of(viewContext).pop();
+              },
+            ),
+          ],
+        );
+      });
 }
