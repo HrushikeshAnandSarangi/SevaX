@@ -3,7 +3,7 @@ import 'package:sevaexchange/utils/utils.dart';
 
 class NotificationCard extends StatelessWidget {
   final Function onPressed;
-  final VoidCallback onDismissed;
+  final Function onDismissed;
   final String photoUrl;
   final String title;
   final String subTitle;
@@ -15,7 +15,10 @@ class NotificationCard extends StatelessWidget {
     this.title,
     this.subTitle,
     this.onDismissed,
-  }) : super(key: key);
+  })  : assert(title != null),
+        assert(subTitle != null),
+        assert(photoUrl != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +67,7 @@ class NotificationCard extends StatelessWidget {
           subtitle: Text(
             subTitle,
           ),
-          onTap: () => onPressed(),
+          onTap: () => onPressed != null ? onPressed() : null,
         ),
       ),
     );
