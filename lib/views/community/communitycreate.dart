@@ -292,6 +292,8 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+
 //                    focusNode: FocusNode(),
 //                    onFieldSubmitted: (v){
 //                      FocusScope.of(context).requestFocus(aboutFocus);
@@ -338,6 +340,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
+                    textCapitalization: TextCapitalization.sentences,
                     initialValue: timebankModel.missionStatement ?? "",
                     onChanged: (value) {
                       timebankModel.missionStatement = value;
