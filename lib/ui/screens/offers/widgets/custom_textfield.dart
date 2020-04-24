@@ -8,6 +8,8 @@ class CustomTextField extends StatelessWidget {
   final int maxLength;
   final String error;
   final TextInputType textInputType;
+  final FocusNode currentNode;
+  final FocusNode nextNode;
   CustomTextField({
     Key key,
     this.heading,
@@ -17,6 +19,8 @@ class CustomTextField extends StatelessWidget {
     this.error,
     this.textInputType = TextInputType.text,
     this.initialValue,
+    this.currentNode,
+    this.nextNode,
   }) : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
@@ -40,6 +44,7 @@ class CustomTextField extends StatelessWidget {
           style: titleStyle,
         ),
         TextField(
+          focusNode: currentNode,
           controller: initialValue != null
               ? TextEditingController(
                   text: initialValue.replaceAll('__*__', ''),
@@ -52,7 +57,15 @@ class CustomTextField extends StatelessWidget {
           ),
           maxLength: maxLength,
           keyboardType: textInputType,
+          textInputAction:
+              nextNode != null ? TextInputAction.next : TextInputAction.done,
           style: subTitleStyle,
+          onSubmitted: (v) {
+            currentNode.unfocus();
+            nextNode != null
+                ? nextNode.requestFocus()
+                : FocusScope.of(context).unfocus();
+          },
         ),
       ],
     );
