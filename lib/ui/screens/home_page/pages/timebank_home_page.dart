@@ -31,12 +31,16 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   HomeDashBoardBloc _homeDashBoardBloc;
   TabController controller;
+  var i_buttonInfo;
+
   String description =
       'A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.';
   @override
   void initState() {
     controller = TabController(length: 3, vsync: this);
     _homeDashBoardBloc = BlocProvider.of<HomeDashBoardBloc>(context);
+    i_buttonInfo =
+        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
 
     super.initState();
   }
@@ -115,9 +119,10 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           ),
                           onPressed: () {
                             showInfoOfConcept(
-                                dialogTitle: description, mContext: context);
+                                dialogTitle: i_buttonInfo['groupsInfo'],
+                                mContext: context);
                           },
-                          tooltip: description,
+                          tooltip: i_buttonInfo['groupsInfo'],
                         ),
                       ),
                     ],

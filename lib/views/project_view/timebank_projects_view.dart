@@ -27,6 +27,16 @@ class TimeBankProjectsView extends StatefulWidget {
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   String description =
       'Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.';
+  var i_buttonInfo;
+
+  @override
+  void initState() {
+    i_buttonInfo =
+        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,10 +72,12 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             height: 16,
                             width: 16,
                           ),
-                          tooltip: description,
+                          tooltip: i_buttonInfo['projectsInfo'] ?? description,
                           onPressed: () {
                             showInfoOfConcept(
-                                dialogTitle: description, mContext: context);
+                                dialogTitle:
+                                    i_buttonInfo['projectsInfo'] ?? description,
+                                mContext: context);
                           },
                         ),
                       ),

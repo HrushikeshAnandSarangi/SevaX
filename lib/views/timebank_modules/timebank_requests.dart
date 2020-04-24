@@ -51,8 +51,16 @@ class RequestsState extends State<RequestsModule> {
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
+  var i_buttonInfo;
   String description =
       'Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.';
+  @override
+  void initState() {
+    i_buttonInfo =
+        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
+
+    super.initState();
+  }
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
@@ -114,10 +122,13 @@ class RequestsState extends State<RequestsModule> {
                                   height: 16,
                                   width: 16,
                                 ),
-                                tooltip: description,
+                                tooltip:
+                                    i_buttonInfo['requestsInfo'] ?? description,
                                 onPressed: () {
                                   showInfoOfConcept(
-                                      dialogTitle: description,
+                                      dialogTitle:
+                                          i_buttonInfo['requestsInfo'] ??
+                                              description,
                                       mContext: context);
                                 },
                               ),

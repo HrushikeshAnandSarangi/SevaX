@@ -32,6 +32,16 @@ class OffersState extends State<OffersModule> {
   int sharedValue = 0;
   String description =
       'Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.';
+  var i_buttonInfo;
+
+  @override
+  void initState() {
+    i_buttonInfo =
+        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     _setORValue();
@@ -75,10 +85,12 @@ class OffersState extends State<OffersModule> {
                                 height: 16,
                                 width: 16,
                               ),
-                              tooltip: description,
+                              tooltip:
+                                  i_buttonInfo['offersInfo'] ?? description,
                               onPressed: () {
                                 showInfoOfConcept(
-                                    dialogTitle: description,
+                                    dialogTitle: i_buttonInfo['offersInfo'] ??
+                                        description,
                                     mContext: context);
                               },
                             ),
