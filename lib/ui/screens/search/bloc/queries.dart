@@ -152,7 +152,7 @@ class Searches {
         currentCommunityOfUser.timebanks, timebanksIdArr);
 //    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = FlavorConfig.values.elasticSearchBaseURL +
-        '//elasticsearch/offers/offer/_search';
+        '//elasticsearch/offers/_doc/_search';
     dynamic body = json.encode(
       {
         "size": 3000,

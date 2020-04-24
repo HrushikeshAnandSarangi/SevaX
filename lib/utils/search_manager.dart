@@ -346,7 +346,7 @@ class SearchManager {
     @required queryString,
   }) async* {
     String url =
-        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/offer/_search';
+        '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/offers/_doc/_search';
     dynamic body = json.encode(
       {
         "query": {
