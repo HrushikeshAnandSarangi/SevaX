@@ -122,13 +122,17 @@ class RequestsState extends State<RequestsModule> {
                                   height: 16,
                                   width: 16,
                                 ),
-                                tooltip:
-                                    i_buttonInfo['requestsInfo'] ?? description,
+                                tooltip: i_buttonInfo['requestsInfo'] != null
+                                    ? i_buttonInfo['requestsInfo'] ??
+                                        description
+                                    : description,
                                 onPressed: () {
                                   showInfoOfConcept(
                                       dialogTitle:
-                                          i_buttonInfo['requestsInfo'] ??
-                                              description,
+                                          i_buttonInfo['requestsInfo'] != null
+                                              ? i_buttonInfo['requestsInfo'] ??
+                                                  description
+                                              : description,
                                       mContext: context);
                                 },
                               ),

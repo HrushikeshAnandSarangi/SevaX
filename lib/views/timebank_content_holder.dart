@@ -4,7 +4,6 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
@@ -763,8 +762,10 @@ class DiscussionListState extends State<DiscussionList> {
                             case ConnectionState.waiting:
                               return Container(
                                 padding: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height / 3),
-                                child: Center(child: CircularProgressIndicator()),
+                                    top:
+                                        MediaQuery.of(context).size.height / 3),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
                               );
                               break;
                             default:
@@ -1300,12 +1301,9 @@ class DiscussionListState extends State<DiscussionList> {
                                                     Icons.flag,
                                                     size: 20,
                                                   )
-                                                : SvgPicture.asset(
-                                                    'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
-                                                    height: 20,
-                                                    width: 20,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
+                                                : Icon(
+                                                    Icons.flag,
+                                                    size: 20,
                                                   ),
                                           ),
                                           () {

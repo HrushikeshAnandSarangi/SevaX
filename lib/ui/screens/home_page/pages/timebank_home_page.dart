@@ -119,10 +119,14 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                           ),
                           onPressed: () {
                             showInfoOfConcept(
-                                dialogTitle: i_buttonInfo['groupsInfo'],
+                                dialogTitle: i_buttonInfo['groupsInfo'] != null
+                                    ? i_buttonInfo['groupsInfo'] ?? description
+                                    : description,
                                 mContext: context);
                           },
-                          tooltip: i_buttonInfo['groupsInfo'],
+                          tooltip: i_buttonInfo['groupsInfo'] != null
+                              ? i_buttonInfo['groupsInfo'] ?? description
+                              : description,
                         ),
                       ),
                     ],
