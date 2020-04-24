@@ -56,7 +56,7 @@ class AboutApp extends StatelessWidget {
             Text(
               globals.currentVersionNumber != null
                   ? 'Version ${globals.currentVersionNumber}' ?? 'Version'
-                  : 'Version',
+                  : 'Version 1.1',
               style: TextStyle(
                   fontFamily: 'Europa',
                   fontSize: 14,

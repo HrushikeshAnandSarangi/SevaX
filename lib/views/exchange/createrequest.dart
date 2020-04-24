@@ -512,15 +512,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       //Form and date is valid
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
-          sevaCoinsValue = await getMemberBalance(
-            SevaCore.of(context).loggedInUser.email,
-            SevaCore.of(context).loggedInUser.sevaUserID,
+          var onBalanceCheckResult = await hasSufficientCredits(
+            credits: requestModel.numberOfHours.toDouble(),
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
           );
 
-          print(
-              "Seva Credits $sevaCoinsValue -------------------------------------------");
-
-          if (!hasSufficientBalance()) {
+          if (!onBalanceCheckResult) {
             showInsufficientBalance();
             return;
           }

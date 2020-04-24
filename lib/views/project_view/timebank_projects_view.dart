@@ -31,10 +31,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
 
   @override
   void initState() {
+    super.initState();
     i_buttonInfo =
         json.decode(AppConfig.remoteConfig.getString('i_button_info'));
-
-    super.initState();
   }
 
   @override
@@ -72,11 +71,16 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             height: 16,
                             width: 16,
                           ),
-                          tooltip: i_buttonInfo['projectsInfo'] ?? description,
+                          tooltip: i_buttonInfo['projectsInfo'] != null
+                              ? i_buttonInfo['projectsInfo'] ?? description
+                              : description,
                           onPressed: () {
                             showInfoOfConcept(
                                 dialogTitle:
-                                    i_buttonInfo['projectsInfo'] ?? description,
+                                    i_buttonInfo['projectsInfo'] != null
+                                        ? i_buttonInfo['projectsInfo'] ??
+                                            description
+                                        : description,
                                 mContext: context);
                           },
                         ),
