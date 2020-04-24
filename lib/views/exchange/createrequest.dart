@@ -181,7 +181,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   @override
   void didChangeDependencies() {
-    FirestoreManager.getUserForIdStream(
+    if(widget.loggedInUser?.sevaUserID != null)FirestoreManager.getUserForIdStream(
             sevaUserId: widget.loggedInUser.sevaUserID)
         .listen((userModel) {});
     super.didChangeDependencies();
