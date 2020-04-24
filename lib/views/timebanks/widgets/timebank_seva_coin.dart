@@ -2,22 +2,21 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
+import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/profile/review_earnings.dart';
 import 'package:sevaexchange/views/profile/widgets/seva_coin_widget.dart';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/constants/sevatitles.dart';
-
 
 class TimeBankSevaCoin extends StatefulWidget {
   final UserModel loggedInUser;
   final bool isAdmin;
   final TimebankModel timebankData;
 
-  const TimeBankSevaCoin({
-    Key key, this.loggedInUser, this.isAdmin, this.timebankData
-  }) : super(key: key);
+  const TimeBankSevaCoin(
+      {Key key, this.loggedInUser, this.isAdmin, this.timebankData})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -26,8 +25,7 @@ class TimeBankSevaCoin extends StatefulWidget {
   }
 }
 
-
-class TimeBankSevaCoinState extends State<TimeBankSevaCoin>{
+class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   double donateAmount = 0;
   @override
   void initState() {
@@ -41,27 +39,29 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin>{
           .collection("timebanknew")
           .document(widget.timebankData.id)
           .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         print(widget.timebankData.id);
         double balance = 0;
         if (snapshot.hasData && snapshot != null) {
-          balance = snapshot.data['balance'];
+          balance = snapshot.data['balance'].toDouble();
           return Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
-              children:  <Widget>[
+              children: <Widget>[
                 Offstage(
                     offstage: widget.isAdmin,
                     child: SevaCoinWidget(
-                      amount: balance ?? 0,
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return ReviewEarningsPage(type: "timebank", timebankid: this.widget.timebankData.id);
-                          },
-                        ),
-                      )
-                    )),
+                        amount: balance ?? 0,
+                        onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ReviewEarningsPage(
+                                      type: "timebank",
+                                      timebankid: this.widget.timebankData.id);
+                                },
+                              ),
+                            ))),
                 Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: RaisedButton(
@@ -77,13 +77,16 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin>{
       },
     );
   }
+
   void _showFontSizePickerDialog() async {
     // <-- note the async keyword here
 
     // this will contain the result from Navigator.pop(context, result)
     final donateAmount_Recieved = await showDialog<double>(
       context: context,
-      builder: (context) => InputDonateDialog(donateAmount: donateAmount, maxAmount: this.widget.loggedInUser.currentBalance),
+      builder: (context) => InputDonateDialog(
+          donateAmount: donateAmount,
+          maxAmount: this.widget.loggedInUser.currentBalance),
     );
 
     // execution of this code continues when the dialog was closed (popped)
@@ -94,12 +97,19 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin>{
       setState(() {
         donateAmount = donateAmount_Recieved;
       });
-      await TransactionBloc().createNewTransaction(this.widget.loggedInUser.sevaUserID, this.widget.timebankData.id, DateTime.now().millisecondsSinceEpoch, donateAmount, true, "USER_DONATE_TOTIMEBANK", null, this.widget.timebankData.id);
+      await TransactionBloc().createNewTransaction(
+          this.widget.loggedInUser.sevaUserID,
+          this.widget.timebankData.id,
+          DateTime.now().millisecondsSinceEpoch,
+          donateAmount,
+          true,
+          "USER_DONATE_TOTIMEBANK",
+          null,
+          this.widget.timebankData.id);
       await showDialog<double>(
         context: context,
-        builder: (context) => InputDonateSuccessDialog(onComplete: () => {
-          Navigator.pop(context)
-        }),
+        builder: (context) => InputDonateSuccessDialog(
+            onComplete: () => {Navigator.pop(context)}),
       );
     }
   }
@@ -113,7 +123,8 @@ class InputDonateDialog extends StatefulWidget {
   final double donateAmount;
   final double maxAmount;
 
-  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount}) : super(key: key);
+  const InputDonateDialog({Key key, this.donateAmount, this.maxAmount})
+      : super(key: key);
 
   @override
   _InputDonateDialogState createState() => _InputDonateDialogState();
@@ -133,12 +144,12 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text('Donate seva coins to timebank'),
-      content:  Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text('Your current seva coins is ' + widget.maxAmount.toString()),
           Slider(
-            label: "Donate " +  _donateAmount.toStringAsFixed(2) + " Coins",
+            label: "Donate " + _donateAmount.toStringAsFixed(2) + " Coins",
             value: _donateAmount,
             min: 0,
             max: widget.maxAmount,
@@ -149,7 +160,8 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
               });
             },
           ),
-          Text('On click of donate your balance will be adjusted')],
+          Text('On click of donate your balance will be adjusted')
+        ],
       ),
       actions: <Widget>[
         RaisedButton(
@@ -173,13 +185,13 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
           ),
           onPressed: () {
             Navigator.of(context).pop();
-
           },
         )
       ],
     );
   }
 }
+
 class InputDonateSuccessDialog extends StatefulWidget {
   /// initial selection for the slider
   final VoidCallback onComplete;
@@ -187,31 +199,31 @@ class InputDonateSuccessDialog extends StatefulWidget {
   const InputDonateSuccessDialog({Key key, this.onComplete}) : super(key: key);
 
   @override
-  _InputDonateSuccessDialogState createState() => _InputDonateSuccessDialogState();
+  _InputDonateSuccessDialogState createState() =>
+      _InputDonateSuccessDialogState();
 }
+
 class _InputDonateSuccessDialogState extends State<InputDonateSuccessDialog> {
   VoidCallback onComplete;
+
   /// current selection of the slider
   @override
   void initState() {
     super.initState();
     onComplete = widget.onComplete;
     var _duration = new Duration(milliseconds: 2000);
-      new Timer(_duration, () => {
-      Navigator.pop(context)
-    });
+    new Timer(_duration, () => {Navigator.pop(context)});
   }
+
 //  Text('Coins successfully donated to timebank')
   @override
   Widget build(BuildContext context) {
-
     return AlertDialog(
       title: Text('Donate seva coins to timebank'),
-      content:  Container(
+      content: Container(
           height: MediaQuery.of(context).size.height / 10,
           width: MediaQuery.of(context).size.width / 12,
-          child: Text('You have donated credits successfully')
-      ),
+          child: Text('You have donated credits successfully')),
     );
   }
 }
