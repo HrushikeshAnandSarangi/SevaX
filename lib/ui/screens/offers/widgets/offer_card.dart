@@ -99,7 +99,7 @@ class OfferCard extends StatelessWidget {
                               padding: EdgeInsets.only(left: 10, right: 10),
                               color: Theme.of(context).primaryColor,
                               child: Text(
-                                actionButtonLabel,
+                                actionButtonLabel ?? '',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),

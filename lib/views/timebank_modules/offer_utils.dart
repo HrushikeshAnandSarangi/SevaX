@@ -79,6 +79,18 @@ String getButtonLabel(OfferModel offerModel, String userId) {
   }
 }
 
+void removeBookmark(String offerId, String userId) {
+  Firestore.instance.collection("offers").document(offerId).updateData({
+    'individualOfferDataModel.offerAcceptors': FieldValue.arrayRemove([userId])
+  });
+}
+
+void addBookMark(String offerId, String userId) {
+  Firestore.instance.collection("offers").document(offerId).updateData({
+    'individualOfferDataModel.offerAcceptors': FieldValue.arrayUnion([userId])
+  });
+}
+
 Future<bool> offerActions(BuildContext context, OfferModel model) async {
   var _userId = SevaCore.of(context).loggedInUser.sevaUserID;
   bool _isParticipant = getOfferParticipants(offerDataModel: model)
@@ -110,13 +122,7 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
       );
     }
   } else {
-    Firestore.instance.collection("offers").document(model.id).updateData(
-      {
-        'individualOfferDataModel.offerAcceptors': _isParticipant
-            ? FieldValue.arrayRemove([_userId])
-            : FieldValue.arrayUnion([_userId])
-      },
-    );
+    if (!_isParticipant) addBookMark(model.id, _userId);
   }
   return true;
 }

@@ -1,0 +1,338 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/offer_model.dart';
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/offers/widgets/offer_card.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/exchange/createrequest.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
+import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
+import 'package:sevaexchange/views/workshop/admin_offer_requests_tab.dart';
+
+class BookmarkedOffers extends StatelessWidget {
+  final String sevaUserId;
+  final TimebankModel timebankModel;
+
+  const BookmarkedOffers({Key key, this.sevaUserId, this.timebankModel})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection("offers")
+          .where("timebankId", isEqualTo: timebankModel.id)
+          .where('individualOfferDataModel.offerAcceptors',
+              arrayContains: sevaUserId)
+          .snapshots(),
+      builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.data == null || snapshot.data?.documents?.length == 0) {
+          return Center(
+            child: Text("No offer accepted"),
+          );
+        }
+        return ListView.builder(
+          itemCount: snapshot.data.documents.length,
+          itemBuilder: (context, index) {
+            OfferModel _offer =
+                OfferModel.fromMap(snapshot.data.documents[index].data);
+            return OfferCard(
+              isCardVisible: false,
+              isCreator: true, //hides the buttons
+              title: getOfferTitle(offerDataModel: _offer),
+              subtitle: getOfferDescription(offerDataModel: _offer),
+              offerType: _offer.offerType,
+              selectedAddress: _offer.selectedAdrress,
+              onCardPressed: () => showDialogForMakingAnOffer(
+                model: _offer,
+                parentContext: context,
+              ),
+              // onActionPressed: () => offerActions(parentContext, model),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void showDialogForMakingAnOffer({
+    OfferModel model,
+    BuildContext parentContext,
+  }) {
+    showDialog(
+      context: parentContext,
+      builder: (BuildContext viewContext) {
+        return FutureBuilder(
+          future: Firestore.instance
+              .collection("users")
+              .where("sevauserid", isEqualTo: model.sevaUserId)
+              .getDocuments(),
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25.0),
+                  ),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      height: 30,
+                      width: 30,
+                      child: AspectRatio(
+                          aspectRatio: 1, child: CircularProgressIndicator()),
+                    ),
+                  ],
+                ),
+              );
+            }
+            if (snapshot.data == null) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(25.0),
+                  ),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Container(
+                      height: 30,
+                      child: Text("Something went wrong!"),
+                    ),
+                  ],
+                ),
+              );
+            }
+            UserModel userModel =
+                UserModel.fromMap(snapshot.data.documents[0].data);
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.0),
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _getCloseButton(viewContext),
+                  Container(
+                    height: 70,
+                    width: 70,
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(userModel.photoURL),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Text(
+                      userModel.fullname,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  if (userModel.bio != null)
+                    Padding(
+                      padding: EdgeInsets.all(0.0),
+                      child: Text(
+                        "About ${userModel.fullname}",
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  getBio(userModel),
+                  Center(
+                    child: Text(
+                        "${userModel.fullname} will be automatically added to the request.",
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
+                        textAlign: TextAlign.center),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                        child: Container(
+                          width: double.infinity,
+                          child: Text(
+                            'Create Request',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        onPressed: () async {
+                          // Once approved
+                          print("UserModel ${userModel.fullname}");
+                          Navigator.pop(viewContext);
+
+                          Navigator.push(
+                            parentContext,
+                            MaterialPageRoute(
+                              builder: (parentContext) => CreateRequest(
+                                isOfferRequest: true,
+                                offer: model,
+                                timebankId: model.timebankId,
+                                userModel: userModel,
+                                projectId: "",
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      RaisedButton(
+                        child: Container(
+                          width: double.infinity,
+                          child: Text(
+                            'Add to Existing Request',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        onPressed: () async {
+                          // Once approved
+                          print("UserModel ${userModel.sevaUserID}");
+                          print("admint ${timebankModel.admins}");
+                          Navigator.pop(viewContext);
+                          if (timebankModel.admins.contains(
+                              SevaCore.of(context).loggedInUser.sevaUserID)) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdminOfferRequestsTab(
+                                  timebankid: model.timebankId,
+                                  parentContext: context,
+                                  userModel: userModel,
+                                ),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdminPersonalRequests(
+                                  timebankId: model.timebankId,
+                                  isTimebankRequest: true,
+                                  parentContext: context,
+                                  userModel: userModel,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        child: Container(
+                            width: double.infinity,
+                            child: Center(
+                              child: Text(
+                                'Remove from bookmark',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )),
+                        onPressed: () async {
+                          removeBookmark(model.id, sevaUserId);
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                      RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        child: Container(
+                            width: double.infinity,
+                            child: Center(
+                              child: Text(
+                                'Cancel',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )),
+                        onPressed: () async {
+                          // request declined
+                          Navigator.pop(viewContext);
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget getBio(UserModel userModel) {
+    if (userModel.bio != null) {
+      if (userModel.bio.length < 100) {
+        return Container(
+          margin: EdgeInsets.all(8),
+          child: Center(
+            child: Text(
+              userModel.bio,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+      return Container(
+        margin: EdgeInsets.all(8),
+        height: 100,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Text(
+            userModel.bio,
+            maxLines: null,
+            overflow: null,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Text("Bio not yet updated"),
+    );
+  }
+
+  Widget _getCloseButton(BuildContext context) {
+    return Container(
+      alignment: FractionalOffset.topRight,
+      child: Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'lib/assets/images/close.png',
+            ),
+          ),
+        ),
+        child: InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+}
