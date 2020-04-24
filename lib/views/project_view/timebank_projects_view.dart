@@ -220,7 +220,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Projects Link", urlToHit: dynamicLinks['projectsInfoLink']),
+          title: "Projects Help", urlToHit: dynamicLinks['projectsInfoLink']),
       context: context,
     );
   }

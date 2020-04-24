@@ -219,7 +219,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Groups Link", urlToHit: dynamicLinks['groupsInfoLink']),
+          title: "Groups Help", urlToHit: dynamicLinks['groupsInfoLink']),
       context: context,
     );
   }

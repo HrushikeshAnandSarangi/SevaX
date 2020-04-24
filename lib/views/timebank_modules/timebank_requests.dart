@@ -410,7 +410,7 @@ class RequestsState extends State<RequestsModule> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Requests Link", urlToHit: dynamicLinks['requestsInfoLink']),
+          title: "Requests Help", urlToHit: dynamicLinks['requestsInfoLink']),
       context: context,
     );
   }
