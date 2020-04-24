@@ -130,14 +130,12 @@ class RequestsState extends State<RequestsModule> {
                           : TransactionLimitCheck(
                               child: GestureDetector(
                                 child: Container(
-                                  margin: EdgeInsets.only(left: 8),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 10,
-                                    child: Image.asset(
-                                        "lib/assets/images/add.png"),
-                                  ),
-                                ),
+                                    margin: EdgeInsets.only(left: 0),
+                                    child: Icon(
+                                      Icons.add_circle,
+                                      color: FlavorConfig
+                                          .values.theme.primaryColor,
+                                    )),
                                 onTap: () {
                                   if (widget.timebankModel.protected) {
                                     if (widget.timebankModel.admins.contains(
@@ -170,16 +168,43 @@ class RequestsState extends State<RequestsModule> {
                                 },
                               ),
                             ),
-                      IconButton(
-                        icon: Icon(Icons.help_outline),
-                        color: FlavorConfig.values.theme.primaryColor,
-                        iconSize: 24,
-                        onPressed: showRequestsWebPage,
-                      ),
                     ],
                   ),
                 ),
+                IconButton(
+                  icon: Image.asset(
+                    'lib/assets/images/help.png',
+                  ),
+                  color: FlavorConfig.values.theme.primaryColor,
+                  iconSize: 24,
+                  onPressed: showRequestsWebPage,
+                ),
+                Container(
+                  width: 120,
+                  child: CupertinoSegmentedControl<int>(
+                    selectedColor: Theme.of(context).primaryColor,
+                    children: logoWidgets,
+                    borderColor: Colors.grey,
 
+                    padding: EdgeInsets.only(left: 0, right: 5.0),
+                    groupValue: sharedValue,
+                    onValueChanged: (int val) {
+                      print(val);
+                      if (val != sharedValue) {
+                        setState(() {
+                          if (isNearme == true)
+                            isNearme = false;
+                          else
+                            isNearme = true;
+                        });
+                        setState(() {
+                          sharedValue = val;
+                        });
+                      }
+                    },
+                    //groupValue: sharedValue,
+                  ),
+                ),
                 // Offstage(
                 //   offstage: true,
                 //   child: StreamBuilder<Object>(
@@ -287,32 +312,6 @@ class RequestsState extends State<RequestsModule> {
                 //       }),
                 // ),
 
-                Container(
-                  width: 120,
-                  child: CupertinoSegmentedControl<int>(
-                    selectedColor: Theme.of(context).primaryColor,
-                    children: logoWidgets,
-                    borderColor: Colors.grey,
-
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    groupValue: sharedValue,
-                    onValueChanged: (int val) {
-                      print(val);
-                      if (val != sharedValue) {
-                        setState(() {
-                          if (isNearme == true)
-                            isNearme = false;
-                          else
-                            isNearme = true;
-                        });
-                        setState(() {
-                          sharedValue = val;
-                        });
-                      }
-                    },
-                    //groupValue: sharedValue,
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(right: 5),
                 ),

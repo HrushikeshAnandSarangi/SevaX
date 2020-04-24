@@ -73,14 +73,14 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
                 TransactionLimitCheck(
                   child: GestureDetector(
                     child: Container(
-                      margin: EdgeInsets.only(left: 10),
+                      margin: EdgeInsets.only(left: 0),
                       child: Icon(
-                        Icons.add_circle_outline,
+                        Icons.add_circle,
                         color: FlavorConfig.values.theme.primaryColor,
                       ),
                     ),
@@ -91,7 +91,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 ),
                 Spacer(),
                 IconButton(
-                  icon: Icon(Icons.help_outline),
+                  icon: Image.asset(
+                    'lib/assets/images/help.png',
+                  ),
                   color: FlavorConfig.values.theme.primaryColor,
                   iconSize: 24,
                   onPressed: showProjectsWebPage,

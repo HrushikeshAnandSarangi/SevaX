@@ -124,12 +124,15 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                   ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.add_circle_outline),
+                  icon: Icon(Icons.add_circle),
+                  color: FlavorConfig.values.theme.primaryColor,
                   onPressed: navigateToCreateGroup,
                 ),
                 Spacer(),
                 IconButton(
-                  icon: Icon(Icons.help_outline),
+                  icon: Image.asset(
+                    'lib/assets/images/help.png',
+                  ),
                   color: FlavorConfig.values.theme.primaryColor,
                   iconSize: 24,
                   onPressed: showGroupsWebPage,
