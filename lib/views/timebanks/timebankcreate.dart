@@ -649,7 +649,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                         'Create group',
                         style: TextStyle(fontSize: 16.0, color: Colors.white),
                       ),
-                      textColor: Colors.blue,
                     );
                   })),
         ),
