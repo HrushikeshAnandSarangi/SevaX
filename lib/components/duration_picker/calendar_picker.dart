@@ -11,9 +11,10 @@ class CalendarPicker extends StatefulWidget {
   final String title;
   final DateTime startDate;
   final DateTime endDate;
+  final String selectedstartorend;
   //final void Function(DateTime dateTime) onDateSelected;
 
-  CalendarPicker(this.title, Key key, this.startDate, this.endDate)
+  CalendarPicker(this.title, Key key, this.startDate, this.endDate, this.selectedstartorend)
       : super(key: key);
 
   @override
@@ -26,7 +27,7 @@ class CalendarPickerState extends State<CalendarPicker> {
   DateTime endDate = DateTime.now();
   int timehour = 0, timeminute = 0;
 
-  SelectionType selectionType = SelectionType.START_DATE;
+  SelectionType selectionType;
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class CalendarPickerState extends State<CalendarPicker> {
     super.initState();
     startDate = widget.startDate;
     endDate = widget.endDate;
+    selectionType = widget.selectedstartorend == 'start' ? SelectionType.START_DATE: SelectionType.END_DATE;
   }
 
   @override
@@ -92,8 +94,16 @@ class CalendarPickerState extends State<CalendarPicker> {
                     (callbackDate, callbackSelectionType) {
                   setState(() {
                     // selectionType = callbackSelectionType;
-                    if (selectionType == SelectionType.START_DATE)
-                      startDate = callbackDate;
+                    if (selectionType == SelectionType.START_DATE) {
+                      startDate = DateTime(
+                          callbackDate.year, callbackDate.month, callbackDate.day,
+                          timehour, timeminute);
+                      if (endDate.millisecondsSinceEpoch <  startDate.millisecondsSinceEpoch) {
+                        endDate = DateTime(
+                            startDate.year, startDate.month, startDate.day,
+                            timehour + 1, timeminute);
+                      }
+                    }
                     else
                       endDate = callbackDate;
                   });

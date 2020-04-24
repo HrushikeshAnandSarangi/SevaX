@@ -85,12 +85,16 @@ class OffersState extends State<OffersModule> {
                                 height: 16,
                                 width: 16,
                               ),
-                              tooltip:
-                                  i_buttonInfo['offersInfo'] ?? description,
+                              tooltip: i_buttonInfo['offersInfo'] != null
+                                  ? i_buttonInfo['offersInfo'] ?? description
+                                  : description,
                               onPressed: () {
                                 showInfoOfConcept(
-                                    dialogTitle: i_buttonInfo['offersInfo'] ??
-                                        description,
+                                    dialogTitle:
+                                        i_buttonInfo['offersInfo'] != null
+                                            ? i_buttonInfo['offersInfo'] ??
+                                                description
+                                            : description,
                                     mContext: context);
                               },
                             ),
