@@ -24,6 +24,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -126,13 +127,19 @@ class CreateEditCommunityViewFormState
   List<FocusNode> focusNodes;
   String errTxt;
   int totalMembersCount = 0;
+  String description =
+      'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations';
+  String taxDescription =
+      'At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax.';
+  var i_buttonInfo;
 
   final _textUpdates = StreamController<String>();
 
   void initState() {
     super.initState();
     var _searchText = "";
-
+    i_buttonInfo =
+        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
     Future.delayed(Duration.zero, () {
       createEditCommunityBloc.getChildTimeBanks(context);
     });
@@ -212,11 +219,7 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Form(
-      key: _formKey,
-      child: createSevaX,
-      autovalidate:false
-    );
+    return Form(key: _formKey, child: createSevaX, autovalidate: false);
   }
 
   moveToTop() {
@@ -289,25 +292,33 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
+
 //                    focusNode: FocusNode(),
 //                    onFieldSubmitted: (v){
 //                      FocusScope.of(context).requestFocus(aboutFocus);
 //                    },
                     controller: searchTextController,
                     onChanged: (value) {
-                      enteredName = value;
-                      print("name ------ $value");
-                      communityModel.name = value;
-                      timebankModel.name = value;
+                      enteredName = value.replaceAll("[^a-zA-Z0-9]+", "");
+
+                      print(
+                          "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9]+", "")}");
+                      communityModel.name =
+                          value.replaceAll("[^a-zA-Z0-9]", "");
+
+                      timebankModel.name = value.replaceAll("[^a-zA-Z0-9]", "");
                     },
                     decoration: InputDecoration(
                       errorText: errTxt,
                       hintText: "Ex: Pets-in-town, Citizen collab",
                     ),
-                    keyboardType: TextInputType.multiline,
+                    keyboardType: TextInputType.text,
+                    autocorrect: true,
+
                     maxLines: 1,
                     onSaved: (value) {
-                      enteredName = value;
+                      enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
                     },
                     // onSaved: (value) => enteredName = value,
                     validator: (value) {
@@ -316,8 +327,10 @@ class CreateEditCommunityViewFormState
                       } else if (communityFound) {
                         return 'Timebank name already exist';
                       } else {
-                        enteredName = value;
-                        snapshot.data.community.updateValueByKey('name', value);
+                        enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
+                        ;
+                        snapshot.data.community.updateValueByKey(
+                            'name', value.replaceAll("[^a-zA-Z0-9]", ""));
                         createEditCommunityBloc.onChange(snapshot.data);
                       }
 
@@ -335,6 +348,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
+                    textCapitalization: TextCapitalization.sentences,
                     initialValue: timebankModel.missionStatement ?? "",
                     onChanged: (value) {
                       timebankModel.missionStatement = value;
@@ -409,12 +423,26 @@ class CreateEditCommunityViewFormState
                         padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
                         child: Tooltip(
                             message:
-                                'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations',
+                                i_buttonInfo['protectedTimebankInfo'] != null
+                                    ? i_buttonInfo['protectedTimebankInfo'] ??
+                                        description
+                                    : description,
                             child: IconButton(
+                                onPressed: () {
+                                  showInfoOfConcept(
+                                      dialogTitle: i_buttonInfo[
+                                                  'protectedTimebankInfo'] !=
+                                              null
+                                          ? i_buttonInfo[
+                                                  'protectedTimebankInfo'] ??
+                                              description
+                                          : description,
+                                      mContext: context);
+                                },
                                 icon: Icon(
-                              Icons.info_outline,
-                              size: 20,
-                            ))),
+                                  Icons.info_outline,
+                                  size: 20,
+                                ))),
                       ),
                       Column(
                         children: <Widget>[
@@ -474,8 +502,16 @@ class CreateEditCommunityViewFormState
                         ),
                       ),
                       IconButton(
-                        tooltip:
-                            'At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax.',
+                        onPressed: () {
+                          showInfoOfConcept(
+                              dialogTitle: i_buttonInfo['taxInfo'] != null
+                                  ? i_buttonInfo['taxInfo'] ?? taxDescription
+                                  : taxDescription,
+                              mContext: context);
+                        },
+                        tooltip: i_buttonInfo['taxInfo'] != null
+                            ? i_buttonInfo['taxInfo'] ?? taxDescription
+                            : taxDescription,
                         icon: Icon(
                           Icons.info_outline,
                           size: 20,

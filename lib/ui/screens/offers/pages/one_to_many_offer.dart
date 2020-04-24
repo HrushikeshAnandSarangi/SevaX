@@ -28,8 +28,12 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
   String selectedAddress;
   CustomLocation customLocation;
   bool closePage = true;
+
+  List<FocusNode> focusNodes;
+
   @override
   void initState() {
+    focusNodes = List.generate(5, (_) => FocusNode());
     if (widget.offerModel != null) {
       _bloc.loadData(widget.offerModel);
       print("${widget.offerModel}");
@@ -47,6 +51,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
 
   @override
   void dispose() {
+    focusNodes.forEach((node) => node.dispose());
     _bloc.dispose();
     super.dispose();
   }
@@ -119,6 +124,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             builder: (_, snapshot) {
                               print(snapshot.data);
                               return CustomTextField(
+                                currentNode: focusNodes[0],
+                                nextNode: focusNodes[1],
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
@@ -153,6 +160,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.preparationHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                currentNode: focusNodes[1],
+                                nextNode: focusNodes[2],
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
@@ -171,6 +180,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classHours,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                currentNode: focusNodes[2],
+                                nextNode: focusNodes[3],
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
@@ -189,6 +200,8 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classSize,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                currentNode: focusNodes[3],
+                                nextNode: focusNodes[4],
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
@@ -207,6 +220,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                             stream: _bloc.classDescription,
                             builder: (_, snapshot) {
                               return CustomTextField(
+                                currentNode: focusNodes[4],
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data

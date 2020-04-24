@@ -181,7 +181,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   @override
   void didChangeDependencies() {
-    FirestoreManager.getUserForIdStream(
+    if(widget.loggedInUser?.sevaUserID != null)FirestoreManager.getUserForIdStream(
             sevaUserId: widget.loggedInUser.sevaUserID)
         .listen((userModel) {});
     super.didChangeDependencies();
@@ -512,15 +512,12 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       //Form and date is valid
       switch (requestModel.requestMode) {
         case RequestMode.PERSONAL_REQUEST:
-          sevaCoinsValue = await getMemberBalance(
-            SevaCore.of(context).loggedInUser.email,
-            SevaCore.of(context).loggedInUser.sevaUserID,
+          var onBalanceCheckResult = await hasSufficientCredits(
+            credits: requestModel.numberOfHours.toDouble(),
+            userId: SevaCore.of(context).loggedInUser.sevaUserID,
           );
 
-          print(
-              "Seva Credits $sevaCoinsValue -------------------------------------------");
-
-          if (!hasSufficientBalance()) {
+          if (!onBalanceCheckResult) {
             showInsufficientBalance();
             return;
           }
@@ -678,33 +675,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   bool hasSufficientBalance() {
-    if (requestModel.requestStart == null) {
-      requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
-    }
-
-    if (requestModel.requestEnd == null) {
-      requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
-    }
-//    print("Project id : ${widget.projectId}");
-//    if (widget.projectId != null && widget.projectId.isNotEmpty) {
-//      requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
-//      print("Inside yes");
-//      return true;
-//    }
-
-    print(getTimeInFormat(requestModel.requestStart) +
-        " <- Start   -> End " +
-        getTimeInFormat(requestModel.requestEnd));
-
-    var diffDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd)
-        .difference(
-            DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart));
     var requestCoins = requestModel.numberOfHours;
-    print("Hours:${diffDate.inHours} --> " +
-        requestModel.numberOfApprovals.toString());
     print("Number of Seva Credits:${requestCoins}");
     print("Seva coin available:${sevaCoinsValue}");
-
     var lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 

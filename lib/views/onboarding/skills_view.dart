@@ -37,10 +37,13 @@ class _SkillViewNewState extends State<SkillViewNew> {
         .collection('skills')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
+      isDataLoaded = true;
+
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.documentID);
         skills[data.documentID] = data['name'];
+
         // ids[data['name']] = data.documentID;
       });
       if (widget.userModel.skills.length > 0) {
@@ -49,7 +52,6 @@ class _SkillViewNewState extends State<SkillViewNew> {
           // selectedChips.add(buildChip(id: id, value: skills[id]));
         });
       }
-      isDataLoaded = true;
       setState(() {});
     });
 

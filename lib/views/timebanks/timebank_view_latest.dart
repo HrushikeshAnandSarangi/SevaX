@@ -11,7 +11,6 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/timebanks/widgets/timebank_seva_coin.dart';
-
 // import 'package:sevaexchange/views/core.dart';
 
 class TimeBankAboutView extends StatefulWidget {
@@ -99,7 +98,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         textAlign: TextAlign.center,
                       ),
                     )),
-                placeholder: (conext, url) {
+                placeholder: (context, url) {
                   return Center(child: CircularProgressIndicator());
                 },
               ),
@@ -137,13 +136,11 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
-            Offstage(
-                offstage: !widget.timebankModel.admins
+            TimeBankSevaCoin(
+                isAdmin: !widget.timebankModel.admins
                     .contains(SevaCore.of(context).loggedInUser.sevaUserID),
-                child: TimeBankSevaCoin(
-                  communityId:
-                      SevaCore.of(context).loggedInUser.currentCommunity,
-                )),
+                loggedInUser: SevaCore.of(context).loggedInUser,
+                timebankData: widget.timebankModel),
             SizedBox(
               height: 15,
             ),

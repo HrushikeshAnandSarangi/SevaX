@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../core.dart';
 
@@ -79,6 +80,18 @@ String getButtonLabel(OfferModel offerModel, String userId) {
   }
 }
 
+void removeBookmark(String offerId, String userId) {
+  Firestore.instance.collection("offers").document(offerId).updateData({
+    'individualOfferDataModel.offerAcceptors': FieldValue.arrayRemove([userId])
+  });
+}
+
+void addBookMark(String offerId, String userId) {
+  Firestore.instance.collection("offers").document(offerId).updateData({
+    'individualOfferDataModel.offerAcceptors': FieldValue.arrayUnion([userId])
+  });
+}
+
 Future<bool> offerActions(BuildContext context, OfferModel model) async {
   var _userId = SevaCore.of(context).loggedInUser.sevaUserID;
   bool _isParticipant = getOfferParticipants(offerDataModel: model)
@@ -86,7 +99,13 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
 
   if (model.offerType == OfferType.GROUP_OFFER && !_isParticipant) {
     //Check balance here
-    if (true) {
+    var hasSufficientCredits = await FirestoreManager.hasSufficientCredits(
+      credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
+      userId: _userId,
+    );
+    print("----------------" + hasSufficientCredits.toString());
+
+    if (hasSufficientCredits) {
       await confirmationDialog(
         context: context,
         title:
@@ -110,13 +129,7 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
       );
     }
   } else {
-    Firestore.instance.collection("offers").document(model.id).updateData(
-      {
-        'individualOfferDataModel.offerAcceptors': _isParticipant
-            ? FieldValue.arrayRemove([_userId])
-            : FieldValue.arrayUnion([_userId])
-      },
-    );
+    if (!_isParticipant) addBookMark(model.id, _userId);
   }
   return true;
 }

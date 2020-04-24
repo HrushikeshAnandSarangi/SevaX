@@ -422,7 +422,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
                       var canApproveTransaction =
                           await FirestoreManager.hasSufficientCredits(
                         credits: transactionModel.credits,
-                        userEmail: SevaCore.of(context).loggedInUser.email,
                         userId: SevaCore.of(context).loggedInUser.sevaUserID,
                       );
                       Navigator.pop(linearProgressForBalanceCheck);
@@ -895,21 +894,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   Future approveTransaction(RequestModel model, String userId,
       String notificationId, SevaCore sevaCore) async {
-    List<TransactionModel> transactions =
-        model.transactions.map((t) => t).toList();
-
-    model.transactions = transactions.map((t) {
-      if (t.to == userId) {
-        TransactionModel editedTransaction = t;
-        editedTransaction.isApproved = true;
-        return editedTransaction;
-      }
-      return t;
-    }).toList();
-
-    if (model.transactions.where((model) => model.isApproved).length ==
-        model.numberOfApprovals) {}
-
     await FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,

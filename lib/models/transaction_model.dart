@@ -31,7 +31,7 @@ class TransactionModel extends DataModel {
       this.timestamp = map['timestamp'];
     }
     if (map.containsKey('credits')) {
-      this.credits = map['credits'];
+      this.credits = num.parse(map['credits'].toStringAsFixed(2));
     }
     if (map.containsKey('to')) {
       this.to = map['to'];
@@ -65,7 +65,7 @@ class TransactionModel extends DataModel {
       map['timestamp'] = this.timestamp;
     }
     if (this.credits != null) {
-      map['credits'] = this.credits;
+      map['credits'] = num.parse(this.credits.toStringAsFixed(2));
     }
     if (this.to != null) {
       map['to'] = this.to;

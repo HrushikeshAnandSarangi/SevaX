@@ -15,8 +15,8 @@ class CalendarWidget extends StatefulWidget {
 
   CalendarWidget(
     this.dateTime,
-    this.endDate,
     this.startDate,
+    this.endDate,
     this.selectionType,
     this.onDateSelected, {
     Key key,
@@ -46,6 +46,9 @@ class CalendarWidgetState extends State<CalendarWidget> {
 //        isSameDay(widget.startDate, widget.endDate));
     startDate = widget.startDate;
     endDate = widget.endDate;
+    print("previous selection");
+    print(startDate);
+    print(endDate);
   }
 
   @override
@@ -99,6 +102,9 @@ class CalendarWidgetState extends State<CalendarWidget> {
                               break;
                             case SelectionType.END_DATE:
                               if (isPastDay(dayNumber)) return false;
+                              print('hey');
+                              print(startDate);
+                              print(getSelectedDate(dayNumber));
                               if (getSelectedDate(dayNumber)
                                   .isBefore(startDate)) return false;
                               setState(() {

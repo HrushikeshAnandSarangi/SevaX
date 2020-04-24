@@ -27,6 +27,15 @@ class TimeBankProjectsView extends StatefulWidget {
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
   String description =
       'Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.';
+  var i_buttonInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    i_buttonInfo =
+        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,10 +71,17 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                             height: 16,
                             width: 16,
                           ),
-                          tooltip: description,
+                          tooltip: i_buttonInfo['projectsInfo'] != null
+                              ? i_buttonInfo['projectsInfo'] ?? description
+                              : description,
                           onPressed: () {
                             showInfoOfConcept(
-                                dialogTitle: description, mContext: context);
+                                dialogTitle:
+                                    i_buttonInfo['projectsInfo'] != null
+                                        ? i_buttonInfo['projectsInfo'] ??
+                                            description
+                                        : description,
+                                mContext: context);
                           },
                         ),
                       ),
@@ -73,14 +89,14 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
                 TransactionLimitCheck(
                   child: GestureDetector(
                     child: Container(
-                      margin: EdgeInsets.only(left: 10),
+                      margin: EdgeInsets.only(left: 0),
                       child: Icon(
-                        Icons.add_circle_outline,
+                        Icons.add_circle,
                         color: FlavorConfig.values.theme.primaryColor,
                       ),
                     ),
@@ -91,7 +107,9 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                 ),
                 Spacer(),
                 IconButton(
-                  icon: Icon(Icons.help_outline),
+                  icon: Image.asset(
+                    'lib/assets/images/help.png',
+                  ),
                   color: FlavorConfig.values.theme.primaryColor,
                   iconSize: 24,
                   onPressed: showProjectsWebPage,
@@ -220,7 +238,7 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
     var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
     navigateToWebView(
       aboutMode: AboutMode(
-          title: "Projects Link", urlToHit: dynamicLinks['projectsInfoLink']),
+          title: "Projects Help", urlToHit: dynamicLinks['projectsInfoLink']),
       context: context,
     );
   }

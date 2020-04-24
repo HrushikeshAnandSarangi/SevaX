@@ -233,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage>
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return ReviewEarningsPage();
+                                return ReviewEarningsPage(type: "user", timebankid: "");
                               },
                             ),
                           ),

@@ -22,6 +22,11 @@ class _IndividualOfferState extends State<IndividualOffer> {
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   String selectedAddress;
   CustomLocation customLocation;
+
+  FocusNode _title = FocusNode();
+  FocusNode _description = FocusNode();
+  FocusNode _availability = FocusNode();
+
   @override
   void initState() {
     if (widget.offerModel != null) {
@@ -33,6 +38,9 @@ class _IndividualOfferState extends State<IndividualOffer> {
   @override
   void dispose() {
     _bloc.dispose();
+    _title.dispose();
+    _description.dispose();
+    _availability.dispose();
     super.dispose();
   }
 
@@ -100,6 +108,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             builder: (context, snapshot) {
                               print(snapshot.data);
                               return CustomTextField(
+                                currentNode: _title,
+                                nextNode: _description,
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
@@ -118,6 +128,8 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             stream: _bloc.offerDescription,
                             builder: (context, snapshot) {
                               return CustomTextField(
+                                currentNode: _description,
+                                nextNode: _availability,
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
@@ -136,6 +148,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                             stream: _bloc.availability,
                             builder: (context, snapshot) {
                               return CustomTextField(
+                                currentNode: _availability,
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data
