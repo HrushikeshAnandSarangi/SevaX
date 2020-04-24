@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
-import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';

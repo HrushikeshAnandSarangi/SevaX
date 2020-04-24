@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -11,6 +13,8 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
+
+import '../core.dart';
 
 class EditGroupView extends StatelessWidget {
   final TimebankModel timebankModel;
@@ -44,11 +48,13 @@ class EditGroupFormState extends State<EditGroupForm> {
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
 
-  // TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;
-
+  TextEditingController searchTextController = new TextEditingController();
+  var _searchText = "";
+  String errTxt;
+  final _textUpdates = StreamController<String>();
   void initState() {
     super.initState();
 
@@ -56,6 +62,33 @@ class EditGroupFormState extends State<EditGroupForm> {
       location = widget.timebankModel.location;
       _getLocation();
     }
+
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 600))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        SearchManager.searchGroupForDuplicate(queryString: s, communityId: SevaCore.of(context).loggedInUser.currentCommunity).then((groupFound) {
+          if (groupFound) {
+            setState(() {
+              errTxt = 'Group name already exists';
+            });
+          } else {
+            setState(() {
+              groupFound = false;
+              errTxt = null;
+            });
+          }
+        });
+      }
+    });
+
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -73,7 +106,6 @@ class EditGroupFormState extends State<EditGroupForm> {
       showDialogForSuccess(dialogTitle: "Details updated successfully.");
     });
     globals.timebankAvatarURL = null;
-    //print("Update Group details ---- ${widget.timebankModel.protected}");
   }
 
   Map onActivityResult;
@@ -146,6 +178,7 @@ class EditGroupFormState extends State<EditGroupForm> {
                 return 'Please enter some text';
               }
               widget.timebankModel.missionStatement = value;
+              return "";
             },
           ),
           Row(
@@ -254,7 +287,9 @@ class EditGroupFormState extends State<EditGroupForm> {
           padding: EdgeInsets.all(15.0),
         ),
         TextFormField(
+          controller: searchTextController,
           decoration: InputDecoration(
+            errorText: errTxt,
             hintText: FlavorConfig.values.timebankName == "Yang 2020"
                 ? "Yang Gang Chapter"
                 : "Timebank Name",
@@ -281,6 +316,7 @@ class EditGroupFormState extends State<EditGroupForm> {
               return 'Please enter some text';
             }
             widget.timebankModel.name = value;
+            return "";
           },
         ),
         Text(' '),
@@ -308,6 +344,8 @@ class EditGroupFormState extends State<EditGroupForm> {
               return 'Please enter some text';
             }
             widget.timebankModel.missionStatement = value;
+            return "";
+
           },
         ),
         Text(''),
@@ -335,6 +373,7 @@ class EditGroupFormState extends State<EditGroupForm> {
               return 'Please enter some text';
             }
             widget.timebankModel.emailId = value;
+            return "";
           },
         ),
         Text(''),
@@ -362,6 +401,7 @@ class EditGroupFormState extends State<EditGroupForm> {
               return 'Please enter some text';
             }
             widget.timebankModel.phoneNumber = value;
+            return "";
           },
         ),
         Text(''),
@@ -389,6 +429,7 @@ class EditGroupFormState extends State<EditGroupForm> {
               return 'Please enter some text';
             }
             widget.timebankModel.address = value;
+            return "";
           },
         ),
         Row(

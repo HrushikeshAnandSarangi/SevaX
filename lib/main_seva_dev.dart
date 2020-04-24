@@ -87,7 +87,7 @@ class MainApplication extends StatelessWidget {
           return GestureDetector(
             child: child,
             onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
+              FocusScope.of(context).unfocus();
             },
           );
         },

@@ -22,6 +22,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 
 class CreateRequest extends StatefulWidget {
@@ -117,19 +118,17 @@ class RequestCreateForm extends StatefulWidget {
 }
 
 class RequestCreateFormState extends State<RequestCreateForm> {
-//  final GlobalKey<_CreateRequestState> _offerState = GlobalKey();
-//  final GlobalKey<OfferDurationWidgetState> _calendarState = GlobalKey();
-
   final _formKey = GlobalKey<FormState>();
+  final hoursTextFocus = FocusNode();
+  final volunteersTextFocus = FocusNode();
 
   RequestModel requestModel = RequestModel();
   GeoFirePoint location;
 
-//  String _dateMessageStart = ' START date and time ';
-//  String _dateMessageEnd = '  END date and time ';
   double sevaCoinsValue = 0;
   String hoursMessage = ' Click to Set Duration';
   String selectedAddress;
+  int sharedValue = 0;
 
   String _selectedTimebankId;
 
@@ -141,7 +140,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     super.initState();
     _selectedTimebankId = widget.timebankId;
     this.requestModel.timebankId = _selectedTimebankId;
-    this.requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
+    this.requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
     this.requestModel.projectId = widget.projectId;
 
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
@@ -224,8 +223,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     timebankModel = snapshot.data;
                     if (snapshot.data.admins.contains(
                         SevaCore.of(context).loggedInUser.sevaUserID)) {
-                      return requestSwitch;
+                      return requestSwitch();
                     } else {
+                      this.requestModel.requestMode =
+                          RequestMode.PERSONAL_REQUEST;
                       return Container();
                     }
                   },
@@ -242,6 +243,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                   decoration: InputDecoration(
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
@@ -250,7 +254,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                   keyboardType: TextInputType.text,
                   initialValue: widget.offer != null && widget.isOfferRequest
-                      ? widget.offer.title
+                      ? getOfferTitle(
+                          offerDataModel: widget.offer,
+                        )
                       : "",
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
@@ -263,8 +269,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 SizedBox(height: 30),
                 OfferDurationWidget(
                   title: ' Request duration',
-                  //startTime: CalendarWidgetState.startDate,
-                  //endTime: CalendarWidgetState.endDate
                 ),
                 SizedBox(height: 12),
                 SizedBox(height: 20),
@@ -280,12 +284,18 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                  focusNode: FocusNode(),
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(hoursTextFocus);
+                  },
                   decoration: InputDecoration(
-                    hintText: 'Your Request \nand any #hashtags',
+                    hintText: 'Your Request and any #hashtags',
                     hintStyle: textStyle,
                   ),
                   initialValue: widget.offer != null && widget.isOfferRequest
-                      ? widget.offer.description
+                      ? getOfferDescription(
+                          offerDataModel: widget.offer,
+                        )
                       : "",
                   keyboardType: TextInputType.multiline,
                   maxLines: 2,
@@ -294,7 +304,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       return 'Please enter some text';
                     }
                     requestModel.description = value;
-                    // return null;
                   },
                 ),
                 SizedBox(height: 40),
@@ -308,6 +317,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                    focusNode: hoursTextFocus,
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(volunteersTextFocus);
+                    },
                     decoration: InputDecoration(
                       hintText: 'No. of hours required',
                       hintStyle: textStyle,
@@ -317,6 +330,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter the number of hours required';
+                      } else if (int.parse(value) < 0) {
+                        return 'No. of hours cannot be lesser than 0';
+                      } else if (int.parse(value) == 0) {
+                        return 'No. of hours cannot be 0';
                       } else {
                         requestModel.numberOfHours = int.parse(value);
                         return null;
@@ -333,6 +350,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
+                  focusNode: volunteersTextFocus,
+                  onFieldSubmitted: (v) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
                   decoration: InputDecoration(
                     hintText: 'No. of approvals',
                     hintStyle: textStyle,
@@ -342,6 +363,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter the number of volunteers needed';
+                    } else if (int.parse(value) < 0) {
+                      return 'No. of volunteers cannot be lesser than 0';
+                    } else if (int.parse(value) == 0) {
+                      return 'No. of volunteers cannot be 0';
                     } else {
                       requestModel.numberOfApprovals = int.parse(value);
                       return null;
@@ -397,7 +422,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     );
   }
 
-  Widget get requestSwitch {
+  Widget requestSwitch() {
     if (widget.projectId == null ||
         widget.projectId.isEmpty ||
         widget.projectId == "") {
@@ -410,14 +435,17 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           borderColor: Colors.grey,
           padding: EdgeInsets.only(left: 5.0, right: 5.0),
           groupValue: sharedValue,
+
           onValueChanged: (int val) {
             print(val);
             if (val != sharedValue) {
               setState(() {
                 print("$sharedValue -- $val");
-                if (sharedValue == 0) {
+                if (val == 0) {
+                  print("TIMEBANK___REQUEST");
                   requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
                 } else {
+                  print("PERSONAL___REQUEST");
                   requestModel.requestMode = RequestMode.PERSONAL_REQUEST;
                 }
                 sharedValue = val;
@@ -439,15 +467,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     }
   }
 
-  int sharedValue = 0;
-
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
-      'Personal Request',
+      'Timebank Request',
       style: TextStyle(fontSize: 15.0),
     ),
     1: Text(
-      'Timebank Request',
+      'Personal Request',
       style: TextStyle(fontSize: 15.0),
     ),
   };
@@ -461,7 +487,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     if (_formKey.currentState.validate()) {
       // validate request start and end date
-
 
       if (requestModel.requestStart == 0 || requestModel.requestEnd == 0) {
         showDialogForTitle(

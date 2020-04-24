@@ -114,22 +114,24 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
-      .where('timebank_id', isEqualTo: timebankid);
+      .where('timebank_id', isEqualTo: timebankid).orderBy("created_at", descending: true);
 
   var data = query.snapshots();
 
   yield* data.transform(
     StreamTransformer<QuerySnapshot, List<ProjectModel>>.fromHandlers(
-      handleData: (snapshot, requestSink) {
-        List<ProjectModel> requestList = [];
+      handleData: (snapshot, projectSink) {
+        print("inside streamtransformer");
+        List<ProjectModel> projectsList = [];
         snapshot.documents.forEach(
           (documentSnapshot) {
+            print("documentSnapshot.data.name --------"+documentSnapshot.data["name"]);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
-            requestList.add(model);
+            projectsList.add(model);
           },
         );
-        requestSink.add(requestList);
+        projectSink.add(projectsList);
       },
     ),
   );
@@ -192,7 +194,7 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
           },
         );
 
-        print("request list size ____________ ${requestList.length}");
+        print("request list size ____________ ${requestList.length.toString()}");
 
         requestSink.add(requestList);
       },
@@ -260,7 +262,7 @@ Stream<List<RequestModel>> getProjectRequestsStream(
 }
 
 Stream<List<RequestModel>> getNearRequestListStream(
-    {String timebankId}) async* {
+    {String timebankId, UserModel loggedInUser}) async* {
   // LocationData pos = await location.getLocation();
   // double lat = pos.latitude;
   // double lng = pos.longitude;
@@ -275,11 +277,11 @@ Stream<List<RequestModel>> getNearRequestListStream(
   var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
           .collection('requests')
-          .where('accepted', isEqualTo: false)
+          .where('accepted', isEqualTo: false).orderBy('posttimestamp', descending: true)
       : Firestore.instance
           .collection('requests')
           .where('timebankId', isEqualTo: timebankId)
-          .where('accepted', isEqualTo: false);
+          .orderBy('posttimestamp', descending: true);
 
   var data = geo
       .collection(collectionRef: query)
@@ -291,11 +293,13 @@ Stream<List<RequestModel>> getNearRequestListStream(
         List<RequestModel> requestList = [];
         snapshot.forEach(
           (documentSnapshot) {
-            RequestModel model = RequestModel.fromMap(documentSnapshot.data);
-            model.id = documentSnapshot.documentID;
-            if (model.approvedUsers != null) {
-              if (model.approvedUsers.length <= model.numberOfApprovals)
-                requestList.add(model);
+            if(documentSnapshot.data['accepted']==false || (documentSnapshot.data['accepted']==true && documentSnapshot.data['sevauserid'] == loggedInUser.sevaUserID) ){
+              RequestModel model = RequestModel.fromMap(documentSnapshot.data);
+              model.id = documentSnapshot.documentID;
+              if (model.approvedUsers != null) {
+                if (model.approvedUsers.length <= model.numberOfApprovals)
+                  requestList.add(model);
+              }
             }
           },
         );

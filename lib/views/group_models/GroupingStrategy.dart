@@ -146,9 +146,9 @@ class GroupOfferCommons {
     return consolidatedList;
   }
 
-  static HashMap<String, List<OfferModel>> getListHashed(
+  static SplayTreeMap<String, List<OfferModel>> getListHashed(
       {List<OfferModel> offerModelList, String sevaUserId}) {
-    HashMap<String, List<OfferModel>> hashMap = new HashMap();
+    SplayTreeMap<String, List<OfferModel>> hashMap = new SplayTreeMap();
 
     // offerModelList.sort();
 
@@ -182,8 +182,8 @@ class GroupOfferCommons {
   static String getGroupTitleForOffer({String groupKey}) {
     switch (groupKey) {
       case "MyOffers":
-        return "My Offers";
-
+        return "";
+        
       case "Others":
         // return "${FlavorConfig.values.timebankTitle} Offers";
         return 'Timebank Offers';

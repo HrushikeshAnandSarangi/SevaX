@@ -29,6 +29,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   bool autovalidate = false;
   Map<String, dynamic> skills = {};
   Map<String, dynamic> _selectedSkills = {};
+  bool isDataLoaded = false;
   @override
   void initState() {
     print(widget.userModel.skills);
@@ -48,6 +49,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
           // selectedChips.add(buildChip(id: id, value: skills[id]));
         });
       }
+      isDataLoaded = true;
       setState(() {});
     });
 
@@ -150,6 +152,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   ),
                 );
               },
+//              loadingBuilder: (context) {
+//                return Center(
+//                  child: CircularProgressIndicator(),
+//                );
+//              },
               onSuggestionSelected: (suggestion) {
                 _textEditingController.clear();
                 if (!_selectedSkills.containsValue(suggestion)) {
@@ -162,31 +169,35 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
             ),
             SizedBox(height: 20),
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Wrap(
-                  runSpacing: 5.0,
-                  spacing: 5.0,
-                  children: _selectedSkills.values
-                      .toList()
-                      .map(
-                        (value) => value == null
-                            ? Container()
-                            : CustomChip(
-                                title: value,
-                                onDelete: () {
-                                  String id = skills.keys
-                                      .firstWhere((k) => skills[k] == value);
-                                  _selectedSkills.remove(id);
-                                  setState(() {});
-                                },
-                              ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
+            isDataLoaded
+                ? ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Wrap(
+                        runSpacing: 5.0,
+                        spacing: 5.0,
+                        children: _selectedSkills.values
+                            .toList()
+                            .map(
+                              (value) => value == null
+                                  ? Container()
+                                  : CustomChip(
+                                      title: value,
+                                      onDelete: () {
+                                        String id = skills.keys.firstWhere(
+                                            (k) => skills[k] == value);
+                                        _selectedSkills.remove(id);
+                                        setState(() {});
+                                      },
+                                    ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
             Spacer(),
             SizedBox(
               width: 134,
@@ -198,26 +209,42 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  widget.userModel.skills == null ? 'Next' : 'Update',
+                  widget.userModel.skills == null ||
+                          widget.userModel.skills.length == 0
+                      ? 'Next'
+                      : 'Update',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-            widget.userModel.skills == null
-                ? FlatButton(
-                    onPressed: () {
-                      widget.onSkipped();
-                    },
-                    child: Text(
-                      AppConfig.prefs.getBool(AppConfig.skip_skill) == null
-                          ? 'Skip'
-                          : 'Cancel',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      ),
-                    ),
-                  )
-                : Container(),
+//            widget.userModel.skills == null
+//                ? FlatButton(
+//                    onPressed: () {
+//                      widget.onSkipped();
+//                    },
+//                    child: Text(
+//                      AppConfig.prefs.getBool(AppConfig.skip_skill) == null
+//                          ? 'Skip'
+//                          : 'Cancel',
+//                      style: TextStyle(
+//                        color: Theme.of(context).accentColor,
+//                      ),
+//                    ),
+//                  )
+//                : Container(),
+            FlatButton(
+              onPressed: () {
+                widget.onSkipped();
+              },
+              child: Text(
+                AppConfig.prefs.getBool(AppConfig.skip_skill) == null
+                    ? 'Skip'
+                    : 'Cancel',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
             SizedBox(height: 20),
           ],
         ),

@@ -1,0 +1,59 @@
+import 'package:flutter/material.dart';
+import 'package:sevaexchange/models/offer_participants_model.dart';
+import 'package:sevaexchange/ui/screens/offers/bloc/offer_bloc.dart';
+import 'package:sevaexchange/ui/screens/search/widgets/network_image.dart';
+import 'package:sevaexchange/utils/bloc_provider.dart';
+
+class UserCircleAvatarList extends StatelessWidget {
+  final int sizeOfClass;
+
+  const UserCircleAvatarList({Key key, this.sizeOfClass}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final _bloc = BlocProvider.of<OfferBloc>(context);
+    return StreamBuilder<List<OfferParticipantsModel>>(
+      stream: _bloc.participants,
+      builder: (context, snapshot) {
+        if (snapshot.data == null || snapshot.data.isEmpty) {
+          return Container();
+        }
+        print(snapshot.data);
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+                sizeOfClass == null
+                    ? "${snapshot.data.length} people signed up"
+                    : "${snapshot.data.length}/$sizeOfClass people signed up",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+            Container(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.all(4),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: ClipOval(
+                        child: CustomNetworkImage(
+                          snapshot.data[index].participantDetails.photourl,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

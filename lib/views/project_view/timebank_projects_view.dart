@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/project_card.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
+import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
 
 import '../requests/project_request.dart';
@@ -21,19 +25,55 @@ class TimeBankProjectsView extends StatefulWidget {
 }
 
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
+  String description =
+      'Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 10),
+            margin: EdgeInsets.only(top: 10, bottom: 10, left: 0, right: 10),
             alignment: Alignment.centerLeft,
             child: Row(
               children: <Widget>[
-                Text(
-                  'Projects',
-                  style: (TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                ButtonTheme(
+                  minWidth: 110.0,
+                  height: 50.0,
+                  buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
+                  child: Stack(
+                    children: [
+                      FlatButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Projects',
+                          style: (TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                      ),
+                      Positioned(
+                        // will be positioned in the top right of the container
+                        top: -8,
+                        right: -10,
+                        child: IconButton(
+                          icon: Image.asset(
+                            'lib/assets/images/info.png',
+                            color: FlavorConfig.values.theme.primaryColor,
+                            height: 16,
+                            width: 16,
+                          ),
+                          tooltip: description,
+                          onPressed: () {
+                            showInfoOfConcept(
+                                dialogTitle: description, mContext: context);
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
                 ),
                 TransactionLimitCheck(
                   child: GestureDetector(
@@ -49,6 +89,13 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                     },
                   ),
                 ),
+                Spacer(),
+                IconButton(
+                  icon: Icon(Icons.help_outline),
+                  color: FlavorConfig.values.theme.primaryColor,
+                  iconSize: 24,
+                  onPressed: showProjectsWebPage,
+                ),
               ],
             ),
           ),
@@ -57,16 +104,16 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
               stream: FirestoreManager.getAllProjectListStream(
                   timebankid: widget.timebankId),
               builder: (BuildContext context,
-                  AsyncSnapshot<List<ProjectModel>> requestListSnapshot) {
-                if (requestListSnapshot.hasError) {
-                  return new Text('Error: ${requestListSnapshot.error}');
+                  AsyncSnapshot<List<ProjectModel>> projectListSnapshot) {
+                if (projectListSnapshot.hasError) {
+                  return new Text('Error: ${projectListSnapshot.error}');
                 }
-                switch (requestListSnapshot.connectionState) {
+                switch (projectListSnapshot.connectionState) {
                   case ConnectionState.waiting:
                     return Center(child: CircularProgressIndicator());
                   default:
                     List<ProjectModel> projectModelList =
-                        requestListSnapshot.data;
+                        projectListSnapshot.data;
 
                     if (projectModelList.length == 0) {
                       return Center(
@@ -168,4 +215,67 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
       ),
     );
   }
+
+  void showProjectsWebPage() {
+    var dynamicLinks = json.decode(AppConfig.remoteConfig.getString('links'));
+    navigateToWebView(
+      aboutMode: AboutMode(
+          title: "Projects Link", urlToHit: dynamicLinks['projectsInfoLink']),
+      context: context,
+    );
+  }
+
+  void navigateToWebView({
+    BuildContext context,
+    AboutMode aboutMode,
+  }) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SevaWebView(aboutMode),
+      ),
+    );
+  }
+}
+
+void showInfoOfConcept({String dialogTitle, BuildContext mContext}) {
+  showDialog(
+      context: mContext,
+      builder: (BuildContext viewContext) {
+        return AlertDialog(
+//            title: Text(
+//              dialogTitle,
+//              style: TextStyle(
+//                fontSize: 16,
+//              ),
+//            ),
+          content: Form(
+            child: Container(
+              height: 120,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Text(
+                  dialogTitle,
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              onPressed: () {
+                return Navigator.of(viewContext).pop();
+              },
+            ),
+          ],
+        );
+      });
 }

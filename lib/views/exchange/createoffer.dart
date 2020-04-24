@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -12,7 +14,9 @@ import 'package:sevaexchange/views/core.dart';
 
 class CreateOffer extends StatelessWidget {
   final String timebankId;
+
   CreateOffer({this.timebankId});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,6 +40,7 @@ class CreateOffer extends StatelessWidget {
 // Create a Form Widget
 class MyCustomForm extends StatefulWidget {
   final String timebankId;
+
   MyCustomForm({this.timebankId});
   @override
   MyCustomFormState createState() {
@@ -52,12 +57,25 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<MyCustomFormState>!
   final _formKey = GlobalKey<FormState>();
 
-  String title = '';
-  String schedule = '';
-  String description = '';
-  GeoFirePoint location;
+  static TextStyle titleStyle = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Europa',
+    color: Colors.grey,
+  );
+  static TextStyle subTitleStyle = TextStyle(
+    fontSize: 14,
+    color: titleStyle.color,
+  );
+
   String selectedAddress;
   String timebankId;
+
+  GeoFirePoint location;
+
+  OfferType offerType;
+  GroupOfferDataModel groupOfferDataModel;
+  IndividualOfferDataModel individualOfferDataModel;
 
   String _selectedTimebankId;
 
@@ -65,43 +83,133 @@ class MyCustomFormState extends State<MyCustomForm> {
   void initState() {
     super.initState();
     _selectedTimebankId = widget.timebankId;
+    offerType = OfferType.INDIVIDUAL_OFFER;
+    groupOfferDataModel = GroupOfferDataModel();
+    individualOfferDataModel = IndividualOfferDataModel();
+
     this.timebankId = _selectedTimebankId;
     if (FlavorConfig.appFlavor == Flavor.APP) {
       _fetchCurrentlocation;
     }
   }
 
-  void _writeToDB() async {
-    int timestamp = DateTime.now().millisecondsSinceEpoch;
-    String timestampString = timestamp.toString();
-    OfferModel model = OfferModel(
-      email: SevaCore.of(context).loggedInUser.email,
-      fullName: SevaCore.of(context).loggedInUser.fullname,
-      title: title,
-      id: '${SevaCore.of(context).loggedInUser.email}*$timestampString',
-      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      description: description,
-      schedule: schedule,
-      timebankId: widget.timebankId,
-      timestamp: timestamp,
-      location:
-          location == null ? GeoFirePoint(40.754387, -73.984291) : location,
-    );
+  void _writeToDB({OfferModel model}) async {
+    print("offer mdoel ----> ${model.toMap()}");
+    // return;
     await createOffer(offerModel: model);
+  }
+
+  Widget getSwitchForGroupOffer() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 20),
+      width: double.infinity,
+      child: CupertinoSegmentedControl<int>(
+        selectedColor: Theme.of(context).primaryColor,
+        children: logoWidgets,
+        borderColor: Colors.grey,
+
+        padding: EdgeInsets.only(left: 0.0, right: 0),
+        groupValue: sharedValue,
+        onValueChanged: (int val) {
+          print(val);
+          if (val != sharedValue) {
+            setState(() {
+              print("$sharedValue -- $val");
+              if (sharedValue == 0) {
+                offerType = OfferType.GROUP_OFFER;
+                groupOfferDataModel =
+                    groupOfferDataModel ?? GroupOfferDataModel();
+              } else {
+                offerType = OfferType.INDIVIDUAL_OFFER;
+                individualOfferDataModel =
+                    individualOfferDataModel ?? IndividualOfferDataModel();
+              }
+              sharedValue = val;
+            });
+          }
+        },
+        //groupValue: sharedValue,
+      ),
+    );
+  }
+
+  int sharedValue = 0;
+
+  final Map<int, Widget> logoWidgets = const <int, Widget>{
+    0: Text(
+      'Individual offer',
+      style: TextStyle(fontSize: 15.0),
+    ),
+    1: Text(
+      'One to many',
+      style: TextStyle(fontSize: 15.0),
+    ),
+  };
+
+  Widget getIndividualOffer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Title*',
+          style: titleStyle,
+          // style: TextStyle(color: Colors.grey, fontSize: 14),
+        ),
+        TextFormField(
+          decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
+          keyboardType: TextInputType.text,
+          style: subTitleStyle,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter the subject of your Offer';
+            }
+            individualOfferDataModel.title = value;
+          },
+        ),
+        SizedBox(height: 40),
+        Text(
+          'Offer description*',
+          style: titleStyle,
+        ),
+        TextFormField(
+          maxLength: 500,
+          style: subTitleStyle,
+          decoration: InputDecoration(
+            hintText: 'Your offer and any #hashtags',
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            individualOfferDataModel.description = value;
+          },
+        ),
+        SizedBox(height: 20),
+        Text('Availability', style: titleStyle),
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: 'Describe my availability',
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLength: 100,
+          style: subTitleStyle,
+          maxLines: null,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            individualOfferDataModel.schedule = value;
+          },
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    TextStyle titleStyle = TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-      fontFamily: 'Europa',
-      color: Colors.grey,
-    );
-    TextStyle subTitleStyle = TextStyle(
-      fontSize: 14,
-      color: titleStyle.color,
-    );
     // Build a Form widget using the _formKey we created above
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -113,61 +221,10 @@ class MyCustomFormState extends State<MyCustomForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'Title*',
-                  style: titleStyle,
-                  // style: TextStyle(color: Colors.grey, fontSize: 14),
-                ),
-                TextFormField(
-                  decoration:
-                      InputDecoration(hintText: 'Ex: Tutoring, painting..'),
-                  keyboardType: TextInputType.text,
-                  // style: finalStyle,
-                  style: subTitleStyle,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter the subject of your Offer';
-                    }
-                    title = value;
-                  },
-                ),
-                SizedBox(height: 40),
-                Text(
-                  'Offer description*',
-                  style: titleStyle,
-                ),
-                TextFormField(
-                  maxLength: 500,
-                  style: subTitleStyle,
-                  decoration: InputDecoration(
-                    hintText: 'Your offer and any #hashtags',
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    description = value;
-                  },
-                ),
-                SizedBox(height: 20),
-                Text('Availability', style: titleStyle),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Describe my availability',
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLength: 100,
-                  style: subTitleStyle,
-                  maxLines: null,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    schedule = value;
-                  },
-                ),
+                getSwitchForGroupOffer(),
+                offerType == OfferType.GROUP_OFFER
+                    ? getGroupAttributes()
+                    : getIndividualOffer(),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -205,27 +262,42 @@ class MyCustomFormState extends State<MyCustomForm> {
                         // color: Theme.of(context).accentColor,
                         onPressed: () {
                           //if (location != null) {
+
                           if (_formKey.currentState.validate()) {
-                            if (!hasRegisteredLocation()) {
-                              showDialogForTitle(
+                            if (location == null) {
+                              showDialogForDate(
                                   dialogTitle:
                                       "Please add location to your offer");
                               return;
+                            }
+                            OfferModel model;
+                            switch (offerType) {
+                              case OfferType.INDIVIDUAL_OFFER:
+                                model = gatherIndividualOfferData();
+                                break;
+
+                              case OfferType.GROUP_OFFER:
+                                if (!isClassStartDateSelected()) {
+                                  return;
+                                }
+                                print("--------------- $groupOfferDataModel");
+                                model = gatherGroupOffer();
+                                break;
                             }
 
                             Scaffold.of(context).showSnackBar(
                               SnackBar(content: Text('Creating Offer')),
                             );
-                            _writeToDB();
+                            _writeToDB(model: model);
                             Navigator.pop(context);
                           } else {
                             print("Invalid data");
                           }
-//                      } else {
-//                        Scaffold.of(context).showSnackBar(SnackBar(
-//                          content: Text('Location not added'),
-//                        ));
-//                      }
+                          //                      } else {
+                          //                        Scaffold.of(context).showSnackBar(SnackBar(
+                          //                          content: Text('Location not added'),
+                          //                        ));
+                          //                      }
                         },
                         child: Text(
                           '  Create Offer  ',
@@ -244,27 +316,20 @@ class MyCustomFormState extends State<MyCustomForm> {
     );
   }
 
-  Future _getLocation() async {
-    String address = await LocationUtility().getFormattedAddress(
-      location.latitude,
-      location.longitude,
+  Widget getDurationWidget() {
+    return OfferDurationWidget(
+      title: ' Offer duration',
+      //startTime: CalendarWidgetState.startDate,
+      //endTime: CalendarWidgetState.endDate
     );
-    log('_getLocation: $address');
-    setState(() {
-      this.selectedAddress = address;
-    });
   }
 
-  bool hasRegisteredLocation() {
-    return location != null;
-  }
-
-  void showDialogForTitle({String dialogTitle}) async {
+  void showDialogForDate({String dialogTitle}) {
     showDialog(
         context: context,
         builder: (BuildContext viewContext) {
           return AlertDialog(
-            title: Text(dialogTitle),
+            title: Text(dialogTitle ?? "Please enter start and end date"),
             actions: <Widget>[
               FlatButton(
                 child: Text(
@@ -282,6 +347,166 @@ class MyCustomFormState extends State<MyCustomForm> {
         });
   }
 
+  Widget getGroupAttributes() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        getClassTitle(),
+        getDurationWidget(),
+        SizedBox(height: 30),
+        getPreperatiionTime(),
+        getNumberOfClassHours(),
+        getClassDesciption(),
+      ],
+    );
+  }
+
+  int preperationTime;
+  TextStyle textStyle = TextStyle(
+    fontSize: 14,
+    // fontWeight: FontWeight.bold,
+    color: Colors.grey,
+    fontFamily: 'Europa',
+  );
+
+  Widget getClassTitle() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 10),
+        Text(
+          'Title*',
+          style: titleStyle,
+          // style: TextStyle(color: Colors.grey, fontSize: 14),
+        ),
+        TextFormField(
+          decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
+          keyboardType: TextInputType.text,
+          // style: finalStyle,
+          style: subTitleStyle,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter the subject of your Offer';
+            }
+            groupOfferDataModel.classTitle = value;
+          },
+        ),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget getClassDesciption() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 10),
+        Text(
+          'Class description*',
+          style: titleStyle,
+        ),
+        TextFormField(
+          maxLength: 500,
+          style: subTitleStyle,
+          decoration: InputDecoration(
+            hintText: 'Please enter some class decription',
+          ),
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter some text';
+            }
+            groupOfferDataModel.classDescription = value;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget getPreperatiionTime() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'No. of preperation hours *',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.grey,
+          ),
+        ),
+        TextFormField(
+            decoration: InputDecoration(
+              hintText: 'No. of preperation hours required',
+              hintStyle: textStyle,
+              // labelText: 'No. of volunteers',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter the your preperation time';
+              } else {
+                groupOfferDataModel.numberOfPreperationHours = int.parse(value);
+                return null;
+              }
+            }),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget getNumberOfClassHours() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 10),
+        Text(
+          'No. of class hours *',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Europa',
+            color: Colors.grey,
+          ),
+        ),
+        TextFormField(
+            decoration: InputDecoration(
+              hintText: 'No. of class hours',
+              hintStyle: textStyle,
+              // labelText: 'No. of volunteers',
+            ),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'No. of class hours';
+              } else {
+                groupOfferDataModel.numberOfClassHours = int.parse(value);
+                return null;
+              }
+            }),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Future _getLocation() async {
+    String address = await LocationUtility().getFormattedAddress(
+      location.latitude,
+      location.longitude,
+    );
+    log('_getLocation: $address');
+    setState(() {
+      this.selectedAddress = address;
+    });
+  }
+
   void get _fetchCurrentlocation {
     Location().getLocation().then((onValue) {
       print("Location1:$onValue");
@@ -297,5 +522,56 @@ class MyCustomFormState extends State<MyCustomForm> {
         });
       });
     });
+  }
+
+  OfferModel gatherIndividualOfferData() {
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
+    var id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
+
+    return OfferModel(
+      id: id,
+      email: SevaCore.of(context).loggedInUser.email,
+      fullName: SevaCore.of(context).loggedInUser.fullname,
+      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      timebankId: widget.timebankId,
+      selectedAdrress: selectedAddress,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      location:
+          location == null ? GeoFirePoint(40.754387, -73.984291) : location,
+      groupOfferDataModel: GroupOfferDataModel(),
+      individualOfferDataModel: individualOfferDataModel,
+      offerType: OfferType.INDIVIDUAL_OFFER,
+    );
+  }
+
+  OfferModel gatherGroupOffer() {
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
+    var id = '${SevaCore.of(context).loggedInUser.email}*$timestamp';
+
+    groupOfferDataModel.startDate = OfferDurationWidgetState.starttimestamp;
+    groupOfferDataModel.endDate = OfferDurationWidgetState.endtimestamp;
+
+    return OfferModel(
+      id: id,
+      email: SevaCore.of(context).loggedInUser.email,
+      fullName: SevaCore.of(context).loggedInUser.fullname,
+      sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+      timebankId: widget.timebankId,
+      selectedAdrress: selectedAddress,
+      timestamp: timestamp,
+      location:
+          location == null ? GeoFirePoint(40.754387, -73.984291) : location,
+      groupOfferDataModel: groupOfferDataModel,
+      individualOfferDataModel: IndividualOfferDataModel(),
+      offerType: OfferType.GROUP_OFFER,
+    );
+  }
+
+  bool isClassStartDateSelected() {
+    if (OfferDurationWidgetState.starttimestamp == 0) {
+      showDialogForDate(dialogTitle: "Please mention the start and end date");
+      return false;
+    }
+    return true;
   }
 }

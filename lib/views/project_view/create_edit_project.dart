@@ -45,6 +45,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   var startDate;
   var endDate;
   bool isDataLoaded = false;
+  int sharedValue = 0;
   ScrollController _controller = ScrollController();
 
   @override
@@ -55,7 +56,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       getData();
     } else {
       setState(() {
-        this.projectModel.mode = 'Personal';
+        this.projectModel.mode = 'Timebank';
       });
     }
 
@@ -143,9 +144,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 if (val != sharedValue) {
                   setState(() {
                     print("$sharedValue -- $val");
-                    if (sharedValue == 0) {
+                    if (val == 0) {
+                      print("TTTTTTTTTtimebank proj");
                       projectModel.mode = 'Timebank';
                     } else {
+                      print("pppppppppersonal proj");
                       projectModel.mode = 'Personal';
                     }
                     sharedValue = val;
@@ -156,21 +159,21 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
           );
         } else {
+          this.projectModel.mode = 'Personal';
+
           return Container();
         }
       },
     );
   }
 
-  int sharedValue = 0;
-
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
-      'Personal Project',
+      'Timebank Project',
       style: TextStyle(fontSize: 15.0),
     ),
     1: Text(
-      'Timebank Project',
+      'Personal Project',
       style: TextStyle(fontSize: 15.0),
     ),
   };
@@ -418,6 +421,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
+                    print('project mode ${projectModel.mode}');
                     FocusScope.of(context).requestFocus(new FocusNode());
                     // show a dialog
                     projectModel.startTime =
@@ -457,7 +461,6 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.pendingRequests = [];
                         projectModel.timebankId = widget.timebankId;
                         projectModel.photoUrl = globals.timebankAvatarURL;
-                        //  projectModel.mode = 'TimeBank';
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -498,6 +501,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             OfferDurationWidgetState.starttimestamp;
                         projectModel.endTime =
                             OfferDurationWidgetState.endtimestamp;
+
                         if (projectModel.startTime == 0 ||
                             projectModel.endTime == 0) {
                           showDialogForTitle(
@@ -515,6 +519,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           return;
                         }
                         showProgressDialog('Updating project');
+                        print("final value of modeeeee is "+this.projectModel.mode);
                         await FirestoreManager.updateProject(
                             projectModel: projectModel);
                         if (dialogContext != null) {

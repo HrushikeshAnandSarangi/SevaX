@@ -79,7 +79,7 @@ class CommunityCreateEditController {
     print(timebank);
   }
 
-  UpdateCommunityDetails(user, timebankimageurl) {
+  UpdateCommunityDetails(user, timebankimageurl, location) {
     this.community.id = Utils.getUuid();
     this.community.logo_url = timebankimageurl;
     this.community.created_at =
@@ -89,6 +89,7 @@ class CommunityCreateEditController {
         DateTime.now().millisecondsSinceEpoch.toString();
     this.community.primary_email = user.email;
     this.community.admins = [user.sevaUserID];
+    this.community.location = location;
   }
 
   UpdateTimebankDetails(user, timebankimageurl, widget) {
@@ -546,11 +547,7 @@ class CommunityCreateEditBloc {
       }
     });
   }
-
-  
 }
-
-
 
 final timeBankBloc = TimeBankBloc();
 final createEditCommunityBloc = CommunityCreateEditBloc();

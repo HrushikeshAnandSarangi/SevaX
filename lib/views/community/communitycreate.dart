@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,12 +18,12 @@ import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/onboarding/findcommunitiesview.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -41,9 +42,9 @@ class CreateEditCommunityView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var title = 'Create a Timebank';
-    return Scaffold(
-      appBar: isCreateTimebank
-          ? AppBar(
+    return isCreateTimebank
+        ? Scaffold(
+            appBar: AppBar(
               elevation: 0.5,
               automaticallyImplyLeading: true,
               title: Text(
@@ -52,14 +53,18 @@ class CreateEditCommunityView extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-            )
-          : null,
-      body: CreateEditCommunityViewForm(
-        timebankId: timebankId,
-        isFromFind: isFromFind,
-        isCreateTimebank: isCreateTimebank,
-      ),
-    );
+            ),
+            body: CreateEditCommunityViewForm(
+              timebankId: timebankId,
+              isFromFind: isFromFind,
+              isCreateTimebank: isCreateTimebank,
+            ),
+          )
+        : CreateEditCommunityViewForm(
+            timebankId: timebankId,
+            isFromFind: isFromFind,
+            isCreateTimebank: isCreateTimebank,
+          );
   }
 }
 
@@ -112,6 +117,7 @@ class CreateEditCommunityViewFormState
   var scollContainer = ScrollController();
   PanelController _pc = new PanelController();
   GlobalKey<FormState> _stateSelectorKey = GlobalKey();
+//  final aboutFocus = FocusNode();
 
   String selectedCountryValue = "Select your country";
 
@@ -121,10 +127,11 @@ class CreateEditCommunityViewFormState
   String errTxt;
   int totalMembersCount = 0;
 
+  final _textUpdates = StreamController<String>();
+
   void initState() {
     super.initState();
     var _searchText = "";
-    checkEmailVerified();
 
     Future.delayed(Duration.zero, () {
       createEditCommunityBloc.getChildTimeBanks(context);
@@ -132,7 +139,6 @@ class CreateEditCommunityViewFormState
     if (widget.isCreateTimebank == false) {
       getModelData();
     }
-    final _textUpdates = StreamController<String>();
 
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
@@ -140,40 +146,29 @@ class CreateEditCommunityViewFormState
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    if (FlavorConfig.appFlavor == Flavor.APP && !widget.isCreateTimebank) {
+    if (!widget.isCreateTimebank) {
       fetchCurrentlocation();
     }
 
     searchTextController
         .addListener(() => _textUpdates.add(searchTextController.text));
 
-    // print('nsdjfjsdf ${widget.loggedInUser.toString()}');
     Observable(_textUpdates.stream)
-        .debounceTime(Duration(milliseconds: 400))
+        .debounceTime(Duration(milliseconds: 600))
         .forEach((s) {
       if (s.isEmpty) {
         setState(() {
           _searchText = "";
         });
       } else {
-        SearchManager.searchCommunityForDuplicate(queryString: s).then((v) {
-          if (v) {
+        SearchManager.searchCommunityForDuplicate(queryString: s)
+            .then((commFound) {
+          if (commFound) {
             setState(() {
               communityFound = true;
               print(
-                  "name ----- ${communitynName}  ${searchTextController.text}");
-
-              if (!widget.isCreateTimebank) {
-                if (searchTextController.text != null &&
-                    communitynName != searchTextController.text) {
-                  //  errTxt = null;
-                  errTxt = 'Timebank name already exist';
-
-                  print("name is equal");
-                }
-              } else {
-                errTxt = 'Timebank name already exist';
-              }
+                  "name ----- ${communitynName} and ${searchTextController.text}");
+              errTxt = 'Timebank name already exists';
             });
           } else {
             setState(() {
@@ -205,12 +200,6 @@ class CreateEditCommunityViewFormState
     location = timebankModel.location;
     totalMembersCount = await FirestoreManager.getMembersCountOfAllMembers(
         communityId: SevaCore.of(context).loggedInUser.currentCommunity);
-//    setState(() {
-//      searchTextController =
-//          new TextEditingController(text: communityModel.name);
-//
-//      //  searchTextController.text = communityModel.name;
-//    });
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -223,11 +212,10 @@ class CreateEditCommunityViewFormState
   Widget build(BuildContext context) {
     this.parentContext = context;
 
-    return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: createSevaX,
-      ),
+    return Form(
+      key: _formKey,
+      child: createSevaX,
+      autovalidate:false
     );
   }
 
@@ -301,6 +289,10 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('Name your timebank'),
                   TextFormField(
+//                    focusNode: FocusNode(),
+//                    onFieldSubmitted: (v){
+//                      FocusScope.of(context).requestFocus(aboutFocus);
+//                    },
                     controller: searchTextController,
                     onChanged: (value) {
                       enteredName = value;
@@ -314,8 +306,6 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: 1,
-                    //initialValue: snapshot.data.community.name ?? '',
-
                     onSaved: (value) {
                       enteredName = value;
                     },
@@ -336,6 +326,10 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('About'),
                   TextFormField(
+//                    focusNode: aboutFocus,
+//                    onFieldSubmitted: (v){
+//                      FocusScope.of(context).requestFocus(FocusNode());
+//                    },
                     decoration: InputDecoration(
                       hintText: 'Ex: A bit more about your timebank',
                     ),
@@ -411,6 +405,17 @@ class CreateEditCommunityViewFormState
                   Row(
                     children: <Widget>[
                       headingText('Protected Timebank'),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                        child: Tooltip(
+                            message:
+                                'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations',
+                            child: IconButton(
+                                icon: Icon(
+                              Icons.info_outline,
+                              size: 20,
+                            ))),
+                      ),
                       Column(
                         children: <Widget>[
                           Divider(),
@@ -424,45 +429,59 @@ class CreateEditCommunityViewFormState
                               snapshot.data.timebank
                                   .updateValueByKey('protected', value);
                               createEditCommunityBloc.onChange(snapshot.data);
-                              return "";
                             },
                           ),
                         ],
                       ),
                     ],
                   ),
-                  Text(
-                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-
-                  headingText('Select Tax percentage'),
-                  Slider(
-                    label: "${taxPercentage.toInt()}%",
-                    value: taxPercentage,
-                    min: 0,
-                    max: 15,
-                    divisions: 15,
-                    onChanged: (value) {
-                      snapshot.data.community
-                          .updateValueByKey('taxPercentage', value / 100);
-                      setState(() {
-                        taxPercentage = value;
-                        communityModel.taxPercentage = value / 100;
-                      });
-                      print(snapshot.data.community);
-                    },
-                  ),
-                  Text(
-                    'Current Tax Percentage : ${taxPercentage.toInt()}%',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+//                  Text(
+//                    'Protected timebanks are for political campaigns and certain nonprofits where user to user transactions are disabled."',
+//                    style: TextStyle(
+//                      fontSize: 12,
+//                      color: Colors.grey,
+//                    ),
+//                  ),
+                  widget.isCreateTimebank ? Container() : SizedBox(height: 10),
+                  widget.isCreateTimebank
+                      ? Container()
+                      : headingText('Select Tax percentage'),
+                  widget.isCreateTimebank
+                      ? Container()
+                      : Slider(
+                          label: "${taxPercentage.toInt()}%",
+                          value: taxPercentage,
+                          min: 0,
+                          max: 15,
+                          divisions: 15,
+                          onChanged: (value) {
+                            snapshot.data.community
+                                .updateValueByKey('taxPercentage', value / 100);
+                            setState(() {
+                              taxPercentage = value;
+                              communityModel.taxPercentage = value / 100;
+                            });
+                            print(snapshot.data.community);
+                          },
+                        ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      IconButton(
+                        tooltip:
+                            'At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax.',
+                        icon: Icon(
+                          Icons.info_outline,
+                          size: 20,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
                   headingText('Your timebank location.'),
@@ -502,7 +521,7 @@ class CreateEditCommunityViewFormState
                             location = snapshot.data.timebank.location = point;
 
                             print(
-                                "Locatsion is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
+                                "Location is iAKSDbkjwdsc:(${location.latitude},${location.longitude})");
                           }
                           _getLocation(snapshot.data);
                           print(
@@ -556,36 +575,15 @@ class CreateEditCommunityViewFormState
                         onPressed: () async {
                           // show a dialog
                           if (widget.isCreateTimebank) {
-//                            if (!firebaseUser.isEmailVerified) {
-//                              _showVerificationAndLogoutDialogue();
-//                            }
-
-                            var timebankAdvisory =
-                                // "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
-                                "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
-
-                            print(_formKey.currentState.validate());
-
-//                            communityFound =
-//                                await isCommunityFound(enteredName);
-//                            if (communityFound) {
-//                              print("Found:$communityFound");
-//                              return;
-//                            }
+                            if (!hasRegisteredLocation()) {
+                              showDialogForSuccess(
+                                  dialogTitle:
+                                      "Please add your timebank location");
+                              return;
+                            }
 
                             if (_formKey.currentState.validate()) {
                               if (isBillingDetailsProvided) {
-                                Map<String, bool> onActivityResult =
-                                    await showTimebankAdvisory(
-                                        dialogTitle: timebankAdvisory);
-                                if (onActivityResult['PROCEED']) {
-                                  print("YES PROCEED WITH TIMEBANK CREATION");
-                                } else {
-                                  print(
-                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
-                                  Navigator.of(context).pop();
-                                }
-
                                 setState(() {
                                   this._billingDetailsError = '';
                                 });
@@ -607,6 +605,7 @@ class CreateEditCommunityViewFormState
                                   snapshot.data.UpdateCommunityDetails(
                                     SevaCore.of(context).loggedInUser,
                                     globals.timebankAvatarURL,
+                                    location,
                                   );
                                   // creation of default timebank;
                                   snapshot.data.UpdateTimebankDetails(
@@ -621,6 +620,7 @@ class CreateEditCommunityViewFormState
 
                                   snapshot.data.community.primary_timebank =
                                       snapshot.data.timebank.id;
+                                  snapshot.data.community.location = location;
 
                                   createEditCommunityBloc.createCommunity(
                                     snapshot.data,
@@ -651,7 +651,6 @@ class CreateEditCommunityViewFormState
                                   // _billingInformationKey.currentState.reset();
                                   UserModel user =
                                       SevaCore.of(context).loggedInUser;
-                                  // Navigator.pop(dialogContext);
                                   _formKey.currentState.reset();
                                   // _billingInformationKey.currentState.reset();
                                   Navigator.of(context).push(
@@ -674,12 +673,12 @@ class CreateEditCommunityViewFormState
                               } else {
                                 setState(() {
                                   this._billingDetailsError =
-                                      'Please configure your billing details';
+                                      'Please configure your personal information details';
                                 });
                               }
                             } else {}
                           } else {
-                            if (location == null) {
+                            if (!hasRegisteredLocation()) {
                               showDialogForSuccess(
                                   dialogTitle:
                                       "Please add your timebank location");
@@ -693,10 +692,6 @@ class CreateEditCommunityViewFormState
                               timebankModel.photoUrl =
                                   globals.timebankAvatarURL;
                             }
-
-//                            print("comm ${communityModel}");
-//
-//                            print("time add${timebankModel.address}");
 
                             timebankModel.location = location;
 
@@ -713,6 +708,17 @@ class CreateEditCommunityViewFormState
                                 members.add(user.sevaUserID);
                               });
                             }
+                            if (widget.isCreateTimebank) {
+                              var taxDefaultVal = (json.decode(AppConfig
+                                      .remoteConfig
+                                      .getString('defaultTaxPercentValue')))
+                                  .toDouble();
+                              snapshot.data.community.updateValueByKey(
+                                  'taxPercentage', taxDefaultVal / 100);
+                              communityModel.taxPercentage =
+                                  taxDefaultVal / 100;
+                            }
+
                             // creation of community;
 
                             // updating timebank with latest values
@@ -722,16 +728,13 @@ class CreateEditCommunityViewFormState
                                 .then((onValue) {
                               print("timebank updated");
                             });
-                             communityModel.taxPercentage = taxPercentage / 100;
+                            communityModel.taxPercentage = taxPercentage / 100;
 //                            //updating community with latest values
                             await FirestoreManager.updateCommunityDetails(
                                     communityModel: communityModel)
                                 .then((onValue) {
                               print("community updated");
                             });
-//
-//
-//
                             if (dialogContext != null) {
                               Navigator.pop(dialogContext);
                             }
@@ -741,7 +744,7 @@ class CreateEditCommunityViewFormState
                             } else {
                               showDialogForSuccess(
                                   dialogTitle:
-                                      "Timebank updated successfully, Please restart your app to see the updated chnages.");
+                                      "Timebank updated successfully, Please restart your app to see the updated changes.");
                             }
                           }
                         },
@@ -791,6 +794,11 @@ class CreateEditCommunityViewFormState
         this.firebaseUser = firebaseUser;
       });
     });
+  }
+
+  bool hasRegisteredLocation() {
+    //  print("Location ---========================= ${timebankModel.address}");
+    return location != null;
   }
 
   void _showVerificationAndLogoutDialogue() {
@@ -936,37 +944,6 @@ class CreateEditCommunityViewFormState
     );
   }
 
-  Widget get tappableFindYourTeam {
-    return GestureDetector(
-      onTap: () {
-        if (widget.isFromFind) {
-          Navigator.pop(context);
-        } else {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return FindCommunitiesView(
-                  keepOnBackPress: true,
-                  loggedInUser: SevaCore.of(context).loggedInUser,
-                  showBackBtn: true,
-                  isFromHome: false,
-                );
-              },
-            ),
-          );
-        }
-      },
-      child: Text(
-        ' Find your Timebank',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.blue,
-          decoration: TextDecoration.underline,
-        ),
-      ),
-    );
-  }
-
   Future _getLocation(data) async {
     print('Timebank value:$data');
     String address = await LocationUtility().getFormattedAddress(
@@ -979,7 +956,9 @@ class CreateEditCommunityViewFormState
 //    timebank.updateValueByKey('locationAddress', address);
     print('_getLocation: $address');
     timebankModel.address = address;
+    communityModel.location = location;
     data.timebank.updateValueByKey('address', address);
+    data.community.updateValueByKey('location', location);
     createEditCommunityBloc.onChange(data);
   }
 
@@ -1145,7 +1124,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[4]);
+            FocusScope.of(context).requestFocus(focusNodes[3]);
           },
           onChanged: (value) {
             print(value);
@@ -1159,7 +1138,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[3],
+          focusNode: focusNodes[2],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -1206,7 +1185,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[5]);
+            FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -1216,7 +1195,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[4],
+          focusNode: focusNodes[3],
           textInputAction: TextInputAction.next,
           initialValue:
               controller.community.billing_address.street_address1 != null
@@ -1234,14 +1213,14 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
             onFieldSubmitted: (input) {
-              FocusScope.of(context).requestFocus(focusNodes[6]);
+              FocusScope.of(context).requestFocus(focusNodes[5]);
             },
             onChanged: (value) {
               controller.community.billing_address
                   .updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
             },
-            focusNode: focusNodes[5],
+            focusNode: focusNodes[4],
             textInputAction: TextInputAction.next,
             initialValue:
                 controller.community.billing_address.street_address2 != null
@@ -1268,6 +1247,9 @@ class CreateEditCommunityViewFormState
           initialValue: controller.community.billing_address.companyname != null
               ? controller.community.billing_address.companyname
               : '',
+          // validator: (value) {
+          //   return value.isEmpty ? 'Field cannot be left blank*' : null;
+          // },
           focusNode: focusNodes[6],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
@@ -1282,7 +1264,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[3]);
+            FocusScope.of(context).requestFocus(focusNodes[6]);
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -1295,7 +1277,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[2],
+          focusNode: focusNodes[5],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Country Name",
@@ -1389,7 +1371,7 @@ class CreateEditCommunityViewFormState
     var communitiesFound =
         await searchCommunityByName(enteredName, communities);
 
-    if (communities == null || communities == null || communities.length == 0) {
+    if (communities == null || communities.length == 0) {
       return false;
     } else {
       return true;
@@ -1508,5 +1490,10 @@ class CreateEditCommunityViewFormState
             ],
           );
         });
+  }
+
+  void dispose() {
+    super.dispose();
+    _textUpdates.close();
   }
 }

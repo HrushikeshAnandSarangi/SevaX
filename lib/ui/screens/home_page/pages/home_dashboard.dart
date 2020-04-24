@@ -6,6 +6,7 @@ import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/home_dashboard_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/ui/screens/home_page/pages/timebank_home_page.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/ui/screens/search/pages/search_page.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/common_timebank_model_singleton.dart';
@@ -14,27 +15,14 @@ import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/timebank_chats.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
-import 'package:sevaexchange/views/requests/project_request.dart';
 import 'package:sevaexchange/views/switch_timebank.dart';
 import 'package:sevaexchange/views/timebank_content_holder.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
 import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
-
-// class HomeDashBoard extends StatelessWidget {
-//   HomeDashBoard();
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: HomeDashBoard(),
-//     );
-//   }
-// }
 
 class HomeDashBoard extends StatefulWidget {
   @override
@@ -58,7 +46,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
   void initState() {
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
-        TabController(initialIndex: 0, length: 8, vsync: this);
+        TabController(initialIndex: 0, length: 7, vsync: this);
     tabs = [
       Tab(
           text:
@@ -68,7 +56,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
       Tab(text: "Requests"),
       Tab(text: "Offers"),
       Tab(text: "About"),
-      Tab(text: "Accepted Offers"),
       Tab(text: "Members")
     ];
     super.initState();
@@ -209,9 +196,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
               if (primaryTimebank != null &&
                   primaryTimebank.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID) &&
-                  tabs.length == 8) {
+                  tabs.length == 7) {
                 isAdmin = true;
-                _timebankController = TabController(length: 11, vsync: this);
+                _timebankController = TabController(length: 10, vsync: this);
 
                 tabs.add(Tab(text: 'Manage'));
                 tabs.add(
@@ -232,8 +219,9 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                 ShowLimitBadge(),
                 TabBar(
                   controller: _timebankController,
-                  indicatorColor: Colors.black,
-                  labelColor: Colors.black,
+                  indicatorColor: Theme.of(context).primaryColor,
+                  unselectedLabelColor: Colors.black,
+                  labelColor: Theme.of(context).primaryColor,
                   isScrollable: true,
                   tabs: tabs,
                 ),
@@ -246,6 +234,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       ),
                       DiscussionList(
                         timebankId: primaryTimebank.id,
+                        timebankModel: primaryTimebank,
                       ),
                       TimeBankProjectsView(
                         timebankId: primaryTimebank.id,
@@ -257,7 +246,11 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                         timebankModel: primaryTimebank,
                         isFromSettings: false,
                       ),
-                      OffersModule.of(
+                      // OffersModule.of(
+                      //   timebankId: primaryTimebank.id,
+                      //   timebankModel: primaryTimebank,
+                      // ),
+                      OfferRouter(
                         timebankId: primaryTimebank.id,
                         timebankModel: primaryTimebank,
                       ),
@@ -268,11 +261,6 @@ class _HomeDashBoardState extends State<HomeDashBoard>
                       TimeBankAboutView.of(
                         timebankModel: primaryTimebank,
                         email: SevaCore.of(context).loggedInUser.email,
-                      ),
-                      AcceptedOffers(
-                        sevaUserId:
-                            SevaCore.of(context).loggedInUser.sevaUserID,
-                        timebankId: primaryTimebank.id,
                       ),
                       TimebankRequestAdminPage(
                         isUserAdmin: primaryTimebank.admins.contains(

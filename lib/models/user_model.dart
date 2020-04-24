@@ -127,6 +127,8 @@ class UserModel extends DataModel {
       //print("Blocked Data present");
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
+    }else{
+      this.communities = List();
     }
 
     if (map.containsKey('blockedBy')) {

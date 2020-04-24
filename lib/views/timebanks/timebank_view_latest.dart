@@ -89,6 +89,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               child: CachedNetworkImage(
                 imageUrl: widget.timebankModel.photoUrl ?? ' ',
                 fit: BoxFit.cover,
+                height: 200,
                 errorWidget: (context, url, error) => Container(
                     height: 80,
                     child: Center(
@@ -103,10 +104,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(left: 20.0, bottom: 10, top: 5),
               child: RichText(
                 text:
                     TextSpan(style: TextStyle(color: Colors.black), children: [
@@ -265,13 +266,13 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: Divider(
                 color: Colors.black12,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(left: 20, top: 0, bottom: 5),
               child: Text(
                 'About us',
                 style: TextStyle(
@@ -283,7 +284,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 10.0, 15, 0),
+              padding: const EdgeInsets.fromLTRB(20.0, 5.0, 15, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -333,7 +334,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             ),
 
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: Divider(
                 color: Colors.black12,
               ),
@@ -356,7 +357,8 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
             // burhan@uipep.com*9ecec05e-71fd-456e-9f6d-35798f41bdf5*73d0de2c-198b-4788-be64-a804700a88a4*4b75347e-56ec-4d62-8ce7-374c5cd84e5f
 
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding:
+                  const EdgeInsets.only(left: 20, right: 20, bottom: 5, top: 5),
               child: Row(
                 children: <Widget>[
                   Column(

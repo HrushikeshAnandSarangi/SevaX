@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart' as prefix0;
@@ -111,54 +113,21 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
 }
 
 /// Get all timebanknew associated with a User as a Stream_
-Future<List<TimebankModel>> getMembersCount(
+Future<int> getMembersCount(
     {@required String communityId}) async {
-  List<dynamic> timeBankIdList = [];
-  List<TimebankModel> timeBankModelList = [];
-
-  await Firestore.instance
-      .collection('communities')
-      .document(communityId)
-      .get()
-      .then((DocumentSnapshot documentSnaphot) {
-    Map<String, dynamic> dataMap = documentSnaphot.data;
-    timeBankIdList = dataMap["timebanks"];
-  });
-
-  var comm = await getCommunityDetailsByCommunityId(communityId: communityId);
-
-  print(timeBankIdList);
-  for (int i = 0; i < timeBankIdList.length; i += 1) {
-    TimebankModel timeBankModel = await getTimeBankForId(
-      timebankId: timeBankIdList[i],
-    );
-    timeBankModelList.add(timeBankModel);
-    /*if(timeBankModel.members.contains(sevaUserId)){
-      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
-    } else if(timeBankModel.admins.contains(sevaUserId)){
-      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
-    }else{
-      timeBankModel.joinStatus=CompareToTimeBank.JOIN;
-    }*/
-
-  }
-  return timeBankModelList;
+  DocumentSnapshot documentSnaphot = await Firestore.instance.collection('communities').document(communityId).get();
+  var primaryTimebankId = documentSnaphot.data['primary_timebank'];
+  DocumentSnapshot timebankDoc = await Firestore.instance.collection('timebanknew').document(primaryTimebankId).get();
+  int totalCount = timebankDoc.data['members'].length + timebankDoc.data['admins'].length;
+  print("full counttttttttt " + totalCount.toString());
+  return totalCount;
 }
 
 /// Get all timebanknew associated with a User as a Stream_
 Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
   int totalCount = 0;
-  print("com id ----- ${communityId}");
-
-  List<TimebankModel> timeBankModelList =
-      await getMembersCount(communityId: communityId);
-  print("list is ----- ${timeBankModelList.length}");
-
-  timeBankModelList.forEach((timebankModel) {
-    totalCount += timebankModel.members.length;
-  });
-  print("count is ----- $totalCount");
-
+  totalCount = await getMembersCount(communityId: communityId);
+  print("totalCounttttttttttttt " + totalCount.toString());
   return totalCount;
 }
 
@@ -183,6 +152,46 @@ Stream<List<TimebankModel>> getTimebanksForAdmins(
         );
 
         timebankSink.add(modelList);
+      },
+    ),
+  );
+}
+
+Stream<List<CommunityModel>> getNearCommunitiesListStream(
+    {String radius}) async* {
+  // LocationData pos = await location.getLocation();
+  // double lat = pos.latitude;
+  // double lng = pos.longitude;
+  // Location location = new Location();
+  Geoflutterfire geo = Geoflutterfire();
+  Geolocator geolocator = Geolocator();
+  Position userLocation;
+  userLocation = await geolocator.getCurrentPosition();
+  double lat = userLocation.latitude;
+  double lng = userLocation.longitude;
+
+  GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
+  var query = Firestore.instance.collection('communities');
+  var data = geo
+      .collection(collectionRef: query)
+      .within(center: center, radius: 10, field: 'location', strictMode: true);
+  //print('near data ${data}');
+  yield* data.transform(
+    StreamTransformer<List<DocumentSnapshot>,
+        List<CommunityModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<CommunityModel> communityList = [];
+        snapshot.forEach(
+          (documentSnapshot) {
+            //   print('near data ${documentSnapshot.data}');
+
+            CommunityModel model = CommunityModel(documentSnapshot.data);
+            model.id = documentSnapshot.documentID;
+
+            communityList.add(model);
+          },
+        );
+        requestSink.add(communityList);
       },
     ),
   );
@@ -433,11 +442,12 @@ Stream<List<TimebankModel>> getChildTimebanks(
   );
 }
 
-Stream<List<prefix0.OfferModel>> getOffersApprovedByAdmin(
+Stream<List<prefix0.OfferModel>> getBookmarkedOffersByMember(
     {@required String sevaUserId}) async* {
   var data = Firestore.instance
       .collection('offers')
-      .where('offerAcceptors', arrayContains: sevaUserId)
+      .where('individualOfferDataModel.offerAcceptors',
+          arrayContains: sevaUserId)
       .snapshots();
 
   yield* data.transform(

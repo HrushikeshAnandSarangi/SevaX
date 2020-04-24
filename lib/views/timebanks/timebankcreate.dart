@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:developer';
 
@@ -5,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -59,15 +61,18 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   //
   // Note: This is a GlobalKey<FormState>, not a GlobalKey<NewsCreateFormState>!
   final _formKey = GlobalKey<FormState>();
-
+  var groupFound = false;
   TimebankModel timebankModel = TimebankModel({});
   bool protectedVal = false;
   GeoFirePoint location;
   String selectedAddress;
+  TextEditingController searchTextController = new TextEditingController();
+  String errTxt;
+  final _textUpdates = StreamController<String>();
 
   void initState() {
     super.initState();
-
+    var _searchText = "";
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
     globals.addedMembersFullname = [];
@@ -76,6 +81,35 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     if (FlavorConfig.appFlavor == Flavor.APP) {
       fetchCurrentlocation();
     }
+    // ignore: close_sinks
+    searchTextController
+        .addListener(() => _textUpdates.add(searchTextController.text));
+
+    Observable(_textUpdates.stream)
+        .debounceTime(Duration(milliseconds: 600))
+        .forEach((s) {
+      if (s.isEmpty) {
+        setState(() {
+          _searchText = "";
+        });
+      } else {
+        SearchManager.searchGroupForDuplicate(
+                queryString: s,
+                communityId: SevaCore.of(context).loggedInUser.currentCommunity)
+            .then((groupFound) {
+          if (groupFound) {
+            setState(() {
+              errTxt = 'Group name already exists';
+            });
+          } else {
+            setState(() {
+              groupFound = false;
+              errTxt = null;
+            });
+          }
+        });
+      }
+    });
   }
 
   HashMap<String, UserModel> selectedUsers = HashMap();
@@ -177,7 +211,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
+            controller: searchTextController,
+            onChanged: (value) {
+              print("groupname ------ $value");
+            },
             decoration: InputDecoration(
+              errorText: errTxt,
               hintText: "Ex: Pets-in-town, Citizen collab",
             ),
             keyboardType: TextInputType.multiline,
@@ -225,7 +264,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ],
           ),
           Text(
-            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled..',
+            'Protected groups are for political campaigns and certain nonprofits where user to user transactions are disabled.',
             style: TextStyle(
               fontSize: 12,
               color: Colors.grey,
@@ -280,7 +319,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
 //                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();
 //                            // return;
-//
                             try {
                               parentTimebank.children.add(timebankModel.id);
                             } catch (e) {
@@ -334,7 +372,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           padding: EdgeInsets.all(15.0),
         ),
         TextFormField(
+          controller: searchTextController,
           decoration: InputDecoration(
+            errorText: errTxt,
             hintText: FlavorConfig.values.timebankName == "Yang 2020"
                 ? "Yang Gang Chapter"
                 : "Timebank Name",
@@ -408,11 +448,13 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ),
             ),
           ),
-          keyboardType: TextInputType.multiline,
+          keyboardType: TextInputType.emailAddress,
           maxLines: 1,
           validator: (value) {
             if (value.isEmpty) {
-              return 'Please enter some text';
+              return 'Please enter email';
+            } else if (!validateEmail(value.trim())) {
+              return 'Please enter a valid email';
             }
             timebankModel.emailId = value;
           },
@@ -435,13 +477,15 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
               ),
             ),
           ),
-          keyboardType: TextInputType.multiline,
+          keyboardType: TextInputType.number,
           maxLines: 1,
+          maxLength: 15,
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter some text';
             }
-            timebankModel.phoneNumber = value;
+            timebankModel.phoneNumber = value.replaceAll('.', '');
+            print(timebankModel.phoneNumber.toString());
           },
         ),
         Text(''),
@@ -646,6 +690,19 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     }
   }
 
+  bool validateEmail(String value) {
+    String pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = new RegExp(pattern);
+    if (value.length == 0) {
+      return false;
+    } else if (!regExp.hasMatch(value)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Widget get tappableInviteMembers {
     return FlavorConfig.appFlavor == Flavor.APP
         ? GestureDetector(
@@ -709,5 +766,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         });
       });
     });
+  }
+
+  void dispose() {
+    super.dispose();
+    _textUpdates.close();
   }
 }

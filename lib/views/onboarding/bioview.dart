@@ -90,11 +90,11 @@ class _BioViewState extends State<BioView> {
                               maxLength: 150,
                               validator: (value) {
                                 if (value.trim().isEmpty) {
-                                  return 'Its easy, please fill few words about you.';
+                                  return 'It\'s easy, please fill few words about you.';
                                 }
                                 if (value.length < 50) {
                                   this.bio = value;
-                                  return '* min 50 characters';
+                                  return 'Min 50 characters *';
                                 }
                                 this.bio = value;
                               }),

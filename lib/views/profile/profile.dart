@@ -13,6 +13,7 @@ import 'package:sevaexchange/models/user_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/utils/animations/fade_route.dart';
+import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/user_profile_bloc.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/community/about_app.dart';
@@ -260,18 +261,35 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                             IconButton(
                               icon: Icon(Icons.add_circle_outline),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CreateEditCommunityView(
-                                      timebankId:
-                                          FlavorConfig.values.timebankId,
-                                      isFromFind: false,
-                                      isCreateTimebank: true,
+                              onPressed: () async {
+                                var timebankAdvisory =
+                                    "Are you sure you want to create a new Timebank - as opposed to joining an existing Timebank? Creating a new Timebank implies that you will be responsible for administering the Timebank - including adding members and managing members’ needs, timely replying to members questions, bringing about conflict resolutions, and hosting monthly potlucks, In order to become a member of an existing Timebank, you will need to know the name of the Timebank and either have an invitation code or submit a request to join the Timebank.";
+                                Map<String, bool> onActivityResult =
+                                    await showTimebankAdvisory(
+                                        dialogTitle: timebankAdvisory);
+                                if (onActivityResult['PROCEED']) {
+                                  print("YES PROCEED WITH TIMEBANK CREATION");
+                                  createEditCommunityBloc.updateUserDetails(
+                                      SevaCore.of(context).loggedInUser);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context1) => SevaCore(
+                                        loggedInUser:
+                                            SevaCore.of(context).loggedInUser,
+                                        child: CreateEditCommunityView(
+                                          isCreateTimebank: true,
+                                          timebankId:
+                                              FlavorConfig.values.timebankId,
+                                          isFromFind: false,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                );
+                                  );
+                                } else {
+                                  print(
+                                      "NO CANCEL MY PLAN OF CREATING A TIMEBANK");
+                                }
                               },
                             ),
                           ],
@@ -492,6 +510,59 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ),
     );
+  }
+
+  Future<Map> showTimebankAdvisory({String dialogTitle}) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext viewContext) {
+          return AlertDialog(
+//            title: Text(
+//              dialogTitle,
+//              style: TextStyle(
+//                fontSize: 16,
+//              ),
+//            ),
+            content: Form(
+              child: Container(
+                height: 200,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Text(
+                    dialogTitle,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(viewContext).pop({'PROCEED': false});
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  'Proceed',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {
+                  return Navigator.of(viewContext).pop({'PROCEED': true});
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Widget get getHelpSection {

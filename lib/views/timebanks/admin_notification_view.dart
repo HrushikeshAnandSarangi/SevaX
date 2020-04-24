@@ -1,14 +1,19 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:http/http.dart' as http;
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
+import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
@@ -19,6 +24,7 @@ import 'package:sevaexchange/views/messages/chatview.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
+import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AdminNotificationViewHolder extends StatefulWidget {
@@ -186,12 +192,55 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
               case NotificationType.RequestInvite:
                 return Text("NotificationType.RequestInvite");
                 break;
+
+              //One to many timebank notification
+
+              case NotificationType.TYPE_DEBIT_FULFILMENT_FROM_TIMEBANK:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+                return NotificationCard(
+                  title: "Debited",
+                  subTitle:
+                      TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
+                          .replaceFirst(
+                            '*n',
+                            (data.classDetails.numberOfClassHours +
+                                    data.classDetails.numberOfPreperationHours)
+                                .toString(),
+                          )
+                          .replaceFirst('*name', data.classDetails.classHost)
+                          .replaceFirst('*class', data.classDetails.classTitle),
+                  photoUrl: '',
+                  onDismissed: () {},
+                );
+                break;
+              case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
+                OneToManyNotificationDataModel data =
+                    OneToManyNotificationDataModel.fromJson(notification.data);
+                return NotificationCard(
+                  title: "Credited",
+                  subTitle: TimebankNotificationMessage
+                      .CREDIT_FROM_OFFER_APPROVED
+                      .replaceFirst(
+                          '*n', data.classDetails.numberOfClassHours.toString())
+                      .replaceFirst('*class', data.classDetails.classTitle),
+                  photoUrl: '',
+                  onDismissed: () {},
+                );
+                break;
+
+              default:
+                log("Unhandled timebank notification type ${notification.type} ${notification.id}");
+                Crashlytics().log(
+                    "Unhandled timebank notification type ${notification.type} ${notification.id}");
+                return Container(
+                    // child: Text(
+                    //   "Unhandled notification type ${notification.type} ${notification.id}",
+                    // ),
+                    // color: Colors.red,
+                    );
+                break;
             }
-            return Container(
-              color: Colors.yellow,
-              width: 50,
-              height: 30,
-            );
           },
         );
       },
@@ -499,7 +548,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                               children: [
                                 TextSpan(
                                   text:
-                                      '${user.fullname} sent request for your offer: ${offermodel.title} ',
+                                      '${user.fullname} sent request for your offer: ${getOfferTitle(offerDataModel: offermodel)} ',
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontFamily: 'Europa',
@@ -554,8 +603,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   }) async {
     Map results = await Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return ReviewFeedback.forVolunteer(
-          forVolunteer: true,
+        return ReviewFeedback(
+          feedbackType: FeedbackType.FOR_REQUEST_VOLUNTEER,
         );
       },
     ));
@@ -1425,8 +1474,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       notificationId: notificationId,
       communityId: SevaCore.of(context).loggedInUser.currentCommunity,
     );
-
-    
   }
 
   Future<void> approveMemberForVolunteerRequest({

@@ -3,21 +3,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
-import 'package:location/location.dart' as prefix1;
 import 'package:sevaexchange/components/location_picker.dart';
-
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
-import 'package:sevaexchange/main.dart' as prefix0;
+import 'package:sevaexchange/flavor_config.dart';
+import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
-
-import '../../main.dart';
 
 class NewsEdit extends StatelessWidget {
   final GlobalKey<NewsEditFormState> _formState = GlobalKey();

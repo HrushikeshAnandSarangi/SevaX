@@ -14,13 +14,12 @@ class InterestViewNew extends StatefulWidget {
   final StringListCallback onSelectedInterests;
   final bool automaticallyImplyLeading;
 
-  InterestViewNew({
-    @required this.onSelectedInterests,
-    @required this.onSkipped,
-    this.onBacked,
-    this.userModel,
-    this.automaticallyImplyLeading
-  });
+  InterestViewNew(
+      {@required this.onSelectedInterests,
+      @required this.onSkipped,
+      this.onBacked,
+      this.userModel,
+      this.automaticallyImplyLeading});
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
 }
@@ -31,9 +30,12 @@ class _InterestViewNewState extends State<InterestViewNew> {
 
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
+  bool isDataLoaded = false;
 
   @override
   void initState() {
+    print("inside interestsview init state");
+
     Firestore.instance
         .collection('interests')
         .getDocuments()
@@ -44,6 +46,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
       widget.userModel.interests.forEach((id) {
         _selectedInterests[id] = interests[id];
       });
+      isDataLoaded = true;
+
       setState(() {});
     });
     super.initState();
@@ -54,7 +58,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
-        leading : widget.automaticallyImplyLeading ? null : BackButton(onPressed: widget.onBacked,),
+        leading: widget.automaticallyImplyLeading
+            ? null
+            : BackButton(
+                onPressed: widget.onBacked,
+              ),
         title: Text(
           'Interests',
           style: TextStyle(
@@ -156,29 +164,33 @@ class _InterestViewNewState extends State<InterestViewNew> {
               },
             ),
             SizedBox(height: 20),
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Wrap(
-                  runSpacing: 5.0,
-                  spacing: 5.0,
-                  children: _selectedInterests.values
-                      .toList()
-                      .map(
-                        (value) => CustomChip(
-                          title: value,
-                          onDelete: () {
-                            String id = interests.keys
-                                .firstWhere((k) => interests[k] == value);
-                            _selectedInterests.remove(id);
-                            setState(() {});
-                          },
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
+            isDataLoaded
+                ? ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Wrap(
+                        runSpacing: 5.0,
+                        spacing: 5.0,
+                        children: _selectedInterests.values
+                            .toList()
+                            .map(
+                              (value) => CustomChip(
+                                title: value,
+                                onDelete: () {
+                                  String id = interests.keys
+                                      .firstWhere((k) => interests[k] == value);
+                                  _selectedInterests.remove(id);
+                                  setState(() {});
+                                },
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  )
+                : Center(
+                    child: CircularProgressIndicator(),
+                  ),
             Spacer(),
             SizedBox(
               width: 134,
@@ -189,26 +201,42 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   widget.onSelectedInterests(selectedID);
                 },
                 child: Text(
-                  widget.userModel.interests == null ? 'Next' : 'Update',
+                  widget.userModel.interests == null ||
+                          widget.userModel.interests.length == 0
+                      ? 'Next'
+                      : 'Update',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
             ),
-            widget.userModel.interests == null
-                ? FlatButton(
-                    onPressed: () {
-                      widget.onSkipped();
-                    },
-                    child: Text(
-                      AppConfig.prefs.getBool(AppConfig.skip_interest) == null
-                          ? 'Skip'
-                          : 'Cancel',
-                      style: TextStyle(
-                        color: Theme.of(context).accentColor,
-                      ),
-                    ),
-                  )
-                : Container(),
+//            widget.userModel.interests == null
+//                ? FlatButton(
+//                    onPressed: () {
+//                      widget.onSkipped();
+//                    },
+//                    child: Text(
+//                      AppConfig.prefs.getBool(AppConfig.skip_interest) == null
+//                          ? 'Skip'
+//                          : 'Cancel',
+//                      style: TextStyle(
+//                        color: Theme.of(context).accentColor,
+//                      ),
+//                    ),
+//                  )
+//                : Container(),
+            FlatButton(
+              onPressed: () {
+                widget.onSkipped();
+              },
+              child: Text(
+                AppConfig.prefs.getBool(AppConfig.skip_interest) == null
+                    ? 'Skip'
+                    : 'Cancel',
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+            ),
             SizedBox(height: 20),
           ],
         ),

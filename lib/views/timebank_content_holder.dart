@@ -172,7 +172,7 @@ Widget createAdminTabBar(
                 text: "About",
               ),
               Tab(
-                text: "Accepted Offers",
+                text: "Bookmarked Offers",
               ),
               Tab(
                 text: "Members",
@@ -192,6 +192,7 @@ Widget createAdminTabBar(
             child: TabBarView(
               children: [
                 DiscussionList(
+                  timebankModel: timebankModel,
                   timebankId: timebankId,
                 ),
                 TimeBankProjectsView(
@@ -371,7 +372,7 @@ Widget createJoinedUserTabBar(
                 text: "About",
               ),
               Tab(
-                text: "Accepted Offers",
+                text: "Bookmarked Offers",
               ),
               Tab(
                 text: "Members",
@@ -382,6 +383,7 @@ Widget createJoinedUserTabBar(
             child: TabBarView(
               children: [
                 DiscussionList(
+                  timebankModel: timebankModel,
                   timebankId: timebankId,
                 ),
                 TimeBankProjectsView(
@@ -479,7 +481,8 @@ AboutUserRole determineUserRoleInAbout(
 class DiscussionList extends StatefulWidget {
   final String loggedInUser;
   final String timebankId;
-  DiscussionList({this.timebankId, this.loggedInUser});
+  final TimebankModel timebankModel;
+  DiscussionList({this.timebankId, this.loggedInUser, this.timebankModel});
   @override
   DiscussionListState createState() {
     return DiscussionListState();
@@ -491,6 +494,9 @@ class DiscussionListState extends State<DiscussionList> {
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
+  String pinnedNewsId = '';
+  bool isPinned = false;
+  NewsModel pinnedNewsModel;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -616,9 +622,24 @@ class DiscussionListState extends State<DiscussionList> {
                       break;
                     default:
                       List<NewsModel> newsList = snapshot.data;
-
+                      print('latest feeds ${newsList}');
                       newsList = filterBlockedContent(newsList, context);
+                      newsList = filterPinnedNews(newsList, context);
+
                       print("Size of incloming docs ${newsList.length}");
+                      if (newsList.length == 1 &&
+                          newsList[0].isPinned == true) {
+                        return Expanded(
+                          child: ListView(
+                            children: <Widget>[
+                              getNewsCard(
+                                newsList.elementAt(0),
+                                false,
+                              )
+                            ],
+                          ),
+                        );
+                      }
                       if (newsList.length == 0) {
                         return Padding(
                           padding: const EdgeInsets.all(28.0),
@@ -626,39 +647,45 @@ class DiscussionListState extends State<DiscussionList> {
                         );
                       }
                       return Expanded(
-                        child: ListView.builder(
-                          itemCount: newsList.length + 1,
-                          itemBuilder: (context, index) {
-                            if (index >= newsList.length) {
-                              return Container(
-                                width: double.infinity,
-                                height: 20,
-                              );
-                            }
+                        child: ListView(
+                          children: <Widget>[
+                            isPinned
+                                ? getNewsCard(
+                                    pinnedNewsModel,
+                                    false,
+                                  )
+                                : Offstage(),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: newsList.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index >= newsList.length) {
+                                  return Container(
+                                    width: double.infinity,
+                                    height: 20,
+                                  );
+                                }
 
-                            if (newsList.elementAt(index).reports.length > 2) {
-                              return Offstage();
-                            } else {
-                              if (index == 0) {
-                                return Column(
-                                  children: <Widget>[
-                                    // getCreateFeedCard(
-                                    //   news: newsList.elementAt(index),
-                                    // ),
-                                    getNewsCard(
+                                if (newsList.elementAt(index).reports.length >
+                                    2) {
+                                  return Offstage();
+                                } else {
+                                  if (index == 0) {
+                                    return getNewsCard(
                                       newsList.elementAt(index),
                                       false,
-                                    )
-                                  ],
-                                );
-                              } else {
-                                return getNewsCard(
-                                  newsList.elementAt(index),
-                                  false,
-                                );
-                              }
-                            }
-                          },
+                                    );
+                                  } else {
+                                    return getNewsCard(
+                                      newsList.elementAt(index),
+                                      false,
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       );
                   }
@@ -678,7 +705,20 @@ class DiscussionListState extends State<DiscussionList> {
                         default:
                           List<NewsModel> newsList = snapshot.data;
                           newsList = filterBlockedContent(newsList, context);
-
+                          newsList = filterPinnedNews(newsList, context);
+                          if (newsList.length == 1 &&
+                              newsList[0].isPinned == true) {
+                            return Expanded(
+                              child: ListView(
+                                children: <Widget>[
+                                  getNewsCard(
+                                    newsList.elementAt(0),
+                                    false,
+                                  )
+                                ],
+                              ),
+                            );
+                          }
                           if (newsList.length == 0) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -686,12 +726,23 @@ class DiscussionListState extends State<DiscussionList> {
                             );
                           }
                           return Expanded(
-                            child: ListView.builder(
-                              itemCount: newsList.length,
-                              itemBuilder: (context, index) {
-                                return getNewsCard(
-                                    newsList.elementAt(index), false);
-                              },
+                            child: ListView(
+                              children: <Widget>[
+                                isPinned
+                                    ? getNewsCard(
+                                        pinnedNewsModel,
+                                        false,
+                                      )
+                                    : Offstage(),
+                                ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: newsList.length,
+                                  itemBuilder: (context, index) {
+                                    return getNewsCard(
+                                        newsList.elementAt(index), false);
+                                  },
+                                ),
+                              ],
                             ),
                           );
                       }
@@ -710,7 +761,11 @@ class DiscussionListState extends State<DiscussionList> {
                                 'Please make sure you have GPS turned on.');
                           switch (snapshot.connectionState) {
                             case ConnectionState.waiting:
-                              return Center(child: CircularProgressIndicator());
+                              return Container(
+                                padding: EdgeInsets.only(
+                                    top: MediaQuery.of(context).size.height / 3),
+                                child: Center(child: CircularProgressIndicator()),
+                              );
                               break;
                             default:
                               List<NewsModel> newsList = snapshot.data;
@@ -719,7 +774,20 @@ class DiscussionListState extends State<DiscussionList> {
                                   "News list from near me ${newsList.length}");
                               newsList =
                                   filterBlockedContent(newsList, context);
-
+                              newsList = filterPinnedNews(newsList, context);
+                              if (newsList.length == 1 &&
+                                  newsList[0].isPinned == true) {
+                                return Expanded(
+                                  child: ListView(
+                                    children: <Widget>[
+                                      getNewsCard(
+                                        newsList.elementAt(0),
+                                        false,
+                                      )
+                                    ],
+                                  ),
+                                );
+                              }
                               if (newsList.length == 0) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -728,12 +796,24 @@ class DiscussionListState extends State<DiscussionList> {
                                 );
                               }
                               return Expanded(
-                                child: ListView.builder(
-                                  itemCount: newsList.length,
-                                  itemBuilder: (context, index) {
-                                    return getNewsCard(
-                                        newsList.elementAt(index), false);
-                                  },
+                                child: ListView(
+                                  children: <Widget>[
+                                    isPinned
+                                        ? getNewsCard(
+                                            pinnedNewsModel,
+                                            false,
+                                          )
+                                        : Offstage(),
+                                    ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: newsList.length,
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return getNewsCard(
+                                            newsList.elementAt(index), false);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               );
                           }
@@ -755,7 +835,21 @@ class DiscussionListState extends State<DiscussionList> {
                                   List<NewsModel> newsList = snapshot.data;
                                   newsList =
                                       filterBlockedContent(newsList, context);
-
+                                  newsList =
+                                      filterPinnedNews(newsList, context);
+                                  if (newsList.length == 1 &&
+                                      newsList[0].isPinned == true) {
+                                    return Expanded(
+                                      child: ListView(
+                                        children: <Widget>[
+                                          getNewsCard(
+                                            newsList.elementAt(0),
+                                            false,
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }
                                   if (newsList.length == 0) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -764,12 +858,25 @@ class DiscussionListState extends State<DiscussionList> {
                                     );
                                   }
                                   return Expanded(
-                                    child: ListView.builder(
-                                      itemCount: newsList.length,
-                                      itemBuilder: (context, index) {
-                                        return getNewsCard(
-                                            newsList.elementAt(index), false);
-                                      },
+                                    child: ListView(
+                                      children: <Widget>[
+                                        isPinned
+                                            ? getNewsCard(
+                                                pinnedNewsModel,
+                                                false,
+                                              )
+                                            : Offstage(),
+                                        ListView.builder(
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemCount: newsList.length,
+                                          itemBuilder: (context, index) {
+                                            return getNewsCard(
+                                                newsList.elementAt(index),
+                                                false);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   );
                               }
@@ -825,7 +932,7 @@ class DiscussionListState extends State<DiscussionList> {
               //       ),
               //     );
               //   }
-              //these 
+              //these
               // },
               child: GestureDetector(
                 onTap: () {
@@ -876,6 +983,48 @@ class DiscussionListState extends State<DiscussionList> {
       style: TextStyle(fontSize: 10.0),
     ),
   };
+  List<NewsModel> filterPinnedNews(
+      List<NewsModel> newsList, BuildContext context) {
+    List<NewsModel> filteredNewsList = [];
+    filteredNewsList = newsList;
+    filteredNewsList.forEach((newsModel) {
+      if (newsModel.isPinned == true) {
+        pinnedNewsModel = newsModel;
+        isPinned = true;
+      }
+    });
+
+    // print('pinned news ${pinnedNewsModel}');
+    if (filteredNewsList.length > 1) {
+      filteredNewsList.removeWhere((news) => news.isPinned == true);
+    }
+    // print('filtered news ${filteredNewsList}');
+
+    return filteredNewsList;
+  }
+
+  void _showAdminAccessMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Access denied."),
+          content: new Text("You are not authorized to pin a feed."),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   List<NewsModel> filterBlockedContent(
       List<NewsModel> newsList, BuildContext context) {
@@ -930,6 +1079,7 @@ class DiscussionListState extends State<DiscussionList> {
                       padding: const EdgeInsets.only(
                           left: 12.0, top: 15, bottom: 15),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Expanded(
                             child: Column(
@@ -972,7 +1122,37 @@ class DiscussionListState extends State<DiscussionList> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 8.0),
+                          //  SizedBox(width: 8.0),
+                          widget.timebankModel.admins.contains(
+                                  SevaCore.of(context).loggedInUser.sevaUserID)
+                              ? getOptionButtons(
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    child: Container(
+//                                      color: news.isPinned
+//                                          ? Colors.green
+//                                          : Colors.black,
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset(
+                                        'lib/assets/images/pin.png',
+                                        color: news.isPinned
+                                            ? Colors.green
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  () {
+                                    news.isPinned
+                                        ? unPinFeed(newsModel: news)
+                                        : pinNews(
+                                            newsModel: news,
+                                          );
+                                    setState(() {});
+                                  },
+                                )
+                              : Offstage(),
                         ],
                       ),
                     ),
@@ -1345,7 +1525,7 @@ class DiscussionListState extends State<DiscussionList> {
                                     FirestoreManager.updateNews(
                                         newsObject: news);
                                   },
-                                )
+                                ),
                               ],
                             )
                           : Center(),
@@ -1460,6 +1640,24 @@ class DiscussionListState extends State<DiscussionList> {
               backgroundColor: chipColor,
             ),
           );
+  }
+
+  void pinNews({NewsModel newsModel}) async {
+    if (pinnedNewsModel != null && isPinned == true) {
+      unPinFeed(newsModel: pinnedNewsModel);
+    }
+    newsModel.isPinned = true;
+    await FirestoreManager.updateNews(newsObject: newsModel);
+  }
+
+  void unPinFeed({NewsModel newsModel}) async {
+    newsModel.isPinned = false;
+    await FirestoreManager.updateNews(newsObject: newsModel);
+
+    setState(() {
+      pinnedNewsModel = null;
+      isPinned = false;
+    });
   }
 
   void loadTimebankForId(
