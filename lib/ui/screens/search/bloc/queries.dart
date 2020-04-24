@@ -160,24 +160,55 @@ class Searches {
           "bool": {
             "must": [
               {
-                "match": {
+                "term": {
                   "root_timebank_id": "${FlavorConfig.values.timebankId}"
                 }
               },
               {
-                "terms": {"timebankId.keyword": myTimebanks}
+                "terms": {
+                  "timebankId.keyword": myTimebanks
+                }
               },
               {
-                "multi_match": {
-                  "query": "$queryString",
-                  "fields": ["description", "email", "fullname", "title"],
-                  "type": "phrase_prefix"
+                "bool": {
+                  "should": [
+                    {
+                      "nested": {
+                        "path": "indivisualOfferDataModel",
+                        "query": {
+                          "bool": {
+                            "should": {
+                              "multi_match": {
+                                "query": queryString.toString(),
+                                "fields": [
+                                  "indivisualOfferDataModel.description",
+                                  "indivisualOfferDataModel.title"
+                                ],
+                                "type": "phrase_prefix"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "multi_match": {
+                        "query": queryString.toString(),
+                        "fields": [
+                          "email",
+                          "fullname",
+                          "selectedAdrress"
+                        ],
+                        "type": "phrase_prefix"
+                      }
+                    }
+                  ]
                 }
               }
             ]
           }
         }
-      },
+      }
     );
 
     List<Map<String, dynamic>> hitList =
