@@ -629,7 +629,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                     TimebankModel parentTimebank = snapshot.data;
                     return RaisedButton(
                       // color: Colors.blue,
-                      color: Colors.red,
+                      color: FlavorConfig.values.theme.primaryColor,
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           // If the form is valid, we want to show a Snackbar
@@ -646,10 +646,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                         }
                       },
                       child: Text(
-                        'Create ${FlavorConfig.values.timebankTitle}',
+                        'Create Group',
                         style: TextStyle(fontSize: 16.0, color: Colors.white),
                       ),
-                      textColor: Colors.blue,
                     );
                   })),
         ),

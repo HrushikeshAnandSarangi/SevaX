@@ -51,8 +51,16 @@ class RequestsState extends State<RequestsModule> {
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
+  var i_buttonInfo;
   String description =
       'Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.';
+  @override
+  void initState() {
+    i_buttonInfo =
+        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
+
+    super.initState();
+  }
 
   final Map<int, Widget> logoWidgets = const <int, Widget>{
     0: Text(
@@ -114,10 +122,17 @@ class RequestsState extends State<RequestsModule> {
                                   height: 16,
                                   width: 16,
                                 ),
-                                tooltip: description,
+                                tooltip: i_buttonInfo['requestsInfo'] != null
+                                    ? i_buttonInfo['requestsInfo'] ??
+                                        description
+                                    : description,
                                 onPressed: () {
                                   showInfoOfConcept(
-                                      dialogTitle: description,
+                                      dialogTitle:
+                                          i_buttonInfo['requestsInfo'] != null
+                                              ? i_buttonInfo['requestsInfo'] ??
+                                                  description
+                                              : description,
                                       mContext: context);
                                 },
                               ),
@@ -130,14 +145,12 @@ class RequestsState extends State<RequestsModule> {
                           : TransactionLimitCheck(
                               child: GestureDetector(
                                 child: Container(
-                                  margin: EdgeInsets.only(left: 8),
-                                  child: CircleAvatar(
-                                    backgroundColor: Colors.white,
-                                    radius: 10,
-                                    child: Image.asset(
-                                        "lib/assets/images/add.png"),
-                                  ),
-                                ),
+                                    margin: EdgeInsets.only(left: 0),
+                                    child: Icon(
+                                      Icons.add_circle,
+                                      color: FlavorConfig
+                                          .values.theme.primaryColor,
+                                    )),
                                 onTap: () {
                                   if (widget.timebankModel.protected) {
                                     if (widget.timebankModel.admins.contains(
@@ -170,16 +183,43 @@ class RequestsState extends State<RequestsModule> {
                                 },
                               ),
                             ),
-                      IconButton(
-                        icon: Icon(Icons.help_outline),
-                        color: FlavorConfig.values.theme.primaryColor,
-                        iconSize: 24,
-                        onPressed: showRequestsWebPage,
-                      ),
                     ],
                   ),
                 ),
+                IconButton(
+                  icon: Image.asset(
+                    'lib/assets/images/help.png',
+                  ),
+                  color: FlavorConfig.values.theme.primaryColor,
+                  iconSize: 24,
+                  onPressed: showRequestsWebPage,
+                ),
+                Container(
+                  width: 120,
+                  child: CupertinoSegmentedControl<int>(
+                    selectedColor: Theme.of(context).primaryColor,
+                    children: logoWidgets,
+                    borderColor: Colors.grey,
 
+                    padding: EdgeInsets.only(left: 0, right: 5.0),
+                    groupValue: sharedValue,
+                    onValueChanged: (int val) {
+                      print(val);
+                      if (val != sharedValue) {
+                        setState(() {
+                          if (isNearme == true)
+                            isNearme = false;
+                          else
+                            isNearme = true;
+                        });
+                        setState(() {
+                          sharedValue = val;
+                        });
+                      }
+                    },
+                    //groupValue: sharedValue,
+                  ),
+                ),
                 // Offstage(
                 //   offstage: true,
                 //   child: StreamBuilder<Object>(
@@ -287,32 +327,6 @@ class RequestsState extends State<RequestsModule> {
                 //       }),
                 // ),
 
-                Container(
-                  width: 120,
-                  child: CupertinoSegmentedControl<int>(
-                    selectedColor: Theme.of(context).primaryColor,
-                    children: logoWidgets,
-                    borderColor: Colors.grey,
-
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    groupValue: sharedValue,
-                    onValueChanged: (int val) {
-                      print(val);
-                      if (val != sharedValue) {
-                        setState(() {
-                          if (isNearme == true)
-                            isNearme = false;
-                          else
-                            isNearme = true;
-                        });
-                        setState(() {
-                          sharedValue = val;
-                        });
-                      }
-                    },
-                    //groupValue: sharedValue,
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(right: 5),
                 ),

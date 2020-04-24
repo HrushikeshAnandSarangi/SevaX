@@ -57,7 +57,7 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (_) {
-      // Crashlytics.instance.enableInDevMode = true;
+      Crashlytics.instance.enableInDevMode = true;
       FlutterError.onError = Crashlytics.instance.recordFlutterError;
       runApp(MainApplication());
       // runZoned(() {

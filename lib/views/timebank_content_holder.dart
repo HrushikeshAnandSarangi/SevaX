@@ -4,11 +4,11 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/news_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/offer_router.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
@@ -27,7 +27,6 @@ import 'package:sevaexchange/views/timebanks/timbank_admin_request_list.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view.dart';
 import 'package:sevaexchange/views/timebanks/timebank_view_latest.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 import 'package:sevaexchange/widgets/timebank_notification_badge.dart';
 import 'package:timeago/timeago.dart' as timeAgo;
 
@@ -136,7 +135,7 @@ Widget createAdminTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 10,
+    length: 9,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -171,9 +170,9 @@ Widget createAdminTabBar(
               Tab(
                 text: "About",
               ),
-              Tab(
-                text: "Bookmarked Offers",
-              ),
+              // Tab(
+              //   text: "Bookmarked Offers",
+              // ),
               Tab(
                 text: "Members",
               ),
@@ -204,7 +203,7 @@ Widget createAdminTabBar(
                   timebankModel: timebankModel,
                   isFromSettings: false,
                 ),
-                OffersModule.of(
+                OfferRouter(
                   timebankId: timebankId,
                   timebankModel: timebankModel,
                 ),
@@ -212,10 +211,10 @@ Widget createAdminTabBar(
                   timebankModel: timebankModel,
                   email: SevaCore.of(context).loggedInUser.email,
                 ),
-                AcceptedOffers(
-                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  timebankId: timebankModel.id,
-                ),
+                // AcceptedOffers(
+                //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                //   timebankId: timebankModel.id,
+                // ),
                 TimebankRequestAdminPage(
                   isUserAdmin: timebankModel.admins
                       .contains(SevaCore.of(context).loggedInUser.sevaUserID),
@@ -310,7 +309,7 @@ Widget createJoinedUserTabBar(
   String timebankId,
 ) {
   return DefaultTabController(
-    length: 7,
+    length: 6,
     child: Scaffold(
       appBar: AppBar(
         elevation: 0.5,
@@ -371,9 +370,9 @@ Widget createJoinedUserTabBar(
               Tab(
                 text: "About",
               ),
-              Tab(
-                text: "Bookmarked Offers",
-              ),
+              // Tab(
+              //   text: "Bookmarked Offers",
+              // ),
               Tab(
                 text: "Members",
               ),
@@ -395,7 +394,7 @@ Widget createJoinedUserTabBar(
                   timebankModel: timebankModel,
                   isFromSettings: false,
                 ),
-                OffersModule.of(
+                OfferRouter(
                   timebankId: timebankId,
                   timebankModel: timebankModel,
                 ),
@@ -403,10 +402,10 @@ Widget createJoinedUserTabBar(
                   timebankModel: timebankModel,
                   email: SevaCore.of(context).loggedInUser.email,
                 ),
-                AcceptedOffers(
-                  sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-                  timebankId: timebankModel.id,
-                ),
+                // AcceptedOffers(
+                //   sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+                //   timebankId: timebankModel.id,
+                // ),
                 TimebankRequestAdminPage(
                   isUserAdmin: timebankModel.admins.contains(
                     SevaCore.of(context).loggedInUser.sevaUserID,
@@ -763,8 +762,10 @@ class DiscussionListState extends State<DiscussionList> {
                             case ConnectionState.waiting:
                               return Container(
                                 padding: EdgeInsets.only(
-                                    top: MediaQuery.of(context).size.height / 3),
-                                child: Center(child: CircularProgressIndicator()),
+                                    top:
+                                        MediaQuery.of(context).size.height / 3),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
                               );
                               break;
                             default:
@@ -1300,12 +1301,9 @@ class DiscussionListState extends State<DiscussionList> {
                                                     Icons.flag,
                                                     size: 20,
                                                   )
-                                                : SvgPicture.asset(
-                                                    'lib/assets/tulsi_icons/tulsi2020_icons_share-icon.svg',
-                                                    height: 20,
-                                                    width: 20,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
+                                                : Icon(
+                                                    Icons.flag,
+                                                    size: 20,
                                                   ),
                                           ),
                                           () {

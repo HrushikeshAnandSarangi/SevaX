@@ -31,7 +31,7 @@ class OfferEarnings extends StatelessWidget {
             DateTime _endTime = DateTime.fromMillisecondsSinceEpoch(
               offerModel.groupOfferDataModel.endDate,
             );
-            Duration _durationLeft = _endTime.difference(DateTime.now());
+            // Duration _durationLeft = _endTime.difference(DateTime.now());
             bool _isOfferOver = DateTime.now().isAfter(_endTime);
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,10 +52,10 @@ class OfferEarnings extends StatelessWidget {
                       title: 'Timebank earnings',
                       amount: offerModel.groupOfferDataModel.creditStatus == 1
                           ? (offerModel.groupOfferDataModel.creditsApproved -
-                                  offerModel
-                                      .groupOfferDataModel.numberOfClassHours +
-                                  offerModel.groupOfferDataModel
-                                      .numberOfPreperationHours)
+                                  (offerModel.groupOfferDataModel
+                                          .numberOfClassHours +
+                                      offerModel.groupOfferDataModel
+                                          .numberOfPreperationHours))
                               .toString()
                           : '0',
                     ),

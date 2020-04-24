@@ -98,7 +98,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                         textAlign: TextAlign.center,
                       ),
                     )),
-                placeholder: (conext, url) {
+                placeholder: (context, url) {
                   return Center(child: CircularProgressIndicator());
                 },
               ),
@@ -137,10 +137,10 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
               ),
             ),
             TimeBankSevaCoin(
-                isAdmin: !widget.timebankModel.admins.contains(SevaCore.of(context).loggedInUser.sevaUserID),
-                loggedInUser:SevaCore.of(context).loggedInUser,
-                timebankData: widget.timebankModel
-          ),
+                isAdmin: !widget.timebankModel.admins
+                    .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                loggedInUser: SevaCore.of(context).loggedInUser,
+                timebankData: widget.timebankModel),
             SizedBox(
               height: 15,
             ),
