@@ -678,33 +678,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   }
 
   bool hasSufficientBalance() {
-    if (requestModel.requestStart == null) {
-      requestModel.requestStart = DateTime.now().millisecondsSinceEpoch;
-    }
-
-    if (requestModel.requestEnd == null) {
-      requestModel.requestEnd = DateTime.now().millisecondsSinceEpoch;
-    }
-//    print("Project id : ${widget.projectId}");
-//    if (widget.projectId != null && widget.projectId.isNotEmpty) {
-//      requestModel.requestMode = RequestMode.TIMEBANK_REQUEST;
-//      print("Inside yes");
-//      return true;
-//    }
-
-    print(getTimeInFormat(requestModel.requestStart) +
-        " <- Start   -> End " +
-        getTimeInFormat(requestModel.requestEnd));
-
-    var diffDate = DateTime.fromMillisecondsSinceEpoch(requestModel.requestEnd)
-        .difference(
-            DateTime.fromMillisecondsSinceEpoch(requestModel.requestStart));
     var requestCoins = requestModel.numberOfHours;
-    print("Hours:${diffDate.inHours} --> " +
-        requestModel.numberOfApprovals.toString());
     print("Number of Seva Credits:${requestCoins}");
     print("Seva coin available:${sevaCoinsValue}");
-
     var lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
 
