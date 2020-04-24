@@ -300,19 +300,25 @@ class CreateEditCommunityViewFormState
 //                    },
                     controller: searchTextController,
                     onChanged: (value) {
-                      enteredName = value;
-                      print("name ------ $value");
-                      communityModel.name = value;
-                      timebankModel.name = value;
+                      enteredName = value.replaceAll("[^a-zA-Z0-9]+", "");
+
+                      print(
+                          "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9]+", "")}");
+                      communityModel.name =
+                          value.replaceAll("[^a-zA-Z0-9]", "");
+
+                      timebankModel.name = value.replaceAll("[^a-zA-Z0-9]", "");
                     },
                     decoration: InputDecoration(
                       errorText: errTxt,
                       hintText: "Ex: Pets-in-town, Citizen collab",
                     ),
-                    keyboardType: TextInputType.multiline,
+                    keyboardType: TextInputType.text,
+                    autocorrect: true,
+
                     maxLines: 1,
                     onSaved: (value) {
-                      enteredName = value;
+                      enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
                     },
                     // onSaved: (value) => enteredName = value,
                     validator: (value) {
@@ -321,8 +327,10 @@ class CreateEditCommunityViewFormState
                       } else if (communityFound) {
                         return 'Timebank name already exist';
                       } else {
-                        enteredName = value;
-                        snapshot.data.community.updateValueByKey('name', value);
+                        enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
+                        ;
+                        snapshot.data.community.updateValueByKey(
+                            'name', value.replaceAll("[^a-zA-Z0-9]", ""));
                         createEditCommunityBloc.onChange(snapshot.data);
                       }
 
