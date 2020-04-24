@@ -879,7 +879,6 @@ class NotificationsView extends State<NotificationViewHolder> {
                 var canApproveTransaction =
                     await FirestoreManager.hasSufficientCredits(
                   credits: transactionModel.credits,
-                  userEmail: SevaCore.of(context).loggedInUser.email,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                 );
                 Navigator.pop(linearProgressForBalanceCheck);

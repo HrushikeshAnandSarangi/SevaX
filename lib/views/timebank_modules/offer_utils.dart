@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/ui/screens/offers/widgets/custom_dialog.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
+import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 
 import '../core.dart';
 
@@ -86,7 +87,13 @@ Future<bool> offerActions(BuildContext context, OfferModel model) async {
 
   if (model.offerType == OfferType.GROUP_OFFER && !_isParticipant) {
     //Check balance here
-    if (true) {
+    var hasSufficientCredits = await FirestoreManager.hasSufficientCredits(
+      credits: model.groupOfferDataModel.numberOfClassHours.toDouble(),
+      userId: _userId,
+    );
+    print("----------------" + hasSufficientCredits.toString());
+
+    if (hasSufficientCredits) {
       await confirmationDialog(
         context: context,
         title:
