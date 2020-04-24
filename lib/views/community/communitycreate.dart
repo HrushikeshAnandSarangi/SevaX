@@ -411,7 +411,11 @@ class CreateEditCommunityViewFormState
                       Padding(
                         padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
                         child: Tooltip(
-                            message: description,
+                            message:
+                                i_buttonInfo['protectedTimebankInfo'] != null
+                                    ? i_buttonInfo['protectedTimebankInfo'] ??
+                                        description
+                                    : description,
                             child: IconButton(
                                 onPressed: () {
                                   showInfoOfConcept(
@@ -494,7 +498,9 @@ class CreateEditCommunityViewFormState
                                   : taxDescription,
                               mContext: context);
                         },
-                        tooltip: taxDescription,
+                        tooltip: i_buttonInfo['taxInfo'] != null
+                            ? i_buttonInfo['taxInfo'] ?? taxDescription
+                            : taxDescription,
                         icon: Icon(
                           Icons.info_outline,
                           size: 20,
