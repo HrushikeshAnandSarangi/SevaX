@@ -553,7 +553,7 @@ Future<void> approveRequestCompletion({
             : updatedRequestModel.toMap(),
         merge: true,
       );
-  transactionBloc.updateNewTransaction(editedTransaction.from, editedTransaction.to,  editedTransaction.timestamp, editedTransaction.credits, editedTransaction.isApproved, model.requestMode, model.id,model.timebankId, false);
+  transactionBloc.updateNewTransaction(model.requestMode == RequestMode.PERSONAL_REQUEST ? editedTransaction.from: editedTransaction.timestamp, editedTransaction.to,  editedTransaction.timestamp, editedTransaction.credits, editedTransaction.isApproved, model.requestMode, model.id,model.timebankId, false);
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
@@ -894,6 +894,63 @@ Stream<List<RequestModel>> getCompletedRequestStream({
           });
 
           if (isRequestCompleted) requestList.add(model);
+        });
+        requestSink.add(requestList);
+
+        print("request model --->>> ${requestList.toString()}");
+      },
+    ),
+  );
+}
+
+
+Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
+  @required String timebankid,
+  @required String userId,
+}) async* {
+  var data = Firestore.instance
+      .collection('transactions')
+      .where('transactionbetween', arrayContains: timebankid)
+      .where("isApproved", isEqualTo: true)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<TransactionModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<TransactionModel> requestList = [];
+        snapshot.documents.forEach((document) {
+          TransactionModel model = TransactionModel.fromMap(document.data);
+          requestList.add(model);
+        });
+        requestSink.add(requestList);
+        print("request model --->>> ${requestList.toString()}");
+      },
+    ),
+  );
+}
+
+Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
+  @required String userEmail,
+  @required String userId,
+}) async* {
+  var data = Firestore.instance
+      .collection('transactions')
+  // .where('transactions.to', isEqualTo: userId)
+  // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
+  //.where('transactions', arrayContains: true)
+      .where('transactionbetween', arrayContains: userId)
+      .where("isApproved", isEqualTo: true)
+      .orderBy("timestamp", descending: true)
+  // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      .snapshots();
+
+  yield* data.transform(
+    StreamTransformer<QuerySnapshot, List<TransactionModel>>.fromHandlers(
+      handleData: (snapshot, requestSink) {
+        List<TransactionModel> requestList = [];
+        snapshot.documents.forEach((document) {
+          TransactionModel model = TransactionModel.fromMap(document.data);
+          requestList.add(model);
         });
         requestSink.add(requestList);
 

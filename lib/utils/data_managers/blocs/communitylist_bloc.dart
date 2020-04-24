@@ -163,10 +163,8 @@ class TransactionBloc {
 //    _communitiesFetcher.sink.add(communityListModel);
 //  }
   handleApprovedTransaction(isApproved, from, to, timebankid, type, credits) async {
-
     if (isApproved) {
       print(type);
-      print(RequestMode.TIMEBANK_REQUEST);
       print('came here approved');
       // update user to user transaction balances
       // TODO burhan suggest to do this in cloud function; current is a background task.
@@ -230,7 +228,8 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({ 'currentBalance': FieldValue.increment(credits)},merge: true);
-      } else if (type == ContantsSeva.USER_DONATE_TOTIMEBANK) {
+      } else if (type == "USER_DONATE_TOTIMEBANK") {
+        print("came here");
         // debit from timebank
         Query query = Firestore.instance
             .collection('timebanknew')
@@ -239,6 +238,8 @@ class TransactionBloc {
         DocumentSnapshot document = snapshot.documents?.length > 0 && snapshot.documents != null
             ? snapshot.documents.first
             : null;
+        print(timebankid);
+        print(snapshot.documents);
         if (document != null)
           Firestore.instance
               .collection('timebanknew')
@@ -248,7 +249,7 @@ class TransactionBloc {
 
         query = Firestore.instance
             .collection('users')
-            .where('sevaUserID', isEqualTo: from);
+            .where('sevauserid', isEqualTo: from);
         snapshot = await query.getDocuments();
         document = snapshot.documents?.length > 0 && snapshot.documents != null
             ? snapshot.documents.first
@@ -263,15 +264,15 @@ class TransactionBloc {
   }
 
   createNewTransaction(from, to, timestamp, credits, isApproved, type, typeid, timebankid) async {
-    TransactionModel transactionModel = new TransactionModel(from: from,to: to, timestamp: timestamp, credits: credits, isApproved: isApproved, type: type, typeid: typeid, timebankid: timebankid, transactionbetween: [from, to]);
-    handleApprovedTransaction(isApproved, from, to, timebankid, type, credits);
+    TransactionModel transactionModel = new TransactionModel(from: from,to: to, timestamp: timestamp, credits: num.parse(credits.toStringAsFixed(2)), isApproved: isApproved, type: type, typeid: typeid, timebankid: timebankid, transactionbetween: [from, to]);
+    await handleApprovedTransaction(isApproved, from, to, timebankid, type, num.parse(credits.toStringAsFixed(2)));
     await Firestore.instance
           .collection('transactions').document().setData(transactionModel.toMap(), merge: true);
   }
 
   updateNewTransaction(from, to, timestamp, credits, isApproved, type, typeid, timebankid, id) async {
     TransactionModel prevtransactionModel;
-    TransactionModel transactionModel = new TransactionModel(from: from,to: to, timestamp: timestamp, credits: credits, isApproved: isApproved, type: type.toString(), typeid: typeid, timebankid: timebankid, transactionbetween: [from, to]);
+    TransactionModel transactionModel = new TransactionModel(from: from,to: to, timestamp: timestamp, credits: num.parse(credits.toStringAsFixed(2)), isApproved: isApproved, type: type.toString(), typeid: typeid, timebankid: timebankid, transactionbetween: [from, to]);
     if (id) {
       var document = await Firestore.instance
           .collection('transactions')
@@ -284,7 +285,7 @@ class TransactionBloc {
             .setData(transactionModel.toMap(), merge: true);
         if (!prevtransactionModel.isApproved && isApproved) {
           print("handle final approval transaction to user and tiembnak");
-          await handleApprovedTransaction(isApproved, from, to, timebankid, type, credits);
+          await handleApprovedTransaction(isApproved, from, to, timebankid, type, num.parse(credits.toStringAsFixed(2)));
         }
       }
     } else {
@@ -302,7 +303,7 @@ class TransactionBloc {
         prevtransactionModel = new TransactionModel.fromMap(document.data);
         if (!prevtransactionModel.isApproved && isApproved) {
           print("handle final approval transaction to user and tiembnak sdf");
-          await handleApprovedTransaction(isApproved, from, to, timebankid, type, credits);
+          await handleApprovedTransaction(isApproved, from, to, timebankid, type, num.parse(credits.toStringAsFixed(2)));
         }
         return await Firestore.instance
             .collection('transactions')

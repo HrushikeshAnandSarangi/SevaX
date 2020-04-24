@@ -895,21 +895,6 @@ class _RequestAcceptedSpendingState extends State<RequestAcceptedSpendingView> {
 
   Future approveTransaction(RequestModel model, String userId,
       String notificationId, SevaCore sevaCore) async {
-    List<TransactionModel> transactions =
-        model.transactions.map((t) => t).toList();
-
-    model.transactions = transactions.map((t) {
-      if (t.to == userId) {
-        TransactionModel editedTransaction = t;
-        editedTransaction.isApproved = true;
-        return editedTransaction;
-      }
-      return t;
-    }).toList();
-
-    if (model.transactions.where((model) => model.isApproved).length ==
-        model.numberOfApprovals) {}
-
     await FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,

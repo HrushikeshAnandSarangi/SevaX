@@ -6,6 +6,9 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
 
 class ReviewEarningsPage extends StatelessWidget {
+  final String type;
+  final String timebankid;
+  const ReviewEarningsPage({this.type, this.timebankid});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,13 +18,16 @@ class ReviewEarningsPage extends StatelessWidget {
             style: TextStyle(fontSize: 18),
           ),
         ),
-        body: ReviewEarning());
+        body: ReviewEarning(type: type, timebankid: this.timebankid));
   }
 }
 
 // TODO: Fix the hacks
 
 class ReviewEarning extends StatefulWidget {
+  final String type;
+  final String timebankid;
+  const ReviewEarning({this.type, this.timebankid});
   @override
   _ReviewEarningState createState() => _ReviewEarningState();
 }
@@ -35,24 +41,36 @@ String getTimeFormattedString(int timeInMilliseconds) {
 }
 
 class _ReviewEarningState extends State<ReviewEarning> {
-  List<RequestModel> requestList = [];
+  List<TransactionModel> requestList = [];
   //List<UserModel> userList = [];
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    FirestoreManager.getCompletedRequestStream(
-            userEmail: SevaCore.of(context).loggedInUser.email,
-            userId: SevaCore.of(context).loggedInUser.sevaUserID)
-        .listen(
-      (result) {
-        if (!mounted) return;
-        requestList = result;
-        
-
-        setState(() {});
-      },
-    );
+    if (widget.type == 'user') {
+      FirestoreManager.getUsersCreditsDebitsStream(
+          userEmail: SevaCore.of(context).loggedInUser.email,
+          userId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .listen(
+            (result) {
+          if (!mounted) return;
+          requestList = result;
+          setState(() {});
+        },
+      );
+    } else if (widget.type == 'timebank') {
+      print('came here timebank id' + widget.timebankid.toString());
+      FirestoreManager.getTimebankCreditsDebitsStream(
+          timebankid: widget.timebankid,
+          userId: SevaCore.of(context).loggedInUser.sevaUserID)
+          .listen(
+            (result) {
+          if (!mounted) return;
+          requestList = result;
+          setState(() {});
+        },
+      );
+    }
   }
 
   @override
@@ -64,7 +82,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Center(
-        child: Text('You have not completed any tasks'),
+        child: Text('You donot have any transactions yet'),
       );
     }
     return FutureBuilder<Object>(
@@ -81,13 +99,13 @@ class _ReviewEarningState extends State<ReviewEarning> {
           String usertimezone = userModel.timezone;
           return ListView.builder(
             itemBuilder: (context, index) {
-              RequestModel model = requestList.elementAt(index);
+              TransactionModel model = requestList.elementAt(index);
 
               return Container(
                 margin: EdgeInsets.all(1),
                 child: Card(
                   child: ListTile(
-                    title: Text(model.title),
+//                    title: Text(model.title),
                     // leading: () {
                     //   if (index + 1 > userList.length) {
                     //     return CircleAvatar(
@@ -100,8 +118,9 @@ class _ReviewEarningState extends State<ReviewEarning> {
                     //   );
                     // }(),
                     leading: FutureBuilder(
-                      future: FirestoreManager.getUserForId(
-                          sevaUserId: model.sevaUserId),
+                      future: model.type == 'user' ? FirestoreManager.getUserForId(
+                          sevaUserId: model.from): FirestoreManager.getTimeBankForId(
+                          timebankId: model.from),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return CircleAvatar();
@@ -110,26 +129,35 @@ class _ReviewEarningState extends State<ReviewEarning> {
                             ConnectionState.waiting) {
                           return CircleAvatar();
                         }
-                        UserModel user = snapshot.data;
-                        return CircleAvatar(
-                          backgroundImage: NetworkImage(user.photoURL),
-                        );
+                        if (model.type == 'user') {
+                          UserModel user = snapshot.data;
+                          return CircleAvatar(
+                            backgroundImage: NetworkImage(user.photoURL),
+                          );
+                        } else {
+                          TimebankModel timebanktemp = snapshot.data;
+                          return CircleAvatar(
+                            backgroundImage: NetworkImage(timebanktemp.photoUrl),
+                          );
+                        }
+
                       },
                     ),
                     trailing: () {
                       //   List<TransactionModel> transactions =
                       //         model.transactions.map((t) => t).toList();
                       //  num transaction = transactions.
-                      TransactionModel transmodel =
-                          model.transactions.firstWhere((transaction) {
-                        return transaction.to ==
-                            SevaCore.of(context).loggedInUser.sevaUserID;
-                      });
+//                      TransactionModel transmodel =
+//                          model.transactions.firstWhere((transaction) {
+//                        return transaction.to ==
+//                            SevaCore.of(context).loggedInUser.sevaUserID;
+//                      });
+                      String plus = model.type == 'user' ? model.from ==  SevaCore.of(context).loggedInUser.sevaUserID ? "+": "-" : model.from ==  model.timebankid ? "-": "+";
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text('${transmodel.credits}',
+                          Text(plus + '${model.credits}',
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
@@ -145,7 +173,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
                     }(),
                     subtitle: FutureBuilder(
                       future: FirestoreManager.getUserForId(
-                          sevaUserId: model.sevaUserId),
+                          sevaUserId: model.from),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Text('');
@@ -154,11 +182,11 @@ class _ReviewEarningState extends State<ReviewEarning> {
                             ConnectionState.waiting) {
                           return Text('');
                         }
-                        TransactionModel transmodel =
-                            model.transactions.firstWhere((transaction) {
-                          return transaction.to ==
-                              SevaCore.of(context).loggedInUser.sevaUserID;
-                        });
+//                        TransactionModel transmodel =
+//                            model.transactions.firstWhere((transaction) {
+//                          return transaction.to ==
+//                              SevaCore.of(context).loggedInUser.sevaUserID;
+//                        });
                         UserModel user = snapshot.data;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,7 +207,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
                                     getDateTimeAccToUserTimezone(
                                         dateTime:
                                             DateTime.fromMillisecondsSinceEpoch(
-                                                transmodel.timestamp),
+                                                model.timestamp),
                                         timezoneAbb: usertimezone),
                                   ),
                               textAlign: TextAlign.start,

@@ -528,24 +528,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 
   void approveTransaction(RequestModel model, String userId,
       String notificationId, SevaCore sevaCore) {
-    List<TransactionModel> transactions =
-        model.transactions.map((t) => t).toList();
-
-    model.transactions = transactions.map((t) {
-      if (t.to == userId) {
-        TransactionModel editedTransaction = t;
-        editedTransaction.isApproved = true;
-        return editedTransaction;
-      }
-      return t;
-    }).toList();
-
-    if (model.transactions.where((model) => model.isApproved).length ==
-        model.numberOfApprovals) {}
-
-    //request completion chain
-    print("request completion chain starts here");
-
     FirestoreManager.approveRequestCompletion(
       model: model,
       userId: userId,
