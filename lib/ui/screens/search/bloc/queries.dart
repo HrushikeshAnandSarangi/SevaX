@@ -8,7 +8,6 @@ import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
-import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 
 class Searches {
   static Future<http.Response> makePostRequest({
@@ -165,9 +164,7 @@ class Searches {
               }
             },
             {
-              "terms": {
-                "timebankId.keyword": myTimebanks
-              }
+              "terms": {"timebankId.keyword": myTimebanks}
             },
             {
               "bool": {
@@ -213,11 +210,7 @@ class Searches {
                   {
                     "multi_match": {
                       "query": queryString,
-                      "fields": [
-                        "email",
-                        "fullname",
-                        "selectedAdrress"
-                      ],
+                      "fields": ["email", "fullname", "selectedAdrress"],
                       "type": "phrase_prefix"
                     }
                   }
@@ -231,21 +224,30 @@ class Searches {
 
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
-    print("hitlist length for updated offers is---" + hitList.length.toString());
+    print(
+        "hitlist length for updated offers is---" + hitList.length.toString());
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
+      print("map -- >< $map");
       Map<String, dynamic> sourceMap = map['_source'];
       if (loggedInUser.blockedBy.length == 0) {
-
-        OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
-//        print(model.email+" " + model.fullName + " " + model.associatedRequest);
-        if (model.associatedRequest == null ||
-            model.associatedRequest.isEmpty) {
-          offersList.add(model);
+        try {
+          OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
+          print("**---->> ${model.offerType}");
+          if (model.associatedRequest == null ||
+              model.associatedRequest.isEmpty) {
+            offersList.add(model);
+          }
+        } catch (e) {
+          print(e);
         }
+
+//        print(model.email+" " + model.fullName + " " + model.associatedRequest);
+
       } else {
         if (!loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
+          print("**---->> ${model.offerType}");
           if (model.associatedRequest == null ||
               model.associatedRequest.isEmpty) {
             offersList.add(model);
