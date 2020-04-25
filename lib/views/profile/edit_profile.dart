@@ -240,6 +240,7 @@ class _EditProfilePageState extends State<EditProfilePage>
           await uploadImage(SevaCore.of(context).loggedInUser.email);
       setState(() {
         SevaCore.of(context).loggedInUser.photoURL = imageUrl;
+        widget.userModel.photoURL = imageUrl;
       });
     }
     await FirestoreManager.updateUser(user: SevaCore.of(context).loggedInUser);

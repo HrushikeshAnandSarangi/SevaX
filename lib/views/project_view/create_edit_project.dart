@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
@@ -225,6 +226,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 print("name ------ $value");
                 projectModel.name = value;
               },
+              inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
               initialValue:
                   widget.isCreateProject ? "" : projectModel.name ?? "",
               decoration: InputDecoration(

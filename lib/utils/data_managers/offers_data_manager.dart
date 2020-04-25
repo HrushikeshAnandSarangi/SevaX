@@ -84,6 +84,7 @@ Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
           .where('timebankId', isEqualTo: timebankId)
           .where('assossiatedRequest', isNull: true);
 
+  print("---- radius is 20");
   var data = geoflutterfire
       .collection(collectionRef: query)
       .within(center: center, radius: 20, field: 'location', strictMode: true);

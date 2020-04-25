@@ -166,6 +166,7 @@ class CreateEditCommunityViewFormState
       if (s.isEmpty) {
         setState(() {
           _searchText = "";
+          errTxt = null;
         });
       } else {
         SearchManager.searchCommunityForDuplicate(queryString: s)

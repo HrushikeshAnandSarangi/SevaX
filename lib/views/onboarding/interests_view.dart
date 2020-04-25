@@ -35,7 +35,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
   @override
   void initState() {
     print("inside interestsview init state");
-
     Firestore.instance
         .collection('interests')
         .getDocuments()
@@ -203,10 +202,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   widget.onSelectedInterests(selectedID);
                 },
                 child: Text(
-                  widget.userModel.interests == null ||
-                          widget.userModel.interests.length == 0
-                      ? 'Next'
-                      : 'Update',
+                  widget.automaticallyImplyLeading ? 'Update' : 'Next',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),

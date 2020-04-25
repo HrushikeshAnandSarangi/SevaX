@@ -152,42 +152,93 @@ class Searches {
         currentCommunityOfUser.timebanks, timebanksIdArr);
 //    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
     String url = FlavorConfig.values.elasticSearchBaseURL +
-        '//elasticsearch/offers/offer/_search';
-    dynamic body = json.encode(
-      {
-        "size": 3000,
-        "query": {
-          "bool": {
-            "must": [
-              {
-                "match": {
-                  "root_timebank_id": "${FlavorConfig.values.timebankId}"
-                }
-              },
-              {
-                "terms": {"timebankId.keyword": myTimebanks}
-              },
-              {
-                "multi_match": {
-                  "query": "$queryString",
-                  "fields": ["description", "email", "fullname", "title"],
-                  "type": "phrase_prefix"
-                }
+        '//elasticsearch/offers/_doc/_search';
+
+    dynamic body = json.encode({
+      "size": 3000,
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "root_timebank_id.keyword": FlavorConfig.values.timebankId
               }
-            ]
-          }
+            },
+            {
+              "terms": {
+                "timebankId.keyword": myTimebanks
+              }
+            },
+            {
+              "bool": {
+                "should": [
+                  {
+                    "nested": {
+                      "path": "individualOfferDataModel",
+                      "query": {
+                        "bool": {
+                          "should": {
+                            "multi_match": {
+                              "query": queryString,
+                              "fields": [
+                                "individualOfferDataModel.description",
+                                "individualOfferDataModel.title"
+                              ],
+                              "type": "phrase_prefix"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "nested": {
+                      "path": "groupOfferDataModel",
+                      "query": {
+                        "bool": {
+                          "should": {
+                            "multi_match": {
+                              "query": queryString,
+                              "fields": [
+                                "groupOfferDataModel.classDescription",
+                                "groupOfferDataModel.classTitle"
+                              ],
+                              "type": "phrase_prefix"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "multi_match": {
+                      "query": queryString,
+                      "fields": [
+                        "email",
+                        "fullname",
+                        "selectedAdrress"
+                      ],
+                      "type": "phrase_prefix"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
-      },
-    );
+      }
+    });
 
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
-
+    print("hitlist length for updated offers is---" + hitList.length.toString());
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
       if (loggedInUser.blockedBy.length == 0) {
+
         OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
+//        print(model.email+" " + model.fullName + " " + model.associatedRequest);
         if (model.associatedRequest == null ||
             model.associatedRequest.isEmpty) {
           offersList.add(model);
@@ -203,8 +254,8 @@ class Searches {
       }
     });
     // UPDATE_REQUIRED
-    offersList.sort((a, b) => getOfferTitle(offerDataModel: a)
-        .compareTo(getOfferTitle(offerDataModel: b)));
+//    offersList.sort((a, b) => getOfferTitle(offerDataModel: a)
+//        .compareTo(getOfferTitle(offerDataModel: b)));
     yield offersList;
   }
 
