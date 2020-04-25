@@ -150,7 +150,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     fetchRemoteConfig();
 
-    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+    if ((FlavorConfig.appFlavor == Flavor.APP ||
+        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _fetchCurrentlocation;
     }
 
@@ -182,9 +183,10 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   @override
   void didChangeDependencies() {
-    if(widget.loggedInUser?.sevaUserID != null)FirestoreManager.getUserForIdStream(
-            sevaUserId: widget.loggedInUser.sevaUserID)
-        .listen((userModel) {});
+    if (widget.loggedInUser?.sevaUserID != null)
+      FirestoreManager.getUserForIdStream(
+              sevaUserId: widget.loggedInUser.sevaUserID)
+          .listen((userModel) {});
     super.didChangeDependencies();
   }
 
@@ -247,7 +249,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
-                  inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                  ],
                   decoration: InputDecoration(
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
@@ -300,7 +304,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         )
                       : "",
                   keyboardType: TextInputType.multiline,
-                  maxLines: 2,
+                  maxLines: 1,
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter some text';
@@ -308,7 +312,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     requestModel.description = value;
                   },
                 ),
-                SizedBox(height: 40),
+                SizedBox(height: 20),
                 Text(
                   'No. of hours *',
                   style: TextStyle(
