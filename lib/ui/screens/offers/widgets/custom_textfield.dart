@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String heading;
@@ -10,6 +11,7 @@ class CustomTextField extends StatelessWidget {
   final TextInputType textInputType;
   final FocusNode currentNode;
   final FocusNode nextNode;
+  final List<TextInputFormatter> formatters;
   CustomTextField({
     Key key,
     this.heading,
@@ -21,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.initialValue,
     this.currentNode,
     this.nextNode,
+    this.formatters
   }) : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
@@ -51,6 +54,7 @@ class CustomTextField extends StatelessWidget {
                 )
               : null,
           onChanged: onChanged,
+          inputFormatters: formatters,
           decoration: InputDecoration(
             hintText: hint ?? '',
             errorText: error,

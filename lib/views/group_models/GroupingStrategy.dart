@@ -86,7 +86,7 @@ class GroupRequestCommons {
         return "My Requests";
 
       case "Others":
-        return FlavorConfig.appFlavor == Flavor.APP
+        return (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
             ? "Timebank Requests"
             : "Timebank Requests";
 

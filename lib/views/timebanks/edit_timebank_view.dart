@@ -85,7 +85,7 @@ class _EditTimebankViewState extends State<EditTimebankView>
   @override
   Widget build(BuildContext context) {
     var timebankName =
-        FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang gang";
+        (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV) ? "Timebank" : "Yang gang";
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(

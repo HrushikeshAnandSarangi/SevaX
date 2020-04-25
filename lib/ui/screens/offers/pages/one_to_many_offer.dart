@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
@@ -126,6 +127,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                               return CustomTextField(
                                 currentNode: focusNodes[0],
                                 nextNode: focusNodes[1],
+                                formatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
                                 initialValue: snapshot.data != null
                                     ? snapshot.data.contains('__*__')
                                         ? snapshot.data

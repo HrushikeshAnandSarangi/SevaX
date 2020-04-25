@@ -67,7 +67,7 @@ class _TimebankViewState extends State<TimebankView> {
   StreamBuilder<TimebankModel> timebankStreamBuilder(
       BuildContext buildcontext) {
     var timebankName =
-        FlavorConfig.appFlavor == Flavor.APP ? "Timebank" : "Yang Gang";
+        (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV) ? "Timebank" : "Yang Gang";
     return StreamBuilder<TimebankModel>(
       stream: FirestoreManager.getTimebankModelStream(
           timebankId: widget.timebankId),

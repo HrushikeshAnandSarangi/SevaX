@@ -216,7 +216,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
     if (adminsNotLoaded) {
       loadNextAdmins().then((onValue) {
         adminsNotLoaded = false;
-        if (_coordinators.length == 0 && FlavorConfig.appFlavor == Flavor.APP) {
+        if (_coordinators.length == 0 && (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
           loadNextCoordinators().then((onValue) {
             if (_members.length == 0) {
               loadNextMembers();
@@ -268,7 +268,7 @@ class _TimebankAdminPageState extends State<TimebankAdminPage> {
   List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
     _avtars.addAll(_admins);
-    if (FlavorConfig.appFlavor == Flavor.APP) {
+    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _avtars.addAll(_coordinators);
     }
     _avtars.addAll(_members);

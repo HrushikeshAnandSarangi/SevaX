@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/components/sevaavatar/campaignavatar.dart';
 import 'package:sevaexchange/views/membersadd.dart';
@@ -135,6 +136,7 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
                     ),
                   ),
                 ),
+                inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
                 validator: (value) {

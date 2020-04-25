@@ -437,7 +437,7 @@ class _LoginPageState extends State<LoginPage> {
                       height: ScreenUtil.getInstance().setHeight(30),
                     ),
 //                    futureLoginBtn,
-                    FlavorConfig.appFlavor == Flavor.APP
+                    (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
                         ? Offstage()
                         : poweredBySevaLogo,
                     SizedBox(height: 16),
