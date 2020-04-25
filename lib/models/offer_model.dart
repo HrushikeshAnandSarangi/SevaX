@@ -47,7 +47,7 @@ class GroupOfferDataModel {
 
     if (this.classDescription != null)
       map['classDescription'] = this.classDescription;
-      
+
     map['signedUpMembers'] = this.signedUpMembers ?? [];
     map['creditsApproved'] = this.creditsApproved ?? 0;
     map['creditStatus'] = this.creditStatus ?? 0;
@@ -215,13 +215,7 @@ class OfferModel extends DataModel {
 
   OfferModel.fromMapElasticSearch(Map<String, dynamic> map) {
     if (map.containsKey('offerType')) {
-      this.offerType = map['offerType'];
-
-      if (map['offerType'] == OfferType.GROUP_OFFER.toString()) {
-        this.offerType = OfferType.GROUP_OFFER;
-      } else {
-        this.offerType = OfferType.INDIVIDUAL_OFFER;
-      }
+      this.offerType = offerTypeMapper[map['offerType']];
     }
 
     if (map.containsKey('id')) {
@@ -230,10 +224,6 @@ class OfferModel extends DataModel {
 
     if (map.containsKey("selectedAdrress")) {
       this.selectedAdrress = map['selectedAdrress'];
-    }
-
-    if (map.containsKey('offerType')) {
-      this.offerType = map['offerType'];
     }
 
     if (map.containsKey("offerAccepted")) {
@@ -283,7 +273,6 @@ class OfferModel extends DataModel {
       this.groupOfferDataModel = null;
 
     print("inside offermodel.frommapelasticsearch");
-
   }
 
   OfferModel.fromMap(Map<String, dynamic> map) {
@@ -462,3 +451,8 @@ class OfferModel extends DataModel {
     }
   }
 }
+
+Map<String, OfferType> offerTypeMapper = {
+  "INDIVIDUAL_OFFER": OfferType.INDIVIDUAL_OFFER,
+  "GROUP_OFFER": OfferType.GROUP_OFFER,
+};
