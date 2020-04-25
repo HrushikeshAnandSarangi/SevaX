@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/models/models.dart';
@@ -216,3 +218,23 @@ Map<String, NotificationType> typeMapper = {
   "TYPE_FEEDBACK_FROM_SIGNUP_MEMBER":
       NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER,
 };
+
+ClearNotificationModel clearNotificationModelFromJson(String str) =>
+    ClearNotificationModel.fromJson(json.decode(str));
+
+class ClearNotificationModel {
+  bool isClearNotificationEnabled;
+  List<NotificationType> notificationType;
+
+  ClearNotificationModel({
+    this.isClearNotificationEnabled,
+    this.notificationType,
+  });
+
+  factory ClearNotificationModel.fromJson(Map<String, dynamic> json) =>
+      ClearNotificationModel(
+        isClearNotificationEnabled: json["isClearNotificationEnabled"],
+        notificationType: List<NotificationType>.from(
+            json["notificationType"].map((x) => typeMapper[x])),
+      );
+}

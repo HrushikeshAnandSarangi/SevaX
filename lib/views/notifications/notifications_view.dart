@@ -15,7 +15,9 @@ import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/models/one_to_many_notification_data_model.dart';
 import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
+import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -56,7 +58,7 @@ class NotificationsView extends State<NotificationViewHolder> {
         userEmail: SevaCore.of(context).loggedInUser.email,
         communityId: SevaCore.of(context).loggedInUser.currentCommunity,
       ),
-      builder: (context_firestore, snapshot) {
+      builder: (contextFirestore, snapshot) {
         if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
@@ -75,357 +77,415 @@ class NotificationsView extends State<NotificationViewHolder> {
             child: Text('No Notifications'),
           );
         }
-        return ListView.builder(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(bottom: 20),
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            NotificationsModel notification = notifications.elementAt(index);
-            void onDismissed() {
-              _clearNotification(
-                notificationId: notification.id,
-                email: user.email,
-              );
-            }
-
-            switch (notification.type) {
-              case NotificationType.RequestAccept:
-                RequestModel model = RequestModel.fromMap(notification.data);
-                // TODO needs flow correction to tasks model and transaction model
-                return FutureBuilder<RequestModel>(
-                    future: FirestoreManager.getRequestFutureById(
-                      requestId: model.id,
-                    ),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      RequestModel model = snapshot.data;
-                      return getNotificationAcceptedWidget(
-                        model,
-                        notification.senderUserId,
-                        notification.id,
-                      );
-                    });
-                break;
-              case NotificationType.RequestApprove:
-                RequestModel model = RequestModel.fromMap(notification.data);
-
-                return getNotificationRequestApprovalWidget(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
-                break;
-
-              case NotificationType.RequestReject:
-                RequestModel model = RequestModel.fromMap(notification.data);
-                return getNotificationRequestRejectWidget(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
-                break;
-
-              case NotificationType.JoinRequest:
-                JoinRequestNotificationModel model =
-                    JoinRequestNotificationModel.fromMap(notification.data);
-                return FutureBuilder<UserModel>(
-                    future: FirestoreManager.getUserForId(
-                        sevaUserId: notification.senderUserId),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return notificationShimmer;
-                      }
-                      UserModel user = snapshot.data;
-                      return user != null && user.fullname != null
-                          ? getJoinReuqestsNotificationWidget(
-                              user, notification.id, model, context)
-                          : Offstage();
-                    });
-                break;
-
-              case NotificationType.RequestCompleted:
-                RequestModel model = RequestModel.fromMap(notification.data);
-                return FutureBuilder<RequestModel>(
-                    future: FirestoreManager.getRequestFutureById(
-                        requestId: model.id),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      RequestModel model = snapshot.data;
-                      return getNotificationRequestCompletedWidget(
-                        model,
-                        notification.senderUserId,
-                        notification.id,
-                      );
-                    });
-                break;
-              case NotificationType.RequestCompletedApproved:
-                RequestModel model = RequestModel.fromMap(notification.data);
-                return getNotificationRequestCompletedApproved(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
-                break;
-              case NotificationType.RequestCompletedRejected:
-                RequestModel model = RequestModel.fromMap(notification.data);
-                return getNotificationTaskCompletedRejectWidget(
-                  model,
-                  notification.senderUserId,
-                  notification.id,
-                );
-                break;
-              case NotificationType.TransactionCredit:
-                // TODO: Handle this case.
-                TransactionModel model =
-                    TransactionModel.fromMap(notification.data);
-                //  return Text('jhb');
-                return getNotificationCredit(
-                    model, notification.senderUserId, notification.id);
-                break;
-              case NotificationType.TransactionDebit:
-                TransactionModel model =
-                    TransactionModel.fromMap(notification.data);
-                // return Text('ko');
-                return getNotificationDebit(
-                    model, notification.senderUserId, notification.id);
-                break;
-              case NotificationType.OfferAccept:
-                return Container();
-                //   OfferModel offerModel = OfferModel.fromMap(notification.data);
-
-                //   List<NotificationsModel> offerAcceptNotificationList =
-                //       notifications.where((noti) {
-                //     if (noti.type == NotificationType.OfferAccept) return true;
-                //     return false;
-                //   }).toList();
-                //   return getOfferAcceptNotification(
-                //     offerModel,
-                //     notification.senderUserId,
-                //     notification.targetUserId,
-                //     notification.id,
-                //     offerModel.requestList.elementAt(0),
-                //     offerAcceptNotificationList,
-                //   );
-                // return Column(
-                //   children: offerModel.requestList.map<Widget>((value) {
-                //     return getOfferAcceptNotification(
-                //         offerModel,
-                //         notification.senderUserId,
-                //         notification.targetUserId,
-                //         notification.id,
-                //         value);
-                //   }).toList(),
-                // );
-
-                // return getOfferAcceptNotification(
-                //   offerModel,
-                //   notification.senderUserId,
-                //   notification.targetUserId,
-                //   notification.id,
-                // );
-                break;
-              case NotificationType.OfferReject:
-                // TODO: Handle this case.
-                return Container(width: 50, height: 50, color: Colors.red);
-                break;
-
-              case NotificationType.AcceptedOffer:
-                OfferAcceptedNotificationModel acceptedOffer =
-                    OfferAcceptedNotificationModel.fromMap(notification.data);
-                return FutureBuilder<UserModel>(
-                    future: FirestoreManager.getUserForId(
-                        sevaUserId: acceptedOffer.acceptedBy),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return notificationShimmer;
-                      }
-                      UserModel user = snapshot.data;
-                      return getOfferAcceptedNotificationView(
-                          user, notification.id, acceptedOffer, context);
-                    });
-
-                // return Text(
-                //     'Acceptance Request ' + acceptedOffer.notificationContent);
-                break;
-
-              case NotificationType.RequestInvite:
-                // TODO: Handle this case.
-
-                print("notification data ${notification.data}");
-                RequestInvitationModel requestInvitationModel =
-                    RequestInvitationModel.fromMap(notification.data);
-                return getInvitedRequestsNotificationWidget(
-                  requestInvitationModel,
-                  notification.id,
-                  context,
-                  notification.timebankId,
-                  notification.communityId,
-                );
-                break;
-
-              // One to many offer notifications(user)
-              // DEBIT_FROM_OFFER,
-              // CREDIT_FROM_OFFER,//user notification
-              // NEW_MEMBER_SIGNUP_OFFER,//user notification
-              // OFFER_FULFILMENT_ACHIEVED,// user notification
-              // OFFER_SUBSCRIPTION_COMPLETED,//user ///successfully signed up
-              // FEEDBACK_FROM_SIGNUP_MEMBER,//feedback user
-
-              //TODO implement
-              // case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
-              //   OneToManyNotificationDataModel data =
-              //       OneToManyNotificationDataModel.fromJson(notification.data);
-
-              //   return Container(
-              //     child: Text(
-              //         "${notification.type} ${data?.classDetails?.classTitle}  ${data?.participantDetails?.fullname}"),
-              //     color: Colors.purple,
-              //     height: 30,
-              //   );
-              //   break;
-
-              //Creator notifications
-              case NotificationType.TYPE_CREDIT_FROM_OFFER:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
-
-                return NotificationCard(
-                  photoUrl:
-                      '', //get timebank photourl// data.participantDetails.photourl,
-                  title: "Credited",
-                  subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
-                      .replaceFirst(
-                        '*n',
-                        (data.classDetails.numberOfClassHours +
-                                data.classDetails.numberOfPreperationHours)
-                            .toString(),
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle),
-                  onDismissed: onDismissed,
-                );
-                break;
-              case NotificationType.TYPE_NEW_MEMBER_SIGNUP_OFFER:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
-
-                return NotificationCard(
-                  photoUrl: data.participantDetails.photourl,
-                  title: "New member signed up",
-                  subTitle: UserNotificationMessage.NEW_MEMBER_SIGNUP_OFFER
-                      .replaceFirst(
-                        '*name',
-                        data.participantDetails.fullname,
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle),
-                  onDismissed: onDismissed,
-                );
-                break;
-              case NotificationType.TYPE_OFFER_FULFILMENT_ACHIEVED:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
-
-                return NotificationCard(
-                  photoUrl:
-                      '', //get timebank photourl// data.participantDetails.photourl,
-                  title: "Credits for ${data.classDetails.classTitle}",
-                  subTitle: UserNotificationMessage.OFFER_FULFILMENT_ACHIEVED
-                      .replaceFirst(
-                        '*n',
-                        (data.classDetails.numberOfClassHours +
-                                data.classDetails.numberOfPreperationHours)
-                            .toString(),
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle),
-                  onDismissed: onDismissed,
-                );
-                break;
-
-              //Member notifications
-
-              case NotificationType.TYPE_DEBIT_FROM_OFFER:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
-
-                return NotificationCard(
-                  photoUrl: data.participantDetails.photourl,
-                  title: "Debited",
-                  subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
-                      .replaceFirst(
-                        '*n',
-                        data.classDetails.numberOfClassHours.toString(),
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle),
-                  onDismissed: onDismissed,
-                );
-                break;
-
-              case NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
-
-                return NotificationCard(
-                  photoUrl: data.participantDetails.photourl,
-                  title: "Signed up for class",
-                  subTitle: UserNotificationMessage.OFFER_SUBSCRIPTION_COMPLETED
-                      .replaceFirst(
-                        '*class',
-                        data.classDetails.classTitle,
-                      )
-                      .replaceFirst('*class', data.classDetails.classTitle),
-                  onDismissed: onDismissed,
-                );
-                break;
-              case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
-                OneToManyNotificationDataModel data =
-                    OneToManyNotificationDataModel.fromJson(notification.data);
-
-                return NotificationCard(
-                  photoUrl: data.participantDetails.photourl,
-                  title: "Feedback request",
-                  subTitle: UserNotificationMessage.FEEDBACK_FROM_SIGNUP_MEMBER
-                      .replaceFirst(
-                    '*class',
-                    data.classDetails.classTitle,
-                  ),
-                  onPressed: () => _handleFeedBackNotificationAction(
-                    data,
-                    notification.id,
-                    user.email,
-                  ),
-                  onDismissed: onDismissed,
-                );
-                break;
-
-              default:
-                log("Unhandled user notification type ${notification.type} ${notification.id}");
-                Crashlytics().log(
-                    "Unhandled notification type ${notification.type} ${notification.id}");
-                return Container(
-                    // child: Text(
-                    //   "Unhandled notification type ${notification.type} ${notification.id}",
-                    // ),
-                    // color: Colors.red,
+        ClearNotificationModel clearNotificationModel =
+            clearNotificationModelFromJson(
+                AppConfig.remoteConfig.getString("clear_notification_type"));
+        print(clearNotificationModel.notificationType);
+        return Column(
+          children: <Widget>[
+            Offstage(
+              offstage: !clearNotificationModel.isClearNotificationEnabled,
+              child: FlatButton(
+                textColor: Colors.black,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(Icons.clear_all),
+                    Text("Clear all notifications"),
+                  ],
+                ),
+                onPressed: () {
+                  clearAllNotification(notifications,
+                      clearNotificationModel.notificationType, user.email);
+                },
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(bottom: 20),
+                itemCount: notifications.length,
+                itemBuilder: (context, index) {
+                  NotificationsModel notification =
+                      notifications.elementAt(index);
+                  void onDismissed() {
+                    _clearNotification(
+                      notificationId: notification.id,
+                      email: user.email,
                     );
-            }
-          },
+                  }
+
+                  switch (notification.type) {
+                    case NotificationType.RequestAccept:
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+                      // TODO needs flow correction to tasks model and transaction model
+                      return FutureBuilder<RequestModel>(
+                          future: FirestoreManager.getRequestFutureById(
+                            requestId: model.id,
+                          ),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            RequestModel model = snapshot.data;
+                            return getNotificationAcceptedWidget(
+                              model,
+                              notification.senderUserId,
+                              notification.id,
+                            );
+                          });
+                      break;
+                    case NotificationType.RequestApprove:
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+
+                      return getNotificationRequestApprovalWidget(
+                        model,
+                        notification.senderUserId,
+                        notification.id,
+                      );
+                      break;
+
+                    case NotificationType.RequestReject:
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+                      return getNotificationRequestRejectWidget(
+                        model,
+                        notification.senderUserId,
+                        notification.id,
+                      );
+                      break;
+
+                    case NotificationType.JoinRequest:
+                      JoinRequestNotificationModel model =
+                          JoinRequestNotificationModel.fromMap(
+                              notification.data);
+                      return FutureBuilder<UserModel>(
+                          future: FirestoreManager.getUserForId(
+                              sevaUserId: notification.senderUserId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return notificationShimmer;
+                            }
+                            UserModel user = snapshot.data;
+                            return user != null && user.fullname != null
+                                ? getJoinReuqestsNotificationWidget(
+                                    user, notification.id, model, context)
+                                : Offstage();
+                          });
+                      break;
+
+                    case NotificationType.RequestCompleted:
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+                      return FutureBuilder<RequestModel>(
+                          future: FirestoreManager.getRequestFutureById(
+                              requestId: model.id),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            }
+                            RequestModel model = snapshot.data;
+                            return getNotificationRequestCompletedWidget(
+                              model,
+                              notification.senderUserId,
+                              notification.id,
+                            );
+                          });
+                      break;
+                    case NotificationType.RequestCompletedApproved:
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+                      return getNotificationRequestCompletedApproved(
+                        model,
+                        notification.senderUserId,
+                        notification.id,
+                      );
+                      break;
+                    case NotificationType.RequestCompletedRejected:
+                      RequestModel model =
+                          RequestModel.fromMap(notification.data);
+                      return getNotificationTaskCompletedRejectWidget(
+                        model,
+                        notification.senderUserId,
+                        notification.id,
+                      );
+                      break;
+                    case NotificationType.TransactionCredit:
+                      // TODO: Handle this case.
+                      TransactionModel model =
+                          TransactionModel.fromMap(notification.data);
+                      //  return Text('jhb');
+                      return getNotificationCredit(
+                          model, notification.senderUserId, notification.id);
+                      break;
+                    case NotificationType.TransactionDebit:
+                      TransactionModel model =
+                          TransactionModel.fromMap(notification.data);
+                      // return Text('ko');
+                      return getNotificationDebit(
+                          model, notification.senderUserId, notification.id);
+                      break;
+                    case NotificationType.OfferAccept:
+                      return Container();
+                      //   OfferModel offerModel = OfferModel.fromMap(notification.data);
+
+                      //   List<NotificationsModel> offerAcceptNotificationList =
+                      //       notifications.where((noti) {
+                      //     if (noti.type == NotificationType.OfferAccept) return true;
+                      //     return false;
+                      //   }).toList();
+                      //   return getOfferAcceptNotification(
+                      //     offerModel,
+                      //     notification.senderUserId,
+                      //     notification.targetUserId,
+                      //     notification.id,
+                      //     offerModel.requestList.elementAt(0),
+                      //     offerAcceptNotificationList,
+                      //   );
+                      // return Column(
+                      //   children: offerModel.requestList.map<Widget>((value) {
+                      //     return getOfferAcceptNotification(
+                      //         offerModel,
+                      //         notification.senderUserId,
+                      //         notification.targetUserId,
+                      //         notification.id,
+                      //         value);
+                      //   }).toList(),
+                      // );
+
+                      // return getOfferAcceptNotification(
+                      //   offerModel,
+                      //   notification.senderUserId,
+                      //   notification.targetUserId,
+                      //   notification.id,
+                      // );
+                      break;
+                    case NotificationType.OfferReject:
+                      // TODO: Handle this case.
+                      return Container(
+                          width: 50, height: 50, color: Colors.red);
+                      break;
+
+                    case NotificationType.AcceptedOffer:
+                      OfferAcceptedNotificationModel acceptedOffer =
+                          OfferAcceptedNotificationModel.fromMap(
+                              notification.data);
+                      return FutureBuilder<UserModel>(
+                          future: FirestoreManager.getUserForId(
+                              sevaUserId: acceptedOffer.acceptedBy),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return notificationShimmer;
+                            }
+                            UserModel user = snapshot.data;
+                            return getOfferAcceptedNotificationView(
+                                user, notification.id, acceptedOffer, context);
+                          });
+
+                      // return Text(
+                      //     'Acceptance Request ' + acceptedOffer.notificationContent);
+                      break;
+
+                    case NotificationType.RequestInvite:
+                      // TODO: Handle this case.
+
+                      print("notification data ${notification.data}");
+                      RequestInvitationModel requestInvitationModel =
+                          RequestInvitationModel.fromMap(notification.data);
+                      return getInvitedRequestsNotificationWidget(
+                        requestInvitationModel,
+                        notification.id,
+                        context,
+                        notification.timebankId,
+                        notification.communityId,
+                      );
+                      break;
+
+                    // One to many offer notifications(user)
+                    // DEBIT_FROM_OFFER,
+                    // CREDIT_FROM_OFFER,//user notification
+                    // NEW_MEMBER_SIGNUP_OFFER,//user notification
+                    // OFFER_FULFILMENT_ACHIEVED,// user notification
+                    // OFFER_SUBSCRIPTION_COMPLETED,//user ///successfully signed up
+                    // FEEDBACK_FROM_SIGNUP_MEMBER,//feedback user
+
+                    //TODO implement
+                    // case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
+                    //   OneToManyNotificationDataModel data =
+                    //       OneToManyNotificationDataModel.fromJson(notification.data);
+
+                    //   return Container(
+                    //     child: Text(
+                    //         "${notification.type} ${data?.classDetails?.classTitle}  ${data?.participantDetails?.fullname}"),
+                    //     color: Colors.purple,
+                    //     height: 30,
+                    //   );
+                    //   break;
+
+                    //Creator notifications
+                    case NotificationType.TYPE_CREDIT_FROM_OFFER:
+                      OneToManyNotificationDataModel data =
+                          OneToManyNotificationDataModel.fromJson(
+                              notification.data);
+
+                      return NotificationCard(
+                        photoUrl:
+                            '', //get timebank photourl// data.participantDetails.photourl,
+                        title: "Credited",
+                        subTitle: UserNotificationMessage.CREDIT_FROM_OFFER
+                            .replaceFirst(
+                              '*n',
+                              (data.classDetails.numberOfClassHours +
+                                      data.classDetails
+                                          .numberOfPreperationHours)
+                                  .toString(),
+                            )
+                            .replaceFirst(
+                                '*class', data.classDetails.classTitle),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+                    case NotificationType.TYPE_NEW_MEMBER_SIGNUP_OFFER:
+                      OneToManyNotificationDataModel data =
+                          OneToManyNotificationDataModel.fromJson(
+                              notification.data);
+
+                      return NotificationCard(
+                        photoUrl: data.participantDetails.photourl,
+                        title: "New member signed up",
+                        subTitle: UserNotificationMessage
+                            .NEW_MEMBER_SIGNUP_OFFER
+                            .replaceFirst(
+                              '*name',
+                              data.participantDetails.fullname,
+                            )
+                            .replaceFirst(
+                                '*class', data.classDetails.classTitle),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+                    case NotificationType.TYPE_OFFER_FULFILMENT_ACHIEVED:
+                      OneToManyNotificationDataModel data =
+                          OneToManyNotificationDataModel.fromJson(
+                              notification.data);
+
+                      return NotificationCard(
+                        photoUrl:
+                            '', //get timebank photourl// data.participantDetails.photourl,
+                        title: "Credits for ${data.classDetails.classTitle}",
+                        subTitle: UserNotificationMessage
+                            .OFFER_FULFILMENT_ACHIEVED
+                            .replaceFirst(
+                              '*n',
+                              (data.classDetails.numberOfClassHours +
+                                      data.classDetails
+                                          .numberOfPreperationHours)
+                                  .toString(),
+                            )
+                            .replaceFirst(
+                                '*class', data.classDetails.classTitle),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+
+                    //Member notifications
+
+                    case NotificationType.TYPE_DEBIT_FROM_OFFER:
+                      OneToManyNotificationDataModel data =
+                          OneToManyNotificationDataModel.fromJson(
+                              notification.data);
+
+                      return NotificationCard(
+                        photoUrl: data.participantDetails.photourl,
+                        title: "Debited",
+                        subTitle: UserNotificationMessage.DEBIT_FROM_OFFER
+                            .replaceFirst(
+                              '*n',
+                              data.classDetails.numberOfClassHours.toString(),
+                            )
+                            .replaceFirst(
+                                '*class', data.classDetails.classTitle),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+
+                    case NotificationType.TYPE_OFFER_SUBSCRIPTION_COMPLETED:
+                      OneToManyNotificationDataModel data =
+                          OneToManyNotificationDataModel.fromJson(
+                              notification.data);
+
+                      return NotificationCard(
+                        photoUrl: data.participantDetails.photourl,
+                        title: "Signed up for class",
+                        subTitle: UserNotificationMessage
+                            .OFFER_SUBSCRIPTION_COMPLETED
+                            .replaceFirst(
+                              '*class',
+                              data.classDetails.classTitle,
+                            )
+                            .replaceFirst(
+                                '*class', data.classDetails.classTitle),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+                    case NotificationType.TYPE_FEEDBACK_FROM_SIGNUP_MEMBER:
+                      OneToManyNotificationDataModel data =
+                          OneToManyNotificationDataModel.fromJson(
+                              notification.data);
+
+                      return NotificationCard(
+                        photoUrl: data.participantDetails.photourl,
+                        title: "Feedback request",
+                        subTitle: UserNotificationMessage
+                            .FEEDBACK_FROM_SIGNUP_MEMBER
+                            .replaceFirst(
+                          '*class',
+                          data.classDetails.classTitle,
+                        ),
+                        onPressed: () => _handleFeedBackNotificationAction(
+                          data,
+                          notification.id,
+                          user.email,
+                        ),
+                        onDismissed: onDismissed,
+                      );
+                      break;
+
+                    default:
+                      log("Unhandled user notification type ${notification.type} ${notification.id}");
+                      Crashlytics().log(
+                          "Unhandled notification type ${notification.type} ${notification.id}");
+                      return Container(
+                          // child: Text(
+                          //   "Unhandled notification type ${notification.type} ${notification.id}",
+                          // ),
+                          // color: Colors.red,
+                          );
+                  }
+                },
+              ),
+            ),
+          ],
         );
       },
     );
