@@ -314,7 +314,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  'No. of hours *',
+                  'Total no. of hours *',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -328,7 +328,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                       FocusScope.of(context).requestFocus(volunteersTextFocus);
                     },
                     decoration: InputDecoration(
-                      hintText: 'No. of hours required',
+                      hintText: 'Total no. of hours required',
                       hintStyle: textStyle,
                       // labelText: 'No. of volunteers',
                     ),

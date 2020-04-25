@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -7,6 +8,8 @@ import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/offer_model.dart';
 import 'package:sevaexchange/models/request_model.dart';
+
+import '../app_config.dart';
 
 Location loc = new Location();
 Geoflutterfire geoflutterfire = Geoflutterfire();
@@ -84,10 +87,19 @@ Stream<List<OfferModel>> getNearOffersStream({String timebankId}) async* {
           .where('timebankId', isEqualTo: timebankId)
           .where('assossiatedRequest', isNull: true);
 
-  print("---- radius is 20");
-  var data = geoflutterfire
-      .collection(collectionRef: query)
-      .within(center: center, radius: 20, field: 'location', strictMode: true);
+  var radius = 20;
+  try {
+    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance ");
+  }
+  print("radius is fetched from remote config near offers ${radius.toDouble()}");
+
+  var data = geoflutterfire.collection(collectionRef: query).within(
+      center: center,
+      radius: radius.toDouble(),
+      field: 'location',
+      strictMode: true);
 
   yield* data.transform(
     StreamTransformer<List<DocumentSnapshot>, List<OfferModel>>.fromHandlers(

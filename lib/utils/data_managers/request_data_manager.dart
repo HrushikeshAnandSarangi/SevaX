@@ -276,7 +276,10 @@ Stream<List<RequestModel>> getNearRequestListStream(
   userLocation = await geolocator.getCurrentPosition();
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
+  print("timebank id ->--------------------- " + timebankId);
 
+  print(
+      "Location retrieved fom user ->  ${lat.toString()} + ${lng.toString()}");
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
@@ -288,9 +291,21 @@ Stream<List<RequestModel>> getNearRequestListStream(
           .where('timebankId', isEqualTo: timebankId)
           .orderBy('posttimestamp', descending: true);
 
-  var data = geo
-      .collection(collectionRef: query)
-      .within(center: center, radius: 20, field: 'location', strictMode: true);
+  var radius = 20;
+  try {
+    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance ");
+  }
+  print(
+      "radius is fetched from remote config near request item ${radius.toDouble()}");
+
+  var data = geo.collection(collectionRef: query).within(
+        center: center,
+        radius: radius.toDouble(),
+        field: 'location',
+        strictMode: true,
+      );
 
   yield* data.transform(
     StreamTransformer<List<DocumentSnapshot>, List<RequestModel>>.fromHandlers(
