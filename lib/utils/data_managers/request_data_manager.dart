@@ -13,8 +13,9 @@ import 'package:sevaexchange/models/request_model.dart';
 import 'package:sevaexchange/models/timebank_balance_transction_model.dart';
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
-import 'package:sevaexchange/utils/utils.dart' as utils;
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
+import 'package:sevaexchange/utils/utils.dart' as utils;
+
 import '../app_config.dart';
 import 'notifications_data_manager.dart';
 
@@ -114,7 +115,8 @@ Stream<List<RequestModel>> getAllRequestListStream() async* {
 Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
   var query = Firestore.instance
       .collection('projects')
-      .where('timebank_id', isEqualTo: timebankid).orderBy("created_at", descending: true);
+      .where('timebank_id', isEqualTo: timebankid)
+      .orderBy("created_at", descending: true);
 
   var data = query.snapshots();
 
@@ -125,7 +127,8 @@ Stream<List<ProjectModel>> getAllProjectListStream({String timebankid}) async* {
         List<ProjectModel> projectsList = [];
         snapshot.documents.forEach(
           (documentSnapshot) {
-            print("documentSnapshot.data.name --------"+documentSnapshot.data["name"]);
+            print("documentSnapshot.data.name --------" +
+                documentSnapshot.data["name"]);
             ProjectModel model = ProjectModel.fromMap(documentSnapshot.data);
             model.id = documentSnapshot.documentID;
             projectsList.add(model);
@@ -194,7 +197,8 @@ Stream<List<RequestModel>> getTimebankExistingRequestListStream(
           },
         );
 
-        print("request list size ____________ ${requestList.length.toString()}");
+        print(
+            "request list size ____________ ${requestList.length.toString()}");
 
         requestSink.add(requestList);
       },
@@ -277,7 +281,8 @@ Stream<List<RequestModel>> getNearRequestListStream(
   var query = timebankId == null || timebankId == 'All'
       ? Firestore.instance
           .collection('requests')
-          .where('accepted', isEqualTo: false).orderBy('posttimestamp', descending: true)
+          .where('accepted', isEqualTo: false)
+          .orderBy('posttimestamp', descending: true)
       : Firestore.instance
           .collection('requests')
           .where('timebankId', isEqualTo: timebankId)
@@ -293,7 +298,10 @@ Stream<List<RequestModel>> getNearRequestListStream(
         List<RequestModel> requestList = [];
         snapshot.forEach(
           (documentSnapshot) {
-            if(documentSnapshot.data['accepted']==false || (documentSnapshot.data['accepted']==true && documentSnapshot.data['sevauserid'] == loggedInUser.sevaUserID) ){
+            if (documentSnapshot.data['accepted'] == false ||
+                (documentSnapshot.data['accepted'] == true &&
+                    documentSnapshot.data['sevauserid'] ==
+                        loggedInUser.sevaUserID)) {
               RequestModel model = RequestModel.fromMap(documentSnapshot.data);
               model.id = documentSnapshot.documentID;
               if (model.approvedUsers != null) {
@@ -426,7 +434,8 @@ Future<void> approveRequestCompletion({
   @required String communityId,
   // @required num taxPercentage,
 }) async {
-  List<TransactionModel> transactions = model.transactions.map((t) => t).toList();
+  List<TransactionModel> transactions =
+      model.transactions.map((t) => t).toList();
   TransactionModel editedTransaction;
   model.transactions = transactions.map((t) {
     if (t.to == userId) {
@@ -557,7 +566,18 @@ Future<void> approveRequestCompletion({
             : updatedRequestModel.toMap(),
         merge: true,
       );
-  transactionBloc.updateNewTransaction(model.requestMode == RequestMode.PERSONAL_REQUEST ? editedTransaction.from: editedTransaction.timestamp, editedTransaction.to,  editedTransaction.timestamp, editedTransaction.credits, editedTransaction.isApproved, model.requestMode, model.id,model.timebankId, false);
+  transactionBloc.updateNewTransaction(
+      model.requestMode == RequestMode.PERSONAL_REQUEST
+          ? editedTransaction.from
+          : editedTransaction.timestamp,
+      editedTransaction.to,
+      editedTransaction.timestamp,
+      editedTransaction.credits,
+      editedTransaction.isApproved,
+      model.requestMode,
+      model.id,
+      model.timebankId,
+      false);
   NotificationsModel creditnotification = NotificationsModel(
     timebankId: model.timebankId,
     id: utils.Utils.getUuid(),
@@ -907,7 +927,6 @@ Stream<List<RequestModel>> getCompletedRequestStream({
   );
 }
 
-
 Stream<List<TransactionModel>> getTimebankCreditsDebitsStream({
   @required String timebankid,
   @required String userId,
@@ -939,13 +958,13 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-  // .where('transactions.to', isEqualTo: userId)
-  // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
-  //.where('transactions', arrayContains: true)
+      // .where('transactions.to', isEqualTo: userId)
+      // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
+      //.where('transactions', arrayContains: true)
       .where('transactionbetween', arrayContains: userId)
       .where("isApproved", isEqualTo: true)
       .orderBy("timestamp", descending: true)
-  // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
+      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
   yield* data.transform(
@@ -965,12 +984,10 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
 }
 
 Future<bool> hasSufficientCredits({
-  String userEmail,
   String userId,
   double credits,
 }) async {
   var sevaCoinsBalance = await getMemberBalance(
-    userEmail,
     userId,
   );
 
@@ -985,20 +1002,21 @@ Future<bool> hasSufficientCredits({
   var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 10);
 
   print(
-      " Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
+      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
 
-  return maxAvailableBalance - credits >= (-lowerLimit);
+  return maxAvailableBalance - credits >= 0;
 }
 
-Future<double> getMemberBalance(userEmail, userId) {
+Future<double> getMemberBalance(userId) async {
   double sevaCoins = 0;
-  FirestoreManager.getUserForIdStream(
+  var userModel = await FirestoreManager.getUserForIdFuture(
     sevaUserId: userId,
-  ).listen((UserModel userModel) {
-    sevaCoins = userModel.currentBalance;
-    return sevaCoins;
-  });
+  );
+  sevaCoins = userModel.currentBalance;
+  print("listen to coins -> " + sevaCoins.toString());
+  return sevaCoins;
 }
+
 ///NOTE Removed as a part of version 1.1 update as balance should be a meta not through calculation
 //Future<double> getMyDebits(userEmail, userId) {
 //  double myDebits = 0;

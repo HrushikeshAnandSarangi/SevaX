@@ -11,7 +11,7 @@ import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
 import 'package:sevaexchange/views/timebanks/admin_personal_requests_view.dart';
 
 import 'admin_offer_requests_tab.dart';
-
+@deprecated
 class AcceptedOffers extends StatefulWidget {
   final String sevaUserId;
   final String timebankId;

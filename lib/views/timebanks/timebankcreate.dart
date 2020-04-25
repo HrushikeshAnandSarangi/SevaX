@@ -374,6 +374,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           padding: EdgeInsets.all(15.0),
         ),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           controller: searchTextController,
           decoration: InputDecoration(
             errorText: errTxt,
@@ -407,6 +408,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ),
         Text(' '),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             hintText: 'What you are about',
             labelText: 'Mission Statement',
@@ -492,6 +494,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         ),
         Text(''),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             hintText: 'Your main address',
             labelText: 'Address',

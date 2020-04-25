@@ -40,6 +40,8 @@ class _InterestViewNewState extends State<InterestViewNew> {
         .collection('interests')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
+      isDataLoaded = true;
+
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         interests[data.documentID] = data['name'];
       });

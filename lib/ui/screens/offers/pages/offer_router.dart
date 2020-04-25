@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/ui/screens/offers/pages/bookmarked_offers.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
-import 'package:sevaexchange/views/workshop/acceptedOffers.dart';
 
 class OfferRouter extends StatelessWidget {
   final String timebankId;
@@ -28,7 +28,7 @@ class OfferRouter extends StatelessWidget {
                   ),
                   Tab(
                     child: Text("Bookmarked Offers"),
-                  )
+                  ),
                 ],
               ),
               Expanded(
@@ -38,9 +38,9 @@ class OfferRouter extends StatelessWidget {
                       timebankId: timebankId,
                       timebankModel: timebankModel,
                     ),
-                    AcceptedOffers(
+                    BookmarkedOffers(
                       sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-                      timebankId: timebankId,
+                      timebankModel: timebankModel,
                     ),
                   ],
                 ),
