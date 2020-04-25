@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/models/models.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 
 ///[Function] clear all notification
 ///
@@ -19,4 +21,13 @@ void clearAllNotification(List<NotificationsModel> notifications,
     }
   });
   batch.commit();
+}
+
+//Fetch location
+Future<String> getLocation(GeoFirePoint location) async {
+  String address = await LocationUtility().getFormattedAddress(
+    location.latitude,
+    location.longitude,
+  );
+  return address;
 }
