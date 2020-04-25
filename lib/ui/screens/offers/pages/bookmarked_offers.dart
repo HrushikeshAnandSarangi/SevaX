@@ -212,25 +212,27 @@ class BookmarkedOffers extends StatelessWidget {
                           print("admint ${timebankModel.admins}");
                           Navigator.pop(viewContext);
                           if (timebankModel.admins.contains(
-                              SevaCore.of(context).loggedInUser.sevaUserID)) {
+                            SevaCore.of(parentContext).loggedInUser.sevaUserID,
+                          )) {
                             Navigator.push(
-                              context,
+                              parentContext,
                               MaterialPageRoute(
-                                builder: (context) => AdminOfferRequestsTab(
+                                builder: (parentContext) =>
+                                    AdminOfferRequestsTab(
                                   timebankid: model.timebankId,
-                                  parentContext: context,
+                                  parentContext: parentContext,
                                   userModel: userModel,
                                 ),
                               ),
                             );
                           } else {
                             Navigator.push(
-                              context,
+                              parentContext,
                               MaterialPageRoute(
                                 builder: (context) => AdminPersonalRequests(
                                   timebankId: model.timebankId,
                                   isTimebankRequest: true,
-                                  parentContext: context,
+                                  parentContext: parentContext,
                                   userModel: userModel,
                                 ),
                               ),

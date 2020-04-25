@@ -199,6 +199,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
+                  isDissmissible: false,
                   title: "Debited",
                   subTitle:
                       TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
@@ -218,6 +219,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
+                  isDissmissible: false,
                   title: "Credited",
                   subTitle: TimebankNotificationMessage
                       .CREDIT_FROM_OFFER_APPROVED
@@ -1325,66 +1327,66 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     // );
   }
 
-  Widget getNotificationTaskCompletedRejectWidget(
-    RequestModel model,
-    String userId,
-    String notificationId,
-  ) {
-    return StreamBuilder<UserModel>(
-      stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Text(snapshot.error.toString()),
-          );
-        }
+  // Widget getNotificationTaskCompletedRejectWidget(
+  //   RequestModel model,
+  //   String userId,
+  //   String notificationId,
+  // ) {
+  //   return StreamBuilder<UserModel>(
+  //     stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.hasError) {
+  //         return Center(
+  //           child: Text(snapshot.error.toString()),
+  //         );
+  //       }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text('getNotificationDebit');
-        }
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Text('getNotificationDebit');
+  //       }
 
-        UserModel user = snapshot.data;
-        return Dismissible(
-          background: dismissibleBackground,
-          key: Key(Utils.getUuid()),
-          onDismissed: (direction) {
-            String userEmail = SevaCore.of(context).loggedInUser.email;
-            FirestoreManager.readUserNotification(notificationId, userEmail);
-          },
-          child: Container(
-            margin: notificationPadding,
-            decoration: notificationDecoration,
-            child: ListTile(
-              title: Text(model.title),
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(user.photoURL),
-              ),
-              subtitle: Text('Task completion rejected by ${user.fullname}'),
-              onTap: () {
-                String loggedInEmail = SevaCore.of(context).loggedInUser.email;
-                List users = [user.email, loggedInEmail];
-                users.sort();
-                ChatModel chatModel = ChatModel();
-                chatModel.user1 = users[0];
-                chatModel.user2 = users[1];
-                chatModel.timebankId = widget.timebankId;
+  //       UserModel user = snapshot.data;
+  //       return Dismissible(
+  //         background: dismissibleBackground,
+  //         key: Key(Utils.getUuid()),
+  //         onDismissed: (direction) {
+  //           String userEmail = SevaCore.of(context).loggedInUser.email;
+  //           FirestoreManager.readUserNotification(notificationId, userEmail);
+  //         },
+  //         child: Container(
+  //           margin: notificationPadding,
+  //           decoration: notificationDecoration,
+  //           child: ListTile(
+  //             title: Text(model.title),
+  //             leading: CircleAvatar(
+  //               backgroundImage: NetworkImage(user.photoURL),
+  //             ),
+  //             subtitle: Text('Task completion rejected by ${user.fullname}'),
+  //             onTap: () {
+  //               String loggedInEmail = SevaCore.of(context).loggedInUser.email;
+  //               List users = [user.email, loggedInEmail];
+  //               users.sort();
+  //               ChatModel chatModel = ChatModel();
+  //               chatModel.user1 = users[0];
+  //               chatModel.user2 = users[1];
+  //               chatModel.timebankId = widget.timebankId;
 
-                createChat(chat: chatModel);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChatView(
-                            useremail: user.email,
-                            chatModel: chatModel,
-                          )),
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
+  //               createChat(chat: chatModel);
+  //               Navigator.push(
+  //                 context,
+  //                 MaterialPageRoute(
+  //                     builder: (context) => ChatView(
+  //                           useremail: user.email,
+  //                           chatModel: chatModel,
+  //                         )),
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<http.Response> scheduleNotification(
       {RequestModel model, UserModel userModel}) {
