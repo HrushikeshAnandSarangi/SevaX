@@ -991,7 +991,7 @@ Future<bool> hasSufficientCredits({
     userId,
   );
 
-  var lowerLimit = 10;
+  var lowerLimit = 50;
   try {
     lowerLimit =
         json.decode(AppConfig.remoteConfig.getString('user_minimum_balance'));
@@ -999,11 +999,12 @@ Future<bool> hasSufficientCredits({
     print("Exception raised while getting user minimum balance");
   }
 
-  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 10);
+  var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
 
-  print("Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
+  print(
+      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
 
-  return maxAvailableBalance - credits >= (-lowerLimit);
+  return maxAvailableBalance - credits >= 0;
 }
 
 Future<double> getMemberBalance(userId) async {

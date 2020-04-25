@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
@@ -149,7 +150,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     fetchRemoteConfig();
 
-    if (FlavorConfig.appFlavor == Flavor.APP) {
+    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _fetchCurrentlocation;
     }
 
@@ -246,6 +247,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
+                  inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
                   decoration: InputDecoration(
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"

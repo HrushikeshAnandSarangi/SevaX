@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
@@ -88,7 +89,7 @@ class MyCustomFormState extends State<MyCustomForm> {
     individualOfferDataModel = IndividualOfferDataModel();
 
     this.timebankId = _selectedTimebankId;
-    if (FlavorConfig.appFlavor == Flavor.APP) {
+    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _fetchCurrentlocation;
     }
   }
@@ -160,6 +161,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
           keyboardType: TextInputType.text,
           style: subTitleStyle,
+          inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
           validator: (value) {
             if (value.isEmpty) {
               return 'Please enter the subject of your Offer';
@@ -384,6 +386,7 @@ class MyCustomFormState extends State<MyCustomForm> {
         TextFormField(
           decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
           keyboardType: TextInputType.text,
+          inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
           // style: finalStyle,
           style: subTitleStyle,
           validator: (value) {

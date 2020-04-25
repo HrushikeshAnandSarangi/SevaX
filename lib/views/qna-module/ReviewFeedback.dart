@@ -181,7 +181,7 @@ class ReviewFeedbackState extends State<ReviewFeedback> {
                   ),
                   onPressed: () {
                     setState(() {
-                      if (FlavorConfig.appFlavor == Flavor.APP) {
+                      if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
                         myCommentsController.text.isEmpty
                             ? _validate = true
                             : _validate = false;

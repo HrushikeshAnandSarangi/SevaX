@@ -117,7 +117,7 @@ class EditGroupFormState extends State<EditGroupForm> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: SingleChildScrollView(
-          child: FlavorConfig.appFlavor == Flavor.APP
+          child: (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
               ? createSevaX
               : createTimebankHumanityFirst,
         ),

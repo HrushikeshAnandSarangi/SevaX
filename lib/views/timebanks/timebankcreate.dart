@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
@@ -78,7 +79,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
     globals.addedMembersFullname = [];
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
-    if (FlavorConfig.appFlavor == Flavor.APP) {
+    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       fetchCurrentlocation();
     }
     // ignore: close_sinks
@@ -175,7 +176,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         child: Container(
             padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
             child: SingleChildScrollView(
-              child: FlavorConfig.appFlavor == Flavor.APP
+              child: ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV) || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
                   ? createSevaX
                   : createTimebankHumanityFirst,
             )));
@@ -221,6 +222,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             ),
             keyboardType: TextInputType.multiline,
             maxLines: 1,
+            inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
@@ -706,7 +708,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   }
 
   Widget get tappableInviteMembers {
-    return FlavorConfig.appFlavor == Flavor.APP
+    return (FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)
         ? GestureDetector(
             onTap: () async {
               addVolunteers();

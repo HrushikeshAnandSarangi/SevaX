@@ -263,7 +263,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         }
       }
       await loadAdmins();
-      if (FlavorConfig.appFlavor == Flavor.APP) {
+      if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
         await loadCoordinators();
       }
       await loadNextMembers();
@@ -455,7 +455,7 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
     _avtars.addAll(_adminsWidgets);
-    if (FlavorConfig.appFlavor == Flavor.APP) {
+    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _avtars.addAll(_coordinatorsWidgets);
     }
     _avtars.addAll(_requestsWidgets);
