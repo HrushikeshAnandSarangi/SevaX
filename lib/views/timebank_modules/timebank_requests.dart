@@ -775,8 +775,12 @@ class NearRequestListItems extends StatelessWidget {
               }
               switch (requestListSnapshot.connectionState) {
                 case ConnectionState.waiting:
+                  print("Waiting........................");
+                
                   return Center(child: CircularProgressIndicator());
+
                 default:
+                  print("Inside default........................");
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
                   requestModelList
