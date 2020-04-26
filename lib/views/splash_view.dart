@@ -793,7 +793,7 @@ class _SplashViewState extends State<SplashView> {
         builder: (context) => InterestViewNew(
           automaticallyImplyLeading: false,
           userModel: loggedInUser,
-          isFromProfile: true,
+          isFromProfile: false,
           onSelectedInterests: (interests) {
             Navigator.pop(context);
             loggedInUser.interests = interests;
