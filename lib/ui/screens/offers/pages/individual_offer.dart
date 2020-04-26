@@ -117,7 +117,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                     : null,
                                 heading: "Title*",
                                 onChanged: _bloc.onTitleChanged,
-                                hint: "Ex Tutoring, painting",
+                                hint: "Ex painting",
                                 maxLength: null,
                                 error: snapshot.error,
                               );
