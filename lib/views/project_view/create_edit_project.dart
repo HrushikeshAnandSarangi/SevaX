@@ -226,7 +226,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 print("name ------ $value");
                 projectModel.name = value;
               },
-              inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
+              textCapitalization: TextCapitalization.sentences,
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+              ],
               initialValue:
                   widget.isCreateProject ? "" : projectModel.name ?? "",
               decoration: InputDecoration(
@@ -280,6 +283,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                   widget.isCreateProject ? "" : projectModel.description ?? "",
               keyboardType: TextInputType.multiline,
               maxLines: null,
+              textCapitalization: TextCapitalization.sentences,
+
               //  initialValue: timebankModel.missionStatement,
               onChanged: (value) {
                 projectModel.description = value;
@@ -521,7 +526,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           return;
                         }
                         showProgressDialog('Updating project');
-                        print("final value of modeeeee is "+this.projectModel.mode);
+                        print("final value of modeeeee is " +
+                            this.projectModel.mode);
                         await FirestoreManager.updateProject(
                             projectModel: projectModel);
                         if (dialogContext != null) {

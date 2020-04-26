@@ -13,13 +13,15 @@ class InterestViewNew extends StatefulWidget {
   final VoidCallback onBacked;
   final StringListCallback onSelectedInterests;
   final bool automaticallyImplyLeading;
+  final bool isFromProfile;
 
   InterestViewNew(
       {@required this.onSelectedInterests,
       @required this.onSkipped,
       this.onBacked,
       this.userModel,
-      this.automaticallyImplyLeading});
+      this.automaticallyImplyLeading,
+      this.isFromProfile});
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
 }
@@ -47,7 +49,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
       widget.userModel.interests.forEach((id) {
         _selectedInterests[id] = interests[id];
       });
-      isDataLoaded = true;
+      // isDataLoaded = true;
 
       setState(() {});
     });
@@ -165,33 +167,29 @@ class _InterestViewNewState extends State<InterestViewNew> {
               },
             ),
             SizedBox(height: 20),
-            isDataLoaded
-                ? ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      Wrap(
-                        runSpacing: 5.0,
-                        spacing: 5.0,
-                        children: _selectedInterests.values
-                            .toList()
-                            .map(
-                              (value) => CustomChip(
-                                title: value,
-                                onDelete: () {
-                                  String id = interests.keys
-                                      .firstWhere((k) => interests[k] == value);
-                                  _selectedInterests.remove(id);
-                                  setState(() {});
-                                },
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ],
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  ),
+            ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Wrap(
+                  runSpacing: 5.0,
+                  spacing: 5.0,
+                  children: _selectedInterests.values
+                      .toList()
+                      .map(
+                        (value) => CustomChip(
+                          title: value,
+                          onDelete: () {
+                            String id = interests.keys
+                                .firstWhere((k) => interests[k] == value);
+                            _selectedInterests.remove(id);
+                            setState(() {});
+                          },
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
             Spacer(),
             SizedBox(
               width: 134,
@@ -202,7 +200,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
                   widget.onSelectedInterests(selectedID);
                 },
                 child: Text(
-                  widget.automaticallyImplyLeading ? 'Update' : 'Next',
+                  widget.isFromProfile ? 'Update' : 'Next',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),

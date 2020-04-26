@@ -12,12 +12,14 @@ class SkillViewNew extends StatefulWidget {
   final UserModel userModel;
   final VoidCallback onSkipped;
   final StringListCallback onSelectedSkills;
+  final bool isFromProfile;
 
   SkillViewNew({
     @required this.onSelectedSkills,
     @required this.onSkipped,
     this.userModel,
     this.automaticallyImplyLeading = true,
+    this.isFromProfile,
   });
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
@@ -171,35 +173,31 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
             ),
             SizedBox(height: 20),
-            isDataLoaded
-                ? ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      Wrap(
-                        runSpacing: 5.0,
-                        spacing: 5.0,
-                        children: _selectedSkills.values
-                            .toList()
-                            .map(
-                              (value) => value == null
-                                  ? Container()
-                                  : CustomChip(
-                                      title: value,
-                                      onDelete: () {
-                                        String id = skills.keys.firstWhere(
-                                            (k) => skills[k] == value);
-                                        _selectedSkills.remove(id);
-                                        setState(() {});
-                                      },
-                                    ),
-                            )
-                            .toList(),
-                      ),
-                    ],
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
-                  ),
+            ListView(
+              shrinkWrap: true,
+              children: <Widget>[
+                Wrap(
+                  runSpacing: 5.0,
+                  spacing: 5.0,
+                  children: _selectedSkills.values
+                      .toList()
+                      .map(
+                        (value) => value == null
+                            ? Container()
+                            : CustomChip(
+                                title: value,
+                                onDelete: () {
+                                  String id = skills.keys
+                                      .firstWhere((k) => skills[k] == value);
+                                  _selectedSkills.remove(id);
+                                  setState(() {});
+                                },
+                              ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
             Spacer(),
             SizedBox(
               width: 134,
@@ -211,7 +209,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  widget.automaticallyImplyLeading ? 'Update' : 'Next',
+                  widget.isFromProfile ? 'Update' : 'Next',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
