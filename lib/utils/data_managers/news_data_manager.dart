@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -7,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:meta/meta.dart';
 import 'package:sevaexchange/models/news_model.dart';
 
+import '../app_config.dart';
 import '../location_utility.dart';
 
 Location locations = new Location();
@@ -102,12 +104,24 @@ Stream<List<NewsModel>> getNearNewsStream(
       //'entityName': FlavorConfig.timebankName,
     },
   );
-  print("timebankID is presentt");
-  var data = geos
-      .collection(collectionRef: query)
-      .within(center: center, radius: 20, field: 'location', strictMode: true);
 
-  print("-------------${lat.toString()}---------${lng.toString()}--------${data.toString()}");
+  var radius = 20;
+  try {
+    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance ");
+  }
+  print("radius is fetched from remote config getNearNewsStream ${radius.toDouble()}");
+
+  var data = geos.collection(collectionRef: query).within(
+        center: center,
+        radius: radius.toDouble(),
+        field: 'location',
+        strictMode: true,
+      );
+
+  print(
+      "-------------${lat.toString()}---------${lng.toString()}--------${data.toString()}");
 
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(
@@ -166,11 +180,21 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
 
+  var radius = 20;
+  try {
+    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance ");
+  }
+  print("radius is fetched from remote config getAllNearNewsStream ${radius.toDouble()}");
+
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('news');
-  var data = geos
-      .collection(collectionRef: query)
-      .within(center: center, radius: 20, field: 'location', strictMode: true);
+  var data = geos.collection(collectionRef: query).within(
+      center: center,
+      radius: radius.toDouble(),
+      field: 'location',
+      strictMode: true);
 
   yield* data.transform(
       StreamTransformer<List<DocumentSnapshot>, List<NewsModel>>.fromHandlers(

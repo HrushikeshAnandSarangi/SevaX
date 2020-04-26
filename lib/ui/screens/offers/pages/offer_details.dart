@@ -73,8 +73,9 @@ class OfferDetails extends StatelessWidget {
                     trailing: Offstage(
                       offstage: offerModel.sevaUserId !=
                               SevaCore.of(context).loggedInUser.sevaUserID ||
-                          getOfferParticipants(offerDataModel: offerModel)
-                              .isNotEmpty,
+                          (getOfferParticipants(offerDataModel: offerModel)
+                                  .isNotEmpty &&
+                              offerModel.offerType == OfferType.GROUP_OFFER),
                       child: Container(
                         height: 30,
                         width: 80,

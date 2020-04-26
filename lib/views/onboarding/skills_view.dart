@@ -211,10 +211,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  widget.userModel.skills == null ||
-                          widget.userModel.skills.length == 0
-                      ? 'Next'
-                      : 'Update',
+                  widget.automaticallyImplyLeading ? 'Update' : 'Next',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),

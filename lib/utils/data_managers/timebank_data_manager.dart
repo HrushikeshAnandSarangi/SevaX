@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -10,6 +11,8 @@ import 'package:sevaexchange/models/reports_model.dart';
 import 'package:sevaexchange/new_baseline/models/card_model.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+
+import '../app_config.dart';
 
 Future<void> createTimebank({@required TimebankModel timebankModel}) async {
   return await Firestore.instance
@@ -113,12 +116,18 @@ Future<List<TimebankModel>> getSubTimebanksForUserStream(
 }
 
 /// Get all timebanknew associated with a User as a Stream_
-Future<int> getMembersCount(
-    {@required String communityId}) async {
-  DocumentSnapshot documentSnaphot = await Firestore.instance.collection('communities').document(communityId).get();
+Future<int> getMembersCount({@required String communityId}) async {
+  DocumentSnapshot documentSnaphot = await Firestore.instance
+      .collection('communities')
+      .document(communityId)
+      .get();
   var primaryTimebankId = documentSnaphot.data['primary_timebank'];
-  DocumentSnapshot timebankDoc = await Firestore.instance.collection('timebanknew').document(primaryTimebankId).get();
-  int totalCount = timebankDoc.data['members'].length + timebankDoc.data['admins'].length;
+  DocumentSnapshot timebankDoc = await Firestore.instance
+      .collection('timebanknew')
+      .document(primaryTimebankId)
+      .get();
+  int totalCount =
+      timebankDoc.data['members'].length + timebankDoc.data['admins'].length;
   print("full counttttttttt " + totalCount.toString());
   return totalCount;
 }
@@ -170,11 +179,22 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
   double lat = userLocation.latitude;
   double lng = userLocation.longitude;
 
+  var radius = 20;
+  try {
+    radius = json.decode(AppConfig.remoteConfig.getString('radius'));
+  } on Exception {
+    print("Exception raised while getting user minimum balance ");
+  }
+  print("radius is fetched from remote config near community list stream${radius.toDouble()}");
+
   GeoFirePoint center = geo.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('communities');
-  var data = geo
-      .collection(collectionRef: query)
-      .within(center: center, radius: 10, field: 'location', strictMode: true);
+  var data = geo.collection(collectionRef: query).within(
+        center: center,
+        radius: radius.toDouble(),
+        field: 'location',
+        strictMode: true,
+      );
   //print('near data ${data}');
   yield* data.transform(
     StreamTransformer<List<DocumentSnapshot>,
@@ -183,7 +203,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
         List<CommunityModel> communityList = [];
         snapshot.forEach(
           (documentSnapshot) {
-            //   print('near data ${documentSnapshot.data}');
+            //   print('near data ${documentSnapsyhot.data}');
 
             CommunityModel model = CommunityModel(documentSnapshot.data);
             model.id = documentSnapshot.documentID;

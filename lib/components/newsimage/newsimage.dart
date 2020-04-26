@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:sevaexchange/ui/utils/helpers.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import './image_picker_handler.dart';
@@ -33,6 +34,7 @@ class NewsImageState extends State<NewsImage>
   bool _isImageBeingUploaded = false;
   Function(GeoFirePoint) geoFirePointLocationCallback;
   NewsImageState(this.geoFirePointLocationCallback);
+  String selectedAddress;
 
   ImagePickerHandler imagePicker;
 
@@ -95,136 +97,116 @@ class NewsImageState extends State<NewsImage>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () => imagePicker.showDialog(context),
-        child: Column(
-          children: <Widget>[
-            _isImageBeingUploaded
-                ? Container(
-                    margin: EdgeInsets.only(top: 20),
-                    child: Container(
-                        color: Colors.grey[100],
-                        height: 150,
-                        width: 150,
-                        child: Center(
-                            child: Container(
-                                height: 50,
-                                width: 50,
-                                child: CircularProgressIndicator()))))
-                : Container(
-                    child: globals.newsImageURL == null
-                        ? Offstage()
-                        : Column(
-                            children: <Widget>[
-                              Container(
-                                height: 200,
-                                width: 200,
-                                child: FadeInImage(
-                                  image: NetworkImage(globals.newsImageURL),
-                                  placeholder: AssetImage(
-                                    'lib/assets/images/noimagefound.png',
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.fromLTRB(
-                                    MediaQuery.of(context).size.width / 4,
-                                    0,
-                                    MediaQuery.of(context).size.width / 4,
-                                    0),
-                                child: TextFormField(
-                                  initialValue: widget.photoCredits != null
-                                      ? widget.photoCredits
-                                      : '',
-                                  decoration: InputDecoration(
-                                    hintText: '+ Photo Credits',
-                                  ),
-                                  keyboardType: TextInputType.text,
-                                  textAlign: TextAlign.center,
-                                  //style: textStyle,
-                                  onChanged: (credits) {
-                                    widget.onCreditsEntered(credits);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                  ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                // height: 60,
-                // width: 100,
-                // color: Colors.grey[100],
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Offstage(
+      onTap: () => imagePicker.showDialog(context),
+      child: Column(
+        children: <Widget>[
+          _isImageBeingUploaded
+              ? Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Container(
+                    color: Colors.grey[100],
+                    height: 150,
+                    width: 150,
+                    child: Center(
                       child: Container(
-                        margin: EdgeInsets.only(left: 20),
-                        child: FlatButton.icon(
-                          padding: EdgeInsets.only(left: 8),
-                          icon: Icon(Icons.image),
-                          color: Colors.grey[200],
-                          label: Text(
-                            "",
-                          ),
-                          onPressed: () {
-                            imagePicker.showDialog(context);
-                          },
-                        ),
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator(),
                       ),
-                      offstage: false,
                     ),
-                    Offstage(
-                      child: Container(
-                        margin: EdgeInsets.only(left: 20),
-                        child: FlatButton.icon(
-                          padding: EdgeInsets.only(left: 8),
-                          icon: Icon(Icons.add_location),
-                          label: Text(
-                            "",
-                          ),
-                          color: Colors.grey[200],
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<GeoFirePoint>(
-                                builder: (context) => LocationPicker(
-                                  selectedLocation: widget.geoFirePointLocation,
+                  ),
+                )
+              : Container(
+                  child: globals.newsImageURL == null
+                      ? Offstage()
+                      : Column(
+                          children: <Widget>[
+                            Container(
+                              height: 200,
+                              width: 200,
+                              child: FadeInImage(
+                                image: NetworkImage(globals.newsImageURL),
+                                placeholder: AssetImage(
+                                  'lib/assets/images/noimagefound.png',
                                 ),
                               ),
-                            ).then((point) {
-                              if (point != null) {
-                                widget.geoFirePointLocation = point;
-                                print("Setting data ${widget.geoFirePointLocation.latitude} ${geoFirePointLocationCallback}");
-                                geoFirePointLocationCallback(point);
-                              }
-                              // _getLocation();
-                            });
-                            // imagePicker.showDialog(context);
-                          },
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(
+                                  MediaQuery.of(context).size.width / 4,
+                                  0,
+                                  MediaQuery.of(context).size.width / 4,
+                                  0),
+                              child: TextFormField(
+                                initialValue: widget.photoCredits != null
+                                    ? widget.photoCredits
+                                    : '',
+                                decoration: InputDecoration(
+                                  hintText: '+ Photo Credits',
+                                ),
+                                keyboardType: TextInputType.text,
+                                textAlign: TextAlign.center,
+                                //style: textStyle,
+                                onChanged: (credits) {
+                                  widget.onCreditsEntered(credits);
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      offstage: false,
-                    )
-                  ],
                 ),
+          FlatButton.icon(
+            icon: Icon(Icons.image),
+            color: Colors.grey[200],
+            label: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                _image != null ? "Change image" : "Add image",
               ),
             ),
-          ],
-        ));
-  }
-
-  Future _getLocation() async {
-    // String address = await LocationUtility().getFormattedAddress(
-    //   widget.geoFirePointLocation.latitude,
-    //   widget.geoFirePointLocation.longitude,
-    // );
-
-    // setState(() {
-    //   this.widget.selectedAddress = address;
-    // });
+            onPressed: () {
+              imagePicker.showDialog(context);
+            },
+          ),
+          FlatButton.icon(
+            color: Colors.grey[200],
+            icon: Icon(Icons.add_location),
+            label: Text(
+              selectedAddress == null ? 'Add Location' : selectedAddress,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<GeoFirePoint>(
+                  builder: (context) => LocationPicker(
+                    selectedLocation: widget.geoFirePointLocation,
+                  ),
+                ),
+              ).then((point) {
+                if (point != null) {
+                  getLocation(point).then((address) {
+                    selectedAddress = address;
+                    geoFirePointLocationCallback(point);
+                    setState(() {});
+                  });
+                }
+              });
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
+
+//   Future _getLocation() async {
+//     // String address = await LocationUtility().getFormattedAddress(
+//     //   widget.geoFirePointLocation.latitude,
+//     //   widget.geoFirePointLocation.longitude,
+//     // );
+
+//     // setState(() {
+//     //   this.widget.selectedAddress = address;
+//     // });
+//   }
+// }

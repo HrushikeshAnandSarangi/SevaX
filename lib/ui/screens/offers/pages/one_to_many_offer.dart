@@ -135,7 +135,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                                     : null,
                                 heading: "Title*",
                                 onChanged: _bloc.onTitleChanged,
-                                hint: "Ex Tutoring, painting",
+                                hint: "Ex tutoring",
                                 maxLength: null,
                                 error: snapshot.error,
                               );
