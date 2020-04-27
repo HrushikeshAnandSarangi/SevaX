@@ -21,11 +21,11 @@ import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/exchange/createrequest.dart';
 import 'package:sevaexchange/views/exchange/edit_request.dart';
 import 'package:sevaexchange/views/group_models/GroupingStrategy.dart';
-import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/requests/request_tab_holder.dart';
 import 'package:sevaexchange/views/timebank_modules/request_details_about_page.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
 import 'package:sevaexchange/views/workshop/approvedUsers.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../core.dart';
 
@@ -51,14 +51,9 @@ class RequestsState extends State<RequestsModule> {
   List<TimebankModel> timebankList = [];
   bool isNearMe = false;
   int sharedValue = 0;
-  var i_buttonInfo;
-  String description =
-      'Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.';
+
   @override
   void initState() {
-    i_buttonInfo =
-        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
-
     super.initState();
   }
 
@@ -115,27 +110,32 @@ class RequestsState extends State<RequestsModule> {
                               // will be positioned in the top right of the container
                               top: -10,
                               right: -10,
-                              child: IconButton(
-                                icon: Image.asset(
-                                  'lib/assets/images/info.png',
-                                  color: FlavorConfig.values.theme.primaryColor,
-                                  height: 16,
-                                  width: 16,
-                                ),
-                                tooltip: i_buttonInfo['requestsInfo'] != null
-                                    ? i_buttonInfo['requestsInfo'] ??
-                                        description
-                                    : description,
-                                onPressed: () {
-                                  showInfoOfConcept(
-                                      dialogTitle:
-                                          i_buttonInfo['requestsInfo'] != null
-                                              ? i_buttonInfo['requestsInfo'] ??
-                                                  description
-                                              : description,
-                                      mContext: context);
-                                },
+                              child: infoButton(
+                                context: context,
+                                key: GlobalKey(),
+                                type: InfoType.REQUESTS,
                               ),
+                              // child: IconButton(
+                              //   icon: Image.asset(
+                              //     'lib/assets/images/info.png',
+                              //     color: FlavorConfig.values.theme.primaryColor,
+                              //     height: 16,
+                              //     width: 16,
+                              //   ),
+                              //   tooltip: infoDetails['requestsInfo'] != null
+                              //       ? infoDetails['requestsInfo'] ??
+                              //           description
+                              //       : description,
+                              //   onPressed: () {
+                              //     showInfoOfConcept(
+                              //         dialogTitle:
+                              //             infoDetails['requestsInfo'] != null
+                              //                 ? infoDetails['requestsInfo'] ??
+                              //                     description
+                              //                 : description,
+                              //         mContext: context);
+                              //   },
+                              // ),
                             ),
                           ],
                         ),
@@ -776,7 +776,7 @@ class NearRequestListItems extends StatelessWidget {
               switch (requestListSnapshot.connectionState) {
                 case ConnectionState.waiting:
                   print("Waiting........................");
-                
+
                   return Center(child: CircularProgressIndicator());
 
                 default:

@@ -8,7 +8,7 @@ import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
-import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../flavor_config.dart';
 import '../../ui/screens/offers/pages/create_offer.dart' as prefix0;
@@ -30,15 +30,9 @@ class OffersState extends State<OffersModule> {
 
   bool isNearme = false;
   int sharedValue = 0;
-  String description =
-      'Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.';
-  var i_buttonInfo;
 
   @override
   void initState() {
-    i_buttonInfo =
-        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
-
     super.initState();
   }
 
@@ -78,26 +72,32 @@ class OffersState extends State<OffersModule> {
                             // will be positioned in the top right of the container
                             top: -10,
                             right: -10,
-                            child: IconButton(
-                              icon: Image.asset(
-                                'lib/assets/images/info.png',
-                                color: FlavorConfig.values.theme.primaryColor,
-                                height: 16,
-                                width: 16,
-                              ),
-                              tooltip: i_buttonInfo['offersInfo'] != null
-                                  ? i_buttonInfo['offersInfo'] ?? description
-                                  : description,
-                              onPressed: () {
-                                showInfoOfConcept(
-                                    dialogTitle:
-                                        i_buttonInfo['offersInfo'] != null
-                                            ? i_buttonInfo['offersInfo'] ??
-                                                description
-                                            : description,
-                                    mContext: context);
-                              },
+                            child: infoButton(
+                              context: context,
+                              key: GlobalKey(),
+                              type: InfoType.OFFERS,
+                              // text: infoDetails['offersInfo'] ?? description,
                             ),
+                            // child: IconButton(
+                            //   icon: Image.asset(
+                            //     'lib/assets/images/info.png',
+                            //     color: FlavorConfig.values.theme.primaryColor,
+                            //     height: 16,
+                            //     width: 16,
+                            //   ),
+                            //   tooltip: infoDetails['offersInfo'] != null
+                            //       ? infoDetails['offersInfo'] ?? description
+                            //       : description,
+                            //   onPressed: () {
+                            //     showInfoOfConcept(
+                            //         dialogTitle:
+                            //             infoDetails['offersInfo'] != null
+                            //                 ? infoDetails['offersInfo'] ??
+                            //                     description
+                            //                 : description,
+                            //         mContext: context);
+                            //   },
+                            // ),
                           ),
                         ],
                       ),
