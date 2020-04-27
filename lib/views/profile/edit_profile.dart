@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -369,7 +370,20 @@ class _EditProfilePageState extends State<EditProfilePage>
                         fontSize: dialogButtonSize,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      var connResult = await Connectivity().checkConnectivity();
+                      if(connResult == ConnectivityResult.none){
+                        _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text("Please check your internet connection."),
+                            action: SnackBarAction(
+                              label: 'Dismiss',
+                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            ),
+                          ),
+                        );
+                        return ;
+                      }
                       if (!_formKey.currentState.validate()) {
                         return;
                       }
@@ -448,7 +462,20 @@ class _EditProfilePageState extends State<EditProfilePage>
                         fontSize: dialogButtonSize,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      var connResult = await Connectivity().checkConnectivity();
+                      if(connResult == ConnectivityResult.none){
+                        _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text("Please check your internet connection."),
+                            action: SnackBarAction(
+                              label: 'Dismiss',
+                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            ),
+                          ),
+                        );
+                        return ;
+                      }
                       if (!_formKey.currentState.validate()) {
                         return;
                       }
@@ -528,7 +555,20 @@ class _EditProfilePageState extends State<EditProfilePage>
                       "Logout",
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
-                    onPressed: () {
+                    onPressed: () async{
+                      var connResult = await Connectivity().checkConnectivity();
+                      if(connResult == ConnectivityResult.none){
+                        _scaffoldKey.currentState.showSnackBar(
+                          SnackBar(
+                            content: Text("Please check your internet connection."),
+                            action: SnackBarAction(
+                              label: 'Dismiss',
+                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            ),
+                          ),
+                        );
+                        return ;
+                      }
                       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                       //   statusBarBrightness: Brightness.light,
                       //   statusBarColor: Colors.white,

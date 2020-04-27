@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -53,7 +54,8 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                     offstage: widget.isAdmin,
                     child: SevaCoinWidget(
                         amount: balance ?? 0,
-                        onTap: () => Navigator.of(context).push(
+                        onTap: () =>
+                            Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) {
                                   return ReviewEarningsPage(
@@ -61,7 +63,8 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
                                       timebankid: this.widget.timebankData.id);
                                 },
                               ),
-                            ))),
+                            )
+                    )),
                 Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: RaisedButton(
@@ -79,6 +82,20 @@ class TimeBankSevaCoinState extends State<TimeBankSevaCoin> {
   }
 
   void _showFontSizePickerDialog() async {
+    var connResult = await Connectivity().checkConnectivity();
+    if(connResult == ConnectivityResult.none){
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please check your internet connection."),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () =>  Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return ;
+    }
+
     // <-- note the async keyword here
 
     // this will contain the result from Navigator.pop(context, result)

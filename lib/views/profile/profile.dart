@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:core' as prefix0;
 import 'dart:core';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -233,14 +234,29 @@ class _ProfilePageState extends State<ProfilePage>
                               ? double.parse(
                                   this.user.currentBalance.toStringAsFixed(2))
                               : 0.0,
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return ReviewEarningsPage(
-                                    type: "user", timebankid: "");
-                              },
-                            ),
-                          ),
+                          onTap: () async{
+                            var connResult = await Connectivity().checkConnectivity();
+                            if(connResult == ConnectivityResult.none){
+                              Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Please check your internet connection."),
+                                  action: SnackBarAction(
+                                    label: 'Dismiss',
+                                    onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                                  ),
+                                ),
+                              );
+                              return ;
+                            }
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return ReviewEarningsPage(
+                                      type: "user", timebankid: "");
+                                },
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),

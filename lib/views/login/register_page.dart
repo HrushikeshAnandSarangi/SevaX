@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -353,6 +354,20 @@ class _RegisterPageState extends State<RegisterPage>
         onPressed: isLoading
             ? null
             : () async {
+                var connResult = await Connectivity().checkConnectivity();
+                if(connResult == ConnectivityResult.none){
+                  _scaffoldKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text("Please check your internet connection."),
+                      action: SnackBarAction(
+                        label: 'Dismiss',
+                        onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                      ),
+                    ),
+                  );
+                  return ;
+                }
+
                 isLoading = true;
                 if (selectedImage == null) {
                   if (!_formKey.currentState.validate()) {
@@ -754,6 +769,19 @@ class _RegisterPageState extends State<RegisterPage>
   }
 
   void appleLogIn() async {
+    var connResult = await Connectivity().checkConnectivity();
+    if(connResult == ConnectivityResult.none){
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Please check your internet connection."),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return ;
+    }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
@@ -777,6 +805,20 @@ class _RegisterPageState extends State<RegisterPage>
       );
 
   void useGoogleSignIn() async {
+    var connResult = await Connectivity().checkConnectivity();
+    if(connResult == ConnectivityResult.none){
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Please check your internet connection."),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return ;
+    }
+
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;

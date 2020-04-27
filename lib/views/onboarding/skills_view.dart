@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -28,6 +29,7 @@ class SkillViewNew extends StatefulWidget {
 class _SkillViewNewState extends State<SkillViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool autovalidate = false;
   Map<String, dynamic> skills = {};
   Map<String, dynamic> _selectedSkills = {};
@@ -63,6 +65,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
@@ -206,7 +209,20 @@ class _SkillViewNewState extends State<SkillViewNew> {
             SizedBox(
               width: 134,
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
+                  var connResult = await Connectivity().checkConnectivity();
+                  if(connResult == ConnectivityResult.none){
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text("Please check your internet connection."),
+                        action: SnackBarAction(
+                          label: 'Dismiss',
+                          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                        ),
+                      ),
+                    );
+                    return ;
+                  }
                   List<String> selectedID = [];
                   _selectedSkills.forEach((id, _) => selectedID.add(id));
                   print(selectedID);

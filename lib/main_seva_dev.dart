@@ -11,6 +11,7 @@ import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/news_model.dart';
+//import 'package:flurry/flurry.dart';
 
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;

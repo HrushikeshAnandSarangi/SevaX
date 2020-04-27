@@ -10,6 +10,8 @@ enum InfoType {
   PROJECTS,
   REQUESTS,
   OFFERS,
+  PROTECTED_TIMEBANK,
+  TAX_CONFIGURATION,
 }
 
 Map<InfoType, String> infoKeyMapper = {
@@ -17,6 +19,8 @@ Map<InfoType, String> infoKeyMapper = {
   InfoType.PROJECTS: "projectsInfo",
   InfoType.REQUESTS: "requestsInfo",
   InfoType.OFFERS: "offersInfo",
+  InfoType.PROTECTED_TIMEBANK: "protectedTimebankInfo",
+  InfoType.TAX_CONFIGURATION: "taxInfo",
 };
 
 Map<InfoType, String> infoDescriptionMapper = {
@@ -28,6 +32,10 @@ Map<InfoType, String> infoDescriptionMapper = {
       'Requests are either created by Time Admins - for community tasks that need to be performed (eg. Weed the school yard) , or by Users who need help from the community for things they need to be done (eg. seniors needing groceries delivered). Requests for a Timebank would be listed under a Project.',
   InfoType.OFFERS:
       'Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.',
+  InfoType.PROTECTED_TIMEBANK:
+      'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations',
+  InfoType.TAX_CONFIGURATION:
+      'At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax.',
 };
 
 Widget infoButton({
@@ -52,18 +60,27 @@ Widget infoButton({
       RenderBox renderBox = key.currentContext.findRenderObject();
       Size buttonSize = renderBox.size;
       Offset buttonPosition = renderBox.localToGlobal(Offset.zero);
-      print("$buttonSize   $buttonPosition");
+      print(
+          "$buttonSize   $buttonPosition ${MediaQuery.of(context).size.height}");
       showDialog(
         context: context,
         builder: (BuildContext context) {
+          bool _isDialogBottom = buttonPosition.dy >
+              (MediaQuery.of(context).size.height / 2) + 100;
           return Stack(
             fit: StackFit.expand,
             children: <Widget>[
               Positioned(
-                top: buttonPosition.dy - 30,
+                top: _isDialogBottom ? null : (buttonPosition.dy - 30),
+                bottom: _isDialogBottom
+                    ? MediaQuery.of(context).size.height -
+                        buttonPosition.dy -
+                        45
+                    : null,
                 left: buttonPosition.dx + 8,
                 child: ClipPath(
-                  clipper: ArrowClipper(),
+                  clipper:
+                      _isDialogBottom ? ReverseArrowClipper() : ArrowClipper(),
                   child: Container(
                     height: 60,
                     width: 30,
@@ -72,7 +89,10 @@ Widget infoButton({
                 ),
               ),
               Positioned(
-                top: buttonPosition.dy + 20,
+                top: _isDialogBottom ? null : (buttonPosition.dy + 20),
+                bottom: _isDialogBottom
+                    ? MediaQuery.of(context).size.height - buttonPosition.dy
+                    : null,
                 left: 20,
                 right: 20,
                 child: Container(
@@ -124,6 +144,23 @@ class ArrowClipper extends CustomClipper<Path> {
     path.moveTo(0, size.height);
     path.lineTo(size.width / 2, size.height / 2);
     path.lineTo(size.width, size.height);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
+  }
+}
+
+class ReverseArrowClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width / 2, size.height / 2);
+
     return path;
   }
 

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -29,6 +30,7 @@ class InterestViewNew extends StatefulWidget {
 class _InterestViewNewState extends State<InterestViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
@@ -59,6 +61,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         leading: widget.automaticallyImplyLeading
@@ -198,7 +201,20 @@ class _InterestViewNewState extends State<InterestViewNew> {
             SizedBox(
               width: 134,
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
+                  var connResult = await Connectivity().checkConnectivity();
+                  if(connResult == ConnectivityResult.none){
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text("Please check your internet connection."),
+                        action: SnackBarAction(
+                          label: 'Dismiss',
+                          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                        ),
+                      ),
+                    );
+                    return ;
+                  }
                   List<String> selectedID = [];
                   _selectedInterests.forEach((id, value) => selectedID.add(id));
                   widget.onSelectedInterests(selectedID);

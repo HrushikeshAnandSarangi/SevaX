@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -400,7 +401,19 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                   shape: StadiumBorder(),
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
-                    // return;
+                    var connResult = await Connectivity().checkConnectivity();
+                    if(connResult == ConnectivityResult.none){
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Please check your internet connection."),
+                          action: SnackBarAction(
+                            label: 'Dismiss',
+                            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
+                      return ;
+                    }
                     if (location != null) {
                       if (formKey.currentState.validate()) {
                         // If the form is valid, we want to show a Snackbar
