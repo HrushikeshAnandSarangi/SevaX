@@ -12,7 +12,7 @@ class OfferCard extends StatelessWidget {
   final OfferType offerType;
   final Function onActionPressed;
   final Function onCardPressed;
-  final Function onSharePressed;
+
   final bool isCreator;
   final bool isCardVisible;
 
@@ -23,7 +23,6 @@ class OfferCard extends StatelessWidget {
     this.offerType,
     this.onActionPressed,
     this.onCardPressed,
-    this.onSharePressed,
     this.isCreator = false,
     this.actionButtonLabel,
     this.selectedAddress,
@@ -76,22 +75,6 @@ class OfferCard extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            FlatButton(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: EdgeInsets.all(0),
-                              child: Text(
-                                'Share',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              onPressed: onSharePressed,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
                             FlatButton(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
