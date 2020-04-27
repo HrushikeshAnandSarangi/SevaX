@@ -189,6 +189,7 @@ class _EditProfilePageState extends State<EditProfilePage>
         builder: (context) => InterestViewNew(
           automaticallyImplyLeading: true,
           userModel: loggedInUser,
+          isFromProfile: true,
           onSelectedInterests: (interests) {
             Navigator.pop(context);
             loggedInUser.interests = interests;
@@ -210,6 +211,7 @@ class _EditProfilePageState extends State<EditProfilePage>
       MaterialPageRoute(
         builder: (context) => SkillViewNew(
           automaticallyImplyLeading: true,
+          isFromProfile: true,
           userModel: loggedInUser,
           onSelectedSkills: (skills) {
             Navigator.pop(context);
