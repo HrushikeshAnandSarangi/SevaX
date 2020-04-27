@@ -44,7 +44,7 @@ class NotAcceptedTaskListState extends State<NotAcceptedTaskList> {
       );
     }
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      // physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         RequestModel model = requestList.elementAt(index);
 

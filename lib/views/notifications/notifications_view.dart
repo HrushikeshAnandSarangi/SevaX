@@ -935,13 +935,11 @@ class NotificationsView extends State<NotificationViewHolder> {
             child: GestureDetector(
               onTap: () async {
                 //check member balance
-                showLinearProgress();
                 var canApproveTransaction =
                     await FirestoreManager.hasSufficientCredits(
                   credits: transactionModel.credits,
                   userId: SevaCore.of(context).loggedInUser.sevaUserID,
                 );
-                Navigator.pop(linearProgressForBalanceCheck);
 
                 if (!canApproveTransaction) {
                   showDiologForMessage(
@@ -1601,21 +1599,6 @@ class NotificationsView extends State<NotificationViewHolder> {
             ));
       },
     );
-  }
-
-  BuildContext linearProgressForBalanceCheck;
-
-  void showLinearProgress() {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (createDialogContext) {
-          linearProgressForBalanceCheck = createDialogContext;
-          return AlertDialog(
-            title: Text('Hang on..'),
-            content: LinearProgressIndicator(),
-          );
-        });
   }
 
   void declineRequestedMember({

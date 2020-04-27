@@ -1017,7 +1017,8 @@ Future<bool> hasSufficientCredits({
   var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
 
   print(
-      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
+      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
+
 
   return maxAvailableBalance - credits >= 0;
 }
