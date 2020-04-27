@@ -136,11 +136,15 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
-            TimeBankSevaCoin(
-                isAdmin: !widget.timebankModel.admins
-                    .contains(SevaCore.of(context).loggedInUser.sevaUserID),
-                loggedInUser: SevaCore.of(context).loggedInUser,
-                timebankData: widget.timebankModel),
+            isUserJoined ||
+                    widget.timebankModel.admins
+                        .contains(SevaCore.of(context).loggedInUser.sevaUserID)
+                ? TimeBankSevaCoin(
+                    isAdmin: !widget.timebankModel.admins
+                        .contains(SevaCore.of(context).loggedInUser.sevaUserID),
+                    loggedInUser: SevaCore.of(context).loggedInUser,
+                    timebankData: widget.timebankModel)
+                : Offstage(),
             SizedBox(
               height: 15,
             ),
