@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
@@ -17,9 +16,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 class NewsCreate extends StatelessWidget {
-  final GlobalKey<NewsCreateFormState> _formState = GlobalKey();
   final String timebankId;
-  String photoCredits;
   NewsCreate({this.timebankId});
 
   @override
@@ -89,7 +86,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
   String photoCredits;
   NewsModel newsObject = NewsModel();
   TextStyle textStyle;
-  NewsCreateFormState() {}
 
   List<DataModel> dataList = [];
   DataModel selectedEntity;
@@ -131,32 +127,12 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     Navigator.pop(context);
   }
 
-//  EntityModel get _getSelectedEntityModel {
-//    if (this.selectedEntity.runtimeType == TimebankModel) {
-//      TimebankModel model = this.selectedEntity;
-//      return EntityModel(
-//        entityId: model.id,
-//        entityName: model.name,
-//        entityType: EntityType.timebank,
-//      );
-//    } else if (this.selectedEntity.runtimeType == CampaignModel) {
-//      CampaignModel model = this.selectedEntity;
-//      return EntityModel(
-//        entityId: model.id,
-//        entityName: model.name,
-//        entityType: EntityType.campaign,
-//      );
-//    } else {
-//      return EntityModel(entityType: EntityType.general);
-//    }
-//  }
-
   @override
   void initState() {
     super.initState();
 
     dataList.add(EntityModel(entityType: EntityType.general));
-    fetchCurrentlocation();
+    // fetchCurrentlocation();
   }
 
   @override
@@ -186,8 +162,6 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       child: FadeAnimation(
         1.5,
         Container(
-          // margin: EdgeInsets.all(10),
-          // padding: EdgeInsets.all(10.0),
           child: SingleChildScrollView(
               child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -271,8 +245,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                       child: NewsImage(
                         photoCredits: "",
                         geoFirePointLocation: location,
+                        selectedAddress: selectedAddress,
                         geoFirePointLocationCallback:
                             (geoLocationPointSelected) async {
+                          print("location is $geoLocationPointSelected");
                           location = geoLocationPointSelected;
                           await _getLocation();
                           print("Location is updated to ");
@@ -563,20 +539,20 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     }
   }
 
-  void fetchCurrentlocation() {
-    Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
-      location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
-        });
-      });
-    });
-  }
+  // void fetchCurrentlocation() {
+  //   Location().getLocation().then((onValue) {
+  //     print("Location1:$onValue");
+  //     location = GeoFirePoint(onValue.latitude, onValue.longitude);
+  //     LocationUtility()
+  //         .getFormattedAddress(
+  //       location.latitude,
+  //       location.longitude,
+  //     )
+  //         .then((address) {
+  //       setState(() {
+  //         this.selectedAddress = address;
+  //       });
+  //     });
+  //   });
+  // }
 }
