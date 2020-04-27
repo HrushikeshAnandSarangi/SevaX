@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,7 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -390,6 +392,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     ),
                     color: Colors.grey[200],
                     onPressed: () {
+
                       Navigator.push(
                         context,
                         MaterialPageRoute<GeoFirePoint>(
@@ -487,6 +490,20 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
+    var connResult = await Connectivity().checkConnectivity();
+    if(connResult == ConnectivityResult.none){
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please check your internet connection."),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return ;
+    }
+
     print('request mode ${requestModel.requestMode.toString()}');
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;

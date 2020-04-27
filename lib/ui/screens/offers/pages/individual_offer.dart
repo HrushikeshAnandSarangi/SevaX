@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/location_picker.dart';
@@ -19,6 +20,8 @@ class IndividualOffer extends StatefulWidget {
 }
 
 class _IndividualOfferState extends State<IndividualOffer> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   String selectedAddress;
   CustomLocation customLocation;
@@ -47,6 +50,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: widget.offerModel != null
           ? AppBar(
               title: Text(
@@ -201,7 +205,20 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           RaisedButton(
                             onPressed: status.data == Status.LOADING
                                 ? () {}
-                                : () {
+                                : () async{
+                              var connResult = await Connectivity().checkConnectivity();
+                              if(connResult == ConnectivityResult.none){
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text("Please check your internet connection."),
+                                    action: SnackBarAction(
+                                      label: 'Dismiss',
+                                      onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                                    ),
+                                  ),
+                                );
+                                return ;
+                              }
                                     if (widget.offerModel == null) {
                                       _bloc.createOrUpdateOffer(
                                         user: SevaCore.of(context).loggedInUser,

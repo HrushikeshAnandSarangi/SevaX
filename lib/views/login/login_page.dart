@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:apple_sign_in/apple_sign_in.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/gestures.dart';
@@ -383,8 +384,22 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: isLoading
                             ? null
-                            : () {
-                                signInWithEmailAndPassword();
+                            : () async {
+                              var connResult = await Connectivity().checkConnectivity();
+                              if(connResult == ConnectivityResult.none){
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text("Please check your internet connection."),
+                                    action: SnackBarAction(
+                                      label: 'Dismiss',
+                                      onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                                    ),
+                                  ),
+                                );
+                                return ;
+                              }
+
+                              signInWithEmailAndPassword();
                               },
                       ),
                     ),
@@ -959,6 +974,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void appleLogIn() async {
+    var connResult = await Connectivity().checkConnectivity();
+    if(connResult == ConnectivityResult.none){
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Please check your internet connection."),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return ;
+    }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
@@ -995,6 +1023,19 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void useGoogleSignIn() async {
+    var connResult = await Connectivity().checkConnectivity();
+    if(connResult == ConnectivityResult.none){
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text("Please check your internet connection."),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return ;
+    }
     isLoading = true;
     Auth auth = AuthProvider.of(context).auth;
     UserModel user;
@@ -1008,6 +1049,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void signInWithEmailAndPassword() async {
+
     if (!_formKey.currentState.validate()) return;
     FocusScope.of(context).requestFocus(FocusNode());
     _formKey.currentState.save();

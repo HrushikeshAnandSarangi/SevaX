@@ -1,5 +1,6 @@
 //import 'dart:html';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,6 +36,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   final _formKey = GlobalKey<FormState>();
   String communityImageError = '';
   TextEditingController searchTextController = new TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   String errTxt;
   ProjectModel projectModel = ProjectModel();
   GeoFirePoint location;
@@ -92,6 +94,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     }
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0.5,
         automaticallyImplyLeading: true,
@@ -428,6 +431,20 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
+                    var connResult = await Connectivity().checkConnectivity();
+                    if(connResult == ConnectivityResult.none){
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text("Please check your internet connection."),
+                          action: SnackBarAction(
+                            label: 'Dismiss',
+                            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          ),
+                        ),
+                      );
+                      return ;
+                    }
+
                     print('project mode ${projectModel.mode}');
                     FocusScope.of(context).requestFocus(new FocusNode());
                     // show a dialog

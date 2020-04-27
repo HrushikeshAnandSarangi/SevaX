@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -237,14 +238,15 @@ class CreateEditCommunityViewFormState
     var colums = StreamBuilder(
         stream: createEditCommunityBloc.createEditCommunity,
         builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data != null) {
-            //print(snapshot.data.timebank.address);
-            if ((selectedAddress.length > 0 &&
-                    snapshot.data.timebank.address.length == 0) ||
-                (snapshot.data.timebank.address != selectedAddress)) {
-              snapshot.data.timebank
-                  .updateValueByKey('address', selectedAddress);
-              createEditCommunityBloc.onChange(snapshot.data);
+          if (snapshot.data != null) {
+            if (selectedAddress != null) {
+              if ((selectedAddress.length > 0 &&
+                      snapshot.data.timebank.address.length == 0) ||
+                  (snapshot.data.timebank.address != selectedAddress)) {
+                snapshot.data.timebank
+                    .updateValueByKey('address', selectedAddress);
+                createEditCommunityBloc.onChange(snapshot.data);
+              }
             }
             // print("  snapshots data   ${snapshot.data.timebanks}");
 
@@ -613,6 +615,22 @@ class CreateEditCommunityViewFormState
                       alignment: Alignment.center,
                       child: RaisedButton(
                         onPressed: () async {
+                          var connResult =
+                              await Connectivity().checkConnectivity();
+                          if (connResult == ConnectivityResult.none) {
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "Please check your internet connection."),
+                                action: SnackBarAction(
+                                  label: 'Dismiss',
+                                  onPressed: () => Scaffold.of(context)
+                                      .hideCurrentSnackBar(),
+                                ),
+                              ),
+                            );
+                            return;
+                          }
                           // show a dialog
                           if (widget.isCreateTimebank) {
                             if (!hasRegisteredLocation()) {

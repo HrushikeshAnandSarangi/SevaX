@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -26,6 +27,7 @@ class OneToManyOffer extends StatefulWidget {
 
 class _OneToManyOfferState extends State<OneToManyOffer> {
   final OneToManyOfferBloc _bloc = OneToManyOfferBloc();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   String selectedAddress;
   CustomLocation customLocation;
   bool closePage = true;
@@ -60,6 +62,7 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
   @override
   Widget build(BuildContext mcontext) {
     return Scaffold(
+      key:_scaffoldKey,
       appBar: widget.offerModel != null
           ? AppBar(
               title: Text(
@@ -277,7 +280,20 @@ class _OneToManyOfferState extends State<OneToManyOffer> {
                           RaisedButton(
                             onPressed: status.data == Status.LOADING
                                 ? () {}
-                                : () {
+                                : () async {
+                                    var connResult = await Connectivity().checkConnectivity();
+                                    if(connResult == ConnectivityResult.none){
+                                      _scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                          content: Text("Please check your internet connection."),
+                                          action: SnackBarAction(
+                                            label: 'Dismiss',
+                                            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                                          ),
+                                        ),
+                                      );
+                                      return ;
+                                    }
                                     FocusScope.of(context).unfocus();
 
                                     // if (_bloc.checkCreditError()) {
