@@ -364,7 +364,9 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         });
   }
 
+  BuildContext buildContext;
   Widget configureBillingHeading(BuildContext buildContext) {
+    this.buildContext = buildContext;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -394,7 +396,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         context: mcontext,
         builder: (BuildContext bc) {
           return Container(
-            child: _scrollingList(focusNodes),
+            child: _scrollingList(focusNodes, bc),
           );
         });
   }
@@ -526,7 +528,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         ));
   }
 
-  static InputDecoration getInputDecoration({String fieldTitle}) {
+  InputDecoration getInputDecoration({String fieldTitle}) {
     return InputDecoration(
       errorStyle: TextStyle(
         color: Colors.red,
@@ -546,14 +548,17 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
     );
   }
 
-  Widget _scrollingList(List<FocusNode> focusNodes) {
+  Widget _scrollingList(List<FocusNode> focusNodes, BuildContext bc) {
     print(focusNodes);
     Widget _cityWidget(String city) {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[1]);
+            print("--------------------------");
+            // FocusScope.of(bc).requestFocus(focusNodes[0]);
+            FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
             print(value);
@@ -563,8 +568,6 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[0],
-          textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "City",
           ),
@@ -576,8 +579,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[2]);
+            // FocusScope.of(bc).requestFocus(focusNodes[1]);
+            FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
             communityModel.billing_address.state = value;
@@ -586,8 +591,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[1],
-          textInputAction: TextInputAction.next,
+          focusNode: focusNodes[0],
           decoration: getInputDecoration(
             fieldTitle: "State",
           ),
@@ -599,8 +603,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[4]);
+            // FocusScope.of(bc).requestFocus(focusNodes[3]);
+            FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
             print(value);
@@ -610,9 +616,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[3],
+          focusNode: focusNodes[2],
           keyboardType: TextInputType.number,
-          textInputAction: TextInputAction.next,
           maxLength: 15,
           decoration: getInputDecoration(
             fieldTitle: "ZIP Code",
@@ -632,14 +637,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             communityModel.billing_address.additionalnotes = value;
           },
           initialValue: notes != null ? notes : '',
-//          validator: (value) {
-//            return value.isEmpty ? 'Field cannot be left blank' : null;
-//          },
-          // onSaved: (value) {
-
-          // },
           focusNode: focusNodes[7],
-          textInputAction: TextInputAction.next,
+          textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
             fieldTitle: "Additional Notes",
           ),
@@ -652,7 +651,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[5]);
+            FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
             communityModel.billing_address.street_address1 = value;
@@ -660,8 +659,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[4],
-          textInputAction: TextInputAction.next,
+          focusNode: focusNodes[3],
+          textInputAction: TextInputAction.done,
           initialValue: street_address1 != null ? street_address1 : '',
           decoration: getInputDecoration(
             fieldTitle: "Street Address 1",
@@ -675,13 +674,14 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
             onFieldSubmitted: (input) {
-              FocusScope.of(parentContext).requestFocus(focusNodes[6]);
+              // FocusScope.of(bc).requestFocus(focusNodes[6]);
+              FocusScope.of(bc).unfocus();
             },
             onChanged: (value) {
               communityModel.billing_address.street_address2 = value;
             },
             focusNode: focusNodes[5],
-            textInputAction: TextInputAction.next,
+            textInputAction: TextInputAction.done,
             initialValue: street_address2 != null ? street_address2 : '',
             decoration: getInputDecoration(
               fieldTitle: "Street Address 2",
@@ -693,8 +693,10 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textInputAction: TextInputAction.done,
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[3]);
+            // FocusScope.of(bc).requestFocus(focusNodes[2]);
+            FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
             communityModel.billing_address.country = value;
@@ -703,8 +705,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[2],
-          textInputAction: TextInputAction.next,
+          focusNode: focusNodes[1],
           decoration: getInputDecoration(
             fieldTitle: "Country Name",
           ),
@@ -717,7 +718,8 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(parentContext).requestFocus(focusNodes[7]);
+            // FocusScope.of(bc).requestFocus(focusNodes[7]);
+            FocusScope.of(bc).unfocus();
           },
           onChanged: (value) {
             communityModel.billing_address.companyname = value;
@@ -727,7 +729,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           //   return value.isEmpty ? 'Field cannot be left blank*' : null;
           // },
           focusNode: focusNodes[6],
-          textInputAction: TextInputAction.next,
+          textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
             fieldTitle: "Company Name",
           ),
@@ -744,7 +746,7 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
             style: Theme.of(parentContext).primaryTextTheme.button,
           ),
           onPressed: () async {
-            FocusScope.of(parentContext).requestFocus(new FocusNode());
+            FocusScope.of(bc).requestFocus(new FocusNode());
             if (_billingInformationKey.currentState.validate()) {
               if (communityModel.billing_address.country == null) {
                 scrollToTop();
@@ -780,14 +782,14 @@ class _TimeBankBillingAdminViewState extends State<TimeBankBillingAdminView> {
           controller: scollContainer,
           children: <Widget>[
             _billingDetailsTitle,
-            _stateWidget(communityModel.billing_address.state),
             _cityWidget(communityModel.billing_address.city),
+            _stateWidget(communityModel.billing_address.state),
+            _countryNameWidget(communityModel.billing_address.country),
             _pinCodeWidget(communityModel.billing_address.pincode),
             _streetAddressWidget(
                 communityModel.billing_address.street_address1),
             _streetAddressTwoWidget(
                 communityModel.billing_address.street_address2),
-            _countryNameWidget(communityModel.billing_address.country),
             _companyNameWidget(communityModel.billing_address.companyname),
             _additionalNotesWidget(
                 communityModel.billing_address.additionalnotes),

@@ -25,9 +25,9 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/search_manager.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/timebanks/billing/billing_plan_details.dart';
 import 'package:sevaexchange/views/workshop/direct_assignment.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class CreateEditCommunityView extends StatelessWidget {
@@ -128,19 +128,13 @@ class CreateEditCommunityViewFormState
   List<FocusNode> focusNodes;
   String errTxt;
   int totalMembersCount = 0;
-  String description =
-      'Check this box if you want to disable user-to-user transactions. That is, “Requests” can only be originated by the designated Admins of this Timebank. Typically, Protected Timebanks are used for Political Campaigns and certain Nonprofit Organizations';
-  String taxDescription =
-      'At the time that a user is credited Seva Credits for completing a request (for the Timebank), the Timebank Admin can specify a Tax - which is credited to the Timebank. Slide the ruler to specify the amount of the Tax.';
-  var i_buttonInfo;
 
   final _textUpdates = StreamController<String>();
 
   void initState() {
     super.initState();
     var _searchText = "";
-    i_buttonInfo =
-        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
+
     Future.delayed(Duration.zero, () {
       createEditCommunityBloc.getChildTimeBanks(context);
     });
@@ -213,7 +207,7 @@ class CreateEditCommunityViewFormState
 
   HashMap<String, UserModel> selectedUsers = HashMap();
   BuildContext parentContext;
-
+  var aboutFocus = FocusNode();
   Map onActivityResult;
   ScrollController _controller = ScrollController();
 
@@ -296,11 +290,9 @@ class CreateEditCommunityViewFormState
                   headingText('Name your timebank'),
                   TextFormField(
                     textCapitalization: TextCapitalization.sentences,
-
-//                    focusNode: FocusNode(),
-//                    onFieldSubmitted: (v){
-//                      FocusScope.of(context).requestFocus(aboutFocus);
-//                    },
+                    onFieldSubmitted: (v) {
+                      FocusScope.of(context).requestFocus(aboutFocus);
+                    },
                     controller: searchTextController,
                     onChanged: (value) {
                       enteredName = value.replaceAll("[^a-zA-Z0-9]+", "");
@@ -316,9 +308,9 @@ class CreateEditCommunityViewFormState
                       errorText: errTxt,
                       hintText: "Ex: Pets-in-town, Citizen collab",
                     ),
+                    textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.text,
                     autocorrect: true,
-
                     maxLines: 1,
                     onSaved: (value) {
                       enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
@@ -342,14 +334,12 @@ class CreateEditCommunityViewFormState
                   ),
                   headingText('About'),
                   TextFormField(
-//                    focusNode: aboutFocus,
-//                    onFieldSubmitted: (v){
-//                      FocusScope.of(context).requestFocus(FocusNode());
-//                    },
+                    focusNode: aboutFocus,
                     decoration: InputDecoration(
                       hintText: 'Ex: A bit more about your timebank',
                     ),
-                    keyboardType: TextInputType.multiline,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
                     maxLines: null,
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: timebankModel.missionStatement ?? "",
@@ -424,28 +414,11 @@ class CreateEditCommunityViewFormState
                       headingText('Protected Timebank'),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
-                        child: Tooltip(
-                            message:
-                                i_buttonInfo['protectedTimebankInfo'] != null
-                                    ? i_buttonInfo['protectedTimebankInfo'] ??
-                                        description
-                                    : description,
-                            child: IconButton(
-                                onPressed: () {
-                                  showInfoOfConcept(
-                                      dialogTitle: i_buttonInfo[
-                                                  'protectedTimebankInfo'] !=
-                                              null
-                                          ? i_buttonInfo[
-                                                  'protectedTimebankInfo'] ??
-                                              description
-                                          : description,
-                                      mContext: context);
-                                },
-                                icon: Icon(
-                                  Icons.info_outline,
-                                  size: 20,
-                                ))),
+                        child: infoButton(
+                          context: context,
+                          key: GlobalKey(),
+                          type: InfoType.PROTECTED_TIMEBANK,
+                        ),
                       ),
                       Column(
                         children: <Widget>[
@@ -506,21 +479,10 @@ class CreateEditCommunityViewFormState
                             color: Colors.grey,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            showInfoOfConcept(
-                                dialogTitle: i_buttonInfo['taxInfo'] != null
-                                    ? i_buttonInfo['taxInfo'] ?? taxDescription
-                                    : taxDescription,
-                                mContext: context);
-                          },
-                          tooltip: i_buttonInfo['taxInfo'] != null
-                              ? i_buttonInfo['taxInfo'] ?? taxDescription
-                              : taxDescription,
-                          icon: Icon(
-                            Icons.info_outline,
-                            size: 20,
-                          ),
+                        infoButton(
+                          context: context,
+                          key: GlobalKey(),
+                          type: InfoType.TAX_CONFIGURATION,
                         ),
                       ],
                     ),
@@ -1162,8 +1124,8 @@ class CreateEditCommunityViewFormState
                 .updateValueByKey('city', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.state != null
-              ? controller.community.billing_address.state
+          initialValue: controller.community.billing_address.city != null
+              ? controller.community.billing_address.city
               : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
@@ -1182,7 +1144,7 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[3]);
+            FocusScope.of(context).requestFocus(focusNodes[4]);
           },
           onChanged: (value) {
             print(value);
@@ -1196,7 +1158,7 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[2],
+          focusNode: focusNodes[3],
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           maxLength: 15,
@@ -1212,7 +1174,8 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            scrollToBottom();
+            FocusScope.of(context).unfocus();
+            // scrollToBottom();
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -1230,7 +1193,7 @@ class CreateEditCommunityViewFormState
 
           // },
           focusNode: focusNodes[7],
-          textInputAction: TextInputAction.next,
+          textInputAction: TextInputAction.done,
           decoration: getInputDecoration(
             fieldTitle: "Additional Notes",
           ),
@@ -1243,7 +1206,8 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[4]);
+            // FocusScope.of(context).requestFocus(focusNodes[5]);
+            FocusScope.of(context).unfocus();
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -1253,8 +1217,8 @@ class CreateEditCommunityViewFormState
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[3],
-          textInputAction: TextInputAction.next,
+          focusNode: focusNodes[4],
+          textInputAction: TextInputAction.done,
           initialValue:
               controller.community.billing_address.street_address1 != null
                   ? controller.community.billing_address.street_address1
@@ -1271,15 +1235,16 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
             onFieldSubmitted: (input) {
-              FocusScope.of(context).requestFocus(focusNodes[5]);
+              FocusScope.of(context).unfocus();
             },
+            keyboardType: TextInputType.text,
             onChanged: (value) {
               controller.community.billing_address
                   .updateValueByKey('street_address2', value);
               createEditCommunityBloc.onChange(controller);
             },
-            focusNode: focusNodes[4],
-            textInputAction: TextInputAction.next,
+            focusNode: focusNodes[5],
+            textInputAction: TextInputAction.done,
             initialValue:
                 controller.community.billing_address.street_address2 != null
                     ? controller.community.billing_address.street_address2
@@ -1296,6 +1261,7 @@ class CreateEditCommunityViewFormState
         child: TextFormField(
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[7]);
+            // scrollToBottom();
           },
           onChanged: (value) {
             controller.community.billing_address
@@ -1322,20 +1288,20 @@ class CreateEditCommunityViewFormState
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
           onFieldSubmitted: (input) {
-            FocusScope.of(context).requestFocus(focusNodes[6]);
+            FocusScope.of(context).requestFocus(focusNodes[3]);
           },
           onChanged: (value) {
             controller.community.billing_address
                 .updateValueByKey('country', value);
             createEditCommunityBloc.onChange(controller);
           },
-          initialValue: controller.community.billing_address.companyname != null
-              ? controller.community.billing_address.companyname
+          initialValue: controller.community.billing_address.country != null
+              ? controller.community.billing_address.country
               : '',
           validator: (value) {
             return value.isEmpty ? 'Field cannot be left blank*' : null;
           },
-          focusNode: focusNodes[5],
+          focusNode: focusNodes[2],
           textInputAction: TextInputAction.next,
           decoration: getInputDecoration(
             fieldTitle: "Country Name",

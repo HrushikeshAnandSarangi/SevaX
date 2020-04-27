@@ -126,6 +126,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final volunteersTextFocus = FocusNode();
 
   RequestModel requestModel = RequestModel();
+  var focusNodes = List.generate(5, (_) => FocusNode());
+
   GeoFirePoint location;
 
   double sevaCoinsValue = 0;
@@ -249,7 +251,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                   onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).requestFocus(focusNodes[0]);
                   },
                   inputFormatters: <TextInputFormatter>[
                     WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
@@ -260,6 +262,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         : "Ex: Small carpentry work...",
                     hintStyle: textStyle,
                   ),
+                  textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                   initialValue: widget.offer != null && widget.isOfferRequest
                       ? getOfferTitle(
@@ -292,10 +295,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                  focusNode: FocusNode(),
+                  focusNode: focusNodes[0],
                   onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(hoursTextFocus);
+                    FocusScope.of(context).requestFocus(focusNodes[1]);
                   },
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'Your Request and any #hashtags',
                     hintStyle: textStyle,
@@ -325,10 +329,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                    focusNode: hoursTextFocus,
+                    focusNode: focusNodes[1],
                     onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(volunteersTextFocus);
+                      FocusScope.of(context).requestFocus(focusNodes[2]);
                     },
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       hintText: 'Total no. of hours required',
                       hintStyle: textStyle,
@@ -358,9 +363,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                  focusNode: volunteersTextFocus,
+                  focusNode: focusNodes[2],
                   onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).unfocus();
                   },
                   decoration: InputDecoration(
                     hintText: 'No. of approvals',

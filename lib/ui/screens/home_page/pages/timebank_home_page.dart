@@ -12,11 +12,11 @@ import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/core.dart';
-import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
 import 'package:sevaexchange/views/tasks/completed_list.dart';
 import 'package:sevaexchange/views/tasks/my_tasks_list.dart';
 import 'package:sevaexchange/views/tasks/notAccepted_tasks.dart';
 import 'package:sevaexchange/views/timebanks/timebankcreate.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../../../flavor_config.dart';
 
@@ -35,10 +35,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   TabController controller;
   ScrollController _scrollController;
   bool isTitleVisible = false;
-  var i_buttonInfo;
 
-  String description =
-      'A Timebank (or Community) is divided into Groups. For example, a School Community would have Groups for Technology Committee, Fund Raising, Classroom, etc.';
   @override
   void initState() {
     controller = TabController(length: 3, vsync: this);
@@ -55,9 +52,6 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       }
     });
     _homeDashBoardBloc = BlocProvider.of<HomeDashBoardBloc>(context);
-    i_buttonInfo =
-        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
-
     super.initState();
   }
 
@@ -146,27 +140,35 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                                 // will be positioned in the top right of the container
                                 top: -10,
                                 right: -10,
-                                child: IconButton(
-                                  icon: Image.asset(
-                                    'lib/assets/images/info.png',
-                                    color:
-                                        FlavorConfig.values.theme.primaryColor,
-                                    height: 16,
-                                    width: 16,
-                                  ),
-                                  onPressed: () {
-                                    showInfoOfConcept(
-                                        dialogTitle:
-                                            i_buttonInfo['groupsInfo'] != null
-                                                ? i_buttonInfo['groupsInfo'] ??
-                                                    description
-                                                : description,
-                                        mContext: context);
-                                  },
-                                  tooltip: i_buttonInfo['groupsInfo'] != null
-                                      ? i_buttonInfo['groupsInfo'] ??
-                                          description
-                                      : description,
+                                // child: IconButton(
+                                //   icon: Image.asset(
+                                //     'lib/assets/images/info.png',
+                                //     color:
+                                //         FlavorConfig.values.theme.primaryColor,
+                                //     height: 16,
+                                //     width: 16,
+                                //   ),
+                                //   onPressed: () {
+                                //     customInfoDialog(context);
+                                //     // showInfoOfConcept(
+                                //     //     dialogTitle:
+                                //     //         infoDetails['groupsInfo'] != null
+                                //     //             ? infoDetails['groupsInfo'] ??
+                                //     //                 description
+                                //     //             : description,
+                                //     //     mContext: context);
+                                //   },
+                                //   tooltip: infoDetails['groupsInfo'] != null
+                                //       ? infoDetails['groupsInfo'] ??
+                                //           description
+                                //       : description,
+                                // ),
+                                child: infoButton(
+                                  context: context,
+                                  key: GlobalKey(),
+                                  type: InfoType.GROUPS,
+                                  // text:
+                                  //     infoDetails['groupsInfo'] ?? description,
                                 ),
                               ),
                             ],

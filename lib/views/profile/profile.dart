@@ -230,7 +230,10 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         SizedBox(height: 20),
                         SevaCoinWidget(
-                          amount: this.user.currentBalance ?? 0.0,
+                          amount: this.user.currentBalance != null
+                              ? double.parse(
+                                  this.user.currentBalance.toStringAsFixed(2))
+                              : 0.0,
                           onTap: () async{
                             var connResult = await Connectivity().checkConnectivity();
                             if(connResult == ConnectivityResult.none){

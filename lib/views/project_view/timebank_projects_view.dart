@@ -11,6 +11,7 @@ import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
 import 'package:sevaexchange/views/project_view/create_edit_project.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../requests/project_request.dart';
 
@@ -25,15 +26,9 @@ class TimeBankProjectsView extends StatefulWidget {
 }
 
 class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
-  String description =
-      'Projects are logical collections under a Group. For example, the Technology Committee Group can have the following Projects: School web page, Equipment, Apps, etc.';
-  var i_buttonInfo;
-
   @override
   void initState() {
     super.initState();
-    i_buttonInfo =
-        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
   }
 
   @override
@@ -64,26 +59,32 @@ class _TimeBankProjectsViewState extends State<TimeBankProjectsView> {
                         // will be positioned in the top right of the container
                         top: -8,
                         right: -10,
-                        child: IconButton(
-                          icon: Image.asset(
-                            'lib/assets/images/info.png',
-                            color: FlavorConfig.values.theme.primaryColor,
-                            height: 16,
-                            width: 16,
-                          ),
-                          tooltip: i_buttonInfo['projectsInfo'] != null
-                              ? i_buttonInfo['projectsInfo'] ?? description
-                              : description,
-                          onPressed: () {
-                            showInfoOfConcept(
-                                dialogTitle:
-                                    i_buttonInfo['projectsInfo'] != null
-                                        ? i_buttonInfo['projectsInfo'] ??
-                                            description
-                                        : description,
-                                mContext: context);
-                          },
+                        child: infoButton(
+                          context: context,
+                          key: GlobalKey(),
+                          type: InfoType.PROJECTS,
+                          // text: infoDetails['projectsInfo'] ?? description,
                         ),
+                        // child: IconButton(
+                        //   icon: Image.asset(
+                        //     'lib/assets/images/info.png',
+                        //     color: FlavorConfig.values.theme.primaryColor,
+                        //     height: 16,
+                        //     width: 16,
+                        //   ),
+                        //   tooltip: infoDetails['projectsInfo'] != null
+                        //       ? infoDetails['projectsInfo'] ?? description
+                        //       : description,
+                        //   onPressed: () {
+                        //     showInfoOfConcept(
+                        //         dialogTitle:
+                        //             infoDetails['projectsInfo'] != null
+                        //                 ? infoDetails['projectsInfo'] ??
+                        //                     description
+                        //                 : description,
+                        //         mContext: context);
+                        //   },
+                        // ),
                       ),
                     ],
                   ),
