@@ -50,7 +50,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   String title = 'Loading';
   String loggedInUser;
   final formkey = GlobalKey<FormState>();
-
+  String userStatus = '';
   static const String JOIN = "Join";
   static const String JOINED = "Joined";
   static const String REQUESTED = "Requested";
@@ -175,8 +175,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                   itemCount: timebankList.length,
                   physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    TimebankModel timebank = timebankList.elementAt(index);
                     CompareToTimeBank status;
+                    TimebankModel timebank = timebankList.elementAt(index);
                     //  print('timebank is ${timebankList.length}');
                     if (timebank.admins
                             .contains(widget.loggedInUserModel.sevaUserID) ||
@@ -185,32 +185,40 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                         timebank.members
                             .contains(widget.loggedInUserModel.sevaUserID)) {
                       status = CompareToTimeBank.JOINED;
-                      return makeItem(timebank, status, bloc);
+                      userStatus = 'Joined';
+                      return makeItem(timebank, status, bloc, userStatus);
                     } else if (_joinRequestModels != null) {
+                      CompareToTimeBank campareStatus;
+
                       _joinRequestModels.forEach((joinRequestModel) {
                         if (joinRequestModel.entityId == timebank.id) {
                           print('timebank is true ${timebank.id}');
 
                           if (joinRequestModel.operationTaken == true &&
                               joinRequestModel.accepted == false) {
-                            status = CompareToTimeBank.REJECTED;
+                            campareStatus = CompareToTimeBank.REJECTED;
                             print('request us rejected ${timebank.id}');
-                          }
-                          if (joinRequestModel.operationTaken == false) {
-                            status = CompareToTimeBank.REQUESTED;
-                          }
-                          if (joinRequestModel.accepted == true) {
-                            status = CompareToTimeBank.JOINED;
+                            userStatus = 'Rejected';
+                          } else if (joinRequestModel.operationTaken == false) {
+                            campareStatus = CompareToTimeBank.REQUESTED;
+                            userStatus = 'Requested';
+                          } else if (joinRequestModel.accepted == true) {
+                            campareStatus = CompareToTimeBank.JOINED;
+                            userStatus = 'Joined';
                           }
                         }
                       });
+                      if (campareStatus != CompareToTimeBank.JOIN) {
+                        status = campareStatus;
+                        return makeItem(timebank, status, bloc, userStatus);
+                      }
                       status = CompareToTimeBank.JOIN;
-
-                      //   status = compareTimeBanks(_joinRequestModels, timebank);
-                      return makeItem(timebank, status, bloc);
+                      userStatus = 'Join';
+                      return makeItem(timebank, status, bloc, userStatus);
                     } else {
+                      userStatus = 'Join';
                       status = CompareToTimeBank.JOIN;
-                      return makeItem(timebank, status, bloc);
+                      return makeItem(timebank, status, bloc, userStatus);
                     }
                   },
                   padding: const EdgeInsets.all(8),
@@ -230,7 +238,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
         });
   }
 
-  Widget makeItem(TimebankModel timebank, CompareToTimeBank status, bloc) {
+  Widget makeItem(TimebankModel timebank, CompareToTimeBank status, bloc,
+      String userStatus) {
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -304,7 +313,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                       textColor: Colors.white,
                       child: Text(getTimeBankStatusTitle(status) ?? "",
                           style: TextStyle(fontSize: 14)),
-                      onPressed: status == CompareToTimeBank.JOIN
+                      onPressed: userStatus == 'Join'
                           ? () async {
                               //    print('print time data ${timebank.creatorId}');
                               joinRequestModel.reason =
