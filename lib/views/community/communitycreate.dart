@@ -493,34 +493,37 @@ class CreateEditCommunityViewFormState
                             print(snapshot.data.community);
                           },
                         ),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        'Current Tax Percentage : ${taxPercentage.toInt()}%',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                  Offstage(
+                    offstage: widget.isCreateTimebank,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'Current Tax Percentage : ${taxPercentage.toInt()}%',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          showInfoOfConcept(
-                              dialogTitle: i_buttonInfo['taxInfo'] != null
-                                  ? i_buttonInfo['taxInfo'] ?? taxDescription
-                                  : taxDescription,
-                              mContext: context);
-                        },
-                        tooltip: i_buttonInfo['taxInfo'] != null
-                            ? i_buttonInfo['taxInfo'] ?? taxDescription
-                            : taxDescription,
-                        icon: Icon(
-                          Icons.info_outline,
-                          size: 20,
+                        IconButton(
+                          onPressed: () {
+                            showInfoOfConcept(
+                                dialogTitle: i_buttonInfo['taxInfo'] != null
+                                    ? i_buttonInfo['taxInfo'] ?? taxDescription
+                                    : taxDescription,
+                                mContext: context);
+                          },
+                          tooltip: i_buttonInfo['taxInfo'] != null
+                              ? i_buttonInfo['taxInfo'] ?? taxDescription
+                              : taxDescription,
+                          icon: Icon(
+                            Icons.info_outline,
+                            size: 20,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 20),
+                  widget.isCreateTimebank ? Container() : SizedBox(height: 20),
                   headingText('Your timebank location.'),
                   Text(
                     'List the place or address where your community meets (such as a cafe, library, or church.).',
