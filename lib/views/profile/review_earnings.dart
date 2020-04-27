@@ -152,7 +152,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
 //                        return transaction.to ==
 //                            SevaCore.of(context).loggedInUser.sevaUserID;
 //                      });
-                      String plus = model.type == 'user' ? model.from ==  SevaCore.of(context).loggedInUser.sevaUserID ? "+": "-" : model.from ==  model.timebankid ? "-": "+";
+                      String plus = model.type == 'RequestMode.PERSONAL_REQUEST' ? model.from ==  SevaCore.of(context).loggedInUser.sevaUserID ? "-": "+" : model.type == 'RequestMode.TIMEBANK_REQUEST' ? model.from ==  model.timebankid ? "-": "+" : model.from ==  SevaCore.of(context).loggedInUser.sevaUserID ? "-": "+";
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,

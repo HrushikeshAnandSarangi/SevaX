@@ -86,7 +86,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          covidcheck.show ? Container(
+          covidcheck["show"] ? Container(
               alignment: Alignment.center,
               height: 90.0,
               margin: const EdgeInsets.symmetric(
@@ -149,7 +149,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
                     ],
                   ),
                 ],
-              )): '',
+              )): Container(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(

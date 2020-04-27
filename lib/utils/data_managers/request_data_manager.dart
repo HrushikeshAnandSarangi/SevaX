@@ -973,13 +973,9 @@ Stream<List<TransactionModel>> getUsersCreditsDebitsStream({
 }) async* {
   var data = Firestore.instance
       .collection('transactions')
-      // .where('transactions.to', isEqualTo: userId)
-      // .where('transactions', arrayContains: {'to': '6TSPDyOpdQbUmBcDwfwEWj7Zz0z1', 'isApproved': true})
-      //.where('transactions', arrayContains: true)
       .where('transactionbetween', arrayContains: userId)
       .where("isApproved", isEqualTo: true)
       .orderBy("timestamp", descending: true)
-      // .where('timebankId', isEqualTo: FlavorConfig.values.timebankId)
       .snapshots();
 
   yield* data.transform(
