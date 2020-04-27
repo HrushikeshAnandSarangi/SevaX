@@ -174,7 +174,7 @@ class TransactionBloc {
         // debit from user
         Query query = Firestore.instance
             .collection('users')
-            .where('sevaUserID', isEqualTo: from);
+            .where('sevauserid', isEqualTo: from);
         QuerySnapshot snapshot = await query.getDocuments();
         DocumentSnapshot document = snapshot.documents?.length > 0 && snapshot.documents != null
             ? snapshot.documents.first
@@ -187,7 +187,7 @@ class TransactionBloc {
         // credit to user
         query = Firestore.instance
             .collection('users')
-            .where('sevaUserID', isEqualTo: to);
+            .where('sevauserid', isEqualTo: to);
         snapshot = await query.getDocuments();
         document = snapshot.documents?.length > 0 && snapshot.documents != null
             ? snapshot.documents.first

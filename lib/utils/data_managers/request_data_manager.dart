@@ -581,7 +581,7 @@ Future<void> approveRequestCompletion({
             : updatedRequestModel.toMap(),
         merge: true,
       );
-  transactionBloc.updateNewTransaction(
+  await transactionBloc.updateNewTransaction(
       model.requestMode == RequestMode.PERSONAL_REQUEST
           ? editedTransaction.from
           : editedTransaction.timestamp,
