@@ -32,7 +32,7 @@ class _BaseViewState<T extends ChangeNotifier> extends State<BaseView<T>> {
   Widget build(BuildContext context) {
     getLogger(this.runtimeType.toString()).i('build');
     return ChangeNotifierProvider<T>(
-      builder: (context) => model,
+      create: (context) => model,
       child: Consumer<T>(
         builder: widget.builder,
         child: widget.child,

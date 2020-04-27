@@ -22,7 +22,7 @@ dependencies:
   intro_slider: ^2.2.9
   firebase_core: ^0.4.4+3
   firebase_auth: ^0.16.0
-  cloud_firestore: ^0.13.5
+  cloud_firestore: ^0.12.5
   google_sign_in: ^4.4.4
   shared_preferences: 0.5.1+2
   firebase_storage: ^3.1.5
@@ -49,13 +49,13 @@ dependencies:
   timezone: ^0.5.7
   flutter_auth_buttons: ^0.8.0
   flutter_svg: ^0.17.4
-  logger: ^0.9.1
-  provider: ^4.0.5+1
+  logger: ^0.7.0+2
+  provider: ^3.0.0+1
   pin_code_text_field: ^1.5.1
   flutter_typeahead: ^1.8.0
-  flutter_google_places: ^0.2.4
+  flutter_google_places: ^0.2.3
   logging: ^0.11.4
-  rxdart: ^0.24.0
+  rxdart: ^0.22.0
   geoflutterfire: 2.0.3+5
   location: ^3.0.2
   google_maps_flutter: 0.5.21+6
@@ -72,10 +72,10 @@ dependencies:
   meet_network_image: ^0.1.2
   dio: ^3.0.9
   simple_animations: ^2.1.0
-  flutter_screenutil: ^1.1.0
+  flutter_screenutil: ^0.7.0
   sticky_headers: ^0.1.8+1
   sliding_up_panel: ^1.0.2
-  cached_network_image: ^2.1.0+1
+  cached_network_image: ^2.0.0
   curved_navigation_bar: ^0.3.2
   autocomplete_textfield: ^1.7.3
   stripe_payment: ^1.0.7
