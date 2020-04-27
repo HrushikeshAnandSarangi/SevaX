@@ -229,11 +229,15 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         SizedBox(height: 20),
                         SevaCoinWidget(
-                          amount: this.user.currentBalance ?? 0.0,
+                          amount: this.user.currentBalance != null
+                              ? double.parse(
+                                  this.user.currentBalance.toStringAsFixed(2))
+                              : 0.0,
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) {
-                                return ReviewEarningsPage(type: "user", timebankid: "");
+                                return ReviewEarningsPage(
+                                    type: "user", timebankid: "");
                               },
                             ),
                           ),
