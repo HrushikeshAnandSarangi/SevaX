@@ -39,8 +39,6 @@ class _SkillViewNewState extends State<SkillViewNew> {
         .collection('skills')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
-      isDataLoaded = true;
-
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.documentID);
@@ -54,7 +52,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
           // selectedChips.add(buildChip(id: id, value: skills[id]));
         });
       }
-      setState(() {});
+      setState(() {
+        isDataLoaded = true;
+      });
     });
 
     super.initState();
@@ -173,31 +173,35 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
             ),
             SizedBox(height: 20),
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Wrap(
-                  runSpacing: 5.0,
-                  spacing: 5.0,
-                  children: _selectedSkills.values
-                      .toList()
-                      .map(
-                        (value) => value == null
-                            ? Container()
-                            : CustomChip(
-                                title: value,
-                                onDelete: () {
-                                  String id = skills.keys
-                                      .firstWhere((k) => skills[k] == value);
-                                  _selectedSkills.remove(id);
-                                  setState(() {});
-                                },
-                              ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
+            widget.isFromProfile && !isDataLoaded
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Wrap(
+                        runSpacing: 5.0,
+                        spacing: 5.0,
+                        children: _selectedSkills.values
+                            .toList()
+                            .map(
+                              (value) => value == null
+                                  ? Container()
+                                  : CustomChip(
+                                      title: value,
+                                      onDelete: () {
+                                        String id = skills.keys.firstWhere(
+                                            (k) => skills[k] == value);
+                                        _selectedSkills.remove(id);
+                                        setState(() {});
+                                      },
+                                    ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
             Spacer(),
             SizedBox(
               width: 134,
