@@ -29,31 +29,13 @@ class MyTaskPage extends StatefulWidget {
   MyTaskPageState createState() => MyTaskPageState();
 }
 
-class MyTaskPageState extends State<MyTaskPage> with TickerProviderStateMixin {
-  TabController controller;
-  final TextEditingController searchTextController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    controller = widget.controller;
-    controller.addListener(() {
-      setState(() {});
-    });
-    searchTextController.addListener(() {
-      setState(() {});
-    });
-  }
-
+class MyTaskPageState extends State<MyTaskPage> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
     return TabBarView(
       controller: widget.controller,
       children: [MyTasksList(), NotAcceptedTaskList(), CompletedList()],
     );
-    ;
   }
 }
 
@@ -87,6 +69,10 @@ class MyTasksList extends StatelessWidget {
               }
               List<RequestModel> requestModelList = snapshot.data;
               if (requestModelList.length == 0) {
+                // return ListView.builder(
+                //   itemBuilder: (context, index) => Text(index.toString()),
+                //   itemCount: 100,
+                // );
                 return Padding(
                   padding: const EdgeInsets.only(top: 58.0),
                   child: Text(
@@ -652,7 +638,17 @@ class TaskCardViewState extends State<TaskCardView> {
 
       FirestoreManager.requestComplete(model: requestModel);
       // END OF CODE correction mentioned above
-      transactionBloc.createNewTransaction(requestModel.sevaUserId, SevaCore.of(context).loggedInUser.sevaUserID, DateTime.now().millisecondsSinceEpoch, totalMinutes / 60, false, this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST ? RequestMode.TIMEBANK_REQUEST.toString() : RequestMode.PERSONAL_REQUEST.toString(), this.requestModel.id, this.requestModel.timebankId);
+      transactionBloc.createNewTransaction(
+          requestModel.sevaUserId,
+          SevaCore.of(context).loggedInUser.sevaUserID,
+          DateTime.now().millisecondsSinceEpoch,
+          totalMinutes / 60,
+          false,
+          this.requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+              ? RequestMode.TIMEBANK_REQUEST.toString()
+              : RequestMode.PERSONAL_REQUEST.toString(),
+          this.requestModel.id,
+          this.requestModel.timebankId);
       FirestoreManager.createTaskCompletedNotification(
         model: NotificationsModel(
           id: utils.Utils.getUuid(),

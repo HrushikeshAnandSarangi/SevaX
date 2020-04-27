@@ -4,7 +4,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
+import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/views/core.dart';
 
 import './image_picker_handler.dart';
@@ -12,18 +14,20 @@ import '../../globals.dart' as globals;
 import '../location_picker.dart';
 
 class NewsImage extends StatefulWidget {
-  String photoCredits;
-  String selectedAddress;
-  GeoFirePoint geoFirePointLocation;
+  final String photoCredits;
+  final String selectedAddress;
+  final GeoFirePoint geoFirePointLocation;
 
   final ValueChanged<String> onCreditsEntered;
-  Function(GeoFirePoint) geoFirePointLocationCallback;
+  final Function(GeoFirePoint) geoFirePointLocationCallback;
 
-  NewsImage(
-      {String photoCredits,
-      GeoFirePoint geoFirePointLocation,
-      this.geoFirePointLocationCallback,
-      this.onCreditsEntered});
+  NewsImage({
+    this.photoCredits,
+    this.geoFirePointLocation,
+    this.geoFirePointLocationCallback,
+    this.onCreditsEntered,
+    this.selectedAddress,
+  });
 
   NewsImageState createState() => NewsImageState(geoFirePointLocationCallback);
 }
@@ -78,7 +82,10 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void initState() {
+    fetchCurrentlocation();
     super.initState();
+    print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
+    selectedAddress = widget.selectedAddress;
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -182,20 +189,40 @@ class NewsImageState extends State<NewsImage>
                     selectedLocation: widget.geoFirePointLocation,
                   ),
                 ),
-              ).then((point) {
-                if (point != null) {
-                  getLocation(point).then((address) {
-                    selectedAddress = address;
-                    geoFirePointLocationCallback(point);
-                    setState(() {});
-                  });
-                }
-              });
+              ).then(
+                (point) {
+                  if (point != null) {
+                    getLocation(point).then((address) {
+                      selectedAddress = address;
+                      geoFirePointLocationCallback(point);
+                      setState(() {});
+                    });
+                  }
+                },
+              );
             },
           ),
         ],
       ),
     );
+  }
+
+  void fetchCurrentlocation() {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      GeoFirePoint location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      geoFirePointLocationCallback(location);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
+    });
   }
 }
 
