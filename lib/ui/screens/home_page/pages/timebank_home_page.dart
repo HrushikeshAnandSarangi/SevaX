@@ -81,10 +81,75 @@ class _TimebankHomePageState extends State<TimebankHomePage>
   Widget build(BuildContext context) {
     final user = BlocProvider.of<UserDataBloc>(context);
     super.build(context);
+    final covidcheck = json.decode(AppConfig.remoteConfig.getString('covid'));
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          covidcheck.show ? Container(
+              alignment: Alignment.center,
+              height: 90.0,
+              margin: const EdgeInsets.symmetric(
+                  horizontal: 0.0, vertical: 5),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0, vertical: 10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(0.0),
+                gradient: LinearGradient(
+                  colors: [Colors.white12, Colors.white12],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey[200],
+                  ),
+                ],
+              ),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          "COVID-19 Volunteer",
+                          maxLines: 2,
+                          overflow: TextOverflow.clip,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .title
+                              .apply(
+                              fontWeightDelta: 2, color: Colors.black54),
+                        ),
+                      ),
+                      SizedBox(width: 15.0),
+                      GestureDetector(
+                        child: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Colors.black54,
+                        ),
+                        onTap: () {},
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          "Help organisations and communities around you. Get information on COVID-19",
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .subtitle
+                              .apply(color: Colors.black54),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )): '',
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
