@@ -765,6 +765,7 @@ class _SplashViewState extends State<SplashView> {
         builder: (context) => SkillViewNew(
           automaticallyImplyLeading: false,
           userModel: loggedInUser,
+          isFromProfile: false,
           onSelectedSkills: (skills) {
             Navigator.pop(context);
             loggedInUser.skills = skills;
@@ -797,6 +798,7 @@ class _SplashViewState extends State<SplashView> {
         builder: (context) => InterestViewNew(
           automaticallyImplyLeading: false,
           userModel: loggedInUser,
+          isFromProfile: false,
           onSelectedInterests: (interests) {
             Navigator.pop(context);
             loggedInUser.interests = interests;

@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,7 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,6 +126,8 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   final volunteersTextFocus = FocusNode();
 
   RequestModel requestModel = RequestModel();
+  var focusNodes = List.generate(5, (_) => FocusNode());
+
   GeoFirePoint location;
 
   double sevaCoinsValue = 0;
@@ -247,7 +251,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                 ),
                 TextFormField(
                   onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).requestFocus(focusNodes[0]);
                   },
                   inputFormatters: <TextInputFormatter>[
                     WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
@@ -258,6 +262,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                         : "Ex: Small carpentry work...",
                     hintStyle: textStyle,
                   ),
+                  textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                   initialValue: widget.offer != null && widget.isOfferRequest
                       ? getOfferTitle(
@@ -290,10 +295,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                  focusNode: FocusNode(),
+                  focusNode: focusNodes[0],
                   onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(hoursTextFocus);
+                    FocusScope.of(context).requestFocus(focusNodes[1]);
                   },
+                  textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'Your Request and any #hashtags',
                     hintStyle: textStyle,
@@ -323,10 +329,11 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                    focusNode: hoursTextFocus,
+                    focusNode: focusNodes[1],
                     onFieldSubmitted: (v) {
-                      FocusScope.of(context).requestFocus(volunteersTextFocus);
+                      FocusScope.of(context).requestFocus(focusNodes[2]);
                     },
+                    textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       hintText: 'Total no. of hours required',
                       hintStyle: textStyle,
@@ -356,9 +363,9 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   ),
                 ),
                 TextFormField(
-                  focusNode: volunteersTextFocus,
+                  focusNode: focusNodes[2],
                   onFieldSubmitted: (v) {
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    FocusScope.of(context).unfocus();
                   },
                   decoration: InputDecoration(
                     hintText: 'No. of approvals',
@@ -390,6 +397,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     ),
                     color: Colors.grey[200],
                     onPressed: () {
+
                       Navigator.push(
                         context,
                         MaterialPageRoute<GeoFirePoint>(
@@ -487,6 +495,20 @@ class RequestCreateFormState extends State<RequestCreateForm> {
   BuildContext dialogContext;
 
   void createRequest() async {
+    var connResult = await Connectivity().checkConnectivity();
+    if(connResult == ConnectivityResult.none){
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Please check your internet connection."),
+          action: SnackBarAction(
+            label: 'Dismiss',
+            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+          ),
+        ),
+      );
+      return ;
+    }
+
     print('request mode ${requestModel.requestMode.toString()}');
     requestModel.requestStart = OfferDurationWidgetState.starttimestamp;
     requestModel.requestEnd = OfferDurationWidgetState.endtimestamp;

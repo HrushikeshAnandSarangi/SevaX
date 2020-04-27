@@ -19,7 +19,6 @@ import 'package:sevaexchange/views/news/news_card_view.dart';
 import 'package:sevaexchange/views/news/newscreate.dart';
 import 'package:sevaexchange/views/profile/profileviewer.dart';
 import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
-import 'package:sevaexchange/views/timebank_modules/timebank_offers.dart';
 import 'package:sevaexchange/views/timebank_modules/timebank_requests.dart';
 import 'package:sevaexchange/views/timebanks/group_manage_seva.dart';
 import 'package:sevaexchange/views/timebanks/new_timebank_notification_view.dart';
@@ -1296,9 +1295,18 @@ class DiscussionListState extends State<DiscussionList> {
                                             child: FlavorConfig.appFlavor ==
                                                         Flavor.HUMANITY_FIRST ||
                                                     FlavorConfig.appFlavor ==
-                                                        Flavor.APP
+                                                        Flavor.APP ||
+                                                    FlavorConfig.appFlavor ==
+                                                        Flavor.SEVA_DEV
                                                 ? Icon(
                                                     Icons.flag,
+                                                    color: news.reports
+                                                            .contains(SevaCore
+                                                                    .of(context)
+                                                                .loggedInUser
+                                                                .sevaUserID)
+                                                        ? Colors.red
+                                                        : Colors.black,
                                                     size: 20,
                                                   )
                                                 : Icon(

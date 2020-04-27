@@ -22,7 +22,7 @@ class SevaCoinWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: 2.0),
+                  padding: const EdgeInsets.only(left: 4.0),
                   child: sevaCoinIcon(),
                 ),
                 SizedBox(height: 1),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -13,13 +14,15 @@ class InterestViewNew extends StatefulWidget {
   final VoidCallback onBacked;
   final StringListCallback onSelectedInterests;
   final bool automaticallyImplyLeading;
+  final bool isFromProfile;
 
   InterestViewNew(
       {@required this.onSelectedInterests,
       @required this.onSkipped,
       this.onBacked,
       this.userModel,
-      this.automaticallyImplyLeading});
+      this.automaticallyImplyLeading,
+      this.isFromProfile});
   @override
   _InterestViewNewState createState() => _InterestViewNewState();
 }
@@ -27,6 +30,7 @@ class InterestViewNew extends StatefulWidget {
 class _InterestViewNewState extends State<InterestViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   Map<String, dynamic> interests = {};
   Map<String, dynamic> _selectedInterests = {};
@@ -39,17 +43,17 @@ class _InterestViewNewState extends State<InterestViewNew> {
         .collection('interests')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
-      isDataLoaded = true;
-
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         interests[data.documentID] = data['name'];
       });
       widget.userModel.interests.forEach((id) {
         _selectedInterests[id] = interests[id];
       });
-      isDataLoaded = true;
+      // isDataLoaded = true;
 
-      setState(() {});
+      setState(() {
+        isDataLoaded = true;
+      });
     });
     super.initState();
   }
@@ -57,6 +61,7 @@ class _InterestViewNewState extends State<InterestViewNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         leading: widget.automaticallyImplyLeading
@@ -165,8 +170,11 @@ class _InterestViewNewState extends State<InterestViewNew> {
               },
             ),
             SizedBox(height: 20),
-            isDataLoaded
-                ? ListView(
+            widget.isFromProfile && !isDataLoaded
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView(
                     shrinkWrap: true,
                     children: <Widget>[
                       Wrap(
@@ -188,21 +196,31 @@ class _InterestViewNewState extends State<InterestViewNew> {
                             .toList(),
                       ),
                     ],
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
                   ),
             Spacer(),
             SizedBox(
               width: 134,
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
+                  var connResult = await Connectivity().checkConnectivity();
+                  if(connResult == ConnectivityResult.none){
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text("Please check your internet connection."),
+                        action: SnackBarAction(
+                          label: 'Dismiss',
+                          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                        ),
+                      ),
+                    );
+                    return ;
+                  }
                   List<String> selectedID = [];
                   _selectedInterests.forEach((id, value) => selectedID.add(id));
                   widget.onSelectedInterests(selectedID);
                 },
                 child: Text(
-                  widget.automaticallyImplyLeading ? 'Update' : 'Next',
+                  widget.isFromProfile ? 'Update' : 'Next',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),

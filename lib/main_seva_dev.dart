@@ -9,12 +9,14 @@ import 'package:sevaexchange/ui/utils/connectivity.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'models/news_model.dart';
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: Duration.zero);
   AppConfig.remoteConfig.activateFetched();
 }
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = Flavor.SEVA_DEV;

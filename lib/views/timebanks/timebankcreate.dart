@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -69,6 +70,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   String selectedAddress;
   TextEditingController searchTextController = new TextEditingController();
   String errTxt;
+  final aboutNode = FocusNode();
   final _textUpdates = StreamController<String>();
 
   void initState() {
@@ -215,6 +217,9 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(aboutNode);
+            },
             controller: searchTextController,
             onChanged: (value) {
               print("groupname ------ $value");
@@ -237,6 +242,10 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           headingText('About', true),
           TextFormField(
+            focusNode: aboutNode,
+            onFieldSubmitted: (v) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
             decoration: InputDecoration(
               hintText: 'Ex: A bit more about your group',
             ),
@@ -640,7 +649,24 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                     return RaisedButton(
                       // color: Colors.blue,
                       color: FlavorConfig.values.theme.primaryColor,
-                      onPressed: () {
+                      onPressed: () async {
+                        var connResult =
+                        await Connectivity().checkConnectivity();
+                        if (connResult == ConnectivityResult.none) {
+                          Scaffold.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "Please check your internet connection."),
+                              action: SnackBarAction(
+                                label: 'Dismiss',
+                                onPressed: () => Scaffold.of(context)
+                                    .hideCurrentSnackBar(),
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
                         if (_formKey.currentState.validate()) {
                           // If the form is valid, we want to show a Snackbar
                           try {

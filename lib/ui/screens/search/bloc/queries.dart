@@ -60,7 +60,6 @@ class Searches {
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
       if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
         timebanksIdArr.add(doc.documentID);
-        print("asdasdasdsdasdas" + doc.documentID);
       }
     });
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -144,7 +143,6 @@ class Searches {
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
       if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
         timebanksIdArr.add(doc.documentID);
-        print("asdasdasdsdasdas" + doc.documentID);
       }
     });
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -224,11 +222,8 @@ class Searches {
 
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
-    print(
-        "hitlist length for updated offers is---" + hitList.length.toString());
     List<OfferModel> offersList = [];
     hitList.forEach((map) {
-      print("map -- >< $map");
       Map<String, dynamic> sourceMap = map['_source'];
       if (loggedInUser.blockedBy.length == 0) {
         try {
@@ -241,9 +236,6 @@ class Searches {
         } catch (e) {
           print(e);
         }
-
-//        print(model.email+" " + model.fullName + " " + model.associatedRequest);
-
       } else {
         if (!loggedInUser.blockedBy.contains(sourceMap["sevauserId"])) {
           OfferModel model = OfferModel.fromMapElasticSearch(sourceMap);
@@ -275,7 +267,6 @@ class Searches {
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
       if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
         timebanksIdArr.add(doc.documentID);
-        print("asdasdasdsdasdas" + doc.documentID);
       }
     });
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
@@ -337,13 +328,11 @@ class Searches {
     timebankSnap.documents.forEach((DocumentSnapshot doc) {
       if (doc.documentID != "73d0de2c-198b-4788-be64-a804700a88a4") {
         timebanksIdArr.add(doc.documentID);
-        print("asdasdasdsdasdas" + doc.documentID);
       }
     });
     List<String> myTimebanks = getTimebanksAndGroupsOfUser(
         currentCommunityOfUser.timebanks, timebanksIdArr);
 //    List<String> myTimebanks = getTimebanksAndGroupsOfUser(currentCommunityOfUser.timebanks, loggedInUser.membershipTimebanks);
-    print("inside search feeds function ");
 
     String url = FlavorConfig.values.elasticSearchBaseURL +
         '//elasticsearch/requests/request/_search';

@@ -6,7 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
-import 'package:sevaexchange/views/core.dart';
 
 class SearchManager {
   static final String _baseUrl = 'http://api.sevaexchange.com:9200';
@@ -103,7 +102,7 @@ class SearchManager {
     List<Map<String, dynamic>> hitList =
         await _makeElasticSearchPostRequest(url, body);
     List<CommunityModel> communityList = [];
-    print("community data ${hitList}");
+    // print("community data ${hitList}");
 
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
@@ -149,7 +148,8 @@ class SearchManager {
 //    }
   }
 
-  static Future<bool> searchGroupForDuplicate({@required queryString, @required communityId}) async {
+  static Future<bool> searchGroupForDuplicate(
+      {@required queryString, @required communityId}) async {
     String url =
         '${FlavorConfig.values.elasticSearchBaseURL}//elasticsearch/sevaxtimebanks/sevaxtimebank/_search';
     dynamic body = json.encode({
@@ -158,8 +158,7 @@ class SearchManager {
           "must": [
             {
               "term": {"community_id.keyword": communityId}
-            }
-            ,
+            },
             {
               "match": {"name": queryString}
             }

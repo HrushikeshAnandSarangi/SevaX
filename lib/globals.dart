@@ -12,6 +12,8 @@ String posterAvatarURL;
 
 String timebankAvatarURL;
 
+String projectsAvtaarURL;
+
 String campaignAvatarURL;
 
 String newsImageURL;

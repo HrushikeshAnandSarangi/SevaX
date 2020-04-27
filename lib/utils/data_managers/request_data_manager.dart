@@ -1013,7 +1013,7 @@ Future<bool> hasSufficientCredits({
   var maxAvailableBalance = (sevaCoinsBalance + lowerLimit ?? 50);
 
   print(
-      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance");
+      "Seva Credits ($sevaCoinsBalance) Credits requested $credits ----------------------------- LOWER LIMIT BALANCE $maxAvailableBalance can credit + ${maxAvailableBalance - credits >= 0}");
 
   return maxAvailableBalance - credits >= 0;
 }
@@ -1025,7 +1025,7 @@ Future<double> getMemberBalance(userId) async {
   );
   sevaCoins = userModel.currentBalance;
   print("listen to coins -> " + sevaCoins.toString());
-  return sevaCoins;
+  return double.parse(sevaCoins.toStringAsFixed(2));
 }
 
 ///NOTE Removed as a part of version 1.1 update as balance should be a meta not through calculation

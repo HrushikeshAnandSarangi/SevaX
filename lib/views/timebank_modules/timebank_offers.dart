@@ -8,7 +8,7 @@ import 'package:sevaexchange/ui/screens/offers/offer_list_items.dart';
 import 'package:sevaexchange/utils/app_config.dart';
 import 'package:sevaexchange/utils/helpers/show_limit_badge.dart';
 import 'package:sevaexchange/views/community/webview_seva.dart';
-import 'package:sevaexchange/views/project_view/timebank_projects_view.dart';
+import 'package:sevaexchange/widgets/custom_info_dialog.dart';
 
 import '../../flavor_config.dart';
 import '../../ui/screens/offers/pages/create_offer.dart' as prefix0;
@@ -30,15 +30,9 @@ class OffersState extends State<OffersModule> {
 
   bool isNearme = false;
   int sharedValue = 0;
-  String description =
-      'Users can either make Offers to the Timebank (eg. I can build HTML pages on Saturday mornings from 9 to 11 am) or to the other members in the Community (eg. I can teach a 4-week class on Making Quilts on Sunday afternoons from 2 to 4 pm). The offers to the Timebank needs to be accepted by an Admin. At this time the Offer gets converted to a Request.';
-  var i_buttonInfo;
 
   @override
   void initState() {
-    i_buttonInfo =
-        json.decode(AppConfig.remoteConfig.getString('i_button_info'));
-
     super.initState();
   }
 
@@ -49,123 +43,99 @@ class OffersState extends State<OffersModule> {
 
     return Column(
       children: <Widget>[
-        Offstage(
-          offstage: false,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 0),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 12, bottom: 12),
-                child: Row(
-                  children: <Widget>[
-                    ButtonTheme(
-                      minWidth: 110.0,
-                      height: 50.0,
-                      buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
-                      child: Stack(
-                        children: [
-                          FlatButton(
-                            onPressed: () {},
-                            child: Text(
-                              'My Offers',
-                              style: (TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
+        Row(
+          children: <Widget>[
+            Container(
+              // margin: EdgeInsets.only(top: 12, bottom: 12),
+              child: Row(
+                children: <Widget>[
+                  ButtonTheme(
+                    minWidth: 110.0,
+                    height: 50.0,
+                    buttonColor: Color.fromRGBO(234, 135, 137, 1.0),
+                    child: Stack(
+                      children: [
+                        FlatButton(
+                          onPressed: () {},
+                          child: Text(
+                            'My Offers',
+                            style: (TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18)),
+                          ),
+                        ),
+                        Positioned(
+                          // will be positioned in the top right of the container
+                          top: -10,
+                          right: -10,
+                          child: infoButton(
+                            context: context,
+                            key: GlobalKey(),
+                            type: InfoType.OFFERS,
+                            // text: infoDetails['offersInfo'] ?? description,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TransactionLimitCheck(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => prefix0.CreateOffer(
+                              timebankId: timebankId,
+                              // communityId: widget.communityId,
                             ),
                           ),
-                          Positioned(
-                            // will be positioned in the top right of the container
-                            top: -10,
-                            right: -10,
-                            child: IconButton(
-                              icon: Image.asset(
-                                'lib/assets/images/info.png',
-                                color: FlavorConfig.values.theme.primaryColor,
-                                height: 16,
-                                width: 16,
-                              ),
-                              tooltip: i_buttonInfo['offersInfo'] != null
-                                  ? i_buttonInfo['offersInfo'] ?? description
-                                  : description,
-                              onPressed: () {
-                                showInfoOfConcept(
-                                    dialogTitle:
-                                        i_buttonInfo['offersInfo'] != null
-                                            ? i_buttonInfo['offersInfo'] ??
-                                                description
-                                            : description,
-                                    mContext: context);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(left: 0),
+                          child: Icon(
+                            Icons.add_circle,
+                            color: FlavorConfig.values.theme.primaryColor,
+                          )),
                     ),
-                    TransactionLimitCheck(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => prefix0.CreateOffer(
-                                timebankId: timebankId,
-                                // communityId: widget.communityId,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                            margin: EdgeInsets.only(left: 0),
-                            child: Icon(
-                              Icons.add_circle,
-                              color: FlavorConfig.values.theme.primaryColor,
-                            )),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 40),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Image.asset(
+                'lib/assets/images/help.png',
               ),
-              IconButton(
-                icon: Image.asset(
-                  'lib/assets/images/help.png',
-                ),
-                color: FlavorConfig.values.theme.primaryColor,
-                iconSize: 24,
-                onPressed: showOffersWebPage,
+              color: FlavorConfig.values.theme.primaryColor,
+              iconSize: 24,
+              onPressed: showOffersWebPage,
+            ),
+            Container(
+              width: 120,
+              child: CupertinoSegmentedControl<int>(
+                selectedColor: Theme.of(context).primaryColor,
+                children: logoWidgets,
+                borderColor: Colors.grey,
+                padding: EdgeInsets.only(left: 0, right: 5.0),
+                groupValue: sharedValue,
+                onValueChanged: (int val) {
+                  print(val);
+                  if (val != sharedValue) {
+                    setState(() {
+                      if (isNearme == true)
+                        isNearme = false;
+                      else
+                        isNearme = true;
+                    });
+                    setState(() {
+                      sharedValue = val;
+                    });
+                  }
+                },
               ),
-              Container(
-                width: 120,
-                child: CupertinoSegmentedControl<int>(
-                  selectedColor: Theme.of(context).primaryColor,
-                  children: logoWidgets,
-                  borderColor: Colors.grey,
-                  padding: EdgeInsets.only(left: 0, right: 5.0),
-                  groupValue: sharedValue,
-                  onValueChanged: (int val) {
-                    print(val);
-                    if (val != sharedValue) {
-                      setState(() {
-                        if (isNearme == true)
-                          isNearme = false;
-                        else
-                          isNearme = true;
-                      });
-                      setState(() {
-                        sharedValue = val;
-                      });
-                    }
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 5),
-              ),
-            ],
-          ),
+            ),
+            SizedBox(width: 5),
+          ],
         ),
         Divider(
           color: Colors.white,

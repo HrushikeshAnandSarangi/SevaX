@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -12,12 +13,14 @@ class SkillViewNew extends StatefulWidget {
   final UserModel userModel;
   final VoidCallback onSkipped;
   final StringListCallback onSelectedSkills;
+  final bool isFromProfile;
 
   SkillViewNew({
     @required this.onSelectedSkills,
     @required this.onSkipped,
     this.userModel,
     this.automaticallyImplyLeading = true,
+    this.isFromProfile,
   });
   @override
   _SkillViewNewState createState() => _SkillViewNewState();
@@ -26,6 +29,7 @@ class SkillViewNew extends StatefulWidget {
 class _SkillViewNewState extends State<SkillViewNew> {
   SuggestionsBoxController controller = SuggestionsBoxController();
   TextEditingController _textEditingController = TextEditingController();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool autovalidate = false;
   Map<String, dynamic> skills = {};
   Map<String, dynamic> _selectedSkills = {};
@@ -37,8 +41,6 @@ class _SkillViewNewState extends State<SkillViewNew> {
         .collection('skills')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
-      isDataLoaded = true;
-
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         // suggestionText.add(data['name']);
         // suggestionID.add(data.documentID);
@@ -52,7 +54,9 @@ class _SkillViewNewState extends State<SkillViewNew> {
           // selectedChips.add(buildChip(id: id, value: skills[id]));
         });
       }
-      setState(() {});
+      setState(() {
+        isDataLoaded = true;
+      });
     });
 
     super.initState();
@@ -61,6 +65,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
         title: Text(
@@ -171,8 +176,11 @@ class _SkillViewNewState extends State<SkillViewNew> {
               },
             ),
             SizedBox(height: 20),
-            isDataLoaded
-                ? ListView(
+            widget.isFromProfile && !isDataLoaded
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView(
                     shrinkWrap: true,
                     children: <Widget>[
                       Wrap(
@@ -196,22 +204,32 @@ class _SkillViewNewState extends State<SkillViewNew> {
                             .toList(),
                       ),
                     ],
-                  )
-                : Center(
-                    child: CircularProgressIndicator(),
                   ),
             Spacer(),
             SizedBox(
               width: 134,
               child: RaisedButton(
-                onPressed: () {
+                onPressed: () async {
+                  var connResult = await Connectivity().checkConnectivity();
+                  if(connResult == ConnectivityResult.none){
+                    _scaffoldKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text("Please check your internet connection."),
+                        action: SnackBarAction(
+                          label: 'Dismiss',
+                          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                        ),
+                      ),
+                    );
+                    return ;
+                  }
                   List<String> selectedID = [];
                   _selectedSkills.forEach((id, _) => selectedID.add(id));
                   print(selectedID);
                   widget.onSelectedSkills(selectedID);
                 },
                 child: Text(
-                  widget.automaticallyImplyLeading ? 'Update' : 'Next',
+                  widget.isFromProfile ? 'Update' : 'Next',
                   style: Theme.of(context).primaryTextTheme.button,
                 ),
               ),
