@@ -204,6 +204,8 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                           }
                         }
                       });
+                      status = CompareToTimeBank.JOIN;
+
                       //   status = compareTimeBanks(_joinRequestModels, timebank);
                       return makeItem(timebank, status, bloc);
                     } else {
