@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -494,12 +492,20 @@ class NewsCreateFormState extends State<NewsCreateForm> {
     });
   }
 
-  Future<Void> fetchPosts(String url) async {
+  Future<void> fetchPosts(String url) async {
     print("started fetch");
     // url = "https://en.wikipedia.org/wiki/The_War_on_Normal_People";
     final response = await http.get(
       url,
     );
+    
+    print("Ststus recived from web scraping -> ${response.statusCode}" );
+    if (response.statusCode != 200) {
+      return;
+    }
+
+
+
     var document = parse(response.body);
 
     var images = document.getElementsByTagName("img");

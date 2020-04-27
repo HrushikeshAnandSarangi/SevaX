@@ -10,16 +10,16 @@ import './image_picker_handler.dart';
 import '../../flavor_config.dart';
 import '../../globals.dart' as globals;
 
-class TimebankAvatar extends StatefulWidget {
+class ProjectAvtaar extends StatefulWidget {
   final String photoUrl;
 
-  TimebankAvatar({this.photoUrl});
+  ProjectAvtaar({this.photoUrl});
 
-  _TimebankAvatarState createState() => _TimebankAvatarState();
+  _ProjectsAvtaarState createState() => _ProjectsAvtaarState();
 }
 
 @override
-class _TimebankAvatarState extends State<TimebankAvatar>
+class _ProjectsAvtaarState extends State<ProjectAvtaar>
     with TickerProviderStateMixin, ImagePickerListener {
   File _image;
   AnimationController _controller;
@@ -31,20 +31,20 @@ class _TimebankAvatarState extends State<TimebankAvatar>
     String timestampString = timestamp.toString();
     StorageReference ref = FirebaseStorage.instance
         .ref()
-        .child('timebanklogos')
+        .child('projects_avtaar')
         .child(
             SevaCore.of(context).loggedInUser.email + timestampString + '.jpg');
     StorageUploadTask uploadTask = ref.putFile(
       _image,
       StorageMetadata(
         contentLanguage: 'en',
-        customMetadata: <String, String>{'activity': 'Timebank Logo'},
+        customMetadata: <String, String>{'activity': 'Projects Logo'},
       ),
     );
     String imageURL = await (await uploadTask.onComplete).ref.getDownloadURL();
 
     setState(() {
-      globals.timebankAvatarURL = imageURL;
+      globals.projectsAvtaarURL = imageURL;
     });
 
     return imageURL;
@@ -109,7 +109,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
             : Container(
                 width: widthOfAvtar,
                 height: widthOfAvtar,
-                child: globals.timebankAvatarURL == null
+                child: globals.projectsAvtaarURL == null
                     ? Stack(
                         children: <Widget>[
                           defaultAvtarWidget,
@@ -123,7 +123,7 @@ class _TimebankAvatarState extends State<TimebankAvatar>
                           //   placeholder: CircularProgressIndicator(),
                           // ),
                           backgroundImage:
-                              NetworkImage(globals.timebankAvatarURL),
+                              NetworkImage(globals.projectsAvtaarURL),
                           backgroundColor: const Color(0xFF778899),
                         ),
                       ),
