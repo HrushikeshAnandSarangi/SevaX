@@ -301,7 +301,7 @@ packages:
       name: flutter_cupertino_date_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.19+1"
+    version: "1.0.23"
   flutter_datetime_picker:
     dependency: "direct main"
     description:
@@ -402,14 +402,14 @@ packages:
       name: geolocator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.3.0"
+    version: "5.3.1"
   google_api_availability:
     dependency: transitive
     description:
       name: google_api_availability
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.3+hotfix.1"
+    version: "2.0.4"
   google_maps_flutter:
     dependency: "direct main"
     description:
@@ -841,7 +841,7 @@ packages:
       name: timezone
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.6"
+    version: "0.5.7"
   tree_view:
     dependency: "direct main"
     description:
@@ -907,4 +907,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.12.13+hotfix.6 <2.0.0"
