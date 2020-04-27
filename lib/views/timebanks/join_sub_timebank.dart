@@ -309,64 +309,65 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                     padding: const EdgeInsets.only(right: 7),
                     child: RaisedButton(
                       elevation: 0,
-                      color: Theme.of(context).accentColor,
+                      color: userStatus == 'Join'
+                          ? Theme.of(context).accentColor
+                          : Colors.grey,
                       textColor: Colors.white,
                       child: Text(getTimeBankStatusTitle(status) ?? "",
                           style: TextStyle(fontSize: 14)),
-                      onPressed: userStatus == 'Join'
-                          ? () async {
-                              //    print('print time data ${timebank.creatorId}');
-                              joinRequestModel.reason =
-                                  "i want to join this group";
-                              joinRequestModel.userId =
-                                  widget.loggedInUserModel.sevaUserID;
-                              joinRequestModel.timestamp =
-                                  DateTime.now().millisecondsSinceEpoch;
+                      onPressed: () async {
+                        if (userStatus == 'Join') {
+                          //    print('print time data ${timebank.creatorId}');
+                          joinRequestModel.reason = "i want to join this group";
+                          joinRequestModel.userId =
+                              widget.loggedInUserModel.sevaUserID;
+                          joinRequestModel.timestamp =
+                              DateTime.now().millisecondsSinceEpoch;
 
-                              joinRequestModel.entityId = timebank.id;
-                              joinRequestModel.entityType = EntityType.Timebank;
-                              joinRequestModel.accepted = false;
+                          joinRequestModel.entityId = timebank.id;
+                          joinRequestModel.entityType = EntityType.Timebank;
+                          joinRequestModel.accepted = false;
 
-                              await updateJoinRequest(model: joinRequestModel);
+                          await updateJoinRequest(model: joinRequestModel);
 
-                              JoinRequestNotificationModel joinReqModel =
-                                  JoinRequestNotificationModel(
-                                      timebankId: timebank.id,
-                                      timebankTitle: timebank.name,
-                                      reasonToJoin: joinRequestModel.reason);
+                          JoinRequestNotificationModel joinReqModel =
+                              JoinRequestNotificationModel(
+                                  timebankId: timebank.id,
+                                  timebankTitle: timebank.name,
+                                  reasonToJoin: joinRequestModel.reason);
 
-                              NotificationsModel notification =
-                                  NotificationsModel(
-                                id: utils.Utils.getUuid(),
-                                targetUserId: timebank.creatorId,
-                                senderUserId:
-                                    widget.loggedInUserModel.sevaUserID,
-                                type: prefix0.NotificationType.JoinRequest,
-                                data: joinReqModel.toMap(),
-                              );
+                          NotificationsModel notification = NotificationsModel(
+                            id: utils.Utils.getUuid(),
+                            targetUserId: timebank.creatorId,
+                            senderUserId: widget.loggedInUserModel.sevaUserID,
+                            type: prefix0.NotificationType.JoinRequest,
+                            data: joinReqModel.toMap(),
+                          );
 
-                              notification.timebankId =
-                                  FlavorConfig.values.timebankId;
-                              //  print('creator id ${notification.timebankId}');
+                          notification.timebankId =
+                              FlavorConfig.values.timebankId;
+                          //  print('creator id ${notification.timebankId}');
 
-                              UserModel timebankCreator =
-                                  await FirestoreManager.getUserForId(
-                                      sevaUserId: timebank.creatorId);
-                              //print('time creator email ${timebankCreator.email}');
+                          UserModel timebankCreator =
+                              await FirestoreManager.getUserForId(
+                                  sevaUserId: timebank.creatorId);
+                          //print('time creator email ${timebankCreator.email}');
 
-                              await Firestore.instance
-                                  .collection('users')
-                                  .document(timebankCreator.email)
-                                  .collection("notifications")
-                                  .document(notification.id)
-                                  .setData(notification.toMap());
+                          await Firestore.instance
+                              .collection('users')
+                              .document(timebankCreator.email)
+                              .collection("notifications")
+                              .document(notification.id)
+                              .setData(notification.toMap());
 
-                              setState(() {
-                                getData();
-                              });
-                              return;
-                            }
-                          : null,
+                          setState(() {
+                            getData();
+                          });
+                          return;
+                        } else {
+                          print('');
+                        }
+                      },
                     ),
                   ),
                 ],
