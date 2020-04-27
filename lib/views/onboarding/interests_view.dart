@@ -41,8 +41,6 @@ class _InterestViewNewState extends State<InterestViewNew> {
         .collection('interests')
         .getDocuments()
         .then((QuerySnapshot querySnapshot) {
-      isDataLoaded = true;
-
       querySnapshot.documents.forEach((DocumentSnapshot data) {
         interests[data.documentID] = data['name'];
       });
@@ -51,7 +49,9 @@ class _InterestViewNewState extends State<InterestViewNew> {
       });
       // isDataLoaded = true;
 
-      setState(() {});
+      setState(() {
+        isDataLoaded = true;
+      });
     });
     super.initState();
   }
@@ -167,29 +167,33 @@ class _InterestViewNewState extends State<InterestViewNew> {
               },
             ),
             SizedBox(height: 20),
-            ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Wrap(
-                  runSpacing: 5.0,
-                  spacing: 5.0,
-                  children: _selectedInterests.values
-                      .toList()
-                      .map(
-                        (value) => CustomChip(
-                          title: value,
-                          onDelete: () {
-                            String id = interests.keys
-                                .firstWhere((k) => interests[k] == value);
-                            _selectedInterests.remove(id);
-                            setState(() {});
-                          },
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
-            ),
+            widget.isFromProfile && !isDataLoaded
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Wrap(
+                        runSpacing: 5.0,
+                        spacing: 5.0,
+                        children: _selectedInterests.values
+                            .toList()
+                            .map(
+                              (value) => CustomChip(
+                                title: value,
+                                onDelete: () {
+                                  String id = interests.keys
+                                      .firstWhere((k) => interests[k] == value);
+                                  _selectedInterests.remove(id);
+                                  setState(() {});
+                                },
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
             Spacer(),
             SizedBox(
               width: 134,
