@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
-import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/new_baseline/models/project_model.dart';
@@ -48,6 +48,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
   bool isDataLoaded = false;
   int sharedValue = 0;
   ScrollController _controller = ScrollController();
+  var focusNodes = List.generate(4, (_) => FocusNode());
 
   @override
   void initState() {
@@ -193,8 +194,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: Column(
                   children: <Widget>[
                     widget.isCreateProject
-                        ? TimebankAvatar()
-                        : TimebankAvatar(
+                        ? ProjectAvtaar()
+                        : ProjectAvtaar(
                             photoUrl: projectModel.photoUrl != null
                                 ? projectModel.photoUrl ?? defaultCameraImageURL
                                 : defaultCameraImageURL,
@@ -239,7 +240,10 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               keyboardType: TextInputType.multiline,
               maxLines: 1,
               //initialValue: snapshot.data.community.name ?? '',
-
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(focusNodes[1]);
+              },
               onSaved: (value) {
                 projectModel.name = value;
               },
@@ -279,6 +283,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 hintText:
                     'Ex: A bit more about your project which will help to associate with',
               ),
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(focusNodes[2]);
+              },
+              textInputAction: TextInputAction.next,
+              focusNode: focusNodes[1],
               initialValue:
                   widget.isCreateProject ? "" : projectModel.description ?? "",
               keyboardType: TextInputType.multiline,
@@ -308,6 +317,11 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             headingText('Email'),
             TextFormField(
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(focusNodes[3]);
+              },
+              textInputAction: TextInputAction.next,
+              focusNode: focusNodes[2],
               cursorColor: Colors.black54,
               validator: _validateEmailId,
               onSaved: (value) {
@@ -336,7 +350,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
             ),
             headingText('Phone Number'),
             TextFormField(
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).unfocus();
+              },
               cursorColor: Colors.black54,
+              focusNode: focusNodes[3],
+              textInputAction: TextInputAction.done,
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
               onSaved: (value) {
@@ -467,7 +486,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                         projectModel.completedRequests = [];
                         projectModel.pendingRequests = [];
                         projectModel.timebankId = widget.timebankId;
-                        projectModel.photoUrl = globals.timebankAvatarURL;
+                        projectModel.photoUrl = globals.projectsAvtaarURL;
                         projectModel.emailId =
                             SevaCore.of(context).loggedInUser.email;
                         int timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -477,14 +496,16 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                             SevaCore.of(context).loggedInUser.sevaUserID;
                         projectModel.members = [];
                         projectModel.id = Utils.getUuid();
-                        if (globals.timebankAvatarURL == null) {
-                          setState(() {
-                            this.communityImageError =
-                                'Project logo is mandatory';
-                            //   moveToTop();
-                          });
-                        }
+                        // if (globals.projectsAvtaarURL == null) {
+                        //   setState(() {
+                        //     this.communityImageError =
+                        //         'Project logo is mandatory';
+                        //     //   moveToTop();
+                        //   });
+
+                        // }
                         showProgressDialog('Creating project');
+                        globals.projectsAvtaarURL = null;
 //                          setState(() {
 //                            this.communityImageError = '';
 //                          });
@@ -498,16 +519,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                       } else {}
                     } else {
                       if (_formKey.currentState.validate()) {
-                        if (globals.timebankAvatarURL == null) {
-                          setState(() {
-                            this.communityImageError =
-                                'Timebank logo is mandatory';
-                          });
-                        }
                         projectModel.startTime =
                             OfferDurationWidgetState.starttimestamp;
                         projectModel.endTime =
                             OfferDurationWidgetState.endtimestamp;
+
+                        projectModel.photoUrl = globals.projectsAvtaarURL;
 
                         if (projectModel.startTime == 0 ||
                             projectModel.endTime == 0) {
@@ -526,6 +543,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           return;
                         }
                         showProgressDialog('Updating project');
+                        globals.projectsAvtaarURL = null;
                         print("final value of modeeeee is " +
                             this.projectModel.mode);
                         await FirestoreManager.updateProject(
