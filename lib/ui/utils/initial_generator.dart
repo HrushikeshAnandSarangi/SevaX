@@ -8,5 +8,3 @@ String getInitials(String nameString) {
 
   return initials;
 }
-
-

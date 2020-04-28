@@ -31,7 +31,7 @@ class BookmarkedOffers extends StatelessWidget {
         }
         if (snapshot.data == null || snapshot.data?.documents?.length == 0) {
           return Center(
-            child: Text("No offer accepted"),
+            child: Text("No offers bookmarked"),
           );
         }
         return ListView.builder(
