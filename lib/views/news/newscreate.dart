@@ -1,5 +1,4 @@
-import 'dart:ffi';
-
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -323,17 +322,19 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 child: RaisedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
-                    if(connResult == ConnectivityResult.none){
+                    if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Please check your internet connection."),
+                          content:
+                              Text("Please check your internet connection."),
                           action: SnackBarAction(
                             label: 'Dismiss',
-                            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                            onPressed: () =>
+                                Scaffold.of(context).hideCurrentSnackBar(),
                           ),
                         ),
                       );
-                      return ;
+                      return;
                     }
                     if (location != null) {
                       if (formKey.currentState.validate()) {
@@ -490,12 +491,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       url,
     );
 
-    print("Ststus recived from web scraping -> ${response.statusCode}" );
+    print("Ststus recived from web scraping -> ${response.statusCode}");
     if (response.statusCode != 200) {
       return;
     }
-
-
 
     var document = parse(response.body);
 
