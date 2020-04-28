@@ -449,7 +449,20 @@ class CreateEditCommunityViewFormState
                   widget.isCreateTimebank ? Container() : SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Container()
-                      : headingText('Select Tax percentage'),
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            headingText('Select Tax percentage'),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                              child: infoButton(
+                                context: context,
+                                key: GlobalKey(),
+                                type: InfoType.TAX_CONFIGURATION,
+                              ),
+                            ),
+                          ],
+                        ),
                   widget.isCreateTimebank
                       ? Container()
                       : Slider(
@@ -478,11 +491,6 @@ class CreateEditCommunityViewFormState
                             fontSize: 12,
                             color: Colors.grey,
                           ),
-                        ),
-                        infoButton(
-                          context: context,
-                          key: GlobalKey(),
-                          type: InfoType.TAX_CONFIGURATION,
                         ),
                       ],
                     ),
