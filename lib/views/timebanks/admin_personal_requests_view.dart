@@ -229,7 +229,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                   return AlertDialog(
                     title: Text('Add To Request?'),
                     content: Text(
-                        'Are you sure want to ${widget.userModel.fullname} add to request?'),
+                        'Are you sure want to add ${widget.userModel.fullname} to request?'),
                     actions: <Widget>[
                       FlatButton(
                         padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
@@ -303,7 +303,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                         model.title,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: Theme.of(widget.parentContext).textTheme.subhead,
+                        style: Theme.of(context).textTheme.subhead,
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.7,
@@ -311,8 +311,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
                           model.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              Theme.of(widget.parentContext).textTheme.subtitle,
+                          style: Theme.of(context).textTheme.subtitle,
                         ),
                       ),
                       SizedBox(height: 8),
@@ -410,7 +409,7 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
         timebankImage: timebankModel.photoUrl,
-        timebankName: timebankModel.name,
+        timebankName: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST ? timebankModel.name :userModel.fullname,
         requestDesc: requestModel.description,
         requestId: requestModel.id,
         requestTitle: requestModel.title);

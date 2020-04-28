@@ -127,8 +127,8 @@ Future<int> getMembersCount({@required String communityId}) async {
       .document(primaryTimebankId)
       .get();
   List<String> membersAndAdminsList = new List();
-  membersAndAdminsList.addAll(timebankDoc.data['members']);
   membersAndAdminsList.addAll(timebankDoc.data['admins']);
+  membersAndAdminsList.addAll(timebankDoc.data['members']);
   Set<String> membersAndAdminsSet = new Set<String>.from(membersAndAdminsList);
   int totalCount = membersAndAdminsSet.length;
   print("full counttttttttt " + totalCount.toString());

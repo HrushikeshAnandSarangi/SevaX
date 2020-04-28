@@ -138,6 +138,7 @@ class CreateEditCommunityViewFormState
     Future.delayed(Duration.zero, () {
       createEditCommunityBloc.getChildTimeBanks(context);
     });
+
     if (widget.isCreateTimebank == false) {
       getModelData();
     }
@@ -171,7 +172,18 @@ class CreateEditCommunityViewFormState
               communityFound = true;
               print(
                   "name ----- ${communitynName} and ${searchTextController.text}");
-              errTxt = 'Timebank name already exists';
+              if (!widget.isCreateTimebank) {
+                if (searchTextController.text != null &&
+                    communitynName != searchTextController.text) {
+                  //  errTxt = null;
+                  errTxt = 'Timebank name already exist';
+
+                  print("name is equal");
+                }
+              } else {
+                errTxt = 'Timebank name already exist';
+              }
+              //errTxt = 'Timebank name already exists';
             });
           } else {
             setState(() {
@@ -323,7 +335,6 @@ class CreateEditCommunityViewFormState
                         return 'Timebank name already exist';
                       } else {
                         enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
-                        ;
                         snapshot.data.community.updateValueByKey(
                             'name', value.replaceAll("[^a-zA-Z0-9]", ""));
                         createEditCommunityBloc.onChange(snapshot.data);

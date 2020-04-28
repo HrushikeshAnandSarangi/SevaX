@@ -199,7 +199,6 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
-                  isDissmissible: false,
                   title: "Debited",
                   subTitle:
                       TimebankNotificationMessage.DEBIT_FULFILMENT_FROM_TIMEBANK
@@ -211,23 +210,29 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           )
                           .replaceFirst('*name', data.classDetails.classHost)
                           .replaceFirst('*class', data.classDetails.classTitle),
-                  photoUrl: '',
-                  onDismissed: () {},
+                  entityName: data.classDetails.classHost,
+                  onDismissed: () {
+                    _clearNotification(
+                        notification.timebankId, notification.id);
+                  },
                 );
                 break;
               case NotificationType.TYPE_CREDIT_FROM_OFFER_APPROVED:
                 OneToManyNotificationDataModel data =
                     OneToManyNotificationDataModel.fromJson(notification.data);
                 return NotificationCard(
-                  isDissmissible: false,
                   title: "Credited",
                   subTitle: TimebankNotificationMessage
                       .CREDIT_FROM_OFFER_APPROVED
                       .replaceFirst(
                           '*n', data.classDetails.numberOfClassHours.toString())
                       .replaceFirst('*class', data.classDetails.classTitle),
-                  photoUrl: '',
-                  onDismissed: () {},
+                  // photoUrl: data.participantDetails.photourl,
+                  entityName: data.participantDetails.fullname,
+                  onDismissed: () {
+                    _clearNotification(
+                        notification.timebankId, notification.id);
+                  },
                 );
                 break;
 
@@ -246,6 +251,17 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
           },
         );
       },
+    );
+  }
+
+  void _clearNotification(String timebankId, String notificationId) {
+    Firestore.instance
+        .collection("timebanknew")
+        .document(timebankId)
+        .collection("notifications")
+        .document(notificationId)
+        .updateData(
+      {"isRead": true},
     );
   }
 

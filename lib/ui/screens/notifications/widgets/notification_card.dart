@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sevaexchange/ui/utils/avatar.dart';
 import 'package:sevaexchange/utils/utils.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -8,6 +10,7 @@ class NotificationCard extends StatelessWidget {
   final String title;
   final String subTitle;
   final bool isDissmissible;
+  final String entityName;
 
   const NotificationCard({
     Key key,
@@ -16,10 +19,10 @@ class NotificationCard extends StatelessWidget {
     this.title,
     this.subTitle,
     this.onDismissed,
+    this.entityName,
     this.isDissmissible = true,
   })  : assert(title != null),
         assert(subTitle != null),
-        assert(photoUrl != null),
         super(key: key);
 
   @override
@@ -65,9 +68,15 @@ class NotificationCard extends StatelessWidget {
           ),
           child: ListTile(
             title: Text(title),
-            leading: CircleAvatar(
-              backgroundImage: NetworkImage(photoUrl),
-            ),
+            leading: photoUrl != null
+                ? CircleAvatar(
+                    radius: 22,
+                    backgroundImage: CachedNetworkImageProvider(photoUrl),
+                  )
+                : CustomAvatar(
+                    radius: 22,
+                    name: entityName ?? " ",
+                  ),
             subtitle: Text(
               subTitle,
             ),
