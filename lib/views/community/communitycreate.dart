@@ -138,6 +138,7 @@ class CreateEditCommunityViewFormState
     Future.delayed(Duration.zero, () {
       createEditCommunityBloc.getChildTimeBanks(context);
     });
+
     if (widget.isCreateTimebank == false) {
       getModelData();
     }
@@ -324,7 +325,6 @@ class CreateEditCommunityViewFormState
                         return 'Timebank name already exist';
                       } else {
                         enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
-                        ;
                         snapshot.data.community.updateValueByKey(
                             'name', value.replaceAll("[^a-zA-Z0-9]", ""));
                         createEditCommunityBloc.onChange(snapshot.data);

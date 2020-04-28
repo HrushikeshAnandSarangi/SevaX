@@ -103,7 +103,8 @@ Stream<List<NewsModel>> getNearNewsStream(
       'entityId': timebankID,
       //'entityName': FlavorConfig.timebankName,
     },
-  ).orderBy('posttimestamp', descending: true);
+  );
+  // .orderBy('posttimestamp', descending: true);
 
   var radius = 20;
   try {
@@ -111,7 +112,8 @@ Stream<List<NewsModel>> getNearNewsStream(
   } on Exception {
     print("Exception raised while getting user minimum balance ");
   }
-  print("radius is fetched from remote config getNearNewsStream ${radius.toDouble()}");
+  print(
+      "radius is fetched from remote config getNearNewsStream ${radius.toDouble()}");
 
   var data = geos.collection(collectionRef: query).within(
         center: center,
@@ -136,6 +138,8 @@ Stream<List<NewsModel>> getNearNewsStream(
     });
     modelList.sort((n1, n2) {
       return n2.postTimestamp.compareTo(n1.postTimestamp);
+      // return n2.postTimestamp > n2.postTimestamp ? -1 : 1;
+
     });
 
     //await process goes here
@@ -186,7 +190,8 @@ Stream<List<NewsModel>> getAllNearNewsStream() async* {
   } on Exception {
     print("Exception raised while getting user minimum balance ");
   }
-  print("radius is fetched from remote config getAllNearNewsStream ${radius.toDouble()}");
+  print(
+      "radius is fetched from remote config getAllNearNewsStream ${radius.toDouble()}");
 
   GeoFirePoint center = geos.point(latitude: lat, longitude: lng);
   var query = Firestore.instance.collection('news');
