@@ -757,6 +757,7 @@ Future<void> acceptInviteRequest({
       .document(requestId)
       .updateData({
     'approvedUsers': FieldValue.arrayUnion([acceptedUserEmail]),
+    'acceptors': FieldValue.arrayUnion([acceptedUserEmail]),
     'invitedUsers': FieldValue.arrayRemove([acceptedUserId])
   });
 }
