@@ -164,22 +164,24 @@ class CreateEditCommunityViewFormState
           errTxt = null;
         });
       } else {
-        SearchManager.searchCommunityForDuplicate(queryString: s)
-            .then((commFound) {
-          if (commFound) {
-            setState(() {
-              communityFound = true;
-              print(
-                  "name ----- ${communitynName} and ${searchTextController.text}");
-              errTxt = 'Timebank name already exists';
-            });
-          } else {
-            setState(() {
-              communityFound = false;
-              errTxt = null;
-            });
-          }
-        });
+        if (communityModel.name != s) {
+          SearchManager.searchCommunityForDuplicate(queryString: s).then((commFound) {
+            if (commFound) {
+              setState(() {
+                communityFound = true;
+                print(
+                    "name ----- ${communitynName} and ${searchTextController
+                        .text}");
+                errTxt = 'Timebank name already exists';
+              });
+            } else {
+              setState(() {
+                communityFound = false;
+                errTxt = null;
+              });
+            }
+          });
+        }
       }
     });
   }
