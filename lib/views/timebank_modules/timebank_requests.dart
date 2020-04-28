@@ -726,10 +726,11 @@ class NearRequestListItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<Object>(
         future: FirestoreManager.getUserForId(
-            sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
+          sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        ),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return new Text('Somthing went wrong!');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -749,12 +750,9 @@ class NearRequestListItems extends StatelessWidget {
               }
               switch (requestListSnapshot.connectionState) {
                 case ConnectionState.waiting:
-                  print("Waiting........................");
-
                   return Center(child: CircularProgressIndicator());
 
                 default:
-                  print("Inside default........................");
                   List<RequestModel> requestModelList =
                       requestListSnapshot.data;
                   requestModelList
@@ -770,22 +768,24 @@ class NearRequestListItems extends StatelessWidget {
                     );
                   }
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: requestModelList.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index >= requestModelList.length) {
-                        return Container(
-                          width: double.infinity,
-                          height: 65,
+                  return Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: requestModelList.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index >= requestModelList.length) {
+                          return Container(
+                            width: double.infinity,
+                            height: 65,
+                          );
+                        }
+                        return getRequestView(
+                          requestModelList[index],
+                          loggedintimezone,
+                          context,
                         );
-                      }
-                      return getRequestView(
-                        requestModelList[index],
-                        loggedintimezone,
-                        context,
-                      );
-                    },
+                      },
+                    ),
                   );
               }
             },
@@ -818,11 +818,12 @@ class NearRequestListItems extends StatelessWidget {
   ) {
     return Container(
       decoration: containerDecoration,
-      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 5, vertical: 0),
       child: Card(
-        elevation: 0,
+        elevation: 2,
         child: InkWell(
           onTap: () {
+            timeBankBloc.setSelectedRequest(model);
             if (model.sevaUserId ==
                     SevaCore.of(context).loggedInUser.sevaUserID ||
                 timebankModel.admins
@@ -861,33 +862,69 @@ class NearRequestListItems extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      model.title,
-                      style: Theme.of(parentContext).textTheme.subhead,
-                    ),
-                    Text(
-                      model.description,
-                      style: Theme.of(parentContext).textTheme.subtitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 8),
-                    Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: <Widget>[
-                        Text(getTimeFormattedString(
-                            model.requestStart, loggedintimezone)),
-                        SizedBox(width: 2),
-                        Icon(Icons.arrow_forward, size: 14),
-                        SizedBox(width: 4),
-                        Text(getTimeFormattedString(
-                            model.requestEnd, loggedintimezone)),
-                      ],
-                    ),
-                  ],
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        model.title,
+                        style: Theme.of(parentContext).textTheme.subhead,
+                      ),
+                      Text(
+                        model.description,
+                        style: Theme.of(parentContext).textTheme.subtitle,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 8),
+                      Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: <Widget>[
+                          Text(getTimeFormattedString(
+                              model.requestStart, loggedintimezone)),
+                          SizedBox(width: 2),
+                          Icon(Icons.arrow_forward, size: 14),
+                          SizedBox(width: 4),
+                          Text(getTimeFormattedString(
+                              model.requestEnd, loggedintimezone)),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          model.acceptors.contains(SevaCore.of(context)
+                                      .loggedInUser
+                                      .email) ||
+                                  model.approvedUsers.contains(
+                                      SevaCore.of(context).loggedInUser.email)
+                              ?
+//                          || model.invitedUsers.contains(userEmail) ?
+                              Container(
+                                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                                  width: 100,
+                                  height: 32,
+                                  child: FlatButton(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    padding: EdgeInsets.all(0),
+                                    color: Colors.green,
+                                    child: Text(
+                                      'Applied',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: () {},
+                                  ),
+                                )
+                              : Container(),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -285,11 +285,11 @@ Stream<List<RequestModel>> getNearRequestListStream(
       ? Firestore.instance
           .collection('requests')
           .where('accepted', isEqualTo: false)
-          .orderBy('posttimestamp', descending: true)
+      // .orderBy('posttimestamp', descending: true)
       : Firestore.instance
           .collection('requests')
-          .where('timebankId', isEqualTo: timebankId)
-          .orderBy('posttimestamp', descending: true);
+          .where('timebankId', isEqualTo: timebankId);
+  // .orderBy('posttimestamp', descending: true);
 
   var radius = 20;
   try {
@@ -326,6 +326,7 @@ Stream<List<RequestModel>> getNearRequestListStream(
             }
           },
         );
+        requestList.sort((a, b) => a.postTimestamp > b.postTimestamp ? -1 : 1);
         requestSink.add(requestList);
       },
     ),
