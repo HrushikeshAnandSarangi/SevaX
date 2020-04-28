@@ -1,7 +1,4 @@
-import 'dart:ffi';
-
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';
@@ -9,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -183,7 +179,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             controller: subheadingController,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              labelStyle: prefix0.TextStyle(color: Colors.grey),
+                              labelStyle: TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
                               hintText: 'Text, URL and Hashtags ',
                               labelText: 'What would you like to share*',
@@ -324,17 +320,19 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                 child: RaisedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
-                    if(connResult == ConnectivityResult.none){
+                    if (connResult == ConnectivityResult.none) {
                       Scaffold.of(context).showSnackBar(
                         SnackBar(
-                          content: Text("Please check your internet connection."),
+                          content:
+                              Text("Please check your internet connection."),
                           action: SnackBarAction(
                             label: 'Dismiss',
-                            onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                            onPressed: () =>
+                                Scaffold.of(context).hideCurrentSnackBar(),
                           ),
                         ),
                       );
-                      return ;
+                      return;
                     }
                     if (location != null) {
                       if (formKey.currentState.validate()) {
@@ -491,12 +489,10 @@ class NewsCreateFormState extends State<NewsCreateForm> {
       url,
     );
 
-    print("Ststus recived from web scraping -> ${response.statusCode}" );
+    print("Ststus recived from web scraping -> ${response.statusCode}");
     if (response.statusCode != 200) {
       return;
     }
-
-
 
     var document = parse(response.body);
 
