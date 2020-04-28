@@ -26,6 +26,7 @@ import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
+import 'package:flurry/flurry.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -98,8 +99,12 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
+    initFlurry();
   }
 
+  void initFlurry() async {
+    await Flurry.initialize(androidKey: "NZN3QTYM42M6ZQXV3GJ8", iosKey: "H9RX59248T458TDZGX3Y", enableLog: true);
+  }
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
