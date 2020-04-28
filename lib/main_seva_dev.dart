@@ -11,8 +11,6 @@ import 'package:sevaexchange/views/splash_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/news_model.dart';
-//import 'package:flurry/flurry.dart';
-
 Future<void> fetchRemoteConfig() async {
   AppConfig.remoteConfig = await RemoteConfig.instance;
   AppConfig.remoteConfig.fetch(expiration: Duration.zero);
@@ -22,7 +20,6 @@ Future<void> fetchRemoteConfig() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlavorConfig.appFlavor = Flavor.SEVA_DEV;
-  // await Flurry.initialize(androidKey: "NZN3QTYM42M6ZQXV3GJ8", iosKey: "H9RX59248T458TDZGX3Y", enableLog: true);
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   _firebaseMessaging.requestNotificationPermissions(
     IosNotificationSettings(

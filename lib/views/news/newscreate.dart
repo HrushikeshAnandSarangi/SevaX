@@ -1,5 +1,4 @@
-import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart' as prefix0;
+ter/material.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';

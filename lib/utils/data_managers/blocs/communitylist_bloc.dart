@@ -174,7 +174,7 @@ class TransactionBloc {
         // debit from user
         Query query = Firestore.instance
             .collection('users')
-            .where('sevaUserID', isEqualTo: from);
+            .where('sevauserid', isEqualTo: from);
         QuerySnapshot snapshot = await query.getDocuments();
         DocumentSnapshot document = snapshot.documents?.length > 0 && snapshot.documents != null
             ? snapshot.documents.first
@@ -183,11 +183,11 @@ class TransactionBloc {
         Firestore.instance
             .collection('users')
             .document(document.documentID)
-            .setData({ 'currentBalance': FieldValue.increment(-credits)},merge: true);
+            .setData({ 'currentBalance': FieldValue.increment(- (num.parse(credits.toStringAsFixed(2))))},merge: true);
         // credit to user
         query = Firestore.instance
             .collection('users')
-            .where('sevaUserID', isEqualTo: to);
+            .where('sevauserid', isEqualTo: to);
         snapshot = await query.getDocuments();
         document = snapshot.documents?.length > 0 && snapshot.documents != null
             ? snapshot.documents.first
@@ -197,7 +197,7 @@ class TransactionBloc {
           Firestore.instance
               .collection('users')
               .document(document.documentID)
-              .setData({ 'currentBalance': FieldValue.increment(credits)},merge: true);
+              .setData({ 'currentBalance': FieldValue.increment(num.parse(credits.toStringAsFixed(2)))},merge: true);
       } else if (type == RequestMode.TIMEBANK_REQUEST) {
         print("handle final approval transaction to user and tiembnak request");
         // debit from timebank
@@ -214,7 +214,7 @@ class TransactionBloc {
           Firestore.instance
               .collection('timebanknew')
               .document(document.documentID)
-              .setData({ 'balance': FieldValue.increment(-credits)},merge: true);
+              .setData({ 'balance': FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))},merge: true);
         // credit to user
         print("handle final approval transaction to user and tiembnak request comere here ");
         query = Firestore.instance
@@ -228,7 +228,7 @@ class TransactionBloc {
           Firestore.instance
               .collection('users')
               .document(document.documentID)
-              .setData({ 'currentBalance': FieldValue.increment(credits)},merge: true);
+              .setData({ 'currentBalance': FieldValue.increment(num.parse(credits.toStringAsFixed(2)))},merge: true);
       } else if (type == "USER_DONATE_TOTIMEBANK") {
         print("came here");
         // debit from timebank
@@ -245,7 +245,7 @@ class TransactionBloc {
           Firestore.instance
               .collection('timebanknew')
               .document(document.documentID)
-              .setData({ 'balance': FieldValue.increment(credits)},merge: true);
+              .setData({ 'balance': FieldValue.increment(num.parse(credits.toStringAsFixed(2)))},merge: true);
         // credit to user
 
         query = Firestore.instance
@@ -259,7 +259,7 @@ class TransactionBloc {
           Firestore.instance
               .collection('users')
               .document(document.documentID)
-              .setData({ 'currentBalance': FieldValue.increment(-credits)},merge: true);
+              .setData({ 'currentBalance': FieldValue.increment(-(num.parse(credits.toStringAsFixed(2))))},merge: true);
       }
     }
   }
