@@ -325,12 +325,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       TimebankModel parentTimebank = snapshot.data;
                       return RaisedButton(
                         // color: Colors.blue,
-
                         onPressed: () {
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
-                          if (_formKey.currentState.validate()) {
+                          if (_formKey.currentState.validate() && errTxt == "") {
 //                            print("Hello");
 //                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();

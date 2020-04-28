@@ -102,7 +102,7 @@ class _ViewAcceptedOffers extends StatelessWidget {
           );
         } else {
           return Center(
-            child: Text("No offer accepted"),
+            child: Text("No offers bookmarked"),
           );
         }
       },

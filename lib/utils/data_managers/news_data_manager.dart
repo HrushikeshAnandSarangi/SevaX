@@ -103,7 +103,7 @@ Stream<List<NewsModel>> getNearNewsStream(
       'entityId': timebankID,
       //'entityName': FlavorConfig.timebankName,
     },
-  );
+  ).orderBy('posttimestamp', descending: true);
 
   var radius = 20;
   try {

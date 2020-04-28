@@ -194,7 +194,6 @@ class CreateEditCommunityViewFormState
         communityModel = onValue;
         communitynName = communityModel.name;
         taxPercentage = onValue.taxPercentage * 100;
-
         searchTextController.text = communityModel.name;
       });
     });
@@ -451,7 +450,20 @@ class CreateEditCommunityViewFormState
                   widget.isCreateTimebank ? Container() : SizedBox(height: 10),
                   widget.isCreateTimebank
                       ? Container()
-                      : headingText('Select Tax percentage'),
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            headingText('Select Tax percentage'),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(2, 15, 0, 0),
+                              child: infoButton(
+                                context: context,
+                                key: GlobalKey(),
+                                type: InfoType.TAX_CONFIGURATION,
+                              ),
+                            ),
+                          ],
+                        ),
                   widget.isCreateTimebank
                       ? Container()
                       : Slider(
@@ -481,11 +493,6 @@ class CreateEditCommunityViewFormState
                             color: Colors.grey,
                           ),
                         ),
-                        infoButton(
-                          context: context,
-                          key: GlobalKey(),
-                          type: InfoType.TAX_CONFIGURATION,
-                        ),
                       ],
                     ),
                   ),
@@ -508,7 +515,7 @@ class CreateEditCommunityViewFormState
                                       snapshot.data.timebank.address.isEmpty) &&
                                   selectedAddress == ''
                               ? 'Add Location'
-                              : snapshot.data.timebank.address,
+                              : widget.isCreateTimebank ? snapshot.data.timebank.address: timebankModel.address,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -716,6 +723,7 @@ class CreateEditCommunityViewFormState
                             }
 
                             timebankModel.location = location;
+;                           timebankModel.address = selectedAddress;
 
                             if (selectedUsers != null) {
                               selectedUsers.forEach((key, user) {

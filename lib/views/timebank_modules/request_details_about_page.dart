@@ -145,11 +145,11 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
                             ' - ' +
                             DateFormat('h:mm a').format(
                               getDateTimeAccToUserTimezone(
-                                  dateTime: DateTime.fromMillisecondsSinceEpoch(
-                                      widget.requestItem.requestEnd),
-                                  timezoneAbb: SevaCore.of(context)
-                                      .loggedInUser
-                                      .timezone,),
+                                dateTime: DateTime.fromMillisecondsSinceEpoch(
+                                    widget.requestItem.requestEnd),
+                                timezoneAbb:
+                                    SevaCore.of(context).loggedInUser.timezone,
+                              ),
                             ),
                         style: subTitleStyle,
                         maxLines: 1,
@@ -485,8 +485,8 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     } else {
       print("Accept request");
       _acceptRequest();
+      Navigator.pop(context);
     }
-    Navigator.pop(context);
   }
 
   void _acceptRequest() {
@@ -503,15 +503,45 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
   }
 
   void _withdrawRequest() {
-    Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
-    acceptorList.remove(SevaCore.of(context).loggedInUser.email);
-    widget.requestItem.acceptors = acceptorList.toList();
-    acceptRequest(
-      requestModel: widget.requestItem,
-      senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
-      isWithdrawal: true,
-      communityId: SevaCore.of(context).loggedInUser.currentCommunity,
-      directToMember: !widget.timebankModel.protected,
+    if (widget.requestItem.approvedUsers
+        .contains(SevaCore.of(context).loggedInUser.email)) {
+      _showAlreadyApprovedMessage();
+    } else {
+      Set<String> acceptorList = Set.from(widget.requestItem.acceptors);
+      acceptorList.remove(SevaCore.of(context).loggedInUser.email);
+      widget.requestItem.acceptors = acceptorList.toList();
+      acceptRequest(
+        requestModel: widget.requestItem,
+        senderUserId: SevaCore.of(context).loggedInUser.sevaUserID,
+        isWithdrawal: true,
+        communityId: SevaCore.of(context).loggedInUser.currentCommunity,
+        directToMember: !widget.timebankModel.protected,
+      );
+      Navigator.pop(context);
+    }
+  }
+
+  void _showAlreadyApprovedMessage() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Already Approved"),
+          content:
+              new Text("You cannot withdraw request since already approved"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
