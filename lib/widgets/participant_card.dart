@@ -106,7 +106,14 @@ class ParticipantCard extends StatelessWidget {
             child: CircleAvatar(
               radius: 35,
               child: ClipOval(
-                  child: CustomNetworkImage(imageUrl ?? defaultUserImageURL)),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: CustomNetworkImage(
+                    imageUrl ?? defaultUserImageURL,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
             ),
           )
         ],

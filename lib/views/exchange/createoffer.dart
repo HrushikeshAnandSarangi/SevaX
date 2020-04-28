@@ -158,7 +158,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           // style: TextStyle(color: Colors.grey, fontSize: 14),
         ),
         TextFormField(
-          decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
+          decoration: InputDecoration(hintText: 'Ex: babysitting..'),
           keyboardType: TextInputType.text,
           style: subTitleStyle,
           inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
@@ -384,7 +384,7 @@ class MyCustomFormState extends State<MyCustomForm> {
           // style: TextStyle(color: Colors.grey, fontSize: 14),
         ),
         TextFormField(
-          decoration: InputDecoration(hintText: 'Ex: Tutoring, painting..'),
+          decoration: InputDecoration(hintText: 'Ex: babysitting..'),
           keyboardType: TextInputType.text,
           inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
           // style: finalStyle,

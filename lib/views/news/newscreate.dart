@@ -1,4 +1,4 @@
-ter/material.dart' as prefix0;
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:html/parser.dart';
@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:sevaexchange/components/newsimage/newsimage.dart';
 import 'package:sevaexchange/flavor_config.dart';
 import 'package:sevaexchange/globals.dart' as globals;
-import 'package:sevaexchange/main.dart' as prefix0;
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/animations/fade_animation.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -180,7 +179,7 @@ class NewsCreateFormState extends State<NewsCreateForm> {
                             controller: subheadingController,
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              labelStyle: prefix0.TextStyle(color: Colors.grey),
+                              labelStyle: TextStyle(color: Colors.grey),
                               alignLabelWithHint: false,
                               hintText: 'Text, URL and Hashtags ',
                               labelText: 'What would you like to share*',
