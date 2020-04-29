@@ -388,7 +388,7 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
     try {
       radius = json.decode(AppConfig.remoteConfig.getString('radius'));
     } on Exception {
-      print("Exception raised while getting user minimum balance");
+      print("Exception raised while getting radius");
     }
 
     return StreamBuilder<List<CommunityModel>>(
@@ -430,7 +430,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               }
             }
           } else if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
+            return Padding(
+                padding: const EdgeInsets.fromLTRB(20.0, 16.0,20.0,16.0),
+                child: Text("Please make sure you have GPS turned on. see the list of timebanks around you"));
             // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){

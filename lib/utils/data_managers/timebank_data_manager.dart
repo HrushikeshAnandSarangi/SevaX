@@ -186,7 +186,7 @@ Stream<List<CommunityModel>> getNearCommunitiesListStream(
   try {
     radius = json.decode(AppConfig.remoteConfig.getString('radius'));
   } on Exception {
-    print("Exception raised while getting user minimum balance ");
+    print("Exception raised while getting radius ");
   }
   print("radius is fetched from remote config near community list stream${radius.toDouble()}");
 
@@ -268,6 +268,7 @@ Future<void> updateTimebankDetails(
       .updateData({
     'name': timebankModel.name,
     'missionStatement': timebankModel.missionStatement,
+    'address': timebankModel.address,
     'location': timebankModel.location.data,
     'protected': timebankModel.protected,
     'photo_url': timebankModel.photoUrl,

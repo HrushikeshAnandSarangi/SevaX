@@ -39,7 +39,7 @@ class SevaCoinWidget extends StatelessWidget {
             ),
             SizedBox(width: 8),
             Text(
-              '$amount Seva Credits',
+              '${amount != null ? double.parse(amount.toStringAsFixed(2)) : 0} Seva Credits',
               style: TextStyle(
                 color: amount > 0 ? Colors.blue : Colors.red,
                 fontWeight: FontWeight.bold,

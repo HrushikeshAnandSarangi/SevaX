@@ -165,33 +165,24 @@ class CreateEditCommunityViewFormState
           errTxt = null;
         });
       } else {
-        SearchManager.searchCommunityForDuplicate(queryString: s)
-            .then((commFound) {
-          if (commFound) {
-            setState(() {
-              communityFound = true;
-              print(
-                  "name ----- ${communitynName} and ${searchTextController.text}");
-              if (!widget.isCreateTimebank) {
-                if (searchTextController.text != null &&
-                    communitynName != searchTextController.text) {
-                  //  errTxt = null;
-                  errTxt = 'Timebank name already exist';
-
-                  print("name is equal");
-                }
-              } else {
-                errTxt = 'Timebank name already exist';
-              }
-              //errTxt = 'Timebank name already exists';
-            });
-          } else {
-            setState(() {
-              communityFound = false;
-              errTxt = null;
-            });
-          }
-        });
+        if (communityModel.name != s) {
+          SearchManager.searchCommunityForDuplicate(queryString: s).then((commFound) {
+            if (commFound) {
+              setState(() {
+                communityFound = true;
+                print(
+                    "name ----- ${communitynName} and ${searchTextController
+                        .text}");
+                errTxt = 'Timebank name already exists';
+              });
+            } else {
+              setState(() {
+                communityFound = false;
+                errTxt = null;
+              });
+            }
+          });
+        }
       }
     });
   }
@@ -204,7 +195,6 @@ class CreateEditCommunityViewFormState
         communityModel = onValue;
         communitynName = communityModel.name;
         taxPercentage = onValue.taxPercentage * 100;
-
         searchTextController.text = communityModel.name;
       });
     });
@@ -525,7 +515,7 @@ class CreateEditCommunityViewFormState
                                       snapshot.data.timebank.address.isEmpty) &&
                                   selectedAddress == ''
                               ? 'Add Location'
-                              : snapshot.data.timebank.address,
+                              : widget.isCreateTimebank ? snapshot.data.timebank.address: timebankModel.address,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -733,6 +723,7 @@ class CreateEditCommunityViewFormState
                             }
 
                             timebankModel.location = location;
+;                           timebankModel.address = selectedAddress;
 
                             if (selectedUsers != null) {
                               selectedUsers.forEach((key, user) {
