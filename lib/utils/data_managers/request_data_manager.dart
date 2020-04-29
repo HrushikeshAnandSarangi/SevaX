@@ -585,7 +585,7 @@ Future<void> approveRequestCompletion({
   await transactionBloc.updateNewTransaction(
       model.requestMode == RequestMode.PERSONAL_REQUEST
           ? editedTransaction.from
-          : editedTransaction.timestamp,
+          : model.timebankId,
       editedTransaction.to,
       editedTransaction.timestamp,
       editedTransaction.credits,

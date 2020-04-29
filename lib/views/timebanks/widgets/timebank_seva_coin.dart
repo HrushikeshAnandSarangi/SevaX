@@ -183,7 +183,7 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
             value: _donateAmount,
             min: 0,
             max: widget.maxAmount,
-            divisions: 9,
+            divisions: 100,
             onChanged: (value) {
               setState(() {
                 _donateAmount = value;

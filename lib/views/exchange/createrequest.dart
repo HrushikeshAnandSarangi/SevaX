@@ -729,8 +729,16 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
     if (requestModel.id == null) return;
 
-    // print(
-    //     "Requeest Model -------------------------- ${requestModel.toString()}");
+    // credit the timebank the required credits before the request creation
+    await TransactionBloc().createNewTransaction(
+        requestModel.timebankId,
+        requestModel.timebankId,
+        DateTime.now().millisecondsSinceEpoch,
+        requestModel.numberOfHours,
+        true,
+        "REQUEST_CREATION_TIMEBANK_FILL_CREDITS",
+        requestModel.id,
+        requestModel.timebankId);
     await FirestoreManager.createRequest(requestModel: requestModel);
   }
 

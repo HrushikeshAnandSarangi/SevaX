@@ -654,7 +654,7 @@ class TaskCardViewState extends State<TaskCardView> {
     startTransaction();
   }
 
-  void startTransaction() {
+  void startTransaction() async {
     if (_formKey.currentState.validate()) {
       // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
       int totalMinutes =
@@ -678,8 +678,10 @@ class TaskCardViewState extends State<TaskCardView> {
 
       FirestoreManager.requestComplete(model: requestModel);
       // END OF CODE correction mentioned above
-      transactionBloc.createNewTransaction(
-          requestModel.sevaUserId,
+      await transactionBloc.createNewTransaction(
+          requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? requestModel.sevaUserId
+              : requestModel.timebankId,
           SevaCore.of(context).loggedInUser.sevaUserID,
           DateTime.now().millisecondsSinceEpoch,
           totalMinutes / 60,
