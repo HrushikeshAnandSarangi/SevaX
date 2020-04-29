@@ -78,6 +78,31 @@ class _ReviewEarningState extends State<ReviewEarning> {
     super.dispose();
   }
 
+  String getOperator(TransactionModel model) {
+    switch (model.type) {
+      case 'RequestMode.PERSONAL_REQUEST':
+        return model.from == SevaCore.of(context).loggedInUser.sevaUserID
+            ? "-"
+            : "+";
+
+      case 'RequestMode.TIMEBANK_REQUEST':
+        return model.from == model.timebankid ? "-" : "+";
+
+      default:
+        return model.from == SevaCore.of(context).loggedInUser.sevaUserID
+            ? "-"
+            : "+";
+    }
+
+    // model.type == 'RequestMode.PERSONAL_REQUEST'
+    //     ? model.from == SevaCore.of(context).loggedInUser.sevaUserID ? "-" : "+"
+    //     : model.type == 'RequestMode.TIMEBANK_REQUEST'
+    //         ? model.from == model.timebankid ? "-" : "+"
+    //         : model.from == SevaCore.of(context).loggedInUser.sevaUserID
+    //             ? "-"
+    //             : "+";
+  }
+
   @override
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
@@ -90,7 +115,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return new Text('Somthing went wrong!');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -154,24 +179,12 @@ class _ReviewEarningState extends State<ReviewEarning> {
 //                        return transaction.to ==
 //                            SevaCore.of(context).loggedInUser.sevaUserID;
 //                      });
-                      String plus = model.type == 'RequestMode.PERSONAL_REQUEST'
-                          ? model.from ==
-                                  SevaCore.of(context).loggedInUser.sevaUserID
-                              ? "-"
-                              : "+"
-                          : model.type == 'RequestMode.TIMEBANK_REQUEST'
-                              ? model.from == model.timebankid ? "-" : "+"
-                              : model.from ==
-                                      SevaCore.of(context)
-                                          .loggedInUser
-                                          .sevaUserID
-                                  ? "-"
-                                  : "+";
+                      // String plus =
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(plus + '${model.credits}',
+                          Text(getOperator(model) + '${model.credits}',
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w500,
@@ -202,6 +215,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
 //                              SevaCore.of(context).loggedInUser.sevaUserID;
 //                        });
                         UserModel user = snapshot.data;
+                        var recievedFromTimebank = user == null;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -209,7 +223,11 @@ class _ReviewEarningState extends State<ReviewEarning> {
                               height: 2,
                             ),
                             Text(
-                              '${user.fullname}',
+                              !recievedFromTimebank
+                                  ? user.fullname == null
+                                      ? "Anonymous"
+                                      : user.fullname
+                                  : "Timebank",
                               textAlign: TextAlign.start,
                             ),
                             SizedBox(
