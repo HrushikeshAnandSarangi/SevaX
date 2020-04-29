@@ -88,13 +88,13 @@ class TransactionModel extends DataModel {
     }
     return map;
   }
-  debitCreditSymbol(id, timebankid) {
-    if (this.type == 'RequestMode.PERSONAL_REQUEST') {
-      return this.from == id ? "-" : "+";
-    } else if (this.type == 'RequestMode.TIMEBANK_REQUEST') {
-      return this.from == timebankid ? "-" : "+";
-    } else if (this.type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
+  debitCreditSymbol(id, timebankid, viewtype) {
+    if (this.type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
       return "+";
+    } else if (viewtype == 'user') {
+      return this.from == id ? "-" : "+";
+    } else if (viewtype == 'timebank') {
+      return this.from == timebankid ? "-" : "+";
     } else {
       return this.from == id ? "-" : "+";
     }

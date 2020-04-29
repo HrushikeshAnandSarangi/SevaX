@@ -104,7 +104,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
               return Container(
                 margin: EdgeInsets.all(1),
                 child: Card(
-                  child: EarningListItem(model: model, usertimezone: usertimezone,),
+                  child: EarningListItem(model: model, usertimezone: usertimezone,viewtype: widget.type ),
                 ),
               );
             },
@@ -183,14 +183,14 @@ class EarningImageItem extends StatelessWidget {
 
 class EarningListItem extends StatefulWidget {
   final model;
+  final viewtype;
   final usertimezone;
-  const EarningListItem({ Key key, this.model, this.usertimezone }) : super(key: key);
+  const EarningListItem({ Key key, this.model, this.usertimezone, this.viewtype }) : super(key: key);
   @override
   _EarningListItemState createState() => _EarningListItemState();
 }
 
 class _EarningListItemState extends State<EarningListItem> {
-  var statedata;
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +215,7 @@ class _EarningListItemState extends State<EarningListItem> {
                 String plus = widget.model.debitCreditSymbol(SevaCore
                     .of(context)
                     .loggedInUser
-                    .sevaUserID, widget.model.timebankid);
+                    .sevaUserID, widget.model.timebankid, widget.viewtype);
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
