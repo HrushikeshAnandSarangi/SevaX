@@ -235,7 +235,7 @@ class _EarningListItemState extends State<EarningListItem> {
                 );
               }(),
               subtitle: EarningItem(
-                  name: type == 'user' ? snapshot.data.fullname : snapshot.data.name,
+                  name: type == 'user' ? snapshot.data.fullname == null ? "Anonymous":  snapshot.data.fullname : snapshot.data.name + " (Timebank)" ,
                   timestamp: widget.model.timestamp,
                   usertimezone: widget.usertimezone)
           );
