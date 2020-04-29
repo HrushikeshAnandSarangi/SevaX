@@ -45,6 +45,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   @override
   void initState() {
+    log("notification page init");
     Future.delayed(Duration.zero, () {
       user = SevaCore.of(context).loggedInUser;
     });
@@ -53,6 +54,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   @override
   Widget build(BuildContext context) {
+    log("notification page build");
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(
         userEmail: SevaCore.of(context).loggedInUser.email,

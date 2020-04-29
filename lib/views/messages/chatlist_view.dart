@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +35,17 @@ class _ChatListViewState extends State<ChatListView> {
   // _ChatListViewState(this.parentContext);
 
 //  var updateUser = SevaCore.of(context).loggedInUser;
+
+  @override
+  void initState() {
+    super.initState();
+
+    log("chat page init");
+  }
+
   @override
   Widget build(BuildContext context) {
+    log("chat page build");
     var blockedMembers =
         List<String>.from(SevaCore.of(context).loggedInUser.blockedMembers);
     var blockedByMembers =

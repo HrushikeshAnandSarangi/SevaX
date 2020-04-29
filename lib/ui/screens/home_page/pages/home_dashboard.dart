@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/chat_model.dart';
@@ -44,6 +46,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   void initState() {
+    log("home dashboard init");
     controller = TabController(initialIndex: 0, length: 3, vsync: this);
     _timebankController =
         TabController(initialIndex: 0, length: 7, vsync: this);
@@ -85,6 +88,7 @@ class _HomeDashBoardState extends State<HomeDashBoard>
 
   @override
   Widget build(BuildContext context) {
+    log("home dashboard page build");
     final _user = BlocProvider.of<UserDataBloc>(context);
     // print("user bloc ${_user.user.email}");
 
