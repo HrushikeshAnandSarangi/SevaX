@@ -329,7 +329,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
-                          if (_formKey.currentState.validate() && errTxt == "") {
+                          if (_formKey.currentState.validate() && errTxt == null) {
 //                            print("Hello");
 //                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();
