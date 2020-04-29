@@ -48,7 +48,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       ),
       builder: (context_firestore, snapshot) {
         if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
+          return Container();
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -83,7 +83,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     ),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
+                        // return Container();
+                        return Container();
                       }
 
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -122,7 +123,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         sevaUserId: notification.senderUserId),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
+                        return Container();
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return notificationShimmer;
@@ -142,7 +143,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         requestId: model.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
-                        return Text(snapshot.error.toString());
+                        return Container();
                       }
 
                       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -273,7 +274,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     return StreamBuilder<UserModel>(
         stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return Text(snapshot.error.toString());
+          if (snapshot.hasError) return Container();
           if (snapshot.connectionState == ConnectionState.waiting) {
             // return notificationShimmer;
             return Text("getNotificationCredit");
@@ -344,7 +345,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     return StreamBuilder<UserModel>(
         stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return Text(snapshot.error.toString());
+          if (snapshot.hasError) return Container();
           if (snapshot.connectionState == ConnectionState.waiting) {
             // return notificationShimmer;
             return Text('getNotificationDebit');
@@ -407,7 +408,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     return StreamBuilder<UserModel>(
       stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return notificationShimmer;
           return Offstage();
@@ -474,7 +475,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     return StreamBuilder<UserModel>(
       stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return notificationShimmer;
           return Text('getOfferAcceptNotification');
@@ -495,7 +496,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                       builder: (context, snapshot) {
                         RequestModel model = snapshot.data;
                         if (snapshot.hasError)
-                          return Text(snapshot.error.toString());
+                          return Container();
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           // return notificationShimmer;
@@ -548,7 +549,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                     builder: (context, snapshot) {
                       RequestModel model = snapshot.data;
                       if (snapshot.hasError)
-                        return Text(snapshot.error.toString());
+                        return Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // return notificationShimmer;
                         return Text('getOfferAcceptNotification');
@@ -674,7 +675,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     return StreamBuilder<UserModel>(
       stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
         }
@@ -1331,7 +1332,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     //   builder: (context, snapshot) {
     //     if (snapshot.hasError) {
     //       return Center(
-    //         child: Text(snapshot.error.toString()),
+    //         child: Container(),
     //       );
     //     }
     //     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1353,7 +1354,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   //     builder: (context, snapshot) {
   //       if (snapshot.hasError) {
   //         return Center(
-  //           child: Text(snapshot.error.toString()),
+  //           child: Container(),
   //         );
   //       }
 
@@ -1431,7 +1432,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
-            child: Text(snapshot.error.toString()),
+            child: Container(),
           );
         }
 
@@ -1885,7 +1886,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 //            userId: SevaCore.of(context).loggedInUser.sevaUserID,
 //          ),
 //          builder: (context, snapshot) {
-//            if (snapshot.hasError) return Text(snapshot.error.toString());
+//            if (snapshot.hasError) return Container();
 //            if (snapshot.connectionState == ConnectionState.waiting) {
 //              return Container();
 //            }
@@ -1917,7 +1918,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
 //            userId: SevaCore.of(context).loggedInUser.sevaUserID,
 //          ),
 //          builder: (context, snapshot) {
-//            if (snapshot.hasError) return Text(snapshot.error.toString());
+//            if (snapshot.hasError) return Container();
 //            if (snapshot.connectionState == ConnectionState.waiting) {
 //              return Container();
 //            }
