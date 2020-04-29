@@ -451,17 +451,19 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 child: RaisedButton(
                   onPressed: () async {
                     var connResult = await Connectivity().checkConnectivity();
-                    if(connResult == ConnectivityResult.none){
+                    if (connResult == ConnectivityResult.none) {
                       _scaffoldKey.currentState.showSnackBar(
                         SnackBar(
-                          content: Text("Please check your internet connection."),
+                          content:
+                              Text("Please check your internet connection."),
                           action: SnackBarAction(
                             label: 'Dismiss',
-                            onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                            onPressed: () =>
+                                _scaffoldKey.currentState.hideCurrentSnackBar(),
                           ),
                         ),
                       );
-                      return ;
+                      return;
                     }
 
                     print('project mode ${projectModel.mode}');
@@ -522,12 +524,13 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
                         // }
                         showProgressDialog('Creating project');
-                        globals.projectsAvtaarURL = null;
 //                          setState(() {
 //                            this.communityImageError = '';
 //                          });
                         await FirestoreManager.createProject(
                             projectModel: projectModel);
+                        globals.projectsAvtaarURL = null;
+
                         if (dialogContext != null) {
                           Navigator.pop(dialogContext);
                         }
@@ -560,11 +563,12 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                           return;
                         }
                         showProgressDialog('Updating project');
-                        globals.projectsAvtaarURL = null;
                         print("final value of modeeeee is " +
                             this.projectModel.mode);
                         await FirestoreManager.updateProject(
                             projectModel: projectModel);
+                        globals.projectsAvtaarURL = null;
+
                         if (dialogContext != null) {
                           Navigator.pop(dialogContext);
                         }

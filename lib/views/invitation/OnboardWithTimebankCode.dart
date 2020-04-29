@@ -223,7 +223,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                   ),
                 ],
               ),
-              requestStatus == CompareToTimeBank.JOIN
+              requestStatus == CompareToTimeBank.JOIN ||
+                      requestStatus == CompareToTimeBank.REJECTED
                   ? Column(
                       children: <Widget>[
                         Text(

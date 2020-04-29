@@ -49,10 +49,10 @@ class _ReviewEarningState extends State<ReviewEarning> {
     super.didChangeDependencies();
     if (widget.type == 'user') {
       FirestoreManager.getUsersCreditsDebitsStream(
-          userEmail: SevaCore.of(context).loggedInUser.email,
-          userId: SevaCore.of(context).loggedInUser.sevaUserID)
+              userEmail: SevaCore.of(context).loggedInUser.email,
+              userId: SevaCore.of(context).loggedInUser.sevaUserID)
           .listen(
-            (result) {
+        (result) {
           if (!mounted) return;
           requestList = result;
           setState(() {});
@@ -61,10 +61,10 @@ class _ReviewEarningState extends State<ReviewEarning> {
     } else if (widget.type == 'timebank') {
       print('came here timebank id' + widget.timebankid.toString());
       FirestoreManager.getTimebankCreditsDebitsStream(
-          timebankid: widget.timebankid,
-          userId: SevaCore.of(context).loggedInUser.sevaUserID)
+              timebankid: widget.timebankid,
+              userId: SevaCore.of(context).loggedInUser.sevaUserID)
           .listen(
-            (result) {
+        (result) {
           if (!mounted) return;
           requestList = result;
           setState(() {});
@@ -82,7 +82,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
   Widget build(BuildContext context) {
     if (requestList.length == 0) {
       return Center(
-        child: Text('You donot have any transactions yet'),
+        child: Text('You do not have any transaction yet'),
       );
     }
     return FutureBuilder<Object>(
@@ -118,9 +118,11 @@ class _ReviewEarningState extends State<ReviewEarning> {
                     //   );
                     // }(),
                     leading: FutureBuilder(
-                      future: model.type == 'user' ? FirestoreManager.getUserForId(
-                          sevaUserId: model.from): FirestoreManager.getTimeBankForId(
-                          timebankId: model.from),
+                      future: model.type == 'user'
+                          ? FirestoreManager.getUserForId(
+                              sevaUserId: model.from)
+                          : FirestoreManager.getTimeBankForId(
+                              timebankId: model.from),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return CircleAvatar();
@@ -137,10 +139,10 @@ class _ReviewEarningState extends State<ReviewEarning> {
                         } else {
                           TimebankModel timebanktemp = snapshot.data;
                           return CircleAvatar(
-                            backgroundImage: NetworkImage(timebanktemp.photoUrl),
+                            backgroundImage:
+                                NetworkImage(timebanktemp.photoUrl),
                           );
                         }
-
                       },
                     ),
                     trailing: () {
@@ -152,7 +154,19 @@ class _ReviewEarningState extends State<ReviewEarning> {
 //                        return transaction.to ==
 //                            SevaCore.of(context).loggedInUser.sevaUserID;
 //                      });
-                      String plus = model.type == 'RequestMode.PERSONAL_REQUEST' ? model.from ==  SevaCore.of(context).loggedInUser.sevaUserID ? "-": "+" : model.type == 'RequestMode.TIMEBANK_REQUEST' ? model.from ==  model.timebankid ? "-": "+" : model.from ==  SevaCore.of(context).loggedInUser.sevaUserID ? "-": "+";
+                      String plus = model.type == 'RequestMode.PERSONAL_REQUEST'
+                          ? model.from ==
+                                  SevaCore.of(context).loggedInUser.sevaUserID
+                              ? "-"
+                              : "+"
+                          : model.type == 'RequestMode.TIMEBANK_REQUEST'
+                              ? model.from == model.timebankid ? "-" : "+"
+                              : model.from ==
+                                      SevaCore.of(context)
+                                          .loggedInUser
+                                          .sevaUserID
+                                  ? "-"
+                                  : "+";
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -172,8 +186,8 @@ class _ReviewEarningState extends State<ReviewEarning> {
                       );
                     }(),
                     subtitle: FutureBuilder(
-                      future: FirestoreManager.getUserForId(
-                          sevaUserId: model.from),
+                      future:
+                          FirestoreManager.getUserForId(sevaUserId: model.from),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
                           return Text('');
