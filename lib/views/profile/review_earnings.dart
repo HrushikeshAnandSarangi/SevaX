@@ -90,7 +90,7 @@ class _ReviewEarningState extends State<ReviewEarning> {
             sevaUserId: SevaCore.of(context).loggedInUser.sevaUserID),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return new Text('Error: ${snapshot.error}');
+            return new Text('Somthing went wrong!');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

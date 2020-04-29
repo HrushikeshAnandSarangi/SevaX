@@ -224,12 +224,13 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             onChanged: (value) {
               print("groupname ------ $value");
             },
+            textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               errorText: errTxt,
               hintText: "Ex: Pets-in-town, Citizen collab",
             ),
-            keyboardType: TextInputType.multiline,
-            maxLines: 1,
+            // keyboardType: TextInputType.multiline,
+            // maxLines: 1,
             inputFormatters: <TextInputFormatter>[
               WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
             ],
@@ -246,11 +247,12 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
             },
+            textInputAction: TextInputAction.done,
             decoration: InputDecoration(
               hintText: 'Ex: A bit more about your group',
             ),
-            keyboardType: TextInputType.multiline,
-            maxLines: null,
+            // keyboardType: TextInputType.multiline,
+            maxLines: 1,
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
@@ -329,7 +331,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
-                          if (_formKey.currentState.validate() && errTxt == null) {
+                          if (_formKey.currentState.validate() &&
+                              errTxt == null) {
 //                            print("Hello");
 //                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();
