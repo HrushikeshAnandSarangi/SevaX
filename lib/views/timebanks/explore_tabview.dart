@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -16,6 +18,7 @@ class _ExploreTabViewState extends State<ExploreTabView> {
   CommunityModel communityModel = CommunityModel({});
   @override
   void initState() {
+    log("exlpore page init");
     // TODO: implement initState
     super.initState();
     getModelData();

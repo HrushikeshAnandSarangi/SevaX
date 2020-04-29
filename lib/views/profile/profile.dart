@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:core' as prefix0;
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,6 +65,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   void initState() {
+    log("profile page init");
     _profileBloc = UserProfileBloc(context);
     super.initState();
     _profileBloc.getAllCommunities(context, widget.userModel);
@@ -160,6 +162,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    log("profile page build");
     return Scaffold(
       backgroundColor: Colors.white,
       body: isUserLoaded
@@ -234,19 +237,22 @@ class _ProfilePageState extends State<ProfilePage>
                               ? double.parse(
                                   this.user.currentBalance.toStringAsFixed(2))
                               : 0.0,
-                          onTap: () async{
-                            var connResult = await Connectivity().checkConnectivity();
-                            if(connResult == ConnectivityResult.none){
+                          onTap: () async {
+                            var connResult =
+                                await Connectivity().checkConnectivity();
+                            if (connResult == ConnectivityResult.none) {
                               Scaffold.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text("Please check your internet connection."),
+                                  content: Text(
+                                      "Please check your internet connection."),
                                   action: SnackBarAction(
                                     label: 'Dismiss',
-                                    onPressed: () => Scaffold.of(context).hideCurrentSnackBar(),
+                                    onPressed: () => Scaffold.of(context)
+                                        .hideCurrentSnackBar(),
                                   ),
                                 ),
                               );
-                              return ;
+                              return;
                             }
                             Navigator.of(context).push(
                               MaterialPageRoute(
