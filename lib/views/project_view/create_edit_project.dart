@@ -18,7 +18,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-
+import 'package:location/location.dart';
 import '../../flavor_config.dart';
 
 class CreateEditProject extends StatefulWidget {
@@ -67,6 +67,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
     getTimebankAdminStatus = getTimebankDetailsbyFuture(
       timebankId: widget.timebankId,
     );
+    _fetchCurrentlocation;
 
     setState(() {});
   }
@@ -79,6 +80,22 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       selectedAddress = projectModel.address;
       isDataLoaded = true;
       setState(() {});
+    });
+  }
+  void get _fetchCurrentlocation {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
     });
   }
 
