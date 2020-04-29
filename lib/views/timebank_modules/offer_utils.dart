@@ -67,13 +67,14 @@ bool isOfferVisible(OfferModel offerModel, String userId) {
 }
 
 String getButtonLabel(OfferModel offerModel, String userId) {
+  List<String> participants = getOfferParticipants(offerDataModel: offerModel);
   if (offerModel.offerType == OfferType.GROUP_OFFER) {
-    if (offerModel.groupOfferDataModel.signedUpMembers.contains(userId))
+    if (participants.contains(userId))
       return "SignedUp";
     else
       return "SignUp";
   } else {
-    if (offerModel.individualOfferDataModel.offerAcceptors.contains(userId))
+    if (participants.contains(userId))
       return "Bookmarked";
     else
       return "Bookmark";
