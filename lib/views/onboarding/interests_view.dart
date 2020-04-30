@@ -174,46 +174,49 @@ class _InterestViewNewState extends State<InterestViewNew> {
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      Wrap(
-                        runSpacing: 5.0,
-                        spacing: 5.0,
-                        children: _selectedInterests.values
-                            .toList()
-                            .map(
-                              (value) => CustomChip(
-                                title: value,
-                                onDelete: () {
-                                  String id = interests.keys
-                                      .firstWhere((k) => interests[k] == value);
-                                  _selectedInterests.remove(id);
-                                  setState(() {});
-                                },
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ],
+                : Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: <Widget>[
+                        Wrap(
+                          runSpacing: 5.0,
+                          spacing: 5.0,
+                          children: _selectedInterests.values
+                              .toList()
+                              .map(
+                                (value) => CustomChip(
+                                  title: value,
+                                  onDelete: () {
+                                    String id = interests.keys.firstWhere(
+                                        (k) => interests[k] == value);
+                                    _selectedInterests.remove(id);
+                                    setState(() {});
+                                  },
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
-            Spacer(),
+            // Spacer(),
             SizedBox(
               width: 134,
               child: RaisedButton(
                 onPressed: () async {
                   var connResult = await Connectivity().checkConnectivity();
-                  if(connResult == ConnectivityResult.none){
+                  if (connResult == ConnectivityResult.none) {
                     _scaffoldKey.currentState.showSnackBar(
                       SnackBar(
                         content: Text("Please check your internet connection."),
                         action: SnackBarAction(
                           label: 'Dismiss',
-                          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          onPressed: () =>
+                              _scaffoldKey.currentState.hideCurrentSnackBar(),
                         ),
                       ),
                     );
-                    return ;
+                    return;
                   }
                   List<String> selectedID = [];
                   _selectedInterests.forEach((id, value) => selectedID.add(id));
