@@ -10,6 +10,7 @@ import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/community_model.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -30,8 +31,8 @@ class JoinSubTimeBankView extends StatefulWidget {
   JoinSubTimeBankView({
     this.loggedInUserModel,
     @required this.isFromDash,
-    @required this.communityId,
-    @required this.communityPrimaryTimebankId,
+    this.communityId,
+    this.communityPrimaryTimebankId
   });
 
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
@@ -43,9 +44,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   // TRUE: register page, FALSE: login page
   TextEditingController controller = TextEditingController();
   TimebankModel timebankModel;
-  //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
-  //JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -54,7 +53,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   static const String JOINED = "Joined";
   static const String REQUESTED = "Requested";
   static const String REJECTED = "Rejected";
-
   bool hasError = false;
   String errorMessage1 = '';
   List<JoinRequestModel> _joinRequestModels;
@@ -73,7 +71,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   void getData() async {
     createEditCommunityBloc.getChildTimeBanks(context);
-
     _joinRequestModels =
         await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
     setState(() {
@@ -87,6 +84,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<UserDataBloc>(context);
+
     print("in explore ==> ${_bloc.user.email}");
     return Scaffold(
 //      appBar: AppBar(
@@ -131,10 +129,11 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget getTimebanks({BuildContext context, UserDataBloc bloc}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
+
     return FutureBuilder<List<TimebankModel>>(
         future: getTimebanksForCommunity(
           communityId: widget.loggedInUserModel.currentCommunity,
-          primaryTimebankId: widget.communityPrimaryTimebankId,
+            primaryTimebankId: widget.communityPrimaryTimebankId
         ),
         builder: (context, snapshot) {
           //    print('timee ${snapshot.data}');
@@ -452,8 +451,10 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
 Future<List<TimebankModel>> getTimebanksForCommunity(
     {String communityId, String primaryTimebankId}) async {
+//  DocumentSnapshot documentSnapshot = await Firestore.instance.collection('communities').document(communityId).get();
+//  Map<String, dynamic> dataMap = documentSnapshot.data;
+//  CommunityModel communityModel = CommunityModel(dataMap);
   List<TimebankModel> timebankList = [];
-
   return Firestore.instance
       .collection('timebanknew')
       .where('community_id', isEqualTo: communityId)
@@ -461,7 +462,9 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
       .then((QuerySnapshot timebankModel) {
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
-      if (model.id != primaryTimebankId) timebankList.add(model);
+      if (model.id != primaryTimebankId) {
+        timebankList.add(model);
+      }
     });
     return timebankList;
   }).catchError((onError) {

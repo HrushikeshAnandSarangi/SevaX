@@ -159,9 +159,11 @@ class ProjectsCard extends StatelessWidget {
       } else if (l.length >= 1) {
         return "${l[0]}";
       } else {
+        print("elasticsearch pjs location result is");
         return "Unknown";
       }
     } else {
+      print("elasticsearch pjs location result isggggg");
       return "Unknown";
     }
   }
