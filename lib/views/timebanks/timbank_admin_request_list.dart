@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/flavor_config.dart';
@@ -263,7 +264,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
         }
       }
       await loadAdmins();
-      if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+      if ((FlavorConfig.appFlavor == Flavor.APP ||
+          FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
         await loadCoordinators();
       }
       await loadNextMembers();
@@ -364,17 +366,16 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             setState(() {
                               isProgressBarActive = true;
                             });
-                            List<String> members = timebankModel.members;
-                            Set<String> usersSet = members.toSet();
-                            usersSet.add(joinRequestModel.userId);
-                            timebankModel.members = usersSet.toList();
-                            joinRequestModel.operationTaken = true;
-                            joinRequestModel.accepted = true;
-                            await updateJoinRequest(model: joinRequestModel);
-                            await updateUserCommunity(
-                                communityId: communityId,
-                                userEmail: user.email);
-                            await _updateTimebank(timebankModel, admins: null);
+
+                            await addMemberToTimebank(
+                              timebankId: joinRequestModel.entityId,
+                              joinRequestId: joinRequestModel.id,
+                              memberJoiningSevaUserId: joinRequestModel.userId,
+                              notificaitonId: joinRequestModel.notificationId,
+                              communityId: communityId,
+                              newMemberJoinedEmail: user.email,
+                              isFromGroup: joinRequestModel.isFromGroup,
+                            ).commit();
                           },
                         ),
                       ),
@@ -387,10 +388,12 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
                             setState(() {
                               isProgressBarActive = true;
                             });
-                            joinRequestModel.operationTaken = true;
-                            joinRequestModel.accepted = false;
-                            updateJoinRequest(model: joinRequestModel)
-                                .then((onValue) {
+
+                            rejectMemberJoinRequest(
+                              joinRequestId: joinRequestModel.id,
+                              notificaitonId: joinRequestModel.notificationId,
+                              timebankId: joinRequestModel.entityId,
+                            ).commit().then((onValue) {
                               resetAndLoad();
                             });
                           },
@@ -415,6 +418,75 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
       ),
       child: item,
     );
+  }
+
+  WriteBatch rejectMemberJoinRequest({
+    String timebankId,
+    String joinRequestId,
+    String notificaitonId,
+  }) {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var joinRequestReference =
+        Firestore.instance.collection('join_requests').document(joinRequestId);
+
+    var timebankNotificationReference = Firestore.instance
+        .collection('timebanknew')
+        .document(timebankId)
+        .collection("notifications")
+        .document(notificaitonId);
+
+    batch.updateData(
+        joinRequestReference, {'operation_taken': true, 'accepted': false});
+
+    batch.updateData(timebankNotificationReference, {'isRead': true});
+
+    return batch;
+  }
+
+  WriteBatch addMemberToTimebank({
+    String timebankId,
+    String memberJoiningSevaUserId,
+    String joinRequestId,
+    String communityId,
+    String newMemberJoinedEmail,
+    String notificaitonId,
+    bool isFromGroup,
+  }) {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef =
+        Firestore.instance.collection('timebanknew').document(timebankId);
+    var joinRequestReference =
+        Firestore.instance.collection('join_requests').document(joinRequestId);
+
+    var newMemberDocumentReference =
+        Firestore.instance.collection('users').document(newMemberJoinedEmail);
+
+    var timebankNotificationReference = Firestore.instance
+        .collection('timebanknew')
+        .document(timebankId)
+        .collection("notifications")
+        .document(notificaitonId);
+
+    batch.updateData(timebankRef, {
+      'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
+    });
+
+    if (!isFromGroup) {
+      batch.updateData(newMemberDocumentReference, {
+        'communities': FieldValue.arrayUnion([communityId]),
+      });
+    }
+
+    batch.updateData(
+        joinRequestReference, {'operation_taken': true, 'accepted': true});
+
+    batch.updateData(timebankNotificationReference, {'isRead': true});
+
+    return batch;
   }
 
   void resetVariables() {
@@ -455,7 +527,8 @@ class _TimebankAdminPageState extends State<TimebankRequestAdminPage>
   List<Widget> getAllMembers() {
     var _avtars = List<Widget>();
     _avtars.addAll(_adminsWidgets);
-    if ((FlavorConfig.appFlavor == Flavor.APP || FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
+    if ((FlavorConfig.appFlavor == Flavor.APP ||
+        FlavorConfig.appFlavor == Flavor.SEVA_DEV)) {
       _avtars.addAll(_coordinatorsWidgets);
     }
     _avtars.addAll(_requestsWidgets);

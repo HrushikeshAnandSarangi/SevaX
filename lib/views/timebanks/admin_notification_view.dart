@@ -1148,6 +1148,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             Navigator.pop(viewContext);
                             showProgressForOnboardingUser();
 
+
                             await addMemberToTimebank(
                               timebankId: model.entityId,
                               joinRequestId: model.id,
@@ -1157,6 +1158,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                                   .loggedInUser
                                   .currentCommunity,
                               newMemberJoinedEmail: userModel.email,
+                              isFromGroup: model.isFromGroup,
                             ).commit();
 
                             Navigator.pop(showProgressForOnboardingUserContext);
@@ -1204,6 +1206,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
     String communityId,
     String newMemberJoinedEmail,
     String notificaitonId,
+    bool isFromGroup,
   }) {
     //add to timebank members
 
@@ -1226,12 +1229,14 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
       'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
     });
 
+    if (!isFromGroup) {
+      batch.updateData(newMemberDocumentReference, {
+        'communities': FieldValue.arrayUnion([communityId]),
+      });
+    }
+
     batch.updateData(
         joinRequestReference, {'operation_taken': true, 'accepted': true});
-
-    batch.updateData(newMemberDocumentReference, {
-      'communities': FieldValue.arrayUnion([communityId]),
-    });
 
     batch.updateData(timebankNotificationReference, {'isRead': true});
 

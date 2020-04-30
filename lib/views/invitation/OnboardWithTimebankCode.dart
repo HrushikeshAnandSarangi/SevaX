@@ -341,6 +341,8 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
       reason: reasonToJoin,
       timestamp: DateTime.now().millisecondsSinceEpoch,
       userId: userIdForNewMember,
+      isFromGroup: false,
+      notificationId: utils.Utils.getUuid(),
     );
   }
 
@@ -352,7 +354,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
   }) {
     return new NotificationsModel(
       timebankId: timebankModel.id,
-      id: utils.Utils.getUuid(),
+      id: joinRequestModel.notificationId,
       targetUserId: timebankModel.creatorId,
       senderUserId: userIdForNewMember,
       type: prefix0.NotificationType.JoinRequest,
@@ -478,10 +480,11 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     ).commit();
   }
 
-  WriteBatch createAndSendJoinJoinRequest(
-      {String primaryTimebankId,
-      prefix0.NotificationsModel notification,
-      JoinRequestModel joinRequestModel}) {
+  WriteBatch createAndSendJoinJoinRequest({
+    String primaryTimebankId,
+    prefix0.NotificationsModel notification,
+    JoinRequestModel joinRequestModel,
+  }) {
     WriteBatch batchWrite = Firestore.instance.batch();
     batchWrite.setData(
         Firestore.instance

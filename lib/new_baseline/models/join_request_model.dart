@@ -1,7 +1,7 @@
 import 'package:sevaexchange/models/data_model.dart';
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
-class JoinRequestModel extends DataModel{
+class JoinRequestModel extends DataModel {
   String userId;
   bool accepted;
   String reason;
@@ -11,6 +11,8 @@ class JoinRequestModel extends DataModel{
   bool operationTaken;
   String id;
   String timebankTitle;
+  bool isFromGroup;
+  String notificationId;
 
   JoinRequestModel({
     this.userId,
@@ -21,6 +23,8 @@ class JoinRequestModel extends DataModel{
     this.entityType,
     this.operationTaken,
     this.timebankTitle,
+    this.isFromGroup,
+    this.notificationId,
   }) {
     id = utils.Utils.getUuid();
   }
@@ -58,6 +62,18 @@ class JoinRequestModel extends DataModel{
       joinRequestModel.id = "NOT_SET";
     }
 
+    if (json.containsKey('isFromGroup')) {
+      joinRequestModel.isFromGroup = json['isFromGroup'];
+    } else {
+      joinRequestModel.isFromGroup = false;
+    }
+
+    if (json.containsKey('notificationId')) {
+      joinRequestModel.notificationId = json['notificationId'];
+    } else {
+      joinRequestModel.notificationId = "NO_SET";
+    }
+
     return joinRequestModel;
   }
 
@@ -80,6 +96,14 @@ class JoinRequestModel extends DataModel{
 
     if (this.timebankTitle != null) {
       map['timebankTitle'] = this.timebankTitle;
+    }
+
+    if (this.isFromGroup != null) {
+      map['isFromGroup'] = this.isFromGroup;
+    }
+
+    if (this.notificationId != null) {
+      map['notificationId'] = this.notificationId;
     }
 
     return map;
