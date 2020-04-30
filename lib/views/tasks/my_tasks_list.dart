@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/components/rich_text_view/rich_text_view.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
@@ -373,11 +374,18 @@ class TaskCardViewState extends State<TaskCardView> {
   String selectedHourValue;
 
   RequestModel requestModel;
+  final subject = new ReplaySubject<int>();
 
   @override
   void initState() {
     super.initState();
     this.requestModel = widget.requestModel;
+    subject
+        .transform(ThrottleStreamTransformer(
+            (_) => TimerStream(true, const Duration(seconds: 1))))
+        .listen((data) {
+      checkForReview();
+    });
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -553,7 +561,9 @@ class TaskCardViewState extends State<TaskCardView> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(8.0),
                       child: RaisedButton(
-                        onPressed: checkForReview,
+                        onPressed: () {
+                          subject.add(0);
+                        },
                         child: Text(
                           'Completed',
                           style: Theme.of(context).primaryTextTheme.button,
@@ -597,7 +607,8 @@ class TaskCardViewState extends State<TaskCardView> {
         int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
     double creditRequest = totalMinutes / 60;
     //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
-    var maxClaim = (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+    var maxClaim =
+        (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
 
     if (creditRequest > maxClaim) {
       showDialogFoInfo(
