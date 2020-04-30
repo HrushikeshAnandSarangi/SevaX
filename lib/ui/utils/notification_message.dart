@@ -16,7 +16,7 @@ class UserNotificationMessage {
   static const String DEBIT_FROM_OFFER =
       "*n Seva Credits have been debited from your account";
   static const String NEW_MEMBER_SIGNUP_OFFER =
-      "*name has signed up for you class \"*class\"";
+      "*name has signed up for your class \"*class\"";
   static const String OFFER_SUBSCRIPTION_COMPLETED =
       "You have successfully signed up for the *class";
   static const String OFFER_FULFILMENT_ACHIEVED =

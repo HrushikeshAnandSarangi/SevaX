@@ -52,13 +52,9 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
         isAdminLoaded = true;
       });
     });
-
-//    if (user != null) {
-//      isAdminLoaded = true;
-//    }
-
+    var templist = [...widget.timebankModel.members,...widget.timebankModel.admins,...widget.timebankModel.coordinators];
+    isUserJoined = templist.contains(SevaCore.of(context).loggedInUser.sevaUserID) ? true: false;
     if (widget.timebankModel.members.contains(widget.userId)) {
-      isUserJoined = true;
       userModels = await FirestoreManager
           .getUsersForAdminsCoordinatorsMembersTimebankIdTwo(
               widget.timebankModel.id, 1, widget.email);
@@ -136,10 +132,7 @@ class _TimeBankAboutViewState extends State<TimeBankAboutView>
                 ),
               ),
             ),
-            isUserJoined ||
-                    widget.timebankModel.admins
-                        .contains(SevaCore.of(context).loggedInUser.sevaUserID)
-                ? TimeBankSevaCoin(
+            isUserJoined ? TimeBankSevaCoin(
                     isAdmin: !widget.timebankModel.admins
                         .contains(SevaCore.of(context).loggedInUser.sevaUserID),
                     loggedInUser: SevaCore.of(context).loggedInUser,

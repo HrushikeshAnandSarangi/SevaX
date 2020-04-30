@@ -570,8 +570,48 @@ class TaskCardViewState extends State<TaskCardView> {
     );
   }
 
+  void showDialogFoInfo({String title, String content}) {
+    showDialog(
+        context: context,
+        builder: (BuildContext buildContext) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Close"),
+                onPressed: () {
+                  Navigator.of(buildContext).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   void checkForReview() async {
     if (hoursController.text == null || hoursController.text.length == 0) {
+      return;
+    }
+    int totalMinutes =
+        int.parse(selectedMinuteValue) + (int.parse(hoursController.text) * 60);
+    double creditRequest = totalMinutes / 60;
+    //Just keeping 20 hours limit for previous versions of app whih did not had number of hours
+    var maxClaim = (requestModel.numberOfHours ?? 20) / requestModel.numberOfApprovals;
+
+    if (creditRequest > maxClaim) {
+      showDialogFoInfo(
+        title: "Limit exceeded!",
+        content:
+            "You can only request a maximum of $maxClaim Hours of credit from this request.",
+      );
+      return;
+      //show dialog
+    } else if (creditRequest == 0) {
+      showDialogFoInfo(
+        title: "Enter hours",
+        content: "Please enter valid number of hours!",
+      );
       return;
     }
 
@@ -614,7 +654,7 @@ class TaskCardViewState extends State<TaskCardView> {
     startTransaction();
   }
 
-  void startTransaction() {
+  void startTransaction() async {
     if (_formKey.currentState.validate()) {
       // TODO needs flow correction to tasks model (currently reliying on requests collection for changes which will be huge instead tasks have to be individual to users)
       int totalMinutes =
@@ -638,8 +678,10 @@ class TaskCardViewState extends State<TaskCardView> {
 
       FirestoreManager.requestComplete(model: requestModel);
       // END OF CODE correction mentioned above
-      transactionBloc.createNewTransaction(
-          requestModel.sevaUserId,
+      await transactionBloc.createNewTransaction(
+          requestModel.requestMode == RequestMode.PERSONAL_REQUEST
+              ? requestModel.sevaUserId
+              : requestModel.timebankId,
           SevaCore.of(context).loggedInUser.sevaUserID,
           DateTime.now().millisecondsSinceEpoch,
           totalMinutes / 60,
@@ -667,7 +709,7 @@ class TaskCardViewState extends State<TaskCardView> {
 
   List<String> get minuteList {
     List<String> data = [];
-    for (int i = 0; i < 60; i += 15) {
+    for (int i = 0; i < 60; i += 5) {
       data.add('$i');
     }
     return data;

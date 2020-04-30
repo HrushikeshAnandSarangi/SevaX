@@ -63,7 +63,7 @@ class _ManageTimebankSeva extends State<ManageTimebankSeva> {
               tabs: <Widget>[
                 Tab(text: "Edit Timebank"),
                 // Tab(text: "Upgrade"),
-                Tab(text: "Billings"),
+                Tab(text: "Billing"),
                 Tab(text: "Settings"),
               ],
 //              onTap: (index) {

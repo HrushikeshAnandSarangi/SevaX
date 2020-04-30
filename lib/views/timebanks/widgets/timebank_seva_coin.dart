@@ -177,13 +177,13 @@ class _InputDonateDialogState extends State<InputDonateDialog> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Your current seva coins is ' + widget.maxAmount.toString()),
+          Text('Your current seva coins is ' + widget.maxAmount.toStringAsFixed(2).toString()),
           Slider(
             label: "Donate " + _donateAmount.toStringAsFixed(2) + " Coins",
             value: _donateAmount,
             min: 0,
             max: widget.maxAmount,
-            divisions: 9,
+            divisions: 100,
             onChanged: (value) {
               setState(() {
                 _donateAmount = value;

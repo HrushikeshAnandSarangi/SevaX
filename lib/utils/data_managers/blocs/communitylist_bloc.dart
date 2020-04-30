@@ -229,6 +229,22 @@ class TransactionBloc {
               .collection('users')
               .document(document.documentID)
               .setData({ 'currentBalance': FieldValue.increment(num.parse(credits.toStringAsFixed(2)))},merge: true);
+      } else if (type == 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS') {
+        // credit request hours to timebank
+        Query query = Firestore.instance
+            .collection('timebanknew')
+            .where('id', isEqualTo: timebankid);
+        QuerySnapshot snapshot = await query.getDocuments();
+        DocumentSnapshot document = snapshot.documents?.length > 0 && snapshot.documents != null
+            ? snapshot.documents.first
+            : null;
+        print(timebankid);
+        print(snapshot.documents);
+        if (document != null)
+          Firestore.instance
+              .collection('timebanknew')
+              .document(document.documentID)
+              .setData({ 'balance': FieldValue.increment((num.parse(credits.toStringAsFixed(2))))},merge: true);
       } else if (type == "USER_DONATE_TOTIMEBANK") {
         print("came here");
         // debit from timebank

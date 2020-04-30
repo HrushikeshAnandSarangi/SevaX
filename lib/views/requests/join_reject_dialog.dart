@@ -92,7 +92,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
             ),
             Center(
               child: Text(
-                  "By approving, ${requestInvitationModel.requestTitle} will be added to the tasks.",
+                  "By accepting, ${requestInvitationModel.requestTitle} will be added to the tasks.",
                   style: TextStyle(
                     fontStyle: FontStyle.italic,
                   ),
@@ -109,7 +109,7 @@ class _JoinRejectDialogViewState extends State<JoinRejectDialogView> {
                   child: RaisedButton(
                     color: FlavorConfig.values.theme.primaryColor,
                     child: Text(
-                      'Approve',
+                      'Accept',
                       style:
                           TextStyle(color: Colors.white, fontFamily: 'Europa'),
                     ),

@@ -45,6 +45,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   @override
   void initState() {
+    log("notification page init");
     Future.delayed(Duration.zero, () {
       user = SevaCore.of(context).loggedInUser;
     });
@@ -53,6 +54,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 
   @override
   Widget build(BuildContext context) {
+    log("notification page build");
     return StreamBuilder<List<NotificationsModel>>(
       stream: FirestoreManager.getNotifications(
         userEmail: SevaCore.of(context).loggedInUser.email,
@@ -60,7 +62,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       ),
       builder: (contextFirestore, snapshot) {
         if (snapshot.hasError) {
-          return Text(snapshot.error.toString());
+          return Container();
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -126,7 +128,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                           ),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              return Text(snapshot.error.toString());
+                              return Container();
                             }
 
                             if (snapshot.connectionState ==
@@ -171,7 +173,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               sevaUserId: notification.senderUserId),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              return Text(snapshot.error.toString());
+                              return Container();
                             }
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -193,7 +195,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               requestId: model.id),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              return Text(snapshot.error.toString());
+                              return Container();
                             }
 
                             if (snapshot.connectionState ==
@@ -291,7 +293,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                               sevaUserId: acceptedOffer.acceptedBy),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              return Text(snapshot.error.toString());
+                              return Container();
                             }
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -534,7 +536,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     return FutureBuilder<UserModel>(
         future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return Text(snapshot.error.toString());
+          if (snapshot.hasError) return Container();
           if (snapshot.connectionState == ConnectionState.waiting) {
             return notificationShimmer;
           }
@@ -606,7 +608,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     return FutureBuilder<UserModel>(
         future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
         builder: (context, snapshot) {
-          if (snapshot.hasError) return Text(snapshot.error.toString());
+          if (snapshot.hasError) return Container();
           if (snapshot.connectionState == ConnectionState.waiting) {
             return notificationShimmer;
           }
@@ -715,7 +717,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     // return StreamBuilder<UserModel>(
     //   stream: FirestoreManager.getUserForIdStream(sevaUserId: userId),
     //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) return Text(snapshot.error.toString());
+    //     if (snapshot.hasError) return Container();
     //     if (snapshot.connectionState == ConnectionState.waiting) {
     //       return notificationShimmer;
     //     }
@@ -735,7 +737,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     return FutureBuilder<UserModel>(
       future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
         }
@@ -755,7 +757,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                       builder: (context, snapshot) {
                         RequestModel model = snapshot.data;
                         if (snapshot.hasError)
-                          return Text(snapshot.error.toString());
+                          return Container();
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return notificationShimmer;
@@ -806,7 +808,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     builder: (context, snapshot) {
                       RequestModel model = snapshot.data;
                       if (snapshot.hasError)
-                        return Text(snapshot.error.toString());
+                        return Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return notificationShimmer;
                       }
@@ -919,7 +921,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     return FutureBuilder<UserModel>(
       future: FirestoreManager.getUserForIdFuture(sevaUserId: userId),
       builder: (context, snapshot) {
-        if (snapshot.hasError) return Text(snapshot.error.toString());
+        if (snapshot.hasError) return Container();
         if (snapshot.connectionState == ConnectionState.waiting) {
           return notificationShimmer;
         }
@@ -1407,7 +1409,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     //   builder: (context, snapshot) {
     //     if (snapshot.hasError) {
     //       return Center(
-    //         child: Text(snapshot.error.toString()),
+    //         child: Container(),
     //       );
     //     }
 
@@ -1451,7 +1453,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     //   builder: (context, snapshot) {
     //     if (snapshot.hasError) {
     //       return Center(
-    //         child: Text(snapshot.error.toString()),
+    //         child: Container(),
     //       );
     //     }
     //     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1514,7 +1516,7 @@ class NotificationsView extends State<NotificationViewHolder> {
     //   builder: (context, snapshot) {
     //     if (snapshot.hasError) {
     //       return Center(
-    //         child: Text(snapshot.error.toString()),
+    //         child: Container(),
     //       );
     //     }
 
@@ -1556,7 +1558,7 @@ class NotificationsView extends State<NotificationViewHolder> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
-            child: Text(snapshot.error.toString()),
+            child: Container(),
           );
         }
 
@@ -2023,7 +2025,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 //            userId: SevaCore.of(context).loggedInUser.sevaUserID,
 //          ),
 //          builder: (context, snapshot) {
-//            if (snapshot.hasError) return Text(snapshot.error.toString());
+//            if (snapshot.hasError) return Container();
 //            if (snapshot.connectionState == ConnectionState.waiting) {
 //              return Container();
 //            }
@@ -2055,7 +2057,7 @@ class NotificationsView extends State<NotificationViewHolder> {
 //            userId: SevaCore.of(context).loggedInUser.sevaUserID,
 //          ),
 //          builder: (context, snapshot) {
-//            if (snapshot.hasError) return Text(snapshot.error.toString());
+//            if (snapshot.hasError) return Container();
 //            if (snapshot.connectionState == ConnectionState.waiting) {
 //              return Container();
 //            }

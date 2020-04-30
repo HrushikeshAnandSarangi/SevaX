@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
@@ -22,9 +24,17 @@ class HomePageRouter extends StatefulWidget {
 class _BottomNavBarRouterState extends State<HomePageRouter> {
   int selected = 2;
   UserDataBloc _userBloc = UserDataBloc();
+  List<Widget> pages = [
+    ExploreTabView(),
+    NotificationsPage(),
+    HomeDashBoard(),
+    ChatListView(),
+    ProfilePage(),
+  ];
 
   @override
   void initState() {
+    log("home page router init");
     super.initState();
 
     Future.delayed(
@@ -90,20 +100,17 @@ class _BottomNavBarRouterState extends State<HomePageRouter> {
                   children: <Widget>[
                     Container(
                       height: MediaQuery.of(context).size.height - 65,
-                      child: IndexedStack(
-                        index: selected,
-                        children: <Widget>[
-                          ExploreTabView(),
-//                          JoinSubTimeBankView(
-//                            isFromDash: true,
-//                            loggedInUserModel: _userBloc.user,
-//                          ),
-                          NotificationsPage(),
-                          HomeDashBoard(),
-                          ChatListView(),
-                          ProfilePage(),
-                        ],
-                      ),
+                      child: pages[selected],
+                      //   child: IndexedStack(
+                      //     index: selected,
+                      //     children: <Widget>[
+                      //       ExploreTabView(),
+                      //       NotificationsPage(),
+                      //       HomeDashBoard(),
+                      //       ChatListView(),
+                      //       ProfilePage(),
+                      //     ],
+                      //   ),
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,

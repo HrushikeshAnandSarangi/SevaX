@@ -409,7 +409,9 @@ class _TimeBankExistingRequestsState extends State<AdminPersonalRequests> {
   }) async {
     RequestInvitationModel requestInvitationModel = RequestInvitationModel(
         timebankImage: timebankModel.photoUrl,
-        timebankName: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST ? timebankModel.name :userModel.fullname,
+        timebankName: requestModel.requestMode == RequestMode.TIMEBANK_REQUEST
+            ? timebankModel.name
+            : userModel.fullname,
         requestDesc: requestModel.description,
         requestId: requestModel.id,
         requestTitle: requestModel.title);

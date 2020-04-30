@@ -35,7 +35,8 @@ class _OfferDetailsRouterState extends State<OfferDetailsRouter> {
   @override
   Widget build(BuildContext context) {
     bool _isCreator = widget.offerModel.sevaUserId ==
-        SevaCore.of(context).loggedInUser.sevaUserID;
+            SevaCore.of(context).loggedInUser.sevaUserID &&
+        widget.offerModel.offerType == OfferType.GROUP_OFFER;
     return BlocProvider(
       bloc: _bloc,
       child: Scaffold(
