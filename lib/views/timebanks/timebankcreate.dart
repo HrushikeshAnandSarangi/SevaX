@@ -70,6 +70,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
   String selectedAddress;
   TextEditingController searchTextController = new TextEditingController();
   String errTxt;
+  final nameNode = FocusNode();
   final aboutNode = FocusNode();
   final _textUpdates = StreamController<String>();
 
@@ -217,6 +218,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
+            focusNode: nameNode,
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(aboutNode);
             },
@@ -328,6 +330,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       return RaisedButton(
                         // color: Colors.blue,
                         onPressed: () {
+
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
@@ -344,6 +347,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                             }
                             updateTimebank(timebankModel: parentTimebank);
                             Navigator.pop(context);
+                          } else {
+                            FocusScope.of(context).requestFocus(nameNode);
                           }
                         },
 

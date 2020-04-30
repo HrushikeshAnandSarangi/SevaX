@@ -126,11 +126,7 @@ Future<int> getMembersCount({@required String communityId}) async {
       .collection('timebanknew')
       .document(primaryTimebankId)
       .get();
-  List<String> membersAndAdminsList = new List();
-  membersAndAdminsList.addAll(timebankDoc.data['admins']);
-  membersAndAdminsList.addAll(timebankDoc.data['members']);
-  Set<String> membersAndAdminsSet = new Set<String>.from(membersAndAdminsList);
-  int totalCount = membersAndAdminsSet.length;
+  int totalCount = timebankDoc.data['members'].length;
   print("full counttttttttt " + totalCount.toString());
   return totalCount;
 }
@@ -139,7 +135,6 @@ Future<int> getMembersCount({@required String communityId}) async {
 Future<int> getMembersCountOfAllMembers({@required String communityId}) async {
   int totalCount = 0;
   totalCount = await getMembersCount(communityId: communityId);
-  print("totalCounttttttttttttt " + totalCount.toString());
   return totalCount;
 }
 
