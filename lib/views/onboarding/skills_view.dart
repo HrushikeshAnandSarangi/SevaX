@@ -180,48 +180,53 @@ class _SkillViewNewState extends State<SkillViewNew> {
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      Wrap(
-                        runSpacing: 5.0,
-                        spacing: 5.0,
-                        children: _selectedSkills.values
-                            .toList()
-                            .map(
-                              (value) => value == null
-                                  ? Container()
-                                  : CustomChip(
-                                      title: value,
-                                      onDelete: () {
-                                        String id = skills.keys.firstWhere(
-                                            (k) => skills[k] == value);
-                                        _selectedSkills.remove(id);
-                                        setState(() {});
-                                      },
-                                    ),
-                            )
-                            .toList(),
-                      ),
-                    ],
+                : Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      children: <Widget>[
+                        Wrap(
+                          runSpacing: 5.0,
+                          spacing: 5.0,
+                          children: _selectedSkills.values
+                              .toList()
+                              .map(
+                                (value) => value == null
+                                    ? Container()
+                                    : CustomChip(
+                                        title: value,
+                                        onDelete: () {
+                                          String id = skills.keys.firstWhere(
+                                              (k) => skills[k] == value);
+                                          _selectedSkills.remove(id);
+                                          setState(() {});
+                                        },
+                                      ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
-            Spacer(),
+            //   Spacer(),
+
             SizedBox(
               width: 134,
               child: RaisedButton(
                 onPressed: () async {
                   var connResult = await Connectivity().checkConnectivity();
-                  if(connResult == ConnectivityResult.none){
+                  if (connResult == ConnectivityResult.none) {
                     _scaffoldKey.currentState.showSnackBar(
                       SnackBar(
                         content: Text("Please check your internet connection."),
                         action: SnackBarAction(
                           label: 'Dismiss',
-                          onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                          onPressed: () =>
+                              _scaffoldKey.currentState.hideCurrentSnackBar(),
                         ),
                       ),
                     );
-                    return ;
+                    return;
                   }
                   List<String> selectedID = [];
                   _selectedSkills.forEach((id, _) => selectedID.add(id));
