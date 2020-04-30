@@ -98,8 +98,8 @@ class UserModel extends DataModel {
       this.pastHires = [];
     }
     if (map.containsKey('emailSent')) {
-      this.emailSent = map['emailSent']??false;
-    }else{
+      this.emailSent = map['emailSent'] ?? false;
+    } else {
       this.emailSent = false;
     }
     if (map.containsKey('acceptedEULA')) {
@@ -120,14 +120,14 @@ class UserModel extends DataModel {
     if (map.containsKey('currentCommunity')) {
       this.currentCommunity = map['currentCommunity'];
     } else {
-      currentCommunity = " ";
+      currentCommunity = "";
     }
 
     if (map.containsKey('communities')) {
       //print("Blocked Data present");
       List<String> communities = List.castFrom(map['communities']);
       this.communities = communities;
-    }else{
+    } else {
       this.communities = List();
     }
 
