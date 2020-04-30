@@ -7,6 +7,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:rxdart/rxdart.dart';
@@ -142,7 +143,7 @@ class CreateEditCommunityViewFormState
     if (widget.isCreateTimebank == false) {
       getModelData();
     }
-
+    _fetchCurrentlocation;
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -184,6 +185,23 @@ class CreateEditCommunityViewFormState
           });
         }
       }
+    });
+  }
+
+  void get _fetchCurrentlocation {
+    Location().getLocation().then((onValue) {
+      print("Location1:$onValue");
+      location = GeoFirePoint(onValue.latitude, onValue.longitude);
+      LocationUtility()
+          .getFormattedAddress(
+        location.latitude,
+        location.longitude,
+      )
+          .then((address) {
+        setState(() {
+          this.selectedAddress = address;
+        });
+      });
     });
   }
 
@@ -297,14 +315,14 @@ class CreateEditCommunityViewFormState
                     },
                     controller: searchTextController,
                     onChanged: (value) {
-                      enteredName = value.replaceAll("[^a-zA-Z0-9]+", "");
+                      enteredName = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
                       print(
-                          "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9]+", "")}");
+                          "name ------ ${enteredName.replaceAll("[^a-zA-Z0-9_ ]*", "")}");
                       communityModel.name =
-                          value.replaceAll("[^a-zA-Z0-9]", "");
+                          value.replaceAll("[^a-zA-Z0-9_ ]*", "");
 
-                      timebankModel.name = value.replaceAll("[^a-zA-Z0-9]", "");
+                      timebankModel.name = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
                     },
                     decoration: InputDecoration(
                       errorText: errTxt,
@@ -314,8 +332,11 @@ class CreateEditCommunityViewFormState
                     keyboardType: TextInputType.text,
                     autocorrect: true,
                     maxLines: 1,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                    ],
                     onSaved: (value) {
-                      enteredName = value.replaceAll("[^a-zA-Z0-9]", "");
+                      enteredName = value.replaceAll("[^a-zA-Z0-9_ ]*", "");
                     },
                     // onSaved: (value) => enteredName = value,
                     validator: (value) {
@@ -341,7 +362,7 @@ class CreateEditCommunityViewFormState
                     ),
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.done,
-                    maxLines: null,
+                    maxLines: 5,
                     textCapitalization: TextCapitalization.sentences,
                     initialValue: timebankModel.missionStatement ?? "",
                     onChanged: (value) {
