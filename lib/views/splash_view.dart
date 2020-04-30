@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flurry/flurry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
@@ -26,7 +27,6 @@ import 'package:sevaexchange/views/workshop/UpdateApp.dart';
 
 import 'onboarding/interests_view.dart';
 import 'onboarding/skills_view.dart';
-import 'package:flurry/flurry.dart';
 
 //class UserData {
 //  static UserModel user;
@@ -103,8 +103,12 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void initFlurry() async {
-    await Flurry.initialize(androidKey: "NZN3QTYM42M6ZQXV3GJ8", iosKey: "H9RX59248T458TDZGX3Y", enableLog: true);
+    await Flurry.initialize(
+        androidKey: "NZN3QTYM42M6ZQXV3GJ8",
+        iosKey: "H9RX59248T458TDZGX3Y",
+        enableLog: true);
   }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -602,25 +606,26 @@ class _SplashViewState extends State<SplashView> {
     if (widget.skipToHomePage) {
       print('Navigating to home page');
       _navigateToCoreView(loggedInUser);
-
-      await FirebaseAuth.instance
-          .currentUser()
-          .then((FirebaseUser firebaseUser) async {
-        if (firebaseUser != null) {
-          if (!firebaseUser.isEmailVerified) {
-            await Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => VerifyEmail(
-                    firebaseUser: firebaseUser,
-                    email: loggedInUser.email,
-                    emailSent: loggedInUser.emailSent,
-                  ),
-                ),
-                (Route<dynamic> route) => false);
-          }
-        }
-      });
     }
+
+    await FirebaseAuth.instance
+        .currentUser()
+        .then((FirebaseUser firebaseUser) async {
+      if (firebaseUser != null) {
+        if (!firebaseUser.isEmailVerified) {
+          await Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => VerifyEmail(
+                  firebaseUser: firebaseUser,
+                  email: loggedInUser.email,
+                  emailSent: loggedInUser.emailSent,
+                ),
+              ),
+              (Route<dynamic> route) => false);
+        }
+      }
+    });
+
     print("reached here------->><><>");
     if (!loggedInUser.acceptedEULA) {
       await _navigateToEULA(loggedInUser);
