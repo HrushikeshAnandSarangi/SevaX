@@ -9,15 +9,15 @@ enum OfferType { INDIVIDUAL_OFFER, GROUP_OFFER }
 
 class GroupOfferDataModel {
   String classTitle;
-  int startDate;
-  int endDate;
-  int numberOfPreperationHours;
-  int numberOfClassHours;
-  int sizeOfClass;
   String classDescription;
-  List<String> signedUpMembers;
   double creditsApproved;
   int creditStatus;
+  int endDate;
+  int numberOfClassHours;
+  int numberOfPreperationHours;
+  List<String> signedUpMembers;
+  int startDate;
+  int sizeOfClass;
 
   int isReviewed;
   int membersNotified;
@@ -117,10 +117,10 @@ class GroupOfferDataModel {
 }
 
 class IndividualOfferDataModel extends DataModel {
-  String title;
   String description;
-  String schedule;
   List<String> offerAcceptors;
+  String schedule;
+  String title;
 
   IndividualOfferDataModel();
 
@@ -169,22 +169,23 @@ class IndividualOfferDataModel extends DataModel {
   }
 }
 
+
 class OfferModel extends DataModel {
-  String id;
+  bool acceptedOffer = false;
+  String associatedRequest;
+  String communityId;
+  Color color;
   String email;
   String fullName;
-  String sevaUserId;
-  String associatedRequest;
-  int timestamp;
-  String timebankId;
+  String id;
   GeoFirePoint location;
-  bool acceptedOffer = false;
-  String root_timebank_id;
   OfferType offerType;
   String photoUrlImage;
-  Color color;
+  String root_timebank_id;
   String selectedAdrress;
-  String communityId;
+  String sevaUserId;
+  String timebankId;
+  int timestamp;
 
   GroupOfferDataModel groupOfferDataModel;
   IndividualOfferDataModel individualOfferDataModel;

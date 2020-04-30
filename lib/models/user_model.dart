@@ -278,7 +278,7 @@ class UserModel extends DataModel {
     }
     if (this.membershipTimebanks != null &&
         this.membershipTimebanks.isNotEmpty) {
-      object['membership_timebanks'] = this.membershipTimebanks;
+      object['membershipTimebanks'] = this.membershipTimebanks;
     }
     if (this.sevaUserID != null && this.sevaUserID.isNotEmpty) {
       object['sevauserid'] = this.sevaUserID;

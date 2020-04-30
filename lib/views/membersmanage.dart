@@ -101,7 +101,7 @@ class MembersManageState extends State<MembersManage> {
                               .collection('users')
                               .document(userModel.email)
                               .updateData({
-                            'membership_timebanks':
+                            'membershipTimebanks':
                                 FieldValue.arrayRemove([timebankModel.id])
                           });
                         },

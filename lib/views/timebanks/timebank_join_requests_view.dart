@@ -119,7 +119,7 @@ class TimebankJoinRequestViewState extends State<TimebankJoinRequestView> {
                                   .collection('users')
                                   .document(item['requestor_email'])
                                   .updateData({
-                                'membership_timebanks':
+                                'membershipTimebanks':
                                     FieldValue.arrayUnion([timebankModel.id])
                               });
 

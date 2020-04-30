@@ -22,7 +22,7 @@ class TimebanksService extends BaseService {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       Map<String, dynamic> dataMap = documentSnapshot.data;
-      List timeBankList = dataMap['membership_timebanks'];
+      List timeBankList = dataMap['membershipTimebanks'];
       timeBankIdList = List.castFrom(timeBankList);
     });
 
