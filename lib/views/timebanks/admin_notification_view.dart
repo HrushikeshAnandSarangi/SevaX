@@ -15,13 +15,11 @@ import 'package:sevaexchange/new_baseline/models/request_invitaton_model.dart';
 import 'package:sevaexchange/ui/screens/notifications/widgets/notification_card.dart';
 import 'package:sevaexchange/ui/utils/notification_message.dart';
 import 'package:sevaexchange/utils/data_managers/chat_data_manager.dart';
-import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
 import 'package:sevaexchange/utils/data_managers/offers_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/chatview.dart';
-import 'package:sevaexchange/views/messages/list_members_timebank.dart';
 import 'package:sevaexchange/views/qna-module/ReviewFeedback.dart';
 import 'package:sevaexchange/views/requests/join_reject_dialog.dart';
 import 'package:sevaexchange/views/timebank_modules/offer_utils.dart';
@@ -116,8 +114,8 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                 break;
 
               case NotificationType.JoinRequest:
-                JoinRequestNotificationModel model =
-                    JoinRequestNotificationModel.fromMap(notification.data);
+                JoinRequestModel model =
+                    JoinRequestModel.fromMap(notification.data);
                 return FutureBuilder<UserModel>(
                     future: FirestoreManager.getUserForId(
                         sevaUserId: notification.senderUserId),
@@ -495,8 +493,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           requestId: requestid),
                       builder: (context, snapshot) {
                         RequestModel model = snapshot.data;
-                        if (snapshot.hasError)
-                          return Container();
+                        if (snapshot.hasError) return Container();
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           // return notificationShimmer;
@@ -548,8 +545,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                         requestId: requestid),
                     builder: (context, snapshot) {
                       RequestModel model = snapshot.data;
-                      if (snapshot.hasError)
-                        return Container();
+                      if (snapshot.hasError) return Container();
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // return notificationShimmer;
                         return Text('getOfferAcceptNotification');
@@ -1012,10 +1008,11 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   }
 
   Widget getJoinReuqestsNotificationWidget(
-      UserModel user,
-      String notificationId,
-      JoinRequestNotificationModel model,
-      BuildContext context) {
+    UserModel user,
+    String notificationId,
+    JoinRequestModel model,
+    BuildContext context,
+  ) {
     return Dismissible(
         background: dismissibleBackground,
         key: Key(Utils.getUuid()),
@@ -1067,7 +1064,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
   void showDialogForJoinRequestApproval({
     BuildContext context,
     UserModel userModel,
-    JoinRequestNotificationModel model,
+    JoinRequestModel model,
     String notificationId,
   }) {
     showDialog(
@@ -1130,7 +1127,7 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(4.0),
-                    child: Text(model.reasonToJoin ?? "Reason not mentioned"),
+                    child: Text(model.reason ?? "Reason not mentioned"),
                   ),
                   Padding(
                     padding: EdgeInsets.all(5.0),
@@ -1148,38 +1145,21 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () async {
-                            // Once approved init timebank model
-                            //show dialog for processing
                             Navigator.pop(viewContext);
                             showProgressForOnboardingUser();
-                            var timebankModel =
-                                await getTimebankDetailsbyFuture(
-                              timebankId: widget.timebankId,
-                            );
 
-                            var model = await getJoinRequestMadeFrom(
-                              timebankId: widget.timebankId,
-                              sevaUserId: userModel.sevaUserID,
-                            );
-
-                            List<String> members = timebankModel.members;
-                            Set<String> usersSet = members.toSet();
-
-                            usersSet.add(model.userId);
-                            timebankModel.members = usersSet.toList();
-                            model.accepted = true;
-                            model.operationTaken = true;
-
-                            updateUserCommunity(
+                            await addMemberToTimebank(
+                              timebankId: model.entityId,
+                              joinRequestId: model.id,
+                              memberJoiningSevaUserId: model.userId,
+                              notificaitonId: notificationId,
                               communityId: SevaCore.of(context)
                                   .loggedInUser
                                   .currentCommunity,
-                              userEmail: userModel.email,
-                            );
+                              newMemberJoinedEmail: userModel.email,
+                            ).commit();
 
-                            await updateJoinRequest(model: model);
                             Navigator.pop(showProgressForOnboardingUserContext);
-                            await updateTimebank(timebankModel: timebankModel);
                             //update user community
                           },
                         ),
@@ -1198,16 +1178,11 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
                           onPressed: () async {
                             Navigator.pop(viewContext);
                             showProgressForOnboardingUser();
-                            // request declined
-                            var model = await getJoinRequestMadeFrom(
-                              timebankId: widget.timebankId,
-                              sevaUserId: userModel.sevaUserID,
-                            );
-                            model.accepted = false;
-                            model.operationTaken = true;
-                            await updateJoinRequest(model: model);
-                            // await readTimeBankNotification(
-                            //     notificationId, widget.timebankId);
+                            await rejectMemberJoinRequest(
+                              timebankId: model.entityId,
+                              joinRequestId: model.id,
+                              notificaitonId: notificationId,
+                            ).commit();
 
                             Navigator.pop(showProgressForOnboardingUserContext);
                           },
@@ -1220,6 +1195,72 @@ class AdminNotificationsView extends State<AdminNotificationViewHolder> {
             ),
           );
         });
+  }
+
+  WriteBatch addMemberToTimebank({
+    String timebankId,
+    String memberJoiningSevaUserId,
+    String joinRequestId,
+    String communityId,
+    String newMemberJoinedEmail,
+    String notificaitonId,
+  }) {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var timebankRef =
+        Firestore.instance.collection('timebanknew').document(timebankId);
+    var joinRequestReference =
+        Firestore.instance.collection('join_requests').document(joinRequestId);
+
+    var newMemberDocumentReference =
+        Firestore.instance.collection('users').document(newMemberJoinedEmail);
+
+    var timebankNotificationReference = Firestore.instance
+        .collection('timebanknew')
+        .document(timebankId)
+        .collection("notifications")
+        .document(notificaitonId);
+
+    batch.updateData(timebankRef, {
+      'members': FieldValue.arrayUnion([memberJoiningSevaUserId]),
+    });
+
+    batch.updateData(
+        joinRequestReference, {'operation_taken': true, 'accepted': true});
+
+    batch.updateData(newMemberDocumentReference, {
+      'communities': FieldValue.arrayUnion([communityId]),
+    });
+
+    batch.updateData(timebankNotificationReference, {'isRead': true});
+
+    return batch;
+  }
+
+  WriteBatch rejectMemberJoinRequest({
+    String timebankId,
+    String joinRequestId,
+    String notificaitonId,
+  }) {
+    //add to timebank members
+
+    WriteBatch batch = Firestore.instance.batch();
+    var joinRequestReference =
+        Firestore.instance.collection('join_requests').document(joinRequestId);
+
+    var timebankNotificationReference = Firestore.instance
+        .collection('timebanknew')
+        .document(timebankId)
+        .collection("notifications")
+        .document(notificaitonId);
+
+    batch.updateData(
+        joinRequestReference, {'operation_taken': true, 'accepted': false});
+
+    batch.updateData(timebankNotificationReference, {'isRead': true});
+
+    return batch;
   }
 
   Future<JoinRequestModel> getJoinRequestMadeFrom({

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -51,8 +50,9 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
 
   List<JoinRequestModel> _joinRequestModelList;
 
+  String reasonToJoin;
+
   //TimebankModel superAdminModel;
-  JoinRequestModel joinRequestModel = new JoinRequestModel();
 //  JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
@@ -327,6 +327,40 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
     );
   }
 
+  JoinRequestModel _assembleJoinRequestModel({
+    String userIdForNewMember,
+    String communityLabel,
+    String communityPrimaryTimebankId,
+  }) {
+    return new JoinRequestModel(
+      timebankTitle: communityLabel,
+      accepted: false,
+      entityId: communityPrimaryTimebankId,
+      entityType: EntityType.Timebank,
+      operationTaken: false,
+      reason: reasonToJoin,
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      userId: userIdForNewMember,
+    );
+  }
+
+  NotificationsModel _assembleNotificationForJoinRequest({
+    String userIdForNewMember,
+    JoinRequestModel joinRequestModel,
+    String communityLabel,
+    String communityPrimaryTimebankId,
+  }) {
+    return new NotificationsModel(
+      timebankId: timebankModel.id,
+      id: utils.Utils.getUuid(),
+      targetUserId: timebankModel.creatorId,
+      senderUserId: userIdForNewMember,
+      type: prefix0.NotificationType.JoinRequest,
+      data: joinRequestModel.toMap(),
+      communityId: widget.communityModel.id,
+    );
+  }
+
   Future<AlertDialog> myDialog(BuildContext context,
       CommunityCreateEditController communityCreateEditSnapshot) {
     showDialog<AlertDialog>(
@@ -363,7 +397,7 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                     if (value.isEmpty) {
                       return 'Please enter some text';
                     }
-                    joinRequestModel.reason = value;
+                    reasonToJoin = value;
                   },
                 ),
               ),
@@ -382,59 +416,12 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
                           fontSize: dialogButtonSize, fontFamily: 'Europa'),
                     ),
                     onPressed: () async {
-                      print("Timebank Model $timebankModel");
-                      joinRequestModel.userId =
-                          communityCreateEditSnapshot.loggedinuser.sevaUserID;
-                      joinRequestModel.timestamp =
-                          DateTime.now().millisecondsSinceEpoch;
-
-                      joinRequestModel.entityId = timebankModel.id;
-                      joinRequestModel.entityType = EntityType.Timebank;
-                      joinRequestModel.accepted = false;
-
                       if (formkey.currentState.validate()) {
                         Navigator.of(dialogContext).pop();
-
                         showProgressDialog();
-
-                        await updateJoinRequest(model: joinRequestModel);
-
-                        JoinRequestNotificationModel joinReqModel =
-                            JoinRequestNotificationModel(
-                          timebankId: timebankModel.id,
-                          timebankTitle: timebankModel.name,
-                          reasonToJoin: joinRequestModel.reason,
+                        await _assembleAndSendRequest(
+                          communityCreateEditSnapshot,
                         );
-                        NotificationsModel notification = NotificationsModel(
-                          timebankId: timebankModel.id,
-                          id: utils.Utils.getUuid(),
-                          targetUserId: timebankModel.creatorId,
-                          senderUserId: communityCreateEditSnapshot
-                              .loggedinuser.sevaUserID,
-                          type: prefix0.NotificationType.JoinRequest,
-                          data: joinReqModel.toMap(),
-                          communityId: widget.communityModel.id,
-                        );
-
-                        notification.timebankId =
-                            FlavorConfig.values.timebankId;
-
-                        // UserModel timebankCreator =
-                        //     await FirestoreManager.getUserForId(
-                        //         sevaUserId: timebankModel.creatorId);
-
-                        await Firestore.instance
-                            .collection('timebanknew')
-                            .document(
-                              communityCreateEditSnapshot
-                                  .selectedCommunity.primary_timebank,
-                            )
-                            // .document(
-                            //   "785006d5-597c-464e-9f3a-edd6c342088f",
-                            // )
-                            .collection("notifications")
-                            .document(notification.id)
-                            .setData(notification.toMap());
 
                         if (dialogLoadingContext != null) {
                           Navigator.pop(dialogLoadingContext);
@@ -464,6 +451,54 @@ class OnBoardWithTimebankState extends State<OnBoardWithTimebank> {
         );
       },
     );
+  }
+
+  Future _assembleAndSendRequest(
+      CommunityCreateEditController communityCreateEditSnapshot) async {
+    var joinRequestModel = _assembleJoinRequestModel(
+      userIdForNewMember: communityCreateEditSnapshot.loggedinuser.sevaUserID,
+      communityLabel: communityCreateEditSnapshot.selectedCommunity.name,
+      communityPrimaryTimebankId:
+          communityCreateEditSnapshot.selectedCommunity.primary_timebank,
+    );
+
+    var notification = _assembleNotificationForJoinRequest(
+      joinRequestModel: joinRequestModel,
+      userIdForNewMember: communityCreateEditSnapshot.loggedinuser.sevaUserID,
+      communityLabel: communityCreateEditSnapshot.selectedCommunity.name,
+      communityPrimaryTimebankId:
+          communityCreateEditSnapshot.selectedCommunity.primary_timebank,
+    );
+
+    await createAndSendJoinJoinRequest(
+      joinRequestModel: joinRequestModel,
+      notification: notification,
+      primaryTimebankId:
+          communityCreateEditSnapshot.selectedCommunity.primary_timebank,
+    ).commit();
+  }
+
+  WriteBatch createAndSendJoinJoinRequest(
+      {String primaryTimebankId,
+      prefix0.NotificationsModel notification,
+      JoinRequestModel joinRequestModel}) {
+    WriteBatch batchWrite = Firestore.instance.batch();
+    batchWrite.setData(
+        Firestore.instance
+            .collection('timebanknew')
+            .document(
+              primaryTimebankId,
+            )
+            .collection("notifications")
+            .document(notification.id),
+        notification.toMap());
+    batchWrite.setData(
+        Firestore.instance
+            .collection('join_requests')
+            .document(joinRequestModel.id),
+        joinRequestModel.toMap());
+
+    return batchWrite;
   }
 
   void _checkFields() {
