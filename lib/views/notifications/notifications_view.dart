@@ -1053,7 +1053,7 @@ class NotificationsView extends State<NotificationViewHolder> {
                     )
                   : Offstage(),
               subtitle: Text(
-                  '${requestInvitationModel.timebankName.toLowerCase()} has requested to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
+                  '${requestInvitationModel.timebankName.toLowerCase()} has requested you to join ${requestInvitationModel.requestTitle}, Tap to view join request'),
             ),
           ),
           onTap: () {
