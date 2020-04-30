@@ -39,12 +39,13 @@ class RequestsTabView extends StatelessWidget {
                   child: Text("No data found !"),
                 );
               }
+
               return ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: 10),
                 shrinkWrap: true,
                 itemCount: snapshot.data.length,
                 itemBuilder: (context, index) {
-                  final request = snapshot.data[index];
+                  RequestModel request = snapshot.data[index];
                   return InkWell(
                     onTap: () => _navigateToRequest(
                       context: mcontext,
@@ -60,7 +61,7 @@ class RequestsTabView extends StatelessWidget {
                       isApplied: request.acceptors.contains(
                               SevaCore.of(context).loggedInUser.email) ||
                           request.approvedUsers.contains(
-                              SevaCore.of(context).loggedInUser.email),
+                              SevaCore.of(context).loggedInUser.email) || false,
                     ),
                   );
                 },
