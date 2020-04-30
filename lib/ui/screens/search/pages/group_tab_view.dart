@@ -1,19 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/new_baseline/models/join_request_model.dart'
     as prefix0;
+import 'package:sevaexchange/new_baseline/models/join_request_model.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/queries.dart';
 import 'package:sevaexchange/ui/screens/search/bloc/search_bloc.dart';
 import 'package:sevaexchange/ui/screens/search/widgets/group_card.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
-import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
-import 'package:sevaexchange/utils/utils.dart';
-
-import '../../../../flavor_config.dart';
+import 'package:sevaexchange/utils/utils.dart' as utils;
 
 class GroupTabView extends StatefulWidget {
   @override
@@ -136,48 +132,101 @@ class _GroupTabViewState extends State<GroupTabView> {
   }
 
   Future<void> joinTimebank(UserModel user, TimebankModel timebank) async {
-    prefix0.JoinRequestModel joinRequestModel = prefix0.JoinRequestModel();
-    joinRequestModel.reason = "i want to join";
-    joinRequestModel.userId = user.sevaUserID;
-    joinRequestModel.timestamp = DateTime.now().millisecondsSinceEpoch;
-
-    joinRequestModel.entityId = timebank.id;
-    joinRequestModel.entityType = prefix0.EntityType.Timebank;
-    joinRequestModel.accepted = false;
-
-    await updateJoinRequest(model: joinRequestModel);
-
-    JoinRequestNotificationModel joinReqModel = JoinRequestNotificationModel(
-        timebankId: timebank.id,
-        timebankTitle: timebank.name,
-        reasonToJoin: joinRequestModel.reason);
-
-    NotificationsModel notification = NotificationsModel(
-      id: Utils.getUuid(),
-      targetUserId: timebank.creatorId,
-      senderUserId: user.sevaUserID,
-      type: NotificationType.JoinRequest,
-      data: joinReqModel.toMap(),
+    await _assembleAndSendRequest(
+      subTimebankId: timebank.id,
+      subTimebankLabel: timebank.name,
+      userIdForNewMember: user.sevaUserID,
     );
-
-    notification.timebankId = FlavorConfig.values.timebankId;
-    //  print('creator id ${notification.timebankId}');
-
-    UserModel timebankCreator =
-        await FirestoreManager.getUserForId(sevaUserId: timebank.creatorId);
-    //print('time creator email ${timebankCreator.email}');
-
-    await Firestore.instance
-        .collection('users')
-        .document(timebankCreator.email)
-        .collection("notifications")
-        .document(notification.id)
-        .setData(notification.toMap());
 
     setState(() {
       // getData();
     });
     return;
+  }
+
+  Future _assembleAndSendRequest({
+    String userIdForNewMember,
+    String subTimebankLabel,
+    String subTimebankId,
+  }) async {
+    var joinRequestModel = _assembleJoinRequestModel(
+      userIdForNewMember: userIdForNewMember,
+      subTimebankLabel: subTimebankLabel,
+      subtimebankId: subTimebankId,
+    );
+
+    var notification = _assembleNotificationForJoinRequest(
+      joinRequestModel: joinRequestModel,
+      userIdForNewMember: userIdForNewMember,
+      creatorId: userIdForNewMember,
+      subTimebankId: subTimebankId,
+    );
+
+    await createAndSendJoinJoinRequest(
+      joinRequestModel: joinRequestModel,
+      notification: notification,
+      subtimebankId: subTimebankId,
+    ).commit();
+  }
+
+  WriteBatch createAndSendJoinJoinRequest({
+    String subtimebankId,
+    NotificationsModel notification,
+    JoinRequestModel joinRequestModel,
+  }) {
+    WriteBatch batchWrite = Firestore.instance.batch();
+    batchWrite.setData(
+        Firestore.instance
+            .collection('timebanknew')
+            .document(
+              subtimebankId,
+            )
+            .collection("notifications")
+            .document(notification.id),
+        notification.toMap());
+
+    batchWrite.setData(
+        Firestore.instance
+            .collection('join_requests')
+            .document(joinRequestModel.id),
+        joinRequestModel.toMap());
+    return batchWrite;
+  }
+
+  JoinRequestModel _assembleJoinRequestModel({
+    String userIdForNewMember,
+    String subTimebankLabel,
+    String subtimebankId,
+  }) {
+    return new JoinRequestModel(
+      timebankTitle: subTimebankLabel,
+      accepted: false,
+      entityId: subtimebankId,
+      entityType: prefix0.EntityType.Timebank,
+      operationTaken: false,
+      reason: "I want to volunteer.",
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      userId: userIdForNewMember,
+      isFromGroup: true,
+      notificationId: utils.Utils.getUuid(),
+    );
+  }
+
+  NotificationsModel _assembleNotificationForJoinRequest({
+    String userIdForNewMember,
+    JoinRequestModel joinRequestModel,
+    String subTimebankId,
+    String creatorId,
+  }) {
+    return new NotificationsModel(
+      timebankId: subTimebankId,
+      id: joinRequestModel.notificationId,
+      targetUserId: creatorId,
+      senderUserId: userIdForNewMember,
+      type: NotificationType.JoinRequest,
+      data: joinRequestModel.toMap(),
+      communityId: "NOT_REQUIRED",
+    );
   }
 }
 
