@@ -50,7 +50,6 @@ class CreateRequest extends StatefulWidget {
 }
 
 class _CreateRequestState extends State<CreateRequest> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -199,7 +198,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
     TextStyle textStyle = TextStyle(
       fontSize: 14,
       // fontWeight: FontWeight.bold,
-      color: Colors.grey,
+      color: Colors.black,
       fontFamily: 'Europa',
     );
 
@@ -246,7 +245,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -291,7 +290,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -325,7 +324,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -359,7 +358,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Europa',
-                    color: Colors.grey,
+                    color: Colors.black,
                   ),
                 ),
                 TextFormField(
@@ -397,7 +396,6 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     ),
                     color: Colors.grey[200],
                     onPressed: () {
-
                       Navigator.push(
                         context,
                         MaterialPageRoute<GeoFirePoint>(
@@ -496,7 +494,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
 
   void createRequest() async {
     var connResult = await Connectivity().checkConnectivity();
-    if(connResult == ConnectivityResult.none){
+    if (connResult == ConnectivityResult.none) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text("Please check your internet connection."),
@@ -506,7 +504,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
           ),
         ),
       );
-      return ;
+      return;
     }
 
     print('request mode ${requestModel.requestMode.toString()}');
