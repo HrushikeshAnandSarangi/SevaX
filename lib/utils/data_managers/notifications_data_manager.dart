@@ -392,6 +392,18 @@ Future updateUserCommunity({
   });
 }
 
+Future addMemberToTimebank({
+  String timebankId,
+  String newUserSevaId,
+}) async {
+  await Firestore.instance
+      .collection('timebanknew')
+      .document(timebankId)
+      .updateData({
+    'members': FieldValue.arrayUnion([newUserSevaId]),
+  });
+}
+
 Stream<List<NotificationsModel>> getNotificationsForTimebank({
   String timebankId,
 }) async* {

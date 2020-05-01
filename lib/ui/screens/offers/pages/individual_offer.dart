@@ -20,7 +20,6 @@ class IndividualOffer extends StatefulWidget {
 }
 
 class _IndividualOfferState extends State<IndividualOffer> {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   final IndividualOfferBloc _bloc = IndividualOfferBloc();
   String selectedAddress;
@@ -139,7 +138,7 @@ class _IndividualOfferState extends State<IndividualOffer> {
                                         ? snapshot.data
                                         : null
                                     : null,
-                                heading: "Offer descritption*",
+                                heading: "Offer description*",
                                 onChanged: _bloc.onOfferDescriptionChanged,
                                 hint: "Your offer and any #hashtags",
                                 maxLength: 500,
@@ -205,20 +204,24 @@ class _IndividualOfferState extends State<IndividualOffer> {
                           RaisedButton(
                             onPressed: status.data == Status.LOADING
                                 ? () {}
-                                : () async{
-                              var connResult = await Connectivity().checkConnectivity();
-                              if(connResult == ConnectivityResult.none){
-                                _scaffoldKey.currentState.showSnackBar(
-                                  SnackBar(
-                                    content: Text("Please check your internet connection."),
-                                    action: SnackBarAction(
-                                      label: 'Dismiss',
-                                      onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
-                                    ),
-                                  ),
-                                );
-                                return ;
-                              }
+                                : () async {
+                                    var connResult = await Connectivity()
+                                        .checkConnectivity();
+                                    if (connResult == ConnectivityResult.none) {
+                                      _scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                              "Please check your internet connection."),
+                                          action: SnackBarAction(
+                                            label: 'Dismiss',
+                                            onPressed: () => _scaffoldKey
+                                                .currentState
+                                                .hideCurrentSnackBar(),
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
                                     if (widget.offerModel == null) {
                                       _bloc.createOrUpdateOffer(
                                         user: SevaCore.of(context).loggedInUser,

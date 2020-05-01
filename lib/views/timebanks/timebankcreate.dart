@@ -218,6 +218,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           )),
           headingText('Name your group', true),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
+
             focusNode: nameNode,
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(aboutNode);
@@ -245,6 +247,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
           ),
           headingText('About', true),
           TextFormField(
+            textCapitalization: TextCapitalization.sentences,
+
             focusNode: aboutNode,
             onFieldSubmitted: (v) {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -330,7 +334,6 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       return RaisedButton(
                         // color: Colors.blue,
                         onPressed: () {
-
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
@@ -658,7 +661,7 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       color: FlavorConfig.values.theme.primaryColor,
                       onPressed: () async {
                         var connResult =
-                        await Connectivity().checkConnectivity();
+                            await Connectivity().checkConnectivity();
                         if (connResult == ConnectivityResult.none) {
                           Scaffold.of(context).showSnackBar(
                             SnackBar(
@@ -666,8 +669,8 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                                   "Please check your internet connection."),
                               action: SnackBarAction(
                                 label: 'Dismiss',
-                                onPressed: () => Scaffold.of(context)
-                                    .hideCurrentSnackBar(),
+                                onPressed: () =>
+                                    Scaffold.of(context).hideCurrentSnackBar(),
                               ),
                             ),
                           );

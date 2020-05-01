@@ -166,13 +166,13 @@ class CreateEditCommunityViewFormState
         });
       } else {
         if (communityModel.name != s) {
-          SearchManager.searchCommunityForDuplicate(queryString: s).then((commFound) {
+          SearchManager.searchCommunityForDuplicate(queryString: s)
+              .then((commFound) {
             if (commFound) {
               setState(() {
                 communityFound = true;
                 print(
-                    "name ----- ${communitynName} and ${searchTextController
-                        .text}");
+                    "name ----- ${communitynName} and ${searchTextController.text}");
                 errTxt = 'Timebank name already exists';
               });
             } else {
@@ -515,7 +515,9 @@ class CreateEditCommunityViewFormState
                                       snapshot.data.timebank.address.isEmpty) &&
                                   selectedAddress == ''
                               ? 'Add Location'
-                              : widget.isCreateTimebank ? snapshot.data.timebank.address: timebankModel.address,
+                              : widget.isCreateTimebank
+                                  ? snapshot.data.timebank.address
+                                  : timebankModel.address,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -723,7 +725,8 @@ class CreateEditCommunityViewFormState
                             }
 
                             timebankModel.location = location;
-;                           timebankModel.address = selectedAddress;
+                            ;
+                            timebankModel.address = selectedAddress;
 
                             if (selectedUsers != null) {
                               selectedUsers.forEach((key, user) {
@@ -1097,6 +1100,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[2]);
           },
@@ -1125,6 +1129,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[1]);
           },
@@ -1183,6 +1188,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).unfocus();
             // scrollToBottom();
@@ -1215,6 +1221,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             // FocusScope.of(context).requestFocus(focusNodes[5]);
             FocusScope.of(context).unfocus();
@@ -1244,6 +1251,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+            textCapitalization: TextCapitalization.sentences,
             onFieldSubmitted: (input) {
               FocusScope.of(context).unfocus();
             },
@@ -1269,6 +1277,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[7]);
             // scrollToBottom();
@@ -1297,6 +1306,7 @@ class CreateEditCommunityViewFormState
       return Container(
         margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onFieldSubmitted: (input) {
             FocusScope.of(context).requestFocus(focusNodes[3]);
           },

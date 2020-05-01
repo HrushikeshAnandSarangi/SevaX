@@ -12,29 +12,29 @@ class CustomTextField extends StatelessWidget {
   final FocusNode currentNode;
   final FocusNode nextNode;
   final List<TextInputFormatter> formatters;
-  CustomTextField({
-    Key key,
-    this.heading,
-    this.onChanged,
-    this.hint,
-    this.maxLength,
-    this.error,
-    this.textInputType = TextInputType.text,
-    this.initialValue,
-    this.currentNode,
-    this.nextNode,
-    this.formatters
-  }) : super(key: key);
+  CustomTextField(
+      {Key key,
+      this.heading,
+      this.onChanged,
+      this.hint,
+      this.maxLength,
+      this.error,
+      this.textInputType = TextInputType.text,
+      this.initialValue,
+      this.currentNode,
+      this.nextNode,
+      this.formatters})
+      : super(key: key);
 
   final TextStyle titleStyle = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.bold,
     fontFamily: 'Europa',
-    color: Colors.grey,
+    color: Colors.black,
   );
   final TextStyle subTitleStyle = TextStyle(
-    fontSize: 14,
-    color: Colors.grey,
+    fontSize: 15,
+    color: Colors.black,
   );
 
   @override

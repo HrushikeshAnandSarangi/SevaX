@@ -294,6 +294,7 @@ class RequestEditFormState extends State<RequestEditForm> {
                 ),
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.requestModel.description,
                 decoration: InputDecoration(
                   hintText: 'Your Request \nand any #hashtags',
