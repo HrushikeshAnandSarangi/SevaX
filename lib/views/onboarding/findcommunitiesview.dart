@@ -279,6 +279,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
                 return Padding(
                     padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
                     child: ListView.builder(
+                        padding: EdgeInsets.only(
+                            bottom:
+                                180), //to avoid keyboard overlap //temp fix neeeds to be changed
                         itemCount: communityList.length,
                         itemBuilder: (BuildContext context, int index) {
                           CompareUserStatus status;
