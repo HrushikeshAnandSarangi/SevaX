@@ -62,10 +62,13 @@ class CreateEditCommunityView extends StatelessWidget {
               isCreateTimebank: isCreateTimebank,
             ),
           )
-        : CreateEditCommunityViewForm(
-            timebankId: timebankId,
-            isFromFind: isFromFind,
-            isCreateTimebank: isCreateTimebank,
+        : Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: CreateEditCommunityViewForm(
+              timebankId: timebankId,
+              isFromFind: isFromFind,
+              isCreateTimebank: isCreateTimebank,
+            ),
           );
   }
 }
