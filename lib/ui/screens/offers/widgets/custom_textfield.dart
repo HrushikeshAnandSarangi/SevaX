@@ -55,6 +55,7 @@ class CustomTextField extends StatelessWidget {
               : null,
           onChanged: onChanged,
           inputFormatters: formatters,
+          textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
             hintText: hint ?? '',
             errorText: error,
