@@ -385,7 +385,7 @@ class _locationScreenState extends State<LocationView> {
               child: TextFormField(
                 enableInteractiveSelection: true,
                 controller: myCommentsController,
-                style: TextStyle(fontSize: 15.0, color: Colors.black87),
+                style: TextStyle(fontSize: 15.0, color: Colors.black),
                 decoration: InputDecoration(
                   hintText: '',
                   border: OutlineInputBorder(

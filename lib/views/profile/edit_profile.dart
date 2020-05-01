@@ -372,17 +372,19 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
-                      if(connResult == ConnectivityResult.none){
+                      if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Please check your internet connection."),
+                            content:
+                                Text("Please check your internet connection."),
                             action: SnackBarAction(
                               label: 'Dismiss',
-                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                              onPressed: () => _scaffoldKey.currentState
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
-                        return ;
+                        return;
                       }
                       if (!_formKey.currentState.validate()) {
                         return;
@@ -464,17 +466,19 @@ class _EditProfilePageState extends State<EditProfilePage>
                     ),
                     onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
-                      if(connResult == ConnectivityResult.none){
+                      if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Please check your internet connection."),
+                            content:
+                                Text("Please check your internet connection."),
                             action: SnackBarAction(
                               label: 'Dismiss',
-                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                              onPressed: () => _scaffoldKey.currentState
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
-                        return ;
+                        return;
                       }
                       if (!_formKey.currentState.validate()) {
                         return;
@@ -555,19 +559,21 @@ class _EditProfilePageState extends State<EditProfilePage>
                       "Logout",
                       style: TextStyle(fontFamily: 'Europa'),
                     ),
-                    onPressed: () async{
+                    onPressed: () async {
                       var connResult = await Connectivity().checkConnectivity();
-                      if(connResult == ConnectivityResult.none){
+                      if (connResult == ConnectivityResult.none) {
                         _scaffoldKey.currentState.showSnackBar(
                           SnackBar(
-                            content: Text("Please check your internet connection."),
+                            content:
+                                Text("Please check your internet connection."),
                             action: SnackBarAction(
                               label: 'Dismiss',
-                              onPressed: () => _scaffoldKey.currentState.hideCurrentSnackBar(),
+                              onPressed: () => _scaffoldKey.currentState
+                                  .hideCurrentSnackBar(),
                             ),
                           ),
                         );
-                        return ;
+                        return;
                       }
                       // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
                       //   statusBarBrightness: Brightness.light,

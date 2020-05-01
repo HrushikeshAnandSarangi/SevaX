@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/components/sevaavatar/timebankavatar.dart';
+import 'package:sevaexchange/globals.dart' as globals;
+import 'package:sevaexchange/models/user_model.dart';
+import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
 import 'package:sevaexchange/views/membersaddedit.dart';
 import 'package:sevaexchange/views/membersmanage.dart';
-import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
-import 'package:sevaexchange/models/user_model.dart';
-import 'package:sevaexchange/globals.dart' as globals;
 
 class TimebankEdit extends StatelessWidget {
   final TimebankModel timebankModel;
@@ -141,6 +140,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
                 padding: EdgeInsets.all(15.0),
               ),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.timebankModel.name,
                 decoration: InputDecoration(
                   hintText: 'Timebank Name',
@@ -169,6 +169,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
               ),
               Text(' '),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.timebankModel.missionStatement,
                 decoration: InputDecoration(
                   hintText: 'What you are about',
@@ -253,6 +254,7 @@ class TimebankEditFormState extends State<TimebankEditForm> {
               ),
               Text(''),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 initialValue: widget.timebankModel.address,
                 decoration: InputDecoration(
                   hintText: 'Your main address',

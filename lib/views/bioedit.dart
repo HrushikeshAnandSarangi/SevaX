@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'core.dart';
 
 class BioEdit extends StatelessWidget {
@@ -106,6 +107,7 @@ class BioFormState extends State<BioForm> {
                   ),
                 ),
                 TextFormField(
+                  textCapitalization: TextCapitalization.sentences,
                   initialValue: SevaCore.of(context).loggedInUser.bio,
                   style: TextStyle(fontSize: 18.0, color: Colors.black87),
                   decoration: InputDecoration(

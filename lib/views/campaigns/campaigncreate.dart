@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/components/sevaavatar/campaignavatar.dart';
-import 'package:sevaexchange/views/membersadd.dart';
-
 import 'package:sevaexchange/globals.dart' as globals;
 import 'package:sevaexchange/new_baseline/models/timebank_model.dart';
+import 'package:sevaexchange/views/core.dart';
+import 'package:sevaexchange/views/membersadd.dart';
 
 class CampaignCreate extends StatelessWidget {
   final TimebankModel timebankModel;
@@ -20,9 +18,10 @@ class CampaignCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create a project", style: TextStyle(
-          color: Colors.white
-        ),),
+        title: Text(
+          "Create a project",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: false,
       ),
       body: CampaignCreateForm(
@@ -111,11 +110,11 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Center(
-                child:Padding(
-                    padding: EdgeInsets.all(0.0),
-                    child: CampaignAvatar(),
-                  ),
-              ),              
+                child: Padding(
+                  padding: EdgeInsets.all(0.0),
+                  child: CampaignAvatar(),
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.all(15.0),
               ),
@@ -136,7 +135,10 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
                     ),
                   ),
                 ),
-                inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))],
+                textCapitalization: TextCapitalization.sentences,
+                inputFormatters: <TextInputFormatter>[
+                  WhitelistingTextInputFormatter(RegExp("[a-zA-Z0-9_ ]*"))
+                ],
                 keyboardType: TextInputType.multiline,
                 maxLines: 3,
                 validator: (value) {
@@ -148,6 +150,7 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
               ),
               Text(' '),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   hintText: 'What you are about',
                   labelText: 'Mission Statement',
@@ -175,6 +178,7 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
               ),
               Text(''),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   hintText: 'The Timebank\'s primary email',
                   labelText: 'Email',
@@ -202,6 +206,7 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
               ),
               Text(''),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   hintText: 'The Timebanks primary phone number',
                   labelText: 'Phone Number',
@@ -229,6 +234,7 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
               ),
               Text(''),
               TextFormField(
+                textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
                   hintText: 'Your main address',
                   labelText: 'Address',
@@ -276,26 +282,26 @@ class CampaignCreateFormState extends State<CampaignCreateForm> {
               ),
               Text(''),
               Container(
-                alignment: Alignment.center,
-                        child: RaisedButton(
-                          color: Colors.red,
-                      // color: Colors.blue,
-                      onPressed: () {
-                        // Validate will return true if the form is valid, or false if
-                        // the form is invalid.
+                  alignment: Alignment.center,
+                  child: RaisedButton(
+                    color: Colors.red,
+                    // color: Colors.blue,
+                    onPressed: () {
+                      // Validate will return true if the form is valid, or false if
+                      // the form is invalid.
 
-                        if (_formKey.currentState.validate()) {
-                          // If the form is valid, we want to show a Snackbar
-                          _writeToDB();
-                          Navigator.pop(context);
-                        }
-                      },
-                      child: Text(
-                        'Create Project',
-                        style: TextStyle(fontSize: 16.0,color: Colors.white),
-                      ),
-                      textColor: Colors.blue,
-                    )),
+                      if (_formKey.currentState.validate()) {
+                        // If the form is valid, we want to show a Snackbar
+                        _writeToDB();
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text(
+                      'Create Project',
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    ),
+                    textColor: Colors.blue,
+                  )),
               // Padding(
               //   padding: EdgeInsets.only(top: 8.0),
               //   child:

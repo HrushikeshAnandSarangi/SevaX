@@ -73,6 +73,7 @@ class _BioViewState extends State<BioView> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                   fontSize: 16.0, color: Colors.black54),
                               decoration: InputDecoration(
@@ -84,7 +85,6 @@ class _BioViewState extends State<BioView> {
                                 focusedBorder: textFieldBorder,
                               ),
                               keyboardType: TextInputType.multiline,
-                              textCapitalization: TextCapitalization.sentences,
                               minLines: 6,
                               maxLines: 50,
                               maxLength: 150,

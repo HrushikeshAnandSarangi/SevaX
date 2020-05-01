@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/views/core.dart';
@@ -79,6 +78,7 @@ class _CampaignJoinRequestState extends State<CampaignJoinRequest> {
                         )),
                   ),
                   TextFormField(
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       hintText: 'Why you want to join us.',
                       labelText: 'Reason to Join Campaign',
