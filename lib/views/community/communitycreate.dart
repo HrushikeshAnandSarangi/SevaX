@@ -694,7 +694,7 @@ class CreateEditCommunityViewFormState
                                       SevaCore.of(context).loggedInUser;
                                   _formKey.currentState.reset();
                                   // _billingInformationKey.currentState.reset();
-                                  Navigator.of(context).push(
+                                  Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
                                       builder: (context) => BillingPlanDetails(
                                         user: user,
