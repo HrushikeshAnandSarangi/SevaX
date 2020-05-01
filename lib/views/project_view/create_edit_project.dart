@@ -93,7 +93,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       )
           .then((address) {
         setState(() {
-          this.selectedAddress = address;
+//          this.selectedAddress = address;
         });
       });
     });
@@ -425,7 +425,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 icon: Icon(Icons.add_location),
                 label: Container(
                   child: Text(
-                    selectedAddress == ''
+                    selectedAddress == '' || selectedAddress==null
                         ? 'Add Location'
                         : selectedAddress ?? "",
                     overflow: TextOverflow.ellipsis,
@@ -494,9 +494,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                            if (!firebaseUser.isEmailVerified) {
 //                              _showVerificationAndLogoutDialogue();
 //                            }
-
                       print(_formKey.currentState.validate());
-
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
 //                            if (communityFound) {
@@ -629,7 +627,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
   bool hasRegisteredLocation() {
     print("Location ---========================= ${projectModel.address}");
-    return location != null;
+    return location != null || projectModel.address !=null;
   }
 
   Future<void> showDialogForTitle({String dialogTitle}) async {
