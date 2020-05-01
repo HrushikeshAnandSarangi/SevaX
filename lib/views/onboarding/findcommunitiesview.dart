@@ -431,8 +431,9 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
             }
           } else if (snapshot.hasError) {
             return Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 16.0,20.0,16.0),
-                child: Text("Please make sure you have GPS turned on. see the list of timebanks around you"));
+                padding: const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 16.0),
+                child: Text(
+                    "Please make sure you have GPS turned on. see the list of timebanks around you"));
             // return Text("Couldn't load results");
           }
           /*else if(snapshot.data==null){

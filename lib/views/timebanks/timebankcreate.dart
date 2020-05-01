@@ -490,6 +490,11 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
         Text(''),
         TextFormField(
           decoration: InputDecoration(
+            prefix: Icon(
+              Icons.add,
+              color: Colors.black,
+              size: 13,
+            ),
             hintText: 'The Timebanks primary phone number',
             labelText: 'Phone Number',
             // labelStyle: textStyle,
