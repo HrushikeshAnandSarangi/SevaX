@@ -202,6 +202,13 @@ class RequestCreateFormState extends State<RequestCreateForm> {
       fontFamily: 'Europa',
     );
 
+    TextStyle hintTextStyle = TextStyle(
+      fontSize: 14,
+      // fontWeight: FontWeight.bold,
+      color: Colors.grey,
+      fontFamily: 'Europa',
+    );
+
     UserModel loggedInUser = SevaCore.of(context).loggedInUser;
     this.requestModel.email = loggedInUser.email;
     this.requestModel.fullName = loggedInUser.fullname;
@@ -259,7 +266,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     hintText: FlavorConfig.appFlavor == Flavor.HUMANITY_FIRST
                         ? "Yang gang request title"
                         : "Ex: Small carpentry work...",
-                    hintStyle: textStyle,
+                    hintStyle: hintTextStyle,
                   ),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -301,7 +308,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'Your Request and any #hashtags',
-                    hintStyle: textStyle,
+                    hintStyle: hintTextStyle,
                   ),
                   initialValue: widget.offer != null && widget.isOfferRequest
                       ? getOfferDescription(
@@ -335,7 +342,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                     textInputAction: TextInputAction.next,
                     decoration: InputDecoration(
                       hintText: 'Total no. of hours required',
-                      hintStyle: textStyle,
+                      hintStyle: hintTextStyle,
                       // labelText: 'No. of volunteers',
                     ),
                     keyboardType: TextInputType.number,
@@ -368,7 +375,7 @@ class RequestCreateFormState extends State<RequestCreateForm> {
                   },
                   decoration: InputDecoration(
                     hintText: 'No. of approvals',
-                    hintStyle: textStyle,
+                    hintStyle: hintTextStyle,
                     // labelText: 'No. of volunteers',
                   ),
                   keyboardType: TextInputType.number,
