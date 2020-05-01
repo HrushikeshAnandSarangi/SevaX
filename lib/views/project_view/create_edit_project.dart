@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
+import 'package:location/location.dart';
 import 'package:sevaexchange/components/duration_picker/offer_duration_widget.dart';
 import 'package:sevaexchange/components/location_picker.dart';
 import 'package:sevaexchange/components/sevaavatar/projects_avtaar.dart';
@@ -18,7 +19,7 @@ import 'package:sevaexchange/utils/location_utility.dart';
 import 'package:sevaexchange/utils/utils.dart';
 import 'package:sevaexchange/views/core.dart';
 import 'package:sevaexchange/views/messages/list_members_timebank.dart';
-import 'package:location/location.dart';
+
 import '../../flavor_config.dart';
 
 class CreateEditProject extends StatefulWidget {
@@ -82,6 +83,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       setState(() {});
     });
   }
+
   void get _fetchCurrentlocation {
     Location().getLocation().then((onValue) {
       print("Location1:$onValue");
@@ -93,7 +95,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
       )
           .then((address) {
         setState(() {
-          this.selectedAddress = address;
+//          this.selectedAddress = address;
         });
       });
     });
@@ -373,22 +375,24 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               onFieldSubmitted: (_) {
                 FocusScope.of(context).unfocus();
               },
+
               cursorColor: Colors.black54,
               focusNode: focusNodes[3],
               textInputAction: TextInputAction.done,
               //  validator: _validateEmailId,
               keyboardType: TextInputType.number,
               onSaved: (value) {
-                projectModel.phoneNumber = value;
+                projectModel.phoneNumber = '+' + value;
               },
               onChanged: (value) {
-                projectModel.phoneNumber = value;
+                projectModel.phoneNumber = '+' + value;
               },
+
               validator: (value) {
                 if (value.isEmpty) {
                   return 'Mobile Number cannot be empty.';
                 } else {
-                  projectModel.phoneNumber = value;
+                  projectModel.phoneNumber = '+' + value;
                 }
                 return null;
               },
@@ -396,13 +400,18 @@ class _CreateEditProjectState extends State<CreateEditProject> {
               initialValue:
                   widget.isCreateProject ? "" : projectModel.phoneNumber ?? "",
               decoration: InputDecoration(
+                prefix: Icon(
+                  Icons.add,
+                  color: Colors.black,
+                  size: 13,
+                ),
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
                 ),
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.black54),
                 ),
-                hintText: '+1 123456789',
+                hintText: '123456789',
                 hintStyle: textStyle,
               ),
             ),
@@ -425,7 +434,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 icon: Icon(Icons.add_location),
                 label: Container(
                   child: Text(
-                    selectedAddress == ''
+                    selectedAddress == '' || selectedAddress==null
                         ? 'Add Location'
                         : selectedAddress ?? "",
                     overflow: TextOverflow.ellipsis,
@@ -467,6 +476,8 @@ class _CreateEditProjectState extends State<CreateEditProject> {
                 alignment: Alignment.center,
                 child: RaisedButton(
                   onPressed: () async {
+                    print('project phone ${projectModel.phoneNumber}');
+
                     var connResult = await Connectivity().checkConnectivity();
                     if (connResult == ConnectivityResult.none) {
                       _scaffoldKey.currentState.showSnackBar(
@@ -494,9 +505,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 //                            if (!firebaseUser.isEmailVerified) {
 //                              _showVerificationAndLogoutDialogue();
 //                            }
-
                       print(_formKey.currentState.validate());
-
 //                            communityFound =
 //                                await isCommunityFound(enteredName);
 //                            if (communityFound) {
@@ -629,7 +638,7 @@ class _CreateEditProjectState extends State<CreateEditProject> {
 
   bool hasRegisteredLocation() {
     print("Location ---========================= ${projectModel.address}");
-    return location != null;
+    return location != null || projectModel.address !=null;
   }
 
   Future<void> showDialogForTitle({String dialogTitle}) async {

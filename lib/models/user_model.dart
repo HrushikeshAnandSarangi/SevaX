@@ -257,7 +257,7 @@ class UserModel extends DataModel {
     if (this.photoURL != null && this.photoURL.isNotEmpty) {
       object['photourl'] = this.photoURL;
     }
-    if (this.interests != null && this.interests.isNotEmpty) {
+    if (this.interests != null) {
       object['interests'] = this.interests;
     }
     if (this.calendar != null) {
@@ -283,7 +283,7 @@ class UserModel extends DataModel {
     if (this.sevaUserID != null && this.sevaUserID.isNotEmpty) {
       object['sevauserid'] = this.sevaUserID;
     }
-    if (this.skills != null && this.skills.isNotEmpty) {
+    if (this.skills != null) {
       object['skills'] = this.skills;
     }
     if (this.communities != null && this.communities.isNotEmpty) {
