@@ -65,6 +65,7 @@ class _SkillViewNewState extends State<SkillViewNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: widget.automaticallyImplyLeading,
