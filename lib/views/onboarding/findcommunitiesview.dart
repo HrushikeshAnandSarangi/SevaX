@@ -406,7 +406,11 @@ class FindCommunitiesViewState extends State<FindCommunitiesView> {
               if (snapshot.data.length != 0) {
                 List<CommunityModel> communityList = snapshot.data;
                 return ListView.builder(
-                    padding: EdgeInsets.only(left: 0, right: 0, top: 5.0),
+                    padding: EdgeInsets.only(
+                      bottom: 180,
+                      top: 5.0,
+                    ), //to avoid keyboard overlap //temp fix neeeds to be changed
+
                     shrinkWrap: true,
                     itemCount: communityList.length,
                     itemBuilder: (BuildContext context, int index) {
