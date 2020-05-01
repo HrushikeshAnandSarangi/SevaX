@@ -334,11 +334,14 @@ class TimebankCreateFormState extends State<TimebankCreateForm> {
                       return RaisedButton(
                         // color: Colors.blue,
                         onPressed: () {
+                          if(errTxt!=null || errTxt!=""){
+
+                          }
                           // Validate will return true if the form is valid, or false if
                           // the form is invalid.
                           //if (location != null) {
                           if (_formKey.currentState.validate() &&
-                              errTxt == null) {
+                              (errTxt == null || errTxt == "")) {
 //                            print("Hello");
 //                            // If the form is valid, we want to show a Snackbar
                             _writeToDB();
