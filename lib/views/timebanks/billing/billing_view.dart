@@ -26,9 +26,12 @@ class BillingView extends StatefulWidget {
 
 class BillingViewState extends State<BillingView> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  Future<UserCardsModel> userCardDetails;
   @override
   void initState() {
     print(widget.planId);
+    userCardDetails = getUserCard(widget.user.currentCommunity);
     StripePayment.setOptions(
       StripeOptions(
         publishableKey: FlavorConfig.values.stripePublishableKey,
@@ -60,14 +63,6 @@ class BillingViewState extends State<BillingView> {
           widget.user ?? SevaCore.of(context).loggedInUser, widget.planId);
 
       _cardSuccessMessage();
-
-      //   Navigator.of(context).pushAndRemoveUntil(
-      //       MaterialPageRoute(
-      //         builder: (context1) => MainApplication(
-      //           skipToHomePage: true,
-      //         ),
-      //       ),
-      //       (Route<dynamic> route) => false);
     }
   }
 
@@ -121,42 +116,18 @@ class BillingViewState extends State<BillingView> {
                 ),
               ),
               Divider(),
-
-              // GestureDetector(
-              //   onDoubleTap: () {
-              //     print("made default");
-              //   },
-              //   child: Column(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     children: <Widget>[
-              //       Padding(
-              //         padding: const EdgeInsets.only(left: 20),
-              //         child: Text('Default card'),
-              //       ),
-              //       CustomCreditCard(
-              //         bankName: "Bank Name",
-              //         cardNumber: "xxxxxx",
-              //         frontBackground: CardBackgrounds.black,
-              //         brand: "mastercard",
-              //         cardExpiry: "22/24",
-              //         cardHolderName: "Shubham",
-              //       ),
-              //     ],
-              //   ),
-              // ),
               FutureBuilder<UserCardsModel>(
-                future: getUserCard(widget.user.currentCommunity),
+                future: userCardDetails,
                 builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return Center(child: CircularProgressIndicator());
+                  }
                   if (snapshot.hasError) {
                     return Center(
                       child: Text("No cards available"),
                     );
                   }
                   if (snapshot.data != null && snapshot.hasData) {
-                    // if (snapshot.data.data.isEmpty) {
-                    //   return Text("No Card");
-                    // }
-
                     return Column(
                       children: <Widget>[
                         Padding(
@@ -238,7 +209,6 @@ class BillingViewState extends State<BillingView> {
                       ],
                     );
                   }
-                  return Center(child: CircularProgressIndicator());
                 },
               ),
               SizedBox(
@@ -250,20 +220,6 @@ class BillingViewState extends State<BillingView> {
       ),
     );
   }
-
-//  BuildContext dialogContext;
-//  void showProgressDialog(String message) {
-//    showDialog(
-//        barrierDismissible: false,
-//        context: context,
-//        builder: (createDialogContext) {
-//          dialogContext = createDialogContext;
-//          return AlertDialog(
-//            title: Text(message),
-//            content: LinearProgressIndicator(),
-//          );
-//        });
-//  }
 
   void _showAlreadyDefaultMessage() {
     // flutter defined function
@@ -306,12 +262,13 @@ class BillingViewState extends State<BillingView> {
                     child: Text('Confirm'),
                     onPressed: () {
                       //showProgressDialog('Adding default card');
-                      setDefaultCard(token: token, communityId: communityId);
-//                      if (dialogContext != null) {
-//                        Navigator.pop(dialogContext);
-//                      }
+                      setDefaultCard(token: token, communityId: communityId)
+                          .then((_) {
+                        userCardDetails = getUserCard(widget.timebankid);
+
+                        setState(() {});
+                      });
                       Navigator.of(context).pop();
-                      setState(() {});
                     },
                   ),
                   SizedBox(width: 10),
@@ -372,10 +329,11 @@ Future<UserCardsModel> getUserCard(String communityId) async {
   }
 }
 
-Future<void> setDefaultCard({String communityId, String token}) async {
+Future<bool> setDefaultCard({String communityId, String token}) async {
   var result = await http.post(
     "${FlavorConfig.values.cloudFunctionBaseURL}/setDefaultCardForCustomer",
     body: {"communityId": communityId, "token": token},
   );
   print(result.body);
+  return true;
 }
