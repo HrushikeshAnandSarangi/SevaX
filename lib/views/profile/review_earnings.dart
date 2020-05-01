@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sevaexchange/constants/sevatitles.dart';
 import 'package:sevaexchange/models/models.dart';
 import 'package:sevaexchange/utils/data_managers/timezone_data_manager.dart';
 import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
@@ -30,14 +31,6 @@ class ReviewEarning extends StatefulWidget {
   const ReviewEarning({this.type, this.timebankid});
   @override
   _ReviewEarningState createState() => _ReviewEarningState();
-}
-
-String getTimeFormattedString(int timeInMilliseconds) {
-  DateFormat dateFormat = DateFormat('d MMM h:m a ');
-  String dateOfTransaction = dateFormat.format(
-    DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
-  );
-  return dateOfTransaction;
 }
 
 class _ReviewEarningState extends State<ReviewEarning> {
@@ -104,7 +97,10 @@ class _ReviewEarningState extends State<ReviewEarning> {
               return Container(
                 margin: EdgeInsets.all(1),
                 child: Card(
-                  child: EarningListItem(model: model, usertimezone: usertimezone,viewtype: widget.type ),
+                  child: EarningListItem(
+                      model: model,
+                      usertimezone: usertimezone,
+                      viewtype: widget.type),
                 ),
               );
             },
@@ -113,6 +109,74 @@ class _ReviewEarningState extends State<ReviewEarning> {
         });
   }
 }
+
+class EarningListItem extends StatefulWidget {
+  final model;
+  final viewtype;
+  final usertimezone;
+  const EarningListItem({Key key, this.model, this.usertimezone, this.viewtype})
+      : super(key: key);
+  @override
+  _EarningListItemState createState() => _EarningListItemState();
+}
+
+class _EarningListItemState extends State<EarningListItem> {
+  @override
+  Widget build(BuildContext context) {
+    var type = (widget.model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' &&
+            widget.model.type != 'RequestMode.TIMEBANK_REQUEST' &&
+            widget.model.from != widget.model.timebankid)
+        ? 'user'
+        : 'timebank';
+    return FutureBuilder(
+        future: type == 'user'
+            ? FirestoreManager.getUserForId(sevaUserId: widget.model.from)
+            : FirestoreManager.getTimeBankForId(timebankId: widget.model.from),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text('');
+          }
+          return ListTile(
+              leading:
+                  EarningImageItem(model: widget.model, snapshot: snapshot),
+              trailing: () {
+                String plus = widget.model.debitCreditSymbol(
+                    SevaCore.of(context).loggedInUser.sevaUserID,
+                    widget.model.timebankid,
+                    widget.viewtype);
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(plus + '${widget.model.credits}',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                        )),
+                    Text('Seva Credits',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.2,
+                        )),
+                  ],
+                );
+              }(),
+              subtitle: EarningItem(
+                  name: type == 'user'
+                      ? snapshot.data.fullname == null
+                          ? "Anonymous"
+                          : snapshot.data.fullname
+                      : snapshot.data.name + " (Timebank)",
+                  timestamp: widget.model.timestamp,
+                  usertimezone: widget.usertimezone));
+        });
+  }
+}
+
 class EarningItem extends StatelessWidget {
   final name;
   final timestamp;
@@ -137,9 +201,7 @@ class EarningItem extends StatelessWidget {
           'Date:  ' +
               DateFormat('MMMM dd, yyyy @ h:mm a').format(
                 getDateTimeAccToUserTimezone(
-                    dateTime:
-                    DateTime.fromMillisecondsSinceEpoch(
-                        timestamp),
+                    dateTime: DateTime.fromMillisecondsSinceEpoch(timestamp),
                     timezoneAbb: usertimezone),
               ),
           textAlign: TextAlign.start,
@@ -158,87 +220,38 @@ class EarningImageItem extends StatelessWidget {
   EarningImageItem({this.model, this.snapshot});
   @override
   Widget build(BuildContext context) {
-        if (snapshot.hasError) {
-          return CircleAvatar();
-        }
-        if (snapshot.connectionState ==
-            ConnectionState.waiting) {
-          return CircleAvatar();
-        }
-        if (model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' && model.type != 'RequestMode.TIMEBANK_REQUEST') {
-          UserModel user = snapshot.data;
-          return CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL),
-          );
-        } else {
-          TimebankModel timebanktemp = snapshot.data;
-          return CircleAvatar(
-            backgroundImage:
-            NetworkImage(timebanktemp.photoUrl),
-          );
-        }
+    if (snapshot.hasError) {
+      return CircleAvatar();
+    }
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircleAvatar();
+    }
+    if (model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' &&
+        model.type != 'RequestMode.TIMEBANK_REQUEST' &&
+        model.from != model.timebankid) {
+      UserModel user = snapshot.data;
+      //Fallback in case the condition anyhow
+      if (user == null)
+        return CircleAvatar(
+          backgroundImage: NetworkImage(defaultUserImageURL),
+        );
+
+      return CircleAvatar(
+        backgroundImage: NetworkImage(user.photoURL ?? defaultUserImageURL),
+      );
+    } else {
+      TimebankModel timebanktemp = snapshot.data;
+      return CircleAvatar(
+        backgroundImage: NetworkImage(timebanktemp.photoUrl),
+      );
+    }
   }
 }
 
-
-class EarningListItem extends StatefulWidget {
-  final model;
-  final viewtype;
-  final usertimezone;
-  const EarningListItem({ Key key, this.model, this.usertimezone, this.viewtype }) : super(key: key);
-  @override
-  _EarningListItemState createState() => _EarningListItemState();
-}
-
-class _EarningListItemState extends State<EarningListItem> {
-
-  @override
-  Widget build(BuildContext context) {
-    var type = (widget.model.type != 'REQUEST_CREATION_TIMEBANK_FILL_CREDITS' && widget.model.type != 'RequestMode.TIMEBANK_REQUEST')
-        ? 'user'
-        : 'timebank';
-    return FutureBuilder(
-        future: type == 'user' ? FirestoreManager.getUserForId(
-            sevaUserId: widget.model.from) : FirestoreManager
-            .getTimeBankForId(timebankId: widget.model.from),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('');
-          }
-          if (snapshot.connectionState ==
-              ConnectionState.waiting) {
-            return Text('');
-          }
-          return ListTile(
-              leading: EarningImageItem(model: widget.model, snapshot: snapshot),
-              trailing: () {
-                String plus = widget.model.debitCreditSymbol(SevaCore
-                    .of(context)
-                    .loggedInUser
-                    .sevaUserID, widget.model.timebankid, widget.viewtype);
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(plus + '${widget.model.credits}',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                        )),
-                    Text('Seva Credits',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.2,
-                        )),
-                  ],
-                );
-              }(),
-              subtitle: EarningItem(
-                  name: type == 'user' ? snapshot.data.fullname == null ? "Anonymous":  snapshot.data.fullname : snapshot.data.name + " (Timebank)" ,
-                  timestamp: widget.model.timestamp,
-                  usertimezone: widget.usertimezone)
-          );
-        });
-  }
+String getTimeFormattedString(int timeInMilliseconds) {
+  DateFormat dateFormat = DateFormat('d MMM h:m a ');
+  String dateOfTransaction = dateFormat.format(
+    DateTime.fromMillisecondsSinceEpoch(timeInMilliseconds),
+  );
+  return dateOfTransaction;
 }
