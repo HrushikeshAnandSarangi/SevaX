@@ -324,7 +324,6 @@ Future<CommunityModel> getCommunityDetailsByCommunityId(
     Map<String, dynamic> dataMap = documentSnapshot.data;
     communityModel = CommunityModel(dataMap);
   });
-
   return communityModel;
 }
 

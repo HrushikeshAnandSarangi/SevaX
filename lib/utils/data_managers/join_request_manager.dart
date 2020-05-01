@@ -32,6 +32,15 @@ Future<void> updateJoinRequest({@required JoinRequestModel model}) async {
       .setData(model.toMap(), merge: true);
 }
 
+Future<void> createJoinRequestForNewMember(
+    {@required JoinRequestModel model}) async {
+  //create a join request for timebank
+  return await Firestore.instance
+      .collection('join_requests')
+      .document(model.id)
+      .setData(model.toMap(), merge: true);
+}
+
 Future<List<JoinRequestModel>> getFutureTimebankJoinRequest({
   @required String timebankID,
 }) async {

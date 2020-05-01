@@ -61,7 +61,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
     var futures = <Future>[];
     futures.clear();
 
-    if (widget.requestItem.acceptors != null) {
+    if (widget.requestItem.acceptors != null || widget.requestItem.acceptors.length !=0 || widget.requestItem.approvedUsers.length !=0 || widget.requestItem.invitedUsers!=null || widget.requestItem.invitedUsers.length !=0) {
       widget.requestItem.acceptors.forEach((memberEmail) {
         futures.add(getUserDetails(memberEmail: memberEmail));
       });
@@ -70,7 +70,7 @@ class _RequestDetailsAboutPageState extends State<RequestDetailsAboutPage> {
           widget.requestItem.approvedUsers
               .contains(SevaCore.of(context).loggedInUser.email) ||
           widget.requestItem.invitedUsers
-              .contains(SevaCore.of(context).loggedInUser.sevaUserID);
+              .contains(SevaCore.of(context).loggedInUser.sevaUserID) || false;
     } else {
       isApplied = false;
     }

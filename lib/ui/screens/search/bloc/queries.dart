@@ -367,11 +367,11 @@ class Searches {
     List<RequestModel> requestsList = [];
     hitList.forEach((map) {
       Map<String, dynamic> sourceMap = map['_source'];
-      if (loggedInUser.blockedBy.length == 0) {
+      if (loggedInUser.blockedBy.length == 0 && sourceMap['projectId']=="") {
         RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
         if (model.accepted == false) requestsList.add(model);
       } else {
-        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"])) {
+        if (!loggedInUser.blockedBy.contains(sourceMap["sevauserid"]) && sourceMap['projectId']=="") {
           RequestModel model = RequestModel.fromMapElasticSearch(sourceMap);
           if (model.accepted == false) requestsList.add(model);
         }

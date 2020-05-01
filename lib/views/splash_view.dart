@@ -463,6 +463,7 @@ class _SplashViewState extends State<SplashView> {
     UserModel loggedInUser = await _getSignedInUserDocs(userId);
     print("---> ${loggedInUser.currentCommunity}");
     if ((loggedInUser.currentCommunity == " " ||
+            loggedInUser.currentCommunity == "" ||
             loggedInUser.currentCommunity == null) &&
         loggedInUser.communities.length != 0) {
       loggedInUser.currentCommunity = loggedInUser.communities.elementAt(0);

@@ -112,83 +112,82 @@ class _TimebankHomePageState extends State<TimebankHomePage>
               titleSpacing: 20,
               backgroundColor: Colors.white,
               pinned: true,
-              expandedHeight: covidcheck['show'] ? 480.0: 370,
+              expandedHeight: covidcheck['show'] ? 480.0 : 370,
               flexibleSpace: FlexibleSpaceBar(
                 collapseMode: CollapseMode.pin,
                 background: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    covidcheck['show'] ? Container(
-                        alignment: Alignment.center,
-                        height: 90.0,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 0.0, vertical: 5),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 10.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(0.0),
-                          gradient: LinearGradient(
-                            colors: [Colors.white12, Colors.white12],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey[200],
-                            ),
-                          ],
-                        ),
-                        child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => MyThreeOptions(
-                                  )));
-                            },
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        "COVID-19 Volunteer",
-                                        maxLines: 2,
-                                        overflow: TextOverflow.clip,
-                                        style: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .title
-                                            .apply(
-                                            fontWeightDelta: 2,
-                                            color: Colors.black54),
-                                      ),
-                                    ),
-                                    SizedBox(width: 15.0),
-                                    GestureDetector(
-                                      child: Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.black54,
-                                      ),
-                                      onTap: () {},
-                                    )
-                                  ],
-                                ),
-                                SizedBox(height: 5.0),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        "Help organisations and communities around you. Get information on COVID-19",
-                                        textAlign: TextAlign.left,
-                                        maxLines: 2,
-                                        style: Theme
-                                            .of(context)
-                                            .textTheme
-                                            .subtitle
-                                            .apply(color: Colors.black54),
-                                      ),
-                                    ),
-                                  ],
+                    covidcheck['show']
+                        ? Container(
+                            alignment: Alignment.center,
+                            height: 90.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 0.0, vertical: 5),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(0.0),
+                              gradient: LinearGradient(
+                                colors: [Colors.white12, Colors.white12],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey[200],
                                 ),
                               ],
-                            ))): Container(),
+                            ),
+                            child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => MyThreeOptions()));
+                                },
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            "COVID-19 Volunteer",
+                                            maxLines: 2,
+                                            overflow: TextOverflow.clip,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .title
+                                                .apply(
+                                                    fontWeightDelta: 2,
+                                                    color: Colors.black54),
+                                          ),
+                                        ),
+                                        SizedBox(width: 15.0),
+                                        GestureDetector(
+                                          child: Icon(
+                                            Icons.keyboard_arrow_right,
+                                            color: Colors.black54,
+                                          ),
+                                          onTap: () {},
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 5.0),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            "Help organisations and communities around you. Get information on COVID-19",
+                                            textAlign: TextAlign.left,
+                                            maxLines: 2,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle
+                                                .apply(color: Colors.black54),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )))
+                        : Container(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -337,7 +336,7 @@ class _TimebankHomePageState extends State<TimebankHomePage>
         ];
       },
       body: SafeArea(
-        minimum: EdgeInsets.only(top: 90),
+        minimum: EdgeInsets.only(top: 104),
         child: TabBarView(
           controller: controller,
           children: <Widget>[

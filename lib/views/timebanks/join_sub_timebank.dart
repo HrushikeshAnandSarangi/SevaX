@@ -5,8 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sevaexchange/constants/sevatitles.dart';
-import 'package:sevaexchange/flavor_config.dart';
-import 'package:sevaexchange/models/join_req_model.dart';
 import 'package:sevaexchange/models/notifications_model.dart' as prefix0;
 import 'package:sevaexchange/models/notifications_model.dart';
 import 'package:sevaexchange/models/user_model.dart';
@@ -16,7 +14,6 @@ import 'package:sevaexchange/ui/screens/home_page/bloc/user_data_bloc.dart';
 import 'package:sevaexchange/utils/bloc_provider.dart';
 import 'package:sevaexchange/utils/data_managers/blocs/communitylist_bloc.dart';
 import 'package:sevaexchange/utils/data_managers/join_request_manager.dart';
-import 'package:sevaexchange/utils/firestore_manager.dart' as FirestoreManager;
 import 'package:sevaexchange/utils/utils.dart' as utils;
 
 import '../timebank_content_holder.dart';
@@ -27,12 +24,11 @@ class JoinSubTimeBankView extends StatefulWidget {
   final String communityId;
   final String communityPrimaryTimebankId;
 
-  JoinSubTimeBankView({
-    this.loggedInUserModel,
-    @required this.isFromDash,
-    @required this.communityId,
-    @required this.communityPrimaryTimebankId,
-  });
+  JoinSubTimeBankView(
+      {this.loggedInUserModel,
+      @required this.isFromDash,
+      this.communityId,
+      this.communityPrimaryTimebankId});
 
   _JoinSubTimeBankViewState createState() => _JoinSubTimeBankViewState();
 }
@@ -43,9 +39,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   // TRUE: register page, FALSE: login page
   TextEditingController controller = TextEditingController();
   TimebankModel timebankModel;
-  //TimebankModel superAdminModel;
   JoinRequestModel joinRequestModel = new JoinRequestModel();
-  //JoinRequestModel getRequestData = new JoinRequestModel();
   UserModel ownerModel;
   String title = 'Loading';
   String loggedInUser;
@@ -54,7 +48,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   static const String JOINED = "Joined";
   static const String REQUESTED = "Requested";
   static const String REJECTED = "Rejected";
-
   bool hasError = false;
   String errorMessage1 = '';
   List<JoinRequestModel> _joinRequestModels;
@@ -73,7 +66,6 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   void getData() async {
     createEditCommunityBloc.getChildTimeBanks(context);
-
     _joinRequestModels =
         await getFutureUserRequest(userID: widget.loggedInUserModel.sevaUserID);
     setState(() {
@@ -87,6 +79,7 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
   Widget build(BuildContext context) {
     final _bloc = BlocProvider.of<UserDataBloc>(context);
+
     print("in explore ==> ${_bloc.user.email}");
     return Scaffold(
 //      appBar: AppBar(
@@ -131,11 +124,11 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
   Widget getTimebanks({BuildContext context, UserDataBloc bloc}) {
     Size size = MediaQuery.of(context).size;
     List<TimebankModel> timebankList = [];
+
     return FutureBuilder<List<TimebankModel>>(
         future: getTimebanksForCommunity(
-          communityId: widget.loggedInUserModel.currentCommunity,
-          primaryTimebankId: widget.communityPrimaryTimebankId,
-        ),
+            communityId: widget.loggedInUserModel.currentCommunity,
+            primaryTimebankId: widget.communityPrimaryTimebankId),
         builder: (context, snapshot) {
           //    print('timee ${snapshot.data}');
           if (snapshot.hasError) return new Text('Error: ${snapshot.error}');
@@ -327,47 +320,13 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
                       onPressed: () async {
                         if (userStatus == 'Join') {
                           //    print('print time data ${timebank.creatorId}');
-                          joinRequestModel.reason = "i want to join this group";
-                          joinRequestModel.userId =
-                              widget.loggedInUserModel.sevaUserID;
-                          joinRequestModel.timestamp =
-                              DateTime.now().millisecondsSinceEpoch;
 
-                          joinRequestModel.entityId = timebank.id;
-                          joinRequestModel.entityType = EntityType.Timebank;
-                          joinRequestModel.accepted = false;
-
-                          await updateJoinRequest(model: joinRequestModel);
-
-                          JoinRequestNotificationModel joinReqModel =
-                              JoinRequestNotificationModel(
-                                  timebankId: timebank.id,
-                                  timebankTitle: timebank.name,
-                                  reasonToJoin: joinRequestModel.reason);
-
-                          NotificationsModel notification = NotificationsModel(
-                            id: utils.Utils.getUuid(),
-                            targetUserId: timebank.creatorId,
-                            senderUserId: widget.loggedInUserModel.sevaUserID,
-                            type: prefix0.NotificationType.JoinRequest,
-                            data: joinReqModel.toMap(),
+                          await _assembleAndSendRequest(
+                            subTimebankId: timebank.id,
+                            subTimebankLabel: timebank.name,
+                            userIdForNewMember:
+                                widget.loggedInUserModel.sevaUserID,
                           );
-
-                          notification.timebankId =
-                              FlavorConfig.values.timebankId;
-                          //  print('creator id ${notification.timebankId}');
-
-                          UserModel timebankCreator =
-                              await FirestoreManager.getUserForId(
-                                  sevaUserId: timebank.creatorId);
-                          //print('time creator email ${timebankCreator.email}');
-
-                          await Firestore.instance
-                              .collection('users')
-                              .document(timebankCreator.email)
-                              .collection("notifications")
-                              .document(notification.id)
-                              .setData(notification.toMap());
 
                           setState(() {
                             getData();
@@ -383,6 +342,91 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
               ),
             ],
           )),
+    );
+  }
+
+  Future _assembleAndSendRequest({
+    String userIdForNewMember,
+    String subTimebankLabel,
+    String subTimebankId,
+  }) async {
+    var joinRequestModel = _assembleJoinRequestModel(
+      userIdForNewMember: userIdForNewMember,
+      subTimebankLabel: subTimebankLabel,
+      subtimebankId: subTimebankId,
+    );
+
+    var notification = _assembleNotificationForJoinRequest(
+      joinRequestModel: joinRequestModel,
+      userIdForNewMember: userIdForNewMember,
+      creatorId: userIdForNewMember,
+      subTimebankId: subTimebankId,
+    );
+
+    await createAndSendJoinJoinRequest(
+      joinRequestModel: joinRequestModel,
+      notification: notification,
+      subtimebankId: subTimebankId,
+    ).commit();
+  }
+
+  WriteBatch createAndSendJoinJoinRequest({
+    String subtimebankId,
+    prefix0.NotificationsModel notification,
+    JoinRequestModel joinRequestModel,
+  }) {
+    WriteBatch batchWrite = Firestore.instance.batch();
+    batchWrite.setData(
+        Firestore.instance
+            .collection('timebanknew')
+            .document(
+              subtimebankId,
+            )
+            .collection("notifications")
+            .document(notification.id),
+        notification.toMap());
+
+    batchWrite.setData(
+        Firestore.instance
+            .collection('join_requests')
+            .document(joinRequestModel.id),
+        joinRequestModel.toMap());
+    return batchWrite;
+  }
+
+  JoinRequestModel _assembleJoinRequestModel({
+    String userIdForNewMember,
+    String subTimebankLabel,
+    String subtimebankId,
+  }) {
+    return new JoinRequestModel(
+      timebankTitle: subTimebankLabel,
+      accepted: false,
+      entityId: subtimebankId,
+      entityType: EntityType.Timebank,
+      operationTaken: false,
+      reason: "I want to volunteer.",
+      timestamp: DateTime.now().millisecondsSinceEpoch,
+      userId: userIdForNewMember,
+      isFromGroup: true,
+      notificationId: utils.Utils.getUuid()
+    );
+  }
+
+  NotificationsModel _assembleNotificationForJoinRequest({
+    String userIdForNewMember,
+    JoinRequestModel joinRequestModel,
+    String subTimebankId,
+    String creatorId,
+  }) {
+    return new NotificationsModel(
+      timebankId: subTimebankId,
+      id: joinRequestModel.notificationId,
+      targetUserId: creatorId,
+      senderUserId: userIdForNewMember,
+      type: prefix0.NotificationType.JoinRequest,
+      data: joinRequestModel.toMap(),
+      communityId: "NOT_REQUIRED",
     );
   }
 
@@ -452,8 +496,10 @@ class _JoinSubTimeBankViewState extends State<JoinSubTimeBankView> {
 
 Future<List<TimebankModel>> getTimebanksForCommunity(
     {String communityId, String primaryTimebankId}) async {
+//  DocumentSnapshot documentSnapshot = await Firestore.instance.collection('communities').document(communityId).get();
+//  Map<String, dynamic> dataMap = documentSnapshot.data;
+//  CommunityModel communityModel = CommunityModel(dataMap);
   List<TimebankModel> timebankList = [];
-
   return Firestore.instance
       .collection('timebanknew')
       .where('community_id', isEqualTo: communityId)
@@ -461,7 +507,9 @@ Future<List<TimebankModel>> getTimebanksForCommunity(
       .then((QuerySnapshot timebankModel) {
     timebankModel.documents.forEach((timebank) {
       var model = TimebankModel.fromMap(timebank.data);
-      if (model.id != primaryTimebankId) timebankList.add(model);
+      if (model.id != primaryTimebankId) {
+        timebankList.add(model);
+      }
     });
     return timebankList;
   }).catchError((onError) {
