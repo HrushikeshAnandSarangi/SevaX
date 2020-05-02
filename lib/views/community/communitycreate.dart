@@ -140,14 +140,12 @@ class CreateEditCommunityViewFormState
     super.initState();
     var _searchText = "";
 
-    Future.delayed(Duration.zero, () {
-      createEditCommunityBloc.getChildTimeBanks(context);
-    });
-
     if (widget.isCreateTimebank == false) {
       getModelData();
+      Future.delayed(Duration.zero, () {
+        createEditCommunityBloc.getChildTimeBanks(context);
+      });
     }
-    _fetchCurrentlocation;
     focusNodes = List.generate(8, (_) => FocusNode());
     globals.timebankAvatarURL = null;
     globals.addedMembersId = [];
@@ -155,7 +153,7 @@ class CreateEditCommunityViewFormState
     globals.addedMembersPhotoURL = [];
     selectedUsers = HashMap();
     if (!widget.isCreateTimebank) {
-      fetchCurrentlocation();
+      _fetchCurrentlocation;
     }
 
     searchTextController
@@ -194,7 +192,26 @@ class CreateEditCommunityViewFormState
     });
   }
 
-  void get _fetchCurrentlocation {
+  void get _fetchCurrentlocation async {
+    Location templocation = new Location();
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await templocation.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await templocation.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await templocation.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await templocation.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
     Location().getLocation().then((onValue) {
       print("Location1:$onValue");
       location = GeoFirePoint(onValue.latitude, onValue.longitude);
@@ -540,7 +557,7 @@ class CreateEditCommunityViewFormState
                       label: Container(
                         child: Text(
                           (snapshot.data.timebank.address == null ||
-                                      snapshot.data.timebank.address.isEmpty ||snapshot.data.timebank.address =="") &&
+                                      snapshot.data.timebank.address.isEmpty || snapshot.data.timebank.address =="") &&
                                   selectedAddress == ''
                               ? 'Add Location'
                               : widget.isCreateTimebank

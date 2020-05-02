@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:location/location.dart';
 import 'package:sevaexchange/ui/utils/helpers.dart';
@@ -82,7 +83,7 @@ class NewsImageState extends State<NewsImage>
 
   @override
   void initState() {
-    fetchCurrentlocation();
+    _fetchCurrentlocation;
     super.initState();
     print("locaton on newsimage ${widget.geoFirePointLocation?.coords}");
     selectedAddress = widget.selectedAddress;
@@ -207,22 +208,50 @@ class NewsImageState extends State<NewsImage>
     );
   }
 
-  void fetchCurrentlocation() {
-    Location().getLocation().then((onValue) {
-      print("Location1:$onValue");
-      GeoFirePoint location = GeoFirePoint(onValue.latitude, onValue.longitude);
-      geoFirePointLocationCallback(location);
-      LocationUtility()
-          .getFormattedAddress(
-        location.latitude,
-        location.longitude,
-      )
-          .then((address) {
-        setState(() {
-          this.selectedAddress = address;
+  void get _fetchCurrentlocation async {
+    try {
+      Location templocation = new Location();
+      bool _serviceEnabled;
+      PermissionStatus _permissionGranted;
+
+      _serviceEnabled = await templocation.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await templocation.requestService();
+        if (!_serviceEnabled) {
+          return;
+        }
+      }
+
+      _permissionGranted = await templocation.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await templocation.requestPermission();
+        if (_permissionGranted != PermissionStatus.granted) {
+          return;
+        }
+      }
+      Location().getLocation().then((onValue) {
+        print("Location1:$onValue");
+        GeoFirePoint location = GeoFirePoint(onValue.latitude, onValue.longitude);
+        geoFirePointLocationCallback(location);
+        LocationUtility()
+            .getFormattedAddress(
+          location.latitude,
+          location.longitude,
+        )
+            .then((address) {
+          setState(() {
+            this.selectedAddress = address;
+          });
         });
       });
-    });
+    } on PlatformException catch (e) {
+      print(e);
+      if (e.code == 'PERMISSION_DENIED') {
+        //error = e.message;
+      } else if (e.code == 'SERVICE_STATUS_ERROR') {
+        //error = e.message;
+      }
+    }
   }
 }
 
